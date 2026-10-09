@@ -7,6 +7,8 @@ import { Module } from '@nestjs/common'
 import { UsersModule } from '../users/users.module'
 import { ArtistEmailCodeService } from './artist-email-code.service'
 import { ArtistOAuthService } from './artist-oauth.service'
+import { ArtistSessionsController } from './artist-sessions.controller'
+import { ArtistSessionsService } from './artist-sessions.service'
 import { ArtistTwoFactorService } from './artist-two-factor.service'
 import { AuthController } from './artists-auth.controller'
 import { ArtistsAuthService } from './artists-auth.service'
@@ -19,8 +21,9 @@ import { ArtistsOAuthController } from './artists-oauth.controller'
     ArtistTwoFactorService,
     ArtistOAuthService,
     ArtistEmailCodeService,
+    ArtistSessionsService,
   ],
-  controllers: [AuthController, ArtistsOAuthController],
+  controllers: [AuthController, ArtistsOAuthController, ArtistSessionsController],
   exports: [ArtistsAuthService, TokensModule],
 })
 export class ArtistsAuthModule {}

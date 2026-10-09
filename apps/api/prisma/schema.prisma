@@ -121,6 +121,11 @@ model ArtistSession {
   access_token  String @unique
   refresh_token String @unique
 
+  /// Browser the session signed in from, shown in the artist's active sessions list.
+  userAgent  String?
+  /// Last sign-in or token refresh; `null` for sessions created before this was tracked.
+  lastUsedAt DateTime?
+
   createdAt DateTime @default(now())
   expiresAt DateTime
 

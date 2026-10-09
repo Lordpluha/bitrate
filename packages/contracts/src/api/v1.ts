@@ -1349,6 +1349,60 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/artists/auth/sessions': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * List the devices signed in to this artist account
+     * @description Unexpired sessions, most recently used first; the requesting one is marked.
+     */
+    get: operations['ArtistSessionsController_list_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/artists/auth/sessions/revoke-others': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Sign out every device except this one */
+    post: operations['ArtistSessionsController_revokeOthers_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/artists/auth/sessions/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    /** Sign out one other device */
+    delete: operations['ArtistSessionsController_revoke_v1']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/search': {
     parameters: {
       query?: never
@@ -4467,6 +4521,13 @@ export interface components {
       access_token: string
       /** @description The refresh token value. */
       refresh_token: string
+      /** @description The browser the session signed in from. */
+      userAgent: string | null
+      /**
+       * Format: date-time
+       * @description The last sign-in or refresh of the session.
+       */
+      lastUsedAt: string | null
       /**
        * Format: date-time
        * @description The created at value.
@@ -4559,6 +4620,26 @@ export interface components {
        * @example JBSWY3DPEHPK3PXP
        */
       manualCode: string
+    }
+    ArtistSessionDeviceEntity: {
+      /** Format: uuid */
+      id: string
+      /** @description Raw browser user agent */
+      userAgent: string | null
+      /** Format: date-time */
+      createdAt: string
+      /**
+       * Format: date-time
+       * @description Last sign-in or refresh; null before it was tracked
+       */
+      lastUsedAt: string | null
+      /** Format: date-time */
+      expiresAt: string
+      /** @description The session making this request */
+      current: boolean
+    }
+    RevokedArtistSessionsEntity: {
+      revoked: number
     }
     SearchResultEntity: {
       /** @description The id value. */
@@ -19555,6 +19636,438 @@ export interface operations {
       }
       /** @description Request timeout */
       408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  ArtistSessionsController_list_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ArtistSessionDeviceEntity'][]
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  ArtistSessionsController_revokeOthers_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['RevokedArtistSessionsEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  ArtistSessionsController_revoke_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description The device was signed out */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description No such session on this account */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description The session is the one making this request; use logout instead */
+      409: {
         headers: {
           [name: string]: unknown
         }

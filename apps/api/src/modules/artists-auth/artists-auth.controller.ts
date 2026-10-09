@@ -59,6 +59,7 @@ import {
   VerifyArtistEmailSchema,
 } from './dtos'
 import { ArtistSessionEntity } from './entities'
+import { sessionClient } from './session-client'
 import type { ArtistAuthRequest } from './types'
 
 /** Represents the auth controller. */
@@ -79,9 +80,14 @@ export class AuthController {
   @Post('login')
   async login(
     @Body(new ZodValidationPipe(LoginSchema)) loginDto: ArtistLoginDto,
+    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const result = await this.artistAuthService.loginArtist(loginDto.email, loginDto.password)
+    const result = await this.artistAuthService.loginArtist(
+      loginDto.email,
+      loginDto.password,
+      sessionClient(req),
+    )
     if ('requires2fa' in result) {
       setPendingTwoFactorCookie(res, result.pendingToken)
       return { requires2fa: true }
@@ -131,7 +137,7 @@ export class AuthController {
   @Post('refresh')
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const refresh_token = req[process.env.REFRESH_TOKEN_NAME!] as string
-    const tokens = await this.artistAuthService.refresh(refresh_token)
+    const tokens = await this.artistAuthService.refresh(refresh_token, sessionClient(req))
     this.tokenService.setAuthCookies(res, tokens.access_token, tokens.refresh_token)
   }
 
@@ -234,6 +240,7 @@ export class AuthController {
     const artist = await this.twoFactorService.verifyLoginCode(pendingToken, dto.code)
     const { access_token, refresh_token } = await this.artistAuthService.completeTwoFactorLogin(
       artist.id,
+      sessionClient(req),
     )
     clearPendingTwoFactorCookie(res)
     this.tokenService.setAuthCookies(res, access_token, refresh_token)
