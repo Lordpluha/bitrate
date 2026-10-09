@@ -7,6 +7,14 @@ export {
 } from './release-contributor.swagger'
 export { ReleaseDetailSwagger } from './release-detail.swagger'
 export {
+  ReleaseTrackAudioSwagger,
+  RemoveReleaseCoverSwagger,
+  RemoveReleaseTrackSwagger,
+  ReplaceReleaseTrackAudioSwagger,
+  UploadReleaseCoverSwagger,
+  UploadReleaseTrackSwagger,
+} from './release-media.swagger'
+export {
   ReplaceReleaseSplitsSwagger,
   SubmitReleaseSwagger,
   UpdateReleaseRightsSwagger,

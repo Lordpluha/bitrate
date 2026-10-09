@@ -117,6 +117,29 @@ preserves existing workspaces and skips existing demo rows on repeat execution. 
 does not create accounts, change credentials or insert public tracks. Demo preview
 URLs resolve to the artist portal's identified synthetic sample audio.
 
+## Artwork and master audio
+
+`ReleaseMediaController` handles files for an owned DRAFT; every write carries
+`expectedUpdatedAt` and goes through the same atomic owner/DRAFT/version lock.
+
+| Route | Purpose |
+| --- | --- |
+| `PUT /releases/:id/cover` | Multipart `cover` (JPEG/PNG/WebP, 20 MB, magic-byte checked) |
+| `DELETE /releases/:id/cover` | Removes the artwork |
+| `POST /releases/:id/tracks` | Multipart `audio` + `title`: creates a recording from a master |
+| `PUT /releases/:id/tracks/:trackId/audio` | Replaces the master of a recording |
+| `DELETE /releases/:id/tracks/:trackId` | Removes a recording, its master and its ISRC |
+| `GET /releases/:id/tracks/:trackId/audio` | Owner-only playback with HTTP Range |
+
+Covers are public images under `releases/covers` and are stored on `Release.cover` as
+`/static/...` paths, like avatars. Masters (WAV, FLAC, MP3, OGG up to 512 MB) stream to
+the private upload directory, then into the object store under `release-masters/`; the
+key never leaves the API. Files are written before the transaction and deleted again
+when it fails, and replaced files are deleted after the commit. Audio changes clear the
+accuracy confirmation. Readiness blocks submission without artwork (`COVER_MISSING`) or
+without a master for each draft recording (`TRACK_AUDIO_MISSING`). Uploading publishes
+and delivers nothing.
+
 `test/migrations/artist-music-catalogue.sql` checks valid-owner links, cross-owner
 rejection and nonnegative duration in a transaction that always rolls back.
 

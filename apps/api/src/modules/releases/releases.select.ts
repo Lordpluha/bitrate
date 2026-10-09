@@ -23,12 +23,13 @@ export const releaseReadinessSelect = (ownerArtistId: string) =>
     status: true,
     updatedAt: true,
     upc: true,
+    cover: true,
     masterOwnerType: true,
     writersConfirmedAt: true,
     accuracyConfirmedAt: true,
     trackDrafts: {
       where: { ownerArtistId, deletedAt: null },
-      select: { id: true, isrc: true },
+      select: { id: true, isrc: true, audioKey: true },
     },
     tracks: {
       where: { track: { deletedAt: null } },

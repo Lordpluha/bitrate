@@ -26,6 +26,9 @@ export function WorkspaceReadiness({
   const contributors = Object.fromEntries(
     release.participants.map((person) => [person.id, person.displayName]),
   )
+  const tracks = Object.fromEntries(
+    release.trackDrafts.map((track) => [track.id, track.title]),
+  )
   return (
     <section
       aria-labelledby="release-readiness-heading"
@@ -48,7 +51,7 @@ export function WorkspaceReadiness({
                 aria-hidden="true"
                 className="size-4 shrink-0 text-destructive"
               />
-              {describeBlocker(blocker, { contributors })}
+              {describeBlocker(blocker, { contributors, tracks })}
             </li>
           ))}
         </ul>

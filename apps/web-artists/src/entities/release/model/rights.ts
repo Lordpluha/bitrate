@@ -23,6 +23,8 @@ export const masterOwnerTypes = [
 
 export const releaseBlockerSchema = z.discriminatedUnion('code', [
   z.object({ code: z.literal('NO_TRACKS') }),
+  z.object({ code: z.literal('COVER_MISSING') }),
+  z.object({ code: z.literal('TRACK_AUDIO_MISSING'), trackId: z.uuid() }),
   z.object({ code: z.literal('MASTER_OWNER_MISSING') }),
   z.object({ code: z.literal('WRITERS_NOT_CONFIRMED') }),
   z.object({ code: z.literal('ACCURACY_NOT_CONFIRMED') }),
@@ -90,6 +92,7 @@ export function formatIsrc(isrc: string): string {
 
 interface BlockerNames {
   contributors: Record<string, string>
+  tracks?: Record<string, string>
 }
 
 export function describeBlocker(
@@ -99,6 +102,10 @@ export function describeBlocker(
   switch (blocker.code) {
     case 'NO_TRACKS':
       return 'Add at least one track'
+    case 'COVER_MISSING':
+      return 'Upload the release artwork'
+    case 'TRACK_AUDIO_MISSING':
+      return `Upload audio for ${names.tracks?.[blocker.trackId] ?? 'a recording'}`
     case 'MASTER_OWNER_MISSING':
       return 'Choose the master owner'
     case 'WRITERS_NOT_CONFIRMED':

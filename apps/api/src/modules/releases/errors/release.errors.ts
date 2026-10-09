@@ -7,6 +7,11 @@ export const RELEASE_ERRORS = {
   RECORDING_NOT_FOUND: 'errors.release.recording_not_found',
   BLOCKERS_UNRESOLVED: 'errors.release.blockers_unresolved',
   SHARE_CONTRIBUTOR_MISMATCH: 'errors.release.share_contributor_mismatch',
+  COVER_FILE_REQUIRED: 'errors.release.cover_file_required',
+  COVER_TYPE_INVALID: 'errors.release.cover_type_invalid',
+  AUDIO_FILE_REQUIRED: 'errors.release.audio_file_required',
+  AUDIO_TYPE_INVALID: 'errors.release.audio_type_invalid',
+  AUDIO_NOT_FOUND: 'errors.release.audio_not_found',
 } as const
 
 /** Zod issue keys of the release DTOs, translated per request like built-in issues. */

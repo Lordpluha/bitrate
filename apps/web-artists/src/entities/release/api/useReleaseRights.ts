@@ -9,7 +9,7 @@ import {
 } from './rights'
 
 /** Every confirmed write refreshes the artist's Music and workspace caches. */
-function useReleaseWrite<Request, Result>(
+export function useReleaseWrite<Request, Result>(
   artistId: string,
   write: (request: Request) => Promise<Result>,
 ) {

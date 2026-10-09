@@ -5,16 +5,19 @@ export const FULL_SHARE_BASIS_POINTS = 10_000
 
 export interface ReleaseReadinessInput {
   upc: string | null
+  cover: string | null
   masterOwnerType: ReleaseMasterOwner | null
   writersConfirmedAt: Date | null
   accuracyConfirmedAt: Date | null
-  tracks: { id: string; isrc: string | null }[]
+  tracks: { id: string; isrc: string | null; hasAudio: boolean }[]
   contributors: { id: string; roles: ReleaseCreditRole[] }[]
   splits: { rightType: ReleaseRightType; shareBasisPoints: number }[]
 }
 
 type ReleaseBlocker =
   | { code: 'NO_TRACKS' }
+  | { code: 'COVER_MISSING' }
+  | { code: 'TRACK_AUDIO_MISSING'; trackId: string }
   | { code: 'MASTER_OWNER_MISSING' }
   | { code: 'WRITERS_NOT_CONFIRMED' }
   | { code: 'ACCURACY_NOT_CONFIRMED' }
@@ -33,6 +36,10 @@ export interface ReleaseReadiness {
 export function releaseReadiness(input: ReleaseReadinessInput): ReleaseReadiness {
   const blockers: ReleaseBlocker[] = []
   if (input.tracks.length === 0) blockers.push({ code: 'NO_TRACKS' })
+  if (!input.cover) blockers.push({ code: 'COVER_MISSING' })
+  for (const track of input.tracks) {
+    if (!track.hasAudio) blockers.push({ code: 'TRACK_AUDIO_MISSING', trackId: track.id })
+  }
   if (!input.masterOwnerType) blockers.push({ code: 'MASTER_OWNER_MISSING' })
   if (!input.writersConfirmedAt) blockers.push({ code: 'WRITERS_NOT_CONFIRMED' })
   if (!input.accuracyConfirmedAt) blockers.push({ code: 'ACCURACY_NOT_CONFIRMED' })

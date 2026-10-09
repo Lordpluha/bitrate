@@ -11,7 +11,8 @@ export const apiBaseUrl = (
   import.meta.env.VITE_API_URL || 'http://localhost:3000'
 ).replace(/\/$/, '')
 
-async function refreshToken(): Promise<boolean> {
+/** Rotates the artist session once; concurrent callers share the same attempt. */
+export async function refreshToken(): Promise<boolean> {
   if (refreshPromise !== null) return refreshPromise
 
   refreshPromise = (async () => {

@@ -51,14 +51,14 @@ export function ReplaceReleaseSplitsSwagger() {
 export function UpdateReleaseTrackSwagger() {
   return applyDecorators(
     ApiOperation({
-      summary: 'Set the ISRC of a recording on an owned draft',
+      summary: 'Rename a recording or set its ISRC on an owned draft',
       description:
-        'Accepts the code with or without hyphens and stores it compact. Optional for submission; a distributor can assign one later.',
+        'Updates the title, the ISRC, or both. The ISRC is accepted with or without hyphens and stored compact; it is optional for submission because a distributor can assign one later.',
     }),
     ApiParam({ name: 'trackId', format: 'uuid' }),
     ApiBody({ type: UpdateReleaseTrackDto }),
     ApiResponse({ status: HttpStatus.OK, type: ReleaseTrackUpdatedEntity }),
-    ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid ISRC or IDs' }),
+    ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid title, ISRC or IDs' }),
     ApiResponse({
       status: HttpStatus.NOT_FOUND,
       description: 'Release or recording unavailable to this artist',

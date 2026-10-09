@@ -45,6 +45,9 @@ export const releaseWorkspaceSchema = releaseSummarySchema
           duration,
           isDemo: z.boolean(),
           isrc,
+          hasAudio: z.boolean(),
+          audioFileName: z.string().nullable(),
+          audioSizeBytes: z.number().int().nonnegative().nullable(),
           version: z.enum(['ORIGINAL', 'REMASTER', 'LIVE', 'DEMO']),
           status: z.enum([
             'DRAFT',

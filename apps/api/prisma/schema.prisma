@@ -546,6 +546,11 @@ model ArtistTrackDraft {
   previewUrl    String?
   // Compact ISO 3901 form (no hyphens); optional until a distributor assigns one.
   isrc          String? @unique @db.VarChar(12)
+  // Private uploaded master in STORAGE_SERVICE; never served publicly.
+  audioKey         String? @unique
+  audioFileName    String?
+  audioContentType String?
+  audioSizeBytes   Int?
   isDemo        Boolean @default(false)
   deletedAt     DateTime?
   createdAt     DateTime @default(now())
