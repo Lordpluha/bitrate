@@ -2265,6 +2265,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/artist-search': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Search the artist's releases, tracks and tasks by title
+     * @description Case-insensitive; at most 5 results per group.
+     */
+    get: operations['ArtistSearchController_search_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/artist-profile': {
     parameters: {
       query?: never
@@ -5119,6 +5139,38 @@ export interface components {
       total: number
       page: number
       limit: number
+    }
+    SearchReleaseEntity: {
+      /** Format: uuid */
+      id: string
+      title: string
+      type: components['schemas']['AlbumType']
+      status: components['schemas']['ReleaseStatus']
+    }
+    SearchTrackEntity: {
+      /** Format: uuid */
+      id: string
+      title: string
+      status: components['schemas']['ArtistTrackStatus']
+      /** Format: uuid */
+      releaseId: string | null
+    }
+    SearchTaskReleaseEntity: {
+      /** Format: uuid */
+      id: string
+      title: string
+    }
+    SearchTaskEntity: {
+      /** Format: uuid */
+      id: string
+      title: string
+      status: components['schemas']['ReleaseTaskStatus']
+      release: components['schemas']['SearchTaskReleaseEntity']
+    }
+    ArtistSearchEntity: {
+      releases: components['schemas']['SearchReleaseEntity'][]
+      tracks: components['schemas']['SearchTrackEntity'][]
+      tasks: components['schemas']['SearchTaskEntity'][]
     }
     ArtistSocialLinksEntity: {
       /** Format: uri */
@@ -27841,6 +27893,154 @@ export interface operations {
         content: {
           'application/json': components['schemas']['DistributionPageEntity']
         }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  ArtistSearchController_search_v1: {
+    parameters: {
+      query: {
+        q: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ArtistSearchEntity']
+        }
+      }
+      /** @description Query shorter than 2 characters */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Unauthorized */
       401: {

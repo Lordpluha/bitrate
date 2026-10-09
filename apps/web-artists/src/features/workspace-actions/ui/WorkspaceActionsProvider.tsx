@@ -9,12 +9,14 @@ import {
 import { type WorkspaceDestination, WorkspaceSearch } from './WorkspaceSearch'
 
 export function WorkspaceActionsProvider({
+  artistId,
   children,
   destinations,
   accountContent,
   appearanceContent,
   createReleaseDialog,
 }: {
+  artistId: string
   children: ReactNode
   destinations: readonly WorkspaceDestination[]
   accountContent: ReactNode
@@ -55,6 +57,7 @@ export function WorkspaceActionsProvider({
             <WorkspaceModal key={action} onClose={close} title={title}>
               {action === 'search' ? (
                 <WorkspaceSearch
+                  artistId={artistId}
                   destinations={destinations}
                   onNavigate={close}
                 />
