@@ -44,13 +44,18 @@
     "test": "vitest run --project=unit --project=node --project=browser",
     "test:unit": "vitest run --project=unit --reporter=verbose",
     "test:node": "vitest run --project=node --reporter=verbose",
-    "test:browser": "vitest run --project=browser --reporter=verbose"
+    "test:browser": "vitest run --project=browser --reporter=verbose",
+    "storybook": "storybook dev -p 6007",
+    "storybook:build": "storybook build"
   },
   "dependencies": {
     "svelte": "^5.57.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
+    "@storybook/addon-a11y": "^10.6.0",
+    "@storybook/addon-docs": "^10.6.0",
+    "@storybook/svelte-vite": "^10.6.0",
     "@sveltejs/vite-plugin-svelte": "^7.3.0",
     "@tsconfig/svelte": "^5.0.8",
     "@types/node": "^25.9.3",
@@ -63,6 +68,7 @@
     "playwright": "^1.53.1",
     "prettier": "^3.9.6",
     "prettier-plugin-svelte": "^4.1.1",
+    "storybook": "^10.6.0",
     "svelte-check": "^4.7.6",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.70.0",

@@ -109,6 +109,14 @@ jobs:
           NG_APP_API_URL: ${{ env.BUILD_NG_APP_API_URL }}
         run: pnpm --filter @bitrate/admin test
 
+      # Builds the UI-kit Storybook (stories under src/app/presentation/ui) as a compile gate:
+      # the Angular builder type-checks every story file. Nothing is published or deployed.
+      # The script does not run env:gen — Storybook compiles only the UI kit, never the
+      # generated env module — so no NG_APP_API_URL is needed here.
+      - name: Build admin Storybook
+        if: ${{ inputs.run-tests }}
+        run: pnpm --filter @bitrate/admin storybook:build
+
       - name: Setup Docker + registries
         uses: ./.github/actions/setup-docker
         with:
