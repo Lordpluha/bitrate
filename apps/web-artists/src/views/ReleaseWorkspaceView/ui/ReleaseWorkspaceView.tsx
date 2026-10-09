@@ -10,15 +10,28 @@ import {
   SplitsDialog,
   UpcDialog,
 } from '@features/edit-release'
+import {
+  CoverDialog,
+  RemoveTrackDialog,
+  RenameTrackDialog,
+  TrackUploadDialog,
+} from '@features/release-media'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
 import {
   ReleaseWorkspaceContent,
   type RightsAction,
+  type TrackActions,
 } from '@widgets/ReleaseWorkspace'
 import { useState } from 'react'
 
-type WorkspaceDialog = RightsAction | { kind: 'isrc'; trackId: string }
+type TrackDialogKind = 'isrc' | 'track-audio' | 'track-rename' | 'track-remove'
+
+type WorkspaceDialog =
+  | RightsAction
+  | { kind: TrackDialogKind; trackId: string }
+  | { kind: 'cover' }
+  | { kind: 'track-add' }
 
 interface ReleaseWorkspaceViewProps {
   artistId: string
@@ -42,6 +55,13 @@ export function ReleaseWorkspaceView({
   const dialogSaved = () => {
     setDialog(null)
     setSaved(true)
+  }
+  const trackActions: TrackActions = {
+    onAdd: () => setDialog({ kind: 'track-add' }),
+    onEditIsrc: (trackId) => setDialog({ kind: 'isrc', trackId }),
+    onReplaceAudio: (trackId) => setDialog({ kind: 'track-audio', trackId }),
+    onRename: (trackId) => setDialog({ kind: 'track-rename', trackId }),
+    onRemove: (trackId) => setDialog({ kind: 'track-remove', trackId }),
   }
   return (
     <div aria-busy={query.isFetching} className="artist-release-workspace">
@@ -80,12 +100,13 @@ export function ReleaseWorkspaceView({
           <ReleaseWorkspaceContent
             artistId={artistId}
             onAddContributor={() => setAddingContributor(true)}
+            onCover={() => setDialog({ kind: 'cover' })}
             onEdit={() => setEditing(true)}
             onEditContributor={setEditingContributor}
-            onEditIsrc={(trackId) => setDialog({ kind: 'isrc', trackId })}
             onRightsAction={setDialog}
             onSchedule={() => setScheduling(true)}
             release={query.data}
+            trackActions={trackActions}
           />
         </>
       )}
@@ -149,6 +170,42 @@ export function ReleaseWorkspaceView({
       )}
       {query.data && dialog?.kind === 'isrc' && (
         <IsrcDialog
+          artistId={artistId}
+          onClose={closeDialog}
+          onSaved={dialogSaved}
+          release={query.data}
+          trackId={dialog.trackId}
+        />
+      )}
+      {query.data && dialog?.kind === 'cover' && (
+        <CoverDialog
+          artistId={artistId}
+          onClose={closeDialog}
+          onSaved={dialogSaved}
+          release={query.data}
+        />
+      )}
+      {query.data &&
+        (dialog?.kind === 'track-add' || dialog?.kind === 'track-audio') && (
+          <TrackUploadDialog
+            artistId={artistId}
+            onClose={closeDialog}
+            onSaved={dialogSaved}
+            release={query.data}
+            trackId={dialog.kind === 'track-audio' ? dialog.trackId : undefined}
+          />
+        )}
+      {query.data && dialog?.kind === 'track-rename' && (
+        <RenameTrackDialog
+          artistId={artistId}
+          onClose={closeDialog}
+          onSaved={dialogSaved}
+          release={query.data}
+          trackId={dialog.trackId}
+        />
+      )}
+      {query.data && dialog?.kind === 'track-remove' && (
+        <RemoveTrackDialog
           artistId={artistId}
           onClose={closeDialog}
           onSaved={dialogSaved}

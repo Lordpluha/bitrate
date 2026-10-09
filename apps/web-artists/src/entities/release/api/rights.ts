@@ -12,20 +12,20 @@ const WRITE_TIMEOUT_MS = 30_000
 const STALE =
   'This release changed or is no longer a draft. Your entries are kept here; close and reopen the form to review the latest version.'
 
-interface WriteResult {
+export interface WriteResult {
   response: Response
   data?: unknown
   error?: unknown
 }
 
-interface WriteMessages {
+export interface WriteMessages {
   invalid: string
   unconfirmed: string
   conflict?: string
 }
 
 /** Maps API failures to recoverable messages; never confirms an unverified write. */
-async function guardedWrite<T>(
+export async function guardedWrite<T>(
   send: () => Promise<WriteResult>,
   confirm: (data: unknown) => T | undefined,
   messages: WriteMessages,
@@ -49,7 +49,7 @@ async function guardedWrite<T>(
 }
 
 /** A confirmed write returns this release with a newer version. */
-function advancedRelease(
+export function advancedRelease(
   data: unknown,
   id: string,
   expectedUpdatedAt: string,

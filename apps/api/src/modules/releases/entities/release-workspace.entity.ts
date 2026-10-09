@@ -29,6 +29,15 @@ export class WorkspaceTrackDraftEntity {
 
   @ApiProperty({ type: String, nullable: true, example: 'USRC17607839' })
   isrc: string | null
+
+  @ApiProperty({ description: 'Whether a master audio file was uploaded for this draft' })
+  hasAudio: boolean
+
+  @ApiProperty({ type: String, nullable: true, description: 'Original name of the uploaded file' })
+  audioFileName: string | null
+
+  @ApiProperty({ type: Number, nullable: true, minimum: 0 })
+  audioSizeBytes: number | null
 }
 
 export class WorkspaceTrackEntity {
@@ -88,6 +97,8 @@ export class ReleaseBlockerEntity {
   @ApiProperty({
     enum: [
       'NO_TRACKS',
+      'COVER_MISSING',
+      'TRACK_AUDIO_MISSING',
       'MASTER_OWNER_MISSING',
       'WRITERS_NOT_CONFIRMED',
       'ACCURACY_NOT_CONFIRMED',
@@ -100,6 +111,9 @@ export class ReleaseBlockerEntity {
 
   @ApiProperty({ format: 'uuid', required: false })
   contributorId?: string
+
+  @ApiProperty({ format: 'uuid', required: false })
+  trackId?: string
 
   @ApiProperty({ enum: ReleaseRightType, enumName: 'ReleaseRightType', required: false })
   rightType?: ReleaseRightType

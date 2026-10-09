@@ -1,14 +1,17 @@
 import { PrismaModule } from '@infra/prisma/prisma.module'
+import { StorageCoreModule } from '@infra/storage/storage-core.module'
 import { TokensModule } from '@modules/tokens/tokens.module'
 import { Module } from '@nestjs/common'
 import { ArtistMusicController } from './artist-music.controller'
 import { ArtistMusicService } from './artist-music.service'
+import { ReleaseMediaController } from './release-media.controller'
+import { ReleaseMediaService } from './release-media.service'
 import { ReleasesController } from './releases.controller'
 import { ReleasesService } from './releases.service'
 
 @Module({
-  imports: [PrismaModule, TokensModule],
-  controllers: [ReleasesController, ArtistMusicController],
-  providers: [ReleasesService, ArtistMusicService],
+  imports: [PrismaModule, StorageCoreModule, TokensModule],
+  controllers: [ReleasesController, ReleaseMediaController, ArtistMusicController],
+  providers: [ReleasesService, ReleaseMediaService, ArtistMusicService],
 })
 export class ReleasesModule {}

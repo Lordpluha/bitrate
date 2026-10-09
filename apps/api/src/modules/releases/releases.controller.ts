@@ -191,7 +191,7 @@ export class ReleasesController {
     @Param('trackId', ParseUUIDPipe) trackId: string,
     @Body(new ZodValidationPipe(UpdateReleaseTrackSchema)) input: UpdateReleaseTrackDto,
   ) {
-    return this.releases.updateTrackIsrc(request.artist.id, id, trackId, input)
+    return this.releases.updateTrack(request.artist.id, id, trackId, input)
   }
 
   @SubmitReleaseSwagger()

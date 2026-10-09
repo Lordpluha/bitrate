@@ -1,5 +1,12 @@
 export { useContributor, useSaveContributor } from './api/useContributor'
 export {
+  useRemoveCover,
+  useRemoveTrack,
+  useRenameTrack,
+  useUploadCover,
+  useUploadTrack,
+} from './api/useReleaseMedia'
+export {
   useSaveRights,
   useSaveSplits,
   useSaveTrackIsrc,
@@ -18,6 +25,16 @@ export {
   contributorSchema,
   type ReleaseContributor,
 } from './model/contributor.schema'
+export {
+  AUDIO_ACCEPT,
+  audioFileProblem,
+  COVER_ACCEPT,
+  coverFileProblem,
+  formatBytes,
+  releaseAudioUrl,
+  releaseCoverUrl,
+  titleFromFileName,
+} from './model/media'
 export {
   type CreateReleaseValues,
   createReleaseSchema,

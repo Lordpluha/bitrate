@@ -1,6 +1,7 @@
 import { Button } from '@bitrate/ui-react'
 import {
   type ReleaseWorkspace,
+  releaseCoverUrl,
   releaseStatusLabels,
   releaseTypeLabels,
 } from '@entities/release'
@@ -10,7 +11,7 @@ import { Info, Music2 } from 'lucide-react'
 import { WorkspaceParticipants } from './WorkspaceParticipants'
 import { WorkspaceReadiness } from './WorkspaceReadiness'
 import { type RightsAction, WorkspaceRights } from './WorkspaceRights'
-import { WorkspaceTracks } from './WorkspaceTracks'
+import { type TrackActions, WorkspaceTracks } from './WorkspaceTracks'
 
 const formatter = new Intl.DateTimeFormat('en-US', {
   dateStyle: 'medium',
@@ -28,7 +29,8 @@ function stageLabel(index: number, draft: boolean, inReview: boolean) {
 interface ReleaseWorkspaceContentProps {
   artistId: string
   release: ReleaseWorkspace
-  onEditIsrc: (trackId: string) => void
+  trackActions: TrackActions
+  onCover: () => void
   onRightsAction: (action: RightsAction) => void
   onEdit: () => void
   onSchedule: () => void
@@ -39,7 +41,8 @@ interface ReleaseWorkspaceContentProps {
 export function ReleaseWorkspaceContent({
   artistId,
   release,
-  onEditIsrc,
+  trackActions,
+  onCover,
   onRightsAction,
   onEdit,
   onSchedule,
@@ -80,7 +83,7 @@ export function ReleaseWorkspaceContent({
               <img
                 alt={`${release.title} artwork`}
                 className="artist-release-cover"
-                src={release.cover}
+                src={releaseCoverUrl(release.cover)}
               />
             ) : (
               <div className="artist-release-cover artist-release-cover-placeholder">
@@ -112,7 +115,7 @@ export function ReleaseWorkspaceContent({
               </h3>
               <p className="artist-release-next-description">
                 {draft
-                  ? 'Update the details, confirm rights and submit for review.'
+                  ? 'Upload artwork and audio, confirm rights and submit for review.'
                   : 'This release is available to view.'}
               </p>
             </div>
@@ -174,8 +177,9 @@ export function ReleaseWorkspaceContent({
                 {draft ? 'Prepare the release details' : 'Release details'}
               </h3>
               <p>
-                Audio uploads, artwork editing and review feedback are coming
-                soon.
+                {draft
+                  ? 'Add the artwork and a master for every track, then confirm rights. Review feedback is coming soon.'
+                  : 'Review feedback is coming soon.'}
               </p>
               <p>
                 {release.isDemo
@@ -191,14 +195,14 @@ export function ReleaseWorkspaceContent({
         >
           <h2 id="release-preparation-heading">Preparation summary</h2>
           {draft && (
-            <Button
-              className="mt-3"
-              onClick={onSchedule}
-              size="sm"
-              variant="outline"
-            >
-              Edit schedule
-            </Button>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Button onClick={onCover} size="sm" variant="outline">
+                {release.cover ? 'Change artwork' : 'Upload artwork'}
+              </Button>
+              <Button onClick={onSchedule} size="sm" variant="outline">
+                Edit schedule
+              </Button>
+            </div>
           )}
           <dl>
             <div>
@@ -219,7 +223,7 @@ export function ReleaseWorkspaceContent({
             </div>
           </dl>
         </section>
-        <WorkspaceTracks onEditIsrc={onEditIsrc} release={release} />
+        <WorkspaceTracks actions={trackActions} release={release} />
         <WorkspaceRights onAction={onRightsAction} release={release} />
         <WorkspaceReadiness artistId={artistId} release={release} />
         <WorkspaceParticipants
