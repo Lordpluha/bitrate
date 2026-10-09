@@ -120,6 +120,16 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     return this.prisma.artistTrackDraft
   }
 
+  /** Gets the participants credited on releases. */
+  get releaseContributor() {
+    return this.prisma.releaseContributor
+  }
+
+  /** Gets the preparation tasks of releases. */
+  get releaseTask() {
+    return this.prisma.releaseTask
+  }
+
   /** Gets the playlist. */
   get playlist() {
     return this.prisma.playlist

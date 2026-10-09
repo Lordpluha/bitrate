@@ -12,6 +12,9 @@ export const RELEASE_ERRORS = {
   AUDIO_FILE_REQUIRED: 'errors.release.audio_file_required',
   AUDIO_TYPE_INVALID: 'errors.release.audio_type_invalid',
   AUDIO_NOT_FOUND: 'errors.release.audio_not_found',
+  TASK_NOT_FOUND: 'errors.release.task_not_found',
+  TASK_CHANGED: 'errors.release.task_changed',
+  TASK_ASSIGNEE_INVALID: 'errors.release.task_assignee_invalid',
 } as const
 
 /** Zod issue keys of the release DTOs, translated per request like built-in issues. */
