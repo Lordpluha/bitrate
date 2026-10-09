@@ -69,6 +69,10 @@ Grafana provisioning, not built by hand):
 | `redis-exporter.json` | [grafana.com/dashboards/763](https://grafana.com/grafana/dashboards/763/) | `redis-exporter` |
 | `node-exporter-full.json` | [grafana.com/dashboards/1860](https://grafana.com/grafana/dashboards/1860/) | `node-exporter` (host-level) |
 | `cadvisor.json` | [grafana.com/dashboards/14282](https://grafana.com/grafana/dashboards/14282/) | `cadvisor` (per-container) |
+| `k6-load-test.json` | Hand-written ([ADR-0060](../../apps/docs/docs/architecture/0060-on-demand-load-testing.md)) | k6 results, pushed by `task load:run` through remote write, next to the API under test |
+
+Prometheus runs with `--web.enable-remote-write-receiver` so k6 can push into it; see
+`infra/load/README.md`.
 
 Every file has its original `${DS_PROMETHEUS}`-style datasource placeholder rewritten to the
 literal string `prometheus` at vendoring time (three different spellings across the five

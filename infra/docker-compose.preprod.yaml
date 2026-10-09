@@ -403,6 +403,9 @@ services:
     command:
       - --config.file=/etc/prometheus/prometheus.yml
       - --storage.tsdb.retention.time=15d
+      # k6 pushes its results here during `task load:run` (ADR-0060). Reachable only on this
+      # compose network and the 127.0.0.1 port below, like the rest of this Prometheus.
+      - --web.enable-remote-write-receiver
     volumes:
       - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus

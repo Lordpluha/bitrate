@@ -25,6 +25,8 @@ vars:
   DC_PROD: docker compose --env-file .env -f infra/docker-compose.prod.yaml
   # Infrastructure only — no application containers. Used by `infra:*`.
   DC_INFRA: docker compose -f infra/docker-compose.dev.yaml
+  # Load-test stand and k6 runner (ADR-0060). Joins the infra and observability networks above.
+  DC_LOAD: docker compose -f infra/docker-compose.loadtest.yaml
 
 tasks:
   # ─────────────────────────────────────────
@@ -290,6 +292,51 @@ tasks:
           {{.DC_DEV}} --profile observability logs -f
           prometheus grafana grafana-cloudflared postgres-exporter redis-exporter
           node-exporter cadvisor loki alloy
+
+  # ─────────────────────────────────────────
+  # Load testing — k6 against a production-built API. See ADR-0060 and infra/load/README.md.
+  # On demand only, never in CI. Needs `infra:up` (seeded) and `observability:up` running.
+  # ─────────────────────────────────────────
+  load:up:
+    desc: Build and start the load-test API (production image, 512M) on http://localhost:3110
+    cmds:
+      - cmd: '{{.DC_LOAD}} up -d --build --wait api'
+
+  load:down:
+    desc: Stop and remove the load-test API
+    cmds:
+      - cmd: '{{.DC_LOAD}} down'
+
+  load:run:
+    desc: 'Run a k6 profile against the load-test API: task load:run PROFILE=stress RATE=50'
+    vars:
+      PROFILE: '{{.PROFILE | default "smoke"}}'
+    cmds:
+      - cmd: mkdir -p infra/load/results
+      - cmd: >-
+          RUN_ID="$(date +%Y%m%d-%H%M%S)-{{.PROFILE}}" &&
+          {{.DC_LOAD}} --profile runner run --rm --service-ports --user "$(id -u):$(id -g)"
+          -e K6_WEB_DASHBOARD_EXPORT="results/$RUN_ID.html"
+          k6 run --out experimental-prometheus-rw --tag testid="$RUN_ID"
+          -e TARGET=local -e PROFILE={{.PROFILE}}
+          {{if .RATE}}-e RATE={{.RATE}}{{end}}
+          {{if .MAX_RATE}}-e MAX_RATE={{.MAX_RATE}}{{end}}
+          {{if .DURATION_SCALE}}-e DURATION_SCALE={{.DURATION_SCALE}}{{end}}
+          {{if .MAX_VUS}}-e MAX_VUS={{.MAX_VUS}}{{end}}
+          api.js
+
+  load:prod-smoke:
+    desc: Two minutes of anonymous reads at 1 req/s against api.bitrate.me — nothing heavier is allowed
+    prompt: Send read-only traffic (1 req/s for 2 minutes) to PRODUCTION api.bitrate.me?
+    cmds:
+      - cmd: mkdir -p infra/load/results
+      - cmd: >-
+          RUN_ID="$(date +%Y%m%d-%H%M%S)-prod-smoke" &&
+          {{.DC_LOAD}} --profile runner run --rm --service-ports --user "$(id -u):$(id -g)"
+          -e K6_WEB_DASHBOARD_EXPORT="results/$RUN_ID.html"
+          k6 run --out experimental-prometheus-rw --tag testid="$RUN_ID"
+          -e TARGET=prod -e PROFILE=prod-smoke
+          api.js
 
   # ─────────────────────────────────────────
   # Production

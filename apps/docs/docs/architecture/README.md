@@ -61,6 +61,7 @@ how to apply it day to day.
 | [0057](./0057-owned-release-contributor-addition.md) | Adding participant credits with unique roles and transactional draft version checks |
 | [0058](./0058-owned-release-contributor-editing.md) | Correcting participant names/roles while preserving identity, account links and splits |
 | [0059](./0059-release-rights-and-review-submission.md) | Rights confirmation, splits, optional UPC/ISRC, readiness and review submission/withdrawal |
+| [0060](./0060-on-demand-load-testing.md) | On-demand load testing against a production-built API |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.

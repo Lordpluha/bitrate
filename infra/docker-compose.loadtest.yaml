@@ -1,0 +1,98 @@
+# Load-test stand (ADR-0060): a production-built API under production memory limits, attached to
+# the infrastructure a developer already runs, plus the k6 runner. See infra/load/README.md.
+#
+# It brings up no database of its own. It joins two networks owned by other compose projects:
+#   - `infra_default`         — `task infra:up` (postgres, redis, seaweedfs), already seeded with
+#                               `task db:seed:native`;
+#   - `infra_bitrate-network` — `task observability:up`, where this API takes the `api` alias, so the
+#                               existing Prometheus job `bitrate-api` scrapes it with no config change
+#                               and k6 remote-writes into the same Prometheus.
+# Both must exist before `task load:up`; compose refuses to start against a missing external network.
+#
+# The load test writes listening history into that same development database. That is the point of
+# reusing it (a seeded catalogue and its audio objects), and it is why nothing here may ever point
+# at a production database.
+
+name: bitrate-loadtest
+
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: ./apps/api/Dockerfile
+      target: production
+      args:
+        - NODE_ENV=production
+    image: bitrate-api:loadtest
+    container_name: bitrate-api-loadtest
+    restart: "no"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-admin}:${POSTGRES_PASSWORD:-admin}@postgres:5432/${POSTGRES_DB:-bitrate}
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      WEB_HOST: http://localhost:3001
+      ARTIST_WEB_HOST: http://localhost:3004
+      # Production refuses to boot without SMTP. Nodemailer connects only when a mail is sent, and
+      # no profile registers or resets a password, so an address that answers nothing is enough.
+      SMTP_HOST: smtp.invalid
+      EMAIL_FROM: no-reply@bitrate.local
+      JWT_SECRET: ${JWT_SECRET:-change_me_in_production_secret}
+      # The run logs in once in setup() and reuses that cookie for the whole test. The 5m default
+      # turned every request after minute five into a 401 in the suite ADR-0030 removed.
+      JWT_ACCESS_EXPIRES_IN: 6h
+      # Lifts only the global throttler. Per-route @Throttle ceilings and AUTH_ROUTE_THROTTLE stay
+      # as in production; k6 instead gives every virtual user its own client address (below).
+      API_RATE_LIMIT_MAX: "1000000"
+      # One trusted hop makes Express read the client address from X-Forwarded-For, which k6 sets
+      # per virtual user. Production gets the same hop from nginx, which overwrites the header, so
+      # this models many real listeners without loosening anything in production.
+      TRUST_PROXY_HOPS: "1"
+      METRICS_TOKEN: dev-metrics-token-local-only-0001
+      S3_ENDPOINT: http://seaweedfs:8333
+      S3_BUCKET: ${S3_BUCKET:-bitrate-audio}
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY:-bitrateDevAccessKey}
+      S3_SECRET_KEY: ${S3_SECRET_KEY:-bitrateDevSecretKeyChangeMe0001}
+      S3_FORCE_PATH_STYLE: "true"
+      # The stand measures request serving, not transcoding.
+      AUDIO_PROCESSING_WORKER_ENABLED: "false"
+    ports:
+      - "127.0.0.1:${LOADTEST_API_PORT:-3110}:3000"
+    # Memory matches infra/docker-compose.prod.yaml's api limit. Production sets no CPU limit, so
+    # this one stands in for the production host's share: set it to that host's vCPU count.
+    cpus: ${LOADTEST_API_CPUS:-2}
+    mem_limit: 512m
+    networks:
+      infra:
+      observability:
+        aliases:
+          - api
+
+  # One-shot runner, started by `task load:run` / `task load:prod-smoke` with `run --rm`.
+  k6:
+    image: grafana/k6:2.2.0
+    profiles:
+      - runner
+    working_dir: /load
+    volumes:
+      - ./load:/load
+    environment:
+      K6_PROMETHEUS_RW_SERVER_URL: http://prometheus:9090/api/v1/write
+      K6_PROMETHEUS_RW_TREND_STATS: p(50),p(95),p(99),max
+      K6_PROMETHEUS_RW_STALE_MARKERS: "true"
+      K6_WEB_DASHBOARD: "true"
+      K6_WEB_DASHBOARD_PORT: "5665"
+    ports:
+      - "127.0.0.1:${K6_DASHBOARD_PORT:-5665}:5665"
+    networks:
+      - observability
+
+networks:
+  infra:
+    external: true
+    name: infra_default
+  observability:
+    external: true
+    name: infra_bitrate-network
