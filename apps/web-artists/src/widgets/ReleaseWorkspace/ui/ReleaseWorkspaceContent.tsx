@@ -12,6 +12,7 @@ import type { ReactNode } from 'react'
 import { WorkspaceParticipants } from './WorkspaceParticipants'
 import { WorkspaceReadiness } from './WorkspaceReadiness'
 import { type RightsAction, WorkspaceRights } from './WorkspaceRights'
+import { WorkspaceRoadmap } from './WorkspaceRoadmap'
 import { type TrackActions, WorkspaceTracks } from './WorkspaceTracks'
 
 const formatter = new Intl.DateTimeFormat('en-US', {
@@ -21,9 +22,16 @@ const formatter = new Intl.DateTimeFormat('en-US', {
 })
 const date = (value: string) => formatter.format(new Date(value))
 
-function stageLabel(index: number, draft: boolean, inReview: boolean) {
-  if (index === 0) return draft ? 'Current' : 'Saved'
-  if (index === 1) return inReview ? 'Current' : 'Next'
+type Status = ReleaseWorkspace['status']
+
+/** Macro stages; the roadmap panel breaks Draft down into its preparation steps. */
+function stageLabel(index: number, status: Status) {
+  if (index === 0) return status === 'DRAFT' ? 'Current' : 'Done'
+  if (index === 1) {
+    if (status === 'SUBMITTED' || status === 'REJECTED') return 'Current'
+    return status === 'READY' || status === 'RELEASED' ? 'Done' : 'Next'
+  }
+  if (status === 'RELEASED') return 'Done'
   return 'Coming soon'
 }
 
@@ -54,7 +62,6 @@ export function ReleaseWorkspaceContent({
   children,
 }: ReleaseWorkspaceContentProps) {
   const draft = release.status === 'DRAFT'
-  const inReview = release.status === 'SUBMITTED'
   return (
     <>
       <header className="artist-release-page-heading">
@@ -153,7 +160,7 @@ export function ReleaseWorkspaceContent({
               (stage, index) => (
                 <li
                   aria-current={
-                    (index === 0 && draft) || (index === 1 && inReview)
+                    stageLabel(index, release.status) === 'Current'
                       ? 'step'
                       : undefined
                   }
@@ -163,7 +170,7 @@ export function ReleaseWorkspaceContent({
                     {index + 1}
                   </span>
                   <span>{stage}</span>
-                  <small>{stageLabel(index, draft, inReview)}</small>
+                  <small>{stageLabel(index, release.status)}</small>
                 </li>
               ),
             )}
@@ -227,6 +234,7 @@ export function ReleaseWorkspaceContent({
             </div>
           </dl>
         </section>
+        <WorkspaceRoadmap release={release} />
         <WorkspaceTracks actions={trackActions} release={release} />
         <WorkspaceRights onAction={onRightsAction} release={release} />
         <WorkspaceReadiness artistId={artistId} release={release} />

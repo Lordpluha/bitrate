@@ -56,6 +56,12 @@ export {
   rightTypes,
 } from './model/rights'
 export {
+  type RoadmapState,
+  type RoadmapStep,
+  releaseRoadmap,
+  roadmapProgress,
+} from './model/roadmap'
+export {
   participantRoleLabels,
   type ReleaseWorkspace,
 } from './model/workspace.schema'
