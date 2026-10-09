@@ -57,7 +57,6 @@ export {
 } from './model/rights'
 export {
   type RoadmapState,
-  type RoadmapStep,
   releaseRoadmap,
   roadmapProgress,
 } from './model/roadmap'

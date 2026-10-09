@@ -2,7 +2,7 @@ import type { ReleaseWorkspace } from './workspace.schema'
 
 export type RoadmapState = 'done' | 'current' | 'todo' | 'later'
 
-export interface RoadmapStep {
+interface RoadmapStep {
   key:
     | 'details'
     | 'artwork'

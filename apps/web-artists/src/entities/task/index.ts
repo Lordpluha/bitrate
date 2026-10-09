@@ -6,8 +6,6 @@ export {
   useUpdateTask,
 } from './api/useTasks'
 export {
-  type ArtistTask,
-  type ArtistTaskPage,
   dueDateToInstant,
   formatDue,
   instantToDueDate,

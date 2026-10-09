@@ -21,4 +21,6 @@ export const RELEASE_ERRORS = {
 export const RELEASE_VALIDATION = {
   ISRC_INVALID: 'validation.release.isrc_invalid',
   UPDATE_EMPTY: 'validation.release.update_empty',
+  COUNTRY_CODE_INVALID: 'validation.release.country_code_invalid',
+  DUPLICATE_ITEMS: 'validation.release.duplicate_items',
 } as const

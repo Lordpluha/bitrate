@@ -1,8 +1,8 @@
 import { apiBaseUrl } from '@shared/api'
 
 /** Mirrors the API limits so oversized or unsupported files are refused before uploading. */
-export const MAX_COVER_BYTES = 20 * 1024 * 1024
-export const MAX_AUDIO_BYTES = 512 * 1024 * 1024
+const MAX_COVER_BYTES = 20 * 1024 * 1024
+const MAX_AUDIO_BYTES = 512 * 1024 * 1024
 
 export const COVER_ACCEPT = 'image/jpeg,image/png,image/webp'
 const COVER_TYPES = new Set(COVER_ACCEPT.split(','))

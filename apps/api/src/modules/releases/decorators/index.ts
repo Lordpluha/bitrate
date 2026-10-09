@@ -1,10 +1,16 @@
 export { AddReleaseContributorSwagger } from './add-release-contributor.swagger'
+export { ArtistDashboardSwagger } from './artist-dashboard.swagger'
 export { CreateReleaseSwagger } from './create-release.swagger'
 export { ListReleasesSwagger } from './list-releases.swagger'
 export {
   ReleaseContributorSwagger,
   UpdateReleaseContributorSwagger,
 } from './release-contributor.swagger'
+export {
+  ListDistributionSwagger,
+  ReleaseDeliverySwagger,
+  UpdateDeliveryPlanSwagger,
+} from './release-delivery.swagger'
 export { ReleaseDetailSwagger } from './release-detail.swagger'
 export {
   ReleaseTrackAudioSwagger,
