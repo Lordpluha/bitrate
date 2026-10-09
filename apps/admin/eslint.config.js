@@ -51,6 +51,18 @@ module.exports = tseslint.config(
         'error',
         { varsIgnorePattern: '^_', argsIgnorePattern: '^_' },
       ],
+      /**
+       * `import { z } from 'zod'` binds zod's re-exported namespace *object*, which esbuild must
+       * materialise whole — every locale included — and it pulled ~260 kB into the initial bundle.
+       * `import * as z` keeps member access static, so unused schemas and locales tree-shake away.
+       */
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "ImportDeclaration[source.value='zod'] > ImportSpecifier[imported.name='z']",
+          message: "Use `import * as z from 'zod'` — the named `z` export defeats tree-shaking.",
+        },
+      ],
     },
   },
   {
