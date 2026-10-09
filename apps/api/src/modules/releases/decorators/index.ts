@@ -1,4 +1,5 @@
 export { AddReleaseContributorSwagger } from './add-release-contributor.swagger'
+export { ArtistAnalyticsSwagger } from './artist-analytics.swagger'
 export { ArtistDashboardSwagger } from './artist-dashboard.swagger'
 export {
   ListArtistNotificationsSwagger,

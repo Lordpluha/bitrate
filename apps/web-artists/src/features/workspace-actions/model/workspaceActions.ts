@@ -5,7 +5,6 @@ export type WorkspaceAction =
   | 'notifications'
   | 'create-release'
   | 'promotion'
-  | 'analytics'
   | 'support'
   | 'account'
   | 'upload-track'
@@ -34,11 +33,6 @@ export const workspaceNotices = {
     title: 'Promotion',
     description:
       'Promotion tools are coming soon. Campaigns and paid promotion are not available yet.',
-  },
-  analytics: {
-    title: 'Analytics',
-    description:
-      'Analytics is coming soon. Listening and performance data will appear when a data provider is connected.',
   },
   support: {
     title: 'Help & support',

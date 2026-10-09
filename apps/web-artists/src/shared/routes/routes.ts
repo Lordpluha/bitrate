@@ -11,6 +11,7 @@ export const ROUTES = {
     music: '/dashboard/music',
     tasks: '/dashboard/tasks',
     distribution: '/dashboard/distribution',
+    analytics: '/dashboard/analytics',
     profile: '/dashboard/profile',
     settings: '/dashboard/settings',
   },

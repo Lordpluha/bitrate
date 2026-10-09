@@ -17,6 +17,7 @@ import { Route as RegistrationRouteImport } from './routes/registration'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
+import { Route as DashboardAnalyticsRouteImport } from './routes/dashboard.analytics'
 import { Route as DashboardDistributionRouteImport } from './routes/dashboard.distribution'
 import { Route as DashboardMusicRouteImport } from './routes/dashboard.music'
 import { Route as DashboardProfileRouteImport } from './routes/dashboard.profile'
@@ -65,6 +66,11 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardAnalyticsRoute = DashboardAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardDistributionRoute = DashboardDistributionRouteImport.update({
   id: '/distribution',
   path: '/distribution',
@@ -109,6 +115,7 @@ export interface FileRoutesByFullPath {
   '/registration': typeof RegistrationRoute
   '/reset-password': typeof ResetPasswordRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/dashboard/analytics': typeof DashboardAnalyticsRoute
   '/dashboard/distribution': typeof DashboardDistributionRoute
   '/dashboard/music': typeof DashboardMusicRoute
   '/dashboard/profile': typeof DashboardProfileRoute
@@ -125,6 +132,7 @@ export interface FileRoutesByTo {
   '/registration': typeof RegistrationRoute
   '/reset-password': typeof ResetPasswordRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/dashboard/analytics': typeof DashboardAnalyticsRoute
   '/dashboard/distribution': typeof DashboardDistributionRoute
   '/dashboard/music': typeof DashboardMusicRoute
   '/dashboard/profile': typeof DashboardProfileRoute
@@ -143,6 +151,7 @@ export interface FileRoutesById {
   '/registration': typeof RegistrationRoute
   '/reset-password': typeof ResetPasswordRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/dashboard/analytics': typeof DashboardAnalyticsRoute
   '/dashboard/distribution': typeof DashboardDistributionRoute
   '/dashboard/music': typeof DashboardMusicRoute
   '/dashboard/profile': typeof DashboardProfileRoute
@@ -162,6 +171,7 @@ export interface FileRouteTypes {
     | '/registration'
     | '/reset-password'
     | '/verify-email'
+    | '/dashboard/analytics'
     | '/dashboard/distribution'
     | '/dashboard/music'
     | '/dashboard/profile'
@@ -178,6 +188,7 @@ export interface FileRouteTypes {
     | '/registration'
     | '/reset-password'
     | '/verify-email'
+    | '/dashboard/analytics'
     | '/dashboard/distribution'
     | '/dashboard/music'
     | '/dashboard/profile'
@@ -195,6 +206,7 @@ export interface FileRouteTypes {
     | '/registration'
     | '/reset-password'
     | '/verify-email'
+    | '/dashboard/analytics'
     | '/dashboard/distribution'
     | '/dashboard/music'
     | '/dashboard/profile'
@@ -274,6 +286,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/analytics': {
+      id: '/dashboard/analytics'
+      path: '/analytics'
+      fullPath: '/dashboard/analytics'
+      preLoaderRoute: typeof DashboardAnalyticsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/distribution': {
       id: '/dashboard/distribution'
       path: '/distribution'
@@ -327,6 +346,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface DashboardRouteChildren {
+  DashboardAnalyticsRoute: typeof DashboardAnalyticsRoute
   DashboardDistributionRoute: typeof DashboardDistributionRoute
   DashboardMusicRoute: typeof DashboardMusicRoute
   DashboardProfileRoute: typeof DashboardProfileRoute
@@ -337,6 +357,7 @@ interface DashboardRouteChildren {
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardAnalyticsRoute: DashboardAnalyticsRoute,
   DashboardDistributionRoute: DashboardDistributionRoute,
   DashboardMusicRoute: DashboardMusicRoute,
   DashboardProfileRoute: DashboardProfileRoute,

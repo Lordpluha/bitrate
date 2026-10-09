@@ -2,6 +2,8 @@ import { PrismaModule } from '@infra/prisma/prisma.module'
 import { StorageCoreModule } from '@infra/storage/storage-core.module'
 import { TokensModule } from '@modules/tokens/tokens.module'
 import { Module } from '@nestjs/common'
+import { ArtistAnalyticsController } from './artist-analytics.controller'
+import { ArtistAnalyticsService } from './artist-analytics.service'
 import { ArtistDashboardController } from './artist-dashboard.controller'
 import { ArtistDashboardService } from './artist-dashboard.service'
 import { ArtistMusicController } from './artist-music.controller'
@@ -36,6 +38,7 @@ import { ReleasesService } from './releases.service'
     DistributionController,
     ArtistSearchController,
     ArtistNotificationsController,
+    ArtistAnalyticsController,
   ],
   providers: [
     ReleasesService,
@@ -46,6 +49,7 @@ import { ReleasesService } from './releases.service'
     ReleaseDeliveryService,
     ArtistSearchService,
     ArtistNotificationsService,
+    ArtistAnalyticsService,
     // Replace with the partner's client once a distribution partner is confirmed (#248).
     { provide: DISTRIBUTION_ADAPTER, useClass: NotConnectedDistributionAdapter },
   ],
