@@ -164,6 +164,7 @@ model Staff {
   role      Role           @relation(fields: [roleId], references: [id])
   sessions  StaffSession[]
   auditLogs AuditLog[]
+  releaseReviews ReleaseReview[]
 
   @@index([email])
   @@index([deletedAt])
@@ -635,6 +636,30 @@ model ArtistNotificationState {
   artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
 }
 
+enum ReleaseReviewDecision {
+  APPROVED
+  CHANGES_REQUESTED
+}
+
+// One Bitrate review decision on a submitted release, kept as history. A decision moves the
+// release SUBMITTED -> READY (approved) or SUBMITTED -> REJECTED (changes requested).
+model ReleaseReview {
+  id              String                @id @default(uuid(7)) @db.Uuid
+  releaseId       String                @db.Uuid
+  staffId         String?               @db.Uuid
+  decision        ReleaseReviewDecision
+  message         String?
+  requiredChanges String[]              @default([])
+  recommendations String[]              @default([])
+  createdAt       DateTime              @default(now())
+
+  release Release @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+  staff   Staff?  @relation(fields: [staffId], references: [id], onDelete: SetNull)
+
+  @@index([releaseId, createdAt(sort: Desc)])
+  @@index([staffId])
+}
+
 enum ReleaseTaskStatus {
   TODO
   IN_PROGRESS
@@ -697,6 +722,7 @@ model Release {
   tasks        ReleaseTask[]
   destinations ReleaseDestination[]
   deliveries   ReleaseDelivery[]
+  reviews      ReleaseReview[]
 
   @@index([ownerArtistId, deletedAt, createdAt(sort: Desc)])
   @@unique([id, ownerArtistId])

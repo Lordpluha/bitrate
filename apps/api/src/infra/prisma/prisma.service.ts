@@ -140,6 +140,11 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     return this.prisma.releaseDelivery
   }
 
+  /** Gets Bitrate review decisions on submitted releases. */
+  get releaseReview() {
+    return this.prisma.releaseReview
+  }
+
   /** Gets when each artist last opened the notification center. */
   get artistNotificationState() {
     return this.prisma.artistNotificationState

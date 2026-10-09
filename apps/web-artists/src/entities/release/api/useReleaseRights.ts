@@ -1,6 +1,7 @@
 import { artistMusicKeys } from '@shared/api/artistMusicKeys'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
+  reviseRelease,
   saveRights,
   saveSplits,
   saveTrackIsrc,
@@ -34,3 +35,5 @@ export const useSubmitRelease = (artistId: string) =>
   useReleaseWrite(artistId, submitRelease)
 export const useWithdrawRelease = (artistId: string) =>
   useReleaseWrite(artistId, withdrawRelease)
+export const useReviseRelease = (artistId: string) =>
+  useReleaseWrite(artistId, reviseRelease)

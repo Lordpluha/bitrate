@@ -47,6 +47,8 @@ const TO_DOMAIN_PERMISSION = {
   'podcasts:read': 'podcasts:read',
   'podcasts:delete': 'podcasts:delete',
   'podcasts:restore': 'podcasts:restore',
+  'releases:read': 'releases:read',
+  'releases:review': 'releases:review',
 } as const satisfies Record<StaffMemberWirePermission, Permission>
 
 /** See `artist.mapper.ts`'s `TO_WIRE_SORT`. */
