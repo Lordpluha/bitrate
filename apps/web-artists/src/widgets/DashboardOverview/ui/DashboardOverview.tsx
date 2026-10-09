@@ -313,9 +313,16 @@ function Analytics() {
         <BarChart3 aria-hidden="true" className="size-5 text-accent" />
       </div>
       <p className="mt-3 text-sm text-text-secondary">
-        No data yet. Listening analytics appear after your first release is
-        published on Bitrate.
+        Plays and listeners on Bitrate, with external services shown as not
+        connected rather than zero.
       </p>
+      <Link
+        className="mt-3 inline-block text-sm underline"
+        search={{ days: 28 }}
+        to={ROUTES.dashboard.analytics}
+      >
+        Open analytics
+      </Link>
     </section>
   )
 }

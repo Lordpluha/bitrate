@@ -16,7 +16,11 @@ const sections = [
   { label: 'Dashboard', to: ROUTES.dashboard.home, icon: LayoutDashboard },
   { label: 'Music', to: ROUTES.dashboard.music, icon: Music2 },
   { label: 'Promotion', action: 'promotion', icon: Megaphone },
-  { label: 'Analytics', action: 'analytics', icon: ChartNoAxesCombined },
+  {
+    label: 'Analytics',
+    to: ROUTES.dashboard.analytics,
+    icon: ChartNoAxesCombined,
+  },
   { label: 'Profile', to: ROUTES.dashboard.profile, icon: UserRound },
   { label: 'Settings', to: ROUTES.dashboard.settings, icon: Settings2 },
 ] as const

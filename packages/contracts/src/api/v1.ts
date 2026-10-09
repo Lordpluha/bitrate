@@ -2322,6 +2322,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/artist-analytics': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Bitrate listening analytics for the artist's tracks
+     * @description Plays and listeners from Bitrate playback only, per UTC day, with the previous period for comparison. External services read NOT_CONNECTED.
+     */
+    get: operations['ArtistAnalyticsController_overview_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/artist-profile': {
     parameters: {
       query?: never
@@ -5243,6 +5263,64 @@ export interface components {
     ArtistNotificationsSeenEntity: {
       /** Format: date-time */
       seenAt: string
+    }
+    /**
+     * @description NO_DATA_YET means nothing was ever played, which is not an observed zero
+     * @enum {string}
+     */
+    ArtistAnalyticsState: 'NO_TRACKS' | 'NO_DATA_YET' | 'READY'
+    AnalyticsPeriodEntity: {
+      /**
+       * Format: date-time
+       * @description Start of the first UTC day
+       */
+      from: string
+      /** Format: date-time */
+      to: string
+      /** @enum {number} */
+      days: 7 | 28 | 90
+      /** @enum {string} */
+      timezone: 'UTC'
+    }
+    AnalyticsTotalsEntity: {
+      plays: number
+      /** @description Distinct signed-in listeners */
+      listeners: number
+    }
+    AnalyticsDayEntity: {
+      /** @example 2026-10-09 */
+      date: string
+      /** @description An observed zero when no one played that day */
+      plays: number
+    }
+    AnalyticsTopTrackEntity: {
+      /** Format: uuid */
+      trackId: string
+      title: string
+      plays: number
+      listeners: number
+    }
+    AnalyticsExternalSourceEntity: {
+      /** @enum {string} */
+      source: 'SPOTIFY' | 'APPLE_MUSIC' | 'YOUTUBE_MUSIC'
+      /** @enum {string} */
+      state: 'NOT_CONNECTED'
+    }
+    ArtistAnalyticsEntity: {
+      /** @description NO_DATA_YET means nothing was ever played, which is not an observed zero */
+      state: components['schemas']['ArtistAnalyticsState']
+      period: components['schemas']['AnalyticsPeriodEntity']
+      /**
+       * Format: date-time
+       * @description When the data was read
+       */
+      freshness: string
+      totals: components['schemas']['AnalyticsTotalsEntity'] | null
+      /** @description The period before */
+      previous: components['schemas']['AnalyticsTotalsEntity'] | null
+      daily: components['schemas']['AnalyticsDayEntity'][]
+      topTracks: components['schemas']['AnalyticsTopTrackEntity'][]
+      external: components['schemas']['AnalyticsExternalSourceEntity'][]
     }
     ArtistSocialLinksEntity: {
       /** Format: uri */
@@ -28511,6 +28589,149 @@ export interface operations {
           [name: string]: unknown
         }
         content?: never
+      }
+    }
+  }
+  ArtistAnalyticsController_overview_v1: {
+    parameters: {
+      query?: {
+        days?: 7 | 28 | 90
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ArtistAnalyticsEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+          }
+        }
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
       }
     }
   }
