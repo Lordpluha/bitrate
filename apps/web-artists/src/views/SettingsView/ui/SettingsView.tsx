@@ -5,6 +5,7 @@ import {
   usePasswordResetEmail,
 } from '@entities/artist-account'
 import {
+  ActiveSessionsSection,
   DeleteAccountSection,
   TwoFactorSection,
 } from '@features/account-security'
@@ -138,6 +139,7 @@ function SettingsSections({
             {reset.isPending ? 'Sending…' : 'Send reset link'}
           </Button>
         </div>
+        <ActiveSessionsSection artistId={artistId} />
       </Panel>
       <Panel id="settings-appearance-heading" title="Appearance">
         <ThemeSwitcher />

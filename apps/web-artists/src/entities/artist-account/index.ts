@@ -11,6 +11,11 @@ export {
   useTwoFactorToggle,
 } from './api/security'
 export {
+  useArtistSessions,
+  useRevokeOtherSessions,
+  useRevokeSession,
+} from './api/sessions'
+export {
   type ArtistProfile,
   type ProfileFormValues,
   profileFormDefaults,
@@ -18,3 +23,4 @@ export {
   socialLinkKeys,
   socialLinkLabels,
 } from './model/profile.schema'
+export { type ArtistSession, describeSessionDevice } from './model/session'
