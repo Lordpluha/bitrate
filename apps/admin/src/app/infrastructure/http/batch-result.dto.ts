@@ -1,5 +1,5 @@
 import type { ApiSchemas } from '@bitrate/contracts'
-import { z } from 'zod'
+import * as z from 'zod'
 import type { BatchResult } from '@domain/shared'
 import { contractEnum } from './contract-union'
 
