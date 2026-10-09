@@ -1,4 +1,5 @@
 import { Button } from '@bitrate/ui-react'
+import { useNotifications } from '@entities/notification'
 import {
   CreateReleaseButton,
   useWorkspaceActions,
@@ -7,8 +8,9 @@ import { ROUTES } from '@shared/routes/routes'
 import { Link, useLocation } from '@tanstack/react-router'
 import { Bell, Search } from 'lucide-react'
 
-export function DashboardCommands() {
+export function DashboardCommands({ artistId }: { artistId: string }) {
   const { openAction } = useWorkspaceActions()
+  const unread = useNotifications(artistId).data?.unread ?? 0
   const releaseWorkspace = useLocation({
     select: (location) =>
       location.pathname.startsWith(`${ROUTES.dashboard.music}/`),
@@ -30,13 +32,21 @@ export function DashboardCommands() {
         </kbd>
       </Button>
       <Button
-        aria-label="Notifications"
-        className="size-11 shrink-0 rounded-lg bg-secondary text-text-secondary"
+        aria-label={
+          unread > 0 ? `Notifications, ${unread} unread` : 'Notifications'
+        }
+        className="relative size-11 shrink-0 rounded-lg bg-secondary text-text-secondary"
         onClick={() => openAction('notifications')}
         size="icon"
         variant="ghost"
       >
         <Bell aria-hidden="true" className="size-5" />
+        {unread > 0 && (
+          <span
+            aria-hidden="true"
+            className="absolute right-2 top-2 size-2 rounded-full bg-accent"
+          />
+        )}
       </Button>
       {releaseWorkspace ? (
         <Button

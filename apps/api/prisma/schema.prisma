@@ -410,6 +410,7 @@ model Artist {
   trackCredits TrackArtist[]
   albums       Album[]
   releases     Release[] @relation("ReleaseOwner")
+  notificationState ArtistNotificationState?
   trackDrafts  ArtistTrackDraft[]
   releaseCredits ReleaseContributor[]
   genres       ArtistGenre[]
@@ -623,6 +624,15 @@ model ReleaseDelivery {
 
   @@id([releaseId, destination])
   @@index([state])
+}
+
+// When the artist last opened the notification center; later notifications read as unread.
+// Kept apart from Artist so the public artist shape is unchanged.
+model ArtistNotificationState {
+  artistId String   @id @db.Uuid
+  seenAt   DateTime @db.Timestamptz(3)
+
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
 }
 
 enum ReleaseTaskStatus {

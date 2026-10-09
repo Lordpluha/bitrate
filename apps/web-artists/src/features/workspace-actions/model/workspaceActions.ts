@@ -28,8 +28,7 @@ export const workspaceNotices = {
   },
   notifications: {
     title: 'Notifications',
-    description:
-      'The notification center is coming soon. No notifications are available in this workspace yet.',
+    description: 'Deadlines, review results and delivery updates.',
   },
   promotion: {
     title: 'Promotion',
