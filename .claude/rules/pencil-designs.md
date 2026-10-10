@@ -28,3 +28,12 @@ paths:
   `node scripts/bind-pen-colors.mjs <file.pen>` migrates a design that breaks it.
 - `.pen` files are edited through the Pencil MCP while open in the editor. After changing a
   `.pen` on disk, reload the editor window before further MCP edits, or it saves its stale copy.
+- Every design draws all reachable screen states, not just the populated default: default,
+  loading, empty, error and not-found/unavailable, plus the screen's own restricted, offline,
+  validation/submission, overlay and selection states — for desktop and mobile. A state that
+  cannot occur is omitted on purpose and the reason is noted in the frame's `context`.
+  Full list: `apps/docs/docs/brand/design.md` § 21 "Screen states".
+- Designs invent nothing. Every visible element is an instance of a library component (`ds:`);
+  a page adds only layout-only frames (no fill, stroke, effect or corner radius of their own)
+  and content overrides (text, cover images). Never draw a chip, row, card, skeleton, panel or
+  text style locally — if the library lacks it, add it to the library as a component first.
