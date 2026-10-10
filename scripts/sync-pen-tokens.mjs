@@ -16,7 +16,8 @@
  * Every design under pencil/ follows one rule: ONE palette, THREE themes (Dark, Light, Dim). A
  * design imports the library as `ds`, paints only with its variables, and defines no colour
  * variables of its own — a file-local palette is a second palette. `scripts/bind-pen-colors.mjs`
- * migrates a design that breaks the rule.
+ * migrates a design that breaks the rule. Screens are assembled, not drawn: outside the library a
+ * design holds only library instances, layout-only frames and content overrides.
  *
  * Only semantic roles and the palette are exported — component roles (`themes/components/*`) stay
  * in code, as in shadcn. Non-colour library variables (spacing, radius, fonts) are design-owned
@@ -29,6 +30,34 @@ const ROOT = join(dirname(new URL(import.meta.url).pathname), '..')
 const THEMES_ENTRY = join(ROOT, 'packages/tailwind/src/themes.css')
 const LIBRARY = join(ROOT, 'pencil/web-player-design/design-system/bitrate.lib.pen')
 const DESIGNS = join(ROOT, 'pencil')
+/**
+ * Designs drawn before the "assembled from library components only" rule. They are reported as
+ * warnings until they are rebuilt from library instances; every other design must comply.
+ */
+const LEGACY = [/^pencil\/web-artist/, /^pencil\/web-player-design\/(landing|player|archive)\//]
+const SHAPES = new Set(['text', 'icon', 'rectangle', 'ellipse', 'path', 'polygon', 'line'])
+const VISUAL = ['fill', 'stroke', 'effect', 'cornerRadius']
+
+/** Counts elements a screen draws itself instead of instancing a library component. */
+function localElements(doc) {
+  let count = 0
+  const visit = (node, top) => {
+    if (Array.isArray(node)) {
+      for (const n of node) visit(n, false)
+      return
+    }
+    if (!node || typeof node !== 'object') return
+    if (node.type === 'ref') {
+      for (const v of Object.values(node.descendants ?? {})) if (v?.type) visit(v, false)
+      return
+    }
+    if (SHAPES.has(node.type)) count++
+    else if (!top && VISUAL.some((k) => k in node)) count++
+    for (const c of node.children ?? []) visit(c, false)
+  }
+  for (const t of doc.children) visit(t, true)
+  return count
+}
 const LIBRARY_ALIAS = 'ds'
 const THEMES = ['Dark', 'Light', 'Dim']
 const SELECTORS = { '@theme': 'Dark', ':root.light': 'Light', ':root.dim': 'Dim' }
@@ -259,7 +288,14 @@ function scanDesign(file, libraryNames, refPattern) {
   }
   for (const top of doc.children) visit(top, `${top.id} ${top.name ?? ''}`.trim())
   const ownColours = Object.entries(doc.variables ?? {}).filter(([, v]) => v.type === 'color')
-  return { hex, unknown, imports: doc.imports ?? {}, ownColours: ownColours.length, wrongAxis }
+  return {
+    hex,
+    unknown,
+    imports: doc.imports ?? {},
+    ownColours: ownColours.length,
+    wrongAxis,
+    local: localElements(doc),
+  }
 }
 
 /* ---------- main ---------- */
@@ -285,6 +321,7 @@ if (!check) {
 }
 
 const problems = []
+const warnings = []
 const drift = Object.keys(generated).filter(
   (k) => JSON.stringify(current[k]?.value) !== JSON.stringify(generated[k].value),
 )
@@ -301,7 +338,16 @@ for (const path of designs) {
   const pattern = isLibrary
     ? /^\$(--[a-z0-9-]+)$/
     : new RegExp(`^\\$${LIBRARY_ALIAS}:(--[a-z0-9-]+)$`)
-  const { hex, unknown, imports, ownColours, wrongAxis } = scanDesign(path, libraryNames, pattern)
+  const { hex, unknown, imports, ownColours, wrongAxis, local } = scanDesign(
+    path,
+    libraryNames,
+    pattern,
+  )
+  if (!isLibrary && local) {
+    const line = `${file}: ${local} element(s) drawn locally instead of instancing a library component`
+    if (LEGACY.some((r) => r.test(file))) warnings.push(line)
+    else problems.push(line)
+  }
   if (!isLibrary && wrongAxis)
     problems.push(
       `${file}: ${wrongAxis} theme(s) set on "Mode" — an importing file must use "ds:Mode"`,
@@ -316,6 +362,10 @@ for (const path of designs) {
     problems.push(`${file}: ${count} hardcoded hex colour(s) in "${frame}"`)
 }
 
+if (warnings.length)
+  console.warn(
+    `⚠ legacy designs to rebuild from library components:\n${warnings.map((w) => `  ${w}`).join('\n')}`,
+  )
 if (problems.length === 0) {
   console.log(
     `✅ pen tokens: library matches code; ${designs.length} designs use one palette, three themes`,
