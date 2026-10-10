@@ -1,0 +1,640 @@
+<title>Bitrate Signal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700;800&family=Poppins:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: seven full-viewport scenes stacked over one fixed WebGL stage; one gesture = one scene. */
+/* Bitrate code tokens — one palette, three themes (Dark default, Light, Dim). */
+:root {
+  --bg: #0b0d12; --card: #151923; --card-glass: rgba(21, 25, 35, .62); --fg: #ffffff; --muted: #9ca3af; --subdued: #6b7280;
+  --border: #2a303c; --primary: #7c3aed; --primary-fg: #ffffff; --accent: #a78bfa; --magenta: #ec4899; --blue: #3b82f6; --success: #10b981;
+  --grain: .07; --glow: rgba(124, 58, 237, .32);
+  --font-display: "Kanit", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-data: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  color-scheme: dark;
+}
+:root[data-bitrate="dim"] { --bg: #0e1117; --card: #171b24; --card-glass: rgba(23, 27, 36, .66); --fg: #e5e7eb; --muted: #a1a7b3; --border: #2b3242; --accent: #8b5cf6; --glow: rgba(139, 92, 246, .26); }
+:root[data-bitrate="light"] { --bg: #ffffff; --card: #ffffff; --card-glass: rgba(255, 255, 255, .7); --fg: #0b0d12; --muted: #4b5563; --subdued: #5f6a78; --border: #e5e7eb; --accent: #7c3aed; --grain: .035; --glow: rgba(124, 58, 237, .18); color-scheme: light; }
+@media (prefers-color-scheme: light) { :root:not([data-bitrate]):not([data-theme="dark"]) { --bg: #ffffff; --card: #ffffff; --card-glass: rgba(255, 255, 255, .7); --fg: #0b0d12; --muted: #4b5563; --subdued: #5f6a78; --border: #e5e7eb; --accent: #7c3aed; --grain: .035; --glow: rgba(124, 58, 237, .18); color-scheme: light; } }
+:root[data-theme="light"]:not([data-bitrate]) { --bg: #ffffff; --card: #ffffff; --card-glass: rgba(255, 255, 255, .7); --fg: #0b0d12; --muted: #4b5563; --subdued: #5f6a78; --border: #e5e7eb; --accent: #7c3aed; --grain: .035; --glow: rgba(124, 58, 237, .18); color-scheme: light; }
+
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.55; overflow: hidden; -webkit-font-smoothing: antialiased; }
+body.static { overflow: auto; }
+#stage { position: fixed; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
+.grain { position: fixed; inset: -50%; z-index: 3; pointer-events: none; opacity: var(--grain); background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); animation: grain 1.2s steps(6) infinite; }
+@keyframes grain { 0%{transform:translate(0,0)} 25%{transform:translate(-4%,3%)} 50%{transform:translate(3%,-2%)} 75%{transform:translate(-2%,-4%)} 100%{transform:translate(0,0)} }
+.cursor-glow { position: fixed; left: 0; top: 0; width: 520px; height: 520px; margin: -260px 0 0 -260px; border-radius: 50%; background: radial-gradient(circle, var(--glow), transparent 62%); pointer-events: none; z-index: 1; will-change: transform; }
+
+/* chrome */
+.top { position: fixed; inset: 0 0 auto 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: calc(env(safe-area-inset-top, 0px) + 18px) clamp(16px, 4vw, 48px) 18px; }
+.brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 600; font-size: 20px; letter-spacing: -.01em; color: var(--fg); text-decoration: none; }
+.mark { width: 30px; height: 30px; }
+.top-actions { display: flex; align-items: center; gap: 10px; }
+.themes { margin: 0; min-width: 0; display: flex; padding: 3px; border: 1px solid var(--border); border-radius: 999px; background: var(--card-glass); backdrop-filter: blur(8px); }
+.themes button { font: 500 12px/1 var(--font-body); color: var(--muted); background: none; border: 0; padding: 7px 11px; border-radius: 999px; cursor: pointer; }
+.themes button[aria-pressed="true"] { background: var(--primary); color: var(--primary-fg); }
+.btn { position: relative; display: inline-flex; align-items: center; gap: 10px; font: 600 15px/1 var(--font-body); padding: 15px 22px; border-radius: 12px; border: 1px solid transparent; cursor: pointer; text-decoration: none; transition: background .2s, border-color .2s; will-change: transform; }
+.btn-primary { background: var(--primary); color: var(--primary-fg); box-shadow: 0 10px 40px -10px var(--glow); }
+.btn-primary:hover { background: #6d28d9; }
+.btn-ghost { background: var(--card-glass); color: var(--fg); border-color: var(--border); backdrop-filter: blur(8px); }
+.btn-small { padding: 10px 14px; font-size: 13px; border-radius: 10px; }
+.btn:focus-visible, .themes button:focus-visible, .dots button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.sound-bars { display: inline-flex; gap: 2px; align-items: end; height: 12px; }
+.sound-bars i { width: 2px; height: 4px; background: currentColor; border-radius: 1px; }
+.playing .sound-bars i { animation: eq .8s ease-in-out infinite alternate; }
+.playing .sound-bars i:nth-child(2) { animation-delay: -.3s } .playing .sound-bars i:nth-child(3) { animation-delay: -.6s }
+@keyframes eq { from { height: 3px } to { height: 12px } }
+
+.dots { position: fixed; right: clamp(12px, 2.4vw, 32px); top: 50%; transform: translateY(-50%); z-index: 10; display: flex; flex-direction: column; gap: 14px; }
+.dots button { width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--muted); background: transparent; padding: 0; cursor: pointer; position: relative; transition: background .3s, border-color .3s, transform .3s; }
+.dots button[aria-current="true"] { background: var(--accent); border-color: var(--accent); transform: scale(1.35); }
+.dots button span { position: absolute; right: 22px; top: 50%; transform: translateY(-50%); white-space: nowrap; font: 500 11px/1 var(--font-data); color: var(--muted); letter-spacing: .06em; opacity: 0; transition: opacity .2s; pointer-events: none; }
+.dots button:hover span, .dots button[aria-current="true"] span { opacity: 1; }
+.counter { position: fixed; left: clamp(16px, 4vw, 48px); bottom: calc(env(safe-area-inset-bottom, 0px) + 22px); z-index: 10; font: 500 12px/1 var(--font-data); color: var(--muted); letter-spacing: .1em; display: flex; align-items: center; gap: 12px; }
+.counter b { color: var(--fg); font-weight: 500; }
+.counter .rail { width: 120px; height: 2px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.counter .rail i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, var(--primary), var(--magenta)); transform-origin: left; transform: scaleX(.142); }
+.hint { position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 22px); transform: translateX(-50%); z-index: 10; font: 500 11px/1 var(--font-data); letter-spacing: .14em; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.hint i { width: 1px; height: 34px; background: linear-gradient(var(--accent), transparent); animation: drip 1.8s ease-in-out infinite; transform-origin: top; }
+@keyframes drip { 0% { transform: scaleY(0) } 50% { transform: scaleY(1) } 100% { transform: scaleY(1); opacity: 0 } }
+
+/* scenes */
+.scene { position: fixed; inset: 0; z-index: 5; display: grid; align-items: center; padding: 96px clamp(16px, 7vw, 120px) 80px; visibility: hidden; }
+.scene.is-active { visibility: visible; }
+body.static .scene { position: relative; visibility: visible; min-height: 100vh; }
+.scene-inner { width: 100%; max-width: 1240px; margin: 0 auto; display: grid; gap: clamp(28px, 5vw, 72px); align-items: center; }
+.split { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.center { justify-items: center; text-align: center; }
+.copy { display: grid; gap: 22px; min-width: 0; }
+.eyebrow { font: 500 12px/1 var(--font-data); letter-spacing: .18em; color: var(--accent); text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
+.eyebrow::before { content: ""; width: 26px; height: 1px; background: currentColor; }
+.center .eyebrow { justify-content: center; }
+h1, h2 { font-family: var(--font-display); font-weight: 700; letter-spacing: -.03em; line-height: .96; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(48px, 8.4vw, 132px); }
+h2 { font-size: clamp(40px, 6vw, 92px); }
+.line { display: block; overflow: hidden; padding-bottom: .06em; }
+.line > span { display: inline-block; }
+.hl { background: linear-gradient(100deg, var(--accent), var(--magenta) 60%, var(--blue)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.lede { font-size: clamp(16px, 1.4vw, 19px); color: var(--muted); max-width: 46ch; margin: 0; }
+.center .lede { margin-inline: auto; }
+.ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+.center .ctas { justify-content: center; }
+.char { display: inline-block; will-change: transform; }
+
+.glass { background: var(--card-glass); border: 1px solid var(--border); border-radius: 18px; backdrop-filter: blur(14px) saturate(1.2); box-shadow: 0 30px 80px -40px rgba(0, 0, 0, .6); }
+.tilt { transform-style: preserve-3d; will-change: transform; }
+
+/* scene 2: the loop */
+.beats { display: grid; gap: 14px; }
+.beat { display: grid; grid-template-columns: 52px 1fr auto; gap: 16px; align-items: center; padding: 18px 20px; }
+.beat .ico { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--accent); color: var(--accent); }
+.beat h3 { font: 600 18px/1.2 var(--font-display); margin: 0 0 4px; letter-spacing: -.01em; }
+.beat p { margin: 0; color: var(--muted); font-size: 14px; }
+.beat .meta { font: 500 12px/1 var(--font-data); color: var(--subdued); }
+.progress { height: 4px; border-radius: 2px; background: var(--border); overflow: hidden; margin-top: 10px; }
+.progress i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, var(--primary), var(--magenta)); transform-origin: left; transform: scaleX(.46); }
+
+/* scene 3: release line */
+.release { padding: 26px; display: grid; gap: 22px; }
+.release-head { display: flex; align-items: center; gap: 14px; }
+.cover { width: 64px; height: 64px; border-radius: 12px; background: radial-gradient(circle at 30% 70%, var(--magenta), transparent 60%), radial-gradient(circle at 70% 30%, var(--primary), transparent 65%), #120b24; flex: none; }
+.release-head h3 { margin: 0; font: 600 22px/1.1 var(--font-display); }
+.release-head p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+.pill { margin-left: auto; font: 600 12px/1 var(--font-body); padding: 7px 11px; border-radius: 999px; color: #bfdbfe; background: rgba(59, 130, 246, .14); border: 1px solid rgba(59, 130, 246, .5); white-space: nowrap; }
+:root[data-bitrate="light"] .pill { color: #1e40af; background: #eff6ff; border-color: #2563eb; }
+.steps { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.steps::before { content: ""; position: absolute; left: 14px; right: 14px; top: 13px; height: 2px; background: var(--border); }
+.steps .fill { position: absolute; left: 14px; right: 14px; top: 13px; height: 2px; background: linear-gradient(90deg, var(--primary), var(--magenta)); transform-origin: left; transform: scaleX(.8); }
+.step { position: relative; display: grid; justify-items: center; gap: 8px; font: 500 12px/1.2 var(--font-body); color: var(--muted); text-align: center; }
+.step b { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font: 600 12px/1 var(--font-data); background: var(--card); border: 1px solid var(--border); color: var(--muted); }
+.step.done b, .step.now b { background: var(--primary); border-color: var(--primary); color: var(--primary-fg); }
+.step.now { color: var(--fg); }
+.checks { display: grid; gap: 10px; }
+.check { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.check i { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--success); display: grid; place-items: center; flex: none; }
+.check i::after { content: ""; width: 7px; height: 4px; border-left: 2px solid var(--success); border-bottom: 2px solid var(--success); transform: rotate(-45deg) translate(1px, -1px); }
+
+/* scene 4: candidates */
+.stack { display: grid; gap: 10px; }
+.cand { display: grid; grid-template-columns: 30px 44px 1fr auto; gap: 14px; align-items: center; padding: 12px 14px; border-radius: 14px; }
+.cand b { font: 600 15px/1 var(--font-data); color: var(--accent); }
+.cand .cv { width: 44px; height: 44px; border-radius: 8px; }
+.cand h4 { margin: 0; font: 600 15px/1.2 var(--font-body); }
+.cand p { margin: 0; color: var(--muted); font-size: 12px; }
+.cand .acts { display: flex; gap: 6px; }
+.cand .acts span { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); display: grid; place-items: center; color: var(--muted); font-size: 14px; }
+.cv1 { background: linear-gradient(135deg, #6d28d9, #ec4899); } .cv2 { background: linear-gradient(135deg, #1d4ed8, #7c3aed); } .cv3 { background: linear-gradient(135deg, #0ea5e9, #312e81); } .cv4 { background: linear-gradient(135deg, #be185d, #4c1d95); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font: 500 13px/1 var(--font-body); padding: 9px 14px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); background: var(--card-glass); }
+.chip.on { background: var(--primary); border-color: var(--primary); color: var(--primary-fg); }
+
+/* scene 5: discovery */
+.graph-labels { position: relative; width: min(100%, 560px); aspect-ratio: 1 / 1; max-width: 100%; }
+.node { position: absolute; font: 600 13px/1.2 var(--font-body); padding: 8px 12px; border-radius: 999px; white-space: nowrap; }
+.node small { display: block; font: 500 10px/1 var(--font-data); color: var(--muted); letter-spacing: .1em; margin-top: 3px; }
+.node.focus { font-size: 16px; padding: 10px 16px; border-color: var(--accent); }
+.marquee { position: absolute; left: 0; right: 0; bottom: 92px; overflow: hidden; white-space: nowrap; font: 700 clamp(28px, 5vw, 64px)/1 var(--font-display); color: transparent; -webkit-text-stroke: 1px var(--border); pointer-events: none; }
+.marquee div { display: inline-block; padding-right: 40px; animation: marquee 26s linear infinite; }
+@keyframes marquee { to { transform: translateX(-100%) } }
+
+/* scene 6: devices */
+.devices { display: flex; align-items: end; justify-content: center; gap: clamp(16px, 3vw, 36px); flex-wrap: wrap; }
+.laptop { width: min(420px, 100%); padding: 14px; border-radius: 16px; }
+.phone { width: 190px; padding: 14px 12px; border-radius: 30px; }
+.screen-cover { aspect-ratio: 16 / 10; border-radius: 10px; background: radial-gradient(circle at 50% 120%, var(--magenta), transparent 55%), radial-gradient(circle at 50% -10%, var(--primary), transparent 60%), #0d0820; position: relative; overflow: hidden; }
+.phone .screen-cover { aspect-ratio: 1 / 1; border-radius: 16px; }
+.screen-cover canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.dev-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 13px; }
+.dev-meta b { font-family: var(--font-display); font-weight: 600; }
+.dev-tag { font: 500 11px/1 var(--font-data); color: var(--accent); letter-spacing: .1em; }
+.dev-tag.muted { color: var(--subdued); }
+.sync { display: flex; align-items: center; justify-content: center; gap: 10px; font: 500 12px/1 var(--font-data); color: var(--muted); letter-spacing: .12em; margin-top: 18px; }
+.sync i { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 0 rgba(16, 185, 129, .6); animation: ping 1.6s infinite; }
+@keyframes ping { to { box-shadow: 0 0 0 12px rgba(16, 185, 129, 0) } }
+
+/* scene 7 */
+.big-cta { font-size: 17px; padding: 20px 30px; border-radius: 14px; }
+.foot { position: absolute; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom, 0px) + 26px); display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; font-size: 13px; color: var(--muted); padding-inline: 16px; }
+.foot a { color: inherit; text-decoration: none; }
+.foot a:hover { color: var(--fg); }
+.tag-demo { font: 500 11px/1 var(--font-data); color: var(--subdued); letter-spacing: .08em; }
+
+@media (max-width: 860px) {
+  .split { grid-template-columns: minmax(0, 1fr); }
+  .scene { align-items: start; padding-top: 88px; overflow: hidden; }
+  .scene .visual { max-height: 44vh; overflow: hidden; }
+  .themes button { padding: 6px 8px; }
+  .top .btn-ghost .label { display: none; }
+  .dots { display: none; }
+  .hint { display: none; }
+  .phone { width: 150px; } .laptop { width: 100%; }
+  .graph-labels { width: min(100%, 360px); }
+  .marquee { bottom: 70px; }
+  .beat { grid-template-columns: 44px 1fr; } .beat .meta { display: none; }
+  .beat .ico { width: 44px; height: 44px; }
+  .cand { grid-template-columns: 24px 40px 1fr; } .cand .acts { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .grain, .hint i, .marquee div, .sync i, .playing .sound-bars i { animation: none; } }
+</style>
+
+<canvas id="stage" aria-hidden="true"></canvas>
+<div class="cursor-glow" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="top">
+  <a class="brand" href="#hero" aria-label="Bitrate home">
+    <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="bm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs><path d="M7 4h11a7 7 0 0 1 4 12.7A7.5 7.5 0 0 1 18.5 30H7V4Zm5 5v6h6a3 3 0 0 0 0-6h-6Zm0 11v5h6.5a2.5 2.5 0 0 0 0-5H12Z" fill="url(#bm)"/></svg>
+    Bitrate
+  </a>
+  <div class="top-actions">
+    <fieldset class="themes" aria-label="Theme">
+      <button type="button" data-set="dark" aria-pressed="false">Dark</button>
+      <button type="button" data-set="light" aria-pressed="false">Light</button>
+      <button type="button" data-set="dim" aria-pressed="false">Dim</button>
+    </fieldset>
+    <button class="btn btn-ghost btn-small" id="sound" type="button" aria-pressed="false"><span class="sound-bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="label">Play signal</span></button>
+  </div>
+</header>
+
+<nav class="dots" aria-label="Sections"></nav>
+<div class="counter" aria-hidden="true"><b id="num">01</b><span class="rail"><i id="rail"></i></span><span>07</span></div>
+<div class="hint" aria-hidden="true">SCROLL<i></i></div>
+
+<main>
+  <section class="scene is-active" id="hero" data-label="Signal" aria-label="Your music, already where you are">
+    <div class="scene-inner split">
+      <div class="copy">
+        <div class="eyebrow">Web player</div>
+        <h1><span class="line"><span>Your music,</span></span><span class="line"><span>already where</span></span><span class="line"><span class="hl">you are.</span></span></h1>
+        <p class="lede">Instant access in your browser. Listen, save and return to your library.</p>
+        <div class="ctas"><a class="btn btn-primary magnetic" href="#cta">Open web player <span aria-hidden="true">→</span></a><a class="btn btn-ghost magnetic" href="#cta">Create account</a></div>
+      </div>
+      <div class="visual" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <section class="scene" id="loop" data-label="Loop" aria-label="Play, save, return">
+    <div class="scene-inner split">
+      <div class="copy">
+        <div class="eyebrow">One listening loop</div>
+        <h2><span class="line"><span>Play.</span></span><span class="line"><span class="hl">Save.</span></span><span class="line"><span>Return.</span></span></h2>
+        <p class="lede">Built around the music you come back to.</p>
+      </div>
+      <div class="beats visual">
+        <div class="beat glass tilt"><span class="ico" aria-hidden="true">▶</span><div><h3>Play without losing focus</h3><p>Your music in the browser. The controls you need, within reach.</p><div class="progress"><i></i></div></div><span class="meta">1:48 / 3:56</span></div>
+        <div class="beat glass tilt"><span class="ico" aria-hidden="true">♥</span><div><h3>Save what matters</h3><p>Like a track. Build a library that sounds more like you.</p></div><span class="meta">128 liked</span></div>
+        <div class="beat glass tilt"><span class="ico" aria-hidden="true">↺</span><div><h3>Find your way back</h3><p>The tracks you keep coming back to, together in your recents.</p></div><span class="meta">Today</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene" id="artists" data-label="Artists" aria-label="Release work in one line of sight">
+    <div class="scene-inner split">
+      <div class="release glass tilt visual">
+        <div class="release-head"><span class="cover" aria-hidden="true"></span><div><h3>Afterglow</h3><p>Single · 1 track · Night Signal</p></div><span class="pill">In review</span></div>
+        <div class="steps"><span class="fill" aria-hidden="true"></span>
+          <div class="step done"><b>✓</b>Audio</div><div class="step done"><b>✓</b>Artwork</div><div class="step done"><b>✓</b>Details</div><div class="step done"><b>✓</b>Contributors</div><div class="step now"><b>5</b>Review</div>
+        </div>
+        <div class="checks"><div class="check"><i></i>Night Signal.wav · audio ready</div><div class="check"><i></i>Cover artwork added</div><div class="check"><i></i>2 people with roles · rights confirmed</div></div>
+        <span class="tag-demo">Release workspace concept · Demonstration data</span>
+      </div>
+      <div class="copy">
+        <div class="eyebrow">For artists</div>
+        <h2><span class="line"><span>Release work,</span></span><span class="line"><span class="hl">in one line</span></span><span class="line"><span class="hl">of sight.</span></span></h2>
+        <p class="lede">Versions, tasks and delivery on one timeline. The system suggests. You stay in control.</p>
+        <div class="ctas"><a class="btn btn-ghost magnetic" href="#cta">Bitrate for Artists →</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene" id="workshop" data-label="Workshop" aria-label="Start with a feeling, finish with your playlist">
+    <div class="scene-inner split">
+      <div class="copy">
+        <div class="eyebrow">Playlist workshop · Concept</div>
+        <h2><span class="line"><span>Start with a feeling.</span></span><span class="line"><span class="hl">Finish with</span></span><span class="line"><span class="hl">your playlist.</span></span></h2>
+        <p class="lede">Describe the session. Compare a few tracks. Keep the final say.</p>
+        <div class="chips"><span class="chip on">Calm</span><span class="chip">Late night</span><span class="chip">45 min</span><span class="chip">From liked songs</span></div>
+      </div>
+      <div class="stack visual" id="stack">
+        <div class="cand glass"><b>#1</b><span class="cv cv1"></span><div><h4>Afterglow</h4><p>Nova &amp; the Static · 3:42</p></div><div class="acts" aria-hidden="true"><span>▶</span><span>✓</span><span>✕</span></div></div>
+        <div class="cand glass"><b>#2</b><span class="cv cv2"></span><div><h4>Night Signal</h4><p>Mira Sol · 3:56</p></div><div class="acts" aria-hidden="true"><span>▶</span><span>✓</span><span>✕</span></div></div>
+        <div class="cand glass"><b>#3</b><span class="cv cv3"></span><div><h4>Static Lines</h4><p>Kite Harbor · 3:47</p></div><div class="acts" aria-hidden="true"><span>▶</span><span>✓</span><span>✕</span></div></div>
+        <div class="cand glass"><b>#4</b><span class="cv cv4"></span><div><h4>Echoes in Motion</h4><p>Lumen Choir · 4:21</p></div><div class="acts" aria-hidden="true"><span>▶</span><span>✓</span><span>✕</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene" id="discover" data-label="Discover" aria-label="Follow the sound">
+    <div class="scene-inner split">
+      <div class="graph-labels visual" aria-hidden="true">
+        <span class="node glass focus" style="left:50%;top:50%">Luma Vale<small>YOU ARE HERE</small></span>
+        <span class="node glass" style="left:18%;top:22%">Lumen Choir<small>INFLUENCE</small></span>
+        <span class="node glass" style="left:82%;top:26%">Mira Sol<small>SIMILAR</small></span>
+        <span class="node glass" style="left:16%;top:78%">Kite Harbor<small>INFLUENCE</small></span>
+        <span class="node glass" style="left:80%;top:76%">Nova &amp; the Static<small>SIMILAR</small></span>
+      </div>
+      <div class="copy">
+        <div class="eyebrow">Discover the connections</div>
+        <h2><span class="line"><span>Follow</span></span><span class="line"><span class="hl">the sound.</span></span></h2>
+        <p class="lede">Explore the artists, influences and scenes behind what you love.</p>
+      </div>
+    </div>
+    <div class="marquee" aria-hidden="true"><div>SYNTH POP · DREAM POP · NIGHT DRIVE · AMBIENT · UK GARAGE · DOWNTEMPO · </div><div>SYNTH POP · DREAM POP · NIGHT DRIVE · AMBIENT · UK GARAGE · DOWNTEMPO · </div></div>
+  </section>
+
+  <section class="scene" id="devices" data-label="Devices" aria-label="Same queue, new scene">
+    <div class="scene-inner center">
+      <div class="copy">
+        <div class="eyebrow">Keep the session going</div>
+        <h2><span class="line"><span>Same queue.</span></span><span class="line"><span class="hl">New scene.</span></span></h2>
+        <p class="lede">Move your listening between devices, or open the room to friends.</p>
+      </div>
+      <div class="visual">
+        <div class="devices">
+          <div class="laptop glass tilt"><div class="screen-cover"><canvas data-viz="laptop"></canvas></div><div class="dev-meta"><div><b>Afterglow</b><br><span class="tag-demo">NOVA &amp; THE STATIC</span></div><span class="dev-tag muted">DESKTOP · PAUSED</span></div><div class="progress"><i class="sync-bar"></i></div></div>
+          <div class="phone glass tilt"><div class="screen-cover"><canvas data-viz="phone"></canvas></div><div class="dev-meta"><b>This phone</b><span class="dev-tag">PLAYING</span></div><div class="progress"><i class="sync-bar"></i></div></div>
+        </div>
+        <div class="sync"><i></i>QUEUE IN SYNC · 2 DEVICES</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene" id="cta" data-label="Start" aria-label="Pick up where the last track left off">
+    <div class="scene-inner center">
+      <div class="copy">
+        <div class="eyebrow">Ready when you are</div>
+        <h2><span class="line"><span>Pick up where</span></span><span class="line"><span>the last track</span></span><span class="line"><span class="hl">left off.</span></span></h2>
+        <p class="lede">Open Bitrate in the browser and make the next session yours.</p>
+        <div class="ctas"><a class="btn btn-primary big-cta magnetic" href="#hero">Open web player <span aria-hidden="true">→</span></a></div>
+      </div>
+    </div>
+    <div class="foot"><a href="#hero">Log in</a><a href="#hero">Create account</a><a href="#artists">For artists</a><span class="tag-demo">MUSIC LIVES ON</span></div>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Observer.min.js"></script>
+<script>
+(() => {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const root = document.documentElement
+  const scenes = [...document.querySelectorAll('.scene')]
+  const _css = (name) => getComputedStyle(root).getPropertyValue(name).trim()
+
+  /* ---------- theme (one palette, three themes) ---------- */
+  const themeButtons = document.querySelectorAll('.themes button')
+  const currentTheme = () => root.dataset.bitrate || (matchMedia('(prefers-color-scheme: light)').matches && root.dataset.theme !== 'dark' ? 'light' : 'dark')
+  const setTheme = (t) => {
+    root.dataset.bitrate = t
+    for (const b of themeButtons) b.setAttribute('aria-pressed', String(b.dataset.set === t))
+    try { localStorage.setItem('bitrate-theme', t) } catch (e) { /* storage unavailable */ }
+    stage?.retheme()
+  }
+  for (const b of themeButtons) b.addEventListener('click', () => setTheme(b.dataset.set))
+  try { const saved = localStorage.getItem('bitrate-theme'); if (saved) root.dataset.bitrate = saved } catch (e) { /* ignore */ }
+  for (const b of themeButtons) b.setAttribute('aria-pressed', String(b.dataset.set === currentTheme()))
+
+  /* ---------- WebGL stage: a noise-displaced signal sphere + a particle field that re-forms per scene ---------- */
+  let stage = null
+  if (window.THREE) {
+    const canvas = document.getElementById('stage')
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true })
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75))
+    const scene = new THREE.Scene()
+    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100)
+    camera.position.set(0, 0, 6)
+
+    const noise = `
+      vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x,289.0);} vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
+      float snoise(vec3 v){const vec2 C=vec2(1.0/6.0,1.0/3.0);const vec4 D=vec4(0.0,0.5,1.0,2.0);vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.0-g;vec3 i1=min(g.xyz,l.zxy);vec3 i2=max(g.xyz,l.zxy);vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+2.0*C.xxx;vec3 x3=x0-1.0+3.0*C.xxx;i=mod(i,289.0);vec4 p=permute(permute(permute(i.z+vec4(0.0,i1.z,i2.z,1.0))+i.y+vec4(0.0,i1.y,i2.y,1.0))+i.x+vec4(0.0,i1.x,i2.x,1.0));float n_=1.0/7.0;vec3 ns=n_*D.wyz-D.xzx;vec4 j=p-49.0*floor(p*ns.z*ns.z);vec4 x_=floor(j*ns.z);vec4 y_=floor(j-7.0*x_);vec4 x=x_*ns.x+ns.yyyy;vec4 y=y_*ns.x+ns.yyyy;vec4 h=1.0-abs(x)-abs(y);vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);vec4 s0=floor(b0)*2.0+1.0;vec4 s1=floor(b1)*2.0+1.0;vec4 sh=-step(h,vec4(0.0));vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0);m=m*m;return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));}`
+    const sphereMat = new THREE.ShaderMaterial({
+      transparent: true,
+      uniforms: { uTime: { value: 0 }, uAmp: { value: 0.32 }, uFreq: { value: 1.25 }, uFlat: { value: 0 }, uA: { value: new THREE.Color('#7c3aed') }, uB: { value: new THREE.Color('#ec4899') }, uC: { value: new THREE.Color('#3b82f6') }, uAlpha: { value: 1 } },
+      vertexShader: `${noise}
+        uniform float uTime, uAmp, uFreq, uFlat; varying vec3 vN; varying vec3 vW; varying float vD;
+        void main(){
+          vec3 p = position;
+          float n = snoise(p * uFreq + vec3(uTime * .35, uTime * .22, 0.0));
+          float d = n * uAmp;
+          p += normal * d;
+          p.y = mix(p.y, p.y * .08 + sin(p.x * 3.0 + uTime) * .25, uFlat);
+          vD = d;
+          vN = normalize(normalMatrix * normal);
+          vW = (modelMatrix * vec4(p, 1.0)).xyz;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+        }`,
+      fragmentShader: `
+        uniform vec3 uA, uB, uC; uniform float uAlpha; varying vec3 vN; varying vec3 vW; varying float vD;
+        void main(){
+          vec3 v = normalize(cameraPosition - vW);
+          float f = pow(1.0 - max(dot(v, vN), 0.0), 2.2);
+          vec3 col = mix(uA, uB, smoothstep(-.25, .35, vD));
+          col = mix(col, uC, smoothstep(.5, 1.0, f) * .55);
+          col += f * .55;
+          gl_FragColor = vec4(col, (.35 + f * .9) * uAlpha);
+        }`,
+    })
+    const sphere = new THREE.Mesh(new THREE.IcosahedronGeometry(1.35, 64), sphereMat)
+    scene.add(sphere)
+
+    /* particles: each point stores 6 target layouts and morphs between them */
+    const COUNT = 2600
+    const layouts = []
+    const make = (fn) => { const a = new Float32Array(COUNT * 3); for (let i = 0; i < COUNT; i++) { const p = fn(i); a[i * 3] = p[0]; a[i * 3 + 1] = p[1]; a[i * 3 + 2] = p[2] } return a }
+    const rnd = (i, s) => { const x = Math.sin(i * 12.9898 + s * 78.233) * 43758.5453; return x - Math.floor(x) }
+    layouts.push(make((i) => { const r = 3.4 + rnd(i, 1) * 3; const t = rnd(i, 2) * Math.PI * 2; const ph = Math.acos(2 * rnd(i, 3) - 1); return [r * Math.sin(ph) * Math.cos(t), r * Math.sin(ph) * Math.sin(t), r * Math.cos(ph) - 2] }))
+    layouts.push(make((i) => { const x = (rnd(i, 4) - .5) * 12; return [x, Math.sin(x * 1.3) * .6 + (rnd(i, 5) - .5) * .25 - 1.6, (rnd(i, 6) - .5) * 4 - 1] }))
+    layouts.push(make((i) => { const t = (i / COUNT) * Math.PI * 2 * 5; const r = 2.4 + (rnd(i, 7) - .5) * .35; return [Math.cos(t) * r, (rnd(i, 8) - .5) * .25, Math.sin(t) * r * .55 - .5] }))
+    layouts.push(make((i) => { const k = i % 4; const ang = (i / COUNT) * Math.PI * 2; const r = .3 + k * .55; return [Math.cos(ang * (k + 1)) * r * 2.1, Math.sin(ang * (k + 1)) * r * 1.4, (rnd(i, 9) - .5) * .6] }))
+    layouts.push(make((i) => { const hubs = [[0, 0], [-2.3, 1.6], [2.4, 1.4], [-2.4, -1.6], [2.3, -1.5]]; const h = hubs[i % 5]; const tt = rnd(i, 10); const link = i % 3 === 0; const x = link ? h[0] * tt : h[0] + (rnd(i, 11) - .5) * .7; const y = link ? h[1] * tt : h[1] + (rnd(i, 12) - .5) * .7; return [x, y, (rnd(i, 13) - .5) * .8] }))
+    layouts.push(make((i) => { const left = i % 2 === 0; const x = (left ? -1.6 : 1.8) + (rnd(i, 14) - .5) * (left ? 2.4 : 1.1); const y = (rnd(i, 15) - .5) * (left ? 1.5 : 2.2) - .6; return [x, y, (rnd(i, 16) - .5) * .3] }))
+    layouts.push(make((i) => { const r = 1.4 + rnd(i, 17) ** .5 * 6; const t = rnd(i, 18) * Math.PI * 2; const ph = Math.acos(2 * rnd(i, 19) - 1); return [r * Math.sin(ph) * Math.cos(t), r * Math.sin(ph) * Math.sin(t), r * Math.cos(ph)] }))
+    const geo = new THREE.BufferGeometry()
+    geo.setAttribute('position', new THREE.BufferAttribute(layouts[0].slice(), 3))
+    geo.setAttribute('aFrom', new THREE.BufferAttribute(layouts[0], 3))
+    geo.setAttribute('aTo', new THREE.BufferAttribute(layouts[0], 3))
+    const seeds = new Float32Array(COUNT); for (let i = 0; i < COUNT; i++) seeds[i] = rnd(i, 20)
+    geo.setAttribute('aSeed', new THREE.BufferAttribute(seeds, 1))
+    const pMat = new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+      uniforms: { uT: { value: 0 }, uTime: { value: 0 }, uSize: { value: 26 * renderer.getPixelRatio() }, uCol: { value: new THREE.Color('#a78bfa') }, uCol2: { value: new THREE.Color('#ec4899') }, uPulse: { value: 0 } },
+      vertexShader: `
+        attribute vec3 aFrom; attribute vec3 aTo; attribute float aSeed; uniform float uT, uTime, uSize, uPulse; varying float vSeed;
+        void main(){
+          float t = smoothstep(0.0, 1.0, clamp(uT * 1.35 - aSeed * .35, 0.0, 1.0));
+          vec3 p = mix(aFrom, aTo, t);
+          p += vec3(sin(uTime * .6 + aSeed * 40.0), cos(uTime * .5 + aSeed * 30.0), sin(uTime * .4 + aSeed * 20.0)) * (.05 + uPulse * .25);
+          vSeed = aSeed;
+          vec4 mv = modelViewMatrix * vec4(p, 1.0);
+          gl_PointSize = uSize * (.35 + aSeed * .9) / -mv.z;
+          gl_Position = projectionMatrix * mv;
+        }`,
+      fragmentShader: `
+        uniform vec3 uCol, uCol2; varying float vSeed;
+        void main(){ float d = length(gl_PointCoord - .5); float a = smoothstep(.5, 0.0, d); gl_FragColor = vec4(mix(uCol, uCol2, vSeed), a * .85); }`,
+    })
+    const points = new THREE.Points(geo, pMat)
+    scene.add(points)
+
+    const resize = () => { const w = window.innerWidth, h = window.innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); sphere.position.x = w < 860 ? 0 : sphere.position.x }
+    window.addEventListener('resize', resize); resize()
+
+    const mouse = { x: 0, y: 0 }
+    window.addEventListener('pointermove', (e) => { mouse.x = e.clientX / window.innerWidth - .5; mouse.y = e.clientY / window.innerHeight - .5 }, { passive: true })
+
+    /* audio-reactive amplitude (only after the viewer presses Play signal) */
+    let analyser = null, freq = null
+    const clock = new THREE.Clock()
+    let running = true
+    const tick = () => {
+      if (!running) return
+      const t = clock.getElapsedTime()
+      let level = 0
+      if (analyser) { analyser.getByteFrequencyData(freq); for (let i = 0; i < 24; i++) level += freq[i]; level = level / (24 * 255) }
+      sphereMat.uniforms.uTime.value = t
+      sphereMat.uniforms.uAmp.value += ((stage.amp + level * .9) - sphereMat.uniforms.uAmp.value) * .08
+      pMat.uniforms.uTime.value = t
+      pMat.uniforms.uPulse.value += (level - pMat.uniforms.uPulse.value) * .1
+      sphere.rotation.y = t * .12 + mouse.x * .4
+      sphere.rotation.x = mouse.y * .3
+      points.rotation.y = t * .03 + mouse.x * .15
+      camera.position.x += (mouse.x * .5 - camera.position.x) * .04
+      camera.position.y += (-mouse.y * .35 - camera.position.y) * .04
+      camera.lookAt(0, 0, 0)
+      renderer.render(scene, camera)
+      requestAnimationFrame(tick)
+    }
+    document.addEventListener('visibilitychange', () => { const was = running; running = !document.hidden; if (running && !was) requestAnimationFrame(tick) })
+
+    /* per-scene choreography: sphere position/scale/flatness, particle layout, palette */
+    const LOOK = [
+      { x: 1.6, y: 0, s: 1, flat: 0, amp: .32, a: '#7c3aed', b: '#ec4899' },
+      { x: 2.1, y: -.2, s: .62, flat: 0, amp: .5, a: '#7c3aed', b: '#a78bfa' },
+      { x: -1.9, y: 0, s: .55, flat: 0, amp: .22, a: '#3b82f6', b: '#7c3aed' },
+      { x: 2.0, y: .1, s: .48, flat: 0, amp: .62, a: '#ec4899', b: '#7c3aed' },
+      { x: -1.6, y: 0, s: .34, flat: 0, amp: .3, a: '#a78bfa', b: '#3b82f6' },
+      { x: 0, y: 1.25, s: .42, flat: .85, amp: .36, a: '#7c3aed', b: '#ec4899' },
+      { x: 0, y: .2, s: 1.25, flat: 0, amp: .75, a: '#ec4899', b: '#3b82f6' },
+    ]
+    const hex = (h) => { const c = new THREE.Color(h); return { r: c.r, g: c.g, b: c.b } }
+    stage = {
+      amp: .32,
+      go(i, dur = 1.4) {
+        const L = LOOK[i]
+        const mobile = window.innerWidth < 860
+        gsap.to(sphere.position, { x: mobile ? 0 : L.x, y: mobile ? (i === 0 ? -1.1 : -1.6) : L.y, duration: dur, ease: 'expo.inOut' })
+        gsap.to(sphere.scale, { x: L.s, y: L.s, z: L.s, duration: dur, ease: 'expo.inOut' })
+        gsap.to(sphereMat.uniforms.uFlat, { value: L.flat, duration: dur, ease: 'power3.inOut' })
+        gsap.to(this, { amp: L.amp, duration: dur })
+        gsap.to(sphereMat.uniforms.uA.value, { ...hex(L.a), duration: dur })
+        gsap.to(sphereMat.uniforms.uB.value, { ...hex(L.b), duration: dur })
+        const from = geo.getAttribute('aFrom'), to = geo.getAttribute('aTo')
+        const cur = new Float32Array(COUNT * 3)
+        const tt = pMat.uniforms.uT.value
+        for (let k = 0; k < COUNT; k++) { const e = Math.min(Math.max(tt * 1.35 - seeds[k] * .35, 0), 1); const s = e * e * (3 - 2 * e); for (let c = 0; c < 3; c++) cur[k * 3 + c] = from.array[k * 3 + c] + (to.array[k * 3 + c] - from.array[k * 3 + c]) * s }
+        from.array.set(cur); from.needsUpdate = true
+        to.array.set(layouts[i]); to.needsUpdate = true
+        pMat.uniforms.uT.value = 0
+        gsap.to(pMat.uniforms.uT, { value: 1, duration: dur * 1.15, ease: 'power2.inOut' })
+      },
+      retheme() { const light = currentTheme() === 'light'; pMat.blending = light ? THREE.NormalBlending : THREE.AdditiveBlending; pMat.needsUpdate = true; pMat.uniforms.uCol.value.set(light ? '#7c3aed' : '#a78bfa') },
+      audio(a, f) { analyser = a; freq = f },
+      start() { requestAnimationFrame(tick) },
+      still() { renderer.render(scene, camera) },
+    }
+    stage.retheme()
+    if (reduce) { sphere.position.x = window.innerWidth < 860 ? 0 : 1.6; stage.still(); canvas.style.position = 'fixed' } else stage.start()
+  }
+
+  /* ---------- small canvases on the device mock-ups ---------- */
+  const vizzes = [...document.querySelectorAll('[data-viz]')].map((c) => ({ c, ctx: c.getContext('2d') }))
+  const drawViz = (t) => {
+    for (const { c, ctx } of vizzes) {
+      const w = c.clientWidth * 1.5
+      const h = c.clientHeight * 1.5
+      c.width = w
+      c.height = h
+      ctx.clearRect(0, 0, w, h)
+      const n = 28, bw = w / n
+      for (let i = 0; i < n; i++) {
+        const v = (Math.sin(t * 2.2 + i * .55) * .5 + .5) * (Math.sin(t * 1.3 + i * .21) * .35 + .65)
+        const bh = v * h * .62
+        ctx.fillStyle = i % 5 === 0 ? 'rgba(236,72,153,.95)' : 'rgba(167,139,250,.9)'
+        ctx.fillRect(i * bw + bw * .2, h - bh - h * .12, bw * .6, bh)
+      }
+    }
+  }
+
+  /* ---------- scenes: one gesture moves exactly one scene ---------- */
+  const dots = document.querySelector('.dots')
+  scenes.forEach((s, i) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', `Go to ${s.dataset.label}`); b.innerHTML = `<span>${String(i + 1).padStart(2, '0')} · ${s.dataset.label.toUpperCase()}</span>`; b.addEventListener('click', () => go(i)); dots.appendChild(b) })
+  const dotButtons = [...dots.children]
+  const num = document.getElementById('num'), rail = document.getElementById('rail')
+
+  /* split headings into characters for the reveal */
+  document.querySelectorAll('.line > span').forEach((span) => {
+    const words = span.textContent.split(' ')
+    span.textContent = ''
+    words.forEach((w, wi) => { const word = document.createElement('span'); word.style.display = 'inline-block'; word.style.whiteSpace = 'nowrap'; [...w].forEach((ch) => { const c = document.createElement('span'); c.className = 'char'; c.textContent = ch; word.appendChild(c) }); span.appendChild(word); if (wi < words.length - 1) span.appendChild(document.createTextNode(' ')) })
+  })
+
+  let index = 0, animating = false
+  const enter = (s, dir) => {
+    const tl = gsap.timeline()
+    tl.fromTo(s.querySelectorAll('.char'), { y: 0, yPercent: 110 * dir, rotate: 8 * dir, opacity: 0 }, { y: 0, yPercent: 0, rotate: 0, opacity: 1, duration: .9, ease: 'expo.out', stagger: .014 }, .15)
+    tl.fromTo(s.querySelectorAll('.eyebrow, .lede, .ctas, .chips'), { y: 24 * dir, opacity: 0 }, { y: 0, opacity: 1, duration: .8, ease: 'power3.out', stagger: .08 }, .3)
+    tl.fromTo(s.querySelectorAll('.glass'), { y: 60 * dir, opacity: 0, scale: .96, rotateX: 10 * dir }, { y: 0, opacity: 1, scale: 1, rotateX: 0, duration: 1, ease: 'expo.out', stagger: .09 }, .25)
+    if (s.id === 'artists') { tl.fromTo(s.querySelector('.steps .fill'), { scaleX: 0 }, { scaleX: .8, duration: 1.4, ease: 'power2.inOut' }, .5); tl.fromTo(s.querySelectorAll('.step b'), { scale: .4 }, { scale: 1, duration: .5, ease: 'back.out(3)', stagger: .18 }, .55); tl.fromTo(s.querySelectorAll('.check'), { x: -20, opacity: 0 }, { x: 0, opacity: 1, stagger: .15, duration: .5 }, 1.2) }
+    if (s.id === 'loop') tl.fromTo(s.querySelector('.progress i'), { scaleX: 0 }, { scaleX: .46, duration: 1.6, ease: 'power2.out' }, .6)
+    if (s.id === 'discover') tl.fromTo(s.querySelectorAll('.node'), { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: .7, ease: 'back.out(2.2)', stagger: { each: .12, from: 'center' } }, .5)
+    if (s.id === 'workshop') shuffle()
+    return tl
+  }
+  const leave = (s, dir) => gsap.to(s.querySelectorAll('.char, .eyebrow, .lede, .ctas, .chips, .glass, .node'), { y: -50 * dir, opacity: 0, duration: .55, ease: 'power3.in', stagger: .006 })
+
+  function go(next) {
+    if (reduce) { scenes[next].scrollIntoView({ behavior: 'auto' }); return }
+    next = Math.max(0, Math.min(scenes.length - 1, next))
+    if (next === index || animating) return
+    animating = true
+    const dir = next > index ? 1 : -1
+    const cur = scenes[index], nxt = scenes[next]
+    stage?.go(next)
+    leave(cur, dir).then(() => {
+      cur.classList.remove('is-active')
+      nxt.classList.add('is-active')
+      enter(nxt, dir).eventCallback('onComplete', () => { animating = false })
+      gsap.delayedCall(.6, () => { animating = false })
+    })
+    index = next
+    dotButtons.forEach((b, i) => { b.setAttribute('aria-current', String(i === next)) })
+    num.textContent = String(next + 1).padStart(2, '0')
+    gsap.to(rail, { scaleX: (next + 1) / scenes.length, duration: .9, ease: 'power3.inOut' })
+    history.replaceState(null, '', `#${nxt.id}`)
+  }
+
+  /* playlist workshop: candidates re-rank on a loop */
+  const stack = document.getElementById('stack')
+  let shuffleTimer = null
+  function shuffle() {
+    clearInterval(shuffleTimer)
+    shuffleTimer = setInterval(() => {
+      if (index !== 3) return clearInterval(shuffleTimer)
+      const items = [...stack.children]
+      const first = items.map((el) => el.getBoundingClientRect().top)
+      stack.appendChild(items[0])
+      const moved = [...stack.children]
+      moved.forEach((el, k) => { el.querySelector('b').textContent = `#${k + 1}` })
+      const last = items.map((el) => el.getBoundingClientRect().top)
+      items.forEach((el, k) => { gsap.fromTo(el, { y: first[k] - last[k] }, { y: 0, duration: .8, ease: 'expo.inOut' }) })
+    }, 2600)
+  }
+
+  /* magnetic buttons, card tilt and the cursor glow — transforms only */
+  const glow = document.querySelector('.cursor-glow')
+  if (!window.gsap) { document.body.classList.add('static'); for (const s of scenes) s.classList.add('is-active'); return }
+  gsap.set('.node', { xPercent: -50, yPercent: -50 })
+  const gx = gsap.quickTo(glow, 'x', { duration: .6, ease: 'power3' }), gy = gsap.quickTo(glow, 'y', { duration: .6, ease: 'power3' })
+  window.addEventListener('pointermove', (e) => { gx(e.clientX); gy(e.clientY) }, { passive: true })
+  if (!reduce && matchMedia('(hover: hover)').matches) {
+    document.querySelectorAll('.magnetic').forEach((el) => {
+      const xTo = gsap.quickTo(el, 'x', { duration: .5, ease: 'elastic.out(1, .4)' }), yTo = gsap.quickTo(el, 'y', { duration: .5, ease: 'elastic.out(1, .4)' })
+      el.addEventListener('pointermove', (e) => { const r = el.getBoundingClientRect(); xTo((e.clientX - r.left - r.width / 2) * .35); yTo((e.clientY - r.top - r.height / 2) * .45) })
+      el.addEventListener('pointerleave', () => { xTo(0); yTo(0) })
+    })
+    document.querySelectorAll('.tilt').forEach((el) => {
+      el.addEventListener('pointermove', (e) => { const r = el.getBoundingClientRect(); gsap.to(el, { rotateY: ((e.clientX - r.left) / r.width - .5) * 10, rotateX: -((e.clientY - r.top) / r.height - .5) * 10, transformPerspective: 900, duration: .4 }) })
+      el.addEventListener('pointerleave', () => gsap.to(el, { rotateX: 0, rotateY: 0, duration: .6 }))
+    })
+  }
+
+  /* sound: a soft synth pad drives the sphere through an AnalyserNode */
+  const soundBtn = document.getElementById('sound')
+  let ctx = null, master = null
+  soundBtn.addEventListener('click', async () => {
+    try {
+      if (!ctx) {
+        ctx = new (window.AudioContext || window.webkitAudioContext)()
+        master = ctx.createGain(); master.gain.value = 0
+        const analyser = ctx.createAnalyser(); analyser.fftSize = 256
+        const filter = ctx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 900
+        const lfo = ctx.createOscillator(); const lfoGain = ctx.createGain(); lfo.frequency.value = .9; lfoGain.gain.value = 600; lfo.connect(lfoGain).connect(filter.frequency); lfo.start()
+        ;[110, 164.81, 220, 277.18, 329.63].forEach((f, i) => { const o = ctx.createOscillator(); o.type = i % 2 ? 'sawtooth' : 'triangle'; o.frequency.value = f; o.detune.value = (i - 2) * 6; const g = ctx.createGain(); g.gain.value = .08; o.connect(g).connect(filter); o.start() })
+        const kick = () => { const o = ctx.createOscillator(); const g = ctx.createGain(); o.frequency.setValueAtTime(120, ctx.currentTime); o.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + .25); g.gain.setValueAtTime(.5, ctx.currentTime); g.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + .3); o.connect(g).connect(master); o.start(); o.stop(ctx.currentTime + .3) }
+        setInterval(() => { if (ctx.state === 'running' && master.gain.value > .01) kick() }, 545)
+        filter.connect(master); master.connect(analyser); analyser.connect(ctx.destination)
+        stage?.audio(analyser, new Uint8Array(analyser.frequencyBinCount))
+      }
+      const on = soundBtn.getAttribute('aria-pressed') !== 'true'
+      if (on) await ctx.resume()
+      master.gain.cancelScheduledValues(ctx.currentTime)
+      master.gain.linearRampToValueAtTime(on ? .5 : 0, ctx.currentTime + .6)
+      soundBtn.setAttribute('aria-pressed', String(on))
+      soundBtn.classList.toggle('playing', on)
+      soundBtn.querySelector('.label').textContent = on ? 'Pause signal' : 'Play signal'
+    } catch (e) { soundBtn.querySelector('.label').textContent = 'Sound unavailable' }
+  })
+
+  /* ---------- boot ---------- */
+  const start = Math.max(0, scenes.findIndex((s) => `#${s.id}` === location.hash))
+  if (reduce || !window.gsap) {
+    document.body.classList.add('static')
+    for (const s of scenes) s.classList.add('is-active')
+    document.querySelector('.hint').hidden = true
+    drawViz(0)
+    return
+  }
+  gsap.registerPlugin(Observer)
+  dotButtons.forEach((b, i) => { b.setAttribute('aria-current', String(i === 0)) })
+  if (start > 0) { scenes[0].classList.remove('is-active'); scenes[start].classList.add('is-active'); index = start; stage?.go(start, .01); dotButtons.forEach((b, i) => { b.setAttribute('aria-current', String(i === start)) }); num.textContent = String(start + 1).padStart(2, '0'); gsap.set(rail, { scaleX: (start + 1) / scenes.length }) }
+  stage?.go(index, 1.8)
+  enter(scenes[index], 1)
+  Observer.create({ target: window, type: 'wheel,touch', wheelSpeed: -1, tolerance: 12, preventDefault: true, onUp: () => go(index + 1), onDown: () => go(index - 1) })
+  window.addEventListener('keydown', (e) => { if (['ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go(index + 1) } if (['ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); go(index - 1) } if (e.key === 'Home') go(0); if (e.key === 'End') go(scenes.length - 1) })
+  for (const a of document.querySelectorAll('a[href^="#"]')) a.addEventListener('click', (e) => { const k = scenes.findIndex((s) => `#${s.id}` === a.getAttribute('href')); if (k >= 0) { e.preventDefault(); go(k) } })
+  gsap.ticker.add((t) => { if (index === 5) drawViz(t) })
+  drawViz(0)
+})()
+</script>
