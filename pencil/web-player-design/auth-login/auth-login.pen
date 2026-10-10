@@ -6,262 +6,296 @@
   "children": [
     {
       "type": "frame",
-      "id": "bFNqqF",
+      "id": "Hgc42P",
       "name": "Auth / Login / Desktop / Dark",
       "width": 1440,
       "height": 900,
       "clip": true,
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
-          "id": "vPjreB",
-          "ref": "ds:dPmdf2",
-          "name": "Auth/Brand Panel",
-          "height": "fill_container",
-          "descendants": {
-            "ds:nJvcGz": {
-              "content": "Your music, ready when you are."
-            }
-          }
-        },
-        {
           "type": "frame",
-          "id": "WFFtDc",
-          "name": "Form Side",
+          "id": "y4hLHd",
+          "name": "Page",
           "width": "fill_container",
           "height": "fill_container",
-          "justifyContent": "center",
-          "alignItems": "center",
+          "layout": "horizontal",
           "children": [
             {
+              "type": "ref",
+              "id": "gTqsKN",
+              "ref": "ds:oRfRX3",
+              "name": "Auth/Brand Panel",
+              "height": "fill_container",
+              "descendants": {
+                "ds:o6vWAQ": {
+                  "content": "Your music, ready when you are."
+                }
+              }
+            },
+            {
               "type": "frame",
-              "id": "6UFWT3",
-              "name": "Form",
-              "layout": "vertical",
-              "gap": 22,
-              "width": 400,
+              "id": "UUHRtV",
+              "name": "Form Side",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
               "children": [
                 {
                   "type": "frame",
-                  "id": "4T8v8g",
-                  "name": "Heading",
+                  "id": "tAZVS7",
+                  "name": "Form",
                   "layout": "vertical",
-                  "gap": 8,
-                  "width": "fill_container",
+                  "gap": 22,
+                  "width": 400,
                   "children": [
-                    {
-                      "type": "ref",
-                      "id": "BwkBJk",
-                      "ref": "ds:KayYYa",
-                      "name": "Text/H2",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Login to your account"
-                    },
-                    {
-                      "type": "ref",
-                      "id": "LrZTn3",
-                      "ref": "ds:cnPxcc",
-                      "name": "Text/Paragraph",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Welcome back! Please sign in to continue."
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "QFT7dT",
-                  "name": "Fields",
-                  "layout": "vertical",
-                  "gap": 14,
-                  "width": "fill_container",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "yPxutj",
-                      "ref": "ds:j04F4",
-                      "name": "Input / Email Address",
-                      "width": "fill_container",
-                      "descendants": {
-                        "ds:l4agQ": {
-                          "content": "Email Address"
-                        },
-                        "ds:iI0CE": {
-                          "content": "you@example.com"
-                        }
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "zrogxC",
-                      "ref": "ds:j04F4",
-                      "name": "Input / Password",
-                      "width": "fill_container",
-                      "descendants": {
-                        "ds:l4agQ": {
-                          "content": "Password"
-                        },
-                        "ds:iI0CE": {
-                          "content": "••••••••"
-                        }
-                      }
-                    },
                     {
                       "type": "frame",
-                      "id": "AB8rAQ",
-                      "name": "Row",
-                      "gap": 12,
-                      "alignItems": "center",
+                      "id": "TrAnAX",
+                      "name": "Heading",
+                      "layout": "vertical",
+                      "gap": 8,
                       "width": "fill_container",
-                      "justifyContent": "end",
                       "children": [
                         {
                           "type": "ref",
-                          "id": "wkdSJD",
-                          "ref": "ds:wypLVn",
-                          "name": "Text/Link",
-                          "content": "Forgot password?"
+                          "id": "dAdufq",
+                          "ref": "ds:Tko4WH",
+                          "name": "Text/H2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Login to your account"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "XvfyQz",
+                          "ref": "ds:sAeSY2",
+                          "name": "Text/Paragraph",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Welcome back! Please sign in to continue."
                         }
                       ]
-                    }
-                  ]
-                },
-                {
-                  "type": "ref",
-                  "id": "QJFqfZ",
-                  "ref": "ds:Y4ylzP",
-                  "name": "Button / Log in",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:NVe7y": {
-                      "content": "Log in"
-                    },
-                    "ds:D3xnv": {
-                      "enabled": false
-                    }
-                  }
-                },
-                {
-                  "type": "ref",
-                  "id": "kzmW9z",
-                  "ref": "ds:baza4N",
-                  "name": "Auth/Or Divider"
-                },
-                {
-                  "type": "frame",
-                  "id": "wudoik",
-                  "name": "Social Sign-in",
-                  "layout": "vertical",
-                  "gap": 10,
-                  "width": "fill_container",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "b7dApC",
-                      "ref": "ds:ShdxRV",
-                      "name": "Form/Checkbox Row",
-                      "width": "fill_container",
-                      "descendants": {
-                        "ds:kH8fAh": {
-                          "content": "I accept the Terms of Use and Privacy Policy"
-                        }
-                      }
                     },
                     {
-                      "type": "ref",
-                      "id": "Zhn6dm",
-                      "ref": "ds:G5tJp",
-                      "name": "Button / Continue with Google",
+                      "type": "frame",
+                      "id": "sAn4dm",
+                      "name": "Fields",
+                      "layout": "vertical",
+                      "gap": 14,
                       "width": "fill_container",
-                      "descendants": {
-                        "ds:d2zCI": {
-                          "content": "Continue with Google"
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ia8Wyx",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Email Address",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Email Address"
+                            },
+                            "ds:iI0CE": {
+                              "content": "you@example.com"
+                            }
+                          }
                         },
-                        "ds:wFUna": {
+                        {
+                          "type": "ref",
+                          "id": "vQZkBg",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Password",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Password"
+                            },
+                            "ds:iI0CE": {
+                              "content": "••••••••"
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "TNH6BF",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "end",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "yDzi4c",
+                              "ref": "ds:E9P6CU",
+                              "name": "Text/Link",
+                              "content": "Forgot password?"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "AU4sPF",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Log in",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Log in"
+                        },
+                        "ds:D3xnv": {
                           "enabled": false
                         }
                       }
                     },
                     {
+                      "type": "ref",
+                      "id": "r8Gtsn",
+                      "ref": "ds:K9GMfF",
+                      "name": "Auth/Or Divider"
+                    },
+                    {
                       "type": "frame",
-                      "id": "C6uEej",
-                      "name": "Providers",
-                      "gap": 8,
-                      "alignItems": "center",
+                      "id": "pxhApN",
+                      "name": "Social Sign-in",
+                      "layout": "vertical",
+                      "gap": 10,
                       "width": "fill_container",
                       "children": [
                         {
                           "type": "ref",
-                          "id": "vshNS6",
-                          "ref": "ds:wXnn4a",
-                          "name": "Auth/Provider",
+                          "id": "5Y3Sxn",
+                          "ref": "ds:2MTiVb",
+                          "name": "Form/Checkbox Row",
                           "width": "fill_container",
                           "descendants": {
-                            "ds:My8YZr": {
-                              "content": "Facebook"
-                            },
-                            "ds:cPCahF": {
-                              "enabled": false
+                            "ds:68Tk2w": {
+                              "content": "I accept the Terms of Use and Privacy Policy"
                             }
                           }
                         },
                         {
                           "type": "ref",
-                          "id": "tN3bAg",
-                          "ref": "ds:wXnn4a",
-                          "name": "Auth/Provider",
+                          "id": "YoT55t",
+                          "ref": "ds:G5tJp",
+                          "name": "Button / Continue with Google",
                           "width": "fill_container",
                           "descendants": {
-                            "ds:My8YZr": {
-                              "content": "Apple"
+                            "ds:d2zCI": {
+                              "content": "Continue with Google"
+                            },
+                            "ds:wFUna": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "uxJ9eD",
+                          "name": "Providers",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "PZmzsL",
+                              "ref": "ds:QMBjG7",
+                              "name": "Auth/Provider",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:oGrcCK": {
+                                  "content": "Facebook"
+                                },
+                                "ds:ERdvTF": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "YN3HgU",
+                              "ref": "ds:QMBjG7",
+                              "name": "Auth/Provider",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:oGrcCK": {
+                                  "content": "Apple"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "KMRoke",
+                          "ref": "ds:DTwJb",
+                          "name": "Button / More options · 10",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:GyGLK": {
+                              "content": "More options · 10"
+                            },
+                            "ds:DsOu2": {
+                              "icon": "chevron-down"
                             }
                           }
                         }
                       ]
                     },
                     {
-                      "type": "ref",
-                      "id": "NF95NH",
-                      "ref": "ds:DTwJb",
-                      "name": "Button / More options · 10",
-                      "width": "fill_container",
-                      "descendants": {
-                        "ds:GyGLK": {
-                          "content": "More options · 10"
+                      "type": "frame",
+                      "id": "QHpYKn",
+                      "name": "Footer Link",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "RZXiWY",
+                          "ref": "ds:BkaXCh",
+                          "name": "Text/Muted",
+                          "content": "Don't have an account?"
                         },
-                        "ds:DsOu2": {
-                          "icon": "chevron-down"
+                        {
+                          "type": "ref",
+                          "id": "Gzo9Ca",
+                          "ref": "ds:E9P6CU",
+                          "name": "Text/Link",
+                          "content": "Sign up"
                         }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "QXGxz4",
-                  "name": "Footer Link",
-                  "gap": 6,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "SX3Kuu",
-                      "ref": "ds:Qj67Up",
-                      "name": "Text/Muted",
-                      "content": "Don't have an account?"
-                    },
-                    {
-                      "type": "ref",
-                      "id": "bG9Hwm",
-                      "ref": "ds:wypLVn",
-                      "name": "Text/Link",
-                      "content": "Sign up"
+                      ]
                     }
                   ]
                 }
               ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "xGEBp6",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "MgqNL4",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
             }
           ]
         }
@@ -275,262 +309,296 @@
     },
     {
       "type": "frame",
-      "id": "JgccvL",
+      "id": "f6DTwq",
       "name": "Auth / Login / Desktop / Light",
       "width": 1440,
       "height": 900,
       "clip": true,
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
-          "id": "LrcYNn",
-          "ref": "ds:dPmdf2",
-          "name": "Auth/Brand Panel",
-          "height": "fill_container",
-          "descendants": {
-            "ds:nJvcGz": {
-              "content": "Your music, ready when you are."
-            }
-          }
-        },
-        {
           "type": "frame",
-          "id": "P5dEpo",
-          "name": "Form Side",
+          "id": "ArDi6L",
+          "name": "Page",
           "width": "fill_container",
           "height": "fill_container",
-          "justifyContent": "center",
-          "alignItems": "center",
+          "layout": "horizontal",
           "children": [
             {
+              "type": "ref",
+              "id": "k8ywSW",
+              "ref": "ds:oRfRX3",
+              "name": "Auth/Brand Panel",
+              "height": "fill_container",
+              "descendants": {
+                "ds:o6vWAQ": {
+                  "content": "Your music, ready when you are."
+                }
+              }
+            },
+            {
               "type": "frame",
-              "id": "fVFsuw",
-              "name": "Form",
-              "layout": "vertical",
-              "gap": 22,
-              "width": 400,
+              "id": "J3KPvn",
+              "name": "Form Side",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
               "children": [
                 {
                   "type": "frame",
-                  "id": "cAKkHx",
-                  "name": "Heading",
+                  "id": "rFKyJF",
+                  "name": "Form",
                   "layout": "vertical",
-                  "gap": 8,
-                  "width": "fill_container",
+                  "gap": 22,
+                  "width": 400,
                   "children": [
-                    {
-                      "type": "ref",
-                      "id": "EZbMCZ",
-                      "ref": "ds:KayYYa",
-                      "name": "Text/H2",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Login to your account"
-                    },
-                    {
-                      "type": "ref",
-                      "id": "Doz6d8",
-                      "ref": "ds:cnPxcc",
-                      "name": "Text/Paragraph",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Welcome back! Please sign in to continue."
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "BZURU5",
-                  "name": "Fields",
-                  "layout": "vertical",
-                  "gap": 14,
-                  "width": "fill_container",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "uRnyZd",
-                      "ref": "ds:j04F4",
-                      "name": "Input / Email Address",
-                      "width": "fill_container",
-                      "descendants": {
-                        "ds:l4agQ": {
-                          "content": "Email Address"
-                        },
-                        "ds:iI0CE": {
-                          "content": "you@example.com"
-                        }
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "tHiqVA",
-                      "ref": "ds:j04F4",
-                      "name": "Input / Password",
-                      "width": "fill_container",
-                      "descendants": {
-                        "ds:l4agQ": {
-                          "content": "Password"
-                        },
-                        "ds:iI0CE": {
-                          "content": "••••••••"
-                        }
-                      }
-                    },
                     {
                       "type": "frame",
-                      "id": "d35kXv",
-                      "name": "Row",
-                      "gap": 12,
-                      "alignItems": "center",
+                      "id": "bWBMP7",
+                      "name": "Heading",
+                      "layout": "vertical",
+                      "gap": 8,
                       "width": "fill_container",
-                      "justifyContent": "end",
                       "children": [
                         {
                           "type": "ref",
-                          "id": "6kuEpV",
-                          "ref": "ds:wypLVn",
-                          "name": "Text/Link",
-                          "content": "Forgot password?"
+                          "id": "GQckju",
+                          "ref": "ds:Tko4WH",
+                          "name": "Text/H2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Login to your account"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "RLM5bJ",
+                          "ref": "ds:sAeSY2",
+                          "name": "Text/Paragraph",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Welcome back! Please sign in to continue."
                         }
                       ]
-                    }
-                  ]
-                },
-                {
-                  "type": "ref",
-                  "id": "4mq7WQ",
-                  "ref": "ds:Y4ylzP",
-                  "name": "Button / Log in",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:NVe7y": {
-                      "content": "Log in"
-                    },
-                    "ds:D3xnv": {
-                      "enabled": false
-                    }
-                  }
-                },
-                {
-                  "type": "ref",
-                  "id": "V6QSk6",
-                  "ref": "ds:baza4N",
-                  "name": "Auth/Or Divider"
-                },
-                {
-                  "type": "frame",
-                  "id": "hYfDFT",
-                  "name": "Social Sign-in",
-                  "layout": "vertical",
-                  "gap": 10,
-                  "width": "fill_container",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "kcFHE6",
-                      "ref": "ds:ShdxRV",
-                      "name": "Form/Checkbox Row",
-                      "width": "fill_container",
-                      "descendants": {
-                        "ds:kH8fAh": {
-                          "content": "I accept the Terms of Use and Privacy Policy"
-                        }
-                      }
                     },
                     {
-                      "type": "ref",
-                      "id": "DBCBxa",
-                      "ref": "ds:G5tJp",
-                      "name": "Button / Continue with Google",
+                      "type": "frame",
+                      "id": "zT9nTe",
+                      "name": "Fields",
+                      "layout": "vertical",
+                      "gap": 14,
                       "width": "fill_container",
-                      "descendants": {
-                        "ds:d2zCI": {
-                          "content": "Continue with Google"
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "TKHpf9",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Email Address",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Email Address"
+                            },
+                            "ds:iI0CE": {
+                              "content": "you@example.com"
+                            }
+                          }
                         },
-                        "ds:wFUna": {
+                        {
+                          "type": "ref",
+                          "id": "gWQvJR",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Password",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Password"
+                            },
+                            "ds:iI0CE": {
+                              "content": "••••••••"
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "vhUtu8",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "end",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "rvexTv",
+                              "ref": "ds:E9P6CU",
+                              "name": "Text/Link",
+                              "content": "Forgot password?"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "N3Yrfx",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Log in",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Log in"
+                        },
+                        "ds:D3xnv": {
                           "enabled": false
                         }
                       }
                     },
                     {
+                      "type": "ref",
+                      "id": "KvEuCR",
+                      "ref": "ds:K9GMfF",
+                      "name": "Auth/Or Divider"
+                    },
+                    {
                       "type": "frame",
-                      "id": "mFiJN5",
-                      "name": "Providers",
-                      "gap": 8,
-                      "alignItems": "center",
+                      "id": "WVqgAi",
+                      "name": "Social Sign-in",
+                      "layout": "vertical",
+                      "gap": 10,
                       "width": "fill_container",
                       "children": [
                         {
                           "type": "ref",
-                          "id": "RvvxKS",
-                          "ref": "ds:wXnn4a",
-                          "name": "Auth/Provider",
+                          "id": "M46W4S",
+                          "ref": "ds:2MTiVb",
+                          "name": "Form/Checkbox Row",
                           "width": "fill_container",
                           "descendants": {
-                            "ds:My8YZr": {
-                              "content": "Facebook"
-                            },
-                            "ds:cPCahF": {
-                              "enabled": false
+                            "ds:68Tk2w": {
+                              "content": "I accept the Terms of Use and Privacy Policy"
                             }
                           }
                         },
                         {
                           "type": "ref",
-                          "id": "8wJdfb",
-                          "ref": "ds:wXnn4a",
-                          "name": "Auth/Provider",
+                          "id": "c2ymJ7",
+                          "ref": "ds:G5tJp",
+                          "name": "Button / Continue with Google",
                           "width": "fill_container",
                           "descendants": {
-                            "ds:My8YZr": {
-                              "content": "Apple"
+                            "ds:d2zCI": {
+                              "content": "Continue with Google"
+                            },
+                            "ds:wFUna": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "7GDUh2",
+                          "name": "Providers",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "nbHWAP",
+                              "ref": "ds:QMBjG7",
+                              "name": "Auth/Provider",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:oGrcCK": {
+                                  "content": "Facebook"
+                                },
+                                "ds:ERdvTF": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "PBpkBv",
+                              "ref": "ds:QMBjG7",
+                              "name": "Auth/Provider",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:oGrcCK": {
+                                  "content": "Apple"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "TkWFVD",
+                          "ref": "ds:DTwJb",
+                          "name": "Button / More options · 10",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:GyGLK": {
+                              "content": "More options · 10"
+                            },
+                            "ds:DsOu2": {
+                              "icon": "chevron-down"
                             }
                           }
                         }
                       ]
                     },
                     {
-                      "type": "ref",
-                      "id": "VJCtE7",
-                      "ref": "ds:DTwJb",
-                      "name": "Button / More options · 10",
-                      "width": "fill_container",
-                      "descendants": {
-                        "ds:GyGLK": {
-                          "content": "More options · 10"
+                      "type": "frame",
+                      "id": "jPComB",
+                      "name": "Footer Link",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "jXbv28",
+                          "ref": "ds:BkaXCh",
+                          "name": "Text/Muted",
+                          "content": "Don't have an account?"
                         },
-                        "ds:DsOu2": {
-                          "icon": "chevron-down"
+                        {
+                          "type": "ref",
+                          "id": "kMrSgq",
+                          "ref": "ds:E9P6CU",
+                          "name": "Text/Link",
+                          "content": "Sign up"
                         }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "jVAE6k",
-                  "name": "Footer Link",
-                  "gap": 6,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "vi3WW5",
-                      "ref": "ds:Qj67Up",
-                      "name": "Text/Muted",
-                      "content": "Don't have an account?"
-                    },
-                    {
-                      "type": "ref",
-                      "id": "FpnGVe",
-                      "ref": "ds:wypLVn",
-                      "name": "Text/Link",
-                      "content": "Sign up"
+                      ]
                     }
                   ]
                 }
               ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "X9LU8M",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "GDZvyE",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
             }
           ]
         }
@@ -544,45 +612,353 @@
     },
     {
       "type": "frame",
-      "id": "SHycdf",
+      "id": "7ZW45N",
       "name": "Auth / Login / Desktop / Dim",
       "width": 1440,
       "height": 900,
       "clip": true,
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
-          "id": "77ybzf",
-          "ref": "ds:dPmdf2",
-          "name": "Auth/Brand Panel",
-          "height": "fill_container",
-          "descendants": {
-            "ds:nJvcGz": {
-              "content": "Your music, ready when you are."
-            }
-          }
-        },
-        {
           "type": "frame",
-          "id": "Jfhn4r",
-          "name": "Form Side",
+          "id": "kBv3aN",
+          "name": "Page",
           "width": "fill_container",
           "height": "fill_container",
-          "justifyContent": "center",
-          "alignItems": "center",
+          "layout": "horizontal",
           "children": [
             {
+              "type": "ref",
+              "id": "vyEVeY",
+              "ref": "ds:oRfRX3",
+              "name": "Auth/Brand Panel",
+              "height": "fill_container",
+              "descendants": {
+                "ds:o6vWAQ": {
+                  "content": "Your music, ready when you are."
+                }
+              }
+            },
+            {
               "type": "frame",
-              "id": "UCMsxF",
-              "name": "Form",
-              "layout": "vertical",
-              "gap": 22,
-              "width": 400,
+              "id": "m5u2ty",
+              "name": "Form Side",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
               "children": [
                 {
                   "type": "frame",
-                  "id": "HqkTkF",
+                  "id": "jyBmkx",
+                  "name": "Form",
+                  "layout": "vertical",
+                  "gap": 22,
+                  "width": 400,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "fWjyUP",
+                      "name": "Heading",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "a3TXw4",
+                          "ref": "ds:Tko4WH",
+                          "name": "Text/H2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Login to your account"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Wevvns",
+                          "ref": "ds:sAeSY2",
+                          "name": "Text/Paragraph",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Welcome back! Please sign in to continue."
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "LAEfLP",
+                      "name": "Fields",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "6CYYza",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Email Address",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Email Address"
+                            },
+                            "ds:iI0CE": {
+                              "content": "you@example.com"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "RX3xRp",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Password",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Password"
+                            },
+                            "ds:iI0CE": {
+                              "content": "••••••••"
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "XPvNYe",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "end",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "uQ6RZo",
+                              "ref": "ds:E9P6CU",
+                              "name": "Text/Link",
+                              "content": "Forgot password?"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "bWpYnJ",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Log in",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Log in"
+                        },
+                        "ds:D3xnv": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "uos5ra",
+                      "ref": "ds:K9GMfF",
+                      "name": "Auth/Or Divider"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "wUpVRL",
+                      "name": "Social Sign-in",
+                      "layout": "vertical",
+                      "gap": 10,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "myXnzg",
+                          "ref": "ds:2MTiVb",
+                          "name": "Form/Checkbox Row",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:68Tk2w": {
+                              "content": "I accept the Terms of Use and Privacy Policy"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ECckf6",
+                          "ref": "ds:G5tJp",
+                          "name": "Button / Continue with Google",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:d2zCI": {
+                              "content": "Continue with Google"
+                            },
+                            "ds:wFUna": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "qZVwYK",
+                          "name": "Providers",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "Twcw6D",
+                              "ref": "ds:QMBjG7",
+                              "name": "Auth/Provider",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:oGrcCK": {
+                                  "content": "Facebook"
+                                },
+                                "ds:ERdvTF": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "H9N9Qo",
+                              "ref": "ds:QMBjG7",
+                              "name": "Auth/Provider",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:oGrcCK": {
+                                  "content": "Apple"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "2aatTF",
+                          "ref": "ds:DTwJb",
+                          "name": "Button / More options · 10",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:GyGLK": {
+                              "content": "More options · 10"
+                            },
+                            "ds:DsOu2": {
+                              "icon": "chevron-down"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "oaFNXC",
+                      "name": "Footer Link",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "AaEhGb",
+                          "ref": "ds:BkaXCh",
+                          "name": "Text/Muted",
+                          "content": "Don't have an account?"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "H3QaXc",
+                          "ref": "ds:E9P6CU",
+                          "name": "Text/Link",
+                          "content": "Sign up"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "rMLmG4",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "65cb8D",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "/auth/login — Login with email/password and social providers."
+    },
+    {
+      "type": "frame",
+      "id": "cxChr4",
+      "name": "Auth / Login / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "RZc5XN",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "ref",
+              "id": "eNfjH7",
+              "ref": "ds:iygje9",
+              "name": "Mobile/Status Bar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "ZQJCRK",
+              "name": "Form",
+              "layout": "vertical",
+              "gap": 22,
+              "width": "fill_container",
+              "padding": [
+                20,
+                20
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "ybggyD",
+                  "ref": "ds:ddzpBD",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "frame",
+                  "id": "oz2W5c",
                   "name": "Heading",
                   "layout": "vertical",
                   "gap": 8,
@@ -590,8 +966,8 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "LwirFW",
-                      "ref": "ds:KayYYa",
+                      "id": "apYLF5",
+                      "ref": "ds:Tko4WH",
                       "name": "Text/H2",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
@@ -599,8 +975,8 @@
                     },
                     {
                       "type": "ref",
-                      "id": "Z4HEUD",
-                      "ref": "ds:cnPxcc",
+                      "id": "NeAu8c",
+                      "ref": "ds:sAeSY2",
                       "name": "Text/Paragraph",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
@@ -610,7 +986,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "hgq6X4",
+                  "id": "UU7x7z",
                   "name": "Fields",
                   "layout": "vertical",
                   "gap": 14,
@@ -618,7 +994,7 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "cubKgo",
+                      "id": "MaMMPS",
                       "ref": "ds:j04F4",
                       "name": "Input / Email Address",
                       "width": "fill_container",
@@ -633,7 +1009,7 @@
                     },
                     {
                       "type": "ref",
-                      "id": "fSxjhd",
+                      "id": "WVBBgv",
                       "ref": "ds:j04F4",
                       "name": "Input / Password",
                       "width": "fill_container",
@@ -648,7 +1024,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "eagcTp",
+                      "id": "qBG34T",
                       "name": "Row",
                       "gap": 12,
                       "alignItems": "center",
@@ -657,8 +1033,8 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "5j8VFt",
-                          "ref": "ds:wypLVn",
+                          "id": "Z8hjpv",
+                          "ref": "ds:E9P6CU",
                           "name": "Text/Link",
                           "content": "Forgot password?"
                         }
@@ -668,7 +1044,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "z7GVHc",
+                  "id": "3WFBUD",
                   "ref": "ds:Y4ylzP",
                   "name": "Button / Log in",
                   "width": "fill_container",
@@ -683,13 +1059,13 @@
                 },
                 {
                   "type": "ref",
-                  "id": "hNKFqr",
-                  "ref": "ds:baza4N",
+                  "id": "XRCTCq",
+                  "ref": "ds:K9GMfF",
                   "name": "Auth/Or Divider"
                 },
                 {
                   "type": "frame",
-                  "id": "joSsjA",
+                  "id": "pgm33F",
                   "name": "Social Sign-in",
                   "layout": "vertical",
                   "gap": 10,
@@ -697,19 +1073,19 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "cGNUzU",
-                      "ref": "ds:ShdxRV",
+                      "id": "iKMPE7",
+                      "ref": "ds:2MTiVb",
                       "name": "Form/Checkbox Row",
                       "width": "fill_container",
                       "descendants": {
-                        "ds:kH8fAh": {
+                        "ds:68Tk2w": {
                           "content": "I accept the Terms of Use and Privacy Policy"
                         }
                       }
                     },
                     {
                       "type": "ref",
-                      "id": "o5epjZ",
+                      "id": "MyFgRa",
                       "ref": "ds:G5tJp",
                       "name": "Button / Continue with Google",
                       "width": "fill_container",
@@ -724,7 +1100,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "ocSW5z",
+                      "id": "eSwqHr",
                       "name": "Providers",
                       "gap": 8,
                       "alignItems": "center",
@@ -732,27 +1108,27 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "9sY3rx",
-                          "ref": "ds:wXnn4a",
+                          "id": "WSr3ST",
+                          "ref": "ds:QMBjG7",
                           "name": "Auth/Provider",
                           "width": "fill_container",
                           "descendants": {
-                            "ds:My8YZr": {
+                            "ds:oGrcCK": {
                               "content": "Facebook"
                             },
-                            "ds:cPCahF": {
+                            "ds:ERdvTF": {
                               "enabled": false
                             }
                           }
                         },
                         {
                           "type": "ref",
-                          "id": "ZMFjag",
-                          "ref": "ds:wXnn4a",
+                          "id": "9xoFcZ",
+                          "ref": "ds:QMBjG7",
                           "name": "Auth/Provider",
                           "width": "fill_container",
                           "descendants": {
-                            "ds:My8YZr": {
+                            "ds:oGrcCK": {
                               "content": "Apple"
                             }
                           }
@@ -761,7 +1137,7 @@
                     },
                     {
                       "type": "ref",
-                      "id": "bGxjff",
+                      "id": "qJTtjU",
                       "ref": "ds:DTwJb",
                       "name": "Button / More options · 10",
                       "width": "fill_container",
@@ -778,22 +1154,22 @@
                 },
                 {
                   "type": "frame",
-                  "id": "Fy5sBb",
+                  "id": "cgrshm",
                   "name": "Footer Link",
                   "gap": 6,
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "ref",
-                      "id": "WZytB7",
-                      "ref": "ds:Qj67Up",
+                      "id": "LzEdhr",
+                      "ref": "ds:BkaXCh",
                       "name": "Text/Muted",
                       "content": "Don't have an account?"
                     },
                     {
                       "type": "ref",
-                      "id": "wFaCvr",
-                      "ref": "ds:wypLVn",
+                      "id": "S3XcX2",
+                      "ref": "ds:E9P6CU",
                       "name": "Text/Link",
                       "content": "Sign up"
                     }
@@ -802,268 +1178,27 @@
               ]
             }
           ]
-        }
-      ],
-      "x": 3080,
-      "y": 0,
-      "theme": {
-        "ds:Mode": "Dim"
-      },
-      "context": "/auth/login — Login with email/password and social providers."
-    },
-    {
-      "type": "frame",
-      "id": "hZzqXH",
-      "name": "Auth / Login / Mobile / Dark",
-      "width": 390,
-      "height": 844,
-      "clip": true,
-      "layout": "vertical",
-      "fill": "$ds:--background",
-      "children": [
-        {
-          "type": "ref",
-          "id": "DNoW6p",
-          "ref": "ds:PVPP6B",
-          "name": "Mobile/Status Bar",
-          "width": "fill_container"
         },
         {
           "type": "frame",
-          "id": "YenwrT",
-          "name": "Form",
-          "layout": "vertical",
-          "gap": 22,
+          "id": "YcReGZ",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
           "width": "fill_container",
+          "justifyContent": "end",
           "padding": [
+            0,
+            16,
             20,
-            20
+            0
           ],
           "children": [
             {
               "type": "ref",
-              "id": "ZP5KpE",
-              "ref": "ds:z9dEdU",
-              "name": "Logo/Lockup"
-            },
-            {
-              "type": "frame",
-              "id": "2iieMH",
-              "name": "Heading",
-              "layout": "vertical",
-              "gap": 8,
-              "width": "fill_container",
-              "children": [
-                {
-                  "type": "ref",
-                  "id": "iDp7YH",
-                  "ref": "ds:KayYYa",
-                  "name": "Text/H2",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Login to your account"
-                },
-                {
-                  "type": "ref",
-                  "id": "PirfeN",
-                  "ref": "ds:cnPxcc",
-                  "name": "Text/Paragraph",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Welcome back! Please sign in to continue."
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "XdbR2M",
-              "name": "Fields",
-              "layout": "vertical",
-              "gap": 14,
-              "width": "fill_container",
-              "children": [
-                {
-                  "type": "ref",
-                  "id": "M6sj4q",
-                  "ref": "ds:j04F4",
-                  "name": "Input / Email Address",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:l4agQ": {
-                      "content": "Email Address"
-                    },
-                    "ds:iI0CE": {
-                      "content": "you@example.com"
-                    }
-                  }
-                },
-                {
-                  "type": "ref",
-                  "id": "zajMn2",
-                  "ref": "ds:j04F4",
-                  "name": "Input / Password",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:l4agQ": {
-                      "content": "Password"
-                    },
-                    "ds:iI0CE": {
-                      "content": "••••••••"
-                    }
-                  }
-                },
-                {
-                  "type": "frame",
-                  "id": "sPboBL",
-                  "name": "Row",
-                  "gap": 12,
-                  "alignItems": "center",
-                  "width": "fill_container",
-                  "justifyContent": "end",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "aQov5M",
-                      "ref": "ds:wypLVn",
-                      "name": "Text/Link",
-                      "content": "Forgot password?"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "ref",
-              "id": "L4JbSt",
-              "ref": "ds:Y4ylzP",
-              "name": "Button / Log in",
-              "width": "fill_container",
-              "descendants": {
-                "ds:NVe7y": {
-                  "content": "Log in"
-                },
-                "ds:D3xnv": {
-                  "enabled": false
-                }
-              }
-            },
-            {
-              "type": "ref",
-              "id": "8ZbpCV",
-              "ref": "ds:baza4N",
-              "name": "Auth/Or Divider"
-            },
-            {
-              "type": "frame",
-              "id": "6Mnn5h",
-              "name": "Social Sign-in",
-              "layout": "vertical",
-              "gap": 10,
-              "width": "fill_container",
-              "children": [
-                {
-                  "type": "ref",
-                  "id": "vmQwbN",
-                  "ref": "ds:ShdxRV",
-                  "name": "Form/Checkbox Row",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:kH8fAh": {
-                      "content": "I accept the Terms of Use and Privacy Policy"
-                    }
-                  }
-                },
-                {
-                  "type": "ref",
-                  "id": "4sktK8",
-                  "ref": "ds:G5tJp",
-                  "name": "Button / Continue with Google",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:d2zCI": {
-                      "content": "Continue with Google"
-                    },
-                    "ds:wFUna": {
-                      "enabled": false
-                    }
-                  }
-                },
-                {
-                  "type": "frame",
-                  "id": "Mqyu4a",
-                  "name": "Providers",
-                  "gap": 8,
-                  "alignItems": "center",
-                  "width": "fill_container",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "U4MQCw",
-                      "ref": "ds:wXnn4a",
-                      "name": "Auth/Provider",
-                      "width": "fill_container",
-                      "descendants": {
-                        "ds:My8YZr": {
-                          "content": "Facebook"
-                        },
-                        "ds:cPCahF": {
-                          "enabled": false
-                        }
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "7TYuKS",
-                      "ref": "ds:wXnn4a",
-                      "name": "Auth/Provider",
-                      "width": "fill_container",
-                      "descendants": {
-                        "ds:My8YZr": {
-                          "content": "Apple"
-                        }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "ref",
-                  "id": "kbuCKf",
-                  "ref": "ds:DTwJb",
-                  "name": "Button / More options · 10",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:GyGLK": {
-                      "content": "More options · 10"
-                    },
-                    "ds:DsOu2": {
-                      "icon": "chevron-down"
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "QquiGr",
-              "name": "Footer Link",
-              "gap": 6,
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "ref",
-                  "id": "LmqCzD",
-                  "ref": "ds:Qj67Up",
-                  "name": "Text/Muted",
-                  "content": "Don't have an account?"
-                },
-                {
-                  "type": "ref",
-                  "id": "ARTqwy",
-                  "ref": "ds:wypLVn",
-                  "name": "Text/Link",
-                  "content": "Sign up"
-                }
-              ]
+              "id": "5cV6Sf",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
             }
           ]
         }
@@ -1077,45 +1212,217 @@
     },
     {
       "type": "frame",
-      "id": "swyv2z",
+      "id": "qFYiKD",
       "name": "Auth / Login / Submitting / Desktop",
       "width": 1440,
       "height": 900,
       "clip": true,
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
-          "id": "Uz8VTJ",
-          "ref": "ds:dPmdf2",
-          "name": "Auth/Brand Panel",
-          "height": "fill_container",
-          "descendants": {
-            "ds:nJvcGz": {
-              "content": "Your music, ready when you are."
-            }
-          }
-        },
-        {
           "type": "frame",
-          "id": "8xdpEX",
-          "name": "Form Side",
+          "id": "ZFjGZF",
+          "name": "Page",
           "width": "fill_container",
           "height": "fill_container",
-          "justifyContent": "center",
-          "alignItems": "center",
+          "layout": "horizontal",
           "children": [
             {
+              "type": "ref",
+              "id": "yDQwdS",
+              "ref": "ds:oRfRX3",
+              "name": "Auth/Brand Panel",
+              "height": "fill_container",
+              "descendants": {
+                "ds:o6vWAQ": {
+                  "content": "Your music, ready when you are."
+                }
+              }
+            },
+            {
               "type": "frame",
-              "id": "99ve9Q",
-              "name": "Form",
-              "layout": "vertical",
-              "gap": 22,
-              "width": 400,
+              "id": "jZuBDL",
+              "name": "Form Side",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
               "children": [
                 {
                   "type": "frame",
-                  "id": "YxKzhS",
+                  "id": "9uaz89",
+                  "name": "Form",
+                  "layout": "vertical",
+                  "gap": 22,
+                  "width": 400,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "NP8ENF",
+                      "name": "Heading",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "u69tG3",
+                          "ref": "ds:Tko4WH",
+                          "name": "Text/H2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Login to your account"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "TkiSTz",
+                          "ref": "ds:sAeSY2",
+                          "name": "Text/Paragraph",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Welcome back! Please sign in to continue."
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Jtc477",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "2eezeN",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Email Address",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Email Address"
+                            },
+                            "ds:iI0CE": {
+                              "content": "maya@example.com"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "8sLu3G",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Password",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Password"
+                            },
+                            "ds:iI0CE": {
+                              "content": "••••••••"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "tV48nJ",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Logging in...",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Logging in..."
+                        },
+                        "ds:D3xnv": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "QRvMJ5",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "v7Qhv9",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/auth/login — Login with email/password and social providers."
+    },
+    {
+      "type": "frame",
+      "id": "5yjacD",
+      "name": "Auth / Login / Submitting / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "kdrqZS",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "ref",
+              "id": "FizRNj",
+              "ref": "ds:iygje9",
+              "name": "Mobile/Status Bar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "58EMuE",
+              "name": "Form",
+              "layout": "vertical",
+              "gap": 22,
+              "width": "fill_container",
+              "padding": [
+                20,
+                20
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "ZTPKKn",
+                  "ref": "ds:ddzpBD",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "frame",
+                  "id": "PUTXfn",
                   "name": "Heading",
                   "layout": "vertical",
                   "gap": 8,
@@ -1123,8 +1430,8 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "yDhqGL",
-                      "ref": "ds:KayYYa",
+                      "id": "RFyJQ4",
+                      "ref": "ds:Tko4WH",
                       "name": "Text/H2",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
@@ -1132,8 +1439,8 @@
                     },
                     {
                       "type": "ref",
-                      "id": "FbF9qg",
-                      "ref": "ds:cnPxcc",
+                      "id": "QqXjHq",
+                      "ref": "ds:sAeSY2",
                       "name": "Text/Paragraph",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
@@ -1143,7 +1450,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "e3LHL5",
+                  "id": "EvDXQE",
                   "name": "Column",
                   "layout": "vertical",
                   "gap": 14,
@@ -1151,7 +1458,7 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "PXWVum",
+                      "id": "eXMm24",
                       "ref": "ds:j04F4",
                       "name": "Input / Email Address",
                       "width": "fill_container",
@@ -1166,7 +1473,7 @@
                     },
                     {
                       "type": "ref",
-                      "id": "3q3Nk2",
+                      "id": "eJ9RMQ",
                       "ref": "ds:j04F4",
                       "name": "Input / Password",
                       "width": "fill_container",
@@ -1183,7 +1490,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "SLkXoi",
+                  "id": "ZN8T7M",
                   "ref": "ds:Y4ylzP",
                   "name": "Button / Logging in...",
                   "width": "fill_container",
@@ -1199,132 +1506,27 @@
               ]
             }
           ]
-        }
-      ],
-      "x": 5110,
-      "y": 0,
-      "theme": {
-        "ds:Mode": "Dark"
-      },
-      "context": "/auth/login — Login with email/password and social providers."
-    },
-    {
-      "type": "frame",
-      "id": "ApBoky",
-      "name": "Auth / Login / Submitting / Mobile",
-      "width": 390,
-      "height": 844,
-      "clip": true,
-      "layout": "vertical",
-      "fill": "$ds:--background",
-      "children": [
-        {
-          "type": "ref",
-          "id": "kMXHWx",
-          "ref": "ds:PVPP6B",
-          "name": "Mobile/Status Bar",
-          "width": "fill_container"
         },
         {
           "type": "frame",
-          "id": "soewbS",
-          "name": "Form",
-          "layout": "vertical",
-          "gap": 22,
+          "id": "xgWWMQ",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
           "width": "fill_container",
+          "justifyContent": "end",
           "padding": [
+            0,
+            16,
             20,
-            20
+            0
           ],
           "children": [
             {
               "type": "ref",
-              "id": "rg2BuL",
-              "ref": "ds:z9dEdU",
-              "name": "Logo/Lockup"
-            },
-            {
-              "type": "frame",
-              "id": "sPnzsR",
-              "name": "Heading",
-              "layout": "vertical",
-              "gap": 8,
-              "width": "fill_container",
-              "children": [
-                {
-                  "type": "ref",
-                  "id": "L9gnN8",
-                  "ref": "ds:KayYYa",
-                  "name": "Text/H2",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Login to your account"
-                },
-                {
-                  "type": "ref",
-                  "id": "ggiPbc",
-                  "ref": "ds:cnPxcc",
-                  "name": "Text/Paragraph",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Welcome back! Please sign in to continue."
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "RUFrD2",
-              "name": "Column",
-              "layout": "vertical",
-              "gap": 14,
-              "width": "fill_container",
-              "children": [
-                {
-                  "type": "ref",
-                  "id": "N8JNkS",
-                  "ref": "ds:j04F4",
-                  "name": "Input / Email Address",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:l4agQ": {
-                      "content": "Email Address"
-                    },
-                    "ds:iI0CE": {
-                      "content": "maya@example.com"
-                    }
-                  }
-                },
-                {
-                  "type": "ref",
-                  "id": "LHiCbb",
-                  "ref": "ds:j04F4",
-                  "name": "Input / Password",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:l4agQ": {
-                      "content": "Password"
-                    },
-                    "ds:iI0CE": {
-                      "content": "••••••••"
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "ref",
-              "id": "2Y3qXD",
-              "ref": "ds:Y4ylzP",
-              "name": "Button / Logging in...",
-              "width": "fill_container",
-              "descendants": {
-                "ds:NVe7y": {
-                  "content": "Logging in..."
-                },
-                "ds:D3xnv": {
-                  "enabled": false
-                }
-              }
+              "id": "QvygRs",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
             }
           ]
         }
@@ -1338,45 +1540,368 @@
     },
     {
       "type": "frame",
-      "id": "JbGGXu",
+      "id": "F4nGKd",
       "name": "Auth / Login / Error / Desktop",
       "width": 1440,
       "height": 900,
       "clip": true,
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
-          "id": "27XEoa",
-          "ref": "ds:dPmdf2",
-          "name": "Auth/Brand Panel",
-          "height": "fill_container",
-          "descendants": {
-            "ds:nJvcGz": {
-              "content": "Your music, ready when you are."
-            }
-          }
-        },
-        {
           "type": "frame",
-          "id": "gJfBW2",
-          "name": "Form Side",
+          "id": "bqRJJ3",
+          "name": "Page",
           "width": "fill_container",
           "height": "fill_container",
-          "justifyContent": "center",
-          "alignItems": "center",
+          "layout": "horizontal",
           "children": [
             {
+              "type": "ref",
+              "id": "jvDbdT",
+              "ref": "ds:oRfRX3",
+              "name": "Auth/Brand Panel",
+              "height": "fill_container",
+              "descendants": {
+                "ds:o6vWAQ": {
+                  "content": "Your music, ready when you are."
+                }
+              }
+            },
+            {
               "type": "frame",
-              "id": "XkCEHh",
-              "name": "Form",
-              "layout": "vertical",
-              "gap": 22,
-              "width": 400,
+              "id": "xpi9F3",
+              "name": "Form Side",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
               "children": [
                 {
                   "type": "frame",
-                  "id": "QWxYkJ",
+                  "id": "YgJMLf",
+                  "name": "Form",
+                  "layout": "vertical",
+                  "gap": 22,
+                  "width": 400,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "KHVBvQ",
+                      "name": "Heading",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ThePXU",
+                          "ref": "ds:Tko4WH",
+                          "name": "Text/H2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Login to your account"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "5uqoXF",
+                          "ref": "ds:sAeSY2",
+                          "name": "Text/Paragraph",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Welcome back! Please sign in to continue."
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "oXSauo",
+                      "ref": "ds:ogW5t",
+                      "name": "Alert / Sign-in failed",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:L7SHNm": {
+                          "content": "Sign-in failed"
+                        },
+                        "ds:F9kE6W": {
+                          "content": "Check your email and password and try again."
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "3RPppD",
+                      "name": "Fields",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "iF6VJE",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Email Address",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Email Address"
+                            },
+                            "ds:iI0CE": {
+                              "content": "you@example.com"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Cxmwc6",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Password",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Password"
+                            },
+                            "ds:iI0CE": {
+                              "content": "••••••••"
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "JeMjjB",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "end",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "MCJera",
+                              "ref": "ds:E9P6CU",
+                              "name": "Text/Link",
+                              "content": "Forgot password?"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "gMuE2M",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Log in",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Log in"
+                        },
+                        "ds:D3xnv": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "hcckZn",
+                      "ref": "ds:K9GMfF",
+                      "name": "Auth/Or Divider"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "i4dBEg",
+                      "name": "Social Sign-in",
+                      "layout": "vertical",
+                      "gap": 10,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "BWUn6n",
+                          "ref": "ds:2MTiVb",
+                          "name": "Form/Checkbox Row",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:68Tk2w": {
+                              "content": "I accept the Terms of Use and Privacy Policy"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "zKxEFS",
+                          "ref": "ds:G5tJp",
+                          "name": "Button / Continue with Google",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:d2zCI": {
+                              "content": "Continue with Google"
+                            },
+                            "ds:wFUna": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "mLCzP8",
+                          "name": "Providers",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "KLShLj",
+                              "ref": "ds:QMBjG7",
+                              "name": "Auth/Provider",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:oGrcCK": {
+                                  "content": "Facebook"
+                                },
+                                "ds:ERdvTF": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "BraMDj",
+                              "ref": "ds:QMBjG7",
+                              "name": "Auth/Provider",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:oGrcCK": {
+                                  "content": "Apple"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "jQoioh",
+                          "ref": "ds:DTwJb",
+                          "name": "Button / More options · 10",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:GyGLK": {
+                              "content": "More options · 10"
+                            },
+                            "ds:DsOu2": {
+                              "icon": "chevron-down"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Umtx24",
+                      "name": "Footer Link",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "cY356K",
+                          "ref": "ds:BkaXCh",
+                          "name": "Text/Muted",
+                          "content": "Don't have an account?"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "kQpuS3",
+                          "ref": "ds:E9P6CU",
+                          "name": "Text/Link",
+                          "content": "Sign up"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "TWgatj",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "JHduR4",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/auth/login — Login with email/password and social providers."
+    },
+    {
+      "type": "frame",
+      "id": "vftQZs",
+      "name": "Auth / Login / Error / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "KGxZfc",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "ref",
+              "id": "Bh954A",
+              "ref": "ds:iygje9",
+              "name": "Mobile/Status Bar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "DYVYHV",
+              "name": "Form",
+              "layout": "vertical",
+              "gap": 22,
+              "width": "fill_container",
+              "padding": [
+                20,
+                20
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "QT8WLX",
+                  "ref": "ds:ddzpBD",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "frame",
+                  "id": "UzQqq5",
                   "name": "Heading",
                   "layout": "vertical",
                   "gap": 8,
@@ -1384,8 +1909,8 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "Hp35SZ",
-                      "ref": "ds:KayYYa",
+                      "id": "oFNrKA",
+                      "ref": "ds:Tko4WH",
                       "name": "Text/H2",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
@@ -1393,8 +1918,8 @@
                     },
                     {
                       "type": "ref",
-                      "id": "gD6VjC",
-                      "ref": "ds:cnPxcc",
+                      "id": "owaAG9",
+                      "ref": "ds:sAeSY2",
                       "name": "Text/Paragraph",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
@@ -1404,7 +1929,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "D2mt7t",
+                  "id": "SerZtd",
                   "ref": "ds:ogW5t",
                   "name": "Alert / Sign-in failed",
                   "width": "fill_container",
@@ -1419,7 +1944,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "zBGycb",
+                  "id": "8dDeLz",
                   "name": "Fields",
                   "layout": "vertical",
                   "gap": 14,
@@ -1427,7 +1952,7 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "Hsfqr9",
+                      "id": "xDsZxn",
                       "ref": "ds:j04F4",
                       "name": "Input / Email Address",
                       "width": "fill_container",
@@ -1442,7 +1967,7 @@
                     },
                     {
                       "type": "ref",
-                      "id": "U7PfSP",
+                      "id": "3aEukQ",
                       "ref": "ds:j04F4",
                       "name": "Input / Password",
                       "width": "fill_container",
@@ -1457,7 +1982,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "x6UmnZ",
+                      "id": "wEiuXS",
                       "name": "Row",
                       "gap": 12,
                       "alignItems": "center",
@@ -1466,8 +1991,8 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "gzGvmL",
-                          "ref": "ds:wypLVn",
+                          "id": "SForxL",
+                          "ref": "ds:E9P6CU",
                           "name": "Text/Link",
                           "content": "Forgot password?"
                         }
@@ -1477,7 +2002,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "bY8U9B",
+                  "id": "fypKN9",
                   "ref": "ds:Y4ylzP",
                   "name": "Button / Log in",
                   "width": "fill_container",
@@ -1492,13 +2017,13 @@
                 },
                 {
                   "type": "ref",
-                  "id": "eep78A",
-                  "ref": "ds:baza4N",
+                  "id": "6WVad5",
+                  "ref": "ds:K9GMfF",
                   "name": "Auth/Or Divider"
                 },
                 {
                   "type": "frame",
-                  "id": "pchQuH",
+                  "id": "vqBjDM",
                   "name": "Social Sign-in",
                   "layout": "vertical",
                   "gap": 10,
@@ -1506,19 +2031,19 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "bu8UAu",
-                      "ref": "ds:ShdxRV",
+                      "id": "Ed89wr",
+                      "ref": "ds:2MTiVb",
                       "name": "Form/Checkbox Row",
                       "width": "fill_container",
                       "descendants": {
-                        "ds:kH8fAh": {
+                        "ds:68Tk2w": {
                           "content": "I accept the Terms of Use and Privacy Policy"
                         }
                       }
                     },
                     {
                       "type": "ref",
-                      "id": "U4dpBA",
+                      "id": "XoDRQG",
                       "ref": "ds:G5tJp",
                       "name": "Button / Continue with Google",
                       "width": "fill_container",
@@ -1533,7 +2058,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "yfruJi",
+                      "id": "r3HkAo",
                       "name": "Providers",
                       "gap": 8,
                       "alignItems": "center",
@@ -1541,27 +2066,27 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "8jmEDo",
-                          "ref": "ds:wXnn4a",
+                          "id": "FcQVoq",
+                          "ref": "ds:QMBjG7",
                           "name": "Auth/Provider",
                           "width": "fill_container",
                           "descendants": {
-                            "ds:My8YZr": {
+                            "ds:oGrcCK": {
                               "content": "Facebook"
                             },
-                            "ds:cPCahF": {
+                            "ds:ERdvTF": {
                               "enabled": false
                             }
                           }
                         },
                         {
                           "type": "ref",
-                          "id": "dYzmQs",
-                          "ref": "ds:wXnn4a",
+                          "id": "3dHQoi",
+                          "ref": "ds:QMBjG7",
                           "name": "Auth/Provider",
                           "width": "fill_container",
                           "descendants": {
-                            "ds:My8YZr": {
+                            "ds:oGrcCK": {
                               "content": "Apple"
                             }
                           }
@@ -1570,7 +2095,7 @@
                     },
                     {
                       "type": "ref",
-                      "id": "nrFGa3",
+                      "id": "KzCVuD",
                       "ref": "ds:DTwJb",
                       "name": "Button / More options · 10",
                       "width": "fill_container",
@@ -1587,22 +2112,22 @@
                 },
                 {
                   "type": "frame",
-                  "id": "jYUFbL",
+                  "id": "PPSiJ2",
                   "name": "Footer Link",
                   "gap": 6,
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "ref",
-                      "id": "xmmkkv",
-                      "ref": "ds:Qj67Up",
+                      "id": "BS8RPJ",
+                      "ref": "ds:BkaXCh",
                       "name": "Text/Muted",
                       "content": "Don't have an account?"
                     },
                     {
                       "type": "ref",
-                      "id": "CmRJoW",
-                      "ref": "ds:wypLVn",
+                      "id": "tfya6J",
+                      "ref": "ds:E9P6CU",
                       "name": "Text/Link",
                       "content": "Sign up"
                     }
@@ -1611,283 +2136,27 @@
               ]
             }
           ]
-        }
-      ],
-      "x": 7140,
-      "y": 0,
-      "theme": {
-        "ds:Mode": "Dark"
-      },
-      "context": "/auth/login — Login with email/password and social providers."
-    },
-    {
-      "type": "frame",
-      "id": "pfXELd",
-      "name": "Auth / Login / Error / Mobile",
-      "width": 390,
-      "height": 844,
-      "clip": true,
-      "layout": "vertical",
-      "fill": "$ds:--background",
-      "children": [
-        {
-          "type": "ref",
-          "id": "JbB6KG",
-          "ref": "ds:PVPP6B",
-          "name": "Mobile/Status Bar",
-          "width": "fill_container"
         },
         {
           "type": "frame",
-          "id": "H7mdtL",
-          "name": "Form",
-          "layout": "vertical",
-          "gap": 22,
+          "id": "hd8RkY",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
           "width": "fill_container",
+          "justifyContent": "end",
           "padding": [
+            0,
+            16,
             20,
-            20
+            0
           ],
           "children": [
             {
               "type": "ref",
-              "id": "a7fkzG",
-              "ref": "ds:z9dEdU",
-              "name": "Logo/Lockup"
-            },
-            {
-              "type": "frame",
-              "id": "Ts54Zn",
-              "name": "Heading",
-              "layout": "vertical",
-              "gap": 8,
-              "width": "fill_container",
-              "children": [
-                {
-                  "type": "ref",
-                  "id": "HcVxnw",
-                  "ref": "ds:KayYYa",
-                  "name": "Text/H2",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Login to your account"
-                },
-                {
-                  "type": "ref",
-                  "id": "Hup86C",
-                  "ref": "ds:cnPxcc",
-                  "name": "Text/Paragraph",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Welcome back! Please sign in to continue."
-                }
-              ]
-            },
-            {
-              "type": "ref",
-              "id": "Yq8JKa",
-              "ref": "ds:ogW5t",
-              "name": "Alert / Sign-in failed",
-              "width": "fill_container",
-              "descendants": {
-                "ds:L7SHNm": {
-                  "content": "Sign-in failed"
-                },
-                "ds:F9kE6W": {
-                  "content": "Check your email and password and try again."
-                }
-              }
-            },
-            {
-              "type": "frame",
-              "id": "amZWFJ",
-              "name": "Fields",
-              "layout": "vertical",
-              "gap": 14,
-              "width": "fill_container",
-              "children": [
-                {
-                  "type": "ref",
-                  "id": "se8vmq",
-                  "ref": "ds:j04F4",
-                  "name": "Input / Email Address",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:l4agQ": {
-                      "content": "Email Address"
-                    },
-                    "ds:iI0CE": {
-                      "content": "you@example.com"
-                    }
-                  }
-                },
-                {
-                  "type": "ref",
-                  "id": "nAWHQM",
-                  "ref": "ds:j04F4",
-                  "name": "Input / Password",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:l4agQ": {
-                      "content": "Password"
-                    },
-                    "ds:iI0CE": {
-                      "content": "••••••••"
-                    }
-                  }
-                },
-                {
-                  "type": "frame",
-                  "id": "udrsdt",
-                  "name": "Row",
-                  "gap": 12,
-                  "alignItems": "center",
-                  "width": "fill_container",
-                  "justifyContent": "end",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "jgWRwL",
-                      "ref": "ds:wypLVn",
-                      "name": "Text/Link",
-                      "content": "Forgot password?"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "ref",
-              "id": "8j96v4",
-              "ref": "ds:Y4ylzP",
-              "name": "Button / Log in",
-              "width": "fill_container",
-              "descendants": {
-                "ds:NVe7y": {
-                  "content": "Log in"
-                },
-                "ds:D3xnv": {
-                  "enabled": false
-                }
-              }
-            },
-            {
-              "type": "ref",
-              "id": "kuZwk9",
-              "ref": "ds:baza4N",
-              "name": "Auth/Or Divider"
-            },
-            {
-              "type": "frame",
-              "id": "yL2XKG",
-              "name": "Social Sign-in",
-              "layout": "vertical",
-              "gap": 10,
-              "width": "fill_container",
-              "children": [
-                {
-                  "type": "ref",
-                  "id": "7eRQd7",
-                  "ref": "ds:ShdxRV",
-                  "name": "Form/Checkbox Row",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:kH8fAh": {
-                      "content": "I accept the Terms of Use and Privacy Policy"
-                    }
-                  }
-                },
-                {
-                  "type": "ref",
-                  "id": "QbVdJH",
-                  "ref": "ds:G5tJp",
-                  "name": "Button / Continue with Google",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:d2zCI": {
-                      "content": "Continue with Google"
-                    },
-                    "ds:wFUna": {
-                      "enabled": false
-                    }
-                  }
-                },
-                {
-                  "type": "frame",
-                  "id": "VkbgcE",
-                  "name": "Providers",
-                  "gap": 8,
-                  "alignItems": "center",
-                  "width": "fill_container",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "x8oQqn",
-                      "ref": "ds:wXnn4a",
-                      "name": "Auth/Provider",
-                      "width": "fill_container",
-                      "descendants": {
-                        "ds:My8YZr": {
-                          "content": "Facebook"
-                        },
-                        "ds:cPCahF": {
-                          "enabled": false
-                        }
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "3TLSeX",
-                      "ref": "ds:wXnn4a",
-                      "name": "Auth/Provider",
-                      "width": "fill_container",
-                      "descendants": {
-                        "ds:My8YZr": {
-                          "content": "Apple"
-                        }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "ref",
-                  "id": "3JFTa5",
-                  "ref": "ds:DTwJb",
-                  "name": "Button / More options · 10",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:GyGLK": {
-                      "content": "More options · 10"
-                    },
-                    "ds:DsOu2": {
-                      "icon": "chevron-down"
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "QUVu5z",
-              "name": "Footer Link",
-              "gap": 6,
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "ref",
-                  "id": "TTVtbh",
-                  "ref": "ds:Qj67Up",
-                  "name": "Text/Muted",
-                  "content": "Don't have an account?"
-                },
-                {
-                  "type": "ref",
-                  "id": "5CeNNM",
-                  "ref": "ds:wypLVn",
-                  "name": "Text/Link",
-                  "content": "Sign up"
-                }
-              ]
+              "id": "zmJFf7",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
             }
           ]
         }
@@ -1901,45 +2170,566 @@
     },
     {
       "type": "frame",
-      "id": "QRA9jN",
+      "id": "j9iort",
       "name": "Auth / Login / More sign-in options / Desktop",
       "width": 1440,
       "height": 900,
       "clip": true,
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
-          "id": "akeMCV",
-          "ref": "ds:dPmdf2",
-          "name": "Auth/Brand Panel",
-          "height": "fill_container",
-          "descendants": {
-            "ds:nJvcGz": {
-              "content": "Your music, ready when you are."
-            }
-          }
-        },
-        {
           "type": "frame",
-          "id": "nN6qeH",
-          "name": "Form Side",
+          "id": "khZDqW",
+          "name": "Page",
           "width": "fill_container",
           "height": "fill_container",
-          "justifyContent": "center",
-          "alignItems": "center",
+          "layout": "horizontal",
           "children": [
             {
+              "type": "ref",
+              "id": "mxAFWs",
+              "ref": "ds:oRfRX3",
+              "name": "Auth/Brand Panel",
+              "height": "fill_container",
+              "descendants": {
+                "ds:o6vWAQ": {
+                  "content": "Your music, ready when you are."
+                }
+              }
+            },
+            {
               "type": "frame",
-              "id": "FWkFRt",
-              "name": "Form",
-              "layout": "vertical",
-              "gap": 22,
-              "width": 400,
+              "id": "k5FmPw",
+              "name": "Form Side",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
               "children": [
                 {
                   "type": "frame",
-                  "id": "NhKHXu",
+                  "id": "VF5eK8",
+                  "name": "Form",
+                  "layout": "vertical",
+                  "gap": 22,
+                  "width": 400,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "57rWCN",
+                      "name": "Heading",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "oxWwwc",
+                          "ref": "ds:Tko4WH",
+                          "name": "Text/H2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Login to your account"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "QWbetm",
+                          "ref": "ds:sAeSY2",
+                          "name": "Text/Paragraph",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Welcome back! Please sign in to continue."
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "4YvqL5",
+                      "name": "Fields",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Hr6a3Y",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Email Address",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Email Address"
+                            },
+                            "ds:iI0CE": {
+                              "content": "you@example.com"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "YjKiDc",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Password",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Password"
+                            },
+                            "ds:iI0CE": {
+                              "content": "••••••••"
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "ps9voK",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "end",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "4jgMSU",
+                              "ref": "ds:E9P6CU",
+                              "name": "Text/Link",
+                              "content": "Forgot password?"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "mkkPcE",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Log in",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Log in"
+                        },
+                        "ds:D3xnv": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "H7iNiw",
+                      "ref": "ds:K9GMfF",
+                      "name": "Auth/Or Divider"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "itszAQ",
+                      "name": "Social Sign-in",
+                      "layout": "vertical",
+                      "gap": 10,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "dFYqDZ",
+                          "ref": "ds:2MTiVb",
+                          "name": "Form/Checkbox Row",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:68Tk2w": {
+                              "content": "I accept the Terms of Use and Privacy Policy"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "5kkhnD",
+                          "ref": "ds:G5tJp",
+                          "name": "Button / Continue with Google",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:d2zCI": {
+                              "content": "Continue with Google"
+                            },
+                            "ds:wFUna": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Zq5K39",
+                          "name": "Providers",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "A4TB5R",
+                              "ref": "ds:QMBjG7",
+                              "name": "Auth/Provider",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:oGrcCK": {
+                                  "content": "Facebook"
+                                },
+                                "ds:ERdvTF": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "gHCM5r",
+                              "ref": "ds:QMBjG7",
+                              "name": "Auth/Provider",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:oGrcCK": {
+                                  "content": "Apple"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "QUuRWW",
+                          "ref": "ds:WmrZBp",
+                          "name": "Surface/Panel",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "descendants": {
+                            "ds:YkmsrB": {
+                              "type": "frame",
+                              "id": "zLQdr3",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 8,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "8LgRYQ",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "9Ziro3",
+                                      "ref": "ds:8FcLQ4",
+                                      "name": "Text/Body Strong",
+                                      "content": "More sign-in options"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "4aGJw6",
+                                      "ref": "ds:vjFRrZ",
+                                      "name": "Button/Icon Ghost",
+                                      "descendants": {
+                                        "ds:5CdLJv": {
+                                          "icon": "chevron-up"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "SxnCoW",
+                                  "name": "Provider Row",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "BYfksy",
+                                      "ref": "ds:QMBjG7",
+                                      "name": "Auth/Provider",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:oGrcCK": {
+                                          "content": "Discord"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "cYcW2C",
+                                      "ref": "ds:QMBjG7",
+                                      "name": "Auth/Provider",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:oGrcCK": {
+                                          "content": "GitHub"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "ni7SX7",
+                                  "name": "Provider Row",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "iF7ugi",
+                                      "ref": "ds:QMBjG7",
+                                      "name": "Auth/Provider",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:oGrcCK": {
+                                          "content": "Microsoft"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "yn9KWg",
+                                      "ref": "ds:QMBjG7",
+                                      "name": "Auth/Provider",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:oGrcCK": {
+                                          "content": "X"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "zfH4Py",
+                                  "name": "Provider Row",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "X59TEz",
+                                      "ref": "ds:QMBjG7",
+                                      "name": "Auth/Provider",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:oGrcCK": {
+                                          "content": "Instagram"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "kx4a4N",
+                                      "ref": "ds:QMBjG7",
+                                      "name": "Auth/Provider",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:oGrcCK": {
+                                          "content": "TikTok"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "n4iXUH",
+                                  "name": "Provider Row",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "YzpP25",
+                                      "ref": "ds:QMBjG7",
+                                      "name": "Auth/Provider",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:oGrcCK": {
+                                          "content": "Twitch"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "DiygMc",
+                                      "ref": "ds:QMBjG7",
+                                      "name": "Auth/Provider",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:oGrcCK": {
+                                          "content": "LinkedIn"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "Ppz8Wx",
+                                  "name": "Provider Row",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "G9ptXA",
+                                      "ref": "ds:QMBjG7",
+                                      "name": "Auth/Provider",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:oGrcCK": {
+                                          "content": "Reddit"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "wwVkQx",
+                                      "ref": "ds:QMBjG7",
+                                      "name": "Auth/Provider",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:oGrcCK": {
+                                          "content": "Telegram"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "nG7tZh",
+                                  "ref": "ds:EWX5cE",
+                                  "name": "Text/Caption",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Coming soon — Google and Facebook are live today."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "qHvLDk",
+                      "name": "Footer Link",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "MohYXT",
+                          "ref": "ds:BkaXCh",
+                          "name": "Text/Muted",
+                          "content": "Don't have an account?"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "KuBHZ7",
+                          "ref": "ds:E9P6CU",
+                          "name": "Text/Link",
+                          "content": "Sign up"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "2yu8V5",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "wMKRQr",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 9170,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/auth/login — Login with email/password and social providers."
+    },
+    {
+      "type": "frame",
+      "id": "3FCtAG",
+      "name": "Auth / Login / More sign-in options / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "xCYrTy",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "ref",
+              "id": "7ex3zh",
+              "ref": "ds:iygje9",
+              "name": "Mobile/Status Bar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "b8uZmT",
+              "name": "Form",
+              "layout": "vertical",
+              "gap": 22,
+              "width": "fill_container",
+              "padding": [
+                20,
+                20
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "UEhnaj",
+                  "ref": "ds:ddzpBD",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "frame",
+                  "id": "mt3c9m",
                   "name": "Heading",
                   "layout": "vertical",
                   "gap": 8,
@@ -1947,8 +2737,8 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "gYkKgw",
-                      "ref": "ds:KayYYa",
+                      "id": "KwihXR",
+                      "ref": "ds:Tko4WH",
                       "name": "Text/H2",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
@@ -1956,8 +2746,8 @@
                     },
                     {
                       "type": "ref",
-                      "id": "eoWz53",
-                      "ref": "ds:cnPxcc",
+                      "id": "AZHnPA",
+                      "ref": "ds:sAeSY2",
                       "name": "Text/Paragraph",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
@@ -1967,7 +2757,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "NXxKs5",
+                  "id": "yaYx57",
                   "name": "Fields",
                   "layout": "vertical",
                   "gap": 14,
@@ -1975,7 +2765,7 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "3UFD3v",
+                      "id": "Y6eBXm",
                       "ref": "ds:j04F4",
                       "name": "Input / Email Address",
                       "width": "fill_container",
@@ -1990,7 +2780,7 @@
                     },
                     {
                       "type": "ref",
-                      "id": "HF5z6m",
+                      "id": "T4mUwL",
                       "ref": "ds:j04F4",
                       "name": "Input / Password",
                       "width": "fill_container",
@@ -2005,7 +2795,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "gRt5xJ",
+                      "id": "7Shf8k",
                       "name": "Row",
                       "gap": 12,
                       "alignItems": "center",
@@ -2014,8 +2804,8 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "dXjK4D",
-                          "ref": "ds:wypLVn",
+                          "id": "tEEwB3",
+                          "ref": "ds:E9P6CU",
                           "name": "Text/Link",
                           "content": "Forgot password?"
                         }
@@ -2025,7 +2815,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "FV7i2m",
+                  "id": "h3b3vD",
                   "ref": "ds:Y4ylzP",
                   "name": "Button / Log in",
                   "width": "fill_container",
@@ -2040,13 +2830,13 @@
                 },
                 {
                   "type": "ref",
-                  "id": "9ExbDD",
-                  "ref": "ds:baza4N",
+                  "id": "5h8rXr",
+                  "ref": "ds:K9GMfF",
                   "name": "Auth/Or Divider"
                 },
                 {
                   "type": "frame",
-                  "id": "L4uNmj",
+                  "id": "Tdh4Ro",
                   "name": "Social Sign-in",
                   "layout": "vertical",
                   "gap": 10,
@@ -2054,19 +2844,19 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "gZajaH",
-                      "ref": "ds:ShdxRV",
+                      "id": "5DcarX",
+                      "ref": "ds:2MTiVb",
                       "name": "Form/Checkbox Row",
                       "width": "fill_container",
                       "descendants": {
-                        "ds:kH8fAh": {
+                        "ds:68Tk2w": {
                           "content": "I accept the Terms of Use and Privacy Policy"
                         }
                       }
                     },
                     {
                       "type": "ref",
-                      "id": "7xYRic",
+                      "id": "Wfgbwx",
                       "ref": "ds:G5tJp",
                       "name": "Button / Continue with Google",
                       "width": "fill_container",
@@ -2081,7 +2871,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "Nwxxhu",
+                      "id": "enqSCe",
                       "name": "Providers",
                       "gap": 8,
                       "alignItems": "center",
@@ -2089,27 +2879,27 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "dzHPTM",
-                          "ref": "ds:wXnn4a",
+                          "id": "z4SmEc",
+                          "ref": "ds:QMBjG7",
                           "name": "Auth/Provider",
                           "width": "fill_container",
                           "descendants": {
-                            "ds:My8YZr": {
+                            "ds:oGrcCK": {
                               "content": "Facebook"
                             },
-                            "ds:cPCahF": {
+                            "ds:ERdvTF": {
                               "enabled": false
                             }
                           }
                         },
                         {
                           "type": "ref",
-                          "id": "mEgxx6",
-                          "ref": "ds:wXnn4a",
+                          "id": "AmpQck",
+                          "ref": "ds:QMBjG7",
                           "name": "Auth/Provider",
                           "width": "fill_container",
                           "descendants": {
-                            "ds:My8YZr": {
+                            "ds:oGrcCK": {
                               "content": "Apple"
                             }
                           }
@@ -2118,15 +2908,15 @@
                     },
                     {
                       "type": "ref",
-                      "id": "4thBJL",
-                      "ref": "ds:AbHArc",
+                      "id": "xJHN7e",
+                      "ref": "ds:WmrZBp",
                       "name": "Surface/Panel",
                       "width": "fill_container",
                       "gap": 8,
                       "descendants": {
-                        "ds:F5d69f": {
+                        "ds:YkmsrB": {
                           "type": "frame",
-                          "id": "cpXgFe",
+                          "id": "rmKZBe",
                           "name": "Panel Content",
                           "layout": "vertical",
                           "gap": 8,
@@ -2134,7 +2924,7 @@
                           "children": [
                             {
                               "type": "frame",
-                              "id": "vZGWww",
+                              "id": "kE6bM3",
                               "name": "Row",
                               "gap": 12,
                               "alignItems": "center",
@@ -2143,18 +2933,18 @@
                               "children": [
                                 {
                                   "type": "ref",
-                                  "id": "8UyncN",
-                                  "ref": "ds:wKs2PQ",
+                                  "id": "TRkQ6y",
+                                  "ref": "ds:8FcLQ4",
                                   "name": "Text/Body Strong",
                                   "content": "More sign-in options"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "2umt8D",
-                                  "ref": "ds:6XGbPr",
+                                  "id": "87ivXm",
+                                  "ref": "ds:vjFRrZ",
                                   "name": "Button/Icon Ghost",
                                   "descendants": {
-                                    "ds:PrPryT": {
+                                    "ds:5CdLJv": {
                                       "icon": "chevron-up"
                                     }
                                   }
@@ -2163,7 +2953,7 @@
                             },
                             {
                               "type": "frame",
-                              "id": "ySjSUk",
+                              "id": "fXNJ7U",
                               "name": "Provider Row",
                               "gap": 8,
                               "alignItems": "center",
@@ -2171,24 +2961,24 @@
                               "children": [
                                 {
                                   "type": "ref",
-                                  "id": "BSe9wv",
-                                  "ref": "ds:wXnn4a",
+                                  "id": "TnFSFJ",
+                                  "ref": "ds:QMBjG7",
                                   "name": "Auth/Provider",
                                   "width": "fill_container",
                                   "descendants": {
-                                    "ds:My8YZr": {
+                                    "ds:oGrcCK": {
                                       "content": "Discord"
                                     }
                                   }
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "t7eAnn",
-                                  "ref": "ds:wXnn4a",
+                                  "id": "SHsaqG",
+                                  "ref": "ds:QMBjG7",
                                   "name": "Auth/Provider",
                                   "width": "fill_container",
                                   "descendants": {
-                                    "ds:My8YZr": {
+                                    "ds:oGrcCK": {
                                       "content": "GitHub"
                                     }
                                   }
@@ -2197,7 +2987,7 @@
                             },
                             {
                               "type": "frame",
-                              "id": "84uNkp",
+                              "id": "ehuZB7",
                               "name": "Provider Row",
                               "gap": 8,
                               "alignItems": "center",
@@ -2205,24 +2995,24 @@
                               "children": [
                                 {
                                   "type": "ref",
-                                  "id": "HhYWTq",
-                                  "ref": "ds:wXnn4a",
+                                  "id": "U7A2kU",
+                                  "ref": "ds:QMBjG7",
                                   "name": "Auth/Provider",
                                   "width": "fill_container",
                                   "descendants": {
-                                    "ds:My8YZr": {
+                                    "ds:oGrcCK": {
                                       "content": "Microsoft"
                                     }
                                   }
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "ibKK9r",
-                                  "ref": "ds:wXnn4a",
+                                  "id": "RdamUi",
+                                  "ref": "ds:QMBjG7",
                                   "name": "Auth/Provider",
                                   "width": "fill_container",
                                   "descendants": {
-                                    "ds:My8YZr": {
+                                    "ds:oGrcCK": {
                                       "content": "X"
                                     }
                                   }
@@ -2231,7 +3021,7 @@
                             },
                             {
                               "type": "frame",
-                              "id": "X7abJy",
+                              "id": "acsnMM",
                               "name": "Provider Row",
                               "gap": 8,
                               "alignItems": "center",
@@ -2239,24 +3029,24 @@
                               "children": [
                                 {
                                   "type": "ref",
-                                  "id": "XLEhC4",
-                                  "ref": "ds:wXnn4a",
+                                  "id": "DgszXu",
+                                  "ref": "ds:QMBjG7",
                                   "name": "Auth/Provider",
                                   "width": "fill_container",
                                   "descendants": {
-                                    "ds:My8YZr": {
+                                    "ds:oGrcCK": {
                                       "content": "Instagram"
                                     }
                                   }
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "GdtF36",
-                                  "ref": "ds:wXnn4a",
+                                  "id": "Gmj6Vn",
+                                  "ref": "ds:QMBjG7",
                                   "name": "Auth/Provider",
                                   "width": "fill_container",
                                   "descendants": {
-                                    "ds:My8YZr": {
+                                    "ds:oGrcCK": {
                                       "content": "TikTok"
                                     }
                                   }
@@ -2265,7 +3055,7 @@
                             },
                             {
                               "type": "frame",
-                              "id": "YvdaKH",
+                              "id": "hLu5qb",
                               "name": "Provider Row",
                               "gap": 8,
                               "alignItems": "center",
@@ -2273,24 +3063,24 @@
                               "children": [
                                 {
                                   "type": "ref",
-                                  "id": "JiesTP",
-                                  "ref": "ds:wXnn4a",
+                                  "id": "ehkKpw",
+                                  "ref": "ds:QMBjG7",
                                   "name": "Auth/Provider",
                                   "width": "fill_container",
                                   "descendants": {
-                                    "ds:My8YZr": {
+                                    "ds:oGrcCK": {
                                       "content": "Twitch"
                                     }
                                   }
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "c4SvqZ",
-                                  "ref": "ds:wXnn4a",
+                                  "id": "WijWDC",
+                                  "ref": "ds:QMBjG7",
                                   "name": "Auth/Provider",
                                   "width": "fill_container",
                                   "descendants": {
-                                    "ds:My8YZr": {
+                                    "ds:oGrcCK": {
                                       "content": "LinkedIn"
                                     }
                                   }
@@ -2299,7 +3089,7 @@
                             },
                             {
                               "type": "frame",
-                              "id": "b5LXFd",
+                              "id": "hPkshW",
                               "name": "Provider Row",
                               "gap": 8,
                               "alignItems": "center",
@@ -2307,24 +3097,24 @@
                               "children": [
                                 {
                                   "type": "ref",
-                                  "id": "Uv2gMQ",
-                                  "ref": "ds:wXnn4a",
+                                  "id": "t8aKtt",
+                                  "ref": "ds:QMBjG7",
                                   "name": "Auth/Provider",
                                   "width": "fill_container",
                                   "descendants": {
-                                    "ds:My8YZr": {
+                                    "ds:oGrcCK": {
                                       "content": "Reddit"
                                     }
                                   }
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "jAXspq",
-                                  "ref": "ds:wXnn4a",
+                                  "id": "vzRPyu",
+                                  "ref": "ds:QMBjG7",
                                   "name": "Auth/Provider",
                                   "width": "fill_container",
                                   "descendants": {
-                                    "ds:My8YZr": {
+                                    "ds:oGrcCK": {
                                       "content": "Telegram"
                                     }
                                   }
@@ -2333,8 +3123,8 @@
                             },
                             {
                               "type": "ref",
-                              "id": "Y9w4e3",
-                              "ref": "ds:Nn6v3D",
+                              "id": "xKBibA",
+                              "ref": "ds:EWX5cE",
                               "name": "Text/Caption",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
@@ -2348,22 +3138,22 @@
                 },
                 {
                   "type": "frame",
-                  "id": "XHDN5C",
+                  "id": "5ayiAx",
                   "name": "Footer Link",
                   "gap": 6,
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "ref",
-                      "id": "KFokjS",
-                      "ref": "ds:Qj67Up",
+                      "id": "8gBNYN",
+                      "ref": "ds:BkaXCh",
                       "name": "Text/Muted",
                       "content": "Don't have an account?"
                     },
                     {
                       "type": "ref",
-                      "id": "32jemk",
-                      "ref": "ds:wypLVn",
+                      "id": "ewkZFk",
+                      "ref": "ds:E9P6CU",
                       "name": "Text/Link",
                       "content": "Sign up"
                     }
@@ -2372,481 +3162,27 @@
               ]
             }
           ]
-        }
-      ],
-      "x": 9170,
-      "y": 0,
-      "theme": {
-        "ds:Mode": "Dark"
-      },
-      "context": "/auth/login — Login with email/password and social providers."
-    },
-    {
-      "type": "frame",
-      "id": "NzfisH",
-      "name": "Auth / Login / More sign-in options / Mobile",
-      "width": 390,
-      "height": 844,
-      "clip": true,
-      "layout": "vertical",
-      "fill": "$ds:--background",
-      "children": [
-        {
-          "type": "ref",
-          "id": "ma7ry7",
-          "ref": "ds:PVPP6B",
-          "name": "Mobile/Status Bar",
-          "width": "fill_container"
         },
         {
           "type": "frame",
-          "id": "6CEgW6",
-          "name": "Form",
-          "layout": "vertical",
-          "gap": 22,
+          "id": "tCjo4a",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
           "width": "fill_container",
+          "justifyContent": "end",
           "padding": [
+            0,
+            16,
             20,
-            20
+            0
           ],
           "children": [
             {
               "type": "ref",
-              "id": "8aRHmQ",
-              "ref": "ds:z9dEdU",
-              "name": "Logo/Lockup"
-            },
-            {
-              "type": "frame",
-              "id": "KZNCfe",
-              "name": "Heading",
-              "layout": "vertical",
-              "gap": 8,
-              "width": "fill_container",
-              "children": [
-                {
-                  "type": "ref",
-                  "id": "oLZKFz",
-                  "ref": "ds:KayYYa",
-                  "name": "Text/H2",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Login to your account"
-                },
-                {
-                  "type": "ref",
-                  "id": "wmydQW",
-                  "ref": "ds:cnPxcc",
-                  "name": "Text/Paragraph",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Welcome back! Please sign in to continue."
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "ArBqMV",
-              "name": "Fields",
-              "layout": "vertical",
-              "gap": 14,
-              "width": "fill_container",
-              "children": [
-                {
-                  "type": "ref",
-                  "id": "VLboi4",
-                  "ref": "ds:j04F4",
-                  "name": "Input / Email Address",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:l4agQ": {
-                      "content": "Email Address"
-                    },
-                    "ds:iI0CE": {
-                      "content": "you@example.com"
-                    }
-                  }
-                },
-                {
-                  "type": "ref",
-                  "id": "v9pMwt",
-                  "ref": "ds:j04F4",
-                  "name": "Input / Password",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:l4agQ": {
-                      "content": "Password"
-                    },
-                    "ds:iI0CE": {
-                      "content": "••••••••"
-                    }
-                  }
-                },
-                {
-                  "type": "frame",
-                  "id": "356Qd9",
-                  "name": "Row",
-                  "gap": 12,
-                  "alignItems": "center",
-                  "width": "fill_container",
-                  "justifyContent": "end",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "HSbiEp",
-                      "ref": "ds:wypLVn",
-                      "name": "Text/Link",
-                      "content": "Forgot password?"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "ref",
-              "id": "KbycGh",
-              "ref": "ds:Y4ylzP",
-              "name": "Button / Log in",
-              "width": "fill_container",
-              "descendants": {
-                "ds:NVe7y": {
-                  "content": "Log in"
-                },
-                "ds:D3xnv": {
-                  "enabled": false
-                }
-              }
-            },
-            {
-              "type": "ref",
-              "id": "5t2GnM",
-              "ref": "ds:baza4N",
-              "name": "Auth/Or Divider"
-            },
-            {
-              "type": "frame",
-              "id": "wchH23",
-              "name": "Social Sign-in",
-              "layout": "vertical",
-              "gap": 10,
-              "width": "fill_container",
-              "children": [
-                {
-                  "type": "ref",
-                  "id": "gSN9nU",
-                  "ref": "ds:ShdxRV",
-                  "name": "Form/Checkbox Row",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:kH8fAh": {
-                      "content": "I accept the Terms of Use and Privacy Policy"
-                    }
-                  }
-                },
-                {
-                  "type": "ref",
-                  "id": "4U4SvF",
-                  "ref": "ds:G5tJp",
-                  "name": "Button / Continue with Google",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:d2zCI": {
-                      "content": "Continue with Google"
-                    },
-                    "ds:wFUna": {
-                      "enabled": false
-                    }
-                  }
-                },
-                {
-                  "type": "frame",
-                  "id": "dXwRcT",
-                  "name": "Providers",
-                  "gap": 8,
-                  "alignItems": "center",
-                  "width": "fill_container",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "pe5kGG",
-                      "ref": "ds:wXnn4a",
-                      "name": "Auth/Provider",
-                      "width": "fill_container",
-                      "descendants": {
-                        "ds:My8YZr": {
-                          "content": "Facebook"
-                        },
-                        "ds:cPCahF": {
-                          "enabled": false
-                        }
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "48HTDd",
-                      "ref": "ds:wXnn4a",
-                      "name": "Auth/Provider",
-                      "width": "fill_container",
-                      "descendants": {
-                        "ds:My8YZr": {
-                          "content": "Apple"
-                        }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "ref",
-                  "id": "CFcgXf",
-                  "ref": "ds:AbHArc",
-                  "name": "Surface/Panel",
-                  "width": "fill_container",
-                  "gap": 8,
-                  "descendants": {
-                    "ds:F5d69f": {
-                      "type": "frame",
-                      "id": "z9sQgv",
-                      "name": "Panel Content",
-                      "layout": "vertical",
-                      "gap": 8,
-                      "width": "fill_container",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "JjQHsS",
-                          "name": "Row",
-                          "gap": 12,
-                          "alignItems": "center",
-                          "width": "fill_container",
-                          "justifyContent": "space_between",
-                          "children": [
-                            {
-                              "type": "ref",
-                              "id": "y6pdqb",
-                              "ref": "ds:wKs2PQ",
-                              "name": "Text/Body Strong",
-                              "content": "More sign-in options"
-                            },
-                            {
-                              "type": "ref",
-                              "id": "gXZy27",
-                              "ref": "ds:6XGbPr",
-                              "name": "Button/Icon Ghost",
-                              "descendants": {
-                                "ds:PrPryT": {
-                                  "icon": "chevron-up"
-                                }
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "GpNUhW",
-                          "name": "Provider Row",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "width": "fill_container",
-                          "children": [
-                            {
-                              "type": "ref",
-                              "id": "W7adJd",
-                              "ref": "ds:wXnn4a",
-                              "name": "Auth/Provider",
-                              "width": "fill_container",
-                              "descendants": {
-                                "ds:My8YZr": {
-                                  "content": "Discord"
-                                }
-                              }
-                            },
-                            {
-                              "type": "ref",
-                              "id": "8P2ucG",
-                              "ref": "ds:wXnn4a",
-                              "name": "Auth/Provider",
-                              "width": "fill_container",
-                              "descendants": {
-                                "ds:My8YZr": {
-                                  "content": "GitHub"
-                                }
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "Y7XrWo",
-                          "name": "Provider Row",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "width": "fill_container",
-                          "children": [
-                            {
-                              "type": "ref",
-                              "id": "kTREHS",
-                              "ref": "ds:wXnn4a",
-                              "name": "Auth/Provider",
-                              "width": "fill_container",
-                              "descendants": {
-                                "ds:My8YZr": {
-                                  "content": "Microsoft"
-                                }
-                              }
-                            },
-                            {
-                              "type": "ref",
-                              "id": "gjyr68",
-                              "ref": "ds:wXnn4a",
-                              "name": "Auth/Provider",
-                              "width": "fill_container",
-                              "descendants": {
-                                "ds:My8YZr": {
-                                  "content": "X"
-                                }
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "x8UGTv",
-                          "name": "Provider Row",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "width": "fill_container",
-                          "children": [
-                            {
-                              "type": "ref",
-                              "id": "StigTv",
-                              "ref": "ds:wXnn4a",
-                              "name": "Auth/Provider",
-                              "width": "fill_container",
-                              "descendants": {
-                                "ds:My8YZr": {
-                                  "content": "Instagram"
-                                }
-                              }
-                            },
-                            {
-                              "type": "ref",
-                              "id": "bP7Fem",
-                              "ref": "ds:wXnn4a",
-                              "name": "Auth/Provider",
-                              "width": "fill_container",
-                              "descendants": {
-                                "ds:My8YZr": {
-                                  "content": "TikTok"
-                                }
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "AZMN7Y",
-                          "name": "Provider Row",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "width": "fill_container",
-                          "children": [
-                            {
-                              "type": "ref",
-                              "id": "F2uWez",
-                              "ref": "ds:wXnn4a",
-                              "name": "Auth/Provider",
-                              "width": "fill_container",
-                              "descendants": {
-                                "ds:My8YZr": {
-                                  "content": "Twitch"
-                                }
-                              }
-                            },
-                            {
-                              "type": "ref",
-                              "id": "esfTKs",
-                              "ref": "ds:wXnn4a",
-                              "name": "Auth/Provider",
-                              "width": "fill_container",
-                              "descendants": {
-                                "ds:My8YZr": {
-                                  "content": "LinkedIn"
-                                }
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "G2DzYt",
-                          "name": "Provider Row",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "width": "fill_container",
-                          "children": [
-                            {
-                              "type": "ref",
-                              "id": "aHrepq",
-                              "ref": "ds:wXnn4a",
-                              "name": "Auth/Provider",
-                              "width": "fill_container",
-                              "descendants": {
-                                "ds:My8YZr": {
-                                  "content": "Reddit"
-                                }
-                              }
-                            },
-                            {
-                              "type": "ref",
-                              "id": "ZJmDTV",
-                              "ref": "ds:wXnn4a",
-                              "name": "Auth/Provider",
-                              "width": "fill_container",
-                              "descendants": {
-                                "ds:My8YZr": {
-                                  "content": "Telegram"
-                                }
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "ref",
-                          "id": "xpSjSM",
-                          "ref": "ds:Nn6v3D",
-                          "name": "Text/Caption",
-                          "textGrowth": "fixed-width",
-                          "width": "fill_container",
-                          "content": "Coming soon — Google and Facebook are live today."
-                        }
-                      ]
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "MjvGfa",
-              "name": "Footer Link",
-              "gap": 6,
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "ref",
-                  "id": "Kzvc7S",
-                  "ref": "ds:Qj67Up",
-                  "name": "Text/Muted",
-                  "content": "Don't have an account?"
-                },
-                {
-                  "type": "ref",
-                  "id": "38DJcM",
-                  "ref": "ds:wypLVn",
-                  "name": "Text/Link",
-                  "content": "Sign up"
-                }
-              ]
+              "id": "hdiNq3",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
             }
           ]
         }

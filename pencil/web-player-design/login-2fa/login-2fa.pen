@@ -6,101 +6,135 @@
   "children": [
     {
       "type": "frame",
-      "id": "hpfdAJ",
+      "id": "n3oaQo",
       "name": "Login / 2FA (redirect) / Desktop / Dark",
       "width": 1440,
       "height": 900,
       "clip": true,
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
-          "id": "EnK5Uo",
-          "ref": "ds:dPmdf2",
-          "name": "Auth/Brand Panel",
-          "height": "fill_container",
-          "descendants": {
-            "ds:nJvcGz": {
-              "content": "One more step."
-            }
-          }
-        },
-        {
           "type": "frame",
-          "id": "hP7RnR",
-          "name": "Form Side",
+          "id": "jKTfmB",
+          "name": "Page",
           "width": "fill_container",
           "height": "fill_container",
-          "justifyContent": "center",
-          "alignItems": "center",
+          "layout": "horizontal",
           "children": [
             {
+              "type": "ref",
+              "id": "K7YbwR",
+              "ref": "ds:oRfRX3",
+              "name": "Auth/Brand Panel",
+              "height": "fill_container",
+              "descendants": {
+                "ds:o6vWAQ": {
+                  "content": "One more step."
+                }
+              }
+            },
+            {
               "type": "frame",
-              "id": "9Z2yzJ",
-              "name": "Form",
-              "layout": "vertical",
-              "gap": 22,
-              "width": 400,
+              "id": "QFMY3N",
+              "name": "Form Side",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
               "children": [
                 {
                   "type": "frame",
-                  "id": "W2vQqS",
-                  "name": "Heading",
+                  "id": "8gebLE",
+                  "name": "Form",
                   "layout": "vertical",
-                  "gap": 8,
-                  "width": "fill_container",
+                  "gap": 22,
+                  "width": 400,
                   "children": [
                     {
-                      "type": "ref",
-                      "id": "QnoBS5",
-                      "ref": "ds:KayYYa",
-                      "name": "Text/H2",
-                      "textGrowth": "fixed-width",
+                      "type": "frame",
+                      "id": "La8ZgP",
+                      "name": "Heading",
+                      "layout": "vertical",
+                      "gap": 8,
                       "width": "fill_container",
-                      "content": "Enter your 2FA code"
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "gpiAaw",
+                          "ref": "ds:Tko4WH",
+                          "name": "Text/H2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Enter your 2FA code"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ZQzziB",
+                          "ref": "ds:sAeSY2",
+                          "name": "Text/Paragraph",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Use the 6-digit code from your authenticator app."
+                        }
+                      ]
                     },
                     {
                       "type": "ref",
-                      "id": "DhK8Wy",
-                      "ref": "ds:cnPxcc",
-                      "name": "Text/Paragraph",
-                      "textGrowth": "fixed-width",
+                      "id": "CWyNG7",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Authentication code",
                       "width": "fill_container",
-                      "content": "Use the 6-digit code from your authenticator app."
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Authentication code"
+                        },
+                        "ds:iI0CE": {
+                          "content": "123456"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "coyivk",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Verify",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Verify"
+                        },
+                        "ds:D3xnv": {
+                          "enabled": false
+                        }
+                      }
                     }
                   ]
-                },
-                {
-                  "type": "ref",
-                  "id": "qLSwgf",
-                  "ref": "ds:j04F4",
-                  "name": "Input / Authentication code",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:l4agQ": {
-                      "content": "Authentication code"
-                    },
-                    "ds:iI0CE": {
-                      "content": "123456"
-                    }
-                  }
-                },
-                {
-                  "type": "ref",
-                  "id": "dMKhHH",
-                  "ref": "ds:Y4ylzP",
-                  "name": "Button / Verify",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:NVe7y": {
-                      "content": "Verify"
-                    },
-                    "ds:D3xnv": {
-                      "enabled": false
-                    }
-                  }
                 }
               ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "3Cim6Y",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "zc8VF4",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
             }
           ]
         }
@@ -114,101 +148,135 @@
     },
     {
       "type": "frame",
-      "id": "U8uFhP",
+      "id": "K5iT6a",
       "name": "Login / 2FA (redirect) / Desktop / Light",
       "width": 1440,
       "height": 900,
       "clip": true,
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
-          "id": "xqydzu",
-          "ref": "ds:dPmdf2",
-          "name": "Auth/Brand Panel",
-          "height": "fill_container",
-          "descendants": {
-            "ds:nJvcGz": {
-              "content": "One more step."
-            }
-          }
-        },
-        {
           "type": "frame",
-          "id": "4CkyYe",
-          "name": "Form Side",
+          "id": "SKe7M4",
+          "name": "Page",
           "width": "fill_container",
           "height": "fill_container",
-          "justifyContent": "center",
-          "alignItems": "center",
+          "layout": "horizontal",
           "children": [
             {
+              "type": "ref",
+              "id": "duYa8F",
+              "ref": "ds:oRfRX3",
+              "name": "Auth/Brand Panel",
+              "height": "fill_container",
+              "descendants": {
+                "ds:o6vWAQ": {
+                  "content": "One more step."
+                }
+              }
+            },
+            {
               "type": "frame",
-              "id": "c9vTSj",
-              "name": "Form",
-              "layout": "vertical",
-              "gap": 22,
-              "width": 400,
+              "id": "fH6XJM",
+              "name": "Form Side",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
               "children": [
                 {
                   "type": "frame",
-                  "id": "YWJZ5F",
-                  "name": "Heading",
+                  "id": "wSTXwL",
+                  "name": "Form",
                   "layout": "vertical",
-                  "gap": 8,
-                  "width": "fill_container",
+                  "gap": 22,
+                  "width": 400,
                   "children": [
                     {
-                      "type": "ref",
-                      "id": "k9wfvF",
-                      "ref": "ds:KayYYa",
-                      "name": "Text/H2",
-                      "textGrowth": "fixed-width",
+                      "type": "frame",
+                      "id": "rTGir6",
+                      "name": "Heading",
+                      "layout": "vertical",
+                      "gap": 8,
                       "width": "fill_container",
-                      "content": "Enter your 2FA code"
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "rgXqAw",
+                          "ref": "ds:Tko4WH",
+                          "name": "Text/H2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Enter your 2FA code"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "35ySDw",
+                          "ref": "ds:sAeSY2",
+                          "name": "Text/Paragraph",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Use the 6-digit code from your authenticator app."
+                        }
+                      ]
                     },
                     {
                       "type": "ref",
-                      "id": "JX7kkT",
-                      "ref": "ds:cnPxcc",
-                      "name": "Text/Paragraph",
-                      "textGrowth": "fixed-width",
+                      "id": "7BdMSJ",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Authentication code",
                       "width": "fill_container",
-                      "content": "Use the 6-digit code from your authenticator app."
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Authentication code"
+                        },
+                        "ds:iI0CE": {
+                          "content": "123456"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "zdR9Yw",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Verify",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Verify"
+                        },
+                        "ds:D3xnv": {
+                          "enabled": false
+                        }
+                      }
                     }
                   ]
-                },
-                {
-                  "type": "ref",
-                  "id": "JuH6GN",
-                  "ref": "ds:j04F4",
-                  "name": "Input / Authentication code",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:l4agQ": {
-                      "content": "Authentication code"
-                    },
-                    "ds:iI0CE": {
-                      "content": "123456"
-                    }
-                  }
-                },
-                {
-                  "type": "ref",
-                  "id": "y6TVRk",
-                  "ref": "ds:Y4ylzP",
-                  "name": "Button / Verify",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:NVe7y": {
-                      "content": "Verify"
-                    },
-                    "ds:D3xnv": {
-                      "enabled": false
-                    }
-                  }
                 }
               ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "eGkapQ",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "oqsabD",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
             }
           ]
         }
@@ -222,101 +290,135 @@
     },
     {
       "type": "frame",
-      "id": "TWXmtG",
+      "id": "5d7rsg",
       "name": "Login / 2FA (redirect) / Desktop / Dim",
       "width": 1440,
       "height": 900,
       "clip": true,
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
-          "id": "rvLRVe",
-          "ref": "ds:dPmdf2",
-          "name": "Auth/Brand Panel",
-          "height": "fill_container",
-          "descendants": {
-            "ds:nJvcGz": {
-              "content": "One more step."
-            }
-          }
-        },
-        {
           "type": "frame",
-          "id": "TgHsYq",
-          "name": "Form Side",
+          "id": "BUGo4a",
+          "name": "Page",
           "width": "fill_container",
           "height": "fill_container",
-          "justifyContent": "center",
-          "alignItems": "center",
+          "layout": "horizontal",
           "children": [
             {
+              "type": "ref",
+              "id": "5sN2Y6",
+              "ref": "ds:oRfRX3",
+              "name": "Auth/Brand Panel",
+              "height": "fill_container",
+              "descendants": {
+                "ds:o6vWAQ": {
+                  "content": "One more step."
+                }
+              }
+            },
+            {
               "type": "frame",
-              "id": "vjUqFm",
-              "name": "Form",
-              "layout": "vertical",
-              "gap": 22,
-              "width": 400,
+              "id": "8CAaki",
+              "name": "Form Side",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
               "children": [
                 {
                   "type": "frame",
-                  "id": "3fDaXt",
-                  "name": "Heading",
+                  "id": "zFEkGt",
+                  "name": "Form",
                   "layout": "vertical",
-                  "gap": 8,
-                  "width": "fill_container",
+                  "gap": 22,
+                  "width": 400,
                   "children": [
                     {
-                      "type": "ref",
-                      "id": "Vojmaj",
-                      "ref": "ds:KayYYa",
-                      "name": "Text/H2",
-                      "textGrowth": "fixed-width",
+                      "type": "frame",
+                      "id": "RXZBiu",
+                      "name": "Heading",
+                      "layout": "vertical",
+                      "gap": 8,
                       "width": "fill_container",
-                      "content": "Enter your 2FA code"
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "6sXQKR",
+                          "ref": "ds:Tko4WH",
+                          "name": "Text/H2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Enter your 2FA code"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "3i7T63",
+                          "ref": "ds:sAeSY2",
+                          "name": "Text/Paragraph",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Use the 6-digit code from your authenticator app."
+                        }
+                      ]
                     },
                     {
                       "type": "ref",
-                      "id": "WwYXun",
-                      "ref": "ds:cnPxcc",
-                      "name": "Text/Paragraph",
-                      "textGrowth": "fixed-width",
+                      "id": "933WXm",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Authentication code",
                       "width": "fill_container",
-                      "content": "Use the 6-digit code from your authenticator app."
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Authentication code"
+                        },
+                        "ds:iI0CE": {
+                          "content": "123456"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "hvxKm4",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Verify",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Verify"
+                        },
+                        "ds:D3xnv": {
+                          "enabled": false
+                        }
+                      }
                     }
                   ]
-                },
-                {
-                  "type": "ref",
-                  "id": "fSeutr",
-                  "ref": "ds:j04F4",
-                  "name": "Input / Authentication code",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:l4agQ": {
-                      "content": "Authentication code"
-                    },
-                    "ds:iI0CE": {
-                      "content": "123456"
-                    }
-                  }
-                },
-                {
-                  "type": "ref",
-                  "id": "QLEc6V",
-                  "ref": "ds:Y4ylzP",
-                  "name": "Button / Verify",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ds:NVe7y": {
-                      "content": "Verify"
-                    },
-                    "ds:D3xnv": {
-                      "enabled": false
-                    }
-                  }
                 }
               ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "KXvEj5",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "BuMYH3",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
             }
           ]
         }
@@ -330,148 +432,50 @@
     },
     {
       "type": "frame",
-      "id": "gAa8qw",
+      "id": "6zbRGB",
       "name": "Login / 2FA (redirect) / Mobile / Dark",
       "width": 390,
       "height": 844,
       "clip": true,
+      "fill": "$ds:--background",
       "layout": "vertical",
-      "fill": "$ds:--background",
       "children": [
         {
-          "type": "ref",
-          "id": "xEKW6L",
-          "ref": "ds:PVPP6B",
-          "name": "Mobile/Status Bar",
-          "width": "fill_container"
-        },
-        {
           "type": "frame",
-          "id": "N2YuTV",
-          "name": "Form",
+          "id": "nSyRVB",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
           "layout": "vertical",
-          "gap": 22,
-          "width": "fill_container",
-          "padding": [
-            20,
-            20
-          ],
           "children": [
             {
               "type": "ref",
-              "id": "mfgqLh",
-              "ref": "ds:z9dEdU",
-              "name": "Logo/Lockup"
+              "id": "dc3f9E",
+              "ref": "ds:iygje9",
+              "name": "Mobile/Status Bar",
+              "width": "fill_container"
             },
             {
               "type": "frame",
-              "id": "WWF98B",
-              "name": "Heading",
-              "layout": "vertical",
-              "gap": 8,
-              "width": "fill_container",
-              "children": [
-                {
-                  "type": "ref",
-                  "id": "4GWsUz",
-                  "ref": "ds:KayYYa",
-                  "name": "Text/H2",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Enter your 2FA code"
-                },
-                {
-                  "type": "ref",
-                  "id": "i8E8oQ",
-                  "ref": "ds:cnPxcc",
-                  "name": "Text/Paragraph",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Use the 6-digit code from your authenticator app."
-                }
-              ]
-            },
-            {
-              "type": "ref",
-              "id": "WXNGZz",
-              "ref": "ds:j04F4",
-              "name": "Input / Authentication code",
-              "width": "fill_container",
-              "descendants": {
-                "ds:l4agQ": {
-                  "content": "Authentication code"
-                },
-                "ds:iI0CE": {
-                  "content": "123456"
-                }
-              }
-            },
-            {
-              "type": "ref",
-              "id": "Fa4cwT",
-              "ref": "ds:Y4ylzP",
-              "name": "Button / Verify",
-              "width": "fill_container",
-              "descendants": {
-                "ds:NVe7y": {
-                  "content": "Verify"
-                },
-                "ds:D3xnv": {
-                  "enabled": false
-                }
-              }
-            }
-          ]
-        }
-      ],
-      "x": 4620,
-      "y": 0,
-      "theme": {
-        "ds:Mode": "Dark"
-      },
-      "context": "/login/2fa — Redirects to /auth/login/2fa; same screen."
-    },
-    {
-      "type": "frame",
-      "id": "VbJ2Ms",
-      "name": "Login / 2FA (redirect) / Invalid code / Desktop",
-      "width": 1440,
-      "height": 900,
-      "clip": true,
-      "fill": "$ds:--background",
-      "children": [
-        {
-          "type": "ref",
-          "id": "Ntp7Zb",
-          "ref": "ds:dPmdf2",
-          "name": "Auth/Brand Panel",
-          "height": "fill_container",
-          "descendants": {
-            "ds:nJvcGz": {
-              "content": "One more step."
-            }
-          }
-        },
-        {
-          "type": "frame",
-          "id": "9pcgGi",
-          "name": "Form Side",
-          "width": "fill_container",
-          "height": "fill_container",
-          "justifyContent": "center",
-          "alignItems": "center",
-          "children": [
-            {
-              "type": "frame",
-              "id": "ZdVJ4p",
+              "id": "aNpf6p",
               "name": "Form",
               "layout": "vertical",
               "gap": 22,
-              "width": 400,
+              "width": "fill_container",
+              "padding": [
+                20,
+                20
+              ],
               "children": [
                 {
+                  "type": "ref",
+                  "id": "fiwGop",
+                  "ref": "ds:ddzpBD",
+                  "name": "Logo/Lockup"
+                },
+                {
                   "type": "frame",
-                  "id": "ZTtLCz",
+                  "id": "2C83NT",
                   "name": "Heading",
                   "layout": "vertical",
                   "gap": 8,
@@ -479,8 +483,8 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "BQZWMr",
-                      "ref": "ds:KayYYa",
+                      "id": "FvveVu",
+                      "ref": "ds:Tko4WH",
                       "name": "Text/H2",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
@@ -488,8 +492,8 @@
                     },
                     {
                       "type": "ref",
-                      "id": "nbR6uu",
-                      "ref": "ds:cnPxcc",
+                      "id": "r3fwtz",
+                      "ref": "ds:sAeSY2",
                       "name": "Text/Paragraph",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
@@ -499,7 +503,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "woFSZk",
+                  "id": "Ht6c7N",
                   "ref": "ds:j04F4",
                   "name": "Input / Authentication code",
                   "width": "fill_container",
@@ -514,18 +518,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "tfqkU7",
-                  "ref": "ds:tgBJtH",
-                  "name": "Form/Field Error",
-                  "descendants": {
-                    "ds:PwxHFn": {
-                      "content": "Invalid or expired 2FA code"
-                    }
-                  }
-                },
-                {
-                  "type": "ref",
-                  "id": "vcYdTD",
+                  "id": "Fy2yYc",
                   "ref": "ds:Y4ylzP",
                   "name": "Button / Verify",
                   "width": "fill_container",
@@ -541,6 +534,182 @@
               ]
             }
           ]
+        },
+        {
+          "type": "frame",
+          "id": "FHFMxg",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            16,
+            20,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "Bh4GXf",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/login/2fa — Redirects to /auth/login/2fa; same screen."
+    },
+    {
+      "type": "frame",
+      "id": "MusbKV",
+      "name": "Login / 2FA (redirect) / Invalid code / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "NmQHRF",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "horizontal",
+          "children": [
+            {
+              "type": "ref",
+              "id": "vp3kr8",
+              "ref": "ds:oRfRX3",
+              "name": "Auth/Brand Panel",
+              "height": "fill_container",
+              "descendants": {
+                "ds:o6vWAQ": {
+                  "content": "One more step."
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "cWZDyY",
+              "name": "Form Side",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "JcH9pE",
+                  "name": "Form",
+                  "layout": "vertical",
+                  "gap": 22,
+                  "width": 400,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "bgn9wr",
+                      "name": "Heading",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "d4gtMt",
+                          "ref": "ds:Tko4WH",
+                          "name": "Text/H2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Enter your 2FA code"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "DyPiTr",
+                          "ref": "ds:sAeSY2",
+                          "name": "Text/Paragraph",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Use the 6-digit code from your authenticator app."
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "E4TVh4",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Authentication code",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Authentication code"
+                        },
+                        "ds:iI0CE": {
+                          "content": "123456"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ahVyVZ",
+                      "ref": "ds:KzddsM",
+                      "name": "Form/Field Error",
+                      "descendants": {
+                        "ds:xna82n": {
+                          "content": "Invalid or expired 2FA code"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "atGxD4",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Verify",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Verify"
+                        },
+                        "ds:D3xnv": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "tw8bTT",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "WzqyXL",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
+            }
+          ]
         }
       ],
       "x": 5110,
@@ -552,107 +721,140 @@
     },
     {
       "type": "frame",
-      "id": "KNr5AF",
+      "id": "xYp6Jc",
       "name": "Login / 2FA (redirect) / Invalid code / Mobile",
       "width": 390,
       "height": 844,
       "clip": true,
-      "layout": "vertical",
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
-          "id": "827Ud3",
-          "ref": "ds:PVPP6B",
-          "name": "Mobile/Status Bar",
-          "width": "fill_container"
+          "type": "frame",
+          "id": "XVAWSs",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "ref",
+              "id": "pF78n3",
+              "ref": "ds:iygje9",
+              "name": "Mobile/Status Bar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "3sE9Vb",
+              "name": "Form",
+              "layout": "vertical",
+              "gap": 22,
+              "width": "fill_container",
+              "padding": [
+                20,
+                20
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "gwHbPZ",
+                  "ref": "ds:ddzpBD",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "frame",
+                  "id": "W8ABNT",
+                  "name": "Heading",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "J7McB6",
+                      "ref": "ds:Tko4WH",
+                      "name": "Text/H2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Enter your 2FA code"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "XSqKhE",
+                      "ref": "ds:sAeSY2",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Use the 6-digit code from your authenticator app."
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "TBk8N5",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Authentication code",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Authentication code"
+                    },
+                    "ds:iI0CE": {
+                      "content": "123456"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "utUFpX",
+                  "ref": "ds:KzddsM",
+                  "name": "Form/Field Error",
+                  "descendants": {
+                    "ds:xna82n": {
+                      "content": "Invalid or expired 2FA code"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "HTTJPq",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Verify",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Verify"
+                    },
+                    "ds:D3xnv": {
+                      "enabled": false
+                    }
+                  }
+                }
+              ]
+            }
+          ]
         },
         {
           "type": "frame",
-          "id": "b9wrJ5",
-          "name": "Form",
-          "layout": "vertical",
-          "gap": 22,
+          "id": "MgFaXM",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
           "width": "fill_container",
+          "justifyContent": "end",
           "padding": [
+            0,
+            16,
             20,
-            20
+            0
           ],
           "children": [
             {
               "type": "ref",
-              "id": "Za8xYB",
-              "ref": "ds:z9dEdU",
-              "name": "Logo/Lockup"
-            },
-            {
-              "type": "frame",
-              "id": "9PVXtT",
-              "name": "Heading",
-              "layout": "vertical",
-              "gap": 8,
-              "width": "fill_container",
-              "children": [
-                {
-                  "type": "ref",
-                  "id": "JHBasV",
-                  "ref": "ds:KayYYa",
-                  "name": "Text/H2",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Enter your 2FA code"
-                },
-                {
-                  "type": "ref",
-                  "id": "7mZMnF",
-                  "ref": "ds:cnPxcc",
-                  "name": "Text/Paragraph",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Use the 6-digit code from your authenticator app."
-                }
-              ]
-            },
-            {
-              "type": "ref",
-              "id": "mSz62i",
-              "ref": "ds:j04F4",
-              "name": "Input / Authentication code",
-              "width": "fill_container",
-              "descendants": {
-                "ds:l4agQ": {
-                  "content": "Authentication code"
-                },
-                "ds:iI0CE": {
-                  "content": "123456"
-                }
-              }
-            },
-            {
-              "type": "ref",
-              "id": "UMmgAg",
-              "ref": "ds:tgBJtH",
-              "name": "Form/Field Error",
-              "descendants": {
-                "ds:PwxHFn": {
-                  "content": "Invalid or expired 2FA code"
-                }
-              }
-            },
-            {
-              "type": "ref",
-              "id": "z6z2so",
-              "ref": "ds:Y4ylzP",
-              "name": "Button / Verify",
-              "width": "fill_container",
-              "descendants": {
-                "ds:NVe7y": {
-                  "content": "Verify"
-                },
-                "ds:D3xnv": {
-                  "enabled": false
-                }
-              }
+              "id": "B2Tew4",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
             }
           ]
         }

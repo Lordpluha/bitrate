@@ -562,11 +562,11 @@ const sceneBar = (i, text) =>
     {
       name: 'Scene Bar',
       width: 'fill_container',
-      padding: [0, 120, 28, 120],
-      justifyContent: 'space_between',
+      padding: [0, 24, 24, 120],
+      gap: 24,
       alignItems: 'end',
     },
-    [counter(i), note(text)],
+    [counter(i), L({ name: 'Spacer', width: 'fill_container' }), note(text), R('Assistant/FAB')],
   )
 const sceneD = (sc, i, open) => {
   const c = copy(sc.copy, false)
@@ -719,7 +719,7 @@ const sceneM = (name, i, signal, body) =>
         justifyContent: 'space_between',
         alignItems: 'center',
       },
-      [counter(i), Tx('Caption', 'Swipe')],
+      [counter(i), Tx('Caption', 'Swipe'), R('Assistant/FAB')],
     ),
   ])
 const mobileSignal = ([size, phase], i) => (i === 0 ? null : [Math.min(size, 80), phase])

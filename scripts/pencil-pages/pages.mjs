@@ -64,6 +64,7 @@ import { loading } from './pages-loading.mjs'
 import { APP_STATES } from './pages-app.mjs'
 import { cursor } from './pages-cursor.mjs'
 import { toasts } from './pages-toasts.mjs'
+import { assistant, withAssistant } from './pages-assistant.mjs'
 
 const T5 = TRACKS.slice(0, 5)
 const mrows = (rows) => rows.map((t) => MobileTrack(t[0], t[1], t[4]))
@@ -2783,6 +2784,7 @@ export const pages = {
   loading,
   cursor,
   toasts,
+  assistant,
   friends,
   'friends-find': friendsFind,
   'friends-requests': friendsRequests,
@@ -2959,6 +2961,33 @@ function lost(m, reported, guest) {
     card,
     tips,
   ])
+}
+
+/* public pages (outside /main) dock the AI assistant button bottom-right */
+const PUBLIC = [
+  'auth-login',
+  'login',
+  'auth-login-2fa',
+  'login-2fa',
+  'auth-registration',
+  'auth-forgot-password',
+  'auth-reset-password',
+  'verify-email',
+  'legal',
+  'not-found',
+  'error',
+  'offline',
+]
+const dockIt = (fn, mobile) => fn && (() => withAssistant(fn(), mobile))
+for (const key of PUBLIC) {
+  const spec = pages[key]
+  spec.desktop = dockIt(spec.desktop, false)
+  spec.mobile = dockIt(spec.mobile, true)
+  spec.states = (spec.states ?? []).map((st) => ({
+    ...st,
+    desktop: dockIt(st.desktop, false),
+    mobile: dockIt(st.mobile, true),
+  }))
 }
 
 /* helpers used above */
