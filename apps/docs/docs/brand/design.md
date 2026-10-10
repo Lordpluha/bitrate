@@ -298,7 +298,34 @@ On smaller screens, preserve:
 3. current content;
 4. optional detail.
 
-## 21. Component philosophy
+## 21. Screen states
+
+A screen is not designed until every state a user can actually reach is drawn. The default,
+populated view is only one of them.
+
+Every design — a new page, a redesign, a component that loads data — includes at least:
+
+1. **Default** — realistic, populated content (not lorem ipsum, not a single perfect item).
+2. **Loading** — skeletons that hold the final layout, or a progress indicator for actions.
+3. **Empty** — first use or nothing to show, with the next meaningful action.
+4. **Error** — what failed, in plain language, and how to recover (retry, go back).
+5. **Not found / unavailable** — for anything addressed by id or link (track, album, artist,
+   playlist, profile, token links).
+
+Add the states the screen's own logic creates:
+
+- **Restricted** — signed out, private, permission or plan required;
+- **Offline / degraded** — no connection, partial data ("some results could not be loaded");
+- **Validation and submission** — field errors, in-progress ("Saving…"), success confirmation;
+- **Interactive overlays** — menus, dialogs, sheets and popovers the screen opens;
+- **Selection and playback** — active, selected, playing, disabled controls.
+
+Each state is drawn for desktop and mobile, and every frame works in all three themes —
+Dark, Light and Dim — because it is built from the shared tokens. A state that cannot occur is
+left out deliberately and the reason is noted next to the design, so a missing state is never
+mistaken for a forgotten one.
+
+## 22. Component philosophy
 
 Components should encode Bitrate's principles.
 
@@ -314,7 +341,13 @@ Examples:
 
 Reusable components should reduce both engineering complexity and cognitive inconsistency.
 
-## 22. AI-generated design rule
+Designs are assembled, not invented. Every element of a screen design is an instance of a
+component from the design-system library (`pencil/web-player-design/design-system/bitrate.lib.pen`,
+imported by every design file). A screen adds only layout and real content — text and artwork.
+When a screen needs something the library does not have, the component is added to the library
+first and then used, so the design system and the screens never drift apart.
+
+## 23. AI-generated design rule
 
 When an AI system generates or modifies Bitrate UI, it should first ask:
 
@@ -328,7 +361,7 @@ When an AI system generates or modifies Bitrate UI, it should first ask:
 
 If uncertain, choose the simpler implementation.
 
-## 23. Design decision test
+## 24. Design decision test
 
 Before accepting a design, ask:
 
@@ -338,7 +371,7 @@ If yes, it is probably moving in the Bitrate direction.
 
 If it adds explanation because the interface itself became harder to understand, reconsider the design.
 
-## 24. Logo
+## 25. Logo
 
 The mark is a single gradient glyph — a stylised **B** built from two stacked strokes, filled left
 to right from `#490AE5` to `#C060FA`. It is self-coloured, so it needs no light-theme variant and
@@ -361,7 +394,7 @@ than editing a PNG, and keep `src/app/icon.svg` in step with the source.
 artists lockup render the mark alone and their slots are square. A wordmark vector replaces
 `logo.svg` and turns those slots back into lockups; until then, do not trace one from the raster.
 
-## 25. What remains intentionally open
+## 26. What remains intentionally open
 
 The following should be developed in the visual identity phase rather than invented prematurely:
 
