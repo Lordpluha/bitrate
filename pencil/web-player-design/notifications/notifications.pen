@@ -1,0 +1,2319 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "52MgLX",
+      "name": "Notifications / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "9vBebt",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "dnsNLq",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "5zFq6j",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": 760,
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "UMLCLU",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "i6B75D",
+                          "ref": "ds:BLCZ2j",
+                          "name": "Text/H1",
+                          "content": "Notifications"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "h9H9g8",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "bgVnuW",
+                      "ref": "ds:DTwJb",
+                      "name": "Button / Mark all read",
+                      "descendants": {
+                        "ds:GyGLK": {
+                          "content": "Mark all read"
+                        },
+                        "ds:DsOu2": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "BjF8CX",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "PTiFN9",
+                      "ref": "ds:hMZrkL",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:otH6tw": {
+                          "content": "All"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "YdxogS",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "Followers"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "uPEuQ9",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "Releases"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "PAHrwQ",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "Playlists"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "hEtsDM",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "Events"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "LihbVF",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "EAM2qP",
+                      "ref": "ds:VndAPa",
+                      "name": "Notification Row/Unread",
+                      "descendants": {
+                        "ds:NxBMMX": {
+                          "icon": "user-plus"
+                        },
+                        "ds:3WPqRu": {
+                          "content": "Jonah started following you"
+                        },
+                        "ds:P8GMn2": {
+                          "content": "5 min ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "b4PeUw",
+                      "ref": "ds:VndAPa",
+                      "name": "Notification Row/Unread",
+                      "descendants": {
+                        "ds:NxBMMX": {
+                          "icon": "disc-3"
+                        },
+                        "ds:3WPqRu": {
+                          "content": "Luma Vale released a new single: Low Orbit"
+                        },
+                        "ds:P8GMn2": {
+                          "content": "2 h ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "NyEgGZ",
+                      "ref": "ds:owcPKe",
+                      "name": "Notification Row/Read",
+                      "descendants": {
+                        "ds:gddpPZ": {
+                          "icon": "list-music"
+                        },
+                        "ds:EGFZY6": {
+                          "content": "Ana added 3 tracks to Rain Drive"
+                        },
+                        "ds:Wnmue9": {
+                          "content": "Yesterday"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "k2pvQh",
+                      "ref": "ds:owcPKe",
+                      "name": "Notification Row/Read",
+                      "descendants": {
+                        "ds:gddpPZ": {
+                          "icon": "calendar"
+                        },
+                        "ds:EGFZY6": {
+                          "content": "Mira Sol announced a live session on 18 Oct"
+                        },
+                        "ds:Wnmue9": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "JCYRDy",
+      "name": "Notifications / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "cqynvr",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "K7ScpN",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Ko5PYq",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": 760,
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "M84biY",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "pqpPtP",
+                          "ref": "ds:BLCZ2j",
+                          "name": "Text/H1",
+                          "content": "Notifications"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "yah2Jt",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "2EgYbQ",
+                      "ref": "ds:DTwJb",
+                      "name": "Button / Mark all read",
+                      "descendants": {
+                        "ds:GyGLK": {
+                          "content": "Mark all read"
+                        },
+                        "ds:DsOu2": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "U3fxzv",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "xKqKKf",
+                      "ref": "ds:hMZrkL",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:otH6tw": {
+                          "content": "All"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "dEjcj7",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "Followers"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jhBPfV",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "Releases"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "uaKb3A",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "Playlists"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "kymqKS",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "Events"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "KUYUiU",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "r293NA",
+                      "ref": "ds:VndAPa",
+                      "name": "Notification Row/Unread",
+                      "descendants": {
+                        "ds:NxBMMX": {
+                          "icon": "user-plus"
+                        },
+                        "ds:3WPqRu": {
+                          "content": "Jonah started following you"
+                        },
+                        "ds:P8GMn2": {
+                          "content": "5 min ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "4RtXRK",
+                      "ref": "ds:VndAPa",
+                      "name": "Notification Row/Unread",
+                      "descendants": {
+                        "ds:NxBMMX": {
+                          "icon": "disc-3"
+                        },
+                        "ds:3WPqRu": {
+                          "content": "Luma Vale released a new single: Low Orbit"
+                        },
+                        "ds:P8GMn2": {
+                          "content": "2 h ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "93isqa",
+                      "ref": "ds:owcPKe",
+                      "name": "Notification Row/Read",
+                      "descendants": {
+                        "ds:gddpPZ": {
+                          "icon": "list-music"
+                        },
+                        "ds:EGFZY6": {
+                          "content": "Ana added 3 tracks to Rain Drive"
+                        },
+                        "ds:Wnmue9": {
+                          "content": "Yesterday"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "HgHUNo",
+                      "ref": "ds:owcPKe",
+                      "name": "Notification Row/Read",
+                      "descendants": {
+                        "ds:gddpPZ": {
+                          "icon": "calendar"
+                        },
+                        "ds:EGFZY6": {
+                          "content": "Mira Sol announced a live session on 18 Oct"
+                        },
+                        "ds:Wnmue9": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "KfatAg",
+      "name": "Notifications / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Qz5fMm",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "2UsA9M",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "MHicyt",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": 760,
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "MGxJnH",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Ya9jrW",
+                          "ref": "ds:BLCZ2j",
+                          "name": "Text/H1",
+                          "content": "Notifications"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "5rngqw",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "VYaRJK",
+                      "ref": "ds:DTwJb",
+                      "name": "Button / Mark all read",
+                      "descendants": {
+                        "ds:GyGLK": {
+                          "content": "Mark all read"
+                        },
+                        "ds:DsOu2": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "FkKVzZ",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "39hnU5",
+                      "ref": "ds:hMZrkL",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:otH6tw": {
+                          "content": "All"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "LESrJe",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "Followers"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "HcHjaK",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "Releases"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "w3LKFk",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "Playlists"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "A64bM7",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "Events"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "rJTwce",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "NhzenN",
+                      "ref": "ds:VndAPa",
+                      "name": "Notification Row/Unread",
+                      "descendants": {
+                        "ds:NxBMMX": {
+                          "icon": "user-plus"
+                        },
+                        "ds:3WPqRu": {
+                          "content": "Jonah started following you"
+                        },
+                        "ds:P8GMn2": {
+                          "content": "5 min ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jyCcvk",
+                      "ref": "ds:VndAPa",
+                      "name": "Notification Row/Unread",
+                      "descendants": {
+                        "ds:NxBMMX": {
+                          "icon": "disc-3"
+                        },
+                        "ds:3WPqRu": {
+                          "content": "Luma Vale released a new single: Low Orbit"
+                        },
+                        "ds:P8GMn2": {
+                          "content": "2 h ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "WQeFeM",
+                      "ref": "ds:owcPKe",
+                      "name": "Notification Row/Read",
+                      "descendants": {
+                        "ds:gddpPZ": {
+                          "icon": "list-music"
+                        },
+                        "ds:EGFZY6": {
+                          "content": "Ana added 3 tracks to Rain Drive"
+                        },
+                        "ds:Wnmue9": {
+                          "content": "Yesterday"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "GVQT2T",
+                      "ref": "ds:owcPKe",
+                      "name": "Notification Row/Read",
+                      "descendants": {
+                        "ds:gddpPZ": {
+                          "icon": "calendar"
+                        },
+                        "ds:EGFZY6": {
+                          "content": "Mira Sol announced a live session on 18 Oct"
+                        },
+                        "ds:Wnmue9": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "NLoycR",
+      "name": "Notifications / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "2EWmkL",
+          "ref": "ds:rJ7nC6",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "PM7aRw",
+          "ref": "ds:yr7XDa",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:YyLmeC": {
+              "content": "Notifications"
+            },
+            "ds:N66thR": {
+              "icon": "check-check"
+            },
+            "ds:XUdBL3": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "7AYc4h",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "PKMC3b",
+              "name": "Chips",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "DcsCPk",
+                  "ref": "ds:hMZrkL",
+                  "name": "Chip/Active",
+                  "descendants": {
+                    "ds:otH6tw": {
+                      "content": "All"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "hFgfZT",
+                  "ref": "ds:Fjw5fa",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:7qYiyW": {
+                      "content": "Followers"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "HHBdLV",
+                  "ref": "ds:Fjw5fa",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:7qYiyW": {
+                      "content": "Releases"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "Teyi4v",
+              "ref": "ds:VndAPa",
+              "name": "Notification Row/Unread",
+              "descendants": {
+                "ds:NxBMMX": {
+                  "icon": "user-plus"
+                },
+                "ds:3WPqRu": {
+                  "content": "Jonah started following you"
+                },
+                "ds:P8GMn2": {
+                  "content": "5 min ago"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "Qhqjqo",
+              "ref": "ds:VndAPa",
+              "name": "Notification Row/Unread",
+              "descendants": {
+                "ds:NxBMMX": {
+                  "icon": "disc-3"
+                },
+                "ds:3WPqRu": {
+                  "content": "Luma Vale released a new single: Low Orbit"
+                },
+                "ds:P8GMn2": {
+                  "content": "2 h ago"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "8nx6v5",
+              "ref": "ds:owcPKe",
+              "name": "Notification Row/Read",
+              "descendants": {
+                "ds:gddpPZ": {
+                  "icon": "list-music"
+                },
+                "ds:EGFZY6": {
+                  "content": "Ana added 3 tracks to Rain Drive"
+                },
+                "ds:Wnmue9": {
+                  "content": "Yesterday"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "pEWLXp",
+              "ref": "ds:owcPKe",
+              "name": "Notification Row/Read",
+              "descendants": {
+                "ds:gddpPZ": {
+                  "icon": "calendar"
+                },
+                "ds:EGFZY6": {
+                  "content": "Mira Sol announced a live session on 18 Oct"
+                },
+                "ds:Wnmue9": {
+                  "content": "2 days ago"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "YLYbai",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "5cN8Jx",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "fdbHoS",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "CGceSW",
+      "name": "Notifications / All caught up / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "vyMkax",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "qr2Eex",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "S2Ek5a",
+                  "ref": "ds:BLCZ2j",
+                  "name": "Text/H1",
+                  "content": "Notifications"
+                },
+                {
+                  "type": "ref",
+                  "id": "u5dXxG",
+                  "ref": "ds:xZAnf",
+                  "name": "State / You're all caught up",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "descendants": {
+                    "ds:i2Q9D": {
+                      "icon": "circle-check"
+                    },
+                    "ds:yQD8U": {
+                      "content": "You're all caught up"
+                    },
+                    "ds:hWHdI": {
+                      "content": "Watch this space for news on your followers, playlists, events and more."
+                    },
+                    "ds:G1ZoX": {
+                      "enabled": false
+                    }
+                  }
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "usgCKf",
+      "name": "Notifications / All caught up / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "44vDDQ",
+          "ref": "ds:rJ7nC6",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "uUXueR",
+          "ref": "ds:yr7XDa",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:YyLmeC": {
+              "content": "Notifications"
+            },
+            "ds:YpvVuM": {
+              "enabled": false
+            },
+            "ds:XUdBL3": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "bJF35S",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "WvkaeD",
+              "ref": "ds:xZAnf",
+              "name": "State / You're all caught up",
+              "width": "fill_container",
+              "height": "fill_container",
+              "descendants": {
+                "ds:i2Q9D": {
+                  "icon": "circle-check"
+                },
+                "ds:yQD8U": {
+                  "content": "You're all caught up"
+                },
+                "ds:hWHdI": {
+                  "content": "Watch this space for news on your followers, playlists, events and more."
+                },
+                "ds:G1ZoX": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "w9xRTG",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "AMzuJV",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "Qm7Fjc",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "juHW7u",
+      "name": "Notifications / Loading / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "3nFC3M",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "yxQuEg",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "5mxV6R",
+                  "ref": "ds:BLCZ2j",
+                  "name": "Text/H1",
+                  "content": "Notifications"
+                },
+                {
+                  "type": "frame",
+                  "id": "VaWesW",
+                  "name": "Loading",
+                  "layout": "vertical",
+                  "gap": 24,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "QsmgZp",
+                      "ref": "ds:Jjegi",
+                      "name": "Skeleton",
+                      "width": 220,
+                      "height": 28
+                    },
+                    {
+                      "type": "frame",
+                      "id": "R5jUo5",
+                      "name": "Skeleton Rows",
+                      "layout": "vertical",
+                      "gap": 16,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "sUArun",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "ezrKU3",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 40,
+                              "height": 40
+                            },
+                            {
+                              "type": "frame",
+                              "id": "zbXXhZ",
+                              "name": "Column",
+                              "layout": "vertical",
+                              "gap": 8,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "ZKgJ3N",
+                                  "ref": "ds:Jjegi",
+                                  "name": "Skeleton",
+                                  "width": 280,
+                                  "height": 12
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "MwVCGE",
+                                  "ref": "ds:Jjegi",
+                                  "name": "Skeleton",
+                                  "width": 170,
+                                  "height": 10
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "3pLPM8",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "eMRyqJ",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 40,
+                              "height": 40
+                            },
+                            {
+                              "type": "frame",
+                              "id": "cTp389",
+                              "name": "Column",
+                              "layout": "vertical",
+                              "gap": 8,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "fkvi9z",
+                                  "ref": "ds:Jjegi",
+                                  "name": "Skeleton",
+                                  "width": 280,
+                                  "height": 12
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "9eCNS5",
+                                  "ref": "ds:Jjegi",
+                                  "name": "Skeleton",
+                                  "width": 170,
+                                  "height": 10
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "K79QGU",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "VU5BUz",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 40,
+                              "height": 40
+                            },
+                            {
+                              "type": "frame",
+                              "id": "HHAunr",
+                              "name": "Column",
+                              "layout": "vertical",
+                              "gap": 8,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "ZPM9kA",
+                                  "ref": "ds:Jjegi",
+                                  "name": "Skeleton",
+                                  "width": 280,
+                                  "height": 12
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "8CgSCX",
+                                  "ref": "ds:Jjegi",
+                                  "name": "Skeleton",
+                                  "width": 170,
+                                  "height": 10
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "69mCSr",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "kKXTeu",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 40,
+                              "height": 40
+                            },
+                            {
+                              "type": "frame",
+                              "id": "f3JaU3",
+                              "name": "Column",
+                              "layout": "vertical",
+                              "gap": 8,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "AjayDf",
+                                  "ref": "ds:Jjegi",
+                                  "name": "Skeleton",
+                                  "width": 280,
+                                  "height": 12
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "xLFKJi",
+                                  "ref": "ds:Jjegi",
+                                  "name": "Skeleton",
+                                  "width": 170,
+                                  "height": 10
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "fKupDi",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "duSqXZ",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 40,
+                              "height": 40
+                            },
+                            {
+                              "type": "frame",
+                              "id": "FxBG8d",
+                              "name": "Column",
+                              "layout": "vertical",
+                              "gap": 8,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "zru7Mn",
+                                  "ref": "ds:Jjegi",
+                                  "name": "Skeleton",
+                                  "width": 280,
+                                  "height": 12
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "rDWvKk",
+                                  "ref": "ds:Jjegi",
+                                  "name": "Skeleton",
+                                  "width": 170,
+                                  "height": 10
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "bCD6tg",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "qKouZt",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 40,
+                              "height": 40
+                            },
+                            {
+                              "type": "frame",
+                              "id": "JBBRsu",
+                              "name": "Column",
+                              "layout": "vertical",
+                              "gap": 8,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "ei6zmX",
+                                  "ref": "ds:Jjegi",
+                                  "name": "Skeleton",
+                                  "width": 280,
+                                  "height": 12
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "z7C47T",
+                                  "ref": "ds:Jjegi",
+                                  "name": "Skeleton",
+                                  "width": 170,
+                                  "height": 10
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "WSRSVx",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "NeKWav",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 40,
+                              "height": 40
+                            },
+                            {
+                              "type": "frame",
+                              "id": "2Jq6c3",
+                              "name": "Column",
+                              "layout": "vertical",
+                              "gap": 8,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "BJhQHC",
+                                  "ref": "ds:Jjegi",
+                                  "name": "Skeleton",
+                                  "width": 280,
+                                  "height": 12
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "KzNbir",
+                                  "ref": "ds:Jjegi",
+                                  "name": "Skeleton",
+                                  "width": 170,
+                                  "height": 10
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "UiWsnq",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "edNvb8",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 40,
+                              "height": 40
+                            },
+                            {
+                              "type": "frame",
+                              "id": "E8Ms8T",
+                              "name": "Column",
+                              "layout": "vertical",
+                              "gap": 8,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "XvYhCn",
+                                  "ref": "ds:Jjegi",
+                                  "name": "Skeleton",
+                                  "width": 280,
+                                  "height": 12
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "s2Qwki",
+                                  "ref": "ds:Jjegi",
+                                  "name": "Skeleton",
+                                  "width": 170,
+                                  "height": 10
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "GNDvwt",
+      "name": "Notifications / Loading / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "UArvZX",
+          "ref": "ds:rJ7nC6",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "MYMggC",
+          "ref": "ds:yr7XDa",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:YyLmeC": {
+              "content": "Notifications"
+            },
+            "ds:YpvVuM": {
+              "enabled": false
+            },
+            "ds:XUdBL3": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "vEXBAN",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "hREXA2",
+              "name": "Loading",
+              "layout": "vertical",
+              "gap": 24,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "6Ye6js",
+                  "ref": "ds:Jjegi",
+                  "name": "Skeleton",
+                  "width": 140,
+                  "height": 28
+                },
+                {
+                  "type": "frame",
+                  "id": "3xxzxr",
+                  "name": "Skeleton Rows",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "8Vmqtg",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "YmS32H",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "SrgncZ",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "3etLXX",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "ZtXDS6",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "VercBG",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "KmY2yp",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "9dXiun",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "AQDQrW",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "wP3cJ8",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "pvqGFg",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ZNGy8U",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "7G6bj5",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "JmGRrz",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "CsPRwP",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "nELEia",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ed9Zqk",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "nHxSbu",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "U5oAaz",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "GZH8ij",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "EuGqid",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "QqSoQe",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "5dbHjq",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "2cn5Et",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "PJGeE4",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "AaTN79",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "bxVnv2",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "fxyPLK",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "TafDA3",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "sdgJaG",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "exLJbd",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "psaoks",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "tRP75x",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "VnaoZD",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "TiwrjS",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "2p4YD3",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "vTgQBD",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "hW7JSS",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "yNU4Jg",
+      "name": "Notifications / Error / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "XtsryE",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "p2qNTx",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "vRPLiL",
+                  "ref": "ds:BLCZ2j",
+                  "name": "Text/H1",
+                  "content": "Notifications"
+                },
+                {
+                  "type": "ref",
+                  "id": "ZjA3Br",
+                  "ref": "ds:fNevX",
+                  "name": "State / Notifications are unavailable right now.",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "descendants": {
+                    "ds:rXj3m": {
+                      "icon": "circle-alert"
+                    },
+                    "ds:ChMrP": {
+                      "content": "Notifications are unavailable right now."
+                    },
+                    "ds:K47N3": {
+                      "content": "Try again in a moment."
+                    },
+                    "ds:DYMu1": {
+                      "content": "Try again →"
+                    }
+                  }
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 9170,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "W9gVkS",
+      "name": "Notifications / Error / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "CC6RtM",
+          "ref": "ds:rJ7nC6",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "yRxbNb",
+          "ref": "ds:yr7XDa",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:YyLmeC": {
+              "content": "Notifications"
+            },
+            "ds:YpvVuM": {
+              "enabled": false
+            },
+            "ds:XUdBL3": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "5cCJKm",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "t4bYZ7",
+              "ref": "ds:fNevX",
+              "name": "State / Notifications are unavailable right now.",
+              "width": "fill_container",
+              "height": "fill_container",
+              "descendants": {
+                "ds:rXj3m": {
+                  "icon": "circle-alert"
+                },
+                "ds:ChMrP": {
+                  "content": "Notifications are unavailable right now."
+                },
+                "ds:K47N3": {
+                  "content": "Try again in a moment."
+                },
+                "ds:DYMu1": {
+                  "content": "Try again →"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "wDExZi",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "ntFmuf",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "evjnxD",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 10710,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+    }
+  ]
+}

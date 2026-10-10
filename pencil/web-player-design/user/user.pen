@@ -1,0 +1,2258 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "rFxpSY",
+      "name": "User / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Eq68HL",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "v3vUSK",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "4EY8Nz",
+                  "ref": "ds:jg9Ydu",
+                  "name": "Profile Header",
+                  "descendants": {
+                    "ds:XPFpZU": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/avatars/avatar3.jpg",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:vFJvjc": {
+                      "content": "Jonah"
+                    },
+                    "ds:WajQLQ": {
+                      "content": "Collector of B-sides."
+                    },
+                    "ds:BEPRGZ": {
+                      "type": "frame",
+                      "id": "WkxR7Y",
+                      "name": "Action",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "wE9mja",
+                          "ref": "ds:G5tJp",
+                          "name": "Button / Follow",
+                          "descendants": {
+                            "ds:d2zCI": {
+                              "content": "Follow"
+                            },
+                            "ds:wFUna": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "SWQn7e",
+                  "ref": "ds:zmGKRX",
+                  "name": "Section Header",
+                  "descendants": {
+                    "ds:Jwg656": {
+                      "content": "Public playlists"
+                    },
+                    "ds:gn5d6t": {
+                      "content": "Show all"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "k44zoe",
+                  "name": "Card Row",
+                  "gap": 20,
+                  "alignItems": "start",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "V8PhPC",
+                      "ref": "ds:dKgOu",
+                      "name": "Playlist / B-sides Forever",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:D3rpRY": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-static-lines.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:I1BLb": {
+                          "content": "B-sides Forever"
+                        },
+                        "ds:oEjKW": {
+                          "content": "Public playlist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "k67i83",
+                      "ref": "ds:dKgOu",
+                      "name": "Playlist / Rain Drive",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:D3rpRY": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-drift-control.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:I1BLb": {
+                          "content": "Rain Drive"
+                        },
+                        "ds:oEjKW": {
+                          "content": "Public playlist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "nsNsEb",
+                      "ref": "ds:dKgOu",
+                      "name": "Playlist / Choir Nights",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:D3rpRY": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:I1BLb": {
+                          "content": "Choir Nights"
+                        },
+                        "ds:oEjKW": {
+                          "content": "Public playlist"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/user/[id] — Another listener's public profile."
+    },
+    {
+      "type": "frame",
+      "id": "Tfx4b9",
+      "name": "User / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "owUnqk",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "Gh836Y",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "4Qzue6",
+                  "ref": "ds:jg9Ydu",
+                  "name": "Profile Header",
+                  "descendants": {
+                    "ds:XPFpZU": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/avatars/avatar3.jpg",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:vFJvjc": {
+                      "content": "Jonah"
+                    },
+                    "ds:WajQLQ": {
+                      "content": "Collector of B-sides."
+                    },
+                    "ds:BEPRGZ": {
+                      "type": "frame",
+                      "id": "C56NwB",
+                      "name": "Action",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "coGhzs",
+                          "ref": "ds:G5tJp",
+                          "name": "Button / Follow",
+                          "descendants": {
+                            "ds:d2zCI": {
+                              "content": "Follow"
+                            },
+                            "ds:wFUna": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "893mSG",
+                  "ref": "ds:zmGKRX",
+                  "name": "Section Header",
+                  "descendants": {
+                    "ds:Jwg656": {
+                      "content": "Public playlists"
+                    },
+                    "ds:gn5d6t": {
+                      "content": "Show all"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "ssBaGt",
+                  "name": "Card Row",
+                  "gap": 20,
+                  "alignItems": "start",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "e4EWsh",
+                      "ref": "ds:dKgOu",
+                      "name": "Playlist / B-sides Forever",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:D3rpRY": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-static-lines.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:I1BLb": {
+                          "content": "B-sides Forever"
+                        },
+                        "ds:oEjKW": {
+                          "content": "Public playlist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "iDjvon",
+                      "ref": "ds:dKgOu",
+                      "name": "Playlist / Rain Drive",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:D3rpRY": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-drift-control.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:I1BLb": {
+                          "content": "Rain Drive"
+                        },
+                        "ds:oEjKW": {
+                          "content": "Public playlist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "fcaaqK",
+                      "ref": "ds:dKgOu",
+                      "name": "Playlist / Choir Nights",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:D3rpRY": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:I1BLb": {
+                          "content": "Choir Nights"
+                        },
+                        "ds:oEjKW": {
+                          "content": "Public playlist"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "/main/user/[id] — Another listener's public profile."
+    },
+    {
+      "type": "frame",
+      "id": "LoLLVT",
+      "name": "User / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "5N8djM",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "NcVDER",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "PQccEt",
+                  "ref": "ds:jg9Ydu",
+                  "name": "Profile Header",
+                  "descendants": {
+                    "ds:XPFpZU": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/avatars/avatar3.jpg",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:vFJvjc": {
+                      "content": "Jonah"
+                    },
+                    "ds:WajQLQ": {
+                      "content": "Collector of B-sides."
+                    },
+                    "ds:BEPRGZ": {
+                      "type": "frame",
+                      "id": "PVuVqP",
+                      "name": "Action",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "BafAP7",
+                          "ref": "ds:G5tJp",
+                          "name": "Button / Follow",
+                          "descendants": {
+                            "ds:d2zCI": {
+                              "content": "Follow"
+                            },
+                            "ds:wFUna": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "8SosQ4",
+                  "ref": "ds:zmGKRX",
+                  "name": "Section Header",
+                  "descendants": {
+                    "ds:Jwg656": {
+                      "content": "Public playlists"
+                    },
+                    "ds:gn5d6t": {
+                      "content": "Show all"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "3a9wPw",
+                  "name": "Card Row",
+                  "gap": 20,
+                  "alignItems": "start",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "2hAeVX",
+                      "ref": "ds:dKgOu",
+                      "name": "Playlist / B-sides Forever",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:D3rpRY": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-static-lines.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:I1BLb": {
+                          "content": "B-sides Forever"
+                        },
+                        "ds:oEjKW": {
+                          "content": "Public playlist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "kYm4fJ",
+                      "ref": "ds:dKgOu",
+                      "name": "Playlist / Rain Drive",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:D3rpRY": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-drift-control.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:I1BLb": {
+                          "content": "Rain Drive"
+                        },
+                        "ds:oEjKW": {
+                          "content": "Public playlist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ujAczJ",
+                      "ref": "ds:dKgOu",
+                      "name": "Playlist / Choir Nights",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:D3rpRY": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:I1BLb": {
+                          "content": "Choir Nights"
+                        },
+                        "ds:oEjKW": {
+                          "content": "Public playlist"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "/main/user/[id] — Another listener's public profile."
+    },
+    {
+      "type": "frame",
+      "id": "ZGeFic",
+      "name": "User / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "eyviFC",
+          "ref": "ds:rJ7nC6",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "W9HE6N",
+          "ref": "ds:yr7XDa",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:YyLmeC": {
+              "content": ""
+            },
+            "ds:YpvVuM": {
+              "enabled": false
+            },
+            "ds:XUdBL3": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "BeJmpW",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "iTWpQ3",
+              "name": "Row",
+              "gap": 16,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "rz7uv7",
+                  "ref": "ds:aX5s8j",
+                  "name": "Media/Avatar",
+                  "width": 88,
+                  "height": 88,
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/avatars/avatar3.jpg",
+                    "mode": "cover"
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "R4YLeJ",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "iEkd7Y",
+                      "ref": "ds:FmAykg",
+                      "name": "Text/Caption",
+                      "content": "Profile"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "nmDHEd",
+                      "ref": "ds:YmcyZh",
+                      "name": "Text/H2",
+                      "content": "Jonah"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "GSYJDV",
+              "ref": "ds:G5tJp",
+              "name": "Button / Follow",
+              "descendants": {
+                "ds:d2zCI": {
+                  "content": "Follow"
+                },
+                "ds:wFUna": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "ffkW5S",
+              "ref": "ds:MGqiFD",
+              "name": "Text/H4",
+              "content": "Public playlists"
+            },
+            {
+              "type": "ref",
+              "id": "6pWmp6",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / B-sides Forever",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-static-lines.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "B-sides Forever"
+                },
+                "ds:rFh9q": {
+                  "content": "Public playlist"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "PbRfRN",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Rain Drive",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-drift-control.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Rain Drive"
+                },
+                "ds:rFh9q": {
+                  "content": "Public playlist"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "tSiwB3",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Choir Nights",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Choir Nights"
+                },
+                "ds:rFh9q": {
+                  "content": "Public playlist"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "KGs9LY",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "QaGUQP",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "V3QGZS",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/user/[id] — Another listener's public profile."
+    },
+    {
+      "type": "frame",
+      "id": "gYWiuz",
+      "name": "User / No playlists / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "D32WZR",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "wEcchK",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "uFnGxA",
+                  "ref": "ds:jg9Ydu",
+                  "name": "Profile Header",
+                  "descendants": {
+                    "ds:vFJvjc": {
+                      "content": "Jonah"
+                    },
+                    "ds:WajQLQ": {
+                      "content": "Collector of B-sides."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "suGnVF",
+                  "ref": "ds:xZAnf",
+                  "name": "State / No public playlists yet.",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "descendants": {
+                    "ds:i2Q9D": {
+                      "icon": "list-music"
+                    },
+                    "ds:yQD8U": {
+                      "content": "No public playlists yet."
+                    },
+                    "ds:hWHdI": {
+                      "content": ""
+                    },
+                    "ds:G1ZoX": {
+                      "enabled": false
+                    }
+                  }
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/user/[id] — Another listener's public profile."
+    },
+    {
+      "type": "frame",
+      "id": "VrnJDB",
+      "name": "User / No playlists / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Y7jUMX",
+          "ref": "ds:rJ7nC6",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "U7iZVu",
+          "ref": "ds:yr7XDa",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:YyLmeC": {
+              "content": "Jonah"
+            },
+            "ds:YpvVuM": {
+              "enabled": false
+            },
+            "ds:XUdBL3": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "98a5vH",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "nCsx6L",
+              "ref": "ds:xZAnf",
+              "name": "State / No public playlists yet.",
+              "width": "fill_container",
+              "height": "fill_container",
+              "descendants": {
+                "ds:i2Q9D": {
+                  "icon": "list-music"
+                },
+                "ds:yQD8U": {
+                  "content": "No public playlists yet."
+                },
+                "ds:hWHdI": {
+                  "content": ""
+                },
+                "ds:G1ZoX": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "QXxQ63",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "dUsmKw",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "oJGUhE",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/user/[id] — Another listener's public profile."
+    },
+    {
+      "type": "frame",
+      "id": "c7SyoH",
+      "name": "User / Loading / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "wxdkpi",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "uPBvxC",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "BmNkCd",
+                  "name": "Loading",
+                  "layout": "vertical",
+                  "gap": 24,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Y5DBgY",
+                      "ref": "ds:Jjegi",
+                      "name": "Skeleton",
+                      "width": 220,
+                      "height": 28
+                    },
+                    {
+                      "type": "frame",
+                      "id": "cjHA5h",
+                      "name": "Skeleton Cards",
+                      "gap": 20,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Lj5kdY",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "y5pkn8",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "6sKoUS",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "MXv4qD",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "BfDASH",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "QppYXF",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "wxoQfP",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "fVkftH",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "yfDPav",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "v5sDHb",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "AHSxs8",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "HGbGTZ",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "e43eLD",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "9nYzrr",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "H5d2vf",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "rbKysH",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "jwBFC4",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "Ufd4fz",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "E9oxCd",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "feEsTq",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "TEiDhD",
+                      "name": "Skeleton Cards",
+                      "gap": 20,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "mKbS2u",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "5V5Bqp",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "s94tsF",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "bV5xAh",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "KVMa7f",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "Zg9oaT",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "VxYs35",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "hpk8Ht",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "YSCLsB",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "V76Jup",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "cLNwek",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "STNBng",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "pcmipq",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "y7NtQP",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "NFs8vg",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "XMkTtu",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "ZQc7Ui",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "LEFuCk",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "7g8itC",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "6XD7ec",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/user/[id] — Another listener's public profile."
+    },
+    {
+      "type": "frame",
+      "id": "ux6sf8",
+      "name": "User / Loading / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "CJcZuF",
+          "ref": "ds:rJ7nC6",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "Kk2M7g",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "5JNygW",
+              "name": "Loading",
+              "layout": "vertical",
+              "gap": 24,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "oxnKGh",
+                  "ref": "ds:Jjegi",
+                  "name": "Skeleton",
+                  "width": 140,
+                  "height": 28
+                },
+                {
+                  "type": "frame",
+                  "id": "HdbPER",
+                  "name": "Skeleton Rows",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "pduLT4",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "SSDhts",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "hpFmrJ",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "oRVC6m",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "UZ572Y",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "8CpKs3",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "6H4qAJ",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "CYzmSE",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "qx6PJr",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "KiKUre",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "iefXLD",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "WMwGZs",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "VWVCRw",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "zBTsRp",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "2vjbp8",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "zcrhD3",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "v93J5H",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "3kC4KC",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "DAoKtN",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "PHLbhR",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "dKdKVL",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "RruJWs",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "uGSEPk",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "VVSx7J",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "28GCW6",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "izcv52",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "iGvcC3",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "NT67fb",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "HJ5cMA",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "2dySxS",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "faEH4Y",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "Qg3Eoz",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "BLihhV",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/user/[id] — Another listener's public profile."
+    },
+    {
+      "type": "frame",
+      "id": "KPJoib",
+      "name": "User / Error / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "YFQLT7",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "wpvnB2",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "UvftZ6",
+                  "ref": "ds:fNevX",
+                  "name": "State / Playlists could not be loaded. Try again later.",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "descendants": {
+                    "ds:rXj3m": {
+                      "icon": "circle-alert"
+                    },
+                    "ds:ChMrP": {
+                      "content": "Playlists could not be loaded. Try again later."
+                    },
+                    "ds:K47N3": {
+                      "content": "Something went wrong on our side."
+                    },
+                    "ds:DYMu1": {
+                      "content": "Try again →"
+                    }
+                  }
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 9170,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/user/[id] — Another listener's public profile."
+    },
+    {
+      "type": "frame",
+      "id": "vKZ8Wi",
+      "name": "User / Error / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "X3cwPL",
+          "ref": "ds:rJ7nC6",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "MiR6u7",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "3ns2p2",
+              "ref": "ds:fNevX",
+              "name": "State / Playlists could not be loaded. Try again later.",
+              "width": "fill_container",
+              "height": "fill_container",
+              "descendants": {
+                "ds:rXj3m": {
+                  "icon": "circle-alert"
+                },
+                "ds:ChMrP": {
+                  "content": "Playlists could not be loaded. Try again later."
+                },
+                "ds:K47N3": {
+                  "content": "Something went wrong on our side."
+                },
+                "ds:DYMu1": {
+                  "content": "Try again →"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "2hUetL",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "ApJxWP",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "niQmrd",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 10710,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/user/[id] — Another listener's public profile."
+    },
+    {
+      "type": "frame",
+      "id": "bHTJee",
+      "name": "User / Not found / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Mysxyo",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "Vhkama",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "fd8ySq",
+                  "ref": "ds:xZAnf",
+                  "name": "State / User not found",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "descendants": {
+                    "ds:i2Q9D": {
+                      "icon": "user-x"
+                    },
+                    "ds:yQD8U": {
+                      "content": "User not found"
+                    },
+                    "ds:hWHdI": {
+                      "content": "This profile is unavailable or no longer exists."
+                    },
+                    "ds:G1ZoX": {
+                      "content": "Back to home →"
+                    }
+                  }
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 11200,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/user/[id] — Another listener's public profile."
+    },
+    {
+      "type": "frame",
+      "id": "eKvd2J",
+      "name": "User / Not found / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "wLbhV4",
+          "ref": "ds:rJ7nC6",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "5TEMRz",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "7VsmEe",
+              "ref": "ds:xZAnf",
+              "name": "State / User not found",
+              "width": "fill_container",
+              "height": "fill_container",
+              "descendants": {
+                "ds:i2Q9D": {
+                  "icon": "user-x"
+                },
+                "ds:yQD8U": {
+                  "content": "User not found"
+                },
+                "ds:hWHdI": {
+                  "content": "This profile is unavailable or no longer exists."
+                },
+                "ds:G1ZoX": {
+                  "content": "Back to home →"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "7TWqk8",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "koiTfp",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "mr2W7v",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 12740,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/user/[id] — Another listener's public profile."
+    }
+  ]
+}

@@ -1,0 +1,1497 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "Pe3qZB",
+      "name": "Auth / Registration / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "j5i8Cy",
+          "ref": "ds:aAwQ9H",
+          "name": "Auth/Brand Panel",
+          "height": "fill_container",
+          "descendants": {
+            "ds:L2i6Fm": {
+              "content": "Start listening for free."
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "pYUBYu",
+          "name": "Form Side",
+          "width": "fill_container",
+          "height": "fill_container",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "FKSLJD",
+              "name": "Form",
+              "layout": "vertical",
+              "gap": 22,
+              "width": 400,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "6C4TLg",
+                  "name": "Heading",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ydcGsF",
+                      "ref": "ds:YmcyZh",
+                      "name": "Text/H2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Create your account for free and start listening"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sxLTm7",
+                      "ref": "ds:NxktPP",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Sign up with your email or continue with a social account."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "kLCqx9",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "iPN3GQ",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Full Name",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Full Name"
+                        },
+                        "ds:iI0CE": {
+                          "content": "Maya Rivers"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "oRtrmU",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Email Address",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Email Address"
+                        },
+                        "ds:iI0CE": {
+                          "content": "you@example.com"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "e8SEgJ",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Password"
+                        },
+                        "ds:iI0CE": {
+                          "content": "••••••••"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "FsMUr5",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Confirm Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Confirm Password"
+                        },
+                        "ds:iI0CE": {
+                          "content": "••••••••"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "zpjR7V",
+                  "ref": "ds:V2YMoZ",
+                  "name": "Form/Checkbox Row",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:gcCuAh": {
+                      "content": "I am at least 16 years old, I accept the Terms of Use and Community Guidelines, and I have read the Privacy Policy."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "PtxAsF",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Register",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Register"
+                    },
+                    "ds:D3xnv": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "44GaMG",
+                  "ref": "ds:WqWmAR",
+                  "name": "Auth/Or Divider"
+                },
+                {
+                  "type": "ref",
+                  "id": "QeNU3q",
+                  "ref": "ds:G5tJp",
+                  "name": "Button / Continue with Google",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:d2zCI": {
+                      "content": "Continue with Google"
+                    },
+                    "ds:wFUna": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "VkBe7R",
+                  "name": "Footer Link",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "D72usT",
+                      "ref": "ds:4zpiTg",
+                      "name": "Text/Muted",
+                      "content": "Already have an account?"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "4NaDqz",
+                      "ref": "ds:rx43Sm",
+                      "name": "Text/Link",
+                      "content": "Log in"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/auth/registration — Single-step sign-up; password rules surface as validation errors."
+    },
+    {
+      "type": "frame",
+      "id": "7bHzKK",
+      "name": "Auth / Registration / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "zMLFNz",
+          "ref": "ds:aAwQ9H",
+          "name": "Auth/Brand Panel",
+          "height": "fill_container",
+          "descendants": {
+            "ds:L2i6Fm": {
+              "content": "Start listening for free."
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "ixXBLH",
+          "name": "Form Side",
+          "width": "fill_container",
+          "height": "fill_container",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "QVUSyB",
+              "name": "Form",
+              "layout": "vertical",
+              "gap": 22,
+              "width": 400,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "LigSMv",
+                  "name": "Heading",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "7eF8va",
+                      "ref": "ds:YmcyZh",
+                      "name": "Text/H2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Create your account for free and start listening"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "QVRv9Q",
+                      "ref": "ds:NxktPP",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Sign up with your email or continue with a social account."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ybVTuY",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "EnjNej",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Full Name",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Full Name"
+                        },
+                        "ds:iI0CE": {
+                          "content": "Maya Rivers"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "waWaHS",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Email Address",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Email Address"
+                        },
+                        "ds:iI0CE": {
+                          "content": "you@example.com"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "envkSW",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Password"
+                        },
+                        "ds:iI0CE": {
+                          "content": "••••••••"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "zVdjsG",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Confirm Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Confirm Password"
+                        },
+                        "ds:iI0CE": {
+                          "content": "••••••••"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "QnXiyK",
+                  "ref": "ds:V2YMoZ",
+                  "name": "Form/Checkbox Row",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:gcCuAh": {
+                      "content": "I am at least 16 years old, I accept the Terms of Use and Community Guidelines, and I have read the Privacy Policy."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "84YMCq",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Register",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Register"
+                    },
+                    "ds:D3xnv": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "7c97TF",
+                  "ref": "ds:WqWmAR",
+                  "name": "Auth/Or Divider"
+                },
+                {
+                  "type": "ref",
+                  "id": "JpbPGg",
+                  "ref": "ds:G5tJp",
+                  "name": "Button / Continue with Google",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:d2zCI": {
+                      "content": "Continue with Google"
+                    },
+                    "ds:wFUna": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "Fzscuz",
+                  "name": "Footer Link",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "zemyHN",
+                      "ref": "ds:4zpiTg",
+                      "name": "Text/Muted",
+                      "content": "Already have an account?"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "nd9jWU",
+                      "ref": "ds:rx43Sm",
+                      "name": "Text/Link",
+                      "content": "Log in"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "/auth/registration — Single-step sign-up; password rules surface as validation errors."
+    },
+    {
+      "type": "frame",
+      "id": "6k7riQ",
+      "name": "Auth / Registration / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "qwhmmV",
+          "ref": "ds:aAwQ9H",
+          "name": "Auth/Brand Panel",
+          "height": "fill_container",
+          "descendants": {
+            "ds:L2i6Fm": {
+              "content": "Start listening for free."
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "gFqe85",
+          "name": "Form Side",
+          "width": "fill_container",
+          "height": "fill_container",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "TJBicc",
+              "name": "Form",
+              "layout": "vertical",
+              "gap": 22,
+              "width": 400,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Kj6YeM",
+                  "name": "Heading",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "s67UEN",
+                      "ref": "ds:YmcyZh",
+                      "name": "Text/H2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Create your account for free and start listening"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "bRZUih",
+                      "ref": "ds:NxktPP",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Sign up with your email or continue with a social account."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "9bksnL",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Sw7LNh",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Full Name",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Full Name"
+                        },
+                        "ds:iI0CE": {
+                          "content": "Maya Rivers"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "UMCu7r",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Email Address",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Email Address"
+                        },
+                        "ds:iI0CE": {
+                          "content": "you@example.com"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "PTXDwJ",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Password"
+                        },
+                        "ds:iI0CE": {
+                          "content": "••••••••"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "rGxoZa",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Confirm Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Confirm Password"
+                        },
+                        "ds:iI0CE": {
+                          "content": "••••••••"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "3QFYi3",
+                  "ref": "ds:V2YMoZ",
+                  "name": "Form/Checkbox Row",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:gcCuAh": {
+                      "content": "I am at least 16 years old, I accept the Terms of Use and Community Guidelines, and I have read the Privacy Policy."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "uni2P5",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Register",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Register"
+                    },
+                    "ds:D3xnv": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "oSFUNg",
+                  "ref": "ds:WqWmAR",
+                  "name": "Auth/Or Divider"
+                },
+                {
+                  "type": "ref",
+                  "id": "BFReCk",
+                  "ref": "ds:G5tJp",
+                  "name": "Button / Continue with Google",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:d2zCI": {
+                      "content": "Continue with Google"
+                    },
+                    "ds:wFUna": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "4SEqo3",
+                  "name": "Footer Link",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "hJDRkJ",
+                      "ref": "ds:4zpiTg",
+                      "name": "Text/Muted",
+                      "content": "Already have an account?"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "PMneZG",
+                      "ref": "ds:rx43Sm",
+                      "name": "Text/Link",
+                      "content": "Log in"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "/auth/registration — Single-step sign-up; password rules surface as validation errors."
+    },
+    {
+      "type": "frame",
+      "id": "antyEF",
+      "name": "Auth / Registration / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "xssxNz",
+          "ref": "ds:rJ7nC6",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "MtTUn9",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "9weeFF",
+              "ref": "ds:np7n3u",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "skcAaD",
+              "name": "Heading",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "dC5CPp",
+                  "ref": "ds:YmcyZh",
+                  "name": "Text/H2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Create your account for free and start listening"
+                },
+                {
+                  "type": "ref",
+                  "id": "XJkMrQ",
+                  "ref": "ds:NxktPP",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Sign up with your email or continue with a social account."
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "j7roh9",
+              "name": "Column",
+              "layout": "vertical",
+              "gap": 12,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Y4FtLa",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Full Name",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Full Name"
+                    },
+                    "ds:iI0CE": {
+                      "content": "Maya Rivers"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "GPsG8w",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "you@example.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "JVUVRq",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Password",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Password"
+                    },
+                    "ds:iI0CE": {
+                      "content": "••••••••"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "sGDmps",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Confirm Password",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Confirm Password"
+                    },
+                    "ds:iI0CE": {
+                      "content": "••••••••"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "RcAuQC",
+              "ref": "ds:V2YMoZ",
+              "name": "Form/Checkbox Row",
+              "width": "fill_container",
+              "descendants": {
+                "ds:gcCuAh": {
+                  "content": "I am at least 16 years old, I accept the Terms of Use and Community Guidelines, and I have read the Privacy Policy."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "b5Zc8F",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Register",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Register"
+                },
+                "ds:D3xnv": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "MjjWnm",
+              "ref": "ds:WqWmAR",
+              "name": "Auth/Or Divider"
+            },
+            {
+              "type": "ref",
+              "id": "SVGnKN",
+              "ref": "ds:G5tJp",
+              "name": "Button / Continue with Google",
+              "width": "fill_container",
+              "descendants": {
+                "ds:d2zCI": {
+                  "content": "Continue with Google"
+                },
+                "ds:wFUna": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "L2DC9M",
+              "name": "Footer Link",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "7s45qS",
+                  "ref": "ds:4zpiTg",
+                  "name": "Text/Muted",
+                  "content": "Already have an account?"
+                },
+                {
+                  "type": "ref",
+                  "id": "QYnBDv",
+                  "ref": "ds:rx43Sm",
+                  "name": "Text/Link",
+                  "content": "Log in"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/auth/registration — Single-step sign-up; password rules surface as validation errors."
+    },
+    {
+      "type": "frame",
+      "id": "X6K7kZ",
+      "name": "Auth / Registration / Validation errors / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "pzfFyk",
+          "ref": "ds:aAwQ9H",
+          "name": "Auth/Brand Panel",
+          "height": "fill_container",
+          "descendants": {
+            "ds:L2i6Fm": {
+              "content": "Start listening for free."
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "UKrAtT",
+          "name": "Form Side",
+          "width": "fill_container",
+          "height": "fill_container",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "QEhkfD",
+              "name": "Form",
+              "layout": "vertical",
+              "gap": 22,
+              "width": 400,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "RB85hn",
+                  "name": "Heading",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "iHoWiN",
+                      "ref": "ds:YmcyZh",
+                      "name": "Text/H2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Create your account for free and start listening"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "qwPgzj",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "8SmNxs",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Email Address",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Email Address"
+                        },
+                        "ds:iI0CE": {
+                          "content": "maya@example.com"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "n9irBE",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Password"
+                        },
+                        "ds:iI0CE": {
+                          "content": "bitrate"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "PLMZgw",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Confirm Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Confirm Password"
+                        },
+                        "ds:iI0CE": {
+                          "content": "bitrat"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "MECxzp",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "wwPH2q",
+                      "ref": "ds:wZmxhY",
+                      "name": "Form/Field Error",
+                      "descendants": {
+                        "ds:jZWiJi": {
+                          "content": "Password must be at least 8 characters"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "b2f42S",
+                      "ref": "ds:wZmxhY",
+                      "name": "Form/Field Error",
+                      "descendants": {
+                        "ds:jZWiJi": {
+                          "content": "Password must include at least one uppercase letter"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "prQvmJ",
+                      "ref": "ds:wZmxhY",
+                      "name": "Form/Field Error",
+                      "descendants": {
+                        "ds:jZWiJi": {
+                          "content": "Password must include at least one number"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "8jYefR",
+                      "ref": "ds:wZmxhY",
+                      "name": "Form/Field Error",
+                      "descendants": {
+                        "ds:jZWiJi": {
+                          "content": "Password must include at least one special character"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "x8bUex",
+                      "ref": "ds:wZmxhY",
+                      "name": "Form/Field Error",
+                      "descendants": {
+                        "ds:jZWiJi": {
+                          "content": "Passwords don't match"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "tr6b7k",
+                      "ref": "ds:wZmxhY",
+                      "name": "Form/Field Error",
+                      "descendants": {
+                        "ds:jZWiJi": {
+                          "content": "You must accept the Terms of Use and Community Guidelines"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "U6oSAw",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Register",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Register"
+                    },
+                    "ds:D3xnv": {
+                      "enabled": false
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/auth/registration — Single-step sign-up; password rules surface as validation errors."
+    },
+    {
+      "type": "frame",
+      "id": "5eC2dF",
+      "name": "Auth / Registration / Validation errors / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "5sKk32",
+          "ref": "ds:rJ7nC6",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "KkMhub",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "VTVrem",
+              "ref": "ds:np7n3u",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "NpQU6t",
+              "name": "Heading",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "atQCYh",
+                  "ref": "ds:YmcyZh",
+                  "name": "Text/H2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Create your account for free and start listening"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "zA6KEC",
+              "name": "Column",
+              "layout": "vertical",
+              "gap": 12,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "4fbFen",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "maya@example.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "YzhnZA",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Password",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Password"
+                    },
+                    "ds:iI0CE": {
+                      "content": "bitrate"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "s34s9j",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Confirm Password",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Confirm Password"
+                    },
+                    "ds:iI0CE": {
+                      "content": "bitrat"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "iUAp56",
+              "name": "Column",
+              "layout": "vertical",
+              "gap": 6,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "BrZZiJ",
+                  "ref": "ds:wZmxhY",
+                  "name": "Form/Field Error",
+                  "descendants": {
+                    "ds:jZWiJi": {
+                      "content": "Password must be at least 8 characters"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "TMMaNk",
+                  "ref": "ds:wZmxhY",
+                  "name": "Form/Field Error",
+                  "descendants": {
+                    "ds:jZWiJi": {
+                      "content": "Password must include at least one uppercase letter"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "y9Msoh",
+                  "ref": "ds:wZmxhY",
+                  "name": "Form/Field Error",
+                  "descendants": {
+                    "ds:jZWiJi": {
+                      "content": "Password must include at least one number"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "afTmoc",
+                  "ref": "ds:wZmxhY",
+                  "name": "Form/Field Error",
+                  "descendants": {
+                    "ds:jZWiJi": {
+                      "content": "Password must include at least one special character"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "2ejKwN",
+                  "ref": "ds:wZmxhY",
+                  "name": "Form/Field Error",
+                  "descendants": {
+                    "ds:jZWiJi": {
+                      "content": "Passwords don't match"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "w2K3Za",
+                  "ref": "ds:wZmxhY",
+                  "name": "Form/Field Error",
+                  "descendants": {
+                    "ds:jZWiJi": {
+                      "content": "You must accept the Terms of Use and Community Guidelines"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "NczJSY",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Register",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Register"
+                },
+                "ds:D3xnv": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/auth/registration — Single-step sign-up; password rules surface as validation errors."
+    },
+    {
+      "type": "frame",
+      "id": "Jrf547",
+      "name": "Auth / Registration / Submitting / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Fj9WQG",
+          "ref": "ds:aAwQ9H",
+          "name": "Auth/Brand Panel",
+          "height": "fill_container",
+          "descendants": {
+            "ds:L2i6Fm": {
+              "content": "Start listening for free."
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "me5wQu",
+          "name": "Form Side",
+          "width": "fill_container",
+          "height": "fill_container",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "P9Ttrj",
+              "name": "Form",
+              "layout": "vertical",
+              "gap": 22,
+              "width": 400,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "ETTR4e",
+                  "name": "Heading",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "v45rv8",
+                      "ref": "ds:YmcyZh",
+                      "name": "Text/H2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Create your account for free and start listening"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "bjpHRg",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "maya@example.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "qC45Xv",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Registering...",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Registering..."
+                    },
+                    "ds:D3xnv": {
+                      "enabled": false
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/auth/registration — Single-step sign-up; password rules surface as validation errors."
+    },
+    {
+      "type": "frame",
+      "id": "mVyQqv",
+      "name": "Auth / Registration / Submitting / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "RqUHgG",
+          "ref": "ds:rJ7nC6",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "KGyztE",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "JWhRCo",
+              "ref": "ds:np7n3u",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "cddNJU",
+              "name": "Heading",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "joZzaH",
+                  "ref": "ds:YmcyZh",
+                  "name": "Text/H2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Create your account for free and start listening"
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "6mVREi",
+              "ref": "ds:j04F4",
+              "name": "Input / Email Address",
+              "width": "fill_container",
+              "descendants": {
+                "ds:l4agQ": {
+                  "content": "Email Address"
+                },
+                "ds:iI0CE": {
+                  "content": "maya@example.com"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "JVMkVA",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Registering...",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Registering..."
+                },
+                "ds:D3xnv": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/auth/registration — Single-step sign-up; password rules surface as validation errors."
+    }
+  ]
+}

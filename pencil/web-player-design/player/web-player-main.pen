@@ -3,2279 +3,6 @@
   "children": [
     {
       "type": "frame",
-      "id": "2OCXo",
-      "x": 0,
-      "y": -1400,
-      "name": "00 • Player Shell Components",
-      "context": "Reusable shell components. Pages use instances of Shell/App Layout; Library Panel, Now Playing Panel, Top Bar and Player Bar are also reusable on their own.",
-      "theme": {
-        "ds:Mode": "Dark"
-      },
-      "clip": true,
-      "width": 2300,
-      "height": 1280,
-      "fill": "$ds:--background",
-      "layout": "none",
-      "children": [
-        {
-          "type": "text",
-          "id": "aUx6Y",
-          "x": 40,
-          "y": 28,
-          "name": "Components Title",
-          "fill": "$ds:--foreground",
-          "content": "Player shell components",
-          "fontFamily": "Bricolage Grotesque",
-          "fontSize": 22,
-          "fontWeight": "700"
-        },
-        {
-          "type": "frame",
-          "id": "NnVxK",
-          "x": 40,
-          "y": 90,
-          "name": "Shell/Top Bar",
-          "reusable": true,
-          "width": 1408,
-          "height": 40,
-          "padding": [
-            0,
-            6
-          ],
-          "justifyContent": "space_between",
-          "alignItems": "center",
-          "children": [
-            {
-              "type": "frame",
-              "id": "gfTFA",
-              "name": "Top Bar Brand",
-              "gap": 10,
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "7X8s5",
-                  "name": "Bitrate Mark",
-                  "width": 33,
-                  "height": 33,
-                  "fill": {
-                    "type": "image",
-                    "enabled": true,
-                    "url": "assets/bitrate-mark.png",
-                    "mode": "contain"
-                  }
-                },
-                {
-                  "type": "text",
-                  "id": "oND5b",
-                  "name": "Top Bar Wordmark",
-                  "fill": "$ds:--foreground",
-                  "content": "Bitrate",
-                  "fontFamily": "Hanken Grotesk",
-                  "fontSize": 19,
-                  "fontWeight": "700"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "UmrCa",
-              "name": "Top Search",
-              "width": 420,
-              "height": 36,
-              "fill": "$ds:--background",
-              "cornerRadius": 12,
-              "stroke": "$ds:--border",
-              "strokeWidth": 1,
-              "gap": 10,
-              "padding": [
-                0,
-                14
-              ],
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "icon",
-                  "id": "1fbLt",
-                  "name": "Top Search Icon",
-                  "width": 15,
-                  "height": 15,
-                  "icon": "search",
-                  "library": "lucide",
-                  "fill": "$ds:--muted-foreground"
-                },
-                {
-                  "type": "text",
-                  "id": "ByHwi",
-                  "name": "Top Search Placeholder",
-                  "fill": "$ds:--foreground",
-                  "content": "Search music...",
-                  "fontFamily": "Hanken Grotesk",
-                  "fontSize": 12,
-                  "fontWeight": "normal"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "cLxQl",
-              "name": "Top Bar Account",
-              "gap": 16,
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "icon",
-                  "id": "bGOUB",
-                  "name": "Top Bar Notifications",
-                  "width": 18,
-                  "height": 18,
-                  "icon": "bell",
-                  "library": "lucide",
-                  "fill": "$ds:--muted-foreground"
-                },
-                {
-                  "type": "icon",
-                  "id": "wXdnY",
-                  "name": "Top Bar Avatar",
-                  "width": 30,
-                  "height": 30,
-                  "icon": "circle-user-round",
-                  "library": "lucide",
-                  "fill": "$ds:--accent"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "SPMkc",
-          "x": 40,
-          "y": 170,
-          "name": "Shell/Player Bar",
-          "reusable": true,
-          "width": 1408,
-          "height": 88,
-          "fill": "$ds:--card",
-          "cornerRadius": 16,
-          "stroke": "$ds:--border",
-          "strokeWidth": 1,
-          "effect": {
-            "type": "shadow",
-            "shadowType": "outer",
-            "color": "$ds:--shadow",
-            "offset": {
-              "x": 0,
-              "y": 10
-            },
-            "blur": 28
-          },
-          "gap": 24,
-          "padding": [
-            0,
-            22
-          ],
-          "alignItems": "center",
-          "children": [
-            {
-              "type": "frame",
-              "id": "EcAZf",
-              "name": "Player Track",
-              "width": 320,
-              "gap": 14,
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "A40QE",
-                  "name": "Player Cover",
-                  "clip": true,
-                  "width": 60,
-                  "height": 60,
-                  "fill": {
-                    "type": "image",
-                    "enabled": true,
-                    "url": "assets/albums/album-afterglow.webp",
-                    "mode": "cover"
-                  },
-                  "cornerRadius": 6,
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "7vkyc",
-                      "x": 0,
-                      "y": 0,
-                      "name": "Player Cover Hover Overlay",
-                      "enabled": false,
-                      "width": "fill_container(0)",
-                      "height": "fill_container(0)",
-                      "fill": "$ds:--scrim",
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "wZtr9",
-                          "name": "Track Details Link",
-                          "width": 26,
-                          "height": 26,
-                          "fill": "$ds:--primary",
-                          "cornerRadius": 7,
-                          "stroke": "$ds:--ring",
-                          "strokeWidth": 1,
-                          "justifyContent": "center",
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "AsRuA",
-                              "name": "Track Details Link Icon",
-                              "width": 14,
-                              "height": 14,
-                              "icon": "arrow-up-right",
-                              "library": "lucide",
-                              "fill": "$ds:--primary-foreground"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "2cqY2",
-                  "name": "Player Track Text",
-                  "layout": "vertical",
-                  "gap": 4,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "WJ4qI",
-                      "name": "Player Track Title",
-                      "fill": "$ds:--foreground",
-                      "content": "Afterglow",
-                      "fontFamily": "Hanken Grotesk",
-                      "fontSize": 14,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "rSfyn",
-                      "name": "Player Track Artist",
-                      "fill": "$ds:--text-secondary",
-                      "content": "Nova & the Static",
-                      "fontFamily": "Hanken Grotesk",
-                      "fontSize": 12,
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "rKXCa",
-                      "name": "Player Video Clip Badge",
-                      "height": 18,
-                      "fill": "$ds:--muted",
-                      "cornerRadius": 9,
-                      "stroke": "$ds:--ring",
-                      "strokeWidth": 1,
-                      "gap": 5,
-                      "padding": [
-                        0,
-                        8
-                      ],
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "icon",
-                          "id": "5q2jG",
-                          "name": "Player Video Clip Badge Icon",
-                          "width": 11,
-                          "height": 11,
-                          "icon": "clapperboard",
-                          "library": "lucide",
-                          "fill": "$ds:--accent"
-                        },
-                        {
-                          "type": "text",
-                          "id": "xhNDh",
-                          "name": "Player Video Clip Badge Label",
-                          "fill": "$ds:--accent",
-                          "content": "Music video",
-                          "fontFamily": "Hanken Grotesk",
-                          "fontSize": 10,
-                          "fontWeight": "600"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "icon",
-                  "id": "hpWKO",
-                  "name": "Player Like",
-                  "width": 18,
-                  "height": 18,
-                  "icon": "heart",
-                  "library": "lucide",
-                  "fill": "$ds:--accent"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "rmxKj",
-              "name": "Player Center",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 8,
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "sBAtX",
-                  "name": "Transport",
-                  "gap": 22,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "0pqgA",
-                      "name": "Transport / Shuffle",
-                      "width": 17,
-                      "height": 17,
-                      "icon": "shuffle",
-                      "library": "lucide",
-                      "fill": "$ds:--muted-foreground"
-                    },
-                    {
-                      "type": "icon",
-                      "id": "k5aCW",
-                      "name": "Transport / Previous",
-                      "width": 22,
-                      "height": 22,
-                      "icon": "skip-back",
-                      "library": "lucide",
-                      "fill": "$ds:--foreground"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "k5NSZ",
-                      "name": "Transport / Pause",
-                      "width": 46,
-                      "height": 46,
-                      "fill": "$ds:--primary",
-                      "cornerRadius": 99,
-                      "stroke": "$ds:--ring",
-                      "strokeWidth": 1,
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "icon",
-                          "id": "vQ5A0",
-                          "name": "Transport / Pause Icon",
-                          "width": 22,
-                          "height": 22,
-                          "icon": "pause",
-                          "library": "lucide",
-                          "fill": "$ds:--primary-foreground"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "icon",
-                      "id": "AeS91",
-                      "name": "Transport / Next",
-                      "width": 22,
-                      "height": 22,
-                      "icon": "skip-forward",
-                      "library": "lucide",
-                      "fill": "$ds:--foreground"
-                    },
-                    {
-                      "type": "icon",
-                      "id": "5OVpI",
-                      "name": "Transport / Repeat",
-                      "width": 17,
-                      "height": 17,
-                      "icon": "repeat",
-                      "library": "lucide",
-                      "fill": "$ds:--muted-foreground"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "Ihp4J",
-                  "name": "Seek Row",
-                  "width": "fill_container",
-                  "gap": 10,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "3JNJd",
-                      "name": "Seek Elapsed",
-                      "fill": "$ds:--text-secondary",
-                      "content": "1:48",
-                      "fontFamily": "Hanken Grotesk",
-                      "fontSize": 11,
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "1Bpk8",
-                      "name": "Seek Rail",
-                      "width": "fill_container",
-                      "height": 3,
-                      "fill": "$ds:--surface",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "rectangle",
-                          "id": "0sgbO",
-                          "name": "Seek Fill",
-                          "fill": "$ds:--primary",
-                          "width": 180,
-                          "height": 3
-                        },
-                        {
-                          "type": "ellipse",
-                          "id": "iv9JU",
-                          "name": "Seek Thumb",
-                          "fill": "$ds:--background",
-                          "width": 7,
-                          "height": 7,
-                          "stroke": "$ds:--primary",
-                          "strokeWidth": 2
-                        }
-                      ]
-                    },
-                    {
-                      "type": "text",
-                      "id": "QfvJS",
-                      "name": "Seek Duration",
-                      "fill": "$ds:--text-secondary",
-                      "content": "3:42",
-                      "fontFamily": "Hanken Grotesk",
-                      "fontSize": 11,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "VGzNR",
-              "layoutPosition": "absolute",
-              "x": 14,
-              "y": -34,
-              "name": "Track Details Tooltip",
-              "enabled": false,
-              "height": 26,
-              "fill": "$ds:--popover",
-              "cornerRadius": 7,
-              "stroke": "$ds:--border",
-              "strokeWidth": 1,
-              "padding": [
-                0,
-                10
-              ],
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "text",
-                  "id": "N1Xfl",
-                  "name": "Track Details Tooltip Label",
-                  "fill": "$ds:--foreground",
-                  "content": "Track details",
-                  "fontFamily": "Hanken Grotesk",
-                  "fontSize": 11,
-                  "fontWeight": "600"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "xsfN6",
-              "name": "Player Actions",
-              "width": 500,
-              "gap": 16,
-              "justifyContent": "end",
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "PkSIJ",
-                  "name": "Spectrum",
-                  "height": 32,
-                  "gap": 3,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "rectangle",
-                      "id": "W3x9K",
-                      "name": "Spectrum / Band 1",
-                      "fill": "$ds:--accent",
-                      "width": 2,
-                      "height": 5
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "sQuKf",
-                      "name": "Spectrum / Band 2",
-                      "fill": "$ds:--primary",
-                      "width": 2,
-                      "height": 20
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "0ElTE",
-                      "name": "Spectrum / Band 3",
-                      "fill": "$ds:--primary",
-                      "width": 2,
-                      "height": 26
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "LYCRP",
-                      "name": "Spectrum / Band 4",
-                      "fill": "$ds:--primary",
-                      "width": 2,
-                      "height": 22
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "klZlI",
-                      "name": "Spectrum / Band 5",
-                      "fill": "$ds:--accent",
-                      "width": 2,
-                      "height": 10
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "uR0Hm",
-                      "name": "Spectrum / Band 6",
-                      "fill": "$ds:--primary",
-                      "width": 2,
-                      "height": 11
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "LhfgB",
-                      "name": "Spectrum / Band 7",
-                      "fill": "$ds:--primary",
-                      "width": 2,
-                      "height": 16
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "cKr8K",
-                      "name": "Spectrum / Band 8",
-                      "fill": "$ds:--primary",
-                      "width": 2,
-                      "height": 13
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "r0Lvg",
-                      "name": "Spectrum / Band 9",
-                      "fill": "$ds:--accent",
-                      "width": 2,
-                      "height": 8
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "x5sIt",
-                      "name": "Spectrum / Band 10",
-                      "fill": "$ds:--primary",
-                      "width": 2,
-                      "height": 5
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "5XDJn",
-                      "name": "Spectrum / Band 11",
-                      "fill": "$ds:--primary",
-                      "width": 2,
-                      "height": 7
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "qjgNY",
-                      "name": "Spectrum / Band 12",
-                      "fill": "$ds:--primary",
-                      "width": 2,
-                      "height": 12
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "hTY1F",
-                      "name": "Spectrum / Band 13",
-                      "fill": "$ds:--accent",
-                      "width": 2,
-                      "height": 13
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "pvIj6",
-                      "name": "Spectrum / Band 14",
-                      "fill": "$ds:--primary",
-                      "width": 2,
-                      "height": 8
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "VLg8y",
-                      "name": "Spectrum / Band 15",
-                      "fill": "$ds:--primary",
-                      "width": 2,
-                      "height": 13
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "kCcdO",
-                      "name": "Spectrum / Band 16",
-                      "fill": "$ds:--primary",
-                      "width": 2,
-                      "height": 23
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "AzbkZ",
-                      "name": "Spectrum / Band 17",
-                      "fill": "$ds:--accent",
-                      "width": 2,
-                      "height": 25
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "oRaoZ",
-                      "name": "Spectrum / Band 18",
-                      "fill": "$ds:--primary",
-                      "width": 2,
-                      "height": 16
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "V8dI8",
-                      "name": "Spectrum / Band 19",
-                      "fill": "$ds:--primary",
-                      "width": 2,
-                      "height": 10
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "CVfwb",
-                      "name": "Spectrum / Band 20",
-                      "fill": "$ds:--primary",
-                      "width": 2,
-                      "height": 23
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "YyFmc",
-                      "name": "Spectrum / Band 21",
-                      "fill": "$ds:--accent",
-                      "width": 2,
-                      "height": 27
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "eqDJm",
-                      "name": "Spectrum / Band 22",
-                      "fill": "$ds:--primary",
-                      "width": 2,
-                      "height": 20
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "W7D8s",
-                      "name": "Spectrum / Band 23",
-                      "fill": "$ds:--primary",
-                      "width": 2,
-                      "height": 7
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "nfgJH",
-                      "name": "Spectrum / Band 24",
-                      "fill": "$ds:--primary",
-                      "width": 2,
-                      "height": 15
-                    }
-                  ]
-                },
-                {
-                  "type": "icon",
-                  "id": "lPCVB",
-                  "name": "Player Lyrics",
-                  "width": 17,
-                  "height": 17,
-                  "icon": "mic-vocal",
-                  "library": "lucide",
-                  "fill": "$ds:--muted-foreground"
-                },
-                {
-                  "type": "icon",
-                  "id": "9fASr",
-                  "name": "Player Queue",
-                  "width": 17,
-                  "height": 17,
-                  "icon": "list-music",
-                  "library": "lucide",
-                  "fill": "$ds:--muted-foreground"
-                },
-                {
-                  "type": "frame",
-                  "id": "ravyb",
-                  "name": "Connect Device Button",
-                  "width": 32,
-                  "height": 32,
-                  "cornerRadius": 8,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "9EZCT",
-                      "name": "Connect Device Icon",
-                      "width": 17,
-                      "height": 17,
-                      "icon": "monitor-speaker",
-                      "library": "lucide",
-                      "fill": "$ds:--muted-foreground"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "znYRb",
-                  "name": "Mini Player Button",
-                  "width": 32,
-                  "height": 32,
-                  "cornerRadius": 8,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "Y9jV3",
-                      "name": "Mini Player Icon",
-                      "width": 17,
-                      "height": 17,
-                      "icon": "picture-in-picture-2",
-                      "library": "lucide",
-                      "fill": "$ds:--muted-foreground"
-                    }
-                  ]
-                },
-                {
-                  "type": "text",
-                  "id": "EMSIU",
-                  "x": 0,
-                  "y": 0,
-                  "name": "Connected Device Label",
-                  "enabled": false,
-                  "fill": "$ds:--accent",
-                  "content": "Living room speaker",
-                  "fontFamily": "Hanken Grotesk",
-                  "fontSize": 11,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "icon",
-                  "id": "JlHIt",
-                  "name": "Player Volume",
-                  "width": 17,
-                  "height": 17,
-                  "icon": "volume-2",
-                  "library": "lucide",
-                  "fill": "$ds:--muted-foreground"
-                },
-                {
-                  "type": "frame",
-                  "id": "d34Fy",
-                  "name": "Volume Rail",
-                  "width": 86,
-                  "height": 3,
-                  "fill": "$ds:--surface",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "rectangle",
-                      "id": "q5fo4",
-                      "name": "Volume Fill",
-                      "fill": "$ds:--primary",
-                      "width": 52,
-                      "height": 3
-                    }
-                  ]
-                },
-                {
-                  "type": "icon",
-                  "id": "XbRDM",
-                  "name": "Player Fullscreen",
-                  "width": 17,
-                  "height": 17,
-                  "icon": "maximize-2",
-                  "library": "lucide",
-                  "fill": "$ds:--muted-foreground"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "IKAOP",
-          "x": 40,
-          "y": 320,
-          "name": "Shell/Library Panel",
-          "reusable": true,
-          "width": 224,
-          "height": 716,
-          "fill": "$ds:--background-secondary",
-          "stroke": "$ds:--border",
-          "strokeWidth": {
-            "right": 1
-          },
-          "layout": "vertical",
-          "gap": 16,
-          "padding": [
-            22,
-            18
-          ],
-          "children": [
-            {
-              "type": "frame",
-              "id": "gubiw",
-              "name": "Nav Header",
-              "width": "fill_container",
-              "justifyContent": "space_between",
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "UsE5T",
-                  "name": "Nav Header Title Group",
-                  "gap": 10,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "h6Vlb",
-                      "name": "Nav Header Icon",
-                      "width": 20,
-                      "height": 20,
-                      "icon": "library-big",
-                      "library": "lucide",
-                      "fill": "$ds:--accent"
-                    },
-                    {
-                      "type": "text",
-                      "id": "iNRi7",
-                      "name": "Nav Header Title",
-                      "fill": "$ds:--foreground",
-                      "content": "Your Library",
-                      "fontFamily": "Hanken Grotesk",
-                      "fontSize": 17,
-                      "fontWeight": "600"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "0cMWL",
-                  "name": "Library Expand Button",
-                  "width": 28,
-                  "height": 28,
-                  "fill": "$ds:--muted",
-                  "cornerRadius": 7,
-                  "stroke": "$ds:--ring",
-                  "strokeWidth": 1,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "sKYXd",
-                      "name": "Library Expand Button Icon",
-                      "width": 14,
-                      "height": 14,
-                      "icon": "maximize-2",
-                      "library": "lucide",
-                      "fill": "$ds:--accent"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "L7Axp",
-              "name": "Nav Items",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 4,
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "oIL28",
-                  "name": "Nav / Home",
-                  "width": "fill_container",
-                  "height": 37,
-                  "fill": "$ds:--muted",
-                  "cornerRadius": 7,
-                  "stroke": "$ds:--ring",
-                  "strokeWidth": 1,
-                  "gap": 12,
-                  "padding": [
-                    0,
-                    12
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "fk2nn",
-                      "name": "Nav / Home Icon",
-                      "width": 18,
-                      "height": 18,
-                      "icon": "house",
-                      "library": "lucide",
-                      "fill": "$ds:--accent"
-                    },
-                    {
-                      "type": "text",
-                      "id": "9BuWN",
-                      "name": "Nav / Home Label",
-                      "fill": "$ds:--foreground",
-                      "content": "Home",
-                      "fontFamily": "Hanken Grotesk",
-                      "fontSize": 14,
-                      "fontWeight": "600"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "tD4Q9",
-                  "name": "Nav / Search",
-                  "width": "fill_container",
-                  "height": 37,
-                  "cornerRadius": 7,
-                  "gap": 12,
-                  "padding": [
-                    0,
-                    12
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "BQxIP",
-                      "name": "Nav / Search Icon",
-                      "width": 18,
-                      "height": 18,
-                      "icon": "search",
-                      "library": "lucide",
-                      "fill": "$ds:--muted-foreground"
-                    },
-                    {
-                      "type": "text",
-                      "id": "oVJ7V",
-                      "name": "Nav / Search Label",
-                      "fill": "$ds:--muted-foreground",
-                      "content": "Search",
-                      "fontFamily": "Hanken Grotesk",
-                      "fontSize": 14,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "zwUnW",
-                  "name": "Nav / Liked songs",
-                  "width": "fill_container",
-                  "height": 37,
-                  "cornerRadius": 7,
-                  "gap": 12,
-                  "padding": [
-                    0,
-                    12
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "OiwyX",
-                      "name": "Nav / Liked songs Icon",
-                      "width": 18,
-                      "height": 18,
-                      "icon": "heart",
-                      "library": "lucide",
-                      "fill": "$ds:--muted-foreground"
-                    },
-                    {
-                      "type": "text",
-                      "id": "t17cF",
-                      "name": "Nav / Liked songs Label",
-                      "fill": "$ds:--muted-foreground",
-                      "content": "Liked songs",
-                      "fontFamily": "Hanken Grotesk",
-                      "fontSize": 14,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "VBE0k",
-                  "name": "Nav / Recents",
-                  "width": "fill_container",
-                  "height": 37,
-                  "cornerRadius": 7,
-                  "gap": 12,
-                  "padding": [
-                    0,
-                    12
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "PIknu",
-                      "name": "Nav / Recents Icon",
-                      "width": 18,
-                      "height": 18,
-                      "icon": "clock-3",
-                      "library": "lucide",
-                      "fill": "$ds:--muted-foreground"
-                    },
-                    {
-                      "type": "text",
-                      "id": "ABdcu",
-                      "name": "Nav / Recents Label",
-                      "fill": "$ds:--muted-foreground",
-                      "content": "Recents",
-                      "fontFamily": "Hanken Grotesk",
-                      "fontSize": 14,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "rectangle",
-              "id": "9ucQs",
-              "name": "Nav Divider",
-              "fill": "$ds:--border",
-              "width": "fill_container",
-              "height": 1
-            },
-            {
-              "type": "text",
-              "id": "C0lz0",
-              "name": "Nav Playlists Label",
-              "fill": "$ds:--muted-foreground",
-              "content": "PLAYLISTS",
-              "fontFamily": "Hanken Grotesk",
-              "fontSize": 10,
-              "fontWeight": "normal",
-              "letterSpacing": 2.4
-            },
-            {
-              "type": "frame",
-              "id": "OcGqr",
-              "name": "Library List",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 2,
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "D1azO",
-                  "name": "Library Row / Night Drive",
-                  "width": "fill_container",
-                  "height": 52,
-                  "gap": 12,
-                  "padding": [
-                    0,
-                    6
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "xKF9b",
-                      "name": "Library Row / Night Drive Cover",
-                      "clip": true,
-                      "width": 40,
-                      "height": 40,
-                      "fill": {
-                        "type": "image",
-                        "enabled": true,
-                        "url": "assets/albums/album-night-signal.webp",
-                        "mode": "cover"
-                      },
-                      "cornerRadius": 6
-                    },
-                    {
-                      "type": "frame",
-                      "id": "mQXBe",
-                      "name": "Library Row / Night Drive Copy",
-                      "layout": "vertical",
-                      "gap": 3,
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "I5NOB",
-                          "name": "Library Row / Night Drive Title",
-                          "fill": "$ds:--foreground",
-                          "content": "Night Drive",
-                          "fontFamily": "Hanken Grotesk",
-                          "fontSize": 13,
-                          "fontWeight": "600"
-                        },
-                        {
-                          "type": "text",
-                          "id": "0Ml6C",
-                          "name": "Library Row / Night Drive Meta",
-                          "fill": "$ds:--muted-foreground",
-                          "content": "Playlist · Maya",
-                          "fontFamily": "Hanken Grotesk",
-                          "fontSize": 11,
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "WLZGD",
-                  "name": "Library Row / Afterglow Sessions",
-                  "width": "fill_container",
-                  "height": 52,
-                  "gap": 12,
-                  "padding": [
-                    0,
-                    6
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "yqdVc",
-                      "name": "Library Row / Afterglow Sessions Cover",
-                      "clip": true,
-                      "width": 40,
-                      "height": 40,
-                      "fill": {
-                        "type": "image",
-                        "enabled": true,
-                        "url": "assets/albums/album-afterglow.webp",
-                        "mode": "cover"
-                      },
-                      "cornerRadius": 6
-                    },
-                    {
-                      "type": "frame",
-                      "id": "UkjMe",
-                      "name": "Library Row / Afterglow Sessions Copy",
-                      "layout": "vertical",
-                      "gap": 3,
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "Ayw8V",
-                          "name": "Library Row / Afterglow Sessions Title",
-                          "fill": "$ds:--foreground",
-                          "content": "Afterglow Sessions",
-                          "fontFamily": "Hanken Grotesk",
-                          "fontSize": 13,
-                          "fontWeight": "600"
-                        },
-                        {
-                          "type": "text",
-                          "id": "QTQ3r",
-                          "name": "Library Row / Afterglow Sessions Meta",
-                          "fill": "$ds:--muted-foreground",
-                          "content": "Playlist · Maya",
-                          "fontFamily": "Hanken Grotesk",
-                          "fontSize": 11,
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "Pm2wY",
-                  "name": "Library Row / Static Lines",
-                  "width": "fill_container",
-                  "height": 52,
-                  "gap": 12,
-                  "padding": [
-                    0,
-                    6
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "IWh7e",
-                      "name": "Library Row / Static Lines Cover",
-                      "clip": true,
-                      "width": 40,
-                      "height": 40,
-                      "fill": {
-                        "type": "image",
-                        "enabled": true,
-                        "url": "assets/albums/album-static-lines.webp",
-                        "mode": "cover"
-                      },
-                      "cornerRadius": 6
-                    },
-                    {
-                      "type": "frame",
-                      "id": "WHMnI",
-                      "name": "Library Row / Static Lines Copy",
-                      "layout": "vertical",
-                      "gap": 3,
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "BERjP",
-                          "name": "Library Row / Static Lines Title",
-                          "fill": "$ds:--foreground",
-                          "content": "Static Lines",
-                          "fontFamily": "Hanken Grotesk",
-                          "fontSize": 13,
-                          "fontWeight": "600"
-                        },
-                        {
-                          "type": "text",
-                          "id": "ZthNb",
-                          "name": "Library Row / Static Lines Meta",
-                          "fill": "$ds:--muted-foreground",
-                          "content": "Album · Kite Harbor",
-                          "fontFamily": "Hanken Grotesk",
-                          "fontSize": 11,
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "Y5Jje",
-                  "name": "Library Row / Echoes in Motion",
-                  "width": "fill_container",
-                  "height": 52,
-                  "gap": 12,
-                  "padding": [
-                    0,
-                    6
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "trTsB",
-                      "name": "Library Row / Echoes in Motion Cover",
-                      "clip": true,
-                      "width": 40,
-                      "height": 40,
-                      "fill": {
-                        "type": "image",
-                        "enabled": true,
-                        "url": "assets/albums/album-echoes-in-motion.webp",
-                        "mode": "cover"
-                      },
-                      "cornerRadius": 6
-                    },
-                    {
-                      "type": "frame",
-                      "id": "boYQK",
-                      "name": "Library Row / Echoes in Motion Copy",
-                      "layout": "vertical",
-                      "gap": 3,
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "F6I8Y",
-                          "name": "Library Row / Echoes in Motion Title",
-                          "fill": "$ds:--foreground",
-                          "content": "Echoes in Motion",
-                          "fontFamily": "Hanken Grotesk",
-                          "fontSize": 13,
-                          "fontWeight": "600"
-                        },
-                        {
-                          "type": "text",
-                          "id": "Isv9V",
-                          "name": "Library Row / Echoes in Motion Meta",
-                          "fill": "$ds:--muted-foreground",
-                          "content": "Album · Lumen Choir",
-                          "fontFamily": "Hanken Grotesk",
-                          "fontSize": 11,
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "cUE97",
-                  "name": "Library Row / Drift Control",
-                  "width": "fill_container",
-                  "height": 52,
-                  "gap": 12,
-                  "padding": [
-                    0,
-                    6
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "SX8iQ",
-                      "name": "Library Row / Drift Control Cover",
-                      "clip": true,
-                      "width": 40,
-                      "height": 40,
-                      "fill": {
-                        "type": "image",
-                        "enabled": true,
-                        "url": "assets/albums/album-drift-control.webp",
-                        "mode": "cover"
-                      },
-                      "cornerRadius": 6
-                    },
-                    {
-                      "type": "frame",
-                      "id": "f1f9Y",
-                      "name": "Library Row / Drift Control Copy",
-                      "layout": "vertical",
-                      "gap": 3,
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "7hS6t",
-                          "name": "Library Row / Drift Control Title",
-                          "fill": "$ds:--foreground",
-                          "content": "Drift Control",
-                          "fontFamily": "Hanken Grotesk",
-                          "fontSize": 13,
-                          "fontWeight": "600"
-                        },
-                        {
-                          "type": "text",
-                          "id": "qh90L",
-                          "name": "Library Row / Drift Control Meta",
-                          "fill": "$ds:--muted-foreground",
-                          "content": "Album · Mira Sol",
-                          "fontFamily": "Hanken Grotesk",
-                          "fontSize": 11,
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "rHI8M",
-          "x": 320,
-          "y": 320,
-          "name": "Shell/Now Playing Panel",
-          "reusable": true,
-          "clip": true,
-          "width": 318,
-          "height": 716,
-          "fill": "$ds:--background-secondary",
-          "stroke": "$ds:--border",
-          "strokeWidth": {
-            "left": 1
-          },
-          "layout": "vertical",
-          "gap": 14,
-          "padding": 20,
-          "children": [
-            {
-              "type": "frame",
-              "id": "cObij",
-              "name": "Now Playing Header",
-              "width": "fill_container",
-              "justifyContent": "space_between",
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "Q0il1",
-                  "name": "Now Playing Status",
-                  "gap": 8,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "ellipse",
-                      "id": "a46m6",
-                      "name": "Status Dot",
-                      "fill": "$ds:--accent",
-                      "width": 6,
-                      "height": 6
-                    },
-                    {
-                      "type": "text",
-                      "id": "VQURe",
-                      "name": "Now Playing Label",
-                      "fill": "$ds:--foreground-secondary",
-                      "content": "NOW PLAYING",
-                      "fontFamily": "Hanken Grotesk",
-                      "fontSize": 10,
-                      "fontWeight": "500",
-                      "letterSpacing": 1.2
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "KWKAZ",
-                  "name": "Now Playing Header Actions",
-                  "gap": 10,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "nFdVQ",
-                      "name": "Now Playing More",
-                      "width": 18,
-                      "height": 18,
-                      "icon": "ellipsis",
-                      "library": "lucide",
-                      "fill": "$ds:--muted-foreground"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "MZyWc",
-                      "name": "Now Playing Expand Button",
-                      "width": 28,
-                      "height": 28,
-                      "fill": "$ds:--muted",
-                      "cornerRadius": 7,
-                      "stroke": "$ds:--ring",
-                      "strokeWidth": 1,
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "icon",
-                          "id": "5jq7a",
-                          "name": "Now Playing Expand Button Icon",
-                          "width": 14,
-                          "height": 14,
-                          "icon": "maximize-2",
-                          "library": "lucide",
-                          "fill": "$ds:--accent"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "YawPL",
-              "name": "Now Playing Artwork",
-              "clip": true,
-              "width": "fill_container",
-              "height": 278,
-              "fill": {
-                "type": "image",
-                "enabled": true,
-                "url": "assets/albums/album-afterglow.webp",
-                "mode": "cover"
-              },
-              "cornerRadius": 6
-            },
-            {
-              "type": "frame",
-              "id": "GmZkH",
-              "name": "Now Playing Identity",
-              "width": "fill_container",
-              "gap": 14,
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "ki0LQ",
-                  "name": "Now Playing Text",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 6,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "8GJ5A",
-                      "name": "Now Playing Title",
-                      "fill": "$ds:--foreground",
-                      "content": "Afterglow",
-                      "fontFamily": "Hanken Grotesk",
-                      "fontSize": 25,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "a2FfD",
-                      "name": "Now Playing Artist",
-                      "fill": "$ds:--text-secondary",
-                      "content": "Nova & the Static",
-                      "fontFamily": "Hanken Grotesk",
-                      "fontSize": 13,
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "Z1Yhj",
-                      "name": "Now Playing Video Clip Badge",
-                      "height": 18,
-                      "fill": "$ds:--muted",
-                      "cornerRadius": 9,
-                      "stroke": "$ds:--ring",
-                      "strokeWidth": 1,
-                      "gap": 5,
-                      "padding": [
-                        0,
-                        8
-                      ],
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "icon",
-                          "id": "usQTN",
-                          "name": "Now Playing Video Clip Badge Icon",
-                          "width": 11,
-                          "height": 11,
-                          "icon": "clapperboard",
-                          "library": "lucide",
-                          "fill": "$ds:--accent"
-                        },
-                        {
-                          "type": "text",
-                          "id": "c1knt",
-                          "name": "Now Playing Video Clip Badge Label",
-                          "fill": "$ds:--accent",
-                          "content": "Music video",
-                          "fontFamily": "Hanken Grotesk",
-                          "fontSize": 10,
-                          "fontWeight": "600"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "icon",
-                  "id": "hN1BW",
-                  "name": "Now Playing Like",
-                  "width": 22,
-                  "height": 22,
-                  "icon": "heart",
-                  "library": "lucide",
-                  "fill": "$ds:--accent"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "jAtiH",
-              "name": "Up Next",
-              "width": "fill_container",
-              "layout": "vertical",
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "erQMg",
-                  "name": "Up Next Header",
-                  "width": "fill_container",
-                  "height": 30,
-                  "justifyContent": "space_between",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "RIPLM",
-                      "name": "Up Next Title",
-                      "fill": "$ds:--foreground",
-                      "content": "UP NEXT",
-                      "fontFamily": "Hanken Grotesk",
-                      "fontSize": 12,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "75Zn1",
-                      "name": "Up Next Clear",
-                      "fill": "$ds:--accent",
-                      "content": "Clear",
-                      "fontFamily": "Hanken Grotesk",
-                      "fontSize": 12,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "pvcKL",
-                  "name": "Queue / Static Lines",
-                  "width": "fill_container",
-                  "height": 66,
-                  "stroke": "$ds:--border",
-                  "strokeWidth": {
-                    "bottom": 1
-                  },
-                  "gap": 12,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "RGyvX",
-                      "name": "Queue / Static Lines Cover",
-                      "clip": true,
-                      "width": 48,
-                      "height": 48,
-                      "fill": {
-                        "type": "image",
-                        "enabled": true,
-                        "url": "assets/albums/album-static-lines.webp",
-                        "mode": "cover"
-                      },
-                      "cornerRadius": 6
-                    },
-                    {
-                      "type": "frame",
-                      "id": "nkJJY",
-                      "name": "Queue / Static Lines Labels",
-                      "width": "fill_container",
-                      "layout": "vertical",
-                      "gap": 5,
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "ZgTpj",
-                          "name": "Queue / Static Lines Title",
-                          "fill": "$ds:--foreground",
-                          "content": "Static Lines",
-                          "fontFamily": "Hanken Grotesk",
-                          "fontSize": 13,
-                          "fontWeight": "600"
-                        },
-                        {
-                          "type": "text",
-                          "id": "xO4BD",
-                          "name": "Queue / Static Lines Artist",
-                          "fill": "$ds:--muted-foreground",
-                          "content": "Kite Harbor",
-                          "fontFamily": "Hanken Grotesk",
-                          "fontSize": 11,
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "icon",
-                      "id": "0LTZ8",
-                      "name": "Queue / Static Lines Clip",
-                      "width": 13,
-                      "height": 13,
-                      "icon": "clapperboard",
-                      "library": "lucide",
-                      "fill": "$ds:--accent"
-                    },
-                    {
-                      "type": "text",
-                      "id": "16Wih",
-                      "name": "Queue / Static Lines Duration",
-                      "fill": "$ds:--text-secondary",
-                      "content": "3:47",
-                      "fontFamily": "Hanken Grotesk",
-                      "fontSize": 11,
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "type": "icon",
-                      "id": "GBwen",
-                      "name": "Queue / Static Lines More",
-                      "width": 14,
-                      "height": 14,
-                      "icon": "ellipsis",
-                      "library": "lucide",
-                      "fill": "$ds:--text-subdued"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "ZB6EY",
-                  "name": "Queue / Drift Control",
-                  "width": "fill_container",
-                  "height": 66,
-                  "stroke": "$ds:--border",
-                  "strokeWidth": {
-                    "bottom": 1
-                  },
-                  "gap": 12,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "cWcC0",
-                      "name": "Queue / Drift Control Cover",
-                      "clip": true,
-                      "width": 48,
-                      "height": 48,
-                      "fill": {
-                        "type": "image",
-                        "enabled": true,
-                        "url": "assets/albums/album-drift-control.webp",
-                        "mode": "cover"
-                      },
-                      "cornerRadius": 6
-                    },
-                    {
-                      "type": "frame",
-                      "id": "XRvtf",
-                      "name": "Queue / Drift Control Labels",
-                      "width": "fill_container",
-                      "layout": "vertical",
-                      "gap": 5,
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "dk74q",
-                          "name": "Queue / Drift Control Title",
-                          "fill": "$ds:--foreground",
-                          "content": "Drift Control",
-                          "fontFamily": "Hanken Grotesk",
-                          "fontSize": 13,
-                          "fontWeight": "600"
-                        },
-                        {
-                          "type": "text",
-                          "id": "wVnDT",
-                          "name": "Queue / Drift Control Artist",
-                          "fill": "$ds:--muted-foreground",
-                          "content": "Mira Sol",
-                          "fontFamily": "Hanken Grotesk",
-                          "fontSize": 11,
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "text",
-                      "id": "gXiV3",
-                      "name": "Queue / Drift Control Duration",
-                      "fill": "$ds:--text-secondary",
-                      "content": "3:19",
-                      "fontFamily": "Hanken Grotesk",
-                      "fontSize": 11,
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "type": "icon",
-                      "id": "jeJxO",
-                      "name": "Queue / Drift Control More",
-                      "width": 14,
-                      "height": 14,
-                      "icon": "ellipsis",
-                      "library": "lucide",
-                      "fill": "$ds:--text-subdued"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "zO87S",
-                  "name": "Queue / Echoes in Motion",
-                  "width": "fill_container",
-                  "height": 66,
-                  "stroke": "$ds:--border",
-                  "strokeWidth": {
-                    "bottom": 1
-                  },
-                  "gap": 12,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "ebc27",
-                      "name": "Queue / Echoes in Motion Cover",
-                      "clip": true,
-                      "width": 48,
-                      "height": 48,
-                      "fill": {
-                        "type": "image",
-                        "enabled": true,
-                        "url": "assets/albums/album-echoes-in-motion.webp",
-                        "mode": "cover"
-                      },
-                      "cornerRadius": 6
-                    },
-                    {
-                      "type": "frame",
-                      "id": "O29v8",
-                      "name": "Queue / Echoes in Motion Labels",
-                      "width": "fill_container",
-                      "layout": "vertical",
-                      "gap": 5,
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "XvSjg",
-                          "name": "Queue / Echoes in Motion Title",
-                          "fill": "$ds:--foreground",
-                          "content": "Echoes in Motion",
-                          "fontFamily": "Hanken Grotesk",
-                          "fontSize": 13,
-                          "fontWeight": "600"
-                        },
-                        {
-                          "type": "text",
-                          "id": "2UQXP",
-                          "name": "Queue / Echoes in Motion Artist",
-                          "fill": "$ds:--muted-foreground",
-                          "content": "Lumen Choir",
-                          "fontFamily": "Hanken Grotesk",
-                          "fontSize": 11,
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "icon",
-                      "id": "YgzIQ",
-                      "name": "Queue / Echoes in Motion Clip",
-                      "width": 13,
-                      "height": 13,
-                      "icon": "clapperboard",
-                      "library": "lucide",
-                      "fill": "$ds:--accent"
-                    },
-                    {
-                      "type": "text",
-                      "id": "yyPUb",
-                      "name": "Queue / Echoes in Motion Duration",
-                      "fill": "$ds:--text-secondary",
-                      "content": "4:21",
-                      "fontFamily": "Hanken Grotesk",
-                      "fontSize": 11,
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "type": "icon",
-                      "id": "lK4P8",
-                      "name": "Queue / Echoes in Motion More",
-                      "width": 14,
-                      "height": 14,
-                      "icon": "ellipsis",
-                      "library": "lucide",
-                      "fill": "$ds:--text-subdued"
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "3Bs3i",
-          "x": 2180,
-          "y": 320,
-          "name": "Shell/Library Panel Mini",
-          "reusable": true,
-          "width": 72,
-          "height": 716,
-          "fill": "$ds:--background-secondary",
-          "stroke": "$ds:--border",
-          "strokeWidth": {
-            "right": 1
-          },
-          "layout": "vertical",
-          "gap": 16,
-          "padding": [
-            22,
-            0
-          ],
-          "alignItems": "center",
-          "children": [
-            {
-              "type": "frame",
-              "id": "UvUj0",
-              "name": "Mini Nav Header",
-              "layout": "vertical",
-              "gap": 12,
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "icon",
-                  "id": "OZNKN",
-                  "name": "Mini Library Icon",
-                  "width": 22,
-                  "height": 22,
-                  "icon": "library-big",
-                  "library": "lucide",
-                  "fill": "$ds:--accent"
-                },
-                {
-                  "type": "frame",
-                  "id": "VlMrz",
-                  "name": "Library Mini Expand Button",
-                  "width": 32,
-                  "height": 32,
-                  "fill": "$ds:--muted",
-                  "cornerRadius": 7,
-                  "stroke": "$ds:--ring",
-                  "strokeWidth": 1,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "O8GzR",
-                      "name": "Library Mini Expand Button Icon",
-                      "width": 15,
-                      "height": 15,
-                      "icon": "panel-left-open",
-                      "library": "lucide",
-                      "fill": "$ds:--accent"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "qq87m",
-              "name": "Mini Nav Items",
-              "layout": "vertical",
-              "gap": 6,
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "Jf4FE",
-                  "name": "Mini Nav / Home",
-                  "width": 40,
-                  "height": 40,
-                  "fill": "$ds:--muted",
-                  "cornerRadius": 10,
-                  "stroke": "$ds:--ring",
-                  "strokeWidth": 1,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "a5vYt",
-                      "name": "Mini Nav / Home Icon",
-                      "width": 18,
-                      "height": 18,
-                      "icon": "house",
-                      "library": "lucide",
-                      "fill": "$ds:--accent"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "AQW2f",
-                  "name": "Mini Nav / Search",
-                  "width": 40,
-                  "height": 40,
-                  "cornerRadius": 10,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "wT7dX",
-                      "name": "Mini Nav / Search Icon",
-                      "width": 18,
-                      "height": 18,
-                      "icon": "search",
-                      "library": "lucide",
-                      "fill": "$ds:--muted-foreground"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "No5xB",
-                  "name": "Mini Nav / Liked songs",
-                  "width": 40,
-                  "height": 40,
-                  "cornerRadius": 10,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "rlhbN",
-                      "name": "Mini Nav / Liked songs Icon",
-                      "width": 18,
-                      "height": 18,
-                      "icon": "heart",
-                      "library": "lucide",
-                      "fill": "$ds:--muted-foreground"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "f0OHS",
-                  "name": "Mini Nav / Recents",
-                  "width": 40,
-                  "height": 40,
-                  "cornerRadius": 10,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "541pM",
-                      "name": "Mini Nav / Recents Icon",
-                      "width": 18,
-                      "height": 18,
-                      "icon": "clock-3",
-                      "library": "lucide",
-                      "fill": "$ds:--muted-foreground"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "rectangle",
-              "id": "nRlIj",
-              "name": "Mini Nav Divider",
-              "fill": "$ds:--border",
-              "width": 32,
-              "height": 1
-            },
-            {
-              "type": "frame",
-              "id": "dihlh",
-              "name": "Mini Library List",
-              "layout": "vertical",
-              "gap": 10,
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "FUuVX",
-                  "name": "Mini Library / Night Drive Cover",
-                  "clip": true,
-                  "width": 44,
-                  "height": 44,
-                  "fill": {
-                    "type": "image",
-                    "enabled": true,
-                    "url": "assets/albums/album-night-signal.webp",
-                    "mode": "cover"
-                  },
-                  "cornerRadius": 8
-                },
-                {
-                  "type": "frame",
-                  "id": "UAvxI",
-                  "name": "Mini Library / Afterglow Sessions Cover",
-                  "clip": true,
-                  "width": 44,
-                  "height": 44,
-                  "fill": {
-                    "type": "image",
-                    "enabled": true,
-                    "url": "assets/albums/album-afterglow.webp",
-                    "mode": "cover"
-                  },
-                  "cornerRadius": 8
-                },
-                {
-                  "type": "frame",
-                  "id": "oLB2V",
-                  "name": "Mini Library / Static Lines Cover",
-                  "clip": true,
-                  "width": 44,
-                  "height": 44,
-                  "fill": {
-                    "type": "image",
-                    "enabled": true,
-                    "url": "assets/albums/album-static-lines.webp",
-                    "mode": "cover"
-                  },
-                  "cornerRadius": 8
-                },
-                {
-                  "type": "frame",
-                  "id": "dVy5u",
-                  "name": "Mini Library / Echoes in Motion Cover",
-                  "clip": true,
-                  "width": 44,
-                  "height": 44,
-                  "fill": {
-                    "type": "image",
-                    "enabled": true,
-                    "url": "assets/albums/album-echoes-in-motion.webp",
-                    "mode": "cover"
-                  },
-                  "cornerRadius": 8
-                },
-                {
-                  "type": "frame",
-                  "id": "LYVhe",
-                  "name": "Mini Library / Drift Control Cover",
-                  "clip": true,
-                  "width": 44,
-                  "height": 44,
-                  "fill": {
-                    "type": "image",
-                    "enabled": true,
-                    "url": "assets/albums/album-drift-control.webp",
-                    "mode": "cover"
-                  },
-                  "cornerRadius": 8
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "OPciE",
-          "x": 700,
-          "y": 320,
-          "name": "Shell/App Layout",
-          "context": "App shell: top bar, library panel, content slot, now playing panel and player bar. Replace Shell Center Slot per page; hide a panel by disabling it.",
-          "theme": {
-            "ds:Mode": "Dark"
-          },
-          "reusable": true,
-          "clip": true,
-          "width": 1440,
-          "height": 900,
-          "fill": "$ds:--background",
-          "layout": "vertical",
-          "gap": 12,
-          "padding": 16,
-          "children": [
-            {
-              "id": "YkUO1",
-              "type": "ref",
-              "ref": "NnVxK",
-              "name": "Top Bar",
-              "width": "fill_container"
-            },
-            {
-              "type": "frame",
-              "id": "sGcXP",
-              "name": "Workspace",
-              "clip": true,
-              "width": "fill_container",
-              "height": "fill_container",
-              "fill": "$ds:--background-secondary",
-              "cornerRadius": 16,
-              "stroke": "$ds:--border",
-              "strokeWidth": 1,
-              "effect": {
-                "type": "shadow",
-                "shadowType": "outer",
-                "color": "$ds:--shadow",
-                "offset": {
-                  "x": 0,
-                  "y": 16
-                },
-                "blur": 32
-              },
-              "children": [
-                {
-                  "id": "VZD6U",
-                  "type": "ref",
-                  "ref": "IKAOP",
-                  "name": "Library Panel",
-                  "width": 224,
-                  "height": "fill_container"
-                },
-                {
-                  "id": "z5MVM",
-                  "type": "ref",
-                  "ref": "3Bs3i",
-                  "name": "Library Panel Mini",
-                  "width": 72,
-                  "height": "fill_container(0)",
-                  "enabled": false
-                },
-                {
-                  "type": "frame",
-                  "id": "xvsK3",
-                  "name": "Shell Center Slot",
-                  "slot": [],
-                  "clip": true,
-                  "width": "fill_container",
-                  "height": "fill_container",
-                  "layout": "vertical",
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "wkg5Q",
-                      "name": "Slot Placeholder",
-                      "fill": "$ds:--muted-foreground",
-                      "content": "Page content",
-                      "fontFamily": "Hanken Grotesk",
-                      "fontSize": 14,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "id": "Nn2KW",
-                  "type": "ref",
-                  "ref": "rHI8M",
-                  "name": "Now Playing Panel",
-                  "width": 318,
-                  "height": "fill_container"
-                }
-              ]
-            },
-            {
-              "id": "c0DIz",
-              "type": "ref",
-              "ref": "SPMkc",
-              "name": "Player Bar",
-              "width": "fill_container"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "frame",
       "id": "Efabu",
       "x": 0,
       "y": 0,
@@ -2292,14 +19,14 @@
         {
           "id": "YOjTt",
           "type": "ref",
-          "ref": "OPciE",
+          "ref": "ds:OPciE",
           "name": "App Layout",
           "x": 0,
           "y": 0,
           "width": 1440,
           "height": 900,
           "descendants": {
-            "xvsK3": {
+            "ds:xvsK3": {
               "type": "frame",
               "id": "GDulK",
               "name": "Main Panel",
@@ -3912,14 +1639,14 @@
         {
           "id": "edJrd",
           "type": "ref",
-          "ref": "OPciE",
+          "ref": "ds:OPciE",
           "name": "App Layout",
           "x": 0,
           "y": 0,
           "width": 1440,
           "height": 900,
           "descendants": {
-            "xvsK3": {
+            "ds:xvsK3": {
               "type": "frame",
               "id": "BE0OZ",
               "name": "Main Panel",
@@ -5510,15 +3237,15 @@
                 }
               ]
             },
-            "c0DIz/ravyb": {
+            "ds:c0DIz/ds:ravyb": {
               "fill": "$ds:--muted",
               "stroke": "$ds:--ring",
               "strokeWidth": 1
             },
-            "c0DIz/9EZCT": {
+            "ds:c0DIz/ds:9EZCT": {
               "fill": "$ds:--accent"
             },
-            "c0DIz/EMSIU": {
+            "ds:c0DIz/ds:EMSIU": {
               "enabled": true
             }
           }
@@ -5972,17 +3699,17 @@
         {
           "id": "1N9lO",
           "type": "ref",
-          "ref": "OPciE",
+          "ref": "ds:OPciE",
           "name": "App Layout",
           "x": 0,
           "y": 0,
           "width": 1440,
           "height": 900,
           "descendants": {
-            "VZD6U": {
+            "ds:VZD6U": {
               "enabled": false
             },
-            "xvsK3": {
+            "ds:xvsK3": {
               "type": "frame",
               "id": "25nBE",
               "name": "Library Expanded Panel",
@@ -7093,7 +4820,7 @@
                 }
               ]
             },
-            "Nn2KW": {
+            "ds:Nn2KW": {
               "enabled": false
             }
           }
@@ -7118,17 +4845,17 @@
         {
           "id": "SipRt",
           "type": "ref",
-          "ref": "OPciE",
+          "ref": "ds:OPciE",
           "name": "App Layout",
           "x": 0,
           "y": 0,
           "width": 1440,
           "height": 900,
           "descendants": {
-            "VZD6U": {
+            "ds:VZD6U": {
               "enabled": false
             },
-            "xvsK3": {
+            "ds:xvsK3": {
               "type": "frame",
               "id": "k4jS3",
               "name": "Expanded Now Playing Layout",
@@ -7800,7 +5527,7 @@
                 }
               ]
             },
-            "Nn2KW": {
+            "ds:Nn2KW": {
               "enabled": false
             }
           }
@@ -7825,20 +5552,20 @@
         {
           "id": "6TwAp",
           "type": "ref",
-          "ref": "OPciE",
+          "ref": "ds:OPciE",
           "name": "App Layout",
           "x": 0,
           "y": 0,
           "width": 1440,
           "height": 900,
           "descendants": {
-            "VZD6U": {
+            "ds:VZD6U": {
               "enabled": false
             },
-            "z5MVM": {
+            "ds:z5MVM": {
               "enabled": true
             },
-            "xvsK3": {
+            "ds:xvsK3": {
               "type": "frame",
               "id": "mRRlf",
               "name": "Main Panel",
@@ -9451,14 +7178,14 @@
         {
           "id": "eUwpG",
           "type": "ref",
-          "ref": "OPciE",
+          "ref": "ds:OPciE",
           "name": "App Layout",
           "x": 0,
           "y": 0,
           "width": 1440,
           "height": 900,
           "descendants": {
-            "xvsK3": {
+            "ds:xvsK3": {
               "type": "frame",
               "id": "NGWtY",
               "name": "Main Panel",
@@ -11049,10 +8776,10 @@
                 }
               ]
             },
-            "c0DIz/7vkyc": {
+            "ds:c0DIz/ds:7vkyc": {
               "enabled": true
             },
-            "c0DIz/VGzNR": {
+            "ds:c0DIz/ds:VGzNR": {
               "enabled": true
             }
           }
@@ -11077,14 +8804,14 @@
         {
           "id": "x2zH2",
           "type": "ref",
-          "ref": "OPciE",
+          "ref": "ds:OPciE",
           "name": "App Layout",
           "x": 0,
           "y": 0,
           "width": 1440,
           "height": 900,
           "descendants": {
-            "xvsK3": {
+            "ds:xvsK3": {
               "type": "frame",
               "id": "47KOk",
               "name": "Main Panel",
@@ -12675,12 +10402,12 @@
                 }
               ]
             },
-            "c0DIz/znYRb": {
+            "ds:c0DIz/ds:znYRb": {
               "fill": "$ds:--muted",
               "stroke": "$ds:--ring",
               "strokeWidth": 1
             },
-            "c0DIz/Y9jV3": {
+            "ds:c0DIz/ds:Y9jV3": {
               "fill": "$ds:--accent"
             }
           }
@@ -13057,444 +10784,6 @@
                   "icon": "repeat",
                   "library": "lucide",
                   "fill": "$ds:--muted-foreground"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "frame",
-      "id": "vzzP4",
-      "x": 0,
-      "y": 2100,
-      "name": "00M • Mobile Player Components",
-      "width": 900,
-      "fill": "$ds:--background",
-      "layout": "vertical",
-      "gap": 40,
-      "padding": 40,
-      "children": [
-        {
-          "type": "text",
-          "id": "Vrobj",
-          "name": "Mobile Components Title",
-          "fill": "$ds:--foreground",
-          "content": "Mobile player components",
-          "fontFamily": "Bricolage Grotesque",
-          "fontSize": 22,
-          "fontWeight": "700"
-        },
-        {
-          "type": "frame",
-          "id": "j91hsM",
-          "name": "Mobile Components Row",
-          "gap": 40,
-          "children": [
-            {
-              "type": "frame",
-              "id": "PmEet",
-              "name": "Mobile/Tab Bar",
-              "reusable": true,
-              "width": 390,
-              "height": 84,
-              "fill": "$ds:--background",
-              "stroke": "$ds:--border",
-              "strokeWidth": {
-                "top": 1
-              },
-              "padding": [
-                8,
-                12,
-                26,
-                12
-              ],
-              "justifyContent": "space_between",
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "NqGw3",
-                  "name": "Tab / Home",
-                  "width": 80,
-                  "height": 48,
-                  "layout": "vertical",
-                  "gap": 4,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "lPxJb",
-                      "name": "Tab Icon",
-                      "width": 22,
-                      "height": 22,
-                      "icon": "house",
-                      "library": "lucide",
-                      "fill": "$ds:--foreground"
-                    },
-                    {
-                      "type": "text",
-                      "id": "ojzHV",
-                      "name": "Tab Label",
-                      "fill": "$ds:--foreground",
-                      "content": "Home",
-                      "fontFamily": "Hanken Grotesk",
-                      "fontSize": 12,
-                      "fontWeight": "600"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "Gd4wZ",
-                  "name": "Tab / Search",
-                  "width": 80,
-                  "height": 48,
-                  "layout": "vertical",
-                  "gap": 4,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "kGpDm",
-                      "name": "Tab Icon",
-                      "width": 22,
-                      "height": 22,
-                      "icon": "search",
-                      "library": "lucide",
-                      "fill": "$ds:--muted-foreground"
-                    },
-                    {
-                      "type": "text",
-                      "id": "mG3wy",
-                      "name": "Tab Label",
-                      "fill": "$ds:--muted-foreground",
-                      "content": "Search",
-                      "fontFamily": "Hanken Grotesk",
-                      "fontSize": 12,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "A50Xsc",
-                  "name": "Tab / Library",
-                  "width": 80,
-                  "height": 48,
-                  "layout": "vertical",
-                  "gap": 4,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "X78L7T",
-                      "name": "Tab Icon",
-                      "width": 22,
-                      "height": 22,
-                      "icon": "library-big",
-                      "library": "lucide",
-                      "fill": "$ds:--muted-foreground"
-                    },
-                    {
-                      "type": "text",
-                      "id": "HnsIZ",
-                      "name": "Tab Label",
-                      "fill": "$ds:--muted-foreground",
-                      "content": "Library",
-                      "fontFamily": "Hanken Grotesk",
-                      "fontSize": 12,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "fCLUz",
-                  "name": "Tab / Profile",
-                  "width": 80,
-                  "height": 48,
-                  "layout": "vertical",
-                  "gap": 4,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "pjDzF",
-                      "name": "Tab Icon",
-                      "width": 22,
-                      "height": 22,
-                      "icon": "circle-user-round",
-                      "library": "lucide",
-                      "fill": "$ds:--muted-foreground"
-                    },
-                    {
-                      "type": "text",
-                      "id": "j8Bscj",
-                      "name": "Tab Label",
-                      "fill": "$ds:--muted-foreground",
-                      "content": "Profile",
-                      "fontFamily": "Hanken Grotesk",
-                      "fontSize": 12,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "YOpwD",
-              "name": "Mobile Components Column",
-              "layout": "vertical",
-              "gap": 32,
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "CeyP3",
-                  "name": "Mobile/Mini Bar",
-                  "reusable": true,
-                  "clip": true,
-                  "width": 358,
-                  "fill": "$ds:--card",
-                  "cornerRadius": 12,
-                  "stroke": "$ds:--border",
-                  "strokeWidth": 1,
-                  "effect": {
-                    "type": "shadow",
-                    "shadowType": "outer",
-                    "color": "$ds:--shadow",
-                    "offset": {
-                      "x": 0,
-                      "y": 8
-                    },
-                    "blur": 24
-                  },
-                  "layout": "vertical",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "KhNvU",
-                      "name": "Mini Bar Row",
-                      "width": "fill_container",
-                      "gap": 12,
-                      "padding": [
-                        8,
-                        4,
-                        8,
-                        8
-                      ],
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "LnQ8U",
-                          "name": "Mini Bar Cover",
-                          "width": 44,
-                          "height": 44,
-                          "fill": {
-                            "type": "image",
-                            "enabled": true,
-                            "url": "assets/albums/album-afterglow.webp",
-                            "mode": "cover"
-                          },
-                          "cornerRadius": 8
-                        },
-                        {
-                          "type": "frame",
-                          "id": "BKz2h",
-                          "name": "Mini Bar Text",
-                          "width": "fill_container",
-                          "layout": "vertical",
-                          "gap": 2,
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "QguyX",
-                              "name": "Mini Bar Title",
-                              "fill": "$ds:--foreground",
-                              "content": "Afterglow",
-                              "fontFamily": "Hanken Grotesk",
-                              "fontSize": 14,
-                              "fontWeight": "600"
-                            },
-                            {
-                              "type": "text",
-                              "id": "oJcMW",
-                              "name": "Mini Bar Artist",
-                              "fill": "$ds:--text-secondary",
-                              "content": "Nova & the Static",
-                              "fontFamily": "Hanken Grotesk",
-                              "fontSize": 13,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "aqXYc",
-                          "name": "Mini Bar Device",
-                          "width": 44,
-                          "height": 44,
-                          "justifyContent": "center",
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "Q7hlu",
-                              "name": "Mini Bar Device Icon",
-                              "width": 22,
-                              "height": 22,
-                              "icon": "monitor-speaker",
-                              "library": "lucide",
-                              "fill": "$ds:--muted-foreground"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "lRjEh",
-                          "name": "Mini Bar Like",
-                          "width": 44,
-                          "height": 44,
-                          "justifyContent": "center",
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "dSSFt",
-                              "name": "Mini Bar Like Icon",
-                              "width": 22,
-                              "height": 22,
-                              "icon": "heart",
-                              "library": "lucide",
-                              "fill": "$ds:--muted-foreground"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "C22qM",
-                          "name": "Mini Bar Play",
-                          "width": 44,
-                          "height": 44,
-                          "justifyContent": "center",
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "AVOz8",
-                              "name": "Mini Bar Play Icon",
-                              "width": 24,
-                              "height": 24,
-                              "icon": "pause",
-                              "library": "lucide",
-                              "fill": "$ds:--foreground"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "frame",
-                      "id": "LHxqu",
-                      "name": "Mini Bar Progress Rail",
-                      "width": "fill_container",
-                      "height": 2,
-                      "fill": "$ds:--surface",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "qPsWF",
-                          "name": "Mini Bar Progress Fill",
-                          "width": 170,
-                          "height": 2,
-                          "fill": "$ds:--primary"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "Y2h8VV",
-                  "name": "Mobile/Track Row",
-                  "reusable": true,
-                  "width": 358,
-                  "height": 64,
-                  "gap": 12,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "fjPYf",
-                      "name": "Track Row Cover",
-                      "width": 48,
-                      "height": 48,
-                      "fill": {
-                        "type": "image",
-                        "enabled": true,
-                        "url": "assets/albums/album-static-lines.webp",
-                        "mode": "cover"
-                      },
-                      "cornerRadius": 6
-                    },
-                    {
-                      "type": "frame",
-                      "id": "BBKwd",
-                      "name": "Track Row Text",
-                      "width": "fill_container",
-                      "layout": "vertical",
-                      "gap": 2,
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "RJ2go",
-                          "name": "Track Row Title",
-                          "fill": "$ds:--foreground",
-                          "content": "Static Lines",
-                          "fontFamily": "Hanken Grotesk",
-                          "fontSize": 14,
-                          "fontWeight": "600"
-                        },
-                        {
-                          "type": "text",
-                          "id": "rFh9q",
-                          "name": "Track Row Meta",
-                          "fill": "$ds:--text-secondary",
-                          "content": "Album · Kite Harbor",
-                          "fontFamily": "Hanken Grotesk",
-                          "fontSize": 13,
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "frame",
-                      "id": "sTvmq",
-                      "name": "Track Row More",
-                      "width": 44,
-                      "height": 44,
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "icon",
-                          "id": "TeJmO",
-                          "name": "Track Row More Icon",
-                          "width": 20,
-                          "height": 20,
-                          "icon": "ellipsis",
-                          "library": "lucide",
-                          "fill": "$ds:--muted-foreground"
-                        }
-                      ]
-                    }
-                  ]
                 }
               ]
             }
@@ -14317,7 +11606,7 @@
             {
               "id": "V2Hub",
               "type": "ref",
-              "ref": "CeyP3",
+              "ref": "ds:CeyP3",
               "name": "Mini Bar",
               "width": "fill_container"
             }
@@ -14326,7 +11615,7 @@
         {
           "id": "aHrBP",
           "type": "ref",
-          "ref": "PmEet",
+          "ref": "ds:PmEet",
           "name": "Tab Bar",
           "width": "fill_container"
         }
@@ -15425,11 +12714,11 @@
                 {
                   "id": "Auft9",
                   "type": "ref",
-                  "ref": "Y2h8VV",
+                  "ref": "ds:Y2h8VV",
                   "name": "Row / Night Drive",
                   "width": "fill_container",
                   "descendants": {
-                    "fjPYf": {
+                    "ds:fjPYf": {
                       "fill": {
                         "type": "image",
                         "enabled": true,
@@ -15437,10 +12726,10 @@
                         "mode": "cover"
                       }
                     },
-                    "RJ2go": {
+                    "ds:RJ2go": {
                       "content": "Night Drive"
                     },
-                    "rFh9q": {
+                    "ds:rFh9q": {
                       "content": "Playlist · Maya"
                     }
                   }
@@ -15448,11 +12737,11 @@
                 {
                   "id": "WR2vF",
                   "type": "ref",
-                  "ref": "Y2h8VV",
+                  "ref": "ds:Y2h8VV",
                   "name": "Row / Afterglow Sessions",
                   "width": "fill_container",
                   "descendants": {
-                    "fjPYf": {
+                    "ds:fjPYf": {
                       "fill": {
                         "type": "image",
                         "enabled": true,
@@ -15460,10 +12749,10 @@
                         "mode": "cover"
                       }
                     },
-                    "RJ2go": {
+                    "ds:RJ2go": {
                       "content": "Afterglow Sessions"
                     },
-                    "rFh9q": {
+                    "ds:rFh9q": {
                       "content": "Playlist · Maya"
                     }
                   }
@@ -15471,11 +12760,11 @@
                 {
                   "id": "lDTse",
                   "type": "ref",
-                  "ref": "Y2h8VV",
+                  "ref": "ds:Y2h8VV",
                   "name": "Row / Static Lines",
                   "width": "fill_container",
                   "descendants": {
-                    "fjPYf": {
+                    "ds:fjPYf": {
                       "fill": {
                         "type": "image",
                         "enabled": true,
@@ -15483,10 +12772,10 @@
                         "mode": "cover"
                       }
                     },
-                    "RJ2go": {
+                    "ds:RJ2go": {
                       "content": "Static Lines"
                     },
-                    "rFh9q": {
+                    "ds:rFh9q": {
                       "content": "Album · Kite Harbor"
                     }
                   }
@@ -15494,11 +12783,11 @@
                 {
                   "id": "LZLkF",
                   "type": "ref",
-                  "ref": "Y2h8VV",
+                  "ref": "ds:Y2h8VV",
                   "name": "Row / Echoes in Motion",
                   "width": "fill_container",
                   "descendants": {
-                    "fjPYf": {
+                    "ds:fjPYf": {
                       "fill": {
                         "type": "image",
                         "enabled": true,
@@ -15506,10 +12795,10 @@
                         "mode": "cover"
                       }
                     },
-                    "RJ2go": {
+                    "ds:RJ2go": {
                       "content": "Echoes in Motion"
                     },
-                    "rFh9q": {
+                    "ds:rFh9q": {
                       "content": "Album · Lumen Choir"
                     }
                   }
@@ -15517,11 +12806,11 @@
                 {
                   "id": "eT0Ba",
                   "type": "ref",
-                  "ref": "Y2h8VV",
+                  "ref": "ds:Y2h8VV",
                   "name": "Row / Drift Control",
                   "width": "fill_container",
                   "descendants": {
-                    "fjPYf": {
+                    "ds:fjPYf": {
                       "fill": {
                         "type": "image",
                         "enabled": true,
@@ -15529,10 +12818,10 @@
                         "mode": "cover"
                       }
                     },
-                    "RJ2go": {
+                    "ds:RJ2go": {
                       "content": "Drift Control"
                     },
-                    "rFh9q": {
+                    "ds:rFh9q": {
                       "content": "Album · Mira Sol"
                     }
                   }
@@ -15540,11 +12829,11 @@
                 {
                   "id": "Z7ATxu",
                   "type": "ref",
-                  "ref": "Y2h8VV",
+                  "ref": "ds:Y2h8VV",
                   "name": "Row / Signal On Air",
                   "width": "fill_container",
                   "descendants": {
-                    "fjPYf": {
+                    "ds:fjPYf": {
                       "fill": {
                         "type": "image",
                         "enabled": true,
@@ -15552,10 +12841,10 @@
                         "mode": "cover"
                       }
                     },
-                    "RJ2go": {
+                    "ds:RJ2go": {
                       "content": "Signal On Air"
                     },
-                    "rFh9q": {
+                    "ds:rFh9q": {
                       "content": "Playlist · Bitrate"
                     }
                   }
@@ -15563,11 +12852,11 @@
                 {
                   "id": "WwvGO",
                   "type": "ref",
-                  "ref": "Y2h8VV",
+                  "ref": "ds:Y2h8VV",
                   "name": "Row / Road Radio",
                   "width": "fill_container",
                   "descendants": {
-                    "fjPYf": {
+                    "ds:fjPYf": {
                       "fill": {
                         "type": "image",
                         "enabled": true,
@@ -15575,10 +12864,10 @@
                         "mode": "cover"
                       }
                     },
-                    "RJ2go": {
+                    "ds:RJ2go": {
                       "content": "Road Radio"
                     },
-                    "rFh9q": {
+                    "ds:rFh9q": {
                       "content": "Playlist · Maya"
                     }
                   }
@@ -15600,7 +12889,7 @@
             {
               "id": "dwjhV",
               "type": "ref",
-              "ref": "CeyP3",
+              "ref": "ds:CeyP3",
               "name": "Mini Bar",
               "width": "fill_container"
             }
@@ -15609,21 +12898,21 @@
         {
           "id": "YVesv",
           "type": "ref",
-          "ref": "PmEet",
+          "ref": "ds:PmEet",
           "name": "Tab Bar",
           "width": "fill_container",
           "descendants": {
-            "lPxJb": {
+            "ds:lPxJb": {
               "fill": "$ds:--muted-foreground"
             },
-            "ojzHV": {
+            "ds:ojzHV": {
               "fill": "$ds:--muted-foreground",
               "fontWeight": "normal"
             },
-            "X78L7T": {
+            "ds:X78L7T": {
               "fill": "$ds:--foreground"
             },
-            "HnsIZ": {
+            "ds:HnsIZ": {
               "fill": "$ds:--foreground",
               "fontWeight": "600"
             }
