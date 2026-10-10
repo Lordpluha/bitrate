@@ -1,0 +1,974 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "tUWhhp",
+      "name": "Settings (redirect) / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "bwzjYr",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "T9RtkK",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Dtqk7E",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "CiS5Ae",
+                      "ref": "ds:MgMQ2L",
+                      "name": "Text/H1",
+                      "content": "Settings"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Skwgdh",
+                      "ref": "ds:Qjj2NE",
+                      "name": "Text/H3",
+                      "content": "Two-factor authentication"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "GRJXfb",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Protect your account with an authenticator app."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Dfei6m",
+                      "ref": "ds:x4Fixv",
+                      "name": "Surface/Panel",
+                      "descendants": {
+                        "ds:xhr0E3": {
+                          "type": "frame",
+                          "id": "kQFjhP",
+                          "name": "Panel Content",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "9Xe6ps",
+                              "ref": "ds:C5Ih8u",
+                              "name": "Text/Muted",
+                              "content": "Manual code"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "2EoXrE",
+                              "ref": "ds:GMgMo3",
+                              "name": "Text/Code",
+                              "content": "JBSW Y3DP EHPK 3PXP"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "9LbZpk",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Authentication code",
+                      "width": 280,
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Authentication code"
+                        },
+                        "ds:iI0CE": {
+                          "content": "123456"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "75RjxC",
+                      "ref": "ds:exjwf",
+                      "name": "Button / Enable 2FA",
+                      "descendants": {
+                        "ds:E23bq6": {
+                          "content": "Enable 2FA"
+                        },
+                        "ds:o7NXW": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/settings — Redirects to /main/preferences; shown with the 2FA set-up step."
+    },
+    {
+      "type": "frame",
+      "id": "dkHzuG",
+      "name": "Settings (redirect) / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "F9GJsh",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "zNVTfj",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "y9PAUM",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "4gZfu7",
+                      "ref": "ds:MgMQ2L",
+                      "name": "Text/H1",
+                      "content": "Settings"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "bZjAYK",
+                      "ref": "ds:Qjj2NE",
+                      "name": "Text/H3",
+                      "content": "Two-factor authentication"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "E5ebP9",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Protect your account with an authenticator app."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "TRsLBa",
+                      "ref": "ds:x4Fixv",
+                      "name": "Surface/Panel",
+                      "descendants": {
+                        "ds:xhr0E3": {
+                          "type": "frame",
+                          "id": "Uz26pu",
+                          "name": "Panel Content",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "4vY6jC",
+                              "ref": "ds:C5Ih8u",
+                              "name": "Text/Muted",
+                              "content": "Manual code"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "FoUWiq",
+                              "ref": "ds:GMgMo3",
+                              "name": "Text/Code",
+                              "content": "JBSW Y3DP EHPK 3PXP"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "q42FES",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Authentication code",
+                      "width": 280,
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Authentication code"
+                        },
+                        "ds:iI0CE": {
+                          "content": "123456"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "oRETVY",
+                      "ref": "ds:exjwf",
+                      "name": "Button / Enable 2FA",
+                      "descendants": {
+                        "ds:E23bq6": {
+                          "content": "Enable 2FA"
+                        },
+                        "ds:o7NXW": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "/main/settings — Redirects to /main/preferences; shown with the 2FA set-up step."
+    },
+    {
+      "type": "frame",
+      "id": "YEGQP7",
+      "name": "Settings (redirect) / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "cEa54t",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "KmRQ3e",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "J8KF5v",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "adzopQ",
+                      "ref": "ds:MgMQ2L",
+                      "name": "Text/H1",
+                      "content": "Settings"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5iwxan",
+                      "ref": "ds:Qjj2NE",
+                      "name": "Text/H3",
+                      "content": "Two-factor authentication"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "dhBA9P",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Protect your account with an authenticator app."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "8RLuCn",
+                      "ref": "ds:x4Fixv",
+                      "name": "Surface/Panel",
+                      "descendants": {
+                        "ds:xhr0E3": {
+                          "type": "frame",
+                          "id": "eitKuz",
+                          "name": "Panel Content",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "HuUP74",
+                              "ref": "ds:C5Ih8u",
+                              "name": "Text/Muted",
+                              "content": "Manual code"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "NHjfRH",
+                              "ref": "ds:GMgMo3",
+                              "name": "Text/Code",
+                              "content": "JBSW Y3DP EHPK 3PXP"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5LNnXY",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Authentication code",
+                      "width": 280,
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Authentication code"
+                        },
+                        "ds:iI0CE": {
+                          "content": "123456"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "f6f4wL",
+                      "ref": "ds:exjwf",
+                      "name": "Button / Enable 2FA",
+                      "descendants": {
+                        "ds:E23bq6": {
+                          "content": "Enable 2FA"
+                        },
+                        "ds:o7NXW": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "/main/settings — Redirects to /main/preferences; shown with the 2FA set-up step."
+    },
+    {
+      "type": "frame",
+      "id": "U8Yq3u",
+      "name": "Settings (redirect) / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "23xL3T",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "ck9F7d",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Settings"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "zAyzXW",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "JxLuxH",
+              "ref": "ds:Qjj2NE",
+              "name": "Text/H3",
+              "content": "Two-factor authentication"
+            },
+            {
+              "type": "ref",
+              "id": "TbeXry",
+              "ref": "ds:XDvNAD",
+              "name": "Text/Paragraph",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Protect your account with an authenticator app."
+            },
+            {
+              "type": "ref",
+              "id": "TJkf4r",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "UtxZqT",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "7dQQ9E",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "Manual code"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "mJzHbX",
+                      "ref": "ds:GMgMo3",
+                      "name": "Text/Code",
+                      "content": "JBSW Y3DP EHPK 3PXP"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "ZHZcUw",
+              "ref": "ds:j04F4",
+              "name": "Input / Authentication code",
+              "width": "fill_container",
+              "descendants": {
+                "ds:l4agQ": {
+                  "content": "Authentication code"
+                },
+                "ds:iI0CE": {
+                  "content": "123456"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "LTCtmz",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Enable 2FA",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Enable 2FA"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "JTFXmf",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/settings — Redirects to /main/preferences; shown with the 2FA set-up step."
+    },
+    {
+      "type": "frame",
+      "id": "ckA2zL",
+      "name": "Settings (redirect) / Invalid code / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "v7ktE2",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "Lhav3i",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "fa9Zz8",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "oXgRjQ",
+                      "ref": "ds:MgMQ2L",
+                      "name": "Text/H1",
+                      "content": "Settings"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "8fZfqD",
+                      "ref": "ds:Qjj2NE",
+                      "name": "Text/H3",
+                      "content": "Two-factor authentication"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "wPJhNU",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Protect your account with an authenticator app."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "QXkuex",
+                      "ref": "ds:x4Fixv",
+                      "name": "Surface/Panel",
+                      "descendants": {
+                        "ds:xhr0E3": {
+                          "type": "frame",
+                          "id": "vg7bHW",
+                          "name": "Panel Content",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "uMEHzY",
+                              "ref": "ds:C5Ih8u",
+                              "name": "Text/Muted",
+                              "content": "Manual code"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "qyW988",
+                              "ref": "ds:GMgMo3",
+                              "name": "Text/Code",
+                              "content": "JBSW Y3DP EHPK 3PXP"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5ZdvgB",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Authentication code",
+                      "width": 280,
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Authentication code"
+                        },
+                        "ds:iI0CE": {
+                          "content": "123456"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "4CKmDz",
+                      "ref": "ds:exjwf",
+                      "name": "Button / Enable 2FA",
+                      "descendants": {
+                        "ds:E23bq6": {
+                          "content": "Enable 2FA"
+                        },
+                        "ds:o7NXW": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "cBYNLa",
+                      "ref": "ds:IqJK6E",
+                      "name": "Form/Field Error",
+                      "descendants": {
+                        "ds:brmWkY": {
+                          "content": "Invalid or expired 2FA code"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/settings — Redirects to /main/preferences; shown with the 2FA set-up step."
+    },
+    {
+      "type": "frame",
+      "id": "7JeafN",
+      "name": "Settings (redirect) / Invalid code / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "WjwZaz",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "97uAqH",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Settings"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "cuEy8E",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "TyjrNu",
+              "ref": "ds:Qjj2NE",
+              "name": "Text/H3",
+              "content": "Two-factor authentication"
+            },
+            {
+              "type": "ref",
+              "id": "oRFyow",
+              "ref": "ds:XDvNAD",
+              "name": "Text/Paragraph",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Protect your account with an authenticator app."
+            },
+            {
+              "type": "ref",
+              "id": "aEqHXG",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "uGLYap",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "LqgEzr",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "Manual code"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "y2M5rX",
+                      "ref": "ds:GMgMo3",
+                      "name": "Text/Code",
+                      "content": "JBSW Y3DP EHPK 3PXP"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "kf8byp",
+              "ref": "ds:j04F4",
+              "name": "Input / Authentication code",
+              "width": "fill_container",
+              "descendants": {
+                "ds:l4agQ": {
+                  "content": "Authentication code"
+                },
+                "ds:iI0CE": {
+                  "content": "123456"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "hvPxpN",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Enable 2FA",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Enable 2FA"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "rxHwzn",
+              "ref": "ds:IqJK6E",
+              "name": "Form/Field Error",
+              "descendants": {
+                "ds:brmWkY": {
+                  "content": "Invalid or expired 2FA code"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "osmu8X",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/settings — Redirects to /main/preferences; shown with the 2FA set-up step."
+    }
+  ]
+}

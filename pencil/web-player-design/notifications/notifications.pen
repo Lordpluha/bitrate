@@ -1,0 +1,2404 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "woF7pJ",
+      "name": "Notifications / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "DPowac",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "nqMFeB",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "HH6DQz",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": 760,
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "CPXn7w",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "BKLDqc",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Notifications"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "2VqF4F",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "DQz6on",
+                      "ref": "ds:DTwJb",
+                      "name": "Button / Mark all read",
+                      "descendants": {
+                        "ds:GyGLK": {
+                          "content": "Mark all read"
+                        },
+                        "ds:uRXDu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "92RT6W",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "L4cgMJ",
+                      "ref": "ds:AdNrrb",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:cUY4Fi": {
+                          "content": "All"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "fuAuti",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Followers"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "4aAkrx",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Releases"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sUirc5",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Playlists"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "dWFiuZ",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Events"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "S9x2Fr",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "pBqbKn",
+                      "ref": "ds:w7kIfD",
+                      "name": "Notification Row/Unread",
+                      "descendants": {
+                        "ds:eVpsWQ": {
+                          "icon": "user-plus"
+                        },
+                        "ds:ZhjNeD": {
+                          "content": "Jonah started following you"
+                        },
+                        "ds:cmpFmf": {
+                          "content": "5 min ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ZbNWVr",
+                      "ref": "ds:w7kIfD",
+                      "name": "Notification Row/Unread",
+                      "descendants": {
+                        "ds:eVpsWQ": {
+                          "icon": "disc-3"
+                        },
+                        "ds:ZhjNeD": {
+                          "content": "Luma Vale released a new single: Low Orbit"
+                        },
+                        "ds:cmpFmf": {
+                          "content": "2 h ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "isKiuC",
+                      "ref": "ds:1ATiw1",
+                      "name": "Notification Row/Read",
+                      "descendants": {
+                        "ds:V2yFd8": {
+                          "icon": "list-music"
+                        },
+                        "ds:SA2HUG": {
+                          "content": "Ana added 3 tracks to Rain Drive"
+                        },
+                        "ds:VAD3PB": {
+                          "content": "Yesterday"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "XBjf6s",
+                      "ref": "ds:1ATiw1",
+                      "name": "Notification Row/Read",
+                      "descendants": {
+                        "ds:V2yFd8": {
+                          "icon": "calendar"
+                        },
+                        "ds:SA2HUG": {
+                          "content": "Mira Sol announced a live session on 18 Oct"
+                        },
+                        "ds:VAD3PB": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "QAhNjQ",
+      "name": "Notifications / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "2gw6Tt",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "RRwt25",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "AEzY6N",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": 760,
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Rt3XxG",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "6ZptE9",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Notifications"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "T7p7Rw",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "TF9jcy",
+                      "ref": "ds:DTwJb",
+                      "name": "Button / Mark all read",
+                      "descendants": {
+                        "ds:GyGLK": {
+                          "content": "Mark all read"
+                        },
+                        "ds:uRXDu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "PR9jZ2",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "5got5L",
+                      "ref": "ds:AdNrrb",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:cUY4Fi": {
+                          "content": "All"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "EpxAz3",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Followers"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jfvycE",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Releases"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "CoYPrS",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Playlists"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "NC4SmV",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Events"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "en3D34",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "RAUC37",
+                      "ref": "ds:w7kIfD",
+                      "name": "Notification Row/Unread",
+                      "descendants": {
+                        "ds:eVpsWQ": {
+                          "icon": "user-plus"
+                        },
+                        "ds:ZhjNeD": {
+                          "content": "Jonah started following you"
+                        },
+                        "ds:cmpFmf": {
+                          "content": "5 min ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "e5JYx5",
+                      "ref": "ds:w7kIfD",
+                      "name": "Notification Row/Unread",
+                      "descendants": {
+                        "ds:eVpsWQ": {
+                          "icon": "disc-3"
+                        },
+                        "ds:ZhjNeD": {
+                          "content": "Luma Vale released a new single: Low Orbit"
+                        },
+                        "ds:cmpFmf": {
+                          "content": "2 h ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "fPEnRb",
+                      "ref": "ds:1ATiw1",
+                      "name": "Notification Row/Read",
+                      "descendants": {
+                        "ds:V2yFd8": {
+                          "icon": "list-music"
+                        },
+                        "ds:SA2HUG": {
+                          "content": "Ana added 3 tracks to Rain Drive"
+                        },
+                        "ds:VAD3PB": {
+                          "content": "Yesterday"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5JWpwL",
+                      "ref": "ds:1ATiw1",
+                      "name": "Notification Row/Read",
+                      "descendants": {
+                        "ds:V2yFd8": {
+                          "icon": "calendar"
+                        },
+                        "ds:SA2HUG": {
+                          "content": "Mira Sol announced a live session on 18 Oct"
+                        },
+                        "ds:VAD3PB": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "kTqNcA",
+      "name": "Notifications / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Ko2dDU",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "6GJk62",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "aap9JJ",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": 760,
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "R7LY4G",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ydqAzU",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Notifications"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "CKMhNf",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "vUPCfy",
+                      "ref": "ds:DTwJb",
+                      "name": "Button / Mark all read",
+                      "descendants": {
+                        "ds:GyGLK": {
+                          "content": "Mark all read"
+                        },
+                        "ds:uRXDu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "BL8YBG",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "aVvHZP",
+                      "ref": "ds:AdNrrb",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:cUY4Fi": {
+                          "content": "All"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "JTCcDF",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Followers"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Wvn2PR",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Releases"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "kTNtx3",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Playlists"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "RHWEP5",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Events"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "jEzMAj",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "xrUjG5",
+                      "ref": "ds:w7kIfD",
+                      "name": "Notification Row/Unread",
+                      "descendants": {
+                        "ds:eVpsWQ": {
+                          "icon": "user-plus"
+                        },
+                        "ds:ZhjNeD": {
+                          "content": "Jonah started following you"
+                        },
+                        "ds:cmpFmf": {
+                          "content": "5 min ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "P8Rut9",
+                      "ref": "ds:w7kIfD",
+                      "name": "Notification Row/Unread",
+                      "descendants": {
+                        "ds:eVpsWQ": {
+                          "icon": "disc-3"
+                        },
+                        "ds:ZhjNeD": {
+                          "content": "Luma Vale released a new single: Low Orbit"
+                        },
+                        "ds:cmpFmf": {
+                          "content": "2 h ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "rhb5Xe",
+                      "ref": "ds:1ATiw1",
+                      "name": "Notification Row/Read",
+                      "descendants": {
+                        "ds:V2yFd8": {
+                          "icon": "list-music"
+                        },
+                        "ds:SA2HUG": {
+                          "content": "Ana added 3 tracks to Rain Drive"
+                        },
+                        "ds:VAD3PB": {
+                          "content": "Yesterday"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "UWbWY6",
+                      "ref": "ds:1ATiw1",
+                      "name": "Notification Row/Read",
+                      "descendants": {
+                        "ds:V2yFd8": {
+                          "icon": "calendar"
+                        },
+                        "ds:SA2HUG": {
+                          "content": "Mira Sol announced a live session on 18 Oct"
+                        },
+                        "ds:VAD3PB": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "BU9mbV",
+      "name": "Notifications / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "79Weyd",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "VS7Q9e",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Notifications"
+            },
+            "ds:zbRXzZ": {
+              "icon": "check-check"
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "hrkpNf",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "9Me3VB",
+              "name": "Chips",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "jSNHwU",
+                  "ref": "ds:AdNrrb",
+                  "name": "Chip/Active",
+                  "descendants": {
+                    "ds:cUY4Fi": {
+                      "content": "All"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "j8Gok2",
+                  "ref": "ds:LUcTan",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:lXs2ja": {
+                      "content": "Followers"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "KyKBFD",
+                  "ref": "ds:LUcTan",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:lXs2ja": {
+                      "content": "Releases"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "tGsgdx",
+              "ref": "ds:w7kIfD",
+              "name": "Notification Row/Unread",
+              "descendants": {
+                "ds:eVpsWQ": {
+                  "icon": "user-plus"
+                },
+                "ds:ZhjNeD": {
+                  "content": "Jonah started following you"
+                },
+                "ds:cmpFmf": {
+                  "content": "5 min ago"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "9TyFMy",
+              "ref": "ds:w7kIfD",
+              "name": "Notification Row/Unread",
+              "descendants": {
+                "ds:eVpsWQ": {
+                  "icon": "disc-3"
+                },
+                "ds:ZhjNeD": {
+                  "content": "Luma Vale released a new single: Low Orbit"
+                },
+                "ds:cmpFmf": {
+                  "content": "2 h ago"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "8XmbKD",
+              "ref": "ds:1ATiw1",
+              "name": "Notification Row/Read",
+              "descendants": {
+                "ds:V2yFd8": {
+                  "icon": "list-music"
+                },
+                "ds:SA2HUG": {
+                  "content": "Ana added 3 tracks to Rain Drive"
+                },
+                "ds:VAD3PB": {
+                  "content": "Yesterday"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "NngFuM",
+              "ref": "ds:1ATiw1",
+              "name": "Notification Row/Read",
+              "descendants": {
+                "ds:V2yFd8": {
+                  "icon": "calendar"
+                },
+                "ds:SA2HUG": {
+                  "content": "Mira Sol announced a live session on 18 Oct"
+                },
+                "ds:VAD3PB": {
+                  "content": "2 days ago"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "RkvD2a",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "bxfGkB",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "3yJbZe",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "iE4dZf",
+      "name": "Notifications / All caught up / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "CJCNQZ",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "2PNQty",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "TgbYa7",
+                  "ref": "ds:MgMQ2L",
+                  "name": "Text/H1",
+                  "content": "Notifications"
+                },
+                {
+                  "type": "frame",
+                  "id": "b5YwHk",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "7SAB4Z",
+                      "ref": "ds:UacIqy",
+                      "name": "State / You're all caught up",
+                      "descendants": {
+                        "ds:QTS6fY": {
+                          "icon": "circle-check"
+                        },
+                        "ds:LaYbWr": {
+                          "content": "You're all caught up"
+                        },
+                        "ds:IowS15": {
+                          "content": "Watch this space for news on your followers, playlists, events and more."
+                        },
+                        "ds:PKR600": {
+                          "enabled": false
+                        },
+                        "ds:Sk1EVh": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "5SHBde",
+      "name": "Notifications / All caught up / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "WR5WWz",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "VrLZW4",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Notifications"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "DAGAYM",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "uYzGQo",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "UeYbWi",
+                  "ref": "ds:UacIqy",
+                  "name": "State / You're all caught up",
+                  "descendants": {
+                    "ds:QTS6fY": {
+                      "icon": "circle-check"
+                    },
+                    "ds:LaYbWr": {
+                      "content": "You're all caught up"
+                    },
+                    "ds:IowS15": {
+                      "content": "Watch this space for news on your followers, playlists, events and more."
+                    },
+                    "ds:PKR600": {
+                      "enabled": false
+                    },
+                    "ds:Sk1EVh": {
+                      "enabled": false
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "yUsevq",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "KNnY24",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "bGWbrQ",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "gUyjYX",
+      "name": "Notifications / Loading / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "pVVGig",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "Lzbzzb",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "gMh292",
+                  "ref": "ds:MgMQ2L",
+                  "name": "Text/H1",
+                  "content": "Notifications"
+                },
+                {
+                  "type": "frame",
+                  "id": "22h43C",
+                  "name": "Loading",
+                  "layout": "vertical",
+                  "gap": 24,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "3a65N8",
+                      "name": "Skeleton Rows",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "SAzLNn",
+                          "ref": "ds:WNtv9r",
+                          "name": "Skeleton/Notification Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "VsAvPY",
+                          "ref": "ds:WNtv9r",
+                          "name": "Skeleton/Notification Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "uk2Ngu",
+                          "ref": "ds:WNtv9r",
+                          "name": "Skeleton/Notification Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "5UuY3u",
+                          "ref": "ds:WNtv9r",
+                          "name": "Skeleton/Notification Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "imNixD",
+                          "ref": "ds:WNtv9r",
+                          "name": "Skeleton/Notification Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "CZ85L4",
+                          "ref": "ds:WNtv9r",
+                          "name": "Skeleton/Notification Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "bPVGd7",
+                          "ref": "ds:WNtv9r",
+                          "name": "Skeleton/Notification Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "3UUyMv",
+                          "ref": "ds:WNtv9r",
+                          "name": "Skeleton/Notification Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "iKSvpy",
+                          "ref": "ds:WNtv9r",
+                          "name": "Skeleton/Notification Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Hu5Lh6",
+                          "ref": "ds:WNtv9r",
+                          "name": "Skeleton/Notification Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Y8i5K3",
+                          "ref": "ds:WNtv9r",
+                          "name": "Skeleton/Notification Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "CfdizL",
+                          "ref": "ds:WNtv9r",
+                          "name": "Skeleton/Notification Row",
+                          "width": "fill_container"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "b7ZqQ3",
+      "name": "Notifications / Loading / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Qar7ap",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "on4Bo2",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Notifications"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "ZGo6iH",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "gAm8hF",
+              "name": "Loading",
+              "layout": "vertical",
+              "gap": 24,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "eAA54Z",
+                  "name": "Skeleton Rows",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "rzDjpp",
+                      "ref": "ds:WNtv9r",
+                      "name": "Skeleton/Notification Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "hTs8Wi",
+                      "ref": "ds:WNtv9r",
+                      "name": "Skeleton/Notification Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Nqxkew",
+                      "ref": "ds:WNtv9r",
+                      "name": "Skeleton/Notification Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "JiiTQf",
+                      "ref": "ds:WNtv9r",
+                      "name": "Skeleton/Notification Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ZPF4gs",
+                      "ref": "ds:WNtv9r",
+                      "name": "Skeleton/Notification Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sCR8pn",
+                      "ref": "ds:WNtv9r",
+                      "name": "Skeleton/Notification Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "b9vQsz",
+                      "ref": "ds:WNtv9r",
+                      "name": "Skeleton/Notification Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "LeQPST",
+                      "ref": "ds:WNtv9r",
+                      "name": "Skeleton/Notification Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "V3EVs8",
+                      "ref": "ds:WNtv9r",
+                      "name": "Skeleton/Notification Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "CPsSv7",
+                      "ref": "ds:WNtv9r",
+                      "name": "Skeleton/Notification Row",
+                      "width": "fill_container"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "L7nVDy",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "vNwUAk",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "qmPQHZ",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "ziEB8h",
+      "name": "Notifications / Error / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "UoeLtA",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "7UVoZe",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "uwuJzC",
+                  "ref": "ds:MgMQ2L",
+                  "name": "Text/H1",
+                  "content": "Notifications"
+                },
+                {
+                  "type": "frame",
+                  "id": "wCtbpv",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "SC3ceM",
+                      "ref": "ds:LQ8GwL",
+                      "name": "State / Notifications are unavailable right now.",
+                      "descendants": {
+                        "ds:zG3uZd": {
+                          "icon": "triangle-alert"
+                        },
+                        "ds:ATKZVK": {
+                          "content": "Notifications are unavailable right now."
+                        },
+                        "ds:h7OAoY": {
+                          "content": "Try again in a moment."
+                        },
+                        "ds:ydkfG5/ds:NVe7y": {
+                          "content": "Try again"
+                        },
+                        "ds:voqjVU/ds:i6a4e": {
+                          "content": "Back to home"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 9170,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "4ehBzN",
+      "name": "Notifications / Error / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "XZjv2p",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "vuv2vp",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Notifications"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "rMtJkF",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "2ZruLa",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "W8ZaEj",
+                  "ref": "ds:LQ8GwL",
+                  "name": "State / Notifications are unavailable right now.",
+                  "descendants": {
+                    "ds:zG3uZd": {
+                      "icon": "triangle-alert"
+                    },
+                    "ds:ATKZVK": {
+                      "content": "Notifications are unavailable right now."
+                    },
+                    "ds:h7OAoY": {
+                      "content": "Try again in a moment."
+                    },
+                    "ds:ydkfG5/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:voqjVU/ds:i6a4e": {
+                      "content": "Back to home"
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "DhDzyA",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "JcZfUD",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "iXPGuW",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 10710,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "nbWdMm",
+      "name": "Notifications / Loading more / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "q3cSdN",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "zhxTCX",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "7dH6pK",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": 760,
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "yMUXFj",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "yCBpF2",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Notifications"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "eV4hi2",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "NcAdd6",
+                      "ref": "ds:DTwJb",
+                      "name": "Button / Mark all read",
+                      "descendants": {
+                        "ds:GyGLK": {
+                          "content": "Mark all read"
+                        },
+                        "ds:uRXDu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "kDjFyN",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "547yZD",
+                      "ref": "ds:AdNrrb",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:cUY4Fi": {
+                          "content": "All"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "iFSytP",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Followers"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "T7HedC",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Releases"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Bmg584",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Playlists"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "bWGkfK",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Events"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Kfysv4",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "b3xAHH",
+                      "ref": "ds:w7kIfD",
+                      "name": "Notification Row/Unread",
+                      "descendants": {
+                        "ds:eVpsWQ": {
+                          "icon": "user-plus"
+                        },
+                        "ds:ZhjNeD": {
+                          "content": "Jonah started following you"
+                        },
+                        "ds:cmpFmf": {
+                          "content": "5 min ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "FwRyzL",
+                      "ref": "ds:w7kIfD",
+                      "name": "Notification Row/Unread",
+                      "descendants": {
+                        "ds:eVpsWQ": {
+                          "icon": "disc-3"
+                        },
+                        "ds:ZhjNeD": {
+                          "content": "Luma Vale released a new single: Low Orbit"
+                        },
+                        "ds:cmpFmf": {
+                          "content": "2 h ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "e6RfmW",
+                      "ref": "ds:1ATiw1",
+                      "name": "Notification Row/Read",
+                      "descendants": {
+                        "ds:V2yFd8": {
+                          "icon": "list-music"
+                        },
+                        "ds:SA2HUG": {
+                          "content": "Ana added 3 tracks to Rain Drive"
+                        },
+                        "ds:VAD3PB": {
+                          "content": "Yesterday"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ZFDTmC",
+                      "ref": "ds:1ATiw1",
+                      "name": "Notification Row/Read",
+                      "descendants": {
+                        "ds:V2yFd8": {
+                          "icon": "calendar"
+                        },
+                        "ds:SA2HUG": {
+                          "content": "Mira Sol announced a live session on 18 Oct"
+                        },
+                        "ds:VAD3PB": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "5CNbVV",
+                  "name": "Loading More",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "sHWtDV",
+                      "ref": "ds:WNtv9r",
+                      "name": "Skeleton/Notification Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "C2gkX4",
+                      "ref": "ds:WNtv9r",
+                      "name": "Skeleton/Notification Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "yH69ED",
+                      "ref": "ds:Nk6cmg",
+                      "name": "List/Load More",
+                      "descendants": {
+                        "ds:Z1ZCZ2": {
+                          "content": "20 of 64"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 11200,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "rcXejF",
+      "name": "Notifications / Loading more / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "UaRpWc",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "MLiqpU",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Notifications"
+            },
+            "ds:zbRXzZ": {
+              "icon": "check-check"
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "c8RdwC",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "f9h2NA",
+              "name": "Chips",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "xSoRoe",
+                  "ref": "ds:AdNrrb",
+                  "name": "Chip/Active",
+                  "descendants": {
+                    "ds:cUY4Fi": {
+                      "content": "All"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "gx8DZh",
+                  "ref": "ds:LUcTan",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:lXs2ja": {
+                      "content": "Followers"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "ka4zWo",
+                  "ref": "ds:LUcTan",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:lXs2ja": {
+                      "content": "Releases"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "Zzbji4",
+              "ref": "ds:w7kIfD",
+              "name": "Notification Row/Unread",
+              "descendants": {
+                "ds:eVpsWQ": {
+                  "icon": "user-plus"
+                },
+                "ds:ZhjNeD": {
+                  "content": "Jonah started following you"
+                },
+                "ds:cmpFmf": {
+                  "content": "5 min ago"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "aScQU4",
+              "ref": "ds:w7kIfD",
+              "name": "Notification Row/Unread",
+              "descendants": {
+                "ds:eVpsWQ": {
+                  "icon": "disc-3"
+                },
+                "ds:ZhjNeD": {
+                  "content": "Luma Vale released a new single: Low Orbit"
+                },
+                "ds:cmpFmf": {
+                  "content": "2 h ago"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "g8gqtM",
+              "ref": "ds:1ATiw1",
+              "name": "Notification Row/Read",
+              "descendants": {
+                "ds:V2yFd8": {
+                  "icon": "list-music"
+                },
+                "ds:SA2HUG": {
+                  "content": "Ana added 3 tracks to Rain Drive"
+                },
+                "ds:VAD3PB": {
+                  "content": "Yesterday"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "XwWRZD",
+              "ref": "ds:1ATiw1",
+              "name": "Notification Row/Read",
+              "descendants": {
+                "ds:V2yFd8": {
+                  "icon": "calendar"
+                },
+                "ds:SA2HUG": {
+                  "content": "Mira Sol announced a live session on 18 Oct"
+                },
+                "ds:VAD3PB": {
+                  "content": "2 days ago"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "qndHkx",
+              "name": "Loading More",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "UWFWtd",
+                  "ref": "ds:WNtv9r",
+                  "name": "Skeleton/Notification Row",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "WU25yb",
+                  "ref": "ds:WNtv9r",
+                  "name": "Skeleton/Notification Row",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "pxDYqg",
+                  "ref": "ds:WNtv9r",
+                  "name": "Skeleton/Notification Row",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "NKWLGd",
+                  "ref": "ds:Nk6cmg",
+                  "name": "List/Load More",
+                  "descendants": {
+                    "ds:Z1ZCZ2": {
+                      "content": "20 of 64"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "H55qmD",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "nS2S4h",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "XrCAFo",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 12740,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — header popover exists; full page parked until a backend exists — Followers, releases, playlists and events. Concept."
+    }
+  ]
+}

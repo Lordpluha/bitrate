@@ -1,0 +1,3639 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "bxPRhx",
+      "name": "Artist / Analytics overview / Desktop / Dark",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "bAPaxk",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6pmZuX": {
+              "type": "ref",
+              "id": "weHfk6",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Analytics",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "chart-column"
+                },
+                "ds:GZQzF3": {
+                  "content": "Analytics"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Analytics / Overview"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Export view"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "YzfjZ9",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "U6g4ei",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Analytics"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Understand Bitrate-owned performance signals"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "onnr8M",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "jpjR8J",
+                  "name": "Analytics Filters",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "PCSm5C",
+                      "ref": "ds:FJUa1",
+                      "name": "Badge / Last 28 days",
+                      "descendants": {
+                        "ds:BI0Pd": {
+                          "content": "Last 28 days"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "z74B9Q",
+                      "ref": "ds:FJUa1",
+                      "name": "Badge / Compare: previous",
+                      "descendants": {
+                        "ds:BI0Pd": {
+                          "content": "Compare: previous"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "k4gyut",
+                      "ref": "ds:FJUa1",
+                      "name": "Badge / Europe/Kyiv",
+                      "descendants": {
+                        "ds:BI0Pd": {
+                          "content": "Europe/Kyiv"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "s9PoJA",
+                      "ref": "ds:FJUa1",
+                      "name": "Badge / Source: Bitrate",
+                      "descendants": {
+                        "ds:BI0Pd": {
+                          "content": "Source: Bitrate"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "wZbc8X",
+                  "ref": "ds:PiqhAO",
+                  "name": "Text/Caption",
+                  "content": "Updated Sep 09, 2026 · 10:42 EEST"
+                },
+                {
+                  "type": "frame",
+                  "id": "ZK24cj",
+                  "name": "Stats",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "aHRGNi",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "PLAYS"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "12,840"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "+18.4% · Qualified Bitrate plays"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "zwFi6u",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "LISTENERS"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "4,216"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "+11.2% · Unique Bitrate accounts"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "rrpcZm",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "SAVES"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "1,084"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "8.4% · Save rate from plays"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "opus4x",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "FOLLOWERS"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "+186"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "+6.1% · Net new followers"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "j9Rw9c",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "f4VLGD",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "q4Qskm",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "EcGJ5v",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "ABZBrH",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "sAf5Zw",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Plays over time"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "G8c8wo",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Qualified plays · daily · Europe/Kyiv · +18.4% vs previous 28 days"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "a9oThM",
+                                  "name": "Chart",
+                                  "gap": 14,
+                                  "alignItems": "end",
+                                  "width": "fill_container",
+                                  "height": 200,
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "kPnST5",
+                                      "ref": "ds:euRP9L",
+                                      "name": "Bar Chart/Bar",
+                                      "descendants": {
+                                        "ds:o7Xolk": {
+                                          "height": 103
+                                        },
+                                        "ds:lsP2i4": {
+                                          "content": "Sep 03"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "qA8qxR",
+                                      "ref": "ds:euRP9L",
+                                      "name": "Bar Chart/Bar",
+                                      "descendants": {
+                                        "ds:o7Xolk": {
+                                          "height": 126
+                                        },
+                                        "ds:lsP2i4": {
+                                          "content": "04"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "Xoygjm",
+                                      "ref": "ds:euRP9L",
+                                      "name": "Bar Chart/Bar",
+                                      "descendants": {
+                                        "ds:o7Xolk": {
+                                          "height": 111
+                                        },
+                                        "ds:lsP2i4": {
+                                          "content": "05"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "ArBDZu",
+                                      "ref": "ds:euRP9L",
+                                      "name": "Bar Chart/Bar",
+                                      "descendants": {
+                                        "ds:o7Xolk": {
+                                          "height": 140
+                                        },
+                                        "ds:lsP2i4": {
+                                          "content": "06"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "dY8hmX",
+                                      "ref": "ds:euRP9L",
+                                      "name": "Bar Chart/Bar",
+                                      "descendants": {
+                                        "ds:o7Xolk": {
+                                          "height": 163
+                                        },
+                                        "ds:lsP2i4": {
+                                          "content": "07"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "d49xNB",
+                                      "ref": "ds:euRP9L",
+                                      "name": "Bar Chart/Bar",
+                                      "descendants": {
+                                        "ds:o7Xolk": {
+                                          "height": 133
+                                        },
+                                        "ds:lsP2i4": {
+                                          "content": "08"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "etm9dt",
+                                      "ref": "ds:0BZlqf",
+                                      "name": "Bar Chart/Bar Highlight",
+                                      "descendants": {
+                                        "ds:I0qWNo": {
+                                          "height": 170
+                                        },
+                                        "ds:FydfRV": {
+                                          "content": "09"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ZcwiLe",
+                                  "ref": "ds:LSzB6i",
+                                  "name": "Text/Link",
+                                  "content": "Table view"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "eEPSsp",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "XTsE7e",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "VnkhoV",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "8emNTx",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "xdpr5y",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Audience snapshot"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "HB4vpj",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Bitrate listeners · demo data"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "2ju5D6",
+                                  "ref": "ds:yjiPHo",
+                                  "name": "Text/Eyebrow",
+                                  "content": "TOP CITIES"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "2r6Rfp",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Kyiv"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "cZEhjG",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "RUNP9q",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "26%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "uguogf",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Warsaw"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "3Ti26R",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "fakuCQ",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "16%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "mRR8q4",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Berlin"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "2uKrmS",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "Mw8KQW",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "11%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/analytics — How confirmed Bitrate signals change; every metric has a source and freshness."
+    },
+    {
+      "type": "frame",
+      "id": "bmLk9o",
+      "name": "Artist / Analytics overview / Desktop / Light",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "2wBpsa",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6pmZuX": {
+              "type": "ref",
+              "id": "iKWBm2",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Analytics",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "chart-column"
+                },
+                "ds:GZQzF3": {
+                  "content": "Analytics"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Analytics / Overview"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Export view"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "tGBeQn",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "yK3xmv",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Analytics"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Understand Bitrate-owned performance signals"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "UGqCAo",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "fBm3UA",
+                  "name": "Analytics Filters",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "dVmBFs",
+                      "ref": "ds:FJUa1",
+                      "name": "Badge / Last 28 days",
+                      "descendants": {
+                        "ds:BI0Pd": {
+                          "content": "Last 28 days"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "WPEfRe",
+                      "ref": "ds:FJUa1",
+                      "name": "Badge / Compare: previous",
+                      "descendants": {
+                        "ds:BI0Pd": {
+                          "content": "Compare: previous"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "a2ekSK",
+                      "ref": "ds:FJUa1",
+                      "name": "Badge / Europe/Kyiv",
+                      "descendants": {
+                        "ds:BI0Pd": {
+                          "content": "Europe/Kyiv"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "cyocSV",
+                      "ref": "ds:FJUa1",
+                      "name": "Badge / Source: Bitrate",
+                      "descendants": {
+                        "ds:BI0Pd": {
+                          "content": "Source: Bitrate"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "LYJf5x",
+                  "ref": "ds:PiqhAO",
+                  "name": "Text/Caption",
+                  "content": "Updated Sep 09, 2026 · 10:42 EEST"
+                },
+                {
+                  "type": "frame",
+                  "id": "KykVND",
+                  "name": "Stats",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "GETtaa",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "PLAYS"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "12,840"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "+18.4% · Qualified Bitrate plays"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "nv6PaD",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "LISTENERS"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "4,216"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "+11.2% · Unique Bitrate accounts"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "QjwJC5",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "SAVES"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "1,084"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "8.4% · Save rate from plays"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Hoky7y",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "FOLLOWERS"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "+186"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "+6.1% · Net new followers"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "qp5Rxd",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "FCqHbN",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "EHrfjy",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "oB95u3",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "uVmDiK",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "GTD5Ne",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Plays over time"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "zHiWRc",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Qualified plays · daily · Europe/Kyiv · +18.4% vs previous 28 days"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "2Sv2XH",
+                                  "name": "Chart",
+                                  "gap": 14,
+                                  "alignItems": "end",
+                                  "width": "fill_container",
+                                  "height": 200,
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "WwDTV6",
+                                      "ref": "ds:euRP9L",
+                                      "name": "Bar Chart/Bar",
+                                      "descendants": {
+                                        "ds:o7Xolk": {
+                                          "height": 103
+                                        },
+                                        "ds:lsP2i4": {
+                                          "content": "Sep 03"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "3TyYv2",
+                                      "ref": "ds:euRP9L",
+                                      "name": "Bar Chart/Bar",
+                                      "descendants": {
+                                        "ds:o7Xolk": {
+                                          "height": 126
+                                        },
+                                        "ds:lsP2i4": {
+                                          "content": "04"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "n3PomE",
+                                      "ref": "ds:euRP9L",
+                                      "name": "Bar Chart/Bar",
+                                      "descendants": {
+                                        "ds:o7Xolk": {
+                                          "height": 111
+                                        },
+                                        "ds:lsP2i4": {
+                                          "content": "05"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "8VFp7E",
+                                      "ref": "ds:euRP9L",
+                                      "name": "Bar Chart/Bar",
+                                      "descendants": {
+                                        "ds:o7Xolk": {
+                                          "height": 140
+                                        },
+                                        "ds:lsP2i4": {
+                                          "content": "06"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "C8kgHQ",
+                                      "ref": "ds:euRP9L",
+                                      "name": "Bar Chart/Bar",
+                                      "descendants": {
+                                        "ds:o7Xolk": {
+                                          "height": 163
+                                        },
+                                        "ds:lsP2i4": {
+                                          "content": "07"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "bviJpX",
+                                      "ref": "ds:euRP9L",
+                                      "name": "Bar Chart/Bar",
+                                      "descendants": {
+                                        "ds:o7Xolk": {
+                                          "height": 133
+                                        },
+                                        "ds:lsP2i4": {
+                                          "content": "08"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "R9Ziuv",
+                                      "ref": "ds:0BZlqf",
+                                      "name": "Bar Chart/Bar Highlight",
+                                      "descendants": {
+                                        "ds:I0qWNo": {
+                                          "height": 170
+                                        },
+                                        "ds:FydfRV": {
+                                          "content": "09"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "67CKR5",
+                                  "ref": "ds:LSzB6i",
+                                  "name": "Text/Link",
+                                  "content": "Table view"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "7DnkwP",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "qTAaQJ",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "ifsDru",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "hvXjLm",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "nVhtwy",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Audience snapshot"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "aC7UPC",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Bitrate listeners · demo data"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "sUqpr3",
+                                  "ref": "ds:yjiPHo",
+                                  "name": "Text/Eyebrow",
+                                  "content": "TOP CITIES"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "jZ8iRb",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Kyiv"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "yKB7U5",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "Q85RWd",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "26%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "LVtPNJ",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Warsaw"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "jZyDM5",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "Xiw8Zr",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "16%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "NGoJ3B",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Berlin"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "QZqQiA",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "xC225M",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "11%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "designed — /dashboard/analytics — How confirmed Bitrate signals change; every metric has a source and freshness."
+    },
+    {
+      "type": "frame",
+      "id": "VayRJg",
+      "name": "Artist / Analytics overview / Desktop / Dim",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "7zc52f",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6pmZuX": {
+              "type": "ref",
+              "id": "QcCpzA",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Analytics",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "chart-column"
+                },
+                "ds:GZQzF3": {
+                  "content": "Analytics"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Analytics / Overview"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Export view"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "QVHPtn",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "xgAsmG",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Analytics"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Understand Bitrate-owned performance signals"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "qmoBUm",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "heNymm",
+                  "name": "Analytics Filters",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "RyUg6X",
+                      "ref": "ds:FJUa1",
+                      "name": "Badge / Last 28 days",
+                      "descendants": {
+                        "ds:BI0Pd": {
+                          "content": "Last 28 days"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qSzexu",
+                      "ref": "ds:FJUa1",
+                      "name": "Badge / Compare: previous",
+                      "descendants": {
+                        "ds:BI0Pd": {
+                          "content": "Compare: previous"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "e89acd",
+                      "ref": "ds:FJUa1",
+                      "name": "Badge / Europe/Kyiv",
+                      "descendants": {
+                        "ds:BI0Pd": {
+                          "content": "Europe/Kyiv"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "MnZb4d",
+                      "ref": "ds:FJUa1",
+                      "name": "Badge / Source: Bitrate",
+                      "descendants": {
+                        "ds:BI0Pd": {
+                          "content": "Source: Bitrate"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "feLs5g",
+                  "ref": "ds:PiqhAO",
+                  "name": "Text/Caption",
+                  "content": "Updated Sep 09, 2026 · 10:42 EEST"
+                },
+                {
+                  "type": "frame",
+                  "id": "m6o7nU",
+                  "name": "Stats",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "8KqNx2",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "PLAYS"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "12,840"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "+18.4% · Qualified Bitrate plays"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "rcfnUw",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "LISTENERS"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "4,216"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "+11.2% · Unique Bitrate accounts"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "FY7MAe",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "SAVES"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "1,084"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "8.4% · Save rate from plays"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "b89vuV",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "FOLLOWERS"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "+186"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "+6.1% · Net new followers"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "a5WZoy",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "aaoNeX",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "8R7BMw",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "VPHRCB",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "rriAcq",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "vKiQ9y",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Plays over time"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "YNRVEb",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Qualified plays · daily · Europe/Kyiv · +18.4% vs previous 28 days"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "rtVV8c",
+                                  "name": "Chart",
+                                  "gap": 14,
+                                  "alignItems": "end",
+                                  "width": "fill_container",
+                                  "height": 200,
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "oV3f8J",
+                                      "ref": "ds:euRP9L",
+                                      "name": "Bar Chart/Bar",
+                                      "descendants": {
+                                        "ds:o7Xolk": {
+                                          "height": 103
+                                        },
+                                        "ds:lsP2i4": {
+                                          "content": "Sep 03"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "inUkis",
+                                      "ref": "ds:euRP9L",
+                                      "name": "Bar Chart/Bar",
+                                      "descendants": {
+                                        "ds:o7Xolk": {
+                                          "height": 126
+                                        },
+                                        "ds:lsP2i4": {
+                                          "content": "04"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "mo8bXM",
+                                      "ref": "ds:euRP9L",
+                                      "name": "Bar Chart/Bar",
+                                      "descendants": {
+                                        "ds:o7Xolk": {
+                                          "height": 111
+                                        },
+                                        "ds:lsP2i4": {
+                                          "content": "05"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "tsydZC",
+                                      "ref": "ds:euRP9L",
+                                      "name": "Bar Chart/Bar",
+                                      "descendants": {
+                                        "ds:o7Xolk": {
+                                          "height": 140
+                                        },
+                                        "ds:lsP2i4": {
+                                          "content": "06"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "KtaKsv",
+                                      "ref": "ds:euRP9L",
+                                      "name": "Bar Chart/Bar",
+                                      "descendants": {
+                                        "ds:o7Xolk": {
+                                          "height": 163
+                                        },
+                                        "ds:lsP2i4": {
+                                          "content": "07"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "J26kY7",
+                                      "ref": "ds:euRP9L",
+                                      "name": "Bar Chart/Bar",
+                                      "descendants": {
+                                        "ds:o7Xolk": {
+                                          "height": 133
+                                        },
+                                        "ds:lsP2i4": {
+                                          "content": "08"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "oLyts4",
+                                      "ref": "ds:0BZlqf",
+                                      "name": "Bar Chart/Bar Highlight",
+                                      "descendants": {
+                                        "ds:I0qWNo": {
+                                          "height": 170
+                                        },
+                                        "ds:FydfRV": {
+                                          "content": "09"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Scjeep",
+                                  "ref": "ds:LSzB6i",
+                                  "name": "Text/Link",
+                                  "content": "Table view"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "WhK6Zm",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "RjCGke",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "2UC5QR",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "FoLu4W",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "tiHYyN",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Audience snapshot"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "nq2dUC",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Bitrate listeners · demo data"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "4QqUS5",
+                                  "ref": "ds:yjiPHo",
+                                  "name": "Text/Eyebrow",
+                                  "content": "TOP CITIES"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "W6MAQb",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Kyiv"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "34SXsj",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "QnimYF",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "26%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "EfB23t",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Warsaw"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "Tf4Zn6",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "cZGhvj",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "16%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "MMNf9D",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Berlin"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "PrMu3H",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "CFWfQi",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "11%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "designed — /dashboard/analytics — How confirmed Bitrate signals change; every metric has a source and freshness."
+    },
+    {
+      "type": "frame",
+      "id": "4Rz4Wo",
+      "name": "Artist / Analytics overview / Mobile / Dark",
+      "width": 390,
+      "height": 1700,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "8y7eVh",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1700,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "jRx2q9",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "7gG7sm",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Analytics"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Understand Bitrate-owned performance signals"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "N2ZRPc",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "qBsuqj",
+                  "name": "Analytics Filters",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "3rabi9",
+                      "ref": "ds:FJUa1",
+                      "name": "Badge / Last 28 days",
+                      "descendants": {
+                        "ds:BI0Pd": {
+                          "content": "Last 28 days"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "EWE7mR",
+                      "ref": "ds:FJUa1",
+                      "name": "Badge / Source: Bitrate",
+                      "descendants": {
+                        "ds:BI0Pd": {
+                          "content": "Source: Bitrate"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "k3Jxvg",
+                  "ref": "ds:PiqhAO",
+                  "name": "Text/Caption",
+                  "content": "Updated Sep 09, 2026 · 10:42 EEST"
+                },
+                {
+                  "type": "frame",
+                  "id": "EefxLA",
+                  "name": "Stats",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "mMPuid",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "PLAYS"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "12,840"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "+18.4% · Qualified Bitrate plays"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "PG3aGo",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "LISTENERS"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "4,216"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "+11.2% · Unique Bitrate accounts"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "hpg7eA",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "SAVES"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "1,084"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "8.4% · Save rate from plays"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "rYsiLf",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "FOLLOWERS"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "+186"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "+6.1% · Net new followers"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "X2g2m4",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "XLxtaJ",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "4JHLuE",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "pdeipZ",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Plays over time"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "RqCpKo",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "Qualified plays · daily · Europe/Kyiv · +18.4% vs previous 28 days"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Mui6KV",
+                          "name": "Chart",
+                          "gap": 14,
+                          "alignItems": "end",
+                          "width": "fill_container",
+                          "height": 200,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "8iWkzP",
+                              "ref": "ds:euRP9L",
+                              "name": "Bar Chart/Bar",
+                              "descendants": {
+                                "ds:o7Xolk": {
+                                  "height": 103
+                                },
+                                "ds:lsP2i4": {
+                                  "content": "Sep 03"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "TJVnJA",
+                              "ref": "ds:euRP9L",
+                              "name": "Bar Chart/Bar",
+                              "descendants": {
+                                "ds:o7Xolk": {
+                                  "height": 126
+                                },
+                                "ds:lsP2i4": {
+                                  "content": "04"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "H9NkHq",
+                              "ref": "ds:euRP9L",
+                              "name": "Bar Chart/Bar",
+                              "descendants": {
+                                "ds:o7Xolk": {
+                                  "height": 111
+                                },
+                                "ds:lsP2i4": {
+                                  "content": "05"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "JZrrDD",
+                              "ref": "ds:euRP9L",
+                              "name": "Bar Chart/Bar",
+                              "descendants": {
+                                "ds:o7Xolk": {
+                                  "height": 140
+                                },
+                                "ds:lsP2i4": {
+                                  "content": "06"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "LpqFJm",
+                              "ref": "ds:euRP9L",
+                              "name": "Bar Chart/Bar",
+                              "descendants": {
+                                "ds:o7Xolk": {
+                                  "height": 163
+                                },
+                                "ds:lsP2i4": {
+                                  "content": "07"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "cG32HP",
+                              "ref": "ds:euRP9L",
+                              "name": "Bar Chart/Bar",
+                              "descendants": {
+                                "ds:o7Xolk": {
+                                  "height": 133
+                                },
+                                "ds:lsP2i4": {
+                                  "content": "08"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "S6K2nj",
+                              "ref": "ds:0BZlqf",
+                              "name": "Bar Chart/Bar Highlight",
+                              "descendants": {
+                                "ds:I0qWNo": {
+                                  "height": 170
+                                },
+                                "ds:FydfRV": {
+                                  "content": "09"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "iyF7CC",
+                          "ref": "ds:LSzB6i",
+                          "name": "Text/Link",
+                          "content": "Table view"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "gX2QPf",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "92ZAEm",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "9WF6G8",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "qkBhfB",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Audience snapshot"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "sMGkra",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "Bitrate listeners · demo data"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "JiGFER",
+                          "ref": "ds:yjiPHo",
+                          "name": "Text/Eyebrow",
+                          "content": "TOP CITIES"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "mPbyde",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Kyiv"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "kaqidy",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "4pBusa",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "26%"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "XE9DLg",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Warsaw"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "rmQmBV",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "UtM5qw",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "16%"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "XnJni8",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Berlin"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "JZa3bS",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "BSvk39",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "11%"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/analytics — How confirmed Bitrate signals change; every metric has a source and freshness."
+    },
+    {
+      "type": "frame",
+      "id": "YCzjPf",
+      "name": "Artist / Analytics overview / Observed zero / Desktop",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "gNfu6g",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6pmZuX": {
+              "type": "ref",
+              "id": "Fg9JXG",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Analytics",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "chart-column"
+                },
+                "ds:GZQzF3": {
+                  "content": "Analytics"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Analytics / Data quality"
+            },
+            "ds:YLdi4o": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "8ueYsS",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "smGrBP",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Analytics"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Know what each number means — and when it is not available"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "LeyNh5",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "TknsML",
+                  "ref": "ds:JwxAx4",
+                  "name": "Stat Tile",
+                  "descendants": {
+                    "ds:PzSH2C": {
+                      "content": "SAVES"
+                    },
+                    "ds:Ysnx6S": {
+                      "content": "0"
+                    },
+                    "ds:1Km9Qf": {
+                      "content": "A real result · No saves in the selected period; source updated 2h ago."
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/analytics — How confirmed Bitrate signals change; every metric has a source and freshness."
+    },
+    {
+      "type": "frame",
+      "id": "YofGdr",
+      "name": "Artist / Analytics overview / Observed zero / Mobile",
+      "width": 390,
+      "height": 1200,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "qsNJy5",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1200,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "F435JM",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Y5tPbQ",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Analytics"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Know what each number means — and when it is not available"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "SbuHuQ",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "M5cLxn",
+                  "ref": "ds:JwxAx4",
+                  "name": "Stat Tile",
+                  "descendants": {
+                    "ds:PzSH2C": {
+                      "content": "SAVES"
+                    },
+                    "ds:Ysnx6S": {
+                      "content": "0"
+                    },
+                    "ds:1Km9Qf": {
+                      "content": "A real result · No saves in the selected period; source updated 2h ago."
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/analytics — How confirmed Bitrate signals change; every metric has a source and freshness."
+    },
+    {
+      "type": "frame",
+      "id": "eje2Pb",
+      "name": "Artist / Analytics overview / No data yet / Desktop",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Up4X9x",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6pmZuX": {
+              "type": "ref",
+              "id": "YMcB9n",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Analytics",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "chart-column"
+                },
+                "ds:GZQzF3": {
+                  "content": "Analytics"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Analytics / Data quality"
+            },
+            "ds:YLdi4o": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "iMbGHQ",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "M8R4sZ",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "xCzKuP",
+                      "ref": "ds:UacIqy",
+                      "name": "State / Nothing collected yet",
+                      "descendants": {
+                        "ds:QTS6fY": {
+                          "icon": "chart-column"
+                        },
+                        "ds:LaYbWr": {
+                          "content": "Nothing collected yet"
+                        },
+                        "ds:IowS15": {
+                          "content": "Tracking has not received a qualifying event for this scope."
+                        },
+                        "ds:PKR600": {
+                          "enabled": false
+                        },
+                        "ds:Sk1EVh": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/analytics — How confirmed Bitrate signals change; every metric has a source and freshness."
+    },
+    {
+      "type": "frame",
+      "id": "3LK5p6",
+      "name": "Artist / Analytics overview / No data yet / Mobile",
+      "width": 390,
+      "height": 1200,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "duS2Ej",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1200,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "TVk2EM",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "o29hEu",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "6Bs8zW",
+                      "ref": "ds:UacIqy",
+                      "name": "State / Nothing collected yet",
+                      "descendants": {
+                        "ds:QTS6fY": {
+                          "icon": "chart-column"
+                        },
+                        "ds:LaYbWr": {
+                          "content": "Nothing collected yet"
+                        },
+                        "ds:IowS15": {
+                          "content": "Tracking has not received a qualifying event for this scope."
+                        },
+                        "ds:PKR600": {
+                          "enabled": false
+                        },
+                        "ds:Sk1EVh": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/analytics — How confirmed Bitrate signals change; every metric has a source and freshness."
+    },
+    {
+      "type": "frame",
+      "id": "LKXBPA",
+      "name": "Artist / Analytics overview / Update delayed / Desktop",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "rgnRcS",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6pmZuX": {
+              "type": "ref",
+              "id": "QhwLAs",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Analytics",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "chart-column"
+                },
+                "ds:GZQzF3": {
+                  "content": "Analytics"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Analytics / Data quality"
+            },
+            "ds:YLdi4o": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "As64Hk",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "WUmK6y",
+                  "ref": "ds:ogW5t",
+                  "name": "Alert / Update delayed",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:L7SHNm": {
+                      "content": "Update delayed"
+                    },
+                    "ds:F9kE6W": {
+                      "content": "Showing the last known value. Last update Sep 08 · 23:10. Next check in 18 min."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "EQxHaa",
+                  "ref": "ds:JwxAx4",
+                  "name": "Stat Tile",
+                  "descendants": {
+                    "ds:PzSH2C": {
+                      "content": "PLAYS"
+                    },
+                    "ds:Ysnx6S": {
+                      "content": "12,840"
+                    },
+                    "ds:1Km9Qf": {
+                      "content": "Last known value"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 9170,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/analytics — How confirmed Bitrate signals change; every metric has a source and freshness."
+    },
+    {
+      "type": "frame",
+      "id": "Js2oJG",
+      "name": "Artist / Analytics overview / Update delayed / Mobile",
+      "width": 390,
+      "height": 1200,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "AYEvMR",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1200,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "HG6NHk",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "JyaBYd",
+                  "ref": "ds:ogW5t",
+                  "name": "Alert / Update delayed",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:L7SHNm": {
+                      "content": "Update delayed"
+                    },
+                    "ds:F9kE6W": {
+                      "content": "Showing the last known value. Last update Sep 08 · 23:10. Next check in 18 min."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "2hMrRp",
+                  "ref": "ds:JwxAx4",
+                  "name": "Stat Tile",
+                  "descendants": {
+                    "ds:PzSH2C": {
+                      "content": "PLAYS"
+                    },
+                    "ds:Ysnx6S": {
+                      "content": "12,840"
+                    },
+                    "ds:1Km9Qf": {
+                      "content": "Last known value"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 10710,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/analytics — How confirmed Bitrate signals change; every metric has a source and freshness."
+    },
+    {
+      "type": "frame",
+      "id": "6sTpio",
+      "name": "Artist / Analytics overview / Load error / Desktop",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "2ay5HV",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6pmZuX": {
+              "type": "ref",
+              "id": "WuUbjX",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Analytics",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "chart-column"
+                },
+                "ds:GZQzF3": {
+                  "content": "Analytics"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Analytics / Data quality"
+            },
+            "ds:YLdi4o": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "KSqH9o",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "n7ERMW",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "xVFHu4",
+                      "ref": "ds:LQ8GwL",
+                      "name": "State / This view could not be loaded",
+                      "descendants": {
+                        "ds:zG3uZd": {
+                          "icon": "triangle-alert"
+                        },
+                        "ds:ATKZVK": {
+                          "content": "This view could not be loaded"
+                        },
+                        "ds:h7OAoY": {
+                          "content": "Try again; period, source and comparison remain selected."
+                        },
+                        "ds:ydkfG5/ds:NVe7y": {
+                          "content": "Try again"
+                        },
+                        "ds:voqjVU": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 11200,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/analytics — How confirmed Bitrate signals change; every metric has a source and freshness."
+    },
+    {
+      "type": "frame",
+      "id": "pq56X9",
+      "name": "Artist / Analytics overview / Load error / Mobile",
+      "width": 390,
+      "height": 1200,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "ZH3ce4",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1200,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "k6EJwD",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "SLDEfy",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "2skLQC",
+                      "ref": "ds:LQ8GwL",
+                      "name": "State / This view could not be loaded",
+                      "descendants": {
+                        "ds:zG3uZd": {
+                          "icon": "triangle-alert"
+                        },
+                        "ds:ATKZVK": {
+                          "content": "This view could not be loaded"
+                        },
+                        "ds:h7OAoY": {
+                          "content": "Try again; period, source and comparison remain selected."
+                        },
+                        "ds:ydkfG5/ds:NVe7y": {
+                          "content": "Try again"
+                        },
+                        "ds:voqjVU": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 12740,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/analytics — How confirmed Bitrate signals change; every metric has a source and freshness."
+    },
+    {
+      "type": "frame",
+      "id": "9PDa3X",
+      "name": "Artist / Analytics overview / Definitions / Desktop",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "LH65zT",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6pmZuX": {
+              "type": "ref",
+              "id": "Gogz4z",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Analytics",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "chart-column"
+                },
+                "ds:GZQzF3": {
+                  "content": "Analytics"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Analytics / Data quality"
+            },
+            "ds:YLdi4o": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "VoeauM",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "qFLUo3",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "jYngrs",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "dBznZe",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "TYJ36K",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Definitions & evidence"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "9CvkpK",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "Selected period: Aug 13–Sep 09 · Europe/Kyiv"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ozmiju",
+                          "ref": "ds:LYSQXR",
+                          "name": "Table/Header Row",
+                          "descendants": {
+                            "ds:pFdzls": {
+                              "type": "frame",
+                              "id": "mSvpZY",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "BpHfun",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Metric"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "JnYfst",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "textGrowth": "fixed-width",
+                                  "width": 240,
+                                  "content": "Definition"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "zSNJMU",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "textGrowth": "fixed-width",
+                                  "width": 160,
+                                  "content": "Source"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "w9T6R2",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "textGrowth": "fixed-width",
+                                  "width": 140,
+                                  "content": "Updated"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ktwfmA",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "fvaufK",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "kZsjC9",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Plays"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ciorQT",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 240,
+                                  "content": "Qualified track starts"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "HapfH9",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 160,
+                                  "content": "Bitrate events"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "RKp5uw",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 140,
+                                  "content": "Sep 09 · 10:42"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "P6bpYh",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "8AxoEC",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "b88CV8",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Listeners"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "uLyLdz",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 240,
+                                  "content": "Unique Bitrate accounts"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "MDNrPH",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 160,
+                                  "content": "Bitrate accounts"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "YU4Y2N",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 140,
+                                  "content": "Sep 09 · 10:42"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "pDErCA",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "kGjeYb",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "vHyHNw",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Saves"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "aJyvAs",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 240,
+                                  "content": "Explicit library adds"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "dzTasJ",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 160,
+                                  "content": "Bitrate library"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "MHPrLr",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 140,
+                                  "content": "Sep 09 · 10:42"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "wz4uJK",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "ShoH95",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "bvyS44",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Followers"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "YawSGG",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 240,
+                                  "content": "Net follower change"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "b8ZzFf",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 160,
+                                  "content": "Bitrate profile"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "KpVD67",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 140,
+                                  "content": "Sep 09 · 10:42"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 13230,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/analytics — How confirmed Bitrate signals change; every metric has a source and freshness."
+    },
+    {
+      "type": "frame",
+      "id": "B8LyeA",
+      "name": "Artist / Analytics overview / Definitions / Mobile",
+      "width": 390,
+      "height": 1200,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "zw2Eyd",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1200,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "s2xoYa",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "6HQKwV",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "pH8cZT",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "49ekxo",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "rZgCfs",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Definitions & evidence"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "r7f6Mw",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "Selected period: Aug 13–Sep 09 · Europe/Kyiv"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "PqVxEH",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "4XAQqs",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "NqBGp4",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Plays"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "mhFENq",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 150,
+                                  "content": "Qualified track starts"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "pyJjRW",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "jmzTAm",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "22qzrE",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Listeners"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "PUmEco",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 150,
+                                  "content": "Unique Bitrate accounts"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "rvbPb6",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "rH6Daf",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "nHwpgW",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Saves"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "rgLAMR",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 150,
+                                  "content": "Explicit library adds"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "FkdjYr",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "yjvuTz",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "54Y6C2",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Followers"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "BaxGx9",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 150,
+                                  "content": "Net follower change"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 14770,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/analytics — How confirmed Bitrate signals change; every metric has a source and freshness."
+    },
+    {
+      "type": "frame",
+      "id": "wndfrM",
+      "name": "Artist / Analytics overview / Coming soon (current app) / Desktop",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "jFztGj",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6pmZuX": {
+              "type": "ref",
+              "id": "tHhdtG",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Analytics",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "chart-column"
+                },
+                "ds:GZQzF3": {
+                  "content": "Analytics"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Analytics"
+            },
+            "ds:YLdi4o": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "kQVi5Y",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "2haCNB",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "WZvGjh",
+                      "ref": "ds:UacIqy",
+                      "name": "State / Analytics is coming soon.",
+                      "descendants": {
+                        "ds:QTS6fY": {
+                          "icon": "chart-column"
+                        },
+                        "ds:LaYbWr": {
+                          "content": "Analytics is coming soon."
+                        },
+                        "ds:IowS15": {
+                          "content": "Listening and performance data will appear when a data provider is connected."
+                        },
+                        "ds:PKR600/ds:NVe7y": {
+                          "content": "Got it"
+                        },
+                        "ds:Sk1EVh": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 15260,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/analytics — How confirmed Bitrate signals change; every metric has a source and freshness."
+    },
+    {
+      "type": "frame",
+      "id": "u48fB4",
+      "name": "Artist / Analytics overview / Coming soon (current app) / Mobile",
+      "width": 390,
+      "height": 1200,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "vA73Zj",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1200,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "kDek2a",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "3sebSh",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "HiLLgt",
+                      "ref": "ds:UacIqy",
+                      "name": "State / Analytics is coming soon.",
+                      "descendants": {
+                        "ds:QTS6fY": {
+                          "icon": "chart-column"
+                        },
+                        "ds:LaYbWr": {
+                          "content": "Analytics is coming soon."
+                        },
+                        "ds:IowS15": {
+                          "content": "Listening and performance data will appear when a data provider is connected."
+                        },
+                        "ds:PKR600/ds:NVe7y": {
+                          "content": "Got it"
+                        },
+                        "ds:Sk1EVh": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 16800,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/analytics — How confirmed Bitrate signals change; every metric has a source and freshness."
+    }
+  ]
+}

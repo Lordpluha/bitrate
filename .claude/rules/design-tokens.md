@@ -19,3 +19,5 @@ paths:
   literal colors or framework-specific runtime dependencies.
 - Angular consumes CSS, not React components. Svelte player has its own CSS property contract.
 - Token map/examples: `.claude/references/styling-guide.md` → Design tokens.
+- One palette, three themes (Dark, Light, Dim). Pencil designs mirror these tokens via
+  `pnpm design:tokens`; after adding or changing a role, run it and `pnpm check:pen-tokens`.

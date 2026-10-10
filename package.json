@@ -35,6 +35,9 @@
     "knip": "knip",
     "check:artifacts": "bash scripts/check-repository-artifacts.sh",
     "check:tokens": "node scripts/check-design-tokens.mjs",
+    "design:tokens": "node scripts/sync-pen-tokens.mjs",
+    "check:pen-tokens": "node scripts/sync-pen-tokens.mjs --check",
+    "design:pages": "node scripts/pencil-pages/blocks.mjs pencil/web-player-design/design-system/bitrate.lib.pen scripts/pencil-pages/registry.json && node scripts/pencil-pages/run.mjs pencil/web-player-design && node scripts/pencil-pages/run-artist.mjs pencil/web-artist-design",
     "clean:dist": "rimraf --glob \"apps/*/dist\" \"packages/*/dist\"",
     "clean:cache": "rimraf --glob \"apps/*/.next/dev/cache\" \"apps/*/.next/cache\" \".turbo/cache\""
   },

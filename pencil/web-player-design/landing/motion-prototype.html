@@ -1,0 +1,2342 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bitrate Signal</title>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Ten fullscreen scenes after the archived "Original Edition" landing. Each scene is a 1440x900 board scaled to
+   the viewport, with layered windows over one fixed WebGL stage. One gesture = one scene. */
+:root {
+  --bg: #0b0d12; --card: #151923; --card-2: #1b2030; --glass: rgba(17, 20, 29, .86); --fg: #ffffff; --muted: #9ca3af; --subdued: #6b7280;
+  --border: #2a303c; --primary: #7c3aed; --primary-fg: #ffffff; --accent: #a78bfa; --magenta: #ec4899; --blue: #3b82f6; --success: #10b981; --warning: #f59e0b;
+  --grain: .07; --glow: rgba(124, 58, 237, .30); --shadow: rgba(0, 0, 0, .55);
+  --font-display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-data: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  color-scheme: dark;
+}
+:root[data-bitrate="dim"] { --bg: #0e1117; --card: #171b24; --card-2: #1d2230; --glass: rgba(20, 24, 33, .88); --fg: #e5e7eb; --muted: #a1a7b3; --border: #2b3242; --accent: #8b5cf6; --glow: rgba(139, 92, 246, .24); }
+:root[data-bitrate="light"] { --bg: #ffffff; --card: #ffffff; --card-2: #f6f5fb; --glass: rgba(255, 255, 255, .9); --fg: #0b0d12; --muted: #4b5563; --subdued: #5f6a78; --border: #e5e7eb; --accent: #7c3aed; --grain: .035; --glow: rgba(124, 58, 237, .16); --shadow: rgba(76, 29, 149, .14); color-scheme: light; }
+@media (prefers-color-scheme: light) { :root:not([data-bitrate]):not([data-theme="dark"]) { --bg: #ffffff; --card: #ffffff; --card-2: #f6f5fb; --glass: rgba(255, 255, 255, .9); --fg: #0b0d12; --muted: #4b5563; --subdued: #5f6a78; --border: #e5e7eb; --accent: #7c3aed; --grain: .035; --glow: rgba(124, 58, 237, .16); --shadow: rgba(76, 29, 149, .14); color-scheme: light; } }
+:root[data-theme="light"]:not([data-bitrate]) { --bg: #ffffff; --card: #ffffff; --card-2: #f6f5fb; --glass: rgba(255, 255, 255, .9); --fg: #0b0d12; --muted: #4b5563; --subdued: #5f6a78; --border: #e5e7eb; --accent: #7c3aed; --grain: .035; --glow: rgba(124, 58, 237, .16); --shadow: rgba(76, 29, 149, .14); color-scheme: light; }
+
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 14px; line-height: 1.5; overflow: hidden; -webkit-font-smoothing: antialiased; }
+body.static { overflow: auto; }
+svg.i { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+#stage { position: fixed; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
+.grain { position: fixed; inset: -50%; z-index: 30; pointer-events: none; opacity: var(--grain); background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+@keyframes grain { 0% { transform: translate(0, 0) } 25% { transform: translate(-4%, 3%) } 50% { transform: translate(3%, -2%) } 75% { transform: translate(-2%, -4%) } 100% { transform: translate(0, 0) } }
+.cursor-glow { position: fixed; left: 0; top: 0; width: 560px; height: 560px; margin: -280px 0 0 -280px; border-radius: 50%; background: radial-gradient(circle, var(--glow), transparent 62%); pointer-events: none; z-index: 1; will-change: transform; }
+.sweep { position: fixed; top: 0; bottom: 0; left: 0; width: 40vw; z-index: 25; pointer-events: none; background: linear-gradient(90deg, transparent, rgba(167, 139, 250, .16), rgba(236, 72, 153, .14), transparent); transform: translateX(-60vw); }
+
+/* chrome */
+.top { position: fixed; inset: 0 0 auto 0; z-index: 40; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: calc(env(safe-area-inset-top, 0px) + 18px) clamp(16px, 3.4vw, 48px) 14px; pointer-events: none; }
+.top > * { pointer-events: auto; }
+.brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 600; font-size: 20px; color: var(--fg); text-decoration: none; }
+.mark { width: 30px; height: 30px; }
+.nav { display: flex; gap: 26px; font-size: 13px; color: var(--muted); }
+.nav a { color: inherit; text-decoration: none; }
+.nav a:hover { color: var(--fg); }
+.top-actions { display: flex; align-items: center; gap: 10px; }
+.themes { margin: 0; min-width: 0; display: flex; padding: 3px; border: 1px solid var(--border); border-radius: 999px; background: var(--glass); backdrop-filter: blur(8px); }
+.themes button { font: 500 12px/1 var(--font-body); color: var(--muted); background: none; border: 0; padding: 7px 11px; border-radius: 999px; cursor: pointer; }
+.themes button[aria-pressed="true"] { background: var(--primary); color: var(--primary-fg); }
+.btn { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 10px; font: 600 15px/1 var(--font-body); padding: 0 22px; height: 54px; border-radius: 12px; border: 1px solid transparent; cursor: pointer; text-decoration: none; transition: background .2s, border-color .2s; white-space: nowrap; }
+.btn-primary { background: var(--primary); color: var(--primary-fg); box-shadow: 0 12px 40px -12px var(--glow); }
+.btn-primary:hover { background: #6d28d9; }
+.btn-ghost { background: var(--glass); color: var(--fg); border-color: var(--border); }
+.btn-sm { height: 38px; padding: 0 14px; font-size: 13px; border-radius: 10px; }
+.btn-xs { height: 32px; padding: 0 12px; font-size: 12px; border-radius: 8px; }
+.btn:focus-visible, .themes button:focus-visible, .dots button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.sound-bars { display: inline-flex; gap: 2px; align-items: end; height: 12px; }
+.sound-bars i { width: 2px; height: 4px; background: currentColor; border-radius: 1px; }
+.playing .sound-bars i { animation: eq .8s ease-in-out infinite alternate; }
+.playing .sound-bars i:nth-child(2) { animation-delay: -.3s }
+.playing .sound-bars i:nth-child(3) { animation-delay: -.6s }
+@keyframes eq { from { height: 3px } to { height: 12px } }
+.dots { position: fixed; right: clamp(10px, 1.6vw, 26px); top: 50%; transform: translateY(-50%); z-index: 40; display: flex; flex-direction: column; gap: 12px; }
+.dots button { width: 9px; height: 9px; border-radius: 50%; border: 1px solid var(--muted); background: transparent; padding: 0; cursor: pointer; position: relative; transition: background .3s, border-color .3s, transform .3s; }
+.dots button[aria-current="true"] { background: var(--accent); border-color: var(--accent); transform: scale(1.4); }
+.dots button span { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); white-space: nowrap; font: 500 10px/1 var(--font-data); color: var(--muted); letter-spacing: .08em; opacity: 0; transition: opacity .2s; pointer-events: none; }
+.dots button:hover span, .dots button[aria-current="true"] span { opacity: 1; }
+.counter { position: fixed; left: clamp(16px, 3.4vw, 48px); bottom: calc(env(safe-area-inset-bottom, 0px) + 18px); z-index: 40; font: 500 11px/1 var(--font-data); color: var(--muted); letter-spacing: .1em; display: flex; align-items: center; gap: 12px; }
+.counter b { color: var(--fg); font-weight: 500; }
+.counter .rail { width: 110px; height: 2px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.counter .rail i { display: block; height: 100%; background: linear-gradient(90deg, var(--primary), var(--magenta)); transform-origin: left; transform: scaleX(.1); }
+
+/* scenes + board */
+.scene { position: fixed; inset: 0; z-index: 5; visibility: hidden; overflow: hidden; }
+.scene.is-active { visibility: visible; }
+body.static .scene { position: relative; visibility: visible; height: 100vh; min-height: 640px; }
+.board { position: absolute; left: 50%; top: 50%; width: 1440px; height: 900px; transform: translate(-50%, -50%) scale(var(--s, 1)); transform-origin: 50% 50%; }
+.abs { position: absolute; left: calc(var(--x) * 1px); top: calc(var(--y) * 1px); width: calc(var(--w) * 1px); }
+.abs[style*="--h"] { height: calc(var(--h) * 1px); }
+.persp { perspective: 1600px; }
+.pos { position: absolute; }
+
+/* type */
+.eyebrow { font: 500 11px/1 var(--font-data); letter-spacing: .18em; color: var(--accent); text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
+.eyebrow::before { content: ""; width: 24px; height: 1px; background: currentColor; }
+.label { font: 500 11px/1 var(--font-data); letter-spacing: .16em; color: var(--subdued); text-transform: uppercase; }
+.disc { font-size: 12px; color: var(--subdued); }
+.sig { font: 600 9px/1 var(--font-data); letter-spacing: .3em; color: var(--subdued); }
+.h { font-family: var(--font-display); font-weight: 700; letter-spacing: -.03em; line-height: .98; margin: 0; }
+.h72 { font-size: 58px; } .h80 { font-size: 64px; line-height: .98; } .h56 { font-size: 46px; } .h48 { font-size: 40px; line-height: 1.06; } .h54 { font-size: 44px; }
+.line { display: block; overflow: hidden; padding: 0 .04em .08em 0; margin-bottom: -.06em; }
+.line > span { display: inline-block; }
+.hl { color: var(--accent); background: linear-gradient(100deg, var(--accent), var(--magenta) 60%, var(--blue)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.hl.split { background: none; -webkit-text-fill-color: currentColor; }
+.char { display: inline-block; will-change: transform; }
+.lede { font-size: 20px; color: var(--muted); margin: 0; line-height: 1.45; }
+.lede.s { font-size: 18px; }
+.ctas { display: flex; gap: 12px; }
+
+/* surfaces */
+.win { background: var(--glass); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 40px 100px -40px var(--shadow); overflow: hidden; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; }
+.soft { background: var(--card-2); border-radius: 12px; }
+.wbar { height: 52px; display: flex; align-items: center; gap: 14px; padding: 0 18px; border-bottom: 1px solid var(--border); font: 500 10px/1 var(--font-data); letter-spacing: .16em; color: var(--subdued); }
+.wbar .dots3 { display: flex; gap: 6px; }
+.wbar .dots3 i { width: 9px; height: 9px; border-radius: 50%; background: var(--border); }
+.live { display: inline-flex; align-items: center; gap: 8px; color: var(--fg); }
+.live i { width: 7px; height: 7px; border-radius: 50%; background: var(--magenta); box-shadow: 0 0 0 0 rgba(236, 72, 153, .6); animation: ping 1.6s infinite; }
+.live.ok i { background: var(--success); }
+@keyframes ping { to { box-shadow: 0 0 0 10px rgba(236, 72, 153, 0) } }
+.grow { flex: 1; }
+.row { display: flex; align-items: center; gap: 12px; }
+.col { display: flex; flex-direction: column; gap: 12px; }
+.t-title { font: 600 14px/1.25 var(--font-body); margin: 0; }
+.t-meta { font-size: 12px; color: var(--muted); margin: 0; }
+.mono { font: 500 11px/1 var(--font-data); color: var(--subdued); letter-spacing: .06em; }
+.cv { width: 48px; height: 48px; border-radius: 8px; flex: none; }
+.cv.s { width: 40px; height: 40px; border-radius: 7px; }
+.cv1 { background: linear-gradient(135deg, #6d28d9, #ec4899); } .cv2 { background: linear-gradient(135deg, #1d4ed8, #7c3aed); } .cv3 { background: linear-gradient(135deg, #0ea5e9, #312e81); }
+.cv4 { background: linear-gradient(135deg, #be185d, #4c1d95); } .cv5 { background: linear-gradient(135deg, #f59e0b, #be185d); }
+.art { border-radius: 14px; background: radial-gradient(circle at 50% 118%, #ec4899, transparent 55%), radial-gradient(circle at 30% 0%, #7c3aed, transparent 62%), radial-gradient(circle at 80% 30%, #3b82f6, transparent 45%), #0d0820; position: relative; overflow: hidden; }
+.art::after { content: ""; position: absolute; left: 50%; top: 54%; width: 46%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff8, transparent 30%), radial-gradient(circle, #a78bfa, #7c3aed 55%, #2e1065 75%, transparent 76%); box-shadow: 0 0 80px #a78bfa88; }
+.prog { height: 4px; border-radius: 2px; background: var(--border); overflow: hidden; }
+.prog i { display: block; height: 100%; background: linear-gradient(90deg, var(--primary), var(--magenta)); transform-origin: left; transform: scaleX(.42); }
+.times { display: flex; justify-content: space-between; font: 500 11px/1 var(--font-data); color: var(--subdued); margin-top: 8px; }
+.transport { display: flex; align-items: center; justify-content: center; gap: 26px; color: var(--muted); }
+.playbtn { width: 52px; height: 52px; border-radius: 50%; background: var(--primary); color: #fff; display: grid; place-items: center; box-shadow: 0 10px 30px -8px var(--glow); }
+.pill { font: 600 11px/1 var(--font-body); padding: 7px 10px; border-radius: 999px; white-space: nowrap; border: 1px solid var(--border); color: var(--muted); }
+.pill.info { color: #bfdbfe; background: rgba(59, 130, 246, .14); border-color: rgba(59, 130, 246, .5); }
+.pill.ok { color: #a7f3d0; background: rgba(16, 185, 129, .12); border-color: rgba(16, 185, 129, .45); }
+.pill.acc { color: var(--primary-fg); background: var(--primary); border-color: var(--primary); }
+:root[data-bitrate="light"] .pill.info { color: #1e40af; background: #eff6ff; border-color: #2563eb; }
+:root[data-bitrate="light"] .pill.ok { color: #065f46; background: #ecfdf5; border-color: #059669; }
+.chip { font: 500 12px/1 var(--font-body); padding: 7px 11px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); white-space: nowrap; }
+.chip.on { background: var(--primary); border-color: var(--primary); color: #fff; }
+.av { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font: 600 10px/1 var(--font-body); color: #fff; border: 2px solid var(--card); flex: none; }
+.avs { display: flex; }
+.avs .av + .av { margin-left: -8px; }
+.medal { width: 56px; height: 56px; border-radius: 50%; border: 1px solid var(--accent); color: var(--accent); display: grid; place-items: center; flex: none; }
+.num { font: 600 12px/1 var(--font-data); color: var(--accent); letter-spacing: .1em; }
+canvas.spec, canvas.wave { display: block; width: 100%; height: 100%; }
+
+/* scene specifics */
+.tech { display: flex; align-items: center; gap: 28px; height: 70px; padding: 0 22px; border-top: 1px solid var(--border); }
+.tech div { display: grid; gap: 6px; }
+.tech b { font: 500 12px/1 var(--font-data); color: var(--fg); letter-spacing: .08em; }
+.qrow { display: flex; align-items: center; gap: 12px; padding: 12px 10px; border-radius: 10px; }
+.qrow.now { background: var(--card-2); }
+.steps { position: relative; display: grid; gap: 6px; }
+.steps .track { position: absolute; left: 14px; right: 14px; top: 13px; height: 2px; background: var(--border); }
+.steps .fill { position: absolute; left: 14px; right: 14px; top: 13px; height: 2px; background: linear-gradient(90deg, var(--primary), var(--magenta)); transform-origin: left; transform: scaleX(.75); }
+.step { position: relative; display: grid; justify-items: center; gap: 8px; font: 500 12px/1.2 var(--font-body); color: var(--muted); text-align: center; }
+.step b { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font: 600 11px/1 var(--font-data); background: var(--card); border: 1px solid var(--border); color: var(--muted); }
+.step.done b, .step.now b { background: var(--primary); border-color: var(--primary); color: #fff; }
+.step.now { color: var(--fg); }
+.task { display: flex; gap: 12px; padding: 14px; border-radius: 12px; border: 1px solid var(--border); align-items: flex-start; }
+.task.now { border-color: var(--accent); background: rgba(124, 58, 237, .08); }
+.ver { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); }
+.ver.sel { border-color: var(--accent); }
+.ver canvas { height: 34px; flex: 1; }
+.cand { display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 12px; background: var(--card-2); }
+.cand .r { font: 600 13px/1 var(--font-data); color: var(--accent); width: 26px; }
+.meter { display: grid; gap: 6px; }
+.meter .prog { height: 6px; }
+.bands { display: flex; align-items: flex-end; gap: 8px; height: 100%; }
+.bands i { flex: 1; border-radius: 2px; background: linear-gradient(to top, transparent, var(--accent)); opacity: .5; transform-origin: bottom; height: 100%; }
+.horizon { border-radius: 0 360px 0 0; background: radial-gradient(ellipse at 0% 100%, rgba(124, 58, 237, .55), transparent 65%), radial-gradient(ellipse at 40% 100%, rgba(236, 72, 153, .35), transparent 60%); overflow: hidden; }
+.drop { border: 1.5px dashed var(--border); border-radius: 14px; display: grid; place-items: center; color: var(--subdued); font-size: 12px; text-align: center; padding: 10px; }
+.toggle { width: 34px; height: 20px; border-radius: 999px; background: var(--border); position: relative; flex: none; transition: background .3s; }
+.toggle::after { content: ""; position: absolute; left: 3px; top: 3px; width: 14px; height: 14px; border-radius: 50%; background: #fff; transition: transform .3s; }
+.toggle.on { background: var(--primary); }
+.toggle.on::after { transform: translateX(14px); }
+.lrow { display: grid; grid-template-columns: 26px 40px 1fr 140px 52px; gap: 12px; align-items: center; padding: 10px 12px; border-radius: 10px; font-size: 13px; }
+.lrow.hd { font: 500 10px/1 var(--font-data); color: var(--subdued); letter-spacing: .12em; padding-top: 0; }
+.lrow.lres:hover { background: var(--card-2); }
+.vrow { display: grid; grid-template-columns: 16px 1fr auto; gap: 12px; align-items: start; position: relative; padding: 12px 0; }
+.vrow .dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--border); background: var(--card); margin-top: 3px; position: relative; z-index: 1; }
+.vrow.sel .dot { border-color: var(--accent); background: var(--accent); }
+.vline { position: absolute; left: 5px; top: 18px; bottom: 18px; width: 2px; background: var(--border); }
+.rail-nav { display: grid; justify-items: center; gap: 30px; padding: 36px 0; font-size: 11px; color: var(--muted); }
+.rail-nav span { display: grid; justify-items: center; gap: 6px; }
+.rail-nav .on { color: var(--fg); background: var(--card-2); border-radius: 12px; padding: 12px 10px; }
+.node { position: absolute; display: flex; align-items: center; gap: 10px; padding: 10px 14px 10px 10px; border-radius: 14px; background: var(--glass); border: 1px solid var(--border); white-space: nowrap; }
+.node .av { width: 40px; height: 40px; font-size: 12px; border: 0; }
+.node small { display: block; font-size: 11px; color: var(--muted); }
+.node.focus { flex-direction: column; justify-content: center; padding: 16px; border-color: var(--accent); box-shadow: 0 0 0 6px rgba(167, 139, 250, .12); }
+.node.focus .av { width: 76px; height: 76px; font-size: 20px; }
+.tag { position: absolute; font: 500 10px/1 var(--font-data); letter-spacing: .06em; color: var(--muted); padding: 6px 9px; border-radius: 999px; border: 1px solid var(--border); background: var(--bg); white-space: nowrap; }
+.graph svg path { fill: none; stroke-width: 1.6; }
+.p-inf { stroke: var(--accent); }
+.p-sim { stroke: var(--magenta); stroke-dasharray: 5 6; }
+.p-scn { stroke: var(--blue); stroke-dasharray: 1 6; }
+.legend { display: flex; gap: 22px; font-size: 11px; color: var(--muted); }
+.legend span { display: flex; align-items: center; gap: 8px; }
+.legend i { width: 18px; height: 2px; border-radius: 1px; }
+.route { display: flex; align-items: center; gap: 18px; padding: 0 18px; }
+.route .n { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--accent); color: var(--accent); display: grid; place-items: center; font: 600 11px/1 var(--font-data); }
+.phone { border-radius: 38px; padding: 16px; background: var(--card); border: 1px solid var(--border); box-shadow: 0 50px 100px -40px var(--shadow); }
+.listeners .av { width: 32px; height: 32px; }
+.cmark { position: absolute; top: -6px; width: 12px; height: 12px; border-radius: 50%; background: var(--magenta); border: 2px solid var(--card); transform: translateX(-50%); }
+.cmt { display: grid; grid-template-columns: 34px 1fr; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.cmt .ts { font: 600 11px/1 var(--font-data); color: var(--accent); margin-right: 6px; }
+.dome { border-radius: 600px 600px 0 0; background: radial-gradient(ellipse at 50% 100%, rgba(124, 58, 237, .45), rgba(236, 72, 153, .14) 50%, transparent 72%); }
+.footer { display: flex; align-items: center; justify-content: space-between; padding: 0 60px; height: 100%; border-top: 1px solid var(--border); font-size: 13px; color: var(--muted); }
+.footer a { color: inherit; text-decoration: none; }
+.footer a:hover { color: var(--fg); }
+
+/* glitch: RGB slice-tear + shake (own implementation of the reference effect) */
+.glitch { position: relative; }
+span.glitch { display: inline-block; }
+.glitch::before, .glitch::after { content: attr(data-text); position: absolute; inset: 0; opacity: 0; pointer-events: none; white-space: nowrap; }
+.glitch::before { color: #ec4899; -webkit-text-fill-color: #ec4899; }
+.glitch::after { color: #22d3ee; -webkit-text-fill-color: #22d3ee; }
+.glitch.is-glitching { animation: g-shake .6s steps(3) both; }
+.glitch.is-glitching::before { animation: g-tear-a .6s steps(2) both; }
+.glitch.is-glitching::after { animation: g-tear-b .6s steps(2) both; }
+@keyframes g-shake { 0% { transform: translate(0) } 25% { transform: translate(-3px, 1px) } 50% { transform: translate(3px, -1px) } 75% { transform: translate(-1px, 2px) } 100% { transform: none } }
+@keyframes g-tear-a { 0% { opacity: .9; clip-path: inset(8% 0 72% 0); transform: translate(-7px, 0) } 25% { clip-path: inset(56% 0 18% 0); transform: translate(6px, 0) } 50% { clip-path: inset(30% 0 46% 0); transform: translate(-4px, 0) } 75% { clip-path: inset(78% 0 4% 0); transform: translate(7px, 0) } 100% { opacity: 0; clip-path: inset(50% 0 50% 0); transform: none } }
+@keyframes g-tear-b { 0% { opacity: .85; clip-path: inset(64% 0 12% 0); transform: translate(6px, 0) } 25% { clip-path: inset(12% 0 70% 0); transform: translate(-6px, 0) } 50% { clip-path: inset(44% 0 30% 0); transform: translate(5px, 0) } 75% { clip-path: inset(2% 0 86% 0); transform: translate(-7px, 0) } 100% { opacity: 0; clip-path: inset(50% 0 50% 0); transform: none } }
+
+/* partners + team: interactive zones */
+.drag-zone { touch-action: none; cursor: grab; }
+.drag-zone:active { cursor: grabbing; }
+.pit { border-radius: 26px; border: 1px solid var(--border); background: linear-gradient(to top, rgba(124, 58, 237, .14), transparent 45%); overflow: hidden; }
+.pit::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), var(--magenta), transparent); opacity: .6; }
+.ball { position: absolute; left: 0; top: 0; border-radius: 50%; display: grid; place-items: center; text-align: center; will-change: transform; user-select: none; -webkit-user-select: none; color: #fff; box-shadow: inset -10px -14px 28px rgba(0, 0, 0, .35), inset 8px 10px 22px rgba(255, 255, 255, .22), 0 12px 30px -12px rgba(0, 0, 0, .6); }
+.ball.person { font: 700 44px/1 var(--font-display); letter-spacing: -.02em; outline: 3px solid rgba(255, 255, 255, .14); outline-offset: -3px; }
+.ball.tech { font: 600 12px/1.1 var(--font-body); padding: 6px; box-sizing: border-box; }
+.ball.hot { outline: 2px solid var(--accent); outline-offset: 2px; }
+.hc { position: absolute; left: 0; top: 0; width: 290px; padding: 16px; border-radius: 12px; background: var(--card); border: 1px solid var(--border); box-shadow: 0 24px 60px -24px var(--shadow); opacity: 0; pointer-events: none; z-index: 5; transition: opacity .15s ease, scale .15s ease; scale: .96; }
+.hc.open { opacity: 1; pointer-events: auto; scale: 1; }
+.hc .row { align-items: flex-start; }
+.hc .av { width: 48px; height: 48px; font-size: 15px; border: 0; }
+.hc .links { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.stats { display: flex; gap: 26px; margin-top: 30px; }
+.stats b { display: block; font: 700 34px/1 var(--font-display); color: var(--fg); }
+
+/* AI assistant: bottom-right button that blooms into a chat; a thinking orb shows the phase */
+.ai-fab { position: fixed; right: 24px; bottom: 24px; z-index: 45; width: 52px; height: 52px; border-radius: 50%; border: 0; display: grid; place-items: center; color: #fff; background: linear-gradient(135deg, #7c3aed, #ec4899); box-shadow: 0 14px 34px -12px rgba(124, 58, 237, .7); cursor: pointer; }
+.ai-fab[aria-expanded="true"] { background: var(--card); color: var(--fg); border: 1px solid var(--border); box-shadow: none; }
+.ai-fab:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.ai-panel { position: fixed; right: 24px; bottom: 88px; z-index: 46; width: 380px; height: 540px; max-height: calc(100vh - 120px); display: flex; flex-direction: column; border-radius: 18px; background: var(--card); border: 1px solid var(--border); box-shadow: 0 30px 80px -30px var(--shadow); transform-origin: 100% 100%; visibility: hidden; overflow: hidden; }
+.ai-panel.open { visibility: visible; }
+.ai-head { display: flex; align-items: center; gap: 10px; height: 60px; padding: 0 14px; border-bottom: 1px solid var(--border); }
+.ai-head .mk { width: 32px; height: 32px; border-radius: 50%; background: var(--card-2); display: grid; place-items: center; }
+.ai-head .mk svg { width: 18px; height: 18px; }
+.ai-head small { display: block; color: var(--muted); font-size: 11px; }
+.ai-x { margin-left: auto; border: 0; background: none; color: var(--muted); cursor: pointer; padding: 6px; }
+.ai-msgs { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; overscroll-behavior: contain; }
+.ai-b { max-width: 82%; padding: 10px 12px; border-radius: 14px; font-size: 13px; line-height: 1.45; background: var(--card-2); align-self: flex-start; }
+.ai-b.me { align-self: flex-end; background: var(--primary); color: #fff; }
+.ai-typing { align-self: flex-start; display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 14px; background: var(--card-2); font-size: 12px; color: var(--muted); }
+.ai-welcome { display: grid; justify-items: center; gap: 8px; padding: 18px 0 6px; text-align: center; }
+.ai-welcome b { font: 600 15px/1.2 var(--font-display); }
+.ai-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.ai-chip { height: 32px; padding: 0 12px; border-radius: 16px; border: 1px solid var(--border); background: none; color: var(--fg); font: 500 12px/1 var(--font-body); cursor: pointer; }
+.ai-chip:hover { border-color: var(--accent); }
+.ai-comp { padding: 10px 12px 12px; border-top: 1px solid var(--border); display: grid; gap: 8px; }
+.ai-in { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 6px 0 12px; border-radius: 12px; background: var(--card-2); }
+.ai-in input { flex: 1; border: 0; outline: 0; background: none; color: var(--fg); font: 13px/1 var(--font-body); }
+.ai-send { width: 32px; height: 32px; border-radius: 10px; border: 0; background: var(--primary); color: #fff; display: grid; place-items: center; cursor: pointer; }
+.ai-comp small { font-size: 10px; color: var(--subdued); }
+.footer { padding-right: 96px; }
+@media (max-width: 820px) { .ai-fab { right: 16px; bottom: 16px; } .ai-panel { inset: 0; width: auto; height: auto; max-height: none; border-radius: 0; } }
+
+/* intro: the logo writes itself, then the hero takes over */
+.intro { position: fixed; inset: 0; z-index: 90; background: var(--bg); display: grid; place-content: center; justify-items: center; gap: 18px; }
+.intro-ll { position: absolute; inset: 0; }
+.intro b, .intro .mono { position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+.intro b { top: calc(50% + min(100vw, 100vh) * .15 + 26px); }
+.intro .mono { top: calc(50% + min(100vw, 100vh) * .15 + 62px); }
+.intro-ll svg, .ll-box svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.intro b { font: 700 24px/1 var(--font-display); letter-spacing: -.02em; }
+body.static .intro { display: none; }
+.mark { width: 30px; height: 30px; }
+
+/* footer links: CSS-only underline reveals (left, right, centre) */
+.ulink { position: relative; color: inherit; text-decoration: none; }
+.ulink::after { content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 1.5px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .38s cubic-bezier(.2, .8, .2, 1); }
+.ulink:hover, .ulink:focus-visible { color: var(--fg); }
+.ulink:hover::after, .ulink:focus-visible::after { transform: scaleX(1); }
+.ulink.u-right::after { transform-origin: right; }
+.ulink.u-center::after { transform-origin: center; }
+
+/* service health: pill that blooms into a panel through an SVG goo filter */
+.health { position: relative; }
+.hpill { position: relative; z-index: 2; display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px; border-radius: 17px; border: 1px solid var(--border); background: var(--card); color: var(--fg); font: 500 13px/1 var(--font-body); cursor: pointer; }
+.hpill:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.hdot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 0 rgba(16, 185, 129, .55); animation: hping 2s infinite; }
+@keyframes hping { to { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0) } }
+.goo { position: absolute; right: 0; bottom: 0; width: 480px; height: 520px; pointer-events: none; filter: url(#goo); z-index: 1; }
+.blob { position: absolute; right: 0; background: var(--card); }
+.b-pill { bottom: 0; width: 210px; height: 34px; border-radius: 17px; }
+.b-panel { bottom: 46px; width: 460px; height: 440px; border-radius: 18px; transform-origin: 100% 100%; transform: scale(.12, .05); }
+.hpanel { position: absolute; right: 0; bottom: 46px; width: 460px; padding: 16px; box-sizing: border-box; z-index: 2; opacity: 0; visibility: hidden; text-align: left; color: var(--fg); }
+.health.open .hpanel { visibility: visible; }
+.hrow { display: grid; grid-template-columns: 140px 1fr auto; gap: 12px; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--border); }
+.hrow b { font: 600 13px/1.2 var(--font-body); display: block; }
+.hrow small { font-size: 11px; color: var(--muted); }
+.bars { display: flex; gap: 2px; align-items: center; }
+.bars i { width: 4px; height: 20px; border-radius: 1px; background: var(--success); opacity: .85; transform-origin: bottom; }
+.bars i.w { background: var(--warning); } .bars i.e { background: #ef4444; }
+.hstate { font: 600 12px/1 var(--font-body); color: var(--success); display: inline-flex; gap: 6px; align-items: center; }
+.hstate::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.hstate.w { color: var(--warning); }
+
+/* phone: the board turns into a flow; the large windows give way to one compact surface */
+@media (max-width: 820px) {
+  body { font-size: 13px; }
+  .nav, .dots, .top .btn-ghost .label { display: none; }
+  .themes button { padding: 6px 8px; }
+  .scene { padding: 84px 16px 64px; box-sizing: border-box; }
+  .board { position: static; transform: none; width: 100%; height: auto; display: flex; flex-direction: column; gap: 16px; }
+  .abs, .pos { position: static !important; width: auto !important; height: auto !important; }
+  .d-only { display: none !important; }
+  .h72, .h80 { font-size: 36px; }
+  .h56, .h54 { font-size: 32px; }
+  .h48 { font-size: 29px; }
+  .lede, .lede.s { font-size: 15px; }
+  .ctas { flex-direction: column; }
+  .ctas .btn { width: 100%; height: 48px; }
+  .win, .card { transform: none !important; }
+  .m-fit { max-height: 38vh; overflow: hidden; }
+  .win.m-fit { height: auto !important; }
+  .lrow { grid-template-columns: 26px 40px 1fr; }
+  .lrow > :nth-child(n+4) { display: none; }
+  .drag-zone { height: 46vh !important; position: relative !important; }
+  .hpanel, .b-panel { width: calc(100vw - 32px); }
+  .goo { width: calc(100vw - 16px); }
+  #cradleSlot { height: 26vh !important; }
+}
+@media (prefers-reduced-motion: reduce) { .grain, .live i, .playing .sound-bars i { animation: none; } }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+  <symbol id="i-prev" viewBox="0 0 24 24"><path d="M19 20L9 12l10-8zM5 19V5"/></symbol>
+  <symbol id="i-next" viewBox="0 0 24 24"><path d="M5 4l10 8-10 8zM19 5v14"/></symbol>
+  <symbol id="i-shuffle" viewBox="0 0 24 24"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></symbol>
+  <symbol id="i-repeat" viewBox="0 0 24 24"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21.2l8.8-8.8a5.5 5.5 0 0 0 0-7.8z"/></symbol>
+  <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l4 2"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10l9-7 9 7v10a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="i-lib" viewBox="0 0 24 24"><path d="M4 4v16M9 4v16M14 4l6 16"/></symbol>
+  <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M16 8l-2 6-6 2 2-6z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M16 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></symbol>
+  <symbol id="i-laptop" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="11" rx="1"/><path d="M2 19h20"/></symbol>
+  <symbol id="i-vol" viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></symbol>
+  <symbol id="i-msg" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-6.4A8 8 0 1 1 21 12z"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 2l10 5-10 5L2 7zM2 17l10 5 10-5M2 12l10 5 10-5"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9z"/></symbol>
+  <symbol id="i-signal" viewBox="0 0 24 24"><path d="M2 20h.01M7 20v-4M12 20v-8M17 20V8M22 4v16"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-grip" viewBox="0 0 24 24"><path d="M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01"/></symbol>
+</svg>
+
+<canvas id="stage" aria-hidden="true"></canvas>
+<div class="cursor-glow" aria-hidden="true"></div>
+<div class="sweep" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><path id="bitrate-logo" d="M 399 145 L 400 146 L 400 150 L 401 151 L 401 154 L 403 158 L 403 161 L 404 162 L 406 170 L 409 175 L 409 177 L 416 191 L 418 193 L 419 196 L 421 198 L 425 205 L 431 212 L 431 213 L 436 218 L 436 219 L 451 234 L 452 234 L 456 238 L 457 238 L 464 244 L 465 244 L 470 248 L 475 250 L 477 252 L 489 258 L 491 258 L 496 261 L 498 261 L 501 263 L 504 263 L 505 264 L 511 265 L 515 267 L 519 267 L 520 268 L 524 268 L 525 269 L 530 269 L 531 270 L 539 270 L 540 271 L 918 271 L 919 272 L 925 272 L 926 273 L 931 273 L 932 274 L 935 274 L 939 276 L 942 276 L 945 278 L 947 278 L 950 280 L 952 280 L 960 284 L 962 286 L 965 287 L 971 292 L 972 292 L 987 307 L 987 308 L 990 311 L 991 314 L 993 316 L 997 324 L 997 326 L 998 327 L 998 329 L 1000 333 L 1000 336 L 1001 337 L 1001 342 L 1002 343 L 1002 358 L 1001 359 L 1001 364 L 1000 365 L 1000 368 L 999 369 L 997 377 L 992 387 L 990 389 L 986 396 L 970 412 L 969 412 L 966 415 L 965 415 L 957 421 L 943 428 L 941 428 L 935 431 L 932 431 L 931 432 L 928 432 L 927 433 L 924 433 L 923 434 L 912 435 L 911 436 L 685 436 L 684 437 L 674 437 L 673 438 L 667 438 L 666 439 L 661 439 L 660 440 L 656 440 L 655 441 L 652 441 L 651 442 L 643 443 L 642 444 L 640 444 L 639 445 L 637 445 L 636 446 L 634 446 L 633 447 L 625 449 L 617 453 L 615 453 L 589 466 L 587 468 L 579 472 L 573 477 L 566 481 L 555 490 L 554 490 L 538 505 L 537 505 L 535 507 L 535 508 L 521 522 L 521 523 L 514 530 L 514 531 L 511 534 L 511 535 L 508 538 L 508 539 L 504 543 L 504 544 L 498 551 L 495 557 L 487 568 L 486 571 L 484 573 L 480 581 L 478 583 L 462 615 L 462 617 L 459 622 L 459 624 L 456 629 L 456 631 L 454 634 L 454 636 L 451 641 L 450 646 L 448 649 L 448 651 L 447 652 L 447 654 L 446 655 L 446 657 L 445 658 L 445 660 L 444 661 L 444 663 L 443 664 L 443 666 L 442 667 L 442 669 L 441 670 L 441 672 L 440 673 L 440 675 L 439 676 L 439 678 L 437 682 L 437 685 L 435 689 L 435 692 L 433 696 L 433 699 L 432 700 L 432 703 L 430 707 L 429 715 L 428 716 L 428 719 L 427 720 L 427 724 L 426 725 L 426 728 L 425 729 L 425 733 L 424 734 L 424 738 L 423 739 L 423 743 L 422 744 L 422 749 L 421 750 L 421 753 L 420 754 L 420 760 L 419 761 L 419 767 L 418 768 L 418 773 L 417 774 L 417 779 L 416 780 L 416 783 L 419 779 L 422 773 L 425 770 L 425 769 L 427 767 L 429 763 L 432 760 L 432 759 L 435 756 L 437 752 L 441 748 L 441 747 L 444 744 L 444 743 L 447 740 L 447 739 L 451 735 L 451 734 L 455 730 L 455 729 L 461 723 L 461 722 L 465 718 L 465 717 L 476 706 L 476 705 L 518 663 L 519 663 L 528 654 L 529 654 L 535 648 L 536 648 L 542 642 L 543 642 L 553 633 L 554 633 L 557 630 L 558 630 L 562 626 L 563 626 L 574 617 L 575 617 L 581 612 L 588 608 L 591 605 L 597 602 L 599 600 L 605 597 L 615 590 L 622 587 L 624 585 L 646 574 L 648 574 L 660 568 L 662 568 L 663 567 L 665 567 L 666 566 L 668 566 L 674 563 L 677 563 L 681 561 L 684 561 L 685 560 L 688 560 L 689 559 L 693 559 L 694 558 L 697 558 L 698 557 L 710 556 L 711 555 L 720 555 L 721 554 L 909 554 L 910 555 L 914 555 L 918 557 L 925 558 L 926 559 L 934 561 L 937 563 L 939 563 L 945 566 L 947 568 L 954 571 L 956 573 L 959 574 L 962 577 L 963 577 L 966 580 L 967 580 L 972 585 L 973 585 L 985 598 L 985 599 L 990 605 L 998 621 L 998 623 L 999 624 L 999 626 L 1001 630 L 1002 640 L 1003 641 L 1003 654 L 1002 655 L 1002 661 L 1001 662 L 1000 669 L 996 677 L 995 681 L 993 683 L 992 686 L 990 688 L 988 692 L 985 695 L 985 696 L 968 712 L 967 712 L 959 718 L 943 726 L 941 726 L 937 728 L 934 728 L 933 729 L 930 729 L 929 730 L 926 730 L 925 731 L 920 731 L 919 732 L 912 732 L 911 733 L 697 733 L 696 734 L 687 734 L 686 735 L 674 736 L 673 737 L 669 737 L 668 738 L 661 739 L 657 741 L 654 741 L 653 742 L 651 742 L 650 743 L 648 743 L 647 744 L 639 746 L 636 748 L 634 748 L 627 752 L 625 752 L 611 759 L 606 763 L 603 764 L 601 766 L 593 770 L 590 773 L 589 773 L 582 779 L 581 779 L 577 783 L 576 783 L 572 787 L 571 787 L 547 811 L 547 812 L 541 818 L 541 819 L 538 822 L 538 823 L 535 826 L 535 827 L 532 830 L 532 831 L 529 834 L 529 835 L 525 840 L 524 843 L 518 851 L 512 863 L 925 863 L 926 862 L 938 862 L 939 861 L 946 861 L 947 860 L 953 860 L 954 859 L 958 859 L 959 858 L 968 857 L 969 856 L 976 855 L 980 853 L 987 852 L 988 851 L 993 850 L 996 848 L 998 848 L 999 847 L 1004 846 L 1007 844 L 1009 844 L 1016 840 L 1018 840 L 1028 835 L 1030 833 L 1037 830 L 1047 823 L 1050 822 L 1053 819 L 1054 819 L 1057 816 L 1058 816 L 1061 813 L 1062 813 L 1065 810 L 1066 810 L 1086 791 L 1086 790 L 1092 784 L 1092 783 L 1101 773 L 1102 770 L 1110 759 L 1112 754 L 1114 752 L 1120 740 L 1120 738 L 1122 736 L 1122 734 L 1124 731 L 1124 729 L 1125 728 L 1127 720 L 1129 717 L 1129 714 L 1131 710 L 1131 707 L 1132 706 L 1132 703 L 1133 702 L 1133 698 L 1134 697 L 1134 694 L 1135 693 L 1135 685 L 1136 684 L 1136 676 L 1137 675 L 1137 650 L 1136 649 L 1136 641 L 1135 640 L 1134 628 L 1133 627 L 1133 624 L 1132 623 L 1131 616 L 1129 612 L 1129 609 L 1127 606 L 1127 604 L 1126 603 L 1125 598 L 1122 593 L 1122 591 L 1115 577 L 1113 575 L 1112 572 L 1110 570 L 1110 569 L 1108 567 L 1108 566 L 1106 564 L 1102 557 L 1092 546 L 1092 545 L 1080 533 L 1079 533 L 1067 522 L 1066 522 L 1059 516 L 1056 515 L 1051 511 L 1058 505 L 1059 505 L 1062 502 L 1063 502 L 1067 498 L 1068 498 L 1084 483 L 1084 482 L 1092 474 L 1092 473 L 1100 464 L 1100 463 L 1106 455 L 1107 452 L 1111 447 L 1112 444 L 1114 442 L 1119 432 L 1119 430 L 1123 423 L 1124 418 L 1126 415 L 1126 413 L 1127 412 L 1127 410 L 1129 406 L 1129 403 L 1131 399 L 1131 396 L 1132 395 L 1133 385 L 1134 384 L 1134 378 L 1135 377 L 1135 368 L 1136 367 L 1136 343 L 1135 342 L 1135 333 L 1134 332 L 1134 325 L 1133 324 L 1133 319 L 1132 318 L 1132 314 L 1131 313 L 1130 306 L 1129 305 L 1129 303 L 1127 299 L 1127 296 L 1126 295 L 1124 287 L 1122 284 L 1122 282 L 1120 279 L 1120 277 L 1110 257 L 1108 255 L 1106 250 L 1104 248 L 1100 241 L 1097 238 L 1097 237 L 1094 234 L 1094 233 L 1090 229 L 1090 228 L 1085 223 L 1085 222 L 1063 200 L 1062 200 L 1053 192 L 1052 192 L 1049 189 L 1042 185 L 1036 180 L 1024 174 L 1022 172 L 1012 167 L 1010 167 L 1003 163 L 998 162 L 995 160 L 993 160 L 992 159 L 990 159 L 989 158 L 987 158 L 986 157 L 984 157 L 983 156 L 981 156 L 977 154 L 974 154 L 973 153 L 970 153 L 969 152 L 966 152 L 965 151 L 961 151 L 960 150 L 957 150 L 956 149 L 951 149 L 950 148 L 946 148 L 945 147 L 938 147 L 937 146 L 927 146 L 926 145 Z"/><linearGradient id="bm" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#490AE5"/><stop offset=".45" stop-color="#6824F8"/><stop offset="1" stop-color="#C060FA"/></linearGradient></defs></svg>
+<div class="intro" id="intro" aria-hidden="true"><div class="intro-ll" id="introLL"></div><b>Bitrate</b><span class="mono">TUNING IN…</span></div>
+
+<header class="top">
+  <a class="brand" href="#hero" aria-label="Bitrate home">
+    <svg class="mark" viewBox="371 117 795 775" aria-hidden="true"><use href="#bitrate-logo" fill="url(#bm)"/></svg>
+    Bitrate
+  </a>
+  <nav class="nav" aria-label="Primary"><a href="#hero">Web player</a><a href="#library">Your library</a><a href="#artists">For artists</a><a href="#rules">Features</a></nav>
+  <div class="top-actions">
+    <fieldset class="themes" aria-label="Theme">
+      <button type="button" data-set="dark" aria-pressed="false">Dark</button>
+      <button type="button" data-set="light" aria-pressed="false">Light</button>
+      <button type="button" data-set="dim" aria-pressed="false">Dim</button>
+    </fieldset>
+    <button class="btn btn-ghost btn-sm" id="sound" type="button" aria-pressed="false"><span class="sound-bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="label">Play signal</span></button>
+  </div>
+</header>
+<nav class="dots" aria-label="Scenes"></nav>
+<div class="counter" aria-hidden="true"><b id="num">01</b><span class="rail"><i id="rail"></i></span><span>12</span></div>
+
+<button class="ai-fab" id="aiFab" type="button" aria-expanded="false" aria-controls="aiPanel" aria-label="Open the Bitrate assistant"><svg aria-hidden="true" class="i" viewBox="0 0 24 24" style="width:22px;height:22px"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></svg></button>
+<section class="ai-panel" id="aiPanel" aria-label="Bitrate assistant">
+  <div class="ai-head"><span class="mk"><svg viewBox="371 117 795 775" aria-hidden="true"><use href="#bitrate-logo" fill="url(#bm)"/></svg></span><span><b style="font-size:14px">Bitrate assistant</b><small id="aiStatus">AI · can make mistakes · demo answers</small></span><button class="ai-x" id="aiClose" type="button" aria-label="Close the assistant">✕</button></div>
+  <div class="ai-msgs" id="aiMsgs"><div class="ai-welcome"><canvas class="orb" data-size="64" width="128" height="128" style="width:64px;height:64px"></canvas><b>Hi, I am the Bitrate assistant</b><span class="t-meta">Ask about the player, plans or releasing your music.</span><div class="ai-chips"><button class="ai-chip" type="button">What is Bitrate?</button><button class="ai-chip" type="button">Is it free?</button><button class="ai-chip" type="button">Release a single</button><button class="ai-chip" type="button">Which devices work?</button></div></div></div>
+  <form class="ai-comp" id="aiForm"><span class="ai-in"><input id="aiInput" type="text" autocomplete="off" placeholder="Ask about Bitrate…" aria-label="Message"><button class="ai-send" type="submit" aria-label="Send">↑</button></span><small>Answers come from Bitrate docs. Do not share passwords or payment details.</small></form>
+</section>
+
+<main>
+  <!-- 01 hero -->
+  <section class="scene is-active" id="hero" data-label="Signal" aria-label="Your music, already where you are">
+    <div class="board">
+      <div class="abs" style="--x:54;--y:262;--w:540">
+        <div class="col" style="gap:26px">
+          <div class="eyebrow" data-a="up">Web player</div>
+          <h1 class="h h72"><span class="line"><span>Your music,</span></span><span class="line"><span>already where</span></span><span class="line"><span class="hl">you are.</span></span></h1>
+          <p class="lede" data-a="up">Instant access in your browser.<br>Listen, save and return to your library.</p>
+          <div class="ctas" data-a="up"><a class="btn btn-primary magnetic" href="#cta">Open web player <svg aria-hidden="true" class="i"><use href="#i-arrow"/></svg></a><a class="btn btn-ghost magnetic" href="#cta">Create account</a></div>
+          <div class="row mono" data-a="up"><svg aria-hidden="true" class="i" style="width:15px;height:15px;color:var(--accent)"><use href="#i-signal"/></svg>INTERACTIVE PLAYER PREVIEW</div>
+        </div>
+      </div>
+      <div class="abs persp d-only" style="--x:610;--y:170;--w:786">
+        <div class="win" data-a="win" id="heroWin">
+          <div class="wbar"><span class="live"><i></i><span class="glitch glitch-auto" data-text="NOW PLAYING">NOW PLAYING</span></span><span class="grow"></span><span class="d-only">PREVIEW SESSION</span><span class="live ok d-only"><i></i><span class="glitch glitch-auto" data-text="SIGNAL STABLE">SIGNAL STABLE</span></span></div>
+          <div class="row m-fit" style="align-items:stretch;gap:0;height:520px">
+            <div class="col d-only" style="width:56px;align-items:center;padding:16px 0;gap:18px;border-right:1px solid var(--border);color:var(--muted)"><svg aria-hidden="true" class="i" style="color:var(--fg)"><use href="#i-home"/></svg><svg aria-hidden="true" class="i"><use href="#i-search"/></svg><svg aria-hidden="true" class="i"><use href="#i-lib"/></svg><span class="grow"></span><span class="av" style="background:#7c3aed">DJ</span></div>
+            <div class="col" style="width:410px;padding:20px;gap:16px;box-sizing:border-box">
+              <div class="art" style="height:300px"></div>
+              <div class="row"><div class="grow"><p class="t-title" style="font:600 22px/1.1 var(--font-display)">Night Signal</p><p class="t-meta">Demo artist</p></div><svg aria-hidden="true" class="i" style="color:var(--accent)"><use href="#i-heart"/></svg></div>
+              <div><div class="prog"><i id="heroProg"></i></div><div class="times"><span>1:38</span><span>3:56</span></div></div>
+              <div class="transport"><svg aria-hidden="true" class="i"><use href="#i-shuffle"/></svg><svg aria-hidden="true" class="i"><use href="#i-prev"/></svg><span class="playbtn"><svg aria-hidden="true" class="i"><use href="#i-pause"/></svg></span><svg aria-hidden="true" class="i"><use href="#i-next"/></svg><svg aria-hidden="true" class="i"><use href="#i-repeat"/></svg></div>
+            </div>
+            <div class="col grow d-only" style="padding:18px 18px 18px 6px;gap:4px;border-left:1px solid var(--border)">
+              <div class="row label" style="justify-content:space-between;padding:4px 10px 10px"><span>UP NEXT</span><span style="letter-spacing:.04em">Clear</span></div>
+              <div class="qrow"><span class="cv s cv2"></span><div class="grow"><p class="t-title">Echoes in Motion</p><p class="t-meta">Lumen Choir</p></div><span class="mono">4:21</span></div>
+              <div class="qrow"><span class="cv s cv3"></span><div class="grow"><p class="t-title">Static Lines</p><p class="t-meta">Kite Harbor</p></div><span class="mono">3:47</span></div>
+              <div class="qrow"><span class="cv s cv4"></span><div class="grow"><p class="t-title">Drift Control</p><p class="t-meta">Mira Sol</p></div><span class="mono">3:12</span></div>
+              <div class="qrow"><span class="cv s cv1"></span><div class="grow"><p class="t-title">Afterglow</p><p class="t-meta">Nova &amp; the Static</p></div><span class="mono">3:42</span></div>
+              <span class="grow"></span>
+              <div class="row" style="padding:0 10px;color:var(--muted)"><svg aria-hidden="true" class="i"><use href="#i-vol"/></svg><div class="prog grow"><i style="transform:scaleX(.7)"></i></div></div>
+            </div>
+          </div>
+          <div class="tech d-only"><div><span class="label">SOURCE</span><b>BITRATE</b></div><div><span class="label">OUTPUT</span><b>WEB</b></div><div><span class="label">MODE</span><b>PREVIEW</b></div><div class="grow" style="height:32px"><canvas class="spec" data-bars="48"></canvas></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 loop -->
+  <section class="scene" id="loop" data-label="Loop" aria-label="Play, save, return">
+    <div class="board">
+      <div class="abs" style="--x:60;--y:64;--w:900">
+        <h2 class="h h80"><span class="line"><span>Play. <span class="hl">Save.</span> Return.</span></span></h2>
+        <p class="lede" style="margin-top:18px" data-a="up">One listening loop. Built around the music you come back to.</p>
+      </div>
+      <div class="abs label d-only" style="--x:1196;--y:72;--w:200;text-align:right" data-a="up">INTERFACE PREVIEW</div>
+      <div class="abs card tiltable" style="--x:60;--y:254;--w:424;--h:542" data-a="win">
+        <div class="col" style="padding:24px;gap:18px;height:100%;box-sizing:border-box">
+          <div class="row" style="align-items:flex-start"><span class="medal"><svg aria-hidden="true" class="i"><use href="#i-play"/></svg></span><div><span class="num">01</span><p class="t-title" style="font:600 20px/1.2 var(--font-display);margin-top:6px">Play without losing focus</p><p class="t-meta">The controls you need, within reach.</p></div></div>
+          <div class="soft col grow" style="padding:16px;gap:14px">
+            <div class="row"><span class="art" style="width:76px;height:76px;border-radius:10px;flex:none"></span><div class="grow"><p class="t-title">Night Signal</p><p class="t-meta">Demo artist</p></div><svg aria-hidden="true" class="i" style="color:var(--accent)"><use href="#i-heart"/></svg></div>
+            <div><div class="prog"><i class="anim-prog"></i></div><div class="times"><span>1:38</span><span>3:56</span></div></div>
+            <div class="transport" style="gap:22px"><svg aria-hidden="true" class="i"><use href="#i-prev"/></svg><span class="playbtn" style="width:44px;height:44px"><svg aria-hidden="true" class="i"><use href="#i-pause"/></svg></span><svg aria-hidden="true" class="i"><use href="#i-next"/></svg></div>
+            <span class="grow"></span>
+            <div class="row" style="gap:18px"><div><span class="label">BITRATE</span><br><b class="mono" style="color:var(--fg)">320 KBPS</b></div><div class="grow" style="height:28px"><canvas class="spec" data-bars="26"></canvas></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="abs card tiltable d-only" style="--x:508;--y:254;--w:424;--h:542" data-a="win">
+        <div class="col" style="padding:24px;gap:18px;height:100%;box-sizing:border-box">
+          <div class="row" style="align-items:flex-start"><span class="medal"><svg aria-hidden="true" class="i"><use href="#i-heart"/></svg></span><div><span class="num">02</span><p class="t-title" style="font:600 20px/1.2 var(--font-display);margin-top:6px">Save what matters</p><p class="t-meta">Build a library that sounds more like you.</p></div></div>
+          <div class="soft col grow" style="padding:16px;gap:10px">
+            <div class="row"><span class="cv" style="background:linear-gradient(135deg,#7c3aed,#ec4899);display:grid;place-items:center;color:#fff"><svg aria-hidden="true" class="i"><use href="#i-heart"/></svg></span><div class="grow"><p class="t-title">Liked songs</p><p class="t-meta">Ready for your next visit · 128</p></div></div>
+            <div class="qrow"><span class="cv s cv1"></span><div class="grow"><p class="t-title">Night Signal</p><p class="t-meta">Demo artist</p></div><svg aria-hidden="true" class="i like-pop" style="color:var(--magenta)"><use href="#i-heart"/></svg></div>
+            <div class="qrow"><span class="cv s cv3"></span><div class="grow"><p class="t-title">Static Lines</p><p class="t-meta">Kite Harbor</p></div><svg aria-hidden="true" class="i like-pop" style="color:var(--magenta)"><use href="#i-heart"/></svg></div>
+            <div class="qrow"><span class="cv s cv5"></span><div class="grow"><p class="t-title">Low Orbit</p><p class="t-meta">Luma Vale</p></div><svg aria-hidden="true" class="i like-pop" style="color:var(--magenta)"><use href="#i-heart"/></svg></div>
+          </div>
+        </div>
+      </div>
+      <div class="abs card tiltable d-only" style="--x:956;--y:254;--w:424;--h:542" data-a="win">
+        <div class="col" style="padding:24px;gap:18px;height:100%;box-sizing:border-box">
+          <div class="row" style="align-items:flex-start"><span class="medal"><svg aria-hidden="true" class="i"><use href="#i-history"/></svg></span><div><span class="num">03</span><p class="t-title" style="font:600 20px/1.2 var(--font-display);margin-top:6px">Find your way back</p><p class="t-meta">Your returns, together in recents.</p></div></div>
+          <div class="soft col grow" style="padding:16px;gap:6px">
+            <div class="row label" style="justify-content:space-between"><span>RECENTS</span><span style="letter-spacing:.04em">See all</span></div>
+            <span class="mono" style="margin-top:8px">TODAY</span>
+            <div class="qrow"><span class="cv s cv1"></span><div class="grow"><p class="t-title">Night Signal</p><p class="t-meta">Played 3×</p></div><span class="mono">21:40</span></div>
+            <div class="qrow"><span class="cv s cv4"></span><div class="grow"><p class="t-title">Drift Control</p><p class="t-meta">From Night drive</p></div><span class="mono">20:12</span></div>
+            <span class="mono" style="margin-top:8px">YESTERDAY</span>
+            <div class="qrow"><span class="cv s cv2"></span><div class="grow"><p class="t-title">Echoes in Motion</p><p class="t-meta">Album</p></div><span class="mono">23:05</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="abs row d-only" style="--x:60;--y:830;--w:1320;justify-content:space-between"><span class="disc">Product preview · Demonstration library</span><span class="sig">MUSIC LIVES ON</span></div>
+    </div>
+  </section>
+
+  <!-- 03 artists -->
+  <section class="scene" id="artists" data-label="Artists" aria-label="Release work in one line of sight">
+    <div class="board">
+      <div class="abs" style="--x:62;--y:66;--w:640"><div class="eyebrow" data-a="up" style="margin-bottom:18px">For artists</div><h2 class="h h48"><span class="line"><span>Release work,</span></span><span class="line"><span class="hl">in one line of sight.</span></span></h2></div>
+      <p class="abs lede s d-only" style="--x:780;--y:104;--w:420" data-a="up">Versions, tasks and delivery on one timeline. The system suggests. You stay in control.</p>
+      <div class="abs label d-only" style="--x:1185;--y:66;--w:200;text-align:right" data-a="up">WORKSPACE CONCEPT</div>
+      <div class="abs persp" style="--x:60;--y:224;--w:1320">
+        <div class="win" data-a="win">
+          <div class="row" style="height:78px;padding:0 22px;border-bottom:1px solid var(--border);gap:14px">
+            <span class="cv cv1"></span><div><p class="t-title" style="font:600 18px/1.1 var(--font-display)">Afterglow</p><p class="t-meta">Demo artist · EP</p></div>
+            <span class="pill info">Review in progress</span><span class="grow"></span><span class="t-meta d-only">Updated 2h ago</span>
+            <div class="avs d-only"><span class="av" style="background:#7c3aed">AL</span><span class="av" style="background:#db2777">JK</span><span class="av" style="background:#334155">+3</span></div>
+          </div>
+          <div style="padding:22px 40px;border-bottom:1px solid var(--border)">
+            <div class="steps" style="grid-template-columns:repeat(5,1fr)"><span class="track"></span><span class="fill" id="relFill"></span>
+              <div class="step done"><b>✓</b>Audio</div><div class="step done"><b>✓</b>Artwork</div><div class="step done"><b>✓</b>Details</div><div class="step now"><b>4</b>Review</div><div class="step"><b>5</b>Delivery</div>
+            </div>
+          </div>
+          <div class="row d-only" style="align-items:stretch;gap:22px;padding:22px;height:330px;box-sizing:border-box">
+            <div class="col" style="width:360px;gap:10px">
+              <span class="label">NEXT IN LINE · 2 / 7</span>
+              <div class="task now"><svg aria-hidden="true" class="i" style="color:var(--accent)"><use href="#i-spark"/></svg><div class="grow"><p class="t-title">Release check</p><p class="t-meta">Align master, artwork and metadata. The pitch needs one decision.</p></div><span class="pill acc">Now</span></div>
+              <div class="task"><svg aria-hidden="true" class="i" style="color:var(--muted)"><use href="#i-layers"/></svg><div class="grow"><p class="t-title">Prepare delivery</p><p class="t-meta">Select services and confirm the date.</p></div><span class="pill">20 min</span></div>
+              <div class="task"><svg aria-hidden="true" class="i" style="color:var(--muted)"><use href="#i-history"/></svg><div class="grow"><p class="t-title">Post-release review</p><p class="t-meta">Signals and follow-up tasks.</p></div><span class="pill">After launch</span></div>
+            </div>
+            <div class="col grow" style="gap:10px">
+              <span class="label">VERSIONS</span>
+              <div class="ver"><span class="mono" style="width:24px">v1</span><div style="width:92px"><p class="t-title">Demo</p><p class="t-meta">Aug 02</p></div><canvas class="wave" data-seed="1"></canvas></div>
+              <div class="ver"><span class="mono" style="width:24px">v2</span><div style="width:92px"><p class="t-title">Mix</p><p class="t-meta">Sep 10</p></div><canvas class="wave" data-seed="2"></canvas></div>
+              <div class="ver sel"><span class="mono" style="width:24px;color:var(--accent)">v3</span><div style="width:92px"><p class="t-title">Master</p><p class="t-meta">Today</p></div><canvas class="wave" data-seed="3"></canvas><span class="pill ok">Selected</span></div>
+            </div>
+            <div class="soft col" style="width:280px;padding:18px;gap:12px">
+              <span class="label" style="color:var(--accent)">SUGGESTED NEXT STEP</span>
+              <p class="t-title" style="font:600 17px/1.3 var(--font-display)">Approve the master and lock the cover.</p>
+              <p class="t-meta">Two collaborators confirmed rights. One decision left for the pitch.</p>
+              <span class="grow"></span>
+              <a class="btn btn-primary btn-sm magnetic" href="#artists">Approve v3</a>
+            </div>
+          </div>
+          <div class="row d-only" style="height:62px;padding:0 22px;border-top:1px solid var(--border);gap:26px"><span class="live ok mono"><i></i>READY FOR DELIVERY 80%</span><span class="mono">3 SERVICES</span><span class="mono">RELEASE · 24 OCT</span><span class="grow"></span><span class="mono">2 PEOPLE WITH ROLES · RIGHTS CONFIRMED</span></div>
+        </div>
+      </div>
+      <span class="abs disc" style="--x:62;--y:840;--w:400">Release workspace concept · Demonstration data</span>
+    </div>
+  </section>
+
+  <!-- 04 workshop -->
+  <section class="scene" id="workshop" data-label="Workshop" aria-label="Start with a feeling, finish with your playlist">
+    <div class="board">
+      <div class="abs row d-only" style="--x:60;--y:96;--w:1320;border-bottom:1px solid var(--border);padding-bottom:14px" data-a="up"><span class="mono" style="color:var(--fg)">BITRATE</span><span class="t-meta grow">More music. More you.</span><span class="label">PLAYLIST BUILDER CONCEPT</span></div>
+      <div class="abs" style="--x:60;--y:186;--w:380">
+        <h2 class="h h48"><span class="line"><span>Start with a</span></span><span class="line"><span>feeling. Finish</span></span><span class="line"><span class="hl">with your playlist.</span></span></h2>
+        <p class="lede s" style="margin-top:22px" data-a="up">Describe the session. Compare a few tracks. Shape a playlist that feels like you.</p>
+        <div class="col d-only" style="margin-top:34px;gap:20px">
+          <div class="row" data-a="up" style="align-items:flex-start"><span class="medal" style="width:44px;height:44px;border-radius:12px"><svg aria-hidden="true" class="i"><use href="#i-zap"/></svg></span><div><p class="t-title">Turn intent into music</p><p class="t-meta">Describe the mood, the activity or the moment.</p></div></div>
+          <div class="row" data-a="up" style="align-items:flex-start"><span class="medal" style="width:44px;height:44px;border-radius:12px"><svg aria-hidden="true" class="i"><use href="#i-layers"/></svg></span><div><p class="t-title">Compare and refine</p><p class="t-meta">Rank a few tracks. Swap the ones that do not fit.</p></div></div>
+          <div class="row" data-a="up" style="align-items:flex-start"><span class="medal" style="width:44px;height:44px;border-radius:12px"><svg aria-hidden="true" class="i"><use href="#i-sliders"/></svg></span><div><p class="t-title">You stay in control</p><p class="t-meta">Approve, reorder or replace. Nothing is final until you say so.</p></div></div>
+        </div>
+      </div>
+      <div class="abs persp" style="--x:466;--y:166;--w:934">
+        <div class="win" data-a="win">
+          <div class="wbar d-only" style="height:62px"><span class="dots3"><i></i><i></i><i></i></span><span class="grow" style="color:var(--fg);letter-spacing:.04em;font-size:12px">Workshop · Untitled session</span><span class="pill">Draft</span></div>
+          <div class="d-only" style="padding:18px 60px;border-bottom:1px solid var(--border)"><div class="steps" style="grid-template-columns:repeat(4,1fr)"><span class="track"></span><span class="fill" id="wsFill" style="transform:scaleX(.66)"></span><div class="step done"><b>✓</b>Describe</div><div class="step done"><b>✓</b>Shape</div><div class="step now"><b>3</b>Compare</div><div class="step"><b>4</b>Approve</div></div></div>
+          <div class="row" style="align-items:stretch;gap:18px;padding:20px">
+            <div class="col d-only" style="width:300px;gap:12px">
+              <span class="label">YOUR SESSION</span>
+              <div class="soft" style="padding:14px;font-size:14px;min-height:96px"><span id="typed"></span><span style="color:var(--accent)">▍</span></div>
+              <div class="row" style="flex-wrap:wrap;gap:8px"><span class="chip on">Calm</span><span class="chip">Late night</span><span class="chip on">45 min</span><span class="chip">From liked songs</span></div>
+              <span class="label" style="margin-top:6px">SIGNALS</span>
+              <div class="meter"><div class="row t-meta" style="justify-content:space-between"><span>Energy</span><span>Low</span></div><div class="prog"><i style="transform:scaleX(.28)"></i></div></div>
+              <div class="meter"><div class="row t-meta" style="justify-content:space-between"><span>Tempo</span><span>88 BPM</span></div><div class="prog"><i style="transform:scaleX(.46)"></i></div></div>
+              <div class="meter"><div class="row t-meta" style="justify-content:space-between"><span>Mood</span><span>Warm</span></div><div class="prog"><i style="transform:scaleX(.72)"></i></div></div>
+            </div>
+            <div class="col grow" style="gap:10px">
+              <div class="row label" style="justify-content:space-between"><span>CANDIDATES</span><span>RANKED BY FIT</span></div>
+              <div class="col" id="stack" style="gap:8px">
+                <div class="cand"><span class="r">#1</span><span class="cv s cv1"></span><div class="grow"><p class="t-title">Afterglow</p><p class="t-meta">Nova &amp; the Static · 3:42</p></div><span class="pill ok">96% fit</span></div>
+                <div class="cand"><span class="r">#2</span><span class="cv s cv2"></span><div class="grow"><p class="t-title">Night Signal</p><p class="t-meta">Mira Sol · 3:56</p></div><span class="pill">91% fit</span></div>
+                <div class="cand"><span class="r">#3</span><span class="cv s cv3"></span><div class="grow"><p class="t-title">Static Lines</p><p class="t-meta">Kite Harbor · 3:47</p></div><span class="pill">88% fit</span></div>
+                <div class="cand"><span class="r">#4</span><span class="cv s cv4"></span><div class="grow"><p class="t-title">Echoes in Motion</p><p class="t-meta">Lumen Choir · 4:21</p></div><span class="pill">84% fit</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="row d-only" style="height:56px;padding:0 20px;border-top:1px solid var(--border);gap:10px"><span class="mono">12 TRACKS · 44 MIN</span><span class="grow"></span><a class="btn btn-ghost btn-xs" href="#workshop">Swap two</a><a class="btn btn-primary btn-xs" href="#workshop">Approve playlist</a></div>
+        </div>
+      </div>
+      <div class="abs row d-only" style="--x:60;--y:846;--w:1320;justify-content:space-between"><span class="disc">Playlist Workshop concept · Demonstration library</span><span style="font:500 16px/1 var(--font-display);color:var(--muted)">Your mood. Your order. Your playlist.</span></div>
+    </div>
+  </section>
+
+  <!-- 05 your rules -->
+  <section class="scene" id="rules" data-label="Your rules" aria-label="Your player, your rules">
+    <div class="board">
+      <div class="abs d-only" style="--x:0;--y:560;--w:360;--h:340"><div class="horizon" style="height:100%"></div></div>
+      <div class="abs d-only" style="--x:40;--y:110;--w:300;--h:120;opacity:.7"><div class="bands" id="bands"></div></div>
+      <div class="abs" style="--x:50;--y:236;--w:320">
+        <div class="eyebrow" data-a="up" style="margin-bottom:18px">Make it yours</div>
+        <h2 class="h h56"><span class="line"><span>Your player.</span></span><span class="line"><span class="hl">Your rules.</span></span></h2>
+        <p class="lede" style="margin-top:26px;color:var(--fg)" data-a="up">Less clutter. More of what you use.</p>
+        <p class="lede s" style="margin-top:14px" data-a="up">Change the layout. Choose your tools. Find your rhythm.</p>
+      </div>
+      <span class="abs sig d-only" style="--x:72;--y:834;--w:200">MUSIC LIVES ON</span>
+      <div class="abs d-only" style="--x:378;--y:110;--w:1024;--h:718;border-radius:24px;background:linear-gradient(135deg,rgba(124,58,237,.25),rgba(236,72,153,.12));border:1px solid var(--border)" data-a="up"></div>
+      <div class="abs persp" style="--x:392;--y:126;--w:1008">
+        <div class="win m-fit" data-a="win" style="position:relative;height:690px">
+          <div class="row d-only" style="height:56px;padding:0 22px;gap:22px;font-size:12px;color:var(--muted)"><b style="font:600 16px/1 var(--font-display);color:var(--fg)">Bitrate</b><span style="color:var(--fg)">Home</span><span>Library</span><span>Discover</span><span class="soft row" style="padding:8px 12px;gap:8px;width:190px;border-radius:999px"><svg aria-hidden="true" class="i" style="width:14px;height:14px"><use href="#i-search"/></svg>Search…</span></div>
+          <div class="pos d-only" style="left:14px;top:70px;width:246px;height:604px"><div class="card col" style="height:100%;padding:14px;gap:14px;box-sizing:border-box"><span class="label">NOW PLAYING</span><div class="art" style="height:218px"></div><p class="t-title" style="font:600 18px/1 var(--font-display)">Night Signal</p><p class="t-meta" style="margin-top:-8px">Demo artist</p><div class="prog"><i class="anim-prog"></i></div><div class="transport" style="gap:18px"><svg aria-hidden="true" class="i"><use href="#i-prev"/></svg><span class="playbtn" style="width:42px;height:42px"><svg aria-hidden="true" class="i"><use href="#i-pause"/></svg></span><svg aria-hidden="true" class="i"><use href="#i-next"/></svg></div><span class="grow"></span><div style="height:44px"><canvas class="spec" data-bars="20"></canvas></div></div></div>
+          <div class="pos d-only" style="left:268px;top:70px;width:238px;height:425px"><div class="card col" style="height:100%;padding:14px;gap:6px;box-sizing:border-box"><span class="label">LIBRARY</span><div class="qrow"><span class="cv s" style="background:linear-gradient(135deg,#7c3aed,#ec4899)"></span><div><p class="t-title">Liked songs</p><p class="t-meta">128 tracks</p></div></div><div class="qrow"><span class="cv s cv2"></span><div><p class="t-title">Night drive</p><p class="t-meta">Playlist</p></div></div><div class="qrow"><span class="cv s cv3"></span><div><p class="t-title">Rain Drive</p><p class="t-meta">Playlist</p></div></div><div class="qrow"><span class="cv s cv5"></span><div><p class="t-title">Luma Vale</p><p class="t-meta">Artist</p></div></div><div class="qrow"><span class="cv s cv4"></span><div><p class="t-title">Ambient mornings</p><p class="t-meta">Playlist</p></div></div></div></div>
+          <div class="pos d-only" style="left:268px;top:507px;width:238px;height:167px"><div class="drop" style="height:100%;box-sizing:border-box">Drop a panel here<br>Lyrics · Credits · Visualizer</div></div>
+          <div class="pos d-only" style="left:514px;top:70px;width:188px;height:604px"><div class="card col" style="height:100%;padding:14px;gap:6px;box-sizing:border-box;opacity:.55"><span class="label">QUEUE DOCK</span><div class="drop" style="height:150px;margin-top:6px">Queue moved</div></div></div>
+          <div class="pos" style="left:714px;top:2px;width:280px;height:674px"><div class="card col" style="height:100%;padding:20px;gap:16px;box-sizing:border-box">
+            <div class="row"><svg aria-hidden="true" class="i" style="color:var(--accent)"><use href="#i-sliders"/></svg><p class="t-title" style="font:600 18px/1 var(--font-display)">Make it yours</p></div>
+            <span class="label">LAYOUT</span>
+            <div class="row" style="gap:8px"><span class="chip on">Focus</span><span class="chip">Studio</span><span class="chip">Mini</span></div>
+            <span class="label">PANELS</span>
+            <div class="row t-title" style="font-weight:500"><span class="grow">Lyrics</span><span class="toggle on"></span></div>
+            <div class="row t-title" style="font-weight:500"><span class="grow">Floating queue</span><span class="toggle" id="tgQueue"></span></div>
+            <div class="row t-title" style="font-weight:500"><span class="grow">Visualizer</span><span class="toggle"></span></div>
+            <div class="row t-title" style="font-weight:500"><span class="grow">Credits</span><span class="toggle"></span></div>
+            <span class="label">ACCENT</span>
+            <div class="row" style="gap:10px"><span class="av" style="background:#7c3aed;border-color:var(--fg)"></span><span class="av" style="background:#ec4899"></span><span class="av" style="background:#3b82f6"></span><span class="av" style="background:#10b981"></span></div>
+            <span class="grow"></span>
+            <p class="t-meta">Saved to this device. Reset any time.</p>
+          </div></div>
+          <div class="pos d-only" style="left:544px;top:246px;width:192px;height:328px" id="floatQ"><div class="card col" style="height:100%;padding:12px;gap:4px;box-sizing:border-box;box-shadow:0 30px 60px -20px var(--shadow);border-color:var(--accent)"><div class="row label" style="justify-content:space-between"><span>FLOATING QUEUE</span><svg aria-hidden="true" class="i" style="width:14px"><use href="#i-grip"/></svg></div><div class="qrow" style="padding:8px 4px"><span class="cv s cv2" style="width:32px;height:32px"></span><p class="t-title" style="font-size:12px">Echoes in Motion</p></div><div class="qrow" style="padding:8px 4px"><span class="cv s cv3" style="width:32px;height:32px"></span><p class="t-title" style="font-size:12px">Static Lines</p></div><div class="qrow" style="padding:8px 4px"><span class="cv s cv4" style="width:32px;height:32px"></span><p class="t-title" style="font-size:12px">Drift Control</p></div><div class="qrow" style="padding:8px 4px"><span class="cv s cv1" style="width:32px;height:32px"></span><p class="t-title" style="font-size:12px">Afterglow</p></div></div></div>
+        </div>
+      </div>
+      <span class="abs disc d-only" style="--x:1196;--y:844;--w:220;text-align:right">Feature concept · Demo content</span>
+    </div>
+  </section>
+
+  <!-- 06 library -->
+  <section class="scene" id="library" data-label="Library" aria-label="A library with a memory">
+    <div class="board">
+      <div class="abs" style="--x:48;--y:104;--w:700">
+        <div class="eyebrow" data-a="up" style="margin-bottom:14px">Your collection, connected</div>
+        <h2 class="h h56"><span class="line"><span>A library with <span class="hl">a memory.</span></span></span></h2>
+        <p class="lede" style="margin-top:12px" data-a="up">Find it faster. Keep it organised. Bring a version back.</p>
+      </div>
+      <div class="abs persp" style="--x:32;--y:270;--w:1376">
+        <div class="win" data-a="win">
+          <div class="row" style="align-items:stretch;gap:0;height:570px">
+            <div class="col d-only" style="width:224px;padding:18px;gap:6px;border-right:1px solid var(--border);box-sizing:border-box">
+              <span class="label">YOUR LIBRARY</span>
+              <div class="row" style="gap:6px;margin:6px 0 4px"><span class="chip on">Playlists</span><span class="chip">Artists</span></div>
+              <div class="qrow now"><span class="cv s cv2"></span><div><p class="t-title">Night drive</p><p class="t-meta">24 tracks</p></div></div>
+              <div class="qrow"><span class="cv s" style="background:linear-gradient(135deg,#7c3aed,#ec4899)"></span><div><p class="t-title">Liked songs</p><p class="t-meta">128 tracks</p></div></div>
+              <div class="qrow"><span class="cv s cv3"></span><div><p class="t-title">Rain Drive</p><p class="t-meta">31 tracks</p></div></div>
+              <div class="qrow"><span class="cv s cv4"></span><div><p class="t-title">Ambient mornings</p><p class="t-meta">18 tracks</p></div></div>
+              <span class="grow"></span>
+              <p class="t-meta" style="font-size:11px">Browse previous versions. Bring the right one back.</p>
+            </div>
+            <div class="col grow d-only" style="padding:18px 22px;gap:4px">
+              <div class="row" style="margin-bottom:8px"><div class="soft row grow" style="padding:10px 14px;gap:10px;border-radius:10px"><svg aria-hidden="true" class="i" style="width:15px;color:var(--muted)"><use href="#i-search"/></svg><span id="libQ">night</span><span style="color:var(--accent)">▍</span></div><span class="chip on">Tracks</span><span class="chip">Albums</span></div>
+              <div class="lrow hd"><span>#</span><span></span><span>TITLE</span><span>ALBUM</span><span>TIME</span></div>
+              <div class="lrow lres"><span class="mono">1</span><span class="cv s cv1"></span><span><b>Night Signal</b><br><span class="t-meta">Mira Sol</span></span><span class="t-meta">Night Signal</span><span class="mono">3:56</span></div>
+              <div class="lrow lres"><span class="mono">2</span><span class="cv s cv2"></span><span><b>Night Drive Theme</b><br><span class="t-meta">Kite Harbor</span></span><span class="t-meta">Harbor Lights</span><span class="mono">4:02</span></div>
+              <div class="lrow lres"><span class="mono">3</span><span class="cv s cv4"></span><span><b>Nightfall Static</b><br><span class="t-meta">Nova &amp; the Static</span></span><span class="t-meta">Afterglow</span><span class="mono">3:21</span></div>
+              <div class="lrow lres"><span class="mono">4</span><span class="cv s cv3"></span><span><b>Midnight Echoes</b><br><span class="t-meta">Lumen Choir</span></span><span class="t-meta">Echoes in Motion</span><span class="mono">4:48</span></div>
+              <div class="lrow lres"><span class="mono">5</span><span class="cv s cv5"></span><span><b>Low Orbit (Night mix)</b><br><span class="t-meta">Luma Vale</span></span><span class="t-meta">Low Orbit</span><span class="mono">3:30</span></div>
+            </div>
+            <div class="col" style="width:318px;padding:20px;gap:6px;border-left:1px solid var(--border);box-sizing:border-box">
+              <div class="row"><svg aria-hidden="true" class="i" style="color:var(--accent)"><use href="#i-history"/></svg><div><p class="t-title">Night drive</p><p class="t-meta">Playlist history</p></div></div>
+              <div style="position:relative;margin-top:8px"><span class="vline"></span>
+                <div class="vrow"><span class="dot"></span><div><p class="t-title">Today</p><p class="t-meta">24 tracks</p></div><span class="pill">Current</span></div>
+                <div class="vrow sel"><span class="dot"></span><div><p class="t-title">Yesterday</p><p class="t-meta">21 tracks</p></div><span class="pill acc">Selected</span></div>
+                <div class="vrow"><span class="dot"></span><div><p class="t-title">Sep 02</p><p class="t-meta">18 tracks</p></div><span class="pill">Saved</span></div>
+              </div>
+              <div class="soft" style="padding:12px;font-size:12px;color:var(--muted)">Changes in this version<br><b style="color:var(--success)">+3 tracks added</b> · <b style="color:var(--magenta)">1 removed</b></div>
+              <span class="grow"></span>
+              <a class="btn btn-primary btn-sm magnetic" href="#library">Restore this version</a>
+              <p class="t-meta" style="text-align:center">Your current version stays in history.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="abs row d-only" style="--x:48;--y:854;--w:1360;justify-content:space-between"><span class="sig">MUSIC LIVES ON</span><span class="disc">Feature concept · Demo content</span></div>
+    </div>
+  </section>
+
+  <!-- 07 discovery -->
+  <section class="scene" id="discover" data-label="Discover" aria-label="Follow the sound">
+    <div class="board">
+      <div class="abs card d-only" style="--x:24;--y:112;--w:82;--h:600" data-a="win"><div class="rail-nav"><span><svg aria-hidden="true" class="i"><use href="#i-home"/></svg>Home</span><span class="on"><svg aria-hidden="true" class="i" style="color:var(--accent)"><use href="#i-compass"/></svg>Discover</span><span><svg aria-hidden="true" class="i"><use href="#i-lib"/></svg>Library</span><span><svg aria-hidden="true" class="i"><use href="#i-layers"/></svg>Playlists</span><span><svg aria-hidden="true" class="i"><use href="#i-user"/></svg>Profile</span></div></div>
+      <div class="abs" style="--x:144;--y:98;--w:640">
+        <div class="eyebrow" data-a="up" style="margin-bottom:14px">Discover the connections</div>
+        <h2 class="h h54"><span class="line"><span>Follow the <span class="hl">sound.</span></span></span></h2>
+        <p class="lede s" style="margin-top:12px" data-a="up">Explore the artists, influences and scenes behind what you love.</p>
+      </div>
+      <div class="abs legend d-only" style="--x:666;--y:228;--w:420" data-a="up"><span><i style="background:var(--accent)"></i>Influenced by</span><span><i style="background:var(--magenta)"></i>Similar sound</span><span><i style="background:var(--blue)"></i>Shared scene</span></div>
+      <div class="abs graph d-only" style="--x:132;--y:262;--w:932;--h:447">
+        <svg width="932" height="447" viewBox="0 0 932 447" style="position:absolute;inset:0" aria-hidden="true">
+          <path class="p-inf" d="M540 261 C 470 160, 400 90, 336 38"/>
+          <path class="p-scn" d="M540 261 C 650 170, 760 90, 798 38"/>
+          <path class="p-sim" d="M540 261 C 400 230, 250 200, 113 182"/>
+          <path class="p-sim" d="M540 261 C 420 300, 260 340, 127 353"/>
+          <path class="p-sim" d="M540 261 C 660 220, 760 160, 828 142"/>
+          <path class="p-scn" d="M540 261 C 650 280, 760 300, 829 305"/>
+          <path class="p-scn" d="M540 261 C 530 320, 500 380, 486 408"/>
+          <path class="p-sim" d="M540 261 C 640 330, 760 390, 822 407"/>
+        </svg>
+        <span class="node" style="left:216px;top:0"><span class="av" style="background:linear-gradient(135deg,#7c3aed,#3b82f6)">MS</span><span><b>Mira Sol</b><small>Influence · Dream pop</small></span></span>
+        <span class="node" style="left:668px;top:0"><span class="av" style="background:linear-gradient(135deg,#3b82f6,#0ea5e9)">NP</span><span><b>Night Pulse Collective</b><small>Shared scene</small></span></span>
+        <span class="node" style="left:0;top:144px"><span class="av" style="background:linear-gradient(135deg,#ec4899,#7c3aed)">SB</span><span><b>Static Bloom</b><small>Similar sound</small></span></span>
+        <span class="node" style="left:14px;top:315px"><span class="av" style="background:linear-gradient(135deg,#be185d,#f59e0b)">AS</span><span><b>Auren Sky</b><small>Similar sound</small></span></span>
+        <span class="node" style="left:724px;top:104px"><span class="av" style="background:linear-gradient(135deg,#db2777,#4c1d95)">VC</span><span><b>Velvet Coast</b><small>Similar sound</small></span></span>
+        <span class="node" style="left:726px;top:267px"><span class="av" style="background:linear-gradient(135deg,#0ea5e9,#312e81)">KH</span><span><b>Kite Halo</b><small>Shared scene</small></span></span>
+        <span class="node" style="left:357px;top:370px"><span class="av" style="background:linear-gradient(135deg,#1d4ed8,#7c3aed)">AD</span><span><b>Afterhours District</b><small>Shared scene</small></span></span>
+        <span class="node" style="left:712px;top:369px"><span class="av" style="background:linear-gradient(135deg,#6d28d9,#ec4899)">GH</span><span><b>Glass Harbour</b><small>Similar sound</small></span></span>
+        <span class="node focus" style="left:468px;top:174px;width:144px;height:174px;box-sizing:border-box"><span class="av" style="background:linear-gradient(135deg,#a78bfa,#ec4899)">LV</span><b>Luma Vale</b><small>You are here</small></span>
+        <span class="tag" style="left:344px;top:100px">Influenced by</span><span class="tag" style="left:248px;top:210px">Similar sound</span><span class="tag" style="left:619px;top:313px">Shared scene</span><span class="tag" style="left:599px;top:147px">Similar sound</span>
+      </div>
+      <div class="abs card" style="--x:1090;--y:104;--w:318" data-a="win">
+        <div class="col" style="padding:20px;gap:12px">
+          <div class="art d-only" style="height:170px"></div>
+          <p class="t-title" style="font:700 29px/1 var(--font-display)">Luma Vale</p>
+          <div class="row" style="gap:8px"><span class="chip">Electronic</span><span class="chip">Dream pop</span><span class="chip">Night</span></div>
+          <p class="mono" style="color:var(--accent)">ILLUSTRATIVE CONNECTION</p>
+          <p class="t-title">Why this connection</p>
+          <p class="t-meta" style="font-size:14px">Dreamlike synth textures, spacious vocals and a shared late-night scene.</p>
+          <p class="t-title d-only" style="margin-top:6px">Top tracks</p>
+          <div class="qrow d-only" style="padding:6px 0"><span class="cv s cv1"></span><div class="grow"><p class="t-title" style="font-size:12px">Night Signal</p><p class="t-meta">3:56</p></div></div>
+          <div class="qrow d-only" style="padding:6px 0"><span class="cv s cv3"></span><div class="grow"><p class="t-title" style="font-size:12px">Glass Horizon</p><p class="t-meta">4:28</p></div></div>
+          <a class="btn btn-primary btn-sm magnetic d-only" href="#discover">Explore this artist <svg aria-hidden="true" class="i"><use href="#i-arrow"/></svg></a>
+        </div>
+      </div>
+      <div class="abs card route d-only" style="--x:132;--y:736;--w:932;--h:75" data-a="win"><div><p class="t-title">Your explored route</p><p class="t-meta">3 steps · Follow the journey</p></div><span class="grow"></span><span class="n">1</span><b>Luma Vale</b><svg aria-hidden="true" class="i" style="color:var(--subdued)"><use href="#i-arrow"/></svg><span class="n">2</span><b>Mira Sol</b><svg aria-hidden="true" class="i" style="color:var(--subdued)"><use href="#i-arrow"/></svg><span class="n">3</span><b>Night Pulse Collective</b></div>
+      <div class="abs row d-only" style="--x:48;--y:854;--w:1360;justify-content:space-between"><span class="sig">MUSIC LIVES ON</span><span class="disc">Feature concept · Demo content</span></div>
+    </div>
+  </section>
+
+  <!-- 08 devices -->
+  <section class="scene" id="devices" data-label="Devices" aria-label="Same queue, new scene">
+    <div class="board">
+      <div class="abs d-only" style="--x:0;--y:626;--w:380;--h:274"><div class="horizon" style="height:100%"></div></div>
+      <div class="abs" style="--x:48;--y:120;--w:380">
+        <div class="eyebrow" data-a="up" style="margin-bottom:18px">Keep the session going</div>
+        <h2 class="h h54"><span class="line"><span>Same queue.</span></span><span class="line"><span class="hl">New scene.</span></span></h2>
+        <p class="lede s" style="margin-top:22px" data-a="up">Move your listening between devices. Or open the room to friends.</p>
+        <div class="col d-only" style="margin-top:34px;gap:20px">
+          <div class="row" data-a="up"><svg aria-hidden="true" class="i" style="color:var(--accent)"><use href="#i-phone"/></svg><div><p class="t-title">Your devices</p><p class="t-meta">Move personal playback</p></div></div>
+          <div class="row" data-a="up"><svg aria-hidden="true" class="i" style="color:var(--accent)"><use href="#i-users"/></svg><div><p class="t-title">Listening room</p><p class="t-meta">Listen together</p></div></div>
+        </div>
+      </div>
+      <div class="abs persp d-only" style="--x:553;--y:116;--w:855">
+        <div class="win" data-a="win" style="height:716px">
+          <div class="wbar"><span class="dots3"><i></i><i></i><i></i></span><span class="grow"></span><span class="live"><i></i><span class="glitch glitch-auto" data-text="ROOM LIVE">ROOM LIVE</span></span></div>
+          <div class="row" style="align-items:stretch;gap:18px;padding:0 18px 18px;height:648px;box-sizing:border-box">
+            <div class="col" style="width:126px;gap:16px;padding-top:18px;font-size:12px;color:var(--muted)"><span class="row" style="gap:8px;color:var(--fg)"><svg aria-hidden="true" class="i"><use href="#i-home"/></svg>Home</span><span class="row" style="gap:8px"><svg aria-hidden="true" class="i"><use href="#i-lib"/></svg>Library</span><span class="row" style="gap:8px"><svg aria-hidden="true" class="i"><use href="#i-users"/></svg>Rooms</span></div>
+            <div class="col grow" style="padding-top:18px;gap:14px;padding-left:120px">
+              <div class="row"><div class="grow"><span class="label" style="color:var(--accent)">SHARED SESSION</span><p class="t-title" style="font:700 30px/1.1 var(--font-display);margin-top:6px">Room: After hours</p></div><div class="avs listeners"><span class="av" style="background:#7c3aed">MR</span><span class="av" style="background:#db2777">JP</span><span class="av" style="background:#0ea5e9">AS</span><span class="av" style="background:#334155">+2</span></div></div>
+              <div class="row" style="gap:18px;align-items:stretch"><div class="art" style="width:200px;height:200px;flex:none"></div><div class="col grow" style="gap:10px"><span class="label">NOW PLAYING · IN SYNC</span><p class="t-title" style="font:600 24px/1.1 var(--font-display)">Night Signal</p><p class="t-meta">Demo artist</p><span class="grow"></span><div class="prog"><i class="sync-bar"></i></div><div class="times"><span>1:38</span><span>3:56</span></div></div></div>
+              <span class="label">UP NEXT · SHARED QUEUE</span>
+              <div class="qrow"><span class="cv s cv2"></span><div class="grow"><p class="t-title">Echoes in Motion</p><p class="t-meta">Added by Maya</p></div><span class="mono">4:21</span></div>
+              <div class="qrow"><span class="cv s cv3"></span><div class="grow"><p class="t-title">Static Lines</p><p class="t-meta">Added by Jonah</p></div><span class="mono">3:47</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <svg class="abs d-only" style="--x:560;--y:578;--w:130;overflow:visible" width="130" height="160" viewBox="0 0 130 160" aria-hidden="true"><path id="devLink" d="M8 150 C 40 140, 70 90, 122 6" fill="none" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 6"/></svg>
+      <div class="abs persp d-only" style="--x:379;--y:196;--w:245">
+        <div class="phone" data-a="win" style="height:595px;box-sizing:border-box">
+          <div class="row mono" style="justify-content:space-between"><span style="color:var(--fg)">9:41</span><span>●●●</span></div>
+          <div class="row" style="margin-top:22px;gap:8px"><b style="font:600 14px/1 var(--font-display)">Bitrate</b></div>
+          <span class="pill" style="display:inline-block;margin-top:14px">Room: After hours</span>
+          <div class="art" style="height:190px;margin-top:16px"></div>
+          <p class="t-title" style="font:600 18px/1.1 var(--font-display);margin-top:16px">Night Signal</p><p class="t-meta">Demo artist</p>
+          <div class="prog" style="margin-top:16px"><i class="sync-bar"></i></div><div class="times"><span>1:38</span><span>3:56</span></div>
+          <div class="transport" style="margin-top:16px;gap:20px"><svg aria-hidden="true" class="i"><use href="#i-prev"/></svg><span class="playbtn" style="width:46px;height:46px"><svg aria-hidden="true" class="i"><use href="#i-pause"/></svg></span><svg aria-hidden="true" class="i"><use href="#i-next"/></svg></div>
+        </div>
+      </div>
+      <div class="abs card" style="--x:365;--y:682;--w:272" data-a="win">
+        <div class="col" style="padding:16px;gap:10px">
+          <p class="t-title" style="font:600 16px/1 var(--font-display)">Your devices</p>
+          <div class="row"><svg aria-hidden="true" class="i" style="color:var(--accent)"><use href="#i-phone"/></svg><div class="grow"><p class="t-title" style="font-size:12px">This phone</p><p class="t-meta" style="font-size:10px">Ready to play</p></div></div>
+          <div class="row"><svg aria-hidden="true" class="i" style="color:var(--muted)"><use href="#i-laptop"/></svg><div class="grow"><p class="t-title" style="font-size:12px">Desktop · Playing</p></div><span class="live ok"><i></i></span></div>
+          <a class="btn btn-primary btn-sm magnetic" href="#devices">Move playback to this phone</a>
+        </div>
+      </div>
+      <div class="abs row d-only" style="--x:48;--y:854;--w:1360;justify-content:space-between"><span class="sig">MUSIC LIVES ON</span><span class="disc">Feature concept · Demo content</span></div>
+    </div>
+  </section>
+
+  <!-- 09 social -->
+  <section class="scene" id="social" data-label="Social" aria-label="Beyond the play button">
+    <div class="board">
+      <div class="abs" style="--x:48;--y:120;--w:330">
+        <div class="eyebrow" data-a="up" style="margin-bottom:18px">Music is a conversation</div>
+        <h2 class="h h54"><span class="line"><span>Beyond the</span></span><span class="line"><span class="hl">play button.</span></span></h2>
+        <p class="lede s" style="margin-top:20px" data-a="up">Share the moment. Follow a friend's taste. Talk with the artist.</p>
+      </div>
+      <div class="abs card" style="--x:43;--y:410;--w:317" data-a="win">
+        <div class="col" style="padding:20px;gap:12px">
+          <div class="row"><span class="av" style="width:60px;height:60px;font-size:16px;background:linear-gradient(135deg,#db2777,#7c3aed);border:0">MR</span><div><p class="t-title" style="font:600 19px/1.1 var(--font-display)">Maya's listening</p><p class="t-meta">Her music, lately.</p></div></div>
+          <div class="row" style="gap:8px"><span class="chip">Electronic</span><span class="chip">Ambient</span><span class="chip">UK Garage</span></div>
+          <p class="t-title d-only" style="margin-top:4px">Taste history</p>
+          <div class="d-only t-meta" style="font-size:13px;display:grid;gap:8px"><span><b style="color:var(--fg)">This month:</b> Broken beat</span><span><b style="color:var(--fg)">Last month:</b> Ambient</span></div>
+          <div class="row" style="justify-content:space-between;margin-top:6px"><span class="t-meta">Recently saved</span><a class="btn btn-ghost btn-xs magnetic" href="#social">Explore profile →</a></div>
+        </div>
+      </div>
+      <div class="abs persp d-only" style="--x:394;--y:109;--w:1014">
+        <div class="win" data-a="win" style="height:723px">
+          <div class="row" style="align-items:stretch;gap:18px;padding:18px;height:100%;box-sizing:border-box">
+            <div class="col" style="width:146px;gap:14px;font-size:12px;color:var(--muted);padding-top:30px"><span class="label">FRIENDS</span>
+              <span class="row" style="gap:8px"><span class="av" style="width:26px;height:26px;background:#db2777">MR</span>Maya <i style="width:7px;height:7px;border-radius:50%;background:var(--accent)"></i></span>
+              <span class="row" style="gap:8px"><span class="av" style="width:26px;height:26px;background:#0ea5e9">JP</span>Jonah <i style="width:7px;height:7px;border-radius:50%;background:var(--success)"></i></span>
+              <span class="row" style="gap:8px"><span class="av" style="width:26px;height:26px;background:#334155">AS</span>Ana</span>
+            </div>
+            <div class="col grow" style="gap:14px;padding-top:30px">
+              <div class="row"><span class="art" style="width:96px;height:96px;flex:none"></span><div class="grow"><span class="label" style="color:var(--accent)">TRACK DISCUSSION</span><p class="t-title" style="font:700 30px/1.05 var(--font-display);margin-top:6px">Night Signal</p><p class="t-meta">Demo artist · 3:56 · 24 comments</p></div><span class="pill ok">Artist replied</span></div>
+              <div style="position:relative;height:60px;margin-top:10px"><canvas class="wave" data-seed="7"></canvas><span class="cmark" style="left:18%"></span><span class="cmark" style="left:41%"></span><span class="cmark" style="left:63%;background:var(--accent)"></span><span class="cmark" style="left:82%"></span></div>
+              <div class="col" style="gap:0">
+                <div class="cmt"><span class="av" style="background:#db2777">MR</span><div><p class="t-title"><span class="ts">0:42</span>Maya</p><p class="t-meta" style="font-size:13px">That synth swell — this is the moment it opens up.</p></div></div>
+                <div class="cmt"><span class="av" style="background:#0ea5e9">JP</span><div><p class="t-title"><span class="ts">1:36</span>Jonah</p><p class="t-meta" style="font-size:13px">Sounds like the whole city at 2 AM.</p></div></div>
+                <div class="cmt"><span class="av" style="background:linear-gradient(135deg,#a78bfa,#ec4899)">DA</span><div><p class="t-title"><span class="ts">2:28</span>Demo artist <span class="pill acc" style="padding:3px 7px;font-size:10px">Artist</span></p><p class="t-meta" style="font-size:13px">Recorded that part in one take. Glad it lands.</p></div></div>
+              </div>
+              <span class="grow"></span>
+              <div class="soft row" style="padding:12px 14px"><svg aria-hidden="true" class="i" style="color:var(--muted)"><use href="#i-msg"/></svg><span class="t-meta grow">Comment at 1:38…</span><a class="btn btn-primary btn-xs" href="#social">Post</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="abs row d-only" style="--x:48;--y:854;--w:1360;justify-content:space-between"><span class="sig">MUSIC LIVES ON</span><span class="disc">Feature concept · Demo content</span></div>
+    </div>
+  </section>
+
+  <!-- 10 partners -->
+  <section class="scene" id="partners" data-label="Partners" aria-label="Our partners">
+    <div class="board">
+      <div class="abs" style="--x:60;--y:170;--w:440">
+        <div class="eyebrow" data-a="up" style="margin-bottom:18px">Our partners</div>
+        <h2 class="h h56"><span class="line"><span>Partners who keep</span></span><span class="line"><span>the <span class="hl">signal on air.</span></span></span></h2>
+        <p class="lede s" style="margin-top:22px" data-a="up">Labels, studios and services we build with. Grab one and throw it — they bounce back.</p>
+        <div class="row mono" style="margin-top:28px" data-a="up"><svg aria-hidden="true" class="i" style="width:15px;color:var(--accent)"><use href="#i-grip"/></svg>DRAG · THROW · SQUEEZE</div>
+        <div class="ctas" style="margin-top:24px" data-a="up"><a class="btn btn-primary magnetic" href="#partners" data-cursor="hover">Become a partner <svg aria-hidden="true" class="i"><use href="#i-arrow"/></svg></a></div>
+      </div>
+      <div class="abs drag-zone" id="partnerZone" style="--x:520;--y:70;--w:900;--h:780" aria-hidden="true"></div>
+      <div class="abs row d-only" style="--x:60;--y:854;--w:1320;justify-content:space-between"><span class="sig">MUSIC LIVES ON</span><span class="disc">Placeholder marks — replace with real partner logos</span></div>
+    </div>
+  </section>
+
+  <!-- 11 team -->
+  <section class="scene" id="team" data-label="Team" aria-label="About our team">
+    <div class="board">
+      <div class="abs" style="--x:60;--y:170;--w:420">
+        <div class="eyebrow" data-a="up" style="margin-bottom:18px">About our team</div>
+        <h2 class="h h56"><span class="line"><span>Small team.</span></span><span class="line"><span class="hl">Loud signal.</span></span></h2>
+        <p class="lede s" style="margin-top:22px" data-a="up">Two people build Bitrate — the player, the artist portal, the API and everything in between. Hover a bubble to meet us, drag it to play.</p>
+        <div class="stats" data-a="up"><span><b data-v="2">2</b><span class="t-meta">people</span></span><span><b data-v="9">9</b><span class="t-meta">workspaces</span></span><span><b data-v="1">1</b><span class="t-meta">palette</span></span></div>
+        <div class="ctas" style="margin-top:26px" data-a="up"><a class="btn btn-primary magnetic" href="https://github.com/Lordpluha/bitrate" target="_blank" rel="noopener noreferrer">Join us <svg aria-hidden="true" class="i"><use href="#i-arrow"/></svg></a><a class="btn btn-ghost magnetic" href="https://github.com/Lordpluha/bitrate/blob/develop/apps/docs/docs/guides/contributing.md" target="_blank" rel="noopener noreferrer">How we work</a></div>
+      </div>
+      <div class="abs pit drag-zone" id="pit" style="--x:520;--y:70;--w:880;--h:780"><div class="hc" id="hc" role="tooltip"></div></div>
+      <div class="abs row d-only" style="--x:60;--y:854;--w:1320;justify-content:space-between"><span class="sig">MUSIC LIVES ON</span><span class="disc">Stack bubbles show where each technology lives in the repository</span></div>
+    </div>
+  </section>
+
+  <!-- 12 final -->
+  <section class="scene" id="cta" data-label="Start" aria-label="Pick up where the last track left off">
+    <div class="board">
+      <div class="abs d-only" style="--x:70;--y:404;--w:1300;--h:378;opacity:.55"><canvas class="spec" data-bars="90" data-tall="1"></canvas></div>
+      <div class="abs d-only" style="--x:205;--y:555;--w:1030;--h:227"><div class="dome" style="height:100%"></div></div>
+      <div class="abs" style="--x:160;--y:64;--w:1120;text-align:center">
+        <div style="display:flex;justify-content:center" data-a="up"><span class="pill" style="padding:11px 16px;font-size:12px;letter-spacing:.14em;font-family:var(--font-data)">READY WHEN YOU ARE</span></div>
+        <h2 class="h h80" style="margin-top:26px"><span class="line"><span>Pick up where the</span></span><span class="line"><span>last track <span class="hl">left off.</span></span></span></h2>
+        <p class="lede" style="margin-top:20px" data-a="up">Open Bitrate in the browser and make the next session yours.</p>
+        <div class="ctas" style="justify-content:center;margin-top:26px" data-a="up"><a class="btn btn-primary magnetic" href="#hero" style="height:60px;padding:0 30px;font-size:16px">Open web player <svg aria-hidden="true" class="i"><use href="#i-arrow"/></svg></a></div>
+      </div>
+      <div class="abs" id="cradleSlot" style="--x:520;--y:470;--w:400;--h:250" aria-hidden="true"></div>
+      <p class="abs mono" style="--x:420;--y:738;--w:600;text-align:center" data-a="up">ENERGY CARRIES ON. SO DOES YOUR QUEUE.</p>
+      <div class="abs" style="--x:0;--y:782;--w:1440;--h:118" data-a="up">
+        <div class="footer"><span class="row"><b style="font:600 20px/1 var(--font-display);color:var(--fg)">Bitrate</b><span class="d-only">Playback is the product.</span></span><span class="sig d-only">MUSIC LIVES ON</span><span class="row" style="gap:24px"><a class="ulink" href="#hero">Log in</a><a class="ulink u-right" href="#hero">Create account</a><a class="ulink u-center d-only" href="#hero">Player preview</a><a class="ulink d-only" href="#hero">Legal</a>
+          <span class="health" id="health"><span class="goo" aria-hidden="true"><span class="blob b-panel"></span><span class="blob b-pill"></span></span>
+            <span class="hpanel" id="hpanel" role="dialog" aria-label="System status"><span class="row" style="justify-content:space-between;margin-bottom:6px"><span><b style="font:600 15px/1.2 var(--font-body);display:block">System status</b><small class="t-meta">Updated 30 s ago · last 30 days · demo data</small></span><span class="pill ok">Operational</span></span><span id="hrows"></span><span class="row" style="justify-content:space-between;margin-top:10px"><small class="t-meta" id="hinc">No incidents in the last 30 days</small><a class="ulink u-center" href="#cta" style="font:600 12px/1 var(--font-body);color:var(--accent)">Status page ↗</a></span></span>
+            <button class="hpill" id="hpill" type="button" aria-expanded="false" aria-controls="hpanel"><i class="hdot"></i><span>All systems operational</span><svg aria-hidden="true" class="i" style="width:14px;height:14px;color:var(--muted)"><use href="#i-arrow"/></svg></button>
+          </span></span></div>
+        <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="goo"><feGaussianBlur in="SourceGraphic" stdDeviation="9" result="b"/><feColorMatrix in="b" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10" result="g"/><feComposite in="SourceGraphic" in2="g" operator="atop"/></filter></svg>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Observer.min.js"></script>
+<script>
+/* Bitrate logo loader — a pen flies in from beyond the edge of the screen (or its container), writes the mark in one
+   gesture along its two ribbons and flies out past the opposite edge; the mark is revealed exactly where the pen passed. */
+window.BitrateLogoLoader = (() => {
+  const SPINE_A = 'M 405 152 C 430 200 470 211 560 211 L 900 211 C 1010 211 1050 280 1050 350 C 1050 430 990 493 900 493 L 720 493 C 560 493 470 600 425 780'
+  const SPINE_B = 'M 860 493 C 1000 493 1050 560 1050 650 C 1050 750 990 805 900 805 L 640 805 C 580 805 540 830 512 868'
+  /* the pen's flourish between the two ribbons runs through the open counter of the lower bowl */
+  const CONNECT = 'M 425 780 C 470 660 640 610 760 560 C 820 535 845 505 860 493'
+  const STOPS = [['0', '#490AE5'], ['.22', '#5515EF'], ['.45', '#6824F8'], ['.65', '#8037FB'], ['.82', '#9E4EFB'], ['1', '#C060FA']]
+  const CX = 768.5
+  const CY = 504.5
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
+  let uid = 0
+  const grad = (id, x2 = '1') => `<linearGradient id="${id}" x1="0" y1="0" x2="${x2}" y2="0">${STOPS.map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join('')}</linearGradient>`
+  const measure = (svg, d) => {
+    const p = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+    p.setAttribute('d', d)
+    svg.appendChild(p)
+    const l = p.getTotalLength()
+    p.remove()
+    return l
+  }
+  const clamp = (v) => Math.min(1, Math.max(0, v))
+
+  /* draw: the full gesture inside `el` (use a full-viewport element for a splash). A ribbon as thick as the mark's
+     strokes, in the brand gradient, flies in past the edge, the mark is revealed exactly where it passes, and the ribbon
+     leaves past the opposite edge; then its tail pulls through and out of the screen too. */
+  const RIBBON = 118
+  /* the route skips the bars' pointed tips: the ribbons themselves cover them */
+  const A_REST = 'L 900 211 C 1010 211 1050 280 1050 350 C 1050 430 990 493 900 493 L 720 493 C 560 493 470 600 425 780'
+  const B_HEAD = 'M 860 493 C 1000 493 1050 560 1050 650 C 1050 750 990 805 900 805 L 640 805'
+  const draw = (el, { size = 0.34, loop = true, onDone } = {}) => {
+    const n = ++uid
+    el.innerHTML = `<svg class="ll-draw" width="100%" height="100%" aria-hidden="true" style="display:block;overflow:hidden"><defs><linearGradient id="lg${n}" gradientUnits="userSpaceOnUse" x1="371" y1="0" x2="1166" y2="0">${STOPS.map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join('')}</linearGradient><linearGradient id="gi${n}" gradientUnits="userSpaceOnUse">${[...STOPS].reverse().map(([o, c]) => `<stop offset="${1 - Number(o)}" stop-color="${c}"/>`).join('')}</linearGradient><linearGradient id="go${n}" gradientUnits="userSpaceOnUse">${STOPS.map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join('')}</linearGradient><mask id="lm${n}" maskUnits="userSpaceOnUse" x="-100000" y="-100000" width="200000" height="200000"><path class="sa" d="${SPINE_A}" fill="none" stroke="#fff" stroke-width="150" stroke-linecap="round"/><path class="sb" d="${SPINE_B}" fill="none" stroke="#fff" stroke-width="150" stroke-linecap="round"/></mask></defs><g class="mark"><use href="#bitrate-logo" fill="url(#lg${n})" opacity=".07"/><use href="#bitrate-logo" fill="url(#lg${n})" mask="url(#lm${n})"/><use class="trace" href="#bitrate-logo" fill="none" stroke="#fff" stroke-width="6" opacity="0"/></g><path class="lead" fill="none" stroke="url(#gi${n})" stroke-width="${RIBBON}"/><path class="out" fill="none" stroke="url(#go${n})" stroke-width="${RIBBON}"/><path class="route" fill="none" stroke="none"/><circle class="head" r="46" fill="#e9d5ff" opacity="0" style="filter:blur(16px)"/></svg>`
+    const svg = el.querySelector('svg')
+    const sa = svg.querySelector('.sa')
+    const sb = svg.querySelector('.sb')
+    const lead = svg.querySelector('.lead')
+    const out = svg.querySelector('.out')
+    const route = svg.querySelector('.route')
+    const head = svg.querySelector('.head')
+    const mark = svg.querySelector('.mark')
+    const trace = svg.querySelector('.trace')
+    const LOGO = document.getElementById('bitrate-logo').getTotalLength()
+    const la = measure(svg, SPINE_A)
+    const lb = measure(svg, SPINE_B)
+    const lc = measure(svg, CONNECT)
+    const aTip = measure(svg, 'M 405 152 C 430 200 470 211 560 211')
+    const laRest = measure(svg, `M 560 211 ${A_REST}`)
+    const lbHead = measure(svg, B_HEAD)
+    sa.setAttribute('stroke-dasharray', `${la} ${la}`)
+    sb.setAttribute('stroke-dasharray', `${lb} ${lb}`)
+    trace.setAttribute('stroke-dasharray', `${LOGO * 0.12} ${LOGO}`)
+    const g = { lin: 0, lout: 0, total: 0, P: 0, T: 0 }
+    /* the viewBox keeps the mark centred at `size` of the short side; both ribbons start and end beyond the edges */
+    const layout = () => {
+      const w = el.clientWidth || 1
+      const h = el.clientHeight || 1
+      const s = (Math.min(w, h) * size) / 775
+      const vw = w / s
+      const vh = h / s
+      const vx = CX - vw / 2
+      const vy = CY - vh / 2
+      svg.setAttribute('viewBox', `${vx} ${vy} ${vw} ${vh}`)
+      const pad = RIBBON * 2
+      const ld = `M ${vx - pad} ${vy - pad} C ${vx + vw * 0.16} ${vy + vh * 0.02} 430 211 560 211`
+      const od = `M 640 805 C 520 805 ${vx + vw * 0.1} ${vy + vh * 0.92} ${vx - pad * 1.4} ${vy + vh + pad}`
+      /* each ribbon carries the ramp along itself: light past the edge, the mark's own violet where it meets it */
+      const gi = svg.querySelector(`#gi${n}`)
+      const go = svg.querySelector(`#go${n}`)
+      const set4 = (el, x1, y1, x2, y2) => { el.setAttribute('x1', x1); el.setAttribute('y1', y1); el.setAttribute('x2', x2); el.setAttribute('y2', y2) }
+      set4(gi, vx - pad, vy - pad, 560, 211)
+      set4(go, 640, 805, vx - pad * 1.4, vy + vh + pad)
+      lead.setAttribute('d', ld)
+      out.setAttribute('d', od)
+      g.lin = lead.getTotalLength()
+      g.lout = out.getTotalLength()
+      lead.setAttribute('stroke-dasharray', `${g.lin} ${g.lin}`)
+      out.setAttribute('stroke-dasharray', `${g.lout} ${g.lout}`)
+      route.setAttribute('d', `${ld} ${A_REST} ${CONNECT.replace(/^M 425 780/, '')} L 860 493 ${B_HEAD.replace(/^M 860 493/, '')} ${od.replace(/^M 640 805/, '')}`)
+      g.total = route.getTotalLength()
+      paint()
+    }
+    /* P: where the pen is along the whole route; T: where the ribbon's tail is (only the in/out ribbons are pulled away) */
+    function paint() {
+      const { lin, lout, total, P, T } = g
+      const bStart = lin + laRest + lc
+      const oStart = bStart + lbHead
+      const drawn = (x, start, len) => clamp((x - start) / len)
+      lead.style.strokeDashoffset = String(lin * (1 - drawn(P, 0, lin)) - lin * drawn(T, 0, lin))
+      out.style.strokeDashoffset = String(lout * (1 - drawn(P, oStart, lout)) - lout * drawn(T, oStart, lout))
+      /* the tip of bar A appears with the ribbon's arrival; bar B's tail tip completes when the ribbon leaves */
+      const a = P < lin ? 0 : (aTip + (la - aTip) * drawn(P, lin, laRest)) / la
+      const b = P < bStart ? 0 : P >= oStart ? 1 : (lbHead / lb) * drawn(P, bStart, lbHead)
+      sa.style.strokeDashoffset = String(la * (1 - a))
+      sb.style.strokeDashoffset = String(lb * (1 - b))
+      const pt = route.getPointAtLength(Math.min(total, Math.max(0, P)))
+      head.setAttribute('cx', String(pt.x))
+      head.setAttribute('cy', String(pt.y))
+    }
+    layout()
+    const ro = new ResizeObserver(() => layout())
+    ro.observe(el)
+    if (reduce) {
+      g.P = g.total
+      g.T = g.total
+      paint()
+      gsap.fromTo(mark, { opacity: 0 }, { opacity: 1, duration: 0.6, onComplete: () => onDone?.() })
+      return { kill: () => ro.disconnect() }
+    }
+    const tl = gsap.timeline({ repeat: loop ? -1 : 0, repeatDelay: 0.2, onComplete: () => onDone?.() })
+    tl.set(mark, { opacity: 1 }, 0)
+    tl.set(g, { P: 0, T: 0, onComplete: paint }, 0)
+    tl.to(head, { attr: { opacity: 0.8 }, duration: 0.2 }, 0)
+    tl.to(g, { P: () => g.total, duration: 2.4, ease: 'power1.inOut', onUpdate: paint }, 0)
+    tl.to(head, { attr: { opacity: 0 }, duration: 0.25 }, 2.2)
+    tl.to(g, { T: () => g.total, duration: 1.3, ease: 'power2.in', onUpdate: paint }, 1.6)
+    /* the white outline runs only once the mark is fully painted (the pen has reached the end of the route) */
+    tl.set(trace, { attr: { opacity: 0 } }, 0)
+    tl.fromTo(trace, { attr: { opacity: 1 }, strokeDashoffset: 0 }, { strokeDashoffset: -LOGO * 1.12, duration: 0.9, ease: 'power1.inOut', immediateRender: false }, 2.45)
+    tl.to(trace, { attr: { opacity: 0 }, duration: 0.2 }, 3.25)
+    if (loop) tl.to(mark, { opacity: 0, duration: 0.45, ease: 'power2.in' }, 3.7)
+    return { tl, kill: () => { tl.kill(); ro.disconnect() } }
+  }
+
+  /* progress: the same gesture mapped to a 0–1 value (determinate loading) */
+  const progress = (el, opts = {}) => {
+    const api = draw(el, { ...opts, loop: false })
+    api.tl?.pause(0)
+    return { set: (p) => api.tl?.progress(Math.min(1, Math.max(0, p)) * (2.4 / api.tl.duration())) }
+  }
+
+  /* mini: a comet running the outline (buttons, rows, toasts) */
+  const mini = (el) => {
+    const n = ++uid
+    el.innerHTML = `<svg viewBox="371 117 795 775" width="100%" height="100%" aria-hidden="true" style="display:block;overflow:visible"><defs>${grad(`lgm${n}`)}</defs><use href="#bitrate-logo" fill="url(#lgm${n})" opacity=".25"/><use class="trace" href="#bitrate-logo" fill="none" stroke="#a78bfa" stroke-width="46" stroke-linecap="round"/></svg>`
+    const trace = el.querySelector('.trace')
+    const L = document.getElementById('bitrate-logo').getTotalLength()
+    trace.setAttribute('stroke-dasharray', `${L * 0.16} ${L}`)
+    return gsap.fromTo(trace, { strokeDashoffset: 0 }, { strokeDashoffset: -L * 1.16, duration: reduce ? 3 : 1.25, ease: 'none', repeat: -1 })
+  }
+
+  const mount = (el, mode = 'loop', opts) => (mode === 'mini' ? mini(el) : mode === 'progress' ? progress(el, opts) : draw(el, { ...opts, loop: mode !== 'once' }))
+  return { mount, draw }
+})()
+
+/* intro: one write-on pass of the logo, then the scenes start */
+window.__bitrateIntro = new Promise((done) => {
+  const intro = document.getElementById('intro')
+  if (!window.gsap || matchMedia('(prefers-reduced-motion: reduce)').matches) { intro.remove(); done(); return }
+  window.BitrateLogoLoader.mount(document.getElementById('introLL'), 'once', { size: 0.3 })
+  gsap.from(intro.querySelectorAll('b, .mono'), { opacity: 0, y: 10, duration: .5, delay: 1.2, stagger: .1 })
+  gsap.to(intro, { opacity: 0, duration: .6, delay: 3.5, ease: 'power2.inOut', onStart: done, onComplete: () => intro.remove() })
+})
+</script>
+<script>
+(() => {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const root = document.documentElement
+  const scenes = [...document.querySelectorAll('.scene')]
+  const isMobile = () => window.innerWidth <= 820
+  const BW = 1440
+  const BH = 900
+
+  /* ---------- board scale: the archived 1440x900 composition fitted to any viewport ---------- */
+  const fit = () => {
+    const s = Math.min(window.innerWidth / BW, window.innerHeight / BH)
+    root.style.setProperty('--s', String(s))
+    return s
+  }
+  fit()
+
+  /* ---------- theme ---------- */
+  const themeButtons = document.querySelectorAll('.themes button')
+  const currentTheme = () => root.dataset.bitrate || (matchMedia('(prefers-color-scheme: light)').matches && root.dataset.theme !== 'dark' ? 'light' : 'dark')
+  let stage = null
+  const setTheme = (t) => {
+    root.dataset.bitrate = t
+    for (const b of themeButtons) b.setAttribute('aria-pressed', String(b.dataset.set === t))
+    try { localStorage.setItem('bitrate-theme', t) } catch (e) { /* storage unavailable */ }
+    stage?.retheme()
+    paintHighlights()
+  }
+  for (const b of themeButtons) b.addEventListener('click', () => setTheme(b.dataset.set))
+  try { const saved = localStorage.getItem('bitrate-theme'); if (saved) root.dataset.bitrate = saved } catch (e) { /* ignore */ }
+  for (const b of themeButtons) b.setAttribute('aria-pressed', String(b.dataset.set === currentTheme()))
+
+  /* ---------- headings: split into characters; gradient words get one colour per letter
+     (background-clip:text does not paint through inline-block children, which hid "you are.") ---------- */
+  const splitChars = (node) => {
+    for (const n of [...node.childNodes]) {
+      if (n.nodeType === 3) {
+        const frag = document.createDocumentFragment()
+        for (const w of n.textContent.split(/(\s+)/)) {
+          if (!w) continue
+          if (/^\s+$/.test(w)) { frag.appendChild(document.createTextNode(' ')); continue }
+          const word = document.createElement('span')
+          word.style.display = 'inline-block'
+          word.style.whiteSpace = 'nowrap'
+          for (const ch of w) { const c = document.createElement('span'); c.className = 'char'; c.textContent = ch; word.appendChild(c) }
+          frag.appendChild(word)
+        }
+        n.replaceWith(frag)
+      } else if (n.nodeType === 1) splitChars(n)
+    }
+  }
+  for (const span of document.querySelectorAll('.line > span')) splitChars(span)
+  const lerpHex = (a, b, t) => {
+    const pa = a.match(/\w\w/g).map((h) => Number.parseInt(h, 16))
+    const pb = b.match(/\w\w/g).map((h) => Number.parseInt(h, 16))
+    return `rgb(${pa.map((v, i) => Math.round(v + (pb[i] - v) * t)).join(',')})`
+  }
+  function paintHighlights() {
+    const light = currentTheme() === 'light'
+    const stops = light ? ['7c3aed', 'db2777', '2563eb'] : ['a78bfa', 'ec4899', '60a5fa']
+    for (const hl of document.querySelectorAll('.hl')) {
+      hl.classList.add('split')
+      const chars = [...hl.querySelectorAll('.char')]
+      chars.forEach((c, i) => {
+        const t = chars.length > 1 ? i / (chars.length - 1) : 0
+        c.style.color = t < 0.6 ? lerpHex(stops[0], stops[1], t / 0.6) : lerpHex(stops[1], stops[2], (t - 0.6) / 0.4)
+      })
+    }
+  }
+  paintHighlights()
+
+  /* ---------- WebGL stage ---------- */
+  /* the 3D stage is optional: without WebGL (blocked GPU, old device) the scenes, text and windows still animate */
+  const hasGL = (() => {
+    try {
+      const c = document.createElement('canvas')
+      return !!(c.getContext('webgl2') || c.getContext('webgl'))
+    } catch (e) {
+      return false
+    }
+  })()
+  if (window.THREE && hasGL) {
+    const canvas = document.getElementById('stage')
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true })
+    let dpr = Math.min(window.devicePixelRatio || 1, 1.25)
+    renderer.setPixelRatio(dpr)
+    const scene = new THREE.Scene()
+    const FOV = 42
+    const CAMZ = 6
+    const camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 100)
+    camera.position.set(0, 0, CAMZ)
+    const PX = { k: 0.01, ox: 0, oy: 0, s: 1 }
+
+    const NOISE = `
+      vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x,289.0);} vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
+      float snoise(vec3 v){const vec2 C=vec2(1.0/6.0,1.0/3.0);const vec4 D=vec4(0.0,0.5,1.0,2.0);vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.0-g;vec3 i1=min(g.xyz,l.zxy);vec3 i2=max(g.xyz,l.zxy);vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+2.0*C.xxx;vec3 x3=x0-1.0+3.0*C.xxx;i=mod(i,289.0);vec4 p=permute(permute(permute(i.z+vec4(0.0,i1.z,i2.z,1.0))+i.y+vec4(0.0,i1.y,i2.y,1.0))+i.x+vec4(0.0,i1.x,i2.x,1.0));float n_=1.0/7.0;vec3 ns=n_*D.wyz-D.xzx;vec4 j=p-49.0*floor(p*ns.z*ns.z);vec4 x_=floor(j*ns.z);vec4 y_=floor(j-7.0*x_);vec4 x=x_*ns.x+ns.yyyy;vec4 y=y_*ns.x+ns.yyyy;vec4 h=1.0-abs(x)-abs(y);vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);vec4 s0=floor(b0)*2.0+1.0;vec4 s1=floor(b1)*2.0+1.0;vec4 sh=-step(h,vec4(0.0));vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0);m=m*m;return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));}`
+
+    /* one parametric surface (u,v) that can become eight shapes; the vertex shader morphs between two of them:
+       0 sphere · 1 torus · 2 wave ribbon · 3 vinyl with grooves · 4 trefoil knot · 5 spiked bloom · 6 helix ribbon · 7 dome */
+    const SHAPES = `
+      const float PI = 3.14159265;
+      uniform float uTime;
+      vec3 knot(float t){ float r = .62 + .28 * cos(3.0 * t); return vec3(r * cos(2.0 * t), r * sin(2.0 * t), .3 * sin(3.0 * t)); }
+      vec3 shapeAt(float id, vec2 uv){
+        float th = uv.x * 2.0 * PI; float ph = uv.y * PI;
+        vec3 sph = vec3(sin(ph) * cos(th), cos(ph), sin(ph) * sin(th));
+        if (id < .5) return sph;
+        if (id < 1.5) { float a = uv.y * 2.0 * PI; float R = .9; float r = .34; return vec3((R + r * cos(a)) * cos(th), r * sin(a), (R + r * cos(a)) * sin(th)); }
+        if (id < 2.5) { float x = (uv.x - .5) * 4.4; float z = (uv.y - .5) * 1.5; return vec3(x, sin(x * 1.7 + uTime * 1.3) * .34 * cos(z * 2.1) + sin(x * 5.0 - uTime * 2.4) * .05, z); }
+        if (id < 3.5) { float r = .16 + uv.y * 1.12; return vec3(r * cos(th), .028 * sin(r * 96.0) * smoothstep(.3, .4, r), r * sin(th)); }
+        if (id < 4.5) { float t = uv.x * 2.0 * PI; vec3 c = knot(t); vec3 T = normalize(knot(t + .01) - c); vec3 N = normalize(cross(T, vec3(0.0, 0.0, 1.0)) + vec3(1e-4)); vec3 B = cross(T, N); float a = uv.y * 2.0 * PI; return c + (N * cos(a) + B * sin(a)) * .15; }
+        if (id < 5.5) { float sp = pow(abs(sin(th * 6.0) * sin(ph * 5.0)), 3.0); return sph * (1.0 + sp * .6); }
+        if (id < 6.5) { float t = (uv.x - .5) * 3.4; float a = t * 2.3 + uTime * .5; float w = (uv.y - .5) * .9; vec3 d = vec3(cos(a), 0.0, sin(a)); return vec3(0.0, t * .85, 0.0) + d * (.42 + w * .5); }
+        float p2 = uv.y * PI * .5; return vec3(sin(p2) * cos(th) * 1.3, cos(p2) * 1.3 - .45, sin(p2) * sin(th) * 1.3);
+      }`
+    const VERT = `${NOISE}${SHAPES}
+      uniform float uA, uB, uMix, uAmp, uTwist, uLevel, uPx;
+      varying vec3 vN; varying vec3 vW; varying float vD; varying vec2 vUv; varying float vBurst;
+      vec3 morph(vec2 uv, float m){ return mix(shapeAt(uA, uv), shapeAt(uB, uv), m); }
+      void main(){
+        float m = smoothstep(0.0, 1.0, clamp(uMix * 1.8 - uv.x * .4 - uv.y * .4, 0.0, 1.0));
+        vec3 p = morph(uv, m);
+        float e = .0025;
+        vec3 cr = cross(morph(uv + vec2(e, 0.0), m) - p, morph(uv + vec2(0.0, e), m) - p);
+        vec3 n = length(cr) > 1e-9 ? normalize(cr) : normalize(p + vec3(1e-4));
+        float burst = sin(m * PI);
+        float nz = snoise(p * 1.4 + vec3(uTime * .32, uTime * .21, 0.0));
+        float d = nz * (uAmp + burst * .38 + uLevel * .55);
+        p += n * d;
+        float ang = uTwist * p.y + burst * 1.4 * sin(uTime * .7);
+        p.xz = mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * p.xz;
+        vD = d; vUv = uv; vBurst = burst;
+        vN = normalize(normalMatrix * n);
+        vec4 wp = modelMatrix * vec4(p, 1.0);
+        vW = wp.xyz;
+        vec4 mv = viewMatrix * wp;
+        gl_PointSize = uPx * (1.0 + burst * 1.5) / -mv.z;
+        gl_Position = projectionMatrix * mv;
+      }`
+    const FRAG_SURF = `
+      uniform vec3 uCa, uCb, uCc; uniform float uAlpha, uTime;
+      varying vec3 vN; varying vec3 vW; varying float vD; varying vec2 vUv; varying float vBurst;
+      void main(){
+        vec3 v = normalize(cameraPosition - vW);
+        float f = pow(1.0 - abs(dot(v, vN)), 2.0);
+        vec3 col = mix(uCa, uCb, smoothstep(-.25, .35, vD));
+        col = mix(col, uCc, smoothstep(.45, 1.0, f) * .6);
+        float scan = smoothstep(.46, .5, abs(fract(vUv.y * 46.0 - uTime * .25) - .5));
+        col += f * .28 + scan * .12 + vBurst * .18;
+        gl_FragColor = vec4(col, (.1 + f * .6 + scan * .1) * uAlpha);
+      }`
+    const FRAG_PTS = `
+      uniform vec3 uCa, uCb; uniform float uAlpha; varying vec2 vUv; varying float vBurst;
+      void main(){ float d = length(gl_PointCoord - .5); float a = smoothstep(.5, .0, d); gl_FragColor = vec4(mix(uCa, uCb, vUv.x), a * (.55 + vBurst * .4) * uAlpha); }`
+    const U = {
+      uTime: { value: 0 }, uA: { value: 0 }, uB: { value: 0 }, uMix: { value: 1 }, uAmp: { value: .18 }, uTwist: { value: 0 }, uLevel: { value: 0 },
+      uPx: { value: 20 * renderer.getPixelRatio() }, uCa: { value: new THREE.Color('#7c3aed') }, uCb: { value: new THREE.Color('#ec4899') }, uCc: { value: new THREE.Color('#3b82f6') }, uAlpha: { value: 1 },
+    }
+    const surfMat = new THREE.ShaderMaterial({ uniforms: U, vertexShader: VERT, fragmentShader: FRAG_SURF, transparent: true, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending })
+    const ptsMat = new THREE.ShaderMaterial({ uniforms: U, vertexShader: VERT, fragmentShader: FRAG_PTS, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })
+    const surface = new THREE.Mesh(new THREE.SphereGeometry(1, 120, 72), surfMat)
+    const skin = new THREE.Points(new THREE.SphereGeometry(1, 64, 40), ptsMat)
+    surface.frustumCulled = false
+    skin.frustumCulled = false
+    const signal = new THREE.Group()
+    const spin = new THREE.Group()
+    spin.add(surface, skin)
+    signal.add(spin)
+    scene.add(signal)
+
+    /* structured particle field: layouts in board pixels (x, y, depth), one per scene */
+    const COUNT = 2400
+    const rnd = (i, s) => { const x = Math.sin(i * 12.9898 + s * 78.233) * 43758.5453; return x - Math.floor(x) }
+    const make = (fn) => { const a = new Float32Array(COUNT * 3); for (let i = 0; i < COUNT; i++) { const p = fn(i, i / COUNT); a[i * 3] = p[0]; a[i * 3 + 1] = p[1]; a[i * 3 + 2] = p[2] } return a }
+    const GOLD = Math.PI * (3 - Math.sqrt(5))
+    const fib = (i, n, r, cx, cy, hemi) => { const y = hemi ? i / n : 1 - (i / (n - 1)) * 2; const rad = Math.sqrt(Math.max(0, 1 - y * y)); const t = GOLD * i; return [cx + Math.cos(t) * rad * r, cy - y * r, Math.sin(t) * rad * r] }
+    const ellipse = (t, cx, cy, rx, ry, tilt = 0) => { const y = Math.sin(t) * ry; return [cx + Math.cos(t) * rx, cy + y * Math.cos(tilt), y * Math.sin(tilt) * 2] }
+    const rect = (x, y, w, h, t) => { let d = t * 2 * (w + h); if (d < w) return [x + d, y]; d -= w; if (d < h) return [x + w, y + d]; d -= h; if (d < w) return [x + w - d, y + h]; d -= w; return [x, y + h - d] }
+    const NODES = [[468, 311], [930, 311], [245, 455], [259, 626], [960, 415], [961, 578], [618, 681], [954, 680]]
+    const LUMA = [672, 534]
+    const LAYOUTS = [
+      /* 01 fibonacci shell around the signal + two tilted orbits */
+      make((i, f) => (f < .62 ? fib(i, Math.floor(COUNT * .62), 430, 1000, 455) : ellipse(i * .37, 1000, 455, 560, 150, f < .81 ? .9 : -.6))),
+      /* 02 a 72-band spectrum along the floor + a signal line over the cards */
+      make((i, f) => { if (f < .7) { const bar = i % 72; const h = (Math.sin(bar * .45) * .5 + .5) * (Math.sin(bar * .13 + 1) * .4 + .6) * 160; return [40 + bar * 19.5, 884 - rnd(i, 1) * h, (rnd(i, 2) - .5) * 40] } const x = rnd(i, 3) * BW; return [x, 230 + Math.sin(x * .02) * 12, (rnd(i, 4) - .5) * 60] }),
+      /* 03 release timeline: one line, five milestone clusters */
+      make((i, f) => { if (f < .5) return [100 + rnd(i, 5) * 1240, 322 + (rnd(i, 6) - .5) * 5, 0]; const k = i % 5; const r = 8 + rnd(i, 7) * 34; const t = rnd(i, 8) * 6.283; return [200 + k * 260 + Math.cos(t) * r, 322 + Math.sin(t) * r, (rnd(i, 9) - .5) * 30] }),
+      /* 04 four concentric orbits — one per workshop step */
+      make((i) => { const ring = i % 4; return ellipse(rnd(i, 10) * 6.283, 930, 520, 170 + ring * 110, 60 + ring * 40, .7 + ring * .12) }),
+      /* 05 a perspective floor grid running to the horizon */
+      make((i) => { const cols = 64; const row = Math.floor(i / cols) % 50; const col = i % cols; return [col * (BW / (cols - 1)), 650 + row * 5, -900 + row * 26] }),
+      /* 06 three stacked version rings */
+      make((i) => { const k = i % 3; return ellipse(rnd(i, 11) * 6.283, 1250, 470 + k * 95, 150 - k * 18, 34, 1.15) }),
+      /* 07 the discovery graph: links from Luma Vale + clusters on every node */
+      make((i) => { const k = i % 8; const a = NODES[k]; if (i % 3 === 0) { const t = rnd(i, 12); return [LUMA[0] + (a[0] - LUMA[0]) * t, LUMA[1] + (a[1] - LUMA[1]) * t, 0] } const c = i % 9 === 0 ? LUMA : a; const r = 30 + rnd(i, 13) * 46; const t = rnd(i, 14) * 6.283; return [c[0] + Math.cos(t) * r, c[1] - 11 + Math.sin(t) * r * .6, (rnd(i, 15) - .5) * 40] }),
+      /* 08 outlines of the desktop window and the phone, joined by an arc */
+      make((i, f) => { if (f < .45) { const p = rect(553, 116, 855, 716, rnd(i, 16)); return [p[0], p[1], 0] } if (f < .75) { const p = rect(379, 196, 245, 595, rnd(i, 17)); return [p[0], p[1], 20] } const t = rnd(i, 18); return [568 + 114 * t + Math.sin(t * 3.1) * 30, 728 - 150 * t * t, 10] }),
+      /* 09 conversation ripples from Maya's card */
+      make((i) => { const ring = i % 9; const t = (rnd(i, 19) - .5) * Math.PI * 1.2; const r = 70 + ring * 70; return [200 + Math.cos(t) * r, 590 + Math.sin(t) * r, (rnd(i, 20) - .5) * 20] }),
+      /* 10 a loose shell around the partner spheres */
+      make((i) => fib(i, COUNT, 470, 970, 460)),
+      /* 11 gravity rain over the team pit + its floor line */
+      make((i, f) => (f < .75 ? [520 + Math.floor(rnd(i, 23) * 44) * 20, 70 + rnd(i, 24) * 780, (rnd(i, 25) - .5) * 30] : [520 + rnd(i, 26) * 880, 849, 0])),
+      /* 12 a dome lattice rising from the footer + a wide halo */
+      make((i, f) => (f < .7 ? fib(i, Math.floor(COUNT * .7), 560, 720, 900, true) : ellipse(rnd(i, 21) * 6.283, 720, 800, 700, 90, 1.2))),
+    ]
+    const pgeo = new THREE.BufferGeometry()
+    pgeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(COUNT * 3), 3))
+    pgeo.setAttribute('aFrom', new THREE.BufferAttribute(LAYOUTS[0].slice(), 3))
+    pgeo.setAttribute('aTo', new THREE.BufferAttribute(LAYOUTS[0].slice(), 3))
+    const seeds = new Float32Array(COUNT)
+    for (let i = 0; i < COUNT; i++) seeds[i] = rnd(i, 22)
+    pgeo.setAttribute('aSeed', new THREE.BufferAttribute(seeds, 1))
+    const fieldU = { uT: { value: 1 }, uTime: U.uTime, uSize: { value: 32 * renderer.getPixelRatio() }, uCol: { value: new THREE.Color('#a78bfa') }, uCol2: { value: new THREE.Color('#ec4899') }, uPulse: { value: 0 }, uBoard: { value: new THREE.Vector4(0, 0, 1, .01) }, uView: { value: new THREE.Vector2(1, 1) } }
+    const field = new THREE.Points(pgeo, new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, uniforms: fieldU,
+      vertexShader: `
+        attribute vec3 aFrom; attribute vec3 aTo; attribute float aSeed; uniform float uT, uTime, uSize, uPulse; uniform vec4 uBoard; uniform vec2 uView; varying float vSeed;
+        void main(){
+          float t = smoothstep(0.0, 1.0, clamp(uT * 1.4 - aSeed * .4, 0.0, 1.0));
+          vec3 b = mix(aFrom, aTo, t);
+          float lift = sin(t * 3.14159) * 140.0 * (aSeed - .5);
+          vec2 sp = uBoard.xy + (b.xy + vec2(lift, -abs(lift) * .6)) * uBoard.z;
+          vec3 p = vec3((sp.x - uView.x * .5) * uBoard.w, -(sp.y - uView.y * .5) * uBoard.w, b.z * uBoard.z * uBoard.w);
+          p += vec3(sin(uTime * .6 + aSeed * 40.0), cos(uTime * .5 + aSeed * 30.0), 0.0) * (.012 + uPulse * .18);
+          vSeed = aSeed;
+          vec4 mv = modelViewMatrix * vec4(p, 1.0);
+          gl_PointSize = uSize * (.35 + aSeed * .8) / -mv.z;
+          gl_Position = projectionMatrix * mv;
+        }`,
+      fragmentShader: `
+        uniform vec3 uCol, uCol2; varying float vSeed;
+        void main(){ float d = length(gl_PointCoord - .5); float a = smoothstep(.5, 0.0, d); gl_FragColor = vec4(mix(uCol, uCol2, vSeed), a * .8); }`,
+    }))
+    field.frustumCulled = false
+    scene.add(field)
+
+    /* screen rect -> world helpers (z = 0 plane, ignoring the small camera parallax) */
+    const toWorld = (sx, sy) => [(sx - window.innerWidth / 2) * PX.k, -(sy - window.innerHeight / 2) * PX.k]
+
+    /* Newton's cradle — own implementation: five chrome balls shaded by an analytic two-lobe matcap */
+    const chromeU = { uBase: { value: new THREE.Color('#3a3550') }, uAccent: { value: new THREE.Color('#ffffff') }, uTint: { value: new THREE.Color('#a78bfa') } }
+    const chromeMat = new THREE.ShaderMaterial({
+      uniforms: chromeU,
+      vertexShader: 'varying vec3 vN; varying vec3 vV; void main(){ vN = normalize(normalMatrix * normal); vec4 mv = modelViewMatrix * vec4(position, 1.0); vV = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }',
+      fragmentShader: `uniform vec3 uBase, uAccent, uTint; varying vec3 vN; varying vec3 vV;
+        void main(){
+          vec3 n = normalize(vN);
+          float rim = pow(1.0 - max(dot(n, vV), 0.0), 3.0);
+          float horizon = smoothstep(-.08, .08, n.y);
+          vec3 body = mix(uBase * .35, uBase * 1.7, horizon) + uTint * smoothstep(.1, -.7, n.y) * .55;
+          vec3 h1 = normalize(normalize(vec3(-.45, .75, .5)) + vV);
+          vec3 h2 = normalize(normalize(vec3(.55, .25, .8)) + vV);
+          float spec = pow(max(dot(n, h1), 0.0), 90.0) + pow(max(dot(n, h2), 0.0), 26.0) * .45;
+          gl_FragColor = vec4(body + uAccent * spec + mix(uTint, uAccent, .5) * rim * .9, 1.0);
+        }`,
+    })
+    const cradle = new THREE.Group()
+    const cradleRig = new THREE.Group()
+    cradle.add(cradleRig)
+    const ballGeo = new THREE.SphereGeometry(1, 40, 28)
+    const CR = { len: 4.2, gap: 2.04, depth: .9, appear: 0 }
+    const cradleBalls = []
+    const cradleStrings = []
+    const stringMat = new THREE.LineBasicMaterial({ color: 0x9aa0b5, transparent: true, opacity: .6 })
+    for (let i = 0; i < 5; i++) {
+      const m = new THREE.Mesh(ballGeo, chromeMat)
+      cradleRig.add(m)
+      cradleBalls.push(m)
+      for (const side of [-1, 1]) {
+        const ln = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), stringMat)
+        ln.userData = { i, side }
+        cradleRig.add(ln)
+        cradleStrings.push(ln)
+      }
+    }
+    for (const side of [-1, 1]) {
+      const bar = new THREE.Mesh(new THREE.CylinderGeometry(.07, .07, CR.gap * 5 + 1, 16), chromeMat)
+      bar.rotation.z = Math.PI / 2
+      bar.position.z = side * CR.depth
+      cradleRig.add(bar)
+    }
+    cradleRig.rotation.set(.18, -.42, 0)
+    cradle.visible = false
+    scene.add(cradle)
+    const updateCradle = (t) => {
+      const sw = Math.sin(t * 3.1)
+      const A = .6
+      const ang = [Math.min(sw, 0) * A, sw * .05 * A, sw * .05 * A, sw * .05 * A, Math.max(sw, 0) * A]
+      cradleBalls.forEach((b, i) => { b.position.set((i - 2) * CR.gap + Math.sin(ang[i]) * CR.len, -Math.cos(ang[i]) * CR.len, 0) })
+      for (const ln of cradleStrings) {
+        const { i, side } = ln.userData
+        const pos = ln.geometry.attributes.position
+        const b = cradleBalls[i].position
+        pos.setXYZ(0, (i - 2) * CR.gap, 0, side * CR.depth)
+        pos.setXYZ(1, b.x, b.y + .9, b.z)
+        pos.needsUpdate = true
+      }
+    }
+    const placeCradle = () => {
+      const r = document.getElementById('cradleSlot').getBoundingClientRect()
+      const unit = r.width / (CR.gap * 4 + 2.4)
+      const [x, y] = toWorld(r.left + r.width / 2, r.top + 8)
+      cradle.position.set(x, y, 1.2)
+      cradle.scale.setScalar(unit * PX.k * CR.appear)
+    }
+
+    /* partner spheres — inflated rubber balls with their own little physics, pushed and thrown by the cursor */
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x2e1065, .95)
+    const key = new THREE.DirectionalLight(0xffffff, 1.05)
+    key.position.set(-3, 4, 6)
+    const rimLight = new THREE.PointLight(0xec4899, .9, 40)
+    rimLight.position.set(5, -3, 4)
+    scene.add(hemi, key, rimLight)
+    const MARKS = [['#7c3aed', '#ffffff', 'ON AIR'], ['#ec4899', '#ffffff', 'LABEL'], ['#3b82f6', '#ffffff', 'STUDIO'], ['#10b981', '#06281d', 'SYNC'], ['#f59e0b', '#2a1702', 'LIVE'], ['#f5f3ff', '#4c1d95', 'FM'], ['#111827', '#a78bfa', 'DSP'], ['#a78bfa', '#1e1b4b', 'MIX'], ['#0ea5e9', '#ffffff', 'WAVE'], ['#db2777', '#fff1f2', 'B-SIDE']]
+    const markTex = ([bg, fg, label]) => {
+      const c = document.createElement('canvas')
+      c.width = 512
+      c.height = 256
+      const x = c.getContext('2d')
+      x.fillStyle = bg
+      x.fillRect(0, 0, 512, 256)
+      x.fillStyle = fg
+      x.strokeStyle = fg
+      x.lineWidth = 6
+      x.textAlign = 'center'
+      x.textBaseline = 'middle'
+      x.font = `700 ${label.length > 4 ? 34 : 48}px Unbounded, sans-serif`
+      for (const cx of [128, 384]) { x.beginPath(); x.arc(cx, 128, 74, 0, Math.PI * 2); x.stroke(); x.fillText(label, cx, 130) }
+      const t = new THREE.CanvasTexture(c)
+      t.anisotropy = 4
+      return t
+    }
+    const markMats = MARKS.map((m) => new THREE.MeshPhysicalMaterial({ map: markTex(m), roughness: .34, metalness: 0, clearcoat: 1, clearcoatRoughness: .12 }))
+    const partners = new THREE.Group()
+    partners.visible = false
+    scene.add(partners)
+    const PB = []
+    const pGeo = new THREE.SphereGeometry(1, 40, 28)
+    for (let i = 0; i < 30; i++) {
+      const m = new THREE.Mesh(pGeo, markMats[i % markMats.length])
+      const r = .55 + rnd(i, 40) * .45
+      m.scale.setScalar(r)
+      m.rotation.set(rnd(i, 41) * 6, rnd(i, 42) * 6, 0)
+      partners.add(m)
+      PB.push({ m, r, p: new THREE.Vector3(), v: new THREE.Vector3() })
+    }
+    const PZ = { unit: 1, appear: 0, pointer: null, grab: null, last: null }
+    const scatterPartners = () => { PB.forEach((b, i) => { const a = rnd(i, 43) * Math.PI * 2; b.p.set(Math.cos(a) * 6.5, Math.sin(a) * 5.5, (rnd(i, 44) - .5) * 4); b.v.set(-Math.cos(a) * 4, -Math.sin(a) * 4, 0) }) }
+    scatterPartners()
+    const placePartners = () => {
+      const r = document.getElementById('partnerZone').getBoundingClientRect()
+      PZ.unit = Math.min(r.width, r.height) / 2 / 4.8
+      const [x, y] = toWorld(r.left + r.width / 2, r.top + r.height / 2)
+      partners.position.set(x, y, 0)
+      partners.scale.setScalar(PZ.unit * PX.k * PZ.appear)
+    }
+    const raycaster = new THREE.Raycaster()
+    const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0)
+    const hit = new THREE.Vector3()
+    const pointerLocal = (e) => {
+      raycaster.setFromCamera({ x: (e.clientX / window.innerWidth) * 2 - 1, y: -(e.clientY / window.innerHeight) * 2 + 1 }, camera)
+      if (!raycaster.ray.intersectPlane(plane, hit)) return null
+      const s = partners.scale.x || 1
+      return new THREE.Vector3((hit.x - partners.position.x) / s, (hit.y - partners.position.y) / s, 0)
+    }
+    const zone = document.getElementById('partnerZone')
+    zone.addEventListener('pointermove', (e) => { PZ.pointer = pointerLocal(e) })
+    zone.addEventListener('pointerleave', () => { if (!PZ.grab) PZ.pointer = null })
+    zone.addEventListener('pointerdown', (e) => {
+      const q = pointerLocal(e)
+      if (!q) return
+      let best = null
+      let bd = 1e9
+      for (const b of PB) { const d = Math.hypot(b.p.x - q.x, b.p.y - q.y); if (d < b.r * 1.15 && d < bd) { bd = d; best = b } }
+      if (best) { PZ.grab = best; zone.setPointerCapture(e.pointerId); window.__dragging = true }
+      PZ.pointer = q
+    })
+    const release = () => { PZ.grab = null; window.__dragging = false }
+    zone.addEventListener('pointerup', release)
+    zone.addEventListener('pointercancel', release)
+    const stepPartners = (dt) => {
+      const n = PB.length
+      for (const b of PB) {
+        b.v.addScaledVector(b.p, -3.2 * dt)
+        b.v.multiplyScalar(Math.exp(-2.2 * dt))
+        if (PZ.grab === b && PZ.pointer) { b.v.set((PZ.pointer.x - b.p.x) * 14, (PZ.pointer.y - b.p.y) * 14, -b.p.z * 4) }
+        else if (PZ.pointer) {
+          const dx = b.p.x - PZ.pointer.x
+          const dy = b.p.y - PZ.pointer.y
+          const d = Math.hypot(dx, dy) || 1e-4
+          const min = b.r + 1.1
+          if (d < min) { const push = (min - d) / d; b.p.x += dx * push * .5; b.p.y += dy * push * .5; b.v.x += dx * push * 9; b.v.y += dy * push * 9 }
+        }
+      }
+      for (let i = 0; i < n; i++) {
+        const a = PB[i]
+        for (let j = i + 1; j < n; j++) {
+          const b = PB[j]
+          const dx = b.p.x - a.p.x
+          const dy = b.p.y - a.p.y
+          const dz = b.p.z - a.p.z
+          const d = Math.hypot(dx, dy, dz) || 1e-4
+          const min = a.r + b.r
+          if (d >= min) continue
+          const nx = dx / d
+          const ny = dy / d
+          const nz = dz / d
+          const corr = (min - d) * .5
+          a.p.x -= nx * corr; a.p.y -= ny * corr; a.p.z -= nz * corr
+          b.p.x += nx * corr; b.p.y += ny * corr; b.p.z += nz * corr
+          const rv = (b.v.x - a.v.x) * nx + (b.v.y - a.v.y) * ny + (b.v.z - a.v.z) * nz
+          if (rv < 0) { const imp = -rv * .75; a.v.x -= nx * imp; a.v.y -= ny * imp; a.v.z -= nz * imp; b.v.x += nx * imp; b.v.y += ny * imp; b.v.z += nz * imp }
+        }
+      }
+      for (const b of PB) {
+        b.p.addScaledVector(b.v, dt)
+        b.p.z = Math.max(-2.5, Math.min(2.5, b.p.z))
+        b.m.position.copy(b.p)
+        b.m.rotation.y += (b.v.x * dt) / b.r
+        b.m.rotation.x -= (b.v.y * dt) / b.r
+        const sq = 1 + Math.min(.12, b.v.length() * .006)
+        b.m.scale.set(b.r * sq, b.r / sq, b.r * sq)
+      }
+    }
+
+    /* per scene: shape, board position (px), size (px), tilt, twist, noise, palette */
+    const LOOK = [
+      { shape: 0, x: 1000, y: 455, size: 560, rx: .2, amp: .2, twist: 0, c: ['#7c3aed', '#ec4899', '#3b82f6'] },
+      { shape: 2, x: 1180, y: 150, size: 330, rx: .5, amp: .08, twist: 0, c: ['#7c3aed', '#a78bfa', '#ec4899'] },
+      { shape: 1, x: 1290, y: 150, size: 190, rx: 1.1, amp: .12, twist: .6, c: ['#3b82f6', '#7c3aed', '#a78bfa'] },
+      { shape: 4, x: 250, y: 790, size: 300, rx: .4, amp: .1, twist: 0, c: ['#ec4899', '#7c3aed', '#3b82f6'] },
+      { shape: 3, x: 180, y: 760, size: 360, rx: 1.15, amp: .03, twist: 0, c: ['#7c3aed', '#ec4899', '#a78bfa'] },
+      { shape: 6, x: 1000, y: 150, size: 200, rx: 0, rz: 1.5708, amp: .06, twist: 0, c: ['#a78bfa', '#3b82f6', '#ec4899'] },
+      { shape: 5, x: LUMA[0], y: LUMA[1] - 18, size: 260, rx: .3, amp: .1, twist: 0, c: ['#a78bfa', '#ec4899', '#3b82f6'] },
+      { shape: 1, x: 170, y: 780, size: 300, rx: 1.0, amp: .2, twist: 2.4, c: ['#7c3aed', '#10b981', '#3b82f6'] },
+      { shape: 0, x: 900, y: 470, size: 620, rx: 0, amp: .42, twist: .8, c: ['#ec4899', '#7c3aed', '#3b82f6'] },
+      { shape: 5, x: 330, y: 110, size: 130, rx: .3, amp: .2, twist: 0, c: ['#ec4899', '#7c3aed', '#3b82f6'], partners: true },
+      { shape: 0, x: 380, y: 96, size: 100, rx: 0, amp: .35, twist: 0, c: ['#a78bfa', '#3b82f6', '#ec4899'] },
+      { shape: 7, x: 720, y: 1020, size: 1000, rx: .05, amp: .16, twist: 0, c: ['#7c3aed', '#ec4899', '#3b82f6'], cradle: true },
+    ]
+    const MOBILE_LOOK = { x: .8, y: .14, size: .42 }
+    const tw = { amp: .2, level: 0 }
+    const hex3 = (h) => { const c = new THREE.Color(h); return { r: c.r, g: c.g, b: c.b } }
+    const halfH = Math.tan((FOV * Math.PI) / 360) * CAMZ
+
+    let analyser = null
+    let freq = null
+    const mouse = { x: 0, y: 0 }
+    window.addEventListener('pointermove', (e) => { mouse.x = e.clientX / window.innerWidth - .5; mouse.y = e.clientY / window.innerHeight - .5 }, { passive: true })
+    const clock = new THREE.Clock()
+    let running = true
+    let last = performance.now()
+    let slow = 0
+    const tick = () => {
+      if (!running) return
+      const now = performance.now()
+      const frameDt = (now - last) / 1000
+      slow = now - last > 28 ? slow + 1 : Math.max(0, slow - 1)
+      last = now
+      if (document.getElementById('intro')) slow = 0 /* the intro's load must not lower the scene for good */
+      if (slow > 20 && dpr > .8) {
+        dpr = Math.max(.8, dpr - .15)
+        renderer.setPixelRatio(dpr)
+        renderer.setSize(window.innerWidth, window.innerHeight, false)
+        /* point sizes are in framebuffer pixels: keep particles the same size on screen */
+        U.uPx.value = 20 * dpr
+        fieldU.uSize.value = 32 * dpr
+        slow = 0
+      }
+      const t = clock.getElapsedTime()
+      let level = 0
+      if (analyser) { analyser.getByteFrequencyData(freq); for (let i = 0; i < 24; i++) level += freq[i]; level /= 24 * 255 }
+      tw.level += (level - tw.level) * .12
+      U.uTime.value = t
+      U.uAmp.value = tw.amp
+      U.uLevel.value = tw.level
+      fieldU.uPulse.value = tw.level
+      if (cradle.visible) { updateCradle(t); placeCradle() }
+      if (partners.visible) { const dt = Math.min(.033, frameDt); stepPartners(dt * .5); stepPartners(dt * .5); placePartners() }
+      spin.rotation.y = t * .16 + mouse.x * .5
+      spin.rotation.x = mouse.y * .3
+      camera.position.x += (mouse.x * .35 - camera.position.x) * .04
+      camera.position.y += (-mouse.y * .25 - camera.position.y) * .04
+      camera.lookAt(camera.position.x * .6, camera.position.y * .6, 0)
+      renderer.render(scene, camera)
+      requestAnimationFrame(tick)
+    }
+    document.addEventListener('visibilitychange', () => { const was = running; running = !document.hidden; if (running && !was) { last = performance.now(); requestAnimationFrame(tick) } })
+
+    stage = {
+      index: 0,
+      place(i, dur = 1.6) {
+        const L = LOOK[i]
+        const w = window.innerWidth
+        const h = window.innerHeight
+        const mob = isMobile()
+        const sx = mob ? w * MOBILE_LOOK.x : PX.ox + L.x * PX.s
+        const sy = mob ? h * MOBILE_LOOK.y : PX.oy + L.y * PX.s
+        const size = mob ? w * MOBILE_LOOK.size : L.size * PX.s
+        const sc = (size / 2) * PX.k
+        gsap.to(signal.position, { x: (sx - w / 2) * PX.k, y: -(sy - h / 2) * PX.k, duration: dur, ease: 'expo.inOut' })
+        gsap.to(signal.scale, { x: sc, y: sc, z: sc, duration: dur, ease: 'expo.inOut' })
+        gsap.to(signal.rotation, { x: L.rx ?? 0, z: L.rz ?? 0, duration: dur, ease: 'power3.inOut' })
+      },
+      go(i, dur = 1.6) {
+        this.index = i
+        const L = LOOK[i]
+        this.place(i, dur)
+        if (L.cradle) { cradle.visible = true; CR.appear = 0; gsap.to(CR, { appear: 1, duration: 1.4, delay: .5, ease: 'elastic.out(1, .6)' }) } else gsap.to(CR, { appear: 0, duration: .4, onComplete: () => { cradle.visible = false } })
+        if (L.partners) { partners.visible = true; scatterPartners(); PZ.appear = 0; gsap.to(PZ, { appear: 1, duration: 1.2, delay: .3, ease: 'expo.out' }) } else gsap.to(PZ, { appear: 0, duration: .4, onComplete: () => { partners.visible = false } })
+        if (U.uMix.value > .5) U.uA.value = U.uB.value
+        U.uB.value = L.shape
+        U.uMix.value = 0
+        gsap.to(U.uMix, { value: 1, duration: dur * 1.15, ease: 'power2.inOut' })
+        gsap.to(U.uTwist, { value: L.twist, duration: dur })
+        gsap.to(tw, { amp: L.amp, duration: dur })
+        gsap.to(U.uCa.value, { ...hex3(L.c[0]), duration: dur })
+        gsap.to(U.uCb.value, { ...hex3(L.c[1]), duration: dur })
+        gsap.to(U.uCc.value, { ...hex3(L.c[2]), duration: dur })
+        const from = pgeo.getAttribute('aFrom')
+        const to = pgeo.getAttribute('aTo')
+        const tt = fieldU.uT.value
+        const cur = new Float32Array(COUNT * 3)
+        for (let k = 0; k < COUNT; k++) {
+          const e = Math.min(Math.max(tt * 1.4 - seeds[k] * .4, 0), 1)
+          const s = e * e * (3 - 2 * e)
+          for (let c = 0; c < 3; c++) cur[k * 3 + c] = from.array[k * 3 + c] + (to.array[k * 3 + c] - from.array[k * 3 + c]) * s
+        }
+        from.array.set(cur)
+        from.needsUpdate = true
+        to.array.set(LAYOUTS[i])
+        to.needsUpdate = true
+        fieldU.uT.value = 0
+        gsap.to(fieldU.uT, { value: 1, duration: dur * 1.25, ease: 'power2.inOut' })
+      },
+      retheme() {
+        const light = currentTheme() === 'light'
+        for (const m of [surfMat, ptsMat, field.material]) { m.blending = light ? THREE.NormalBlending : THREE.AdditiveBlending; m.needsUpdate = true }
+        U.uAlpha.value = light ? .75 : 1
+        chromeU.uBase.value.set(light ? '#8d93ab' : '#3a3550')
+        hemi.intensity = light ? 1.15 : .95
+        fieldU.uCol.value.set(light ? '#7c3aed' : '#a78bfa')
+      },
+      audio(a, f) { analyser = a; freq = f },
+      start() { requestAnimationFrame(tick) },
+      still() { renderer.render(scene, camera) },
+    }
+    const resize = () => {
+      const w = window.innerWidth
+      const h = window.innerHeight
+      renderer.setSize(w, h, false)
+      camera.aspect = w / h
+      camera.updateProjectionMatrix()
+      const s = fit()
+      PX.s = s
+      PX.ox = (w - BW * s) / 2
+      PX.oy = (h - BH * s) / 2
+      PX.k = (2 * halfH) / h
+      fieldU.uBoard.value.set(PX.ox, PX.oy, s, PX.k)
+      fieldU.uView.value.set(w, h)
+      stage.place(stage.index, .01)
+    }
+    window.addEventListener('resize', resize)
+    resize()
+    stage.retheme()
+    if (reduce) { stage.go(0, .01); gsap.delayedCall(.1, () => stage.still()) } else stage.start()
+  }
+  window.addEventListener('resize', fit)
+
+  /* ---------- small canvases: spectra and waveforms ---------- */
+  const specs = [...document.querySelectorAll('canvas.spec')].map((c) => ({ c, ctx: c.getContext('2d'), n: Number(c.dataset.bars) || 32, tall: !!c.dataset.tall, scene: c.closest('.scene') }))
+  let level = 0
+  const drawSpecs = (t) => {
+    for (const s of specs) {
+      if (!s.scene.classList.contains('is-active')) continue
+      const w = Math.round(s.c.clientWidth * 1.5)
+      const h = Math.round(s.c.clientHeight * 1.5)
+      if (!w || !h) continue
+      if (s.c.width !== w) { s.c.width = w; s.c.height = h }
+      s.ctx.clearRect(0, 0, w, h)
+      const bw = w / s.n
+      for (let i = 0; i < s.n; i++) {
+        const v = (Math.sin(t * 2.1 + i * .5) * .5 + .5) * (Math.sin(t * 1.3 + i * .19) * .35 + .65) * (.7 + level * .8)
+        const bh = Math.max(2, v * h * (s.tall ? .9 : .85))
+        s.ctx.fillStyle = s.tall ? `rgba(167,139,250,${.15 + v * .45})` : i % 6 === 0 ? 'rgba(236,72,153,.95)' : 'rgba(167,139,250,.9)'
+        s.ctx.fillRect(i * bw + bw * .18, (h - bh) * (s.tall ? 1 : .5), bw * .64, bh)
+      }
+    }
+  }
+  const drawWaves = () => {
+    for (const c of document.querySelectorAll('canvas.wave')) {
+      const w = Math.round(c.clientWidth * 1.5)
+      const h = Math.round(c.clientHeight * 1.5)
+      if (!w) continue
+      c.width = w
+      c.height = h
+      const ctx = c.getContext('2d')
+      const seed = Number(c.dataset.seed)
+      const n = Math.floor(w / 6)
+      for (let i = 0; i < n; i++) {
+        const v = Math.abs(Math.sin(i * .21 * seed + seed) * .6 + Math.sin(i * .05 + seed * 2) * .4)
+        const bh = Math.max(2, v * h * .9)
+        ctx.fillStyle = i / n < .42 ? '#a78bfa' : 'rgba(156,163,175,.45)'
+        ctx.fillRect(i * 6, (h - bh) / 2, 3, bh)
+      }
+    }
+  }
+
+  /* audio bands for "your rules" */
+  const bands = document.getElementById('bands')
+  for (let i = 0; i < 18; i++) bands.appendChild(document.createElement('i'))
+
+  /* ---------- scenes ---------- */
+  const dots = document.querySelector('.dots')
+  scenes.forEach((s, i) => {
+    const b = document.createElement('button')
+    b.type = 'button'
+    b.setAttribute('aria-label', `Go to ${s.dataset.label}`)
+    b.innerHTML = `<span>${String(i + 1).padStart(2, '0')} · ${s.dataset.label.toUpperCase()}</span>`
+    b.addEventListener('click', () => go(i))
+    dots.appendChild(b)
+  })
+  const dotButtons = [...dots.children]
+  const num = document.getElementById('num')
+  const rail = document.getElementById('rail')
+  const sweep = document.querySelector('.sweep')
+  let index = 0
+  let animating = false
+  const loops = []
+  const stopLoops = () => { while (loops.length) loops.pop().kill() }
+
+  const typed = document.getElementById('typed')
+  const PROMPT = 'Calm late-night focus, 45 minutes, from my liked songs.'
+  const libQ = document.getElementById('libQ')
+  const tgQueue = document.getElementById('tgQueue')
+
+  const enter = (s, dir) => {
+    const tl = gsap.timeline()
+    const mob = isMobile()
+    tl.fromTo(s.querySelectorAll('.char'), { y: 0, yPercent: 115 * dir, rotate: 10 * dir, opacity: 0 }, { yPercent: 0, rotate: 0, opacity: 1, duration: 1, ease: 'expo.out', stagger: .012 }, .1)
+    tl.fromTo(s.querySelectorAll('[data-a="up"]'), { y: 26 * dir, opacity: 0 }, { y: 0, opacity: 1, duration: .8, ease: 'power3.out', stagger: .06 }, .3)
+    tl.fromTo(s.querySelectorAll('[data-a="win"]'), { y: 90 * dir, opacity: 0, rotateX: mob ? 0 : 16 * dir, rotateY: mob ? 0 : -10, rotateZ: 0, scale: .94, transformPerspective: 1600 }, { y: 0, opacity: 1, rotateX: 0, rotateY: 0, scale: 1, duration: 1.3, ease: 'expo.out', stagger: .1 }, .2)
+    const id = s.id
+    if (id === 'hero' && !mob) {
+      tl.to('#heroWin', { rotateY: -14, rotateX: 6, rotateZ: -1, duration: 1.4, ease: 'expo.out' }, .9)
+      loops.push(gsap.fromTo('#heroProg', { scaleX: .3 }, { scaleX: .62, duration: 9, ease: 'none', repeat: -1 }))
+    }
+    if (id === 'loop') {
+      tl.fromTo(s.querySelectorAll('.anim-prog'), { scaleX: 0 }, { scaleX: .42, duration: 1.6, ease: 'power2.out' }, .8)
+      tl.fromTo(s.querySelectorAll('.like-pop'), { scale: 0 }, { scale: 1, duration: .5, ease: 'back.out(4)', stagger: .15 }, 1.1)
+    }
+    if (id === 'artists') {
+      tl.fromTo('#relFill', { scaleX: 0 }, { scaleX: .75, duration: 1.5, ease: 'power2.inOut' }, .7)
+      tl.fromTo(s.querySelectorAll('.step b'), { scale: .3 }, { scale: 1, duration: .5, ease: 'back.out(3)', stagger: .16 }, .75)
+      tl.fromTo(s.querySelectorAll('.task, .ver'), { x: -24, opacity: 0 }, { x: 0, opacity: 1, duration: .6, stagger: .08 }, 1.1)
+    }
+    if (id === 'workshop') {
+      typed.textContent = ''
+      const o = { n: 0 }
+      tl.to(o, { n: PROMPT.length, duration: 2, ease: 'none', onUpdate: () => { typed.textContent = PROMPT.slice(0, Math.round(o.n)) } }, .8)
+      tl.fromTo('#wsFill', { scaleX: 0 }, { scaleX: .66, duration: 1.2, ease: 'power2.inOut' }, .8)
+      tl.fromTo(s.querySelectorAll('.cand'), { x: 40, opacity: 0 }, { x: 0, opacity: 1, duration: .6, stagger: .08 }, 1.2)
+      tl.call(() => shuffle(), null, 2.6)
+    }
+    if (id === 'rules') {
+      tgQueue.classList.remove('on')
+      tl.call(() => tgQueue.classList.add('on'), null, 1.2)
+      if (!mob) {
+        loops.push(gsap.fromTo('#bands i', { scaleY: .1 }, { scaleY: () => .25 + Math.random() * .75, duration: .5, ease: 'sine.inOut', stagger: { each: .05, repeat: -1, yoyo: true } }))
+        tl.fromTo('#floatQ', { x: -230, y: 140, rotate: 0, opacity: 0 }, { x: 0, y: 0, rotate: -5, opacity: 1, duration: 1.4, ease: 'expo.out' }, 1.3)
+        loops.push(gsap.to('#floatQ', { y: -10, rotate: -3.5, duration: 2.4, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 2.8 }))
+      }
+    }
+    if (id === 'library') {
+      libQ.textContent = ''
+      const o = { n: 0 }
+      tl.to(o, { n: 5, duration: .8, ease: 'none', onUpdate: () => { libQ.textContent = 'night'.slice(0, Math.round(o.n)) } }, .8)
+      tl.fromTo(s.querySelectorAll('.lres'), { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: .5, stagger: .07 }, 1.3)
+      tl.fromTo(s.querySelectorAll('.vrow'), { x: 20, opacity: 0 }, { x: 0, opacity: 1, duration: .5, stagger: .12 }, 1)
+    }
+    if (id === 'discover' && !mob) {
+      for (const p of s.querySelectorAll('.graph path')) {
+        const L = p.getTotalLength()
+        tl.fromTo(p, { strokeDasharray: `${L} ${L}`, strokeDashoffset: L }, { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut', onComplete: () => { gsap.set(p, { clearProps: 'strokeDasharray,strokeDashoffset' }) } }, .7 + Math.random() * .4)
+      }
+      tl.fromTo(s.querySelectorAll('.node'), { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: .7, ease: 'back.out(2)', stagger: { each: .07, from: 'end' } }, .6)
+      tl.fromTo(s.querySelectorAll('.tag'), { opacity: 0 }, { opacity: 1, duration: .4, stagger: .06 }, 1.4)
+    }
+    if (id === 'devices') {
+      if (!mob) {
+        tl.fromTo('#devLink', { strokeDashoffset: 300 }, { strokeDashoffset: 0, duration: 1.4, ease: 'power2.out' }, 1)
+        tl.fromTo(s.querySelector('.phone'), { x: -120 }, { x: 0, duration: 1.3, ease: 'expo.out' }, .35)
+      }
+      loops.push(gsap.fromTo(s.querySelectorAll('.sync-bar'), { scaleX: .3 }, { scaleX: .7, duration: 8, ease: 'none', repeat: -1 }))
+    }
+    if (id === 'partners') window.__partnersReset?.()
+    if (id === 'team') { resetTeam(); tl.fromTo(s.querySelectorAll('.stats b'), { textContent: 0 }, { textContent: (k, el) => el.dataset.v, duration: 1.2, snap: { textContent: 1 }, ease: 'power2.out' }, .8) }
+    tl.call(() => { for (const ln of s.querySelectorAll('.line.glitch')) glitch(ln) }, null, 1.25)
+    if (id === 'social' && !mob) {
+      tl.fromTo(s.querySelectorAll('.cmark'), { scale: 0 }, { scale: 1, duration: .4, ease: 'back.out(3)', stagger: .12 }, .9)
+      tl.fromTo(s.querySelectorAll('.cmt'), { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: .5, stagger: .25 }, 1.2)
+    }
+    return tl
+  }
+  const leave = (s, dir) => gsap.to(s.querySelectorAll('.char, [data-a]'), { y: -60 * dir, opacity: 0, duration: .5, ease: 'power3.in', stagger: .004 })
+
+  function go(next) {
+    if (reduce || !window.gsap) { scenes[next]?.scrollIntoView({ behavior: 'auto' }); return }
+    const target = Math.max(0, Math.min(scenes.length - 1, next))
+    if (target === index || animating) return
+    animating = true
+    const dir = target > index ? 1 : -1
+    const cur = scenes[index]
+    const nxt = scenes[target]
+    stopLoops()
+    stage?.go(target)
+    gsap.fromTo(sweep, { x: dir > 0 ? -window.innerWidth * .6 : window.innerWidth * 1.2 }, { x: dir > 0 ? window.innerWidth * 1.2 : -window.innerWidth * .6, duration: 1.1, ease: 'power2.inOut' })
+    leave(cur, dir).then(() => {
+      cur.classList.remove('is-active')
+      nxt.classList.add('is-active')
+      if (nxt.id === 'artists' || nxt.id === 'social') drawWaves()
+      enter(nxt, dir)
+      gsap.delayedCall(.7, () => { animating = false })
+    })
+    index = target
+    dotButtons.forEach((b, i) => { b.setAttribute('aria-current', String(i === target)) })
+    num.textContent = String(target + 1).padStart(2, '0')
+    gsap.to(rail, { scaleX: (target + 1) / scenes.length, duration: .9, ease: 'power3.inOut' })
+    history.replaceState(null, '', `#${nxt.id}`)
+  }
+
+  /* workshop candidates re-rank (FLIP, transforms only) */
+  const stack = document.getElementById('stack')
+  let shuffleTimer = null
+  function shuffle() {
+    clearInterval(shuffleTimer)
+    shuffleTimer = setInterval(() => {
+      if (scenes[index].id !== 'workshop') { clearInterval(shuffleTimer); return }
+      const items = [...stack.children]
+      const first = items.map((el) => el.getBoundingClientRect().top)
+      stack.appendChild(items[0])
+      ;[...stack.children].forEach((el, k) => { el.querySelector('.r').textContent = `#${k + 1}` })
+      const last = items.map((el) => el.getBoundingClientRect().top)
+      const scale = isMobile() ? 1 : Number(getComputedStyle(root).getPropertyValue('--s')) || 1
+      items.forEach((el, k) => { gsap.fromTo(el, { y: (first[k] - last[k]) / scale }, { y: 0, duration: .8, ease: 'expo.inOut' }) })
+    }, 2600)
+  }
+
+  /* cursor glow, magnetic buttons, hero window parallax, card tilt — transforms only */
+  const glow = document.querySelector('.cursor-glow')
+  if (!window.gsap) { document.body.classList.add('static'); for (const s of scenes) s.classList.add('is-active'); return }
+  const gx = gsap.quickTo(glow, 'x', { duration: .6, ease: 'power3' })
+  const gy = gsap.quickTo(glow, 'y', { duration: .6, ease: 'power3' })
+  window.addEventListener('pointermove', (e) => { gx(e.clientX); gy(e.clientY) }, { passive: true })
+  if (!reduce && matchMedia('(hover: hover)').matches) {
+    for (const el of document.querySelectorAll('.magnetic')) {
+      const xTo = gsap.quickTo(el, 'x', { duration: .5, ease: 'elastic.out(1, .4)' })
+      const yTo = gsap.quickTo(el, 'y', { duration: .5, ease: 'elastic.out(1, .4)' })
+      el.addEventListener('pointermove', (e) => { const r = el.getBoundingClientRect(); xTo((e.clientX - r.left - r.width / 2) * .3); yTo((e.clientY - r.top - r.height / 2) * .4) })
+      el.addEventListener('pointerleave', () => { xTo(0); yTo(0) })
+    }
+    const hw = document.getElementById('heroWin')
+    window.addEventListener('pointermove', (e) => {
+      if (scenes[index].id !== 'hero' || animating || isMobile()) return
+      const mx = e.clientX / window.innerWidth - .5
+      const my = e.clientY / window.innerHeight - .5
+      gsap.to(hw, { rotateY: -14 + mx * 10, rotateX: 6 - my * 8, duration: .8, overwrite: 'auto' })
+    }, { passive: true })
+    for (const el of document.querySelectorAll('.tiltable')) {
+      el.addEventListener('pointermove', (e) => { const r = el.getBoundingClientRect(); gsap.to(el, { rotateY: ((e.clientX - r.left) / r.width - .5) * 10, rotateX: -((e.clientY - r.top) / r.height - .5) * 10, transformPerspective: 1000, duration: .4 }) })
+      el.addEventListener('pointerleave', () => gsap.to(el, { rotateX: 0, rotateY: 0, duration: .6 }))
+    }
+  }
+
+  /* sound: a soft synth pad drives the signal through an AnalyserNode (starts only on click) */
+  const soundBtn = document.getElementById('sound')
+  let ctx = null
+  let master = null
+  let an = null
+  let fb = null
+  soundBtn.addEventListener('click', async () => {
+    try {
+      if (!ctx) {
+        ctx = new (window.AudioContext || window.webkitAudioContext)()
+        master = ctx.createGain()
+        master.gain.value = 0
+        an = ctx.createAnalyser()
+        an.fftSize = 256
+        fb = new Uint8Array(an.frequencyBinCount)
+        const filter = ctx.createBiquadFilter()
+        filter.type = 'lowpass'
+        filter.frequency.value = 900
+        const lfo = ctx.createOscillator()
+        const lfoGain = ctx.createGain()
+        lfo.frequency.value = .9
+        lfoGain.gain.value = 600
+        lfo.connect(lfoGain).connect(filter.frequency)
+        lfo.start()
+        ;[110, 164.81, 220, 277.18, 329.63].forEach((f, i) => { const o = ctx.createOscillator(); o.type = i % 2 ? 'sawtooth' : 'triangle'; o.frequency.value = f; o.detune.value = (i - 2) * 6; const g = ctx.createGain(); g.gain.value = .08; o.connect(g).connect(filter); o.start() })
+        const kick = () => { const o = ctx.createOscillator(); const g = ctx.createGain(); o.frequency.setValueAtTime(120, ctx.currentTime); o.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + .25); g.gain.setValueAtTime(.5, ctx.currentTime); g.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + .3); o.connect(g).connect(master); o.start(); o.stop(ctx.currentTime + .3) }
+        setInterval(() => { if (ctx.state === 'running' && master.gain.value > .01) kick() }, 545)
+        filter.connect(master)
+        master.connect(an)
+        an.connect(ctx.destination)
+        stage?.audio(an, fb)
+      }
+      const on = soundBtn.getAttribute('aria-pressed') !== 'true'
+      if (on) await ctx.resume()
+      master.gain.cancelScheduledValues(ctx.currentTime)
+      master.gain.linearRampToValueAtTime(on ? .5 : 0, ctx.currentTime + .6)
+      soundBtn.setAttribute('aria-pressed', String(on))
+      soundBtn.classList.toggle('playing', on)
+      soundBtn.querySelector('.label').textContent = on ? 'Pause signal' : 'Play signal'
+    } catch (e) { soundBtn.querySelector('.label').textContent = 'Sound unavailable' }
+  })
+
+  /* ---------- glitch: lines with an accent word, telemetry labels ---------- */
+  const glitch = (el) => { el.classList.remove('is-glitching'); requestAnimationFrame(() => { el.classList.add('is-glitching') }); setTimeout(() => el.classList.remove('is-glitching'), 700) }
+  for (const ln of document.querySelectorAll('.line')) {
+    if (!ln.querySelector('.hl')) continue
+    ln.classList.add('glitch')
+    ln.dataset.text = ln.textContent
+    ln.addEventListener('pointerenter', () => glitch(ln))
+  }
+  if (!reduce) setInterval(() => { const live = scenes[index].querySelectorAll('.glitch-auto'); if (live.length) glitch(live[Math.floor(Math.random() * live.length)]) }, 3200)
+
+  /* ---------- particles without WebGL: a 2D field on the same canvas (drifting dots in the palette) ---------- */
+  if (!(window.THREE && hasGL)) {
+    const cv = document.getElementById('stage')
+    const cx2 = cv.getContext('2d')
+    const DOTS = Array.from({ length: 520 }, (_, i) => {
+      const a = i * 2.39996
+      const r = Math.sqrt(i / 520)
+      return { a, r, z: 0.35 + ((i * 53) % 100) / 100, c: i % 5 === 0 ? '236,72,153' : i % 3 === 0 ? '59,130,246' : '167,139,250' }
+    })
+    let mx = 0
+    let my = 0
+    window.addEventListener('pointermove', (e) => { mx = e.clientX / window.innerWidth - 0.5; my = e.clientY / window.innerHeight - 0.5 }, { passive: true })
+    const size2d = () => { const d = Math.min(window.devicePixelRatio || 1, 1.5); cv.width = window.innerWidth * d; cv.height = window.innerHeight * d; cx2.setTransform(d, 0, 0, d, 0, 0) }
+    size2d()
+    window.addEventListener('resize', size2d)
+    gsap.ticker.add((t) => {
+      if (document.hidden) return
+      const w = window.innerWidth
+      const h = window.innerHeight
+      cx2.clearRect(0, 0, w, h)
+      const R = Math.hypot(w, h) * 0.62
+      for (const d of DOTS) {
+        const a = d.a + t * 0.02 * d.z
+        const rr = d.r * R * (0.92 + 0.08 * Math.sin(t * 0.6 + d.a))
+        const x = w * 0.62 + Math.cos(a) * rr + mx * 40 * d.z
+        const y = h * 0.5 + Math.sin(a) * rr * 0.62 + my * 30 * d.z
+        const tw = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * 1.7 + d.a * 3))
+        cx2.fillStyle = `rgba(${d.c},${(0.25 + 0.55 * d.z) * tw})`
+        cx2.beginPath()
+        cx2.arc(x, y, 0.8 + d.z * 1.6, 0, Math.PI * 2)
+        cx2.fill()
+      }
+    })
+  }
+
+  /* ---------- partners without WebGL: the same rubber balls as DOM bubbles with 2D physics ---------- */
+  if (!(window.THREE && hasGL)) {
+    const zoneEl = document.getElementById('partnerZone')
+    const MARKS2 = [['#7c3aed', '#ffffff', 'ON AIR'], ['#ec4899', '#ffffff', 'LABEL'], ['#3b82f6', '#ffffff', 'STUDIO'], ['#10b981', '#06281d', 'SYNC'], ['#f59e0b', '#2a1702', 'LIVE'], ['#f5f3ff', '#4c1d95', 'FM'], ['#111827', '#a78bfa', 'DSP'], ['#a78bfa', '#1e1b4b', 'MIX'], ['#0ea5e9', '#ffffff', 'WAVE'], ['#db2777', '#fff1f2', 'B-SIDE']]
+    const PBS = []
+    for (let i = 0; i < 22; i++) {
+      const [bg, fg, label] = MARKS2[i % MARKS2.length]
+      const r = 44 + ((i * 37) % 5) * 9
+      const el = document.createElement('div')
+      el.className = 'ball tech'
+      el.style.cssText = `width:${r * 2}px;height:${r * 2}px;background:radial-gradient(circle at 32% 28%, rgba(255,255,255,.55), transparent 34%), ${bg};color:${fg};font:700 ${r > 70 ? 16 : 12}px/1 var(--font-display)`
+      el.textContent = label
+      zoneEl.appendChild(el)
+      PBS.push({ el, r, x: 0, y: 0, vx: 0, vy: 0 })
+    }
+    const PF = { ptr: null, grab: null }
+    const local = (e) => {
+      const rc = zoneEl.getBoundingClientRect()
+      const k = zoneEl.offsetWidth / rc.width
+      return [(e.clientX - rc.left) * k, (e.clientY - rc.top) * k]
+    }
+    zoneEl.addEventListener('pointermove', (e) => { PF.ptr = local(e) })
+    zoneEl.addEventListener('pointerleave', () => { if (!PF.grab) PF.ptr = null })
+    zoneEl.addEventListener('pointerdown', (e) => {
+      const [x, y] = local(e)
+      PF.ptr = [x, y]
+      PF.grab = PBS.find((b) => Math.hypot(b.x - x, b.y - y) < b.r) ?? null
+      if (PF.grab) { zoneEl.setPointerCapture(e.pointerId); window.__dragging = true }
+    })
+    const letGo = () => { PF.grab = null; window.__dragging = false }
+    zoneEl.addEventListener('pointerup', letGo)
+    zoneEl.addEventListener('pointercancel', letGo)
+    window.__partnersReset = () => {
+      const W = zoneEl.offsetWidth
+      const H = zoneEl.offsetHeight
+      PBS.forEach((b, i) => {
+        const a = i * 2.4
+        b.x = W / 2 + Math.cos(a) * W * 0.75
+        b.y = H / 2 + Math.sin(a) * H * 0.75
+        b.vx = -Math.cos(a) * 320
+        b.vy = -Math.sin(a) * 320
+      })
+    }
+    window.__partnersReset()
+    const stepP = (dt) => {
+      const W = zoneEl.offsetWidth
+      const H = zoneEl.offsetHeight
+      for (const b of PBS) {
+        if (PF.grab === b && PF.ptr) { b.vx = (PF.ptr[0] - b.x) * 14; b.vy = (PF.ptr[1] - b.y) * 14 } else {
+          b.vx += (W / 2 - b.x) * 3.2 * dt
+          b.vy += (H / 2 - b.y) * 3.2 * dt
+          if (PF.ptr) {
+            const dx = b.x - PF.ptr[0]
+            const dy = b.y - PF.ptr[1]
+            const d = Math.hypot(dx, dy) || 1e-3
+            const min = b.r + 60
+            if (d < min) { b.vx += (dx / d) * (min - d) * 14; b.vy += (dy / d) * (min - d) * 14 }
+          }
+        }
+        const damp = Math.exp(-2.2 * dt)
+        b.vx *= damp
+        b.vy *= damp
+      }
+      for (let i = 0; i < PBS.length; i++) {
+        for (let j = i + 1; j < PBS.length; j++) {
+          const a = PBS[i]
+          const c = PBS[j]
+          const dx = c.x - a.x
+          const dy = c.y - a.y
+          const d = Math.hypot(dx, dy) || 1e-3
+          const min = a.r + c.r
+          if (d >= min) continue
+          const nx = dx / d
+          const ny = dy / d
+          const corr = (min - d) / 2
+          a.x -= nx * corr; a.y -= ny * corr; c.x += nx * corr; c.y += ny * corr
+          const rv = (c.vx - a.vx) * nx + (c.vy - a.vy) * ny
+          if (rv < 0) { const imp = -rv * 0.75; a.vx -= nx * imp; a.vy -= ny * imp; c.vx += nx * imp; c.vy += ny * imp }
+        }
+      }
+      for (const b of PBS) {
+        b.x += b.vx * dt
+        b.y += b.vy * dt
+        const sq = 1 + Math.min(0.12, Math.hypot(b.vx, b.vy) * 0.0004)
+        b.el.style.transform = `translate(${b.x - b.r}px, ${b.y - b.r}px) scale(${sq}, ${1 / sq})`
+      }
+    }
+    gsap.ticker.add(() => {
+      if (scenes[index]?.id !== 'partners') return
+      const dt = Math.min(0.033, gsap.ticker.deltaRatio() / 60)
+      stepP(dt / 2)
+      stepP(dt / 2)
+    })
+  }
+
+  /* ---------- team: gravity bubbles with hover cards (2D physics, transforms only) ---------- */
+  const REPO = 'https://github.com/Lordpluha/bitrate'
+  const TEAM = [
+    { kind: 'person', label: 'VT', name: 'Vladyslav Tesliuk', meta: '@Lordpluha · Author', bio: 'Author and maintainer of Bitrate.', links: [['GitHub', 'https://github.com/Lordpluha'], ['Repository', REPO]], bg: 'linear-gradient(135deg,#7c3aed,#ec4899)', r: 92 },
+    { kind: 'person', label: 'AK', name: 'Andrey Kalashnikov', meta: '@andreo-kalashnello · Contributor', bio: 'Contributor to Bitrate.', links: [['GitHub', 'https://github.com/andreo-kalashnello'], ['Repository', REPO]], bg: 'linear-gradient(135deg,#3b82f6,#7c3aed)', r: 92 },
+    ...[
+      ['Next.js', 'Web player', 'apps/web-player', '#111827'], ['TanStack Start', 'Artist portal', 'apps/web-artists', '#be185d'], ['NestJS', 'API', 'apps/api', '#e11d48'],
+      ['Prisma', 'Data layer', 'apps/api', '#334155'], ['PostgreSQL', 'Database', 'apps/api', '#1d4ed8'], ['Redis', 'Cache · queues', 'apps/api', '#b91c1c'],
+      ['Svelte 5', 'Player engine', 'packages/player', '#ea580c'], ['Angular', 'Admin panel', 'apps/admin', '#9f1239'], ['Tauri 2', 'Desktop app', 'apps/desktop', '#0e7490'],
+      ['Expo', 'Mobile app', 'apps/mobile', '#1f2937'], ['Tailwind v4', 'Design tokens', 'packages/ui-react', '#0891b2'], ['Turborepo', 'Monorepo', 'turbo.json', '#7c3aed'],
+    ].map(([label, role, path, bg], i) => ({ kind: 'tech', label, name: label, meta: role, bio: `Lives in ${path}.`, links: [['Open in repo', `${REPO}/tree/develop/${path}`]], bg, r: 40 + (i % 4) * 5 })),
+  ]
+  const pit = document.getElementById('pit')
+  const hc = document.getElementById('hc')
+  const bubbles = TEAM.map((d) => {
+    const el = document.createElement('div')
+    el.className = `ball ${d.kind}`
+    el.style.width = `${d.r * 2}px`
+    el.style.height = `${d.r * 2}px`
+    el.style.background = d.bg
+    el.textContent = d.label
+    el.setAttribute('aria-label', d.name)
+    pit.appendChild(el)
+    return { d, el, x: 0, y: 0, vx: 0, vy: 0, r: d.r, delay: 0 }
+  })
+  const TP = { w: 880, h: 780, grab: null, gx: 0, gy: 0, hover: null, hideT: 0, run: false }
+  const pitLocal = (e) => { const r = pit.getBoundingClientRect(); const k = pit.offsetWidth / r.width; return [(e.clientX - r.left) * k, (e.clientY - r.top) * k] }
+  const resetTeam = () => {
+    TP.w = pit.offsetWidth
+    TP.h = pit.offsetHeight
+    bubbles.forEach((b, i) => { b.x = b.r + rndf(i) * (TP.w - b.r * 2); b.y = -b.r - rndf(i + 9) * 600 - (b.d.kind === 'person' ? 700 : 0); b.vx = (rndf(i + 3) - .5) * 200; b.vy = 0 })
+    TP.run = true
+  }
+  const rndf = (i) => { const x = Math.sin(i * 91.7 + 13.1) * 43758.5453; return x - Math.floor(x) }
+  const showCard = (b) => {
+    clearTimeout(TP.hideT)
+    TP.hover = b
+    for (const o of bubbles) o.el.classList.toggle('hot', o === b)
+    const d = b.d
+    hc.innerHTML = `<div class="row"><span class="av" style="background:${d.bg}">${d.kind === 'person' ? d.label : d.label.slice(0, 2)}</span><div><p class="t-title">${d.name}</p><p class="t-meta">${d.meta}</p></div></div><p class="t-meta" style="font-size:13px;margin-top:10px;color:var(--fg)">${d.bio}</p><div class="links">${d.links.map(([t, u]) => `<a class="btn btn-ghost btn-xs" href="${u}" target="_blank" rel="noopener noreferrer">${t} ↗</a>`).join('')}</div>`
+    hc.classList.add('open')
+  }
+  const hideCard = () => { TP.hideT = setTimeout(() => { TP.hover = null; hc.classList.remove('open'); for (const o of bubbles) o.el.classList.remove('hot') }, 140) }
+  for (const b of bubbles) {
+    b.el.addEventListener('pointerenter', () => { if (!TP.grab) showCard(b) })
+    b.el.addEventListener('pointerleave', hideCard)
+    b.el.addEventListener('pointerdown', (e) => { TP.grab = b; window.__dragging = true; pit.setPointerCapture(e.pointerId); const [x, y] = pitLocal(e); TP.gx = x; TP.gy = y; hc.classList.remove('open') })
+  }
+  hc.addEventListener('pointerenter', () => clearTimeout(TP.hideT))
+  hc.addEventListener('pointerleave', hideCard)
+  pit.addEventListener('pointermove', (e) => { if (TP.grab) { const [x, y] = pitLocal(e); TP.gx = x; TP.gy = y } })
+  const drop = () => { TP.grab = null; window.__dragging = false }
+  pit.addEventListener('pointerup', drop)
+  pit.addEventListener('pointercancel', drop)
+  const stepTeam = (dt) => {
+    const G = 2600
+    for (const b of bubbles) {
+      if (TP.grab === b) { b.vx = (TP.gx - b.x) * 16; b.vy = (TP.gy - b.y) * 16 } else b.vy += G * dt
+      b.vx *= .996
+      b.x += b.vx * dt
+      b.y += b.vy * dt
+      if (b.x < b.r) { b.x = b.r; b.vx = Math.abs(b.vx) * .4 }
+      if (b.x > TP.w - b.r) { b.x = TP.w - b.r; b.vx = -Math.abs(b.vx) * .4 }
+      if (b.y > TP.h - b.r) { b.y = TP.h - b.r; b.vy = -Math.abs(b.vy) * .32; b.vx *= .94 }
+    }
+    for (let it = 0; it < 3; it++) {
+      for (let i = 0; i < bubbles.length; i++) {
+        for (let j = i + 1; j < bubbles.length; j++) {
+          const a = bubbles[i]
+          const c = bubbles[j]
+          const dx = c.x - a.x
+          const dy = c.y - a.y
+          const d = Math.hypot(dx, dy) || 1e-3
+          const min = a.r + c.r
+          if (d >= min) continue
+          const nx = dx / d
+          const ny = dy / d
+          const ma = TP.grab === a ? 0 : 1 / a.r
+          const mc = TP.grab === c ? 0 : 1 / c.r
+          const sum = ma + mc || 1
+          const corr = min - d
+          a.x -= nx * corr * (ma / sum); a.y -= ny * corr * (ma / sum)
+          c.x += nx * corr * (mc / sum); c.y += ny * corr * (mc / sum)
+          const rv = (c.vx - a.vx) * nx + (c.vy - a.vy) * ny
+          if (rv < 0) { const imp = (-rv * 1.3) / sum; a.vx -= nx * imp * ma; a.vy -= ny * imp * ma; c.vx += nx * imp * mc; c.vy += ny * imp * mc }
+        }
+      }
+    }
+    for (const b of bubbles) b.el.style.transform = `translate(${b.x - b.r}px, ${b.y - b.r}px)`
+    if (TP.hover) {
+      const b = TP.hover
+      const above = b.y - b.r - 14 > hc.offsetHeight
+      hc.style.transform = `translate(${Math.max(8, Math.min(TP.w - 298, b.x - 145))}px, ${above ? b.y - b.r - 12 - hc.offsetHeight : b.y + b.r + 12}px)`
+    }
+  }
+
+  /* ---------- service health (footer): gooey bloom from the pill into the panel ---------- */
+  const SERVICES = [['API', 'NestJS · apps/api', 'ok'], ['Web player', 'apps/web-player', 'ok'], ['Artist portal', 'apps/web-artists', 'ok'], ['Streaming', 'Audio delivery', 'ok'], ['Realtime', 'Socket.io · queue sync', 'ok'], ['Background jobs', 'BullMQ', 'ok'], ['Database', 'PostgreSQL', 'ok'], ['Cache', 'Redis', 'ok']]
+  const hrows = document.getElementById('hrows')
+  hrows.innerHTML = SERVICES.map(([n, meta, st]) => `<span class="hrow"><span><b>${n}</b><small>${st === 'w' ? '99.71%' : '99.98%'} · ${meta}</small></span><span class="bars">${Array.from({ length: 30 }, (_, i) => `<i class="${st === 'w' && i > 26 ? 'w' : ''}"></i>`).join('')}</span><span class="hstate ${st === 'w' ? 'w' : ''}">${st === 'w' ? 'Degraded' : 'Operational'}</span></span>`).join('')
+  const health = document.getElementById('health')
+  const hpill = document.getElementById('hpill')
+  const hpanel = document.getElementById('hpanel')
+  const blob = health.querySelector('.b-panel')
+  let hOpen = false
+  const setHealth = (open) => {
+    if (open === hOpen) return
+    hOpen = open
+    hpill.setAttribute('aria-expanded', String(open))
+    health.classList.toggle('open', open)
+    gsap.killTweensOf([blob, hpanel, ...hpanel.querySelectorAll('.hrow, .bars i')])
+    if (open) {
+      gsap.to(blob, { scaleX: 1, scaleY: 1, duration: .75, ease: 'elastic.out(1, .72)' })
+      gsap.fromTo(hpanel, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: .35, delay: .18 })
+      gsap.fromTo(hpanel.querySelectorAll('.hrow'), { opacity: 0, x: 12 }, { opacity: 1, x: 0, duration: .4, stagger: .035, delay: .22 })
+      gsap.fromTo(hpanel.querySelectorAll('.bars i'), { scaleY: .2 }, { scaleY: 1, duration: .35, stagger: { each: .002, from: 'end' }, delay: .3 })
+    } else {
+      gsap.to(hpanel, { opacity: 0, y: 6, duration: .18 })
+      gsap.to(blob, { scaleX: .12, scaleY: .05, duration: .45, ease: 'power3.in', delay: .05 })
+    }
+  }
+  hpill.addEventListener('click', () => setHealth(!hOpen))
+  health.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') setHealth(true) })
+  health.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') setHealth(false) })
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') setHealth(false) })
+  document.addEventListener('pointerdown', (e) => { if (hOpen && !health.contains(e.target)) setHealth(false) })
+
+  /* ---------- AI assistant: thinking orb (own take on the reference: breathing, searching, composing) ---------- */
+  const orbs = new Set()
+  const drawOrb = (c, t) => {
+    const ctx = c.getContext('2d')
+    const w = c.width
+    const r = w / 2
+    const st = c.dataset.state || 'breathing'
+    const sp = st === 'composing' ? 2.4 : st === 'searching' ? 1.6 : 0.7
+    ctx.clearRect(0, 0, w, w)
+    ctx.save()
+    ctx.beginPath()
+    ctx.arc(r, r, r * (st === 'breathing' ? 0.86 + 0.06 * Math.sin(t * 2) : 0.9), 0, Math.PI * 2)
+    ctx.clip()
+    const bg = ctx.createRadialGradient(r * 0.7, r * 0.6, 0, r, r, r)
+    bg.addColorStop(0, '#c4b5fd')
+    bg.addColorStop(0.55, '#7c3aed')
+    bg.addColorStop(1, '#2e1065')
+    ctx.fillStyle = bg
+    ctx.fillRect(0, 0, w, w)
+    ctx.globalCompositeOperation = 'lighter'
+    for (let k = 0; k < 3; k++) {
+      const a = t * sp * (1 + k * 0.3) + k * 2.1
+      const x = r + Math.cos(a) * r * 0.38
+      const y = r + Math.sin(a * 1.3) * r * 0.32
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r * 0.7)
+      g.addColorStop(0, ['rgba(236,72,153,.75)', 'rgba(59,130,246,.65)', 'rgba(255,255,255,.45)'][k])
+      g.addColorStop(1, 'rgba(0,0,0,0)')
+      ctx.fillStyle = g
+      ctx.fillRect(0, 0, w, w)
+    }
+    ctx.restore()
+    if (st === 'searching') {
+      ctx.strokeStyle = 'rgba(255,255,255,.85)'
+      ctx.lineWidth = Math.max(1.5, w / 40)
+      ctx.lineCap = 'round'
+      ctx.beginPath()
+      ctx.arc(r, r, r * 0.95, t * 4, t * 4 + 1.1)
+      ctx.stroke()
+    }
+    if (st === 'composing') {
+      ctx.strokeStyle = `rgba(167,139,250,${0.6 - ((t * 1.5) % 1) * 0.6})`
+      ctx.lineWidth = Math.max(1, w / 60)
+      ctx.beginPath()
+      ctx.arc(r, r, r * (0.6 + ((t * 1.5) % 1) * 0.38), 0, Math.PI * 2)
+      ctx.stroke()
+    }
+  }
+  const aiFab = document.getElementById('aiFab')
+  const aiPanel = document.getElementById('aiPanel')
+  const aiMsgs = document.getElementById('aiMsgs')
+  const aiInput = document.getElementById('aiInput')
+  const aiStatus = document.getElementById('aiStatus')
+  const SPARK = aiFab.innerHTML
+  for (const c of aiPanel.querySelectorAll('canvas.orb')) orbs.add(c)
+  let aiOpen = false
+  const setAi = (open) => {
+    if (open === aiOpen) return
+    aiOpen = open
+    aiFab.setAttribute('aria-expanded', String(open))
+    aiFab.setAttribute('aria-label', open ? 'Close the assistant' : 'Open the Bitrate assistant')
+    aiFab.innerHTML = open ? '<span aria-hidden="true" style="font-size:18px">✕</span>' : SPARK
+    if (open) {
+      aiPanel.classList.add('open')
+      gsap.fromTo(aiPanel, { scale: 0.2, opacity: 0, borderRadius: 40 }, { scale: 1, opacity: 1, borderRadius: 18, duration: reduce ? 0.01 : 0.55, ease: 'elastic.out(1, .8)' })
+      setTimeout(() => aiInput.focus(), 120)
+    } else gsap.to(aiPanel, { scale: 0.2, opacity: 0, duration: reduce ? 0.01 : 0.25, ease: 'power3.in', onComplete: () => aiPanel.classList.remove('open') })
+  }
+  aiFab.addEventListener('click', () => setAi(!aiOpen))
+  document.getElementById('aiClose').addEventListener('click', () => setAi(false))
+  aiPanel.addEventListener('keydown', (e) => { if (e.key === 'Escape') { setAi(false); aiFab.focus() } e.stopPropagation() })
+  const ANSWERS = {
+    'what is bitrate?': 'Bitrate is a music player in your browser, with a portal for artists to release and grow their music.',
+    'is it free?': 'Yes — listening in the browser is free. Premium plans are on the way; your plan shows in Settings.',
+    'release a single': 'Open Bitrate for Artists → Create release, then follow the steps: audio, artwork, details, contributors and review.',
+    'which devices work?': 'Any modern browser on desktop or phone. Your queue follows you between devices.',
+  }
+  const bubble = (text, me) => { const b = document.createElement('div'); b.className = `ai-b${me ? ' me' : ''}`; b.textContent = text; aiMsgs.appendChild(b); gsap.from(b, { y: 8, opacity: 0, duration: 0.3 }); aiMsgs.scrollTop = aiMsgs.scrollHeight; return b }
+  const ask = (q) => {
+    if (!q.trim()) return
+    aiMsgs.querySelector('.ai-welcome')?.remove()
+    bubble(q, true)
+    const typing = document.createElement('div')
+    typing.className = 'ai-typing'
+    typing.innerHTML = '<canvas class="orb" width="40" height="40" style="width:20px;height:20px" data-state="searching"></canvas><span>Searching the docs…</span>'
+    aiMsgs.appendChild(typing)
+    const oc = typing.querySelector('canvas')
+    orbs.add(oc)
+    aiStatus.textContent = 'Searching the docs…'
+    aiMsgs.scrollTop = aiMsgs.scrollHeight
+    setTimeout(() => { oc.dataset.state = 'composing'; typing.querySelector('span').textContent = 'Composing…'; aiStatus.textContent = 'Composing…' }, 900)
+    setTimeout(() => {
+      orbs.delete(oc)
+      typing.remove()
+      aiStatus.textContent = 'AI · can make mistakes · demo answers'
+      const text = ANSWERS[q.trim().toLowerCase()] ?? 'This is a demo. In the product I answer from the Bitrate docs and link the right page.'
+      const b = bubble('', false)
+      const words = text.split(' ')
+      let k = 0
+      const iv = setInterval(() => { b.textContent = words.slice(0, ++k).join(' '); aiMsgs.scrollTop = aiMsgs.scrollHeight; if (k >= words.length) clearInterval(iv) }, reduce ? 0 : 45)
+    }, 1650)
+  }
+  aiMsgs.addEventListener('click', (e) => { const c = e.target.closest('.ai-chip'); if (c) ask(c.textContent) })
+  document.getElementById('aiForm').addEventListener('submit', (e) => { e.preventDefault(); ask(aiInput.value); aiInput.value = '' })
+  gsap.ticker.add((t) => { if (aiOpen) for (const c of orbs) drawOrb(c, t) })
+
+  /* ---------- boot ---------- */
+  drawWaves()
+  const start = Math.max(0, scenes.findIndex((s) => `#${s.id}` === location.hash))
+  if (reduce) {
+    document.body.classList.add('static')
+    for (const s of scenes) s.classList.add('is-active')
+    drawSpecs(0)
+    return
+  }
+  gsap.registerPlugin(Observer)
+  scenes[0].classList.remove('is-active')
+  scenes[start].classList.add('is-active')
+  index = start
+  dotButtons.forEach((b, i) => { b.setAttribute('aria-current', String(i === start)) })
+  num.textContent = String(start + 1).padStart(2, '0')
+  gsap.set(rail, { scaleX: (start + 1) / scenes.length })
+  window.__bitrateIntro.then(() => { stage?.go(start, 1.8); enter(scenes[start], 1) })
+  Observer.create({ target: window, type: 'wheel,touch', wheelSpeed: -1, tolerance: 12, preventDefault: true, onUp: (self) => { if (!window.__dragging && !self.event?.target?.closest?.('.ai-panel')) go(index + 1) }, onDown: (self) => { if (!window.__dragging && !self.event?.target?.closest?.('.ai-panel')) go(index - 1) } })
+  window.addEventListener('keydown', (e) => {
+    if (e.target.closest?.('input, textarea, .ai-panel')) return
+    if (['ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go(index + 1) }
+    if (['ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); go(index - 1) }
+    if (e.key === 'Home') go(0)
+    if (e.key === 'End') go(scenes.length - 1)
+  })
+  for (const a of document.querySelectorAll('a[href^="#"]')) a.addEventListener('click', (e) => { const k = scenes.findIndex((s) => `#${s.id}` === a.getAttribute('href')); if (k >= 0) { e.preventDefault(); go(k) } })
+  gsap.ticker.add((t) => {
+    if (an) { an.getByteFrequencyData(fb); let v = 0; for (let i = 0; i < 24; i++) v += fb[i]; level = v / (24 * 255); window.__bitrateLevel = soundBtn.getAttribute('aria-pressed') === 'true' ? level : 0 }
+    drawSpecs(t)
+    if (TP.run && scenes[index].id === 'team') { const dt = Math.min(.033, gsap.ticker.deltaRatio() / 60); stepTeam(dt * .5); stepTeam(dt * .5) }
+  })
+})()
+</script>
+
+<style>
+/* Signal cursor — one custom cursor for the landing and the app (fine pointers only; touch keeps the system) */
+html.has-cursor, html.has-cursor * { cursor: none !important; }
+.cur { position: fixed; left: 0; top: 0; z-index: 9999; pointer-events: none; }
+.cur > * { position: fixed; left: 0; top: 0; pointer-events: none; will-change: transform; }
+.cur-dot { width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; background: var(--fg); transition: opacity .2s, scale .2s; }
+.cur-ring { width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%; border: 1.5px solid var(--accent); display: grid; place-items: center; transition: width .32s cubic-bezier(.2, .8, .2, 1), height .32s cubic-bezier(.2, .8, .2, 1), margin .32s cubic-bezier(.2, .8, .2, 1), background-color .3s, border-color .3s, opacity .2s, scale .2s; }
+.cur-ring > * { grid-area: 1 / 1; opacity: 0; transition: opacity .2s; }
+.cur-eq { display: flex; gap: 2px; align-items: center; height: 20px; }
+.cur-eq i { width: 2px; height: 18px; border-radius: 1px; background: var(--accent); transform-origin: center; transform: scaleY(.3); }
+.cur-arrows { font: 600 14px/1 var(--font-body, system-ui); color: var(--accent); letter-spacing: 6px; padding-left: 6px; }
+.cur-ban { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--muted); position: relative; }
+.cur-ban::after { content: ""; position: absolute; left: 50%; top: -1px; bottom: -1px; width: 1.5px; margin-left: -.75px; background: var(--muted); transform: rotate(45deg); }
+.cur-pill { display: flex; align-items: center; gap: 8px; height: 40px; margin: -20px 0 0 -38px; padding: 0 14px; border-radius: 20px; background: #fff; color: #0b0d12; font: 600 13px/1 var(--font-body, system-ui); opacity: 0; scale: .5; transition: opacity .2s, scale .32s cubic-bezier(.3, 1.6, .5, 1); }
+.cur-pill i { width: 0; height: 0; border-left: 9px solid #0b0d12; border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
+.cur-beam { width: 2px; height: 22px; margin: -11px 0 0 -1px; border-radius: 1px; background: var(--accent); opacity: 0; transition: opacity .15s; }
+.cur-scrub { display: grid; justify-items: center; gap: 4px; margin: -44px 0 0 -20px; width: 40px; opacity: 0; transition: opacity .15s; }
+.cur-scrub b { font: 600 11px/1 var(--font-data, monospace); color: var(--bg); background: var(--fg); padding: 4px 6px; border-radius: 6px; }
+.cur-scrub i { width: 2px; height: 28px; border-radius: 1px; background: var(--accent); }
+.cur.m-hover .cur-ring, .cur.m-drag .cur-ring { width: 56px; height: 56px; margin: -28px 0 0 -28px; background-color: color-mix(in srgb, var(--accent) 16%, transparent); }
+.cur.m-hover .cur-dot, .cur.m-drag .cur-dot, .cur.m-disabled .cur-dot { opacity: 0; }
+.cur.m-drag .cur-arrows, .cur.m-disabled .cur-ban { opacity: 1; }
+.cur.m-disabled .cur-ring { border-color: var(--muted); }
+.cur.m-play .cur-ring, .cur.m-play .cur-dot, .cur.m-text .cur-ring, .cur.m-text .cur-dot, .cur.m-scrub .cur-ring, .cur.m-scrub .cur-dot, .cur.m-hide > * { opacity: 0; }
+.cur.m-play .cur-pill { opacity: 1; scale: 1; }
+.cur.m-text .cur-beam, .cur.m-scrub .cur-scrub { opacity: 1; }
+.cur.is-press .cur-ring { scale: .75; }
+.cur.is-press .cur-pill { scale: .9; }
+.cur.is-listen:is(.m-default, .m-hover) .cur-eq { opacity: 1; }
+.cur.is-listen:is(.m-default, .m-hover) .cur-dot { opacity: 0; }
+.cur.is-out > * { opacity: 0 !important; }
+</style>
+<script>
+(() => {
+  if (!window.gsap || !matchMedia('(hover: hover) and (pointer: fine)').matches) return
+  const slow = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1
+  document.documentElement.classList.add('has-cursor')
+  const cur = document.createElement('div')
+  cur.className = 'cur m-default is-out'
+  cur.setAttribute('aria-hidden', 'true')
+  cur.innerHTML = '<div class="cur-ring"><span class="cur-eq"><i></i><i></i><i></i><i></i><i></i></span><span class="cur-arrows">‹›</span><span class="cur-ban"></span></div><div class="cur-pill"><i></i><span>Play</span></div><div class="cur-beam"></div><div class="cur-scrub"><b>Seek</b><i></i></div><div class="cur-dot"></div>'
+  document.body.appendChild(cur)
+  const [ringEl, pill, beam, scrub, dot] = cur.children
+  const follow = (el, d) => [gsap.quickTo(el, 'x', { duration: d * slow, ease: 'power3' }), gsap.quickTo(el, 'y', { duration: d * slow, ease: 'power3' })]
+  const ring = follow(ringEl, 0.38)
+  const pillTo = follow(pill, 0.22)
+  const beamTo = follow(beam, 0.06)
+  const scrubTo = follow(scrub, 0.08)
+  const dotTo = follow(dot, 0.05)
+  const bars = [...cur.querySelectorAll('.cur-eq i')]
+  const label = pill.querySelector('span')
+  let mode = 'default'
+  const modeOf = (el) => {
+    if (!el?.closest) return ['default']
+    const tagged = el.closest('[data-cursor]')
+    if (tagged) return [tagged.dataset.cursor, tagged]
+    if (el.closest('[disabled], [aria-disabled="true"]')) return ['disabled']
+    if (el.closest('input[type="range"], .prog')) return ['scrub']
+    if (el.closest('input, textarea, [contenteditable="true"]')) return ['text']
+    if (el.closest('.drag-zone, .ball')) return ['drag']
+    if (el.closest('.thumb')) return ['hide']
+    const play = el.closest('.art, .cv, .playbtn, .cover')
+    if (play) return ['play', play]
+    const hit = el.closest('a, button, [role="button"], [role="tab"], [role="option"], summary, label, .magnetic, .node')
+    if (hit) return ['hover', hit]
+    return ['default']
+  }
+  window.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse') return
+    cur.classList.remove('is-out')
+    const [m, el] = modeOf(e.target)
+    if (m !== mode) { cur.classList.replace(`m-${mode}`, `m-${m}`); mode = m }
+    let x = e.clientX
+    let y = e.clientY
+    if (m === 'hover' && el) { const r = el.getBoundingClientRect(); if (r.width < 260 && r.height < 120) { x += (r.left + r.width / 2 - x) * 0.25; y += (r.top + r.height / 2 - y) * 0.25 } }
+    if (m === 'play') label.textContent = el?.dataset?.cursorLabel ?? 'Play'
+    ring[0](x); ring[1](y)
+    pillTo[0](e.clientX); pillTo[1](e.clientY)
+    beamTo[0](e.clientX); beamTo[1](e.clientY)
+    scrubTo[0](e.clientX); scrubTo[1](e.clientY)
+    dotTo[0](e.clientX); dotTo[1](e.clientY)
+  }, { passive: true })
+  window.addEventListener('pointerdown', () => cur.classList.add('is-press'))
+  window.addEventListener('pointerup', () => cur.classList.remove('is-press'))
+  document.addEventListener('pointerleave', () => cur.classList.add('is-out'))
+  window.addEventListener('blur', () => cur.classList.add('is-out'))
+  /* listening: bars pulse with the playing track's level (the page publishes window.__bitrateLevel) */
+  gsap.ticker.add((t) => {
+    const lv = window.__bitrateLevel || 0
+    const on = lv > 0.02
+    cur.classList.toggle('is-listen', on)
+    if (!on) return
+    bars.forEach((b, i) => { b.style.transform = `scaleY(${Math.min(1, 0.25 + lv * 1.6 * (0.6 + 0.4 * Math.sin(t * 9 + i * 1.3)))})` })
+  })
+})()
+</script>
+</body>
+</html>

@@ -1,0 +1,2528 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "A92qc4",
+      "name": "Listening analytics / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "meRiRm",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "wzdUhP",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "QRTCrE",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "JvXjkj",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "4qhjzv",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Your listening"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "g7evjD",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "kGfrxA",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "October so far. Only visible to you."
+                },
+                {
+                  "type": "frame",
+                  "id": "ovG7f5",
+                  "name": "Row",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "fTcsLq",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "Minutes listened"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "1,284"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "+18% vs September"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "kYghcV",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "Tracks"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "342"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "96 new to you"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "76rNSe",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "Top genre"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "Synth pop"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "41% of listening"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "KzJNS9",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "Streak"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "12 days"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "Longest this year"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Cye6so",
+                  "name": "Row",
+                  "gap": 16,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "BNiWra",
+                      "ref": "ds:x4Fixv",
+                      "name": "Surface/Panel",
+                      "descendants": {
+                        "ds:xhr0E3": {
+                          "type": "frame",
+                          "id": "tJHiaK",
+                          "name": "Panel Content",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "F8AyxW",
+                              "ref": "ds:SOt7Oe",
+                              "name": "Text/Body Strong",
+                              "content": "Listening by day"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "nrDmtK",
+                              "name": "Listening By Day",
+                              "gap": 18,
+                              "alignItems": "end",
+                              "width": "fill_container",
+                              "height": 180,
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "79on6M",
+                                  "ref": "ds:euRP9L",
+                                  "name": "Bar Chart/Bar",
+                                  "descendants": {
+                                    "ds:o7Xolk": {
+                                      "height": 69
+                                    },
+                                    "ds:lsP2i4": {
+                                      "content": "Mon"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Au9EQo",
+                                  "ref": "ds:euRP9L",
+                                  "name": "Bar Chart/Bar",
+                                  "descendants": {
+                                    "ds:o7Xolk": {
+                                      "height": 93
+                                    },
+                                    "ds:lsP2i4": {
+                                      "content": "Tue"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "xWaDGG",
+                                  "ref": "ds:euRP9L",
+                                  "name": "Bar Chart/Bar",
+                                  "descendants": {
+                                    "ds:o7Xolk": {
+                                      "height": 57
+                                    },
+                                    "ds:lsP2i4": {
+                                      "content": "Wed"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "hToSAq",
+                                  "ref": "ds:euRP9L",
+                                  "name": "Bar Chart/Bar",
+                                  "descendants": {
+                                    "ds:o7Xolk": {
+                                      "height": 111
+                                    },
+                                    "ds:lsP2i4": {
+                                      "content": "Thu"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "cHb9Ms",
+                                  "ref": "ds:0BZlqf",
+                                  "name": "Bar Chart/Bar Highlight",
+                                  "descendants": {
+                                    "ds:I0qWNo": {
+                                      "height": 150
+                                    },
+                                    "ds:FydfRV": {
+                                      "content": "Fri"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "3DRKS8",
+                                  "ref": "ds:euRP9L",
+                                  "name": "Bar Chart/Bar",
+                                  "descendants": {
+                                    "ds:o7Xolk": {
+                                      "height": 132
+                                    },
+                                    "ds:lsP2i4": {
+                                      "content": "Sat"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ZXDARz",
+                                  "ref": "ds:euRP9L",
+                                  "name": "Bar Chart/Bar",
+                                  "descendants": {
+                                    "ds:o7Xolk": {
+                                      "height": 84
+                                    },
+                                    "ds:lsP2i4": {
+                                      "content": "Sun"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qeQhLY",
+                      "ref": "ds:x4Fixv",
+                      "name": "Surface/Panel",
+                      "width": 380,
+                      "descendants": {
+                        "ds:xhr0E3": {
+                          "type": "frame",
+                          "id": "mzEAjL",
+                          "name": "Panel Content",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "6pUqMi",
+                              "ref": "ds:SOt7Oe",
+                              "name": "Text/Body Strong",
+                              "content": "Top artists"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "Pq54eA",
+                              "ref": "ds:Y2h8VV",
+                              "name": "Track / Luma Vale",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:fjPYf": {
+                                  "fill": {
+                                    "type": "image",
+                                    "url": "../design-system/assets/hero/luma-vale.png",
+                                    "mode": "cover"
+                                  }
+                                },
+                                "ds:RJ2go": {
+                                  "content": "Luma Vale"
+                                },
+                                "ds:rFh9q": {
+                                  "content": "Artist"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "HwZieH",
+                              "ref": "ds:Y2h8VV",
+                              "name": "Track / Mira Sol",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:fjPYf": {
+                                  "fill": {
+                                    "type": "image",
+                                    "url": "../design-system/assets/albums/album-night-signal.webp",
+                                    "mode": "cover"
+                                  }
+                                },
+                                "ds:RJ2go": {
+                                  "content": "Mira Sol"
+                                },
+                                "ds:rFh9q": {
+                                  "content": "Artist"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "6sYdDG",
+                              "ref": "ds:Y2h8VV",
+                              "name": "Track / Kite Harbor",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:fjPYf": {
+                                  "fill": {
+                                    "type": "image",
+                                    "url": "../design-system/assets/albums/album-static-lines.webp",
+                                    "mode": "cover"
+                                  }
+                                },
+                                "ds:RJ2go": {
+                                  "content": "Kite Harbor"
+                                },
+                                "ds:rFh9q": {
+                                  "content": "Artist"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"Listening Analytics\" — Personal listening statistics. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "Pjvn5U",
+      "name": "Listening analytics / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "97iZFs",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "6m6nq7",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "jN397v",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "hQ3Ei8",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "guzhV5",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Your listening"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "JhibZn",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "LMqSUH",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "October so far. Only visible to you."
+                },
+                {
+                  "type": "frame",
+                  "id": "WDJ9Vd",
+                  "name": "Row",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "bb94TX",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "Minutes listened"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "1,284"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "+18% vs September"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "aNUZRp",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "Tracks"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "342"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "96 new to you"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "GeQHiz",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "Top genre"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "Synth pop"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "41% of listening"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "dbnZXm",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "Streak"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "12 days"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "Longest this year"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "zwUXg2",
+                  "name": "Row",
+                  "gap": 16,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "un8TmA",
+                      "ref": "ds:x4Fixv",
+                      "name": "Surface/Panel",
+                      "descendants": {
+                        "ds:xhr0E3": {
+                          "type": "frame",
+                          "id": "7BVRLb",
+                          "name": "Panel Content",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "jaGEbJ",
+                              "ref": "ds:SOt7Oe",
+                              "name": "Text/Body Strong",
+                              "content": "Listening by day"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "XWoj3Z",
+                              "name": "Listening By Day",
+                              "gap": 18,
+                              "alignItems": "end",
+                              "width": "fill_container",
+                              "height": 180,
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "djyoiN",
+                                  "ref": "ds:euRP9L",
+                                  "name": "Bar Chart/Bar",
+                                  "descendants": {
+                                    "ds:o7Xolk": {
+                                      "height": 69
+                                    },
+                                    "ds:lsP2i4": {
+                                      "content": "Mon"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "AoiAdz",
+                                  "ref": "ds:euRP9L",
+                                  "name": "Bar Chart/Bar",
+                                  "descendants": {
+                                    "ds:o7Xolk": {
+                                      "height": 93
+                                    },
+                                    "ds:lsP2i4": {
+                                      "content": "Tue"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "38eiWf",
+                                  "ref": "ds:euRP9L",
+                                  "name": "Bar Chart/Bar",
+                                  "descendants": {
+                                    "ds:o7Xolk": {
+                                      "height": 57
+                                    },
+                                    "ds:lsP2i4": {
+                                      "content": "Wed"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "zHCf9X",
+                                  "ref": "ds:euRP9L",
+                                  "name": "Bar Chart/Bar",
+                                  "descendants": {
+                                    "ds:o7Xolk": {
+                                      "height": 111
+                                    },
+                                    "ds:lsP2i4": {
+                                      "content": "Thu"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "NU2UbS",
+                                  "ref": "ds:0BZlqf",
+                                  "name": "Bar Chart/Bar Highlight",
+                                  "descendants": {
+                                    "ds:I0qWNo": {
+                                      "height": 150
+                                    },
+                                    "ds:FydfRV": {
+                                      "content": "Fri"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "PtYaEC",
+                                  "ref": "ds:euRP9L",
+                                  "name": "Bar Chart/Bar",
+                                  "descendants": {
+                                    "ds:o7Xolk": {
+                                      "height": 132
+                                    },
+                                    "ds:lsP2i4": {
+                                      "content": "Sat"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "QUXiTm",
+                                  "ref": "ds:euRP9L",
+                                  "name": "Bar Chart/Bar",
+                                  "descendants": {
+                                    "ds:o7Xolk": {
+                                      "height": 84
+                                    },
+                                    "ds:lsP2i4": {
+                                      "content": "Sun"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Kuimwz",
+                      "ref": "ds:x4Fixv",
+                      "name": "Surface/Panel",
+                      "width": 380,
+                      "descendants": {
+                        "ds:xhr0E3": {
+                          "type": "frame",
+                          "id": "bZtgkL",
+                          "name": "Panel Content",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "VR2AKt",
+                              "ref": "ds:SOt7Oe",
+                              "name": "Text/Body Strong",
+                              "content": "Top artists"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "6tVW4v",
+                              "ref": "ds:Y2h8VV",
+                              "name": "Track / Luma Vale",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:fjPYf": {
+                                  "fill": {
+                                    "type": "image",
+                                    "url": "../design-system/assets/hero/luma-vale.png",
+                                    "mode": "cover"
+                                  }
+                                },
+                                "ds:RJ2go": {
+                                  "content": "Luma Vale"
+                                },
+                                "ds:rFh9q": {
+                                  "content": "Artist"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "Y7mheG",
+                              "ref": "ds:Y2h8VV",
+                              "name": "Track / Mira Sol",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:fjPYf": {
+                                  "fill": {
+                                    "type": "image",
+                                    "url": "../design-system/assets/albums/album-night-signal.webp",
+                                    "mode": "cover"
+                                  }
+                                },
+                                "ds:RJ2go": {
+                                  "content": "Mira Sol"
+                                },
+                                "ds:rFh9q": {
+                                  "content": "Artist"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "UnKXGW",
+                              "ref": "ds:Y2h8VV",
+                              "name": "Track / Kite Harbor",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:fjPYf": {
+                                  "fill": {
+                                    "type": "image",
+                                    "url": "../design-system/assets/albums/album-static-lines.webp",
+                                    "mode": "cover"
+                                  }
+                                },
+                                "ds:RJ2go": {
+                                  "content": "Kite Harbor"
+                                },
+                                "ds:rFh9q": {
+                                  "content": "Artist"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "concept — backlog \"Listening Analytics\" — Personal listening statistics. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "akV9Xj",
+      "name": "Listening analytics / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "SvSMZA",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "BC6ZyB",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "RtSkps",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "MYfgFq",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "5dbsaN",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Your listening"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "MEM3wz",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "orvzKC",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "October so far. Only visible to you."
+                },
+                {
+                  "type": "frame",
+                  "id": "xHxoiF",
+                  "name": "Row",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Zy8FWS",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "Minutes listened"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "1,284"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "+18% vs September"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "fZoAbY",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "Tracks"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "342"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "96 new to you"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "zNPhYw",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "Top genre"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "Synth pop"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "41% of listening"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qCp55C",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "Streak"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "12 days"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "Longest this year"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Dzejhd",
+                  "name": "Row",
+                  "gap": 16,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "nWADNv",
+                      "ref": "ds:x4Fixv",
+                      "name": "Surface/Panel",
+                      "descendants": {
+                        "ds:xhr0E3": {
+                          "type": "frame",
+                          "id": "seGiSv",
+                          "name": "Panel Content",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "L549Sp",
+                              "ref": "ds:SOt7Oe",
+                              "name": "Text/Body Strong",
+                              "content": "Listening by day"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "euaNq9",
+                              "name": "Listening By Day",
+                              "gap": 18,
+                              "alignItems": "end",
+                              "width": "fill_container",
+                              "height": 180,
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "8cBKDY",
+                                  "ref": "ds:euRP9L",
+                                  "name": "Bar Chart/Bar",
+                                  "descendants": {
+                                    "ds:o7Xolk": {
+                                      "height": 69
+                                    },
+                                    "ds:lsP2i4": {
+                                      "content": "Mon"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "g97NMu",
+                                  "ref": "ds:euRP9L",
+                                  "name": "Bar Chart/Bar",
+                                  "descendants": {
+                                    "ds:o7Xolk": {
+                                      "height": 93
+                                    },
+                                    "ds:lsP2i4": {
+                                      "content": "Tue"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "fc3JjX",
+                                  "ref": "ds:euRP9L",
+                                  "name": "Bar Chart/Bar",
+                                  "descendants": {
+                                    "ds:o7Xolk": {
+                                      "height": 57
+                                    },
+                                    "ds:lsP2i4": {
+                                      "content": "Wed"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "oQkE5o",
+                                  "ref": "ds:euRP9L",
+                                  "name": "Bar Chart/Bar",
+                                  "descendants": {
+                                    "ds:o7Xolk": {
+                                      "height": 111
+                                    },
+                                    "ds:lsP2i4": {
+                                      "content": "Thu"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "QrbTsu",
+                                  "ref": "ds:0BZlqf",
+                                  "name": "Bar Chart/Bar Highlight",
+                                  "descendants": {
+                                    "ds:I0qWNo": {
+                                      "height": 150
+                                    },
+                                    "ds:FydfRV": {
+                                      "content": "Fri"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "S5NEPZ",
+                                  "ref": "ds:euRP9L",
+                                  "name": "Bar Chart/Bar",
+                                  "descendants": {
+                                    "ds:o7Xolk": {
+                                      "height": 132
+                                    },
+                                    "ds:lsP2i4": {
+                                      "content": "Sat"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Pqtjbm",
+                                  "ref": "ds:euRP9L",
+                                  "name": "Bar Chart/Bar",
+                                  "descendants": {
+                                    "ds:o7Xolk": {
+                                      "height": 84
+                                    },
+                                    "ds:lsP2i4": {
+                                      "content": "Sun"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "NoPTVW",
+                      "ref": "ds:x4Fixv",
+                      "name": "Surface/Panel",
+                      "width": 380,
+                      "descendants": {
+                        "ds:xhr0E3": {
+                          "type": "frame",
+                          "id": "aHnKEa",
+                          "name": "Panel Content",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "6rgsth",
+                              "ref": "ds:SOt7Oe",
+                              "name": "Text/Body Strong",
+                              "content": "Top artists"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "a4PS6H",
+                              "ref": "ds:Y2h8VV",
+                              "name": "Track / Luma Vale",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:fjPYf": {
+                                  "fill": {
+                                    "type": "image",
+                                    "url": "../design-system/assets/hero/luma-vale.png",
+                                    "mode": "cover"
+                                  }
+                                },
+                                "ds:RJ2go": {
+                                  "content": "Luma Vale"
+                                },
+                                "ds:rFh9q": {
+                                  "content": "Artist"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "nDYodd",
+                              "ref": "ds:Y2h8VV",
+                              "name": "Track / Mira Sol",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:fjPYf": {
+                                  "fill": {
+                                    "type": "image",
+                                    "url": "../design-system/assets/albums/album-night-signal.webp",
+                                    "mode": "cover"
+                                  }
+                                },
+                                "ds:RJ2go": {
+                                  "content": "Mira Sol"
+                                },
+                                "ds:rFh9q": {
+                                  "content": "Artist"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "phKnkA",
+                              "ref": "ds:Y2h8VV",
+                              "name": "Track / Kite Harbor",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:fjPYf": {
+                                  "fill": {
+                                    "type": "image",
+                                    "url": "../design-system/assets/albums/album-static-lines.webp",
+                                    "mode": "cover"
+                                  }
+                                },
+                                "ds:RJ2go": {
+                                  "content": "Kite Harbor"
+                                },
+                                "ds:rFh9q": {
+                                  "content": "Artist"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "concept — backlog \"Listening Analytics\" — Personal listening statistics. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "Huctv5",
+      "name": "Listening analytics / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "iV6Dip",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "ToRytZ",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Your listening"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "gk79L6",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "UgHdJf",
+              "name": "Row",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Mfxv9t",
+                  "ref": "ds:JwxAx4",
+                  "name": "Stat Tile",
+                  "descendants": {
+                    "ds:PzSH2C": {
+                      "content": "Minutes"
+                    },
+                    "ds:Ysnx6S": {
+                      "content": "1,284"
+                    },
+                    "ds:1Km9Qf": {
+                      "content": "+18%"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "g7PVH3",
+                  "ref": "ds:JwxAx4",
+                  "name": "Stat Tile",
+                  "descendants": {
+                    "ds:PzSH2C": {
+                      "content": "Tracks"
+                    },
+                    "ds:Ysnx6S": {
+                      "content": "342"
+                    },
+                    "ds:1Km9Qf": {
+                      "content": "96 new"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "eWUure",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "J95ii6",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "jCqzTs",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Listening by day"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "7tEueM",
+                      "name": "Listening By Day",
+                      "gap": 18,
+                      "alignItems": "end",
+                      "width": "fill_container",
+                      "height": 180,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Hc6Cv8",
+                          "ref": "ds:euRP9L",
+                          "name": "Bar Chart/Bar",
+                          "descendants": {
+                            "ds:o7Xolk": {
+                              "height": 69
+                            },
+                            "ds:lsP2i4": {
+                              "content": "Mon"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "oNiEtG",
+                          "ref": "ds:euRP9L",
+                          "name": "Bar Chart/Bar",
+                          "descendants": {
+                            "ds:o7Xolk": {
+                              "height": 93
+                            },
+                            "ds:lsP2i4": {
+                              "content": "Tue"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "i4DP3j",
+                          "ref": "ds:euRP9L",
+                          "name": "Bar Chart/Bar",
+                          "descendants": {
+                            "ds:o7Xolk": {
+                              "height": 57
+                            },
+                            "ds:lsP2i4": {
+                              "content": "Wed"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "98opjD",
+                          "ref": "ds:euRP9L",
+                          "name": "Bar Chart/Bar",
+                          "descendants": {
+                            "ds:o7Xolk": {
+                              "height": 111
+                            },
+                            "ds:lsP2i4": {
+                              "content": "Thu"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "vqyden",
+                          "ref": "ds:0BZlqf",
+                          "name": "Bar Chart/Bar Highlight",
+                          "descendants": {
+                            "ds:I0qWNo": {
+                              "height": 150
+                            },
+                            "ds:FydfRV": {
+                              "content": "Fri"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "z5Ug5a",
+                          "ref": "ds:euRP9L",
+                          "name": "Bar Chart/Bar",
+                          "descendants": {
+                            "ds:o7Xolk": {
+                              "height": 132
+                            },
+                            "ds:lsP2i4": {
+                              "content": "Sat"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "XwHMdk",
+                          "ref": "ds:euRP9L",
+                          "name": "Bar Chart/Bar",
+                          "descendants": {
+                            "ds:o7Xolk": {
+                              "height": 84
+                            },
+                            "ds:lsP2i4": {
+                              "content": "Sun"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "NbFrRK",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "Top artists"
+            },
+            {
+              "type": "ref",
+              "id": "MikNH8",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Mira Sol",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-night-signal.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Mira Sol"
+                },
+                "ds:rFh9q": {
+                  "content": "Artist"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "gNQFxx",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Kite Harbor",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-static-lines.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Kite Harbor"
+                },
+                "ds:rFh9q": {
+                  "content": "Artist"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "44dyhw",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Lumen Choir",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Lumen Choir"
+                },
+                "ds:rFh9q": {
+                  "content": "Artist"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "x8S3Tb",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "FUxWMr",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "9F4pdN",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"Listening Analytics\" — Personal listening statistics. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "rbJrSe",
+      "name": "Listening analytics / Not enough data / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "ju6U9p",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "3sTGVL",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "HXwp67",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "G4qfcy",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "6AFNgb",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Your listening"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "9BTFtU",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "yAZWeF",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ZkD7Ep",
+                      "ref": "ds:UacIqy",
+                      "name": "State / Not enough listening yet",
+                      "descendants": {
+                        "ds:QTS6fY": {
+                          "icon": "chart-column"
+                        },
+                        "ds:LaYbWr": {
+                          "content": "Not enough listening yet"
+                        },
+                        "ds:IowS15": {
+                          "content": "Listen for a few days and your statistics will appear here."
+                        },
+                        "ds:PKR600/ds:NVe7y": {
+                          "content": "Find something to play"
+                        },
+                        "ds:Sk1EVh": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"Listening Analytics\" — Personal listening statistics. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "SpNxPe",
+      "name": "Listening analytics / Not enough data / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "cAJvtn",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "UfrQSq",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Your listening"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "vvEmMv",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "2FHXNV",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "iwM2Py",
+                  "ref": "ds:UacIqy",
+                  "name": "State / Not enough listening yet",
+                  "descendants": {
+                    "ds:QTS6fY": {
+                      "icon": "chart-column"
+                    },
+                    "ds:LaYbWr": {
+                      "content": "Not enough listening yet"
+                    },
+                    "ds:IowS15": {
+                      "content": "Listen for a few days and your statistics will appear here."
+                    },
+                    "ds:PKR600/ds:NVe7y": {
+                      "content": "Find something to play"
+                    },
+                    "ds:Sk1EVh": {
+                      "enabled": false
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "avfNy9",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "4W2H3V",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "z9DZfN",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"Listening Analytics\" — Personal listening statistics. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "w2c8Nk",
+      "name": "Listening analytics / Loading / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "xaMik3",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "iXxYUJ",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "BRHEbD",
+                  "name": "Loading",
+                  "layout": "vertical",
+                  "gap": 24,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "eYs9cB",
+                      "ref": "ds:Jjegi",
+                      "name": "Skeleton",
+                      "width": 220,
+                      "height": 28
+                    },
+                    {
+                      "type": "frame",
+                      "id": "9XwshV",
+                      "name": "Skeleton Grid",
+                      "layout": "vertical",
+                      "gap": 24,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "bRRgHA",
+                          "name": "Skeleton Cards",
+                          "gap": 20,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "C8FZMQ",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "3DEYgC",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "dntL5k",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "7Rcp7y",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "WuGhqx",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "dV7kpa",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "ctqy3s",
+                          "name": "Skeleton Cards",
+                          "gap": 20,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "8fWwAq",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "CyGiQV",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "dZf5Gy",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "kDrneF",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "5jVHhQ",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "zKfKHX",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "DQHmjh",
+                          "name": "Skeleton Cards",
+                          "gap": 20,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "KiLxop",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "ABWj28",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "5QTffJ",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "iFFXnn",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "ewW4aE",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "RtyvSH",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"Listening Analytics\" — Personal listening statistics. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "YB5Hoa",
+      "name": "Listening analytics / Loading / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "F4iKLQ",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "rHvs7a",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "Goxhft",
+              "name": "Loading",
+              "layout": "vertical",
+              "gap": 24,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "5a4Rwk",
+                  "ref": "ds:Jjegi",
+                  "name": "Skeleton",
+                  "width": 140,
+                  "height": 28
+                },
+                {
+                  "type": "frame",
+                  "id": "7k65tT",
+                  "name": "Skeleton Grid",
+                  "layout": "vertical",
+                  "gap": 24,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "t6YuNf",
+                      "name": "Skeleton Cards",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Q7gvpx",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "9DzL83",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Hbg6Bj",
+                      "name": "Skeleton Cards",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "26vHu9",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "9ZocEp",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "oSAo8H",
+                      "name": "Skeleton Cards",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "3VmPXp",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "uJUw3G",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "xKe6Vu",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "dbTwUL",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "MYDdTx",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"Listening Analytics\" — Personal listening statistics. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "BjCiuN",
+      "name": "Listening analytics / Error / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "bSyzCa",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "Fbi8UT",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "RJmyVt",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "6rjz5N",
+                      "ref": "ds:LQ8GwL",
+                      "name": "State / Statistics are unavailable",
+                      "descendants": {
+                        "ds:zG3uZd": {
+                          "icon": "triangle-alert"
+                        },
+                        "ds:ATKZVK": {
+                          "content": "Statistics are unavailable"
+                        },
+                        "ds:h7OAoY": {
+                          "content": "Try again in a moment."
+                        },
+                        "ds:ydkfG5/ds:NVe7y": {
+                          "content": "Try again"
+                        },
+                        "ds:voqjVU/ds:i6a4e": {
+                          "content": "Back to home"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 9170,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"Listening Analytics\" — Personal listening statistics. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "p8YfhP",
+      "name": "Listening analytics / Error / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "3NEDXz",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "Y2ibWo",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "KxYoCg",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "6R6H5m",
+                  "ref": "ds:LQ8GwL",
+                  "name": "State / Statistics are unavailable",
+                  "descendants": {
+                    "ds:zG3uZd": {
+                      "icon": "triangle-alert"
+                    },
+                    "ds:ATKZVK": {
+                      "content": "Statistics are unavailable"
+                    },
+                    "ds:h7OAoY": {
+                      "content": "Try again in a moment."
+                    },
+                    "ds:ydkfG5/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:voqjVU/ds:i6a4e": {
+                      "content": "Back to home"
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "5FTCZq",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "vKAhMo",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "EyeKhq",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 10710,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"Listening Analytics\" — Personal listening statistics. Concept."
+    }
+  ]
+}

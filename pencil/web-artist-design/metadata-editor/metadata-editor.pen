@@ -1,0 +1,2183 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "o77ESM",
+      "name": "Artist / Metadata editor / Desktop / Dark",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "JRXvHV",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6bAVSI": {
+              "type": "ref",
+              "id": "fvVR7E",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "disc-3"
+                },
+                "ds:GZQzF3": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Music / Night Signal"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Open workspace"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "WfJnmP",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "XsUWEk",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "content": "NIGHT SIGNAL"
+                    },
+                    "ds:8a3o93": {
+                      "content": "Edit metadata"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Keep release and track details accurate"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "wd3W5f",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "hV7Rxf",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "cPCtf7",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Track details",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Track details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "v7dcA3",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Release details",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Release details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "YoCse5",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Contributors & rights",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Contributors & rights"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "TSaH2u",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "RnMPbn",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "N5b3Vq",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "84mFF3",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "f2knmz",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "4wbTHz",
+                                      "ref": "ds:WcSzPr",
+                                      "name": "Status/Warning",
+                                      "descendants": {
+                                        "ds:8sj0Ew": {
+                                          "content": "Unsaved changes"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "UQG4ia",
+                                      "ref": "ds:PiqhAO",
+                                      "name": "Text/Caption",
+                                      "content": "Fields marked required block review when missing."
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "cqZNMR",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Track title (Required)",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Track title (Required)"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Night Signal"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "nK5d9X",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Version (Optional)",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Version (Optional)"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Original mix"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "LJDQS8",
+                                  "ref": "ds:Kfq8t",
+                                  "name": "Select / Release",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:PLkpD": {
+                                      "content": "Release"
+                                    },
+                                    "ds:USlYG": {
+                                      "content": "Afterglow · Single"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "FCRq74",
+                                  "ref": "ds:Kfq8t",
+                                  "name": "Select / Lyrics language",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:PLkpD": {
+                                      "content": "Lyrics language"
+                                    },
+                                    "ds:USlYG": {
+                                      "content": "English"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "ohBmro",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "q8Hz6W",
+                                      "ref": "ds:Kfq8t",
+                                      "name": "Select / Primary genre",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:PLkpD": {
+                                          "content": "Primary genre"
+                                        },
+                                        "ds:USlYG": {
+                                          "content": "Electronic"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "u6JWoj",
+                                      "ref": "ds:Kfq8t",
+                                      "name": "Select / Secondary genre",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:PLkpD": {
+                                          "content": "Secondary genre"
+                                        },
+                                        "ds:USlYG": {
+                                          "content": "Downtempo"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "BQB2ru",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Explicit content"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "RNompU",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "wbFXTb",
+                                      "ref": "ds:8Ffcuk",
+                                      "name": "Option Card/Selected",
+                                      "descendants": {
+                                        "ds:T5zLer": {
+                                          "content": "No"
+                                        },
+                                        "ds:nIHs9M": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "tCrwtL",
+                                      "ref": "ds:8QxyNQ",
+                                      "name": "Option Card",
+                                      "descendants": {
+                                        "ds:xHFeRf": {
+                                          "content": "Yes"
+                                        },
+                                        "ds:VvnZDS": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "aJXPJ4",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "ISRC (read only)"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "92KE7A",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "UhT3Rx",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Not assigned"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "CjerKu",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "HJe2pU",
+                                      "ref": "ds:exjwf",
+                                      "name": "Button / Save changes",
+                                      "descendants": {
+                                        "ds:E23bq6": {
+                                          "content": "Save changes"
+                                        },
+                                        "ds:o7NXW": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "NBa7B2",
+                                      "ref": "ds:DTwJb",
+                                      "name": "Button / Discard",
+                                      "descendants": {
+                                        "ds:GyGLK": {
+                                          "content": "Discard"
+                                        },
+                                        "ds:uRXDu": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "PpKzXD",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "jVwHVK",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "SwDbMS",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "Wyyctv",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "UVqeJ2",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Catalog context"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "nLckSP",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "RELEASE"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "kEVTXh",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "QbXjUq",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Afterglow"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "EUmmUF",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "STATUS"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "N26gKr",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "GLq6uC",
+                                          "ref": "ds:U7YZW8",
+                                          "name": "Status/Info",
+                                          "descendants": {
+                                            "ds:OvU9Iz": {
+                                              "content": "In review"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "WstXmc",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "LAST UPDATED"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "8wSvBd",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "jgcLk4",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Sep 09, 2026 · 11:14 EEST"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "n6FFRF",
+                                  "ref": "ds:XDvNAD",
+                                  "name": "Text/Paragraph",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Open the release workspace for tasks, versions and reviewer feedback."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "aq583Y",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Catalog metadata stays private until the release is published."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/music/$trackId metadata — Keep release and track details accurate."
+    },
+    {
+      "type": "frame",
+      "id": "Q2yJ2b",
+      "name": "Artist / Metadata editor / Desktop / Light",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "YvNpKk",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6bAVSI": {
+              "type": "ref",
+              "id": "Y8aG4f",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "disc-3"
+                },
+                "ds:GZQzF3": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Music / Night Signal"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Open workspace"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "TUXmuG",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "tLVDCr",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "content": "NIGHT SIGNAL"
+                    },
+                    "ds:8a3o93": {
+                      "content": "Edit metadata"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Keep release and track details accurate"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "WNBHYt",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "URAWb3",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "DkjBk8",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Track details",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Track details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "oRbiun",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Release details",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Release details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "7VJBms",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Contributors & rights",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Contributors & rights"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "BNixjr",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "B9EyyP",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "s5csmh",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "wSMduK",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "2LVAZX",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "gpG8J4",
+                                      "ref": "ds:WcSzPr",
+                                      "name": "Status/Warning",
+                                      "descendants": {
+                                        "ds:8sj0Ew": {
+                                          "content": "Unsaved changes"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "RXNcry",
+                                      "ref": "ds:PiqhAO",
+                                      "name": "Text/Caption",
+                                      "content": "Fields marked required block review when missing."
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "SmwSFf",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Track title (Required)",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Track title (Required)"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Night Signal"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "9FvR6d",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Version (Optional)",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Version (Optional)"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Original mix"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "diogCN",
+                                  "ref": "ds:Kfq8t",
+                                  "name": "Select / Release",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:PLkpD": {
+                                      "content": "Release"
+                                    },
+                                    "ds:USlYG": {
+                                      "content": "Afterglow · Single"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "gwqQKr",
+                                  "ref": "ds:Kfq8t",
+                                  "name": "Select / Lyrics language",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:PLkpD": {
+                                      "content": "Lyrics language"
+                                    },
+                                    "ds:USlYG": {
+                                      "content": "English"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "Ev48Mq",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "Xau9iM",
+                                      "ref": "ds:Kfq8t",
+                                      "name": "Select / Primary genre",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:PLkpD": {
+                                          "content": "Primary genre"
+                                        },
+                                        "ds:USlYG": {
+                                          "content": "Electronic"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "4z28hr",
+                                      "ref": "ds:Kfq8t",
+                                      "name": "Select / Secondary genre",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:PLkpD": {
+                                          "content": "Secondary genre"
+                                        },
+                                        "ds:USlYG": {
+                                          "content": "Downtempo"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "CbRL58",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Explicit content"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "hQNYEf",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "CtHuX7",
+                                      "ref": "ds:8Ffcuk",
+                                      "name": "Option Card/Selected",
+                                      "descendants": {
+                                        "ds:T5zLer": {
+                                          "content": "No"
+                                        },
+                                        "ds:nIHs9M": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "VXMpQE",
+                                      "ref": "ds:8QxyNQ",
+                                      "name": "Option Card",
+                                      "descendants": {
+                                        "ds:xHFeRf": {
+                                          "content": "Yes"
+                                        },
+                                        "ds:VvnZDS": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "JmTrHa",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "ISRC (read only)"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "DQVhYB",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "qMA4LT",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Not assigned"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "gxcD2V",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "Sou6BB",
+                                      "ref": "ds:exjwf",
+                                      "name": "Button / Save changes",
+                                      "descendants": {
+                                        "ds:E23bq6": {
+                                          "content": "Save changes"
+                                        },
+                                        "ds:o7NXW": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "RPpCPM",
+                                      "ref": "ds:DTwJb",
+                                      "name": "Button / Discard",
+                                      "descendants": {
+                                        "ds:GyGLK": {
+                                          "content": "Discard"
+                                        },
+                                        "ds:uRXDu": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "kQypao",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "7N2Hd3",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "v66ZC4",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "dQ5EYF",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "mhzsQ3",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Catalog context"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ZD8bau",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "RELEASE"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "LgUGxK",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "QW8FKP",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Afterglow"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "TaruTh",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "STATUS"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "CXYr7L",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "J4K6TA",
+                                          "ref": "ds:U7YZW8",
+                                          "name": "Status/Info",
+                                          "descendants": {
+                                            "ds:OvU9Iz": {
+                                              "content": "In review"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "z9cDRS",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "LAST UPDATED"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "QV2sSM",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "b5MMwV",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Sep 09, 2026 · 11:14 EEST"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "koruqA",
+                                  "ref": "ds:XDvNAD",
+                                  "name": "Text/Paragraph",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Open the release workspace for tasks, versions and reviewer feedback."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "xKvHZP",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Catalog metadata stays private until the release is published."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "designed — /dashboard/music/$trackId metadata — Keep release and track details accurate."
+    },
+    {
+      "type": "frame",
+      "id": "vFtzCK",
+      "name": "Artist / Metadata editor / Desktop / Dim",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "zqN8pH",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6bAVSI": {
+              "type": "ref",
+              "id": "X47Rqj",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "disc-3"
+                },
+                "ds:GZQzF3": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Music / Night Signal"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Open workspace"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "TcRL7x",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "yfF3Fi",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "content": "NIGHT SIGNAL"
+                    },
+                    "ds:8a3o93": {
+                      "content": "Edit metadata"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Keep release and track details accurate"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "upprEJ",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "zg6g5F",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Donn8V",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Track details",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Track details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "hAKuBu",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Release details",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Release details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "JkuDwi",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Contributors & rights",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Contributors & rights"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "5mKNjo",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "cMpCRx",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "4TbmhS",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "ZTozAf",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "jSd47B",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "DYshqZ",
+                                      "ref": "ds:WcSzPr",
+                                      "name": "Status/Warning",
+                                      "descendants": {
+                                        "ds:8sj0Ew": {
+                                          "content": "Unsaved changes"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "qsDXBH",
+                                      "ref": "ds:PiqhAO",
+                                      "name": "Text/Caption",
+                                      "content": "Fields marked required block review when missing."
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "gFRqpr",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Track title (Required)",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Track title (Required)"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Night Signal"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "iThNrz",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Version (Optional)",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Version (Optional)"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Original mix"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "BhGKcM",
+                                  "ref": "ds:Kfq8t",
+                                  "name": "Select / Release",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:PLkpD": {
+                                      "content": "Release"
+                                    },
+                                    "ds:USlYG": {
+                                      "content": "Afterglow · Single"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "QCYFus",
+                                  "ref": "ds:Kfq8t",
+                                  "name": "Select / Lyrics language",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:PLkpD": {
+                                      "content": "Lyrics language"
+                                    },
+                                    "ds:USlYG": {
+                                      "content": "English"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "RAu49G",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "tLirdr",
+                                      "ref": "ds:Kfq8t",
+                                      "name": "Select / Primary genre",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:PLkpD": {
+                                          "content": "Primary genre"
+                                        },
+                                        "ds:USlYG": {
+                                          "content": "Electronic"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "cTtFQX",
+                                      "ref": "ds:Kfq8t",
+                                      "name": "Select / Secondary genre",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:PLkpD": {
+                                          "content": "Secondary genre"
+                                        },
+                                        "ds:USlYG": {
+                                          "content": "Downtempo"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "W49cgS",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Explicit content"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "oeVkR4",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "vAgZgS",
+                                      "ref": "ds:8Ffcuk",
+                                      "name": "Option Card/Selected",
+                                      "descendants": {
+                                        "ds:T5zLer": {
+                                          "content": "No"
+                                        },
+                                        "ds:nIHs9M": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "jL5vag",
+                                      "ref": "ds:8QxyNQ",
+                                      "name": "Option Card",
+                                      "descendants": {
+                                        "ds:xHFeRf": {
+                                          "content": "Yes"
+                                        },
+                                        "ds:VvnZDS": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "KZARWX",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "ISRC (read only)"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "KH6GhR",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "ao57YH",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Not assigned"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "VayAuL",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "iHC6qM",
+                                      "ref": "ds:exjwf",
+                                      "name": "Button / Save changes",
+                                      "descendants": {
+                                        "ds:E23bq6": {
+                                          "content": "Save changes"
+                                        },
+                                        "ds:o7NXW": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "nKJ4qS",
+                                      "ref": "ds:DTwJb",
+                                      "name": "Button / Discard",
+                                      "descendants": {
+                                        "ds:GyGLK": {
+                                          "content": "Discard"
+                                        },
+                                        "ds:uRXDu": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "UYssG5",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "6NBchx",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "BPVNso",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "9aFjPy",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "PqEZXF",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Catalog context"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "PREiDh",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "RELEASE"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "rbHv3h",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "sq5dbs",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Afterglow"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "g9cZFY",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "STATUS"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "rBcPeX",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "RMuAMC",
+                                          "ref": "ds:U7YZW8",
+                                          "name": "Status/Info",
+                                          "descendants": {
+                                            "ds:OvU9Iz": {
+                                              "content": "In review"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "j8aZWs",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "LAST UPDATED"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "JvXufm",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "kDtLB8",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Sep 09, 2026 · 11:14 EEST"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "qC6SHL",
+                                  "ref": "ds:XDvNAD",
+                                  "name": "Text/Paragraph",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Open the release workspace for tasks, versions and reviewer feedback."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "h4f4Bm",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Catalog metadata stays private until the release is published."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "designed — /dashboard/music/$trackId metadata — Keep release and track details accurate."
+    },
+    {
+      "type": "frame",
+      "id": "XDuRVk",
+      "name": "Artist / Metadata editor / Mobile / Dark",
+      "width": 390,
+      "height": 1800,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "XuVQdL",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1800,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "AtcSEZ",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "cytYzC",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "content": "NIGHT SIGNAL"
+                    },
+                    "ds:8a3o93": {
+                      "content": "Edit metadata"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Keep release and track details accurate"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "fjdmj8",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "xa7Mhy",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "4EQA5f",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Track details",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Track details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "mhY3xk",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Release details",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Release details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qTYTpm",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Contributors & rights",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Contributors & rights"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "rwsRTH",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "nm6Bct",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "RochSk",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "VEimGS",
+                              "ref": "ds:WcSzPr",
+                              "name": "Status/Warning",
+                              "descendants": {
+                                "ds:8sj0Ew": {
+                                  "content": "Unsaved changes"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "yoMDWG",
+                              "ref": "ds:PiqhAO",
+                              "name": "Text/Caption",
+                              "content": "Fields marked required block review when missing."
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "iNZRv6",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Track title (Required)",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Track title (Required)"
+                            },
+                            "ds:iI0CE": {
+                              "content": "Night Signal"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "YZCYGQ",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Version (Optional)",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Version (Optional)"
+                            },
+                            "ds:iI0CE": {
+                              "content": "Original mix"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "X2scJy",
+                          "ref": "ds:Kfq8t",
+                          "name": "Select / Release",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:PLkpD": {
+                              "content": "Release"
+                            },
+                            "ds:USlYG": {
+                              "content": "Afterglow · Single"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "uj2dCj",
+                          "ref": "ds:Kfq8t",
+                          "name": "Select / Lyrics language",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:PLkpD": {
+                              "content": "Lyrics language"
+                            },
+                            "ds:USlYG": {
+                              "content": "English"
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "s5UaXR",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "atdsYR",
+                              "ref": "ds:Kfq8t",
+                              "name": "Select / Primary genre",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:PLkpD": {
+                                  "content": "Primary genre"
+                                },
+                                "ds:USlYG": {
+                                  "content": "Electronic"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "9NnffQ",
+                              "ref": "ds:Kfq8t",
+                              "name": "Select / Secondary genre",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:PLkpD": {
+                                  "content": "Secondary genre"
+                                },
+                                "ds:USlYG": {
+                                  "content": "Downtempo"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "bxs7aw",
+                          "ref": "ds:SOt7Oe",
+                          "name": "Text/Body Strong",
+                          "content": "Explicit content"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "HQpQkr",
+                          "name": "Row",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "W7NUpK",
+                              "ref": "ds:8Ffcuk",
+                              "name": "Option Card/Selected",
+                              "descendants": {
+                                "ds:T5zLer": {
+                                  "content": "No"
+                                },
+                                "ds:nIHs9M": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "5yUPD2",
+                              "ref": "ds:8QxyNQ",
+                              "name": "Option Card",
+                              "descendants": {
+                                "ds:xHFeRf": {
+                                  "content": "Yes"
+                                },
+                                "ds:VvnZDS": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "gCFzo8",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "ISRC (read only)"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "Go3nKU",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "UZFgaN",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Not assigned"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "QWarYB",
+                          "name": "Row",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "S5mfXA",
+                              "ref": "ds:exjwf",
+                              "name": "Button / Save changes",
+                              "descendants": {
+                                "ds:E23bq6": {
+                                  "content": "Save changes"
+                                },
+                                "ds:o7NXW": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "TF8QLQ",
+                              "ref": "ds:DTwJb",
+                              "name": "Button / Discard",
+                              "descendants": {
+                                "ds:GyGLK": {
+                                  "content": "Discard"
+                                },
+                                "ds:uRXDu": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "VDyBo8",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "oi8thS",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "RqaRVF",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "SWnFes",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Catalog context"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "hmVgCc",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "RELEASE"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "gZbWwN",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "b3QTpP",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Afterglow"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "vvLfGu",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "STATUS"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "LDnzqs",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "fDsrkc",
+                                  "ref": "ds:U7YZW8",
+                                  "name": "Status/Info",
+                                  "descendants": {
+                                    "ds:OvU9Iz": {
+                                      "content": "In review"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "6SHRr8",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "LAST UPDATED"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "ajaBps",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "JMkiuG",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Sep 09, 2026 · 11:14 EEST"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "VMyQWa",
+                          "ref": "ds:XDvNAD",
+                          "name": "Text/Paragraph",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Open the release workspace for tasks, versions and reviewer feedback."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "JvoFuP",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "Catalog metadata stays private until the release is published."
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/music/$trackId metadata — Keep release and track details accurate."
+    }
+  ]
+}

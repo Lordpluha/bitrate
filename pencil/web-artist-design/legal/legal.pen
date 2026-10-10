@@ -1,0 +1,787 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "SVcoiL",
+      "name": "Artist / Legal / Desktop / Dark",
+      "width": 1440,
+      "height": 1100,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Vszaae",
+          "ref": "ds:h25UaM",
+          "name": "Public Header"
+        },
+        {
+          "type": "frame",
+          "id": "BPYFU3",
+          "name": "Column",
+          "layout": "vertical",
+          "gap": 16,
+          "width": 760,
+          "children": [
+            {
+              "type": "ref",
+              "id": "SjTUcN",
+              "ref": "ds:cFuiSI",
+              "name": "Alert/Warning",
+              "descendants": {
+                "ds:3d5wsO": {
+                  "content": "Draft — pending legal review. This draft covers only the hosting licence needed for uploads today."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "9qxhYG",
+              "ref": "ds:yjiPHo",
+              "name": "Text/Eyebrow",
+              "content": "LEGAL"
+            },
+            {
+              "type": "ref",
+              "id": "PqYBFH",
+              "ref": "ds:MgMQ2L",
+              "name": "Text/H1",
+              "content": "Artist Agreement"
+            },
+            {
+              "type": "ref",
+              "id": "UgWFYe",
+              "ref": "ds:Qjj2NE",
+              "name": "Text/H3",
+              "content": "1. What Bitrate is"
+            },
+            {
+              "type": "ref",
+              "id": "DAsBfS",
+              "ref": "ds:XDvNAD",
+              "name": "Text/Paragraph",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Bitrate is a service you use to host and share your music. Bitrate is not a record label, publisher or manager and does not acquire ownership of your recordings or compositions."
+            },
+            {
+              "type": "ref",
+              "id": "UxYMHq",
+              "ref": "ds:Qjj2NE",
+              "name": "Text/H3",
+              "content": "2. Your content and warranties"
+            },
+            {
+              "type": "ref",
+              "id": "UC4EhL",
+              "ref": "ds:XDvNAD",
+              "name": "Text/Paragraph",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "2.1 \"Your Content\" means audio, artwork, titles and metadata you upload."
+            },
+            {
+              "type": "ref",
+              "id": "wkjJER",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "3. Licence to Bitrate"
+            },
+            {
+              "type": "ref",
+              "id": "USoeq2",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "4. Removal and disputes"
+            },
+            {
+              "type": "ref",
+              "id": "qbsHs6",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "5. Indemnity"
+            },
+            {
+              "type": "ref",
+              "id": "DcsNxE",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "6. Payments"
+            },
+            {
+              "type": "ref",
+              "id": "Mw6X3v",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "7. Term and termination"
+            },
+            {
+              "type": "ref",
+              "id": "eWjWCo",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "8. Governing law"
+            },
+            {
+              "type": "ref",
+              "id": "jR9hs6",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "9. Contact"
+            },
+            {
+              "type": "ref",
+              "id": "TAjYzP",
+              "ref": "ds:RlxQk",
+              "name": "Divider",
+              "width": "fill_container"
+            },
+            {
+              "type": "ref",
+              "id": "gW6iBm",
+              "ref": "ds:SOt7Oe",
+              "name": "Text/Body Strong",
+              "content": "Other legal documents"
+            },
+            {
+              "type": "ref",
+              "id": "fnBbHi",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Terms of Use"
+            },
+            {
+              "type": "ref",
+              "id": "R2yoLp",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Privacy Policy"
+            },
+            {
+              "type": "ref",
+              "id": "oV9fsf",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Community Guidelines"
+            },
+            {
+              "type": "ref",
+              "id": "XCHeLi",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Complaints"
+            },
+            {
+              "type": "ref",
+              "id": "iPqsff",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Copyright"
+            }
+          ]
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/legal/$slug — terms, artist-agreement, privacy, community, complaints, copyright — One template for every legal document; shown with the Artist Agreement."
+    },
+    {
+      "type": "frame",
+      "id": "wRSxCF",
+      "name": "Artist / Legal / Desktop / Light",
+      "width": 1440,
+      "height": 1100,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "DLf3f4",
+          "ref": "ds:h25UaM",
+          "name": "Public Header"
+        },
+        {
+          "type": "frame",
+          "id": "3zsE2t",
+          "name": "Column",
+          "layout": "vertical",
+          "gap": 16,
+          "width": 760,
+          "children": [
+            {
+              "type": "ref",
+              "id": "Y7ruDB",
+              "ref": "ds:cFuiSI",
+              "name": "Alert/Warning",
+              "descendants": {
+                "ds:3d5wsO": {
+                  "content": "Draft — pending legal review. This draft covers only the hosting licence needed for uploads today."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "HoFvyQ",
+              "ref": "ds:yjiPHo",
+              "name": "Text/Eyebrow",
+              "content": "LEGAL"
+            },
+            {
+              "type": "ref",
+              "id": "jJ49VP",
+              "ref": "ds:MgMQ2L",
+              "name": "Text/H1",
+              "content": "Artist Agreement"
+            },
+            {
+              "type": "ref",
+              "id": "nDjFPS",
+              "ref": "ds:Qjj2NE",
+              "name": "Text/H3",
+              "content": "1. What Bitrate is"
+            },
+            {
+              "type": "ref",
+              "id": "gdCkif",
+              "ref": "ds:XDvNAD",
+              "name": "Text/Paragraph",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Bitrate is a service you use to host and share your music. Bitrate is not a record label, publisher or manager and does not acquire ownership of your recordings or compositions."
+            },
+            {
+              "type": "ref",
+              "id": "HpfuyV",
+              "ref": "ds:Qjj2NE",
+              "name": "Text/H3",
+              "content": "2. Your content and warranties"
+            },
+            {
+              "type": "ref",
+              "id": "jtXY9a",
+              "ref": "ds:XDvNAD",
+              "name": "Text/Paragraph",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "2.1 \"Your Content\" means audio, artwork, titles and metadata you upload."
+            },
+            {
+              "type": "ref",
+              "id": "CubPoZ",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "3. Licence to Bitrate"
+            },
+            {
+              "type": "ref",
+              "id": "aPbRXF",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "4. Removal and disputes"
+            },
+            {
+              "type": "ref",
+              "id": "EKBPDg",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "5. Indemnity"
+            },
+            {
+              "type": "ref",
+              "id": "NBQxwR",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "6. Payments"
+            },
+            {
+              "type": "ref",
+              "id": "XHhhWC",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "7. Term and termination"
+            },
+            {
+              "type": "ref",
+              "id": "sgNwLT",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "8. Governing law"
+            },
+            {
+              "type": "ref",
+              "id": "zL65ZB",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "9. Contact"
+            },
+            {
+              "type": "ref",
+              "id": "Btxuzz",
+              "ref": "ds:RlxQk",
+              "name": "Divider",
+              "width": "fill_container"
+            },
+            {
+              "type": "ref",
+              "id": "D8Ewhm",
+              "ref": "ds:SOt7Oe",
+              "name": "Text/Body Strong",
+              "content": "Other legal documents"
+            },
+            {
+              "type": "ref",
+              "id": "BKsFqY",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Terms of Use"
+            },
+            {
+              "type": "ref",
+              "id": "bXQtWf",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Privacy Policy"
+            },
+            {
+              "type": "ref",
+              "id": "jCG72M",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Community Guidelines"
+            },
+            {
+              "type": "ref",
+              "id": "rEhhBy",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Complaints"
+            },
+            {
+              "type": "ref",
+              "id": "5LrC4K",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Copyright"
+            }
+          ]
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "/legal/$slug — terms, artist-agreement, privacy, community, complaints, copyright — One template for every legal document; shown with the Artist Agreement."
+    },
+    {
+      "type": "frame",
+      "id": "cUHCo3",
+      "name": "Artist / Legal / Desktop / Dim",
+      "width": 1440,
+      "height": 1100,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "jHVWFh",
+          "ref": "ds:h25UaM",
+          "name": "Public Header"
+        },
+        {
+          "type": "frame",
+          "id": "gcYPAd",
+          "name": "Column",
+          "layout": "vertical",
+          "gap": 16,
+          "width": 760,
+          "children": [
+            {
+              "type": "ref",
+              "id": "gFQcXM",
+              "ref": "ds:cFuiSI",
+              "name": "Alert/Warning",
+              "descendants": {
+                "ds:3d5wsO": {
+                  "content": "Draft — pending legal review. This draft covers only the hosting licence needed for uploads today."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "Kiq3Aw",
+              "ref": "ds:yjiPHo",
+              "name": "Text/Eyebrow",
+              "content": "LEGAL"
+            },
+            {
+              "type": "ref",
+              "id": "dLmP8K",
+              "ref": "ds:MgMQ2L",
+              "name": "Text/H1",
+              "content": "Artist Agreement"
+            },
+            {
+              "type": "ref",
+              "id": "iGB9P7",
+              "ref": "ds:Qjj2NE",
+              "name": "Text/H3",
+              "content": "1. What Bitrate is"
+            },
+            {
+              "type": "ref",
+              "id": "52FfNi",
+              "ref": "ds:XDvNAD",
+              "name": "Text/Paragraph",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Bitrate is a service you use to host and share your music. Bitrate is not a record label, publisher or manager and does not acquire ownership of your recordings or compositions."
+            },
+            {
+              "type": "ref",
+              "id": "yGDv7W",
+              "ref": "ds:Qjj2NE",
+              "name": "Text/H3",
+              "content": "2. Your content and warranties"
+            },
+            {
+              "type": "ref",
+              "id": "TWbX7z",
+              "ref": "ds:XDvNAD",
+              "name": "Text/Paragraph",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "2.1 \"Your Content\" means audio, artwork, titles and metadata you upload."
+            },
+            {
+              "type": "ref",
+              "id": "7bXgaa",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "3. Licence to Bitrate"
+            },
+            {
+              "type": "ref",
+              "id": "j6HXjC",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "4. Removal and disputes"
+            },
+            {
+              "type": "ref",
+              "id": "vWx67F",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "5. Indemnity"
+            },
+            {
+              "type": "ref",
+              "id": "j5uQNi",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "6. Payments"
+            },
+            {
+              "type": "ref",
+              "id": "RUVTKc",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "7. Term and termination"
+            },
+            {
+              "type": "ref",
+              "id": "TbfzXu",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "8. Governing law"
+            },
+            {
+              "type": "ref",
+              "id": "Skw3Mh",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "9. Contact"
+            },
+            {
+              "type": "ref",
+              "id": "MRfB6M",
+              "ref": "ds:RlxQk",
+              "name": "Divider",
+              "width": "fill_container"
+            },
+            {
+              "type": "ref",
+              "id": "mdJdFB",
+              "ref": "ds:SOt7Oe",
+              "name": "Text/Body Strong",
+              "content": "Other legal documents"
+            },
+            {
+              "type": "ref",
+              "id": "aiKQNy",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Terms of Use"
+            },
+            {
+              "type": "ref",
+              "id": "6MVbiZ",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Privacy Policy"
+            },
+            {
+              "type": "ref",
+              "id": "rR6duK",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Community Guidelines"
+            },
+            {
+              "type": "ref",
+              "id": "dJzL6Y",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Complaints"
+            },
+            {
+              "type": "ref",
+              "id": "kaHVwr",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Copyright"
+            }
+          ]
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "/legal/$slug — terms, artist-agreement, privacy, community, complaints, copyright — One template for every legal document; shown with the Artist Agreement."
+    },
+    {
+      "type": "frame",
+      "id": "xvmPuT",
+      "name": "Artist / Legal / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Q7ainb",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "q2nH4v",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "tkqZTA",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "ref",
+              "id": "v3Rc5b",
+              "ref": "ds:cFuiSI",
+              "name": "Alert/Warning",
+              "descendants": {
+                "ds:3d5wsO": {
+                  "content": "Draft — pending legal review. This draft covers only the hosting licence needed for uploads today."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "9rcxRv",
+              "ref": "ds:yjiPHo",
+              "name": "Text/Eyebrow",
+              "content": "LEGAL"
+            },
+            {
+              "type": "ref",
+              "id": "Dt7PnM",
+              "ref": "ds:MgMQ2L",
+              "name": "Text/H1",
+              "content": "Artist Agreement"
+            },
+            {
+              "type": "ref",
+              "id": "jhXYzV",
+              "ref": "ds:Qjj2NE",
+              "name": "Text/H3",
+              "content": "1. What Bitrate is"
+            },
+            {
+              "type": "ref",
+              "id": "k4DcFS",
+              "ref": "ds:XDvNAD",
+              "name": "Text/Paragraph",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Bitrate is a service you use to host and share your music. Bitrate is not a record label, publisher or manager and does not acquire ownership of your recordings or compositions."
+            },
+            {
+              "type": "ref",
+              "id": "39cmjd",
+              "ref": "ds:Qjj2NE",
+              "name": "Text/H3",
+              "content": "2. Your content and warranties"
+            },
+            {
+              "type": "ref",
+              "id": "d8r5As",
+              "ref": "ds:XDvNAD",
+              "name": "Text/Paragraph",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "2.1 \"Your Content\" means audio, artwork, titles and metadata you upload."
+            },
+            {
+              "type": "ref",
+              "id": "pCFcaK",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "3. Licence to Bitrate"
+            },
+            {
+              "type": "ref",
+              "id": "GLCPrV",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "4. Removal and disputes"
+            },
+            {
+              "type": "ref",
+              "id": "cE7JdE",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "5. Indemnity"
+            },
+            {
+              "type": "ref",
+              "id": "A2YmqE",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "6. Payments"
+            },
+            {
+              "type": "ref",
+              "id": "XMHvr7",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "7. Term and termination"
+            },
+            {
+              "type": "ref",
+              "id": "kqbX9X",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "8. Governing law"
+            },
+            {
+              "type": "ref",
+              "id": "nMsQu8",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "9. Contact"
+            },
+            {
+              "type": "ref",
+              "id": "6VuDQJ",
+              "ref": "ds:RlxQk",
+              "name": "Divider",
+              "width": "fill_container"
+            },
+            {
+              "type": "ref",
+              "id": "XXiLZV",
+              "ref": "ds:SOt7Oe",
+              "name": "Text/Body Strong",
+              "content": "Other legal documents"
+            },
+            {
+              "type": "ref",
+              "id": "G9nuBk",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Terms of Use"
+            },
+            {
+              "type": "ref",
+              "id": "EozjZi",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Privacy Policy"
+            },
+            {
+              "type": "ref",
+              "id": "bJwC6y",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Community Guidelines"
+            },
+            {
+              "type": "ref",
+              "id": "ZX7oqh",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Complaints"
+            },
+            {
+              "type": "ref",
+              "id": "tcaJgs",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Copyright"
+            }
+          ]
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/legal/$slug — terms, artist-agreement, privacy, community, complaints, copyright — One template for every legal document; shown with the Artist Agreement."
+    }
+  ]
+}

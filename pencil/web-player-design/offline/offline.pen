@@ -1,0 +1,2262 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "QYV3ha",
+      "name": "Offline / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "gAEajr",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "nu735E",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "KjHrvv",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "6pqnxL",
+                  "ref": "ds:4pXc9h",
+                  "name": "State / You are offline",
+                  "descendants": {
+                    "ds:pGzESM": {
+                      "content": "You are offline"
+                    },
+                    "ds:GnYRtP": {
+                      "content": "Check your connection and try opening the page again."
+                    },
+                    "ds:9DXNXn/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:iaJVGU": {
+                      "enabled": false
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "fCeG9g",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": 520,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "ifdSeU",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "qaqkne",
+                      "name": "Head",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "WLmJCL",
+                          "ref": "ds:zBEiKg",
+                          "name": "Icon/Primary",
+                          "icon": "hard-drive-download",
+                          "width": 22,
+                          "height": 22
+                        },
+                        {
+                          "type": "ref",
+                          "id": "CU4yXK",
+                          "ref": "ds:fLuqjC",
+                          "name": "Text/H4",
+                          "content": "Offline version"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "CHZVcy",
+                          "ref": "ds:Y4q2pj",
+                          "name": "Badge / Beta",
+                          "descendants": {
+                            "ds:IlFc9": {
+                              "content": "Beta"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qZPBmz",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Play your downloaded music and liked songs without a connection. Likes and playlist edits wait here and sync when you are back online."
+                    },
+                    {
+                      "type": "frame",
+                      "id": "tasQvc",
+                      "name": "Facts",
+                      "gap": 16,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "g6r4wJ",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "214 downloaded tracks"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "tvBk6x",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "1.8 GB on this device"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "67bNB5",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Try the offline version",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Try the offline version"
+                        },
+                        "ds:D3xnv": {
+                          "icon": "arrow-right"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "VryEzU",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "aUxKkg",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/offline — Shown by the service worker without a connection. Bitrate keeps working offline: the beta offline version plays downloaded and liked music and queues changes to sync later."
+    },
+    {
+      "type": "frame",
+      "id": "abgBbF",
+      "name": "Offline / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "sYYeNr",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "hUGBVC",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "ARiFhT",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "yxFLDC",
+                  "ref": "ds:4pXc9h",
+                  "name": "State / You are offline",
+                  "descendants": {
+                    "ds:pGzESM": {
+                      "content": "You are offline"
+                    },
+                    "ds:GnYRtP": {
+                      "content": "Check your connection and try opening the page again."
+                    },
+                    "ds:9DXNXn/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:iaJVGU": {
+                      "enabled": false
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "rb9dkd",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": 520,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "MaQSm3",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "DhtmHd",
+                      "name": "Head",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "M7nwqP",
+                          "ref": "ds:zBEiKg",
+                          "name": "Icon/Primary",
+                          "icon": "hard-drive-download",
+                          "width": 22,
+                          "height": 22
+                        },
+                        {
+                          "type": "ref",
+                          "id": "euhj7S",
+                          "ref": "ds:fLuqjC",
+                          "name": "Text/H4",
+                          "content": "Offline version"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "rJ536k",
+                          "ref": "ds:Y4q2pj",
+                          "name": "Badge / Beta",
+                          "descendants": {
+                            "ds:IlFc9": {
+                              "content": "Beta"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "gyXHnr",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Play your downloaded music and liked songs without a connection. Likes and playlist edits wait here and sync when you are back online."
+                    },
+                    {
+                      "type": "frame",
+                      "id": "6XUuK5",
+                      "name": "Facts",
+                      "gap": 16,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "DZ7QGS",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "214 downloaded tracks"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "khDbvi",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "1.8 GB on this device"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "CNmA3T",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Try the offline version",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Try the offline version"
+                        },
+                        "ds:D3xnv": {
+                          "icon": "arrow-right"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "9rGNo8",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "EpN87G",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "/offline — Shown by the service worker without a connection. Bitrate keeps working offline: the beta offline version plays downloaded and liked music and queues changes to sync later."
+    },
+    {
+      "type": "frame",
+      "id": "RXsPb4",
+      "name": "Offline / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "6h4qnZ",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "AMHWVq",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "U44m4k",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "r4kAmR",
+                  "ref": "ds:4pXc9h",
+                  "name": "State / You are offline",
+                  "descendants": {
+                    "ds:pGzESM": {
+                      "content": "You are offline"
+                    },
+                    "ds:GnYRtP": {
+                      "content": "Check your connection and try opening the page again."
+                    },
+                    "ds:9DXNXn/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:iaJVGU": {
+                      "enabled": false
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "3qJx6C",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": 520,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "bjZKHx",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "cpdLPG",
+                      "name": "Head",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "T8uTEz",
+                          "ref": "ds:zBEiKg",
+                          "name": "Icon/Primary",
+                          "icon": "hard-drive-download",
+                          "width": 22,
+                          "height": 22
+                        },
+                        {
+                          "type": "ref",
+                          "id": "rWzo22",
+                          "ref": "ds:fLuqjC",
+                          "name": "Text/H4",
+                          "content": "Offline version"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "nHSUMV",
+                          "ref": "ds:Y4q2pj",
+                          "name": "Badge / Beta",
+                          "descendants": {
+                            "ds:IlFc9": {
+                              "content": "Beta"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "9bvBLF",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Play your downloaded music and liked songs without a connection. Likes and playlist edits wait here and sync when you are back online."
+                    },
+                    {
+                      "type": "frame",
+                      "id": "znVpP4",
+                      "name": "Facts",
+                      "gap": 16,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "No73eM",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "214 downloaded tracks"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "VsAaRJ",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "1.8 GB on this device"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "yu2V5q",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Try the offline version",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Try the offline version"
+                        },
+                        "ds:D3xnv": {
+                          "icon": "arrow-right"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "aZePhU",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "gMC9La",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "/offline — Shown by the service worker without a connection. Bitrate keeps working offline: the beta offline version plays downloaded and liked music and queues changes to sync later."
+    },
+    {
+      "type": "frame",
+      "id": "deg24Y",
+      "name": "Offline / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "ss3Ztz",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "kGZVeA",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "ThWEEb",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "ELXAdW",
+                  "ref": "ds:4pXc9h",
+                  "name": "State / You are offline",
+                  "descendants": {
+                    "ds:pGzESM": {
+                      "content": "You are offline"
+                    },
+                    "ds:GnYRtP": {
+                      "content": "Check your connection and try opening the page again."
+                    },
+                    "ds:9DXNXn/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:iaJVGU": {
+                      "enabled": false
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "8sKdyn",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": "fill_container",
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "jHVk4n",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "sjRZTJ",
+                      "name": "Head",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ML6LFK",
+                          "ref": "ds:zBEiKg",
+                          "name": "Icon/Primary",
+                          "icon": "hard-drive-download",
+                          "width": 22,
+                          "height": 22
+                        },
+                        {
+                          "type": "ref",
+                          "id": "YXgAJt",
+                          "ref": "ds:fLuqjC",
+                          "name": "Text/H4",
+                          "content": "Offline version"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "XNtqMB",
+                          "ref": "ds:Y4q2pj",
+                          "name": "Badge / Beta",
+                          "descendants": {
+                            "ds:IlFc9": {
+                              "content": "Beta"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "k3vvyr",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Play your downloaded music and liked songs without a connection. Likes and playlist edits wait here and sync when you are back online."
+                    },
+                    {
+                      "type": "frame",
+                      "id": "2e3rjh",
+                      "name": "Facts",
+                      "gap": 16,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "2LmDvW",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "214 downloaded tracks"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "4ydtbA",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "1.8 GB on this device"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "xGP9cc",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Try the offline version",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Try the offline version"
+                        },
+                        "ds:D3xnv": {
+                          "icon": "arrow-right"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Pj7Qst",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            16,
+            20,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "GjoWii",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/offline — Shown by the service worker without a connection. Bitrate keeps working offline: the beta offline version plays downloaded and liked music and queues changes to sync later."
+    },
+    {
+      "type": "frame",
+      "id": "C53F2e",
+      "name": "Offline / Offline version (beta) / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "vRBgJr",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "ref",
+              "id": "Ugu2RF",
+              "ref": "ds:OPciE",
+              "name": "App Layout",
+              "width": 1440,
+              "height": 900,
+              "descendants": {
+                "ds:xvsK3": {
+                  "type": "frame",
+                  "id": "SbQ7eh",
+                  "name": "Main Panel",
+                  "clip": true,
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "layout": "vertical",
+                  "gap": 28,
+                  "padding": [
+                    24,
+                    32
+                  ],
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "XMAk82",
+                      "ref": "ds:ogW5t",
+                      "name": "Alert / Offline mode · Beta",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:L7SHNm": {
+                          "content": "Offline mode · Beta"
+                        },
+                        "ds:F9kE6W": {
+                          "content": "Playing from this device. Changes sync when you reconnect."
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "qg6QfU",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "gzm2gp",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Downloaded"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "4beXEZ",
+                          "ref": "ds:e9YOsV",
+                          "name": "Badge / 214 tracks",
+                          "descendants": {
+                            "ds:c9raBZ": {
+                              "content": "214 tracks"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "JLw3tE",
+                          "ref": "ds:BJdEmQ",
+                          "name": "Status/Queued",
+                          "descendants": {
+                            "ds:o56ZbH": {
+                              "content": "3 changes queued"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "pUs22s",
+                      "name": "Chips",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "MSxxyD",
+                          "ref": "ds:AdNrrb",
+                          "name": "Chip/Active",
+                          "descendants": {
+                            "ds:cUY4Fi": {
+                              "content": "All"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "5LH73x",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Liked Songs"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "wvtux7",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Night drive"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ut4bxG",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Rain Drive"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Hoyj68",
+                      "name": "Track Table",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "GDqiEK",
+                          "ref": "ds:gwXgvi",
+                          "name": "Track Table/Header"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "dmoKew",
+                          "ref": "ds:XzmRy1",
+                          "name": "Track Row/Playing",
+                          "descendants": {
+                            "ds:c4PJ5R": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-afterglow.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:RKnhla": {
+                              "content": "Afterglow"
+                            },
+                            "ds:07Q8NN": {
+                              "content": "Nova & the Static"
+                            },
+                            "ds:VxmOIl": {
+                              "content": "Afterglow"
+                            },
+                            "ds:0Dde7d": {
+                              "content": "Today"
+                            },
+                            "ds:QnYex1": {
+                              "content": "3:42"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "SeWksY",
+                          "ref": "ds:WQxBT",
+                          "name": "Track / Night Signal",
+                          "descendants": {
+                            "ds:YSAj4": {
+                              "content": "2"
+                            },
+                            "ds:PptA9": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-night-signal.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:eGEfP": {
+                              "content": "Night Signal"
+                            },
+                            "ds:cNYVw": {
+                              "content": "Mira Sol"
+                            },
+                            "ds:REBNx": {
+                              "content": "Night Signal"
+                            },
+                            "ds:QCCe4": {
+                              "content": "2 days ago"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "2qaSRD",
+                          "ref": "ds:WQxBT",
+                          "name": "Track / Static Lines",
+                          "descendants": {
+                            "ds:YSAj4": {
+                              "content": "3"
+                            },
+                            "ds:PptA9": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-static-lines.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:eGEfP": {
+                              "content": "Static Lines"
+                            },
+                            "ds:cNYVw": {
+                              "content": "Kite Harbor"
+                            },
+                            "ds:REBNx": {
+                              "content": "Static Lines"
+                            },
+                            "ds:QCCe4": {
+                              "content": "2 days ago"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "YRGaCE",
+                          "ref": "ds:WQxBT",
+                          "name": "Track / Echoes in Motion",
+                          "descendants": {
+                            "ds:YSAj4": {
+                              "content": "4"
+                            },
+                            "ds:PptA9": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:eGEfP": {
+                              "content": "Echoes in Motion"
+                            },
+                            "ds:cNYVw": {
+                              "content": "Lumen Choir"
+                            },
+                            "ds:REBNx": {
+                              "content": "Echoes in Motion"
+                            },
+                            "ds:QCCe4": {
+                              "content": "2 days ago"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "tCAPfS",
+                          "ref": "ds:WQxBT",
+                          "name": "Track / Drift Control",
+                          "descendants": {
+                            "ds:YSAj4": {
+                              "content": "5"
+                            },
+                            "ds:PptA9": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-drift-control.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:eGEfP": {
+                              "content": "Drift Control"
+                            },
+                            "ds:cNYVw": {
+                              "content": "Mira Sol"
+                            },
+                            "ds:REBNx": {
+                              "content": "Drift Control"
+                            },
+                            "ds:QCCe4": {
+                              "content": "2 days ago"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "E2uDuc",
+                      "ref": "ds:PiqhAO",
+                      "name": "Text/Caption",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Not downloaded items are hidden while offline. Search and recommendations return when you are back."
+                    }
+                  ]
+                },
+                "ds:Nn2KW": {
+                  "enabled": true
+                },
+                "ds:VZD6U": {
+                  "enabled": true
+                },
+                "ds:z5MVM": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "yYFebb",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "opjrg4",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/offline — Shown by the service worker without a connection. Bitrate keeps working offline: the beta offline version plays downloaded and liked music and queues changes to sync later."
+    },
+    {
+      "type": "frame",
+      "id": "G3NCmC",
+      "name": "Offline / Offline version (beta) / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "EmPvMj",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "ref",
+              "id": "etM8WA",
+              "ref": "ds:xBZUrc",
+              "name": "Mobile/Status Bar",
+              "width": "fill_container"
+            },
+            {
+              "type": "ref",
+              "id": "8FDxXk",
+              "ref": "ds:pmBZPg",
+              "name": "Mobile/Header",
+              "width": "fill_container",
+              "descendants": {
+                "ds:AfZgNi": {
+                  "content": "Offline"
+                },
+                "ds:B4rkef": {
+                  "enabled": false
+                },
+                "ds:Du8iEf": {
+                  "enabled": false
+                },
+                "ds:GvquLa": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "hZFvUt",
+              "name": "Content",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                8,
+                16,
+                16,
+                16
+              ],
+              "clip": true,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "KDR2zY",
+                  "ref": "ds:ogW5t",
+                  "name": "Alert / Offline mode · Beta",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:L7SHNm": {
+                      "content": "Offline mode · Beta"
+                    },
+                    "ds:F9kE6W": {
+                      "content": "Playing from this device. Changes sync when you reconnect."
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "7Hihyt",
+                  "name": "Row",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "NsZSNQ",
+                      "ref": "ds:RoXXJv",
+                      "name": "Text/H2",
+                      "content": "Downloaded"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "HxthUK",
+                      "ref": "ds:e9YOsV",
+                      "name": "Badge / 214 tracks",
+                      "descendants": {
+                        "ds:c9raBZ": {
+                          "content": "214 tracks"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "yThjx5",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "V5uLf2",
+                      "ref": "ds:AdNrrb",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:cUY4Fi": {
+                          "content": "All"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qNBJrW",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Liked Songs"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "mWh99C",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Night drive"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "erBZSZ",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Rain Drive"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "U3q24E",
+                  "ref": "ds:Y2h8VV",
+                  "name": "Track / Afterglow",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:fjPYf": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/albums/album-afterglow.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:RJ2go": {
+                      "content": "Afterglow"
+                    },
+                    "ds:rFh9q": {
+                      "content": "Nova & the Static"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "wj9PW9",
+                  "ref": "ds:Y2h8VV",
+                  "name": "Track / Night Signal",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:fjPYf": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/albums/album-night-signal.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:RJ2go": {
+                      "content": "Night Signal"
+                    },
+                    "ds:rFh9q": {
+                      "content": "Mira Sol"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "tYd5si",
+                  "ref": "ds:Y2h8VV",
+                  "name": "Track / Static Lines",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:fjPYf": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/albums/album-static-lines.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:RJ2go": {
+                      "content": "Static Lines"
+                    },
+                    "ds:rFh9q": {
+                      "content": "Kite Harbor"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "fXQ727",
+                  "ref": "ds:Y2h8VV",
+                  "name": "Track / Echoes in Motion",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:fjPYf": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:RJ2go": {
+                      "content": "Echoes in Motion"
+                    },
+                    "ds:rFh9q": {
+                      "content": "Lumen Choir"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "h5sXg2",
+                  "ref": "ds:Y2h8VV",
+                  "name": "Track / Drift Control",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:fjPYf": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/albums/album-drift-control.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:RJ2go": {
+                      "content": "Drift Control"
+                    },
+                    "ds:rFh9q": {
+                      "content": "Mira Sol"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "KfeNDC",
+                  "ref": "ds:PiqhAO",
+                  "name": "Text/Caption",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Not downloaded items are hidden while offline. Search and recommendations return when you are back."
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "d5RZu7",
+              "name": "Mini Bar Slot",
+              "width": "fill_container",
+              "padding": [
+                8,
+                16
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "9u6Vwn",
+                  "ref": "ds:CeyP3",
+                  "name": "Mini Bar",
+                  "width": "fill_container"
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "pUMV9x",
+              "ref": "ds:PmEet",
+              "name": "Tab Bar",
+              "width": "fill_container",
+              "descendants": {
+                "ds:lPxJb": {
+                  "fill": "$ds:--muted-foreground"
+                },
+                "ds:ojzHV": {
+                  "fill": "$ds:--muted-foreground",
+                  "fontWeight": "normal"
+                },
+                "ds:kGpDm": {
+                  "fill": "$ds:--muted-foreground"
+                },
+                "ds:mG3wy": {
+                  "fill": "$ds:--muted-foreground",
+                  "fontWeight": "normal"
+                },
+                "ds:X78L7T": {
+                  "fill": "$ds:--foreground"
+                },
+                "ds:HnsIZ": {
+                  "fill": "$ds:--foreground",
+                  "fontWeight": "600"
+                },
+                "ds:pjDzF": {
+                  "fill": "$ds:--muted-foreground",
+                  "icon": "square-plus"
+                },
+                "ds:j8Bscj": {
+                  "fill": "$ds:--muted-foreground",
+                  "fontWeight": "normal",
+                  "content": "Create"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "fG337r",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            16,
+            20,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "9VWCNQ",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/offline — Shown by the service worker without a connection. Bitrate keeps working offline: the beta offline version plays downloaded and liked music and queues changes to sync later."
+    },
+    {
+      "type": "frame",
+      "id": "4H2HJN",
+      "name": "Offline / Back online / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "beAEUX",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "ref",
+              "id": "3dd6Fm",
+              "ref": "ds:OPciE",
+              "name": "App Layout",
+              "width": 1440,
+              "height": 900,
+              "descendants": {
+                "ds:xvsK3": {
+                  "type": "frame",
+                  "id": "AB2zhf",
+                  "name": "Main Panel",
+                  "clip": true,
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "layout": "vertical",
+                  "gap": 28,
+                  "padding": [
+                    24,
+                    32
+                  ],
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "zGTthX",
+                      "ref": "ds:ogW5t",
+                      "name": "Alert / You are back online",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:L7SHNm": {
+                          "content": "You are back online"
+                        },
+                        "ds:F9kE6W": {
+                          "content": "Syncing 3 changes made offline — likes and one playlist edit."
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "bACSJW",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "tYL9Gp",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Downloaded"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "2CXmsH",
+                          "ref": "ds:e9YOsV",
+                          "name": "Badge / 214 tracks",
+                          "descendants": {
+                            "ds:c9raBZ": {
+                              "content": "214 tracks"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "n5yvgZ",
+                          "ref": "ds:Ltfcwo",
+                          "name": "Status/Syncing",
+                          "descendants": {
+                            "ds:IyJdUz": {
+                              "content": "Syncing 3"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "6AJzc6",
+                      "name": "Chips",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "PQTfiy",
+                          "ref": "ds:AdNrrb",
+                          "name": "Chip/Active",
+                          "descendants": {
+                            "ds:cUY4Fi": {
+                              "content": "All"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "6UZL2k",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Liked Songs"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "XheQx8",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Night drive"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "k9PWfm",
+                          "ref": "ds:LUcTan",
+                          "name": "Chip/Default",
+                          "descendants": {
+                            "ds:lXs2ja": {
+                              "content": "Rain Drive"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "sDXKvF",
+                      "name": "Track Table",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "KB56cE",
+                          "ref": "ds:gwXgvi",
+                          "name": "Track Table/Header"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "zpkFsj",
+                          "ref": "ds:XzmRy1",
+                          "name": "Track Row/Playing",
+                          "descendants": {
+                            "ds:c4PJ5R": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-afterglow.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:RKnhla": {
+                              "content": "Afterglow"
+                            },
+                            "ds:07Q8NN": {
+                              "content": "Nova & the Static"
+                            },
+                            "ds:VxmOIl": {
+                              "content": "Afterglow"
+                            },
+                            "ds:0Dde7d": {
+                              "content": "Today"
+                            },
+                            "ds:QnYex1": {
+                              "content": "3:42"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "4kktwG",
+                          "ref": "ds:WQxBT",
+                          "name": "Track / Night Signal",
+                          "descendants": {
+                            "ds:YSAj4": {
+                              "content": "2"
+                            },
+                            "ds:PptA9": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-night-signal.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:eGEfP": {
+                              "content": "Night Signal"
+                            },
+                            "ds:cNYVw": {
+                              "content": "Mira Sol"
+                            },
+                            "ds:REBNx": {
+                              "content": "Night Signal"
+                            },
+                            "ds:QCCe4": {
+                              "content": "2 days ago"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Q55Vbd",
+                          "ref": "ds:WQxBT",
+                          "name": "Track / Static Lines",
+                          "descendants": {
+                            "ds:YSAj4": {
+                              "content": "3"
+                            },
+                            "ds:PptA9": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-static-lines.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:eGEfP": {
+                              "content": "Static Lines"
+                            },
+                            "ds:cNYVw": {
+                              "content": "Kite Harbor"
+                            },
+                            "ds:REBNx": {
+                              "content": "Static Lines"
+                            },
+                            "ds:QCCe4": {
+                              "content": "2 days ago"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "YLritr",
+                          "ref": "ds:WQxBT",
+                          "name": "Track / Echoes in Motion",
+                          "descendants": {
+                            "ds:YSAj4": {
+                              "content": "4"
+                            },
+                            "ds:PptA9": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:eGEfP": {
+                              "content": "Echoes in Motion"
+                            },
+                            "ds:cNYVw": {
+                              "content": "Lumen Choir"
+                            },
+                            "ds:REBNx": {
+                              "content": "Echoes in Motion"
+                            },
+                            "ds:QCCe4": {
+                              "content": "2 days ago"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "7X7nUM",
+                          "ref": "ds:WQxBT",
+                          "name": "Track / Drift Control",
+                          "descendants": {
+                            "ds:YSAj4": {
+                              "content": "5"
+                            },
+                            "ds:PptA9": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-drift-control.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:eGEfP": {
+                              "content": "Drift Control"
+                            },
+                            "ds:cNYVw": {
+                              "content": "Mira Sol"
+                            },
+                            "ds:REBNx": {
+                              "content": "Drift Control"
+                            },
+                            "ds:QCCe4": {
+                              "content": "2 days ago"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "AozYhn",
+                      "ref": "ds:PiqhAO",
+                      "name": "Text/Caption",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Not downloaded items are hidden while offline. Search and recommendations return when you are back."
+                    }
+                  ]
+                },
+                "ds:Nn2KW": {
+                  "enabled": true
+                },
+                "ds:VZD6U": {
+                  "enabled": true
+                },
+                "ds:z5MVM": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "FawgZj",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "tNWjxL",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/offline — Shown by the service worker without a connection. Bitrate keeps working offline: the beta offline version plays downloaded and liked music and queues changes to sync later."
+    },
+    {
+      "type": "frame",
+      "id": "3QZmLZ",
+      "name": "Offline / Back online / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "KqqvF4",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "ref",
+              "id": "x8CWtj",
+              "ref": "ds:xBZUrc",
+              "name": "Mobile/Status Bar",
+              "width": "fill_container"
+            },
+            {
+              "type": "ref",
+              "id": "MFhjXz",
+              "ref": "ds:pmBZPg",
+              "name": "Mobile/Header",
+              "width": "fill_container",
+              "descendants": {
+                "ds:AfZgNi": {
+                  "content": "Offline"
+                },
+                "ds:B4rkef": {
+                  "enabled": false
+                },
+                "ds:Du8iEf": {
+                  "enabled": false
+                },
+                "ds:GvquLa": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "6Du5AY",
+              "name": "Content",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                8,
+                16,
+                16,
+                16
+              ],
+              "clip": true,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "rHygKi",
+                  "ref": "ds:ogW5t",
+                  "name": "Alert / You are back online",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:L7SHNm": {
+                      "content": "You are back online"
+                    },
+                    "ds:F9kE6W": {
+                      "content": "Syncing 3 changes made offline — likes and one playlist edit."
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "F48Hy4",
+                  "name": "Row",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "fAi48t",
+                      "ref": "ds:RoXXJv",
+                      "name": "Text/H2",
+                      "content": "Downloaded"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "2HuMRy",
+                      "ref": "ds:e9YOsV",
+                      "name": "Badge / 214 tracks",
+                      "descendants": {
+                        "ds:c9raBZ": {
+                          "content": "214 tracks"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "oSoKGP",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "c2UFye",
+                      "ref": "ds:AdNrrb",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:cUY4Fi": {
+                          "content": "All"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pmuXSE",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Liked Songs"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ZxdozG",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Night drive"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "BCbyLj",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Rain Drive"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "Uu8pRF",
+                  "ref": "ds:Y2h8VV",
+                  "name": "Track / Afterglow",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:fjPYf": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/albums/album-afterglow.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:RJ2go": {
+                      "content": "Afterglow"
+                    },
+                    "ds:rFh9q": {
+                      "content": "Nova & the Static"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "TfiQUK",
+                  "ref": "ds:Y2h8VV",
+                  "name": "Track / Night Signal",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:fjPYf": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/albums/album-night-signal.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:RJ2go": {
+                      "content": "Night Signal"
+                    },
+                    "ds:rFh9q": {
+                      "content": "Mira Sol"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "Redjri",
+                  "ref": "ds:Y2h8VV",
+                  "name": "Track / Static Lines",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:fjPYf": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/albums/album-static-lines.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:RJ2go": {
+                      "content": "Static Lines"
+                    },
+                    "ds:rFh9q": {
+                      "content": "Kite Harbor"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "aXDAaN",
+                  "ref": "ds:Y2h8VV",
+                  "name": "Track / Echoes in Motion",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:fjPYf": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:RJ2go": {
+                      "content": "Echoes in Motion"
+                    },
+                    "ds:rFh9q": {
+                      "content": "Lumen Choir"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "bcwDkg",
+                  "ref": "ds:Y2h8VV",
+                  "name": "Track / Drift Control",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:fjPYf": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/albums/album-drift-control.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:RJ2go": {
+                      "content": "Drift Control"
+                    },
+                    "ds:rFh9q": {
+                      "content": "Mira Sol"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "v8mBZ4",
+                  "ref": "ds:PiqhAO",
+                  "name": "Text/Caption",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Not downloaded items are hidden while offline. Search and recommendations return when you are back."
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "5ZHeL7",
+              "name": "Mini Bar Slot",
+              "width": "fill_container",
+              "padding": [
+                8,
+                16
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Ku7jWA",
+                  "ref": "ds:CeyP3",
+                  "name": "Mini Bar",
+                  "width": "fill_container"
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "jsoYVe",
+              "ref": "ds:PmEet",
+              "name": "Tab Bar",
+              "width": "fill_container",
+              "descendants": {
+                "ds:lPxJb": {
+                  "fill": "$ds:--muted-foreground"
+                },
+                "ds:ojzHV": {
+                  "fill": "$ds:--muted-foreground",
+                  "fontWeight": "normal"
+                },
+                "ds:kGpDm": {
+                  "fill": "$ds:--muted-foreground"
+                },
+                "ds:mG3wy": {
+                  "fill": "$ds:--muted-foreground",
+                  "fontWeight": "normal"
+                },
+                "ds:X78L7T": {
+                  "fill": "$ds:--foreground"
+                },
+                "ds:HnsIZ": {
+                  "fill": "$ds:--foreground",
+                  "fontWeight": "600"
+                },
+                "ds:pjDzF": {
+                  "fill": "$ds:--muted-foreground",
+                  "icon": "square-plus"
+                },
+                "ds:j8Bscj": {
+                  "fill": "$ds:--muted-foreground",
+                  "fontWeight": "normal",
+                  "content": "Create"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "JrGaXV",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            16,
+            20,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "v5Wyhd",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/offline — Shown by the service worker without a connection. Bitrate keeps working offline: the beta offline version plays downloaded and liked music and queues changes to sync later."
+    }
+  ]
+}

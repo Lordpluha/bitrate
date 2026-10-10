@@ -1,0 +1,1055 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "tRihzC",
+      "name": "Artist / Notification center / Desktop / Dark",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "3dnFUL",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:3YKZVX": {
+              "type": "ref",
+              "id": "ayXsJZ",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Dashboard",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "layout-dashboard"
+                },
+                "ds:GZQzF3": {
+                  "content": "Dashboard"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Notifications"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Create release"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "icon": "plus"
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "2Qr8Lm",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "MLN3Q4",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Notifications"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "What changed across your releases and campaigns."
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "zDDaph",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "5an5gc",
+                  "name": "Row",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "rDB78Y",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Action required 2",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Action required 2"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Eh9czU",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / All",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "All"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Dc6QK9",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Releases",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Releases"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "yPsf9R",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Promotion",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Promotion"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "FqUuwh",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "QVRJpH",
+                      "ref": "ds:w7kIfD",
+                      "name": "Notification Row/Unread",
+                      "descendants": {
+                        "ds:eVpsWQ": {
+                          "icon": "circle-alert"
+                        },
+                        "ds:ZhjNeD": {
+                          "content": "Afterglow needs a rights confirmation"
+                        },
+                        "ds:cmpFmf": {
+                          "content": "Review feedback · 12 min ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "QkYhNA",
+                      "ref": "ds:w7kIfD",
+                      "name": "Notification Row/Unread",
+                      "descendants": {
+                        "ds:eVpsWQ": {
+                          "icon": "image"
+                        },
+                        "ds:ZhjNeD": {
+                          "content": "Night Signal artwork was flagged"
+                        },
+                        "ds:cmpFmf": {
+                          "content": "Required change · 1 h ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "38rXEG",
+                      "ref": "ds:1ATiw1",
+                      "name": "Notification Row/Read",
+                      "descendants": {
+                        "ds:V2yFd8": {
+                          "icon": "check"
+                        },
+                        "ds:SA2HUG": {
+                          "content": "Audio checks completed · Afterglow"
+                        },
+                        "ds:VAD3PB": {
+                          "content": "Release · 2 h ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "oGJdjH",
+                      "ref": "ds:1ATiw1",
+                      "name": "Notification Row/Read",
+                      "descendants": {
+                        "ds:V2yFd8": {
+                          "icon": "megaphone"
+                        },
+                        "ds:SA2HUG": {
+                          "content": "Afterglow launch was scheduled"
+                        },
+                        "ds:VAD3PB": {
+                          "content": "Promotion · Yesterday"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — header bell · current app: coming soon — Event, object, time and next step; action required is separated."
+    },
+    {
+      "type": "frame",
+      "id": "kVNRB7",
+      "name": "Artist / Notification center / Desktop / Light",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "kNP5qc",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:3YKZVX": {
+              "type": "ref",
+              "id": "L7rQNH",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Dashboard",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "layout-dashboard"
+                },
+                "ds:GZQzF3": {
+                  "content": "Dashboard"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Notifications"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Create release"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "icon": "plus"
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "VzsCcp",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "d6QLPr",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Notifications"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "What changed across your releases and campaigns."
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "DLFUQy",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "Mo3Us2",
+                  "name": "Row",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "tkw6Sa",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Action required 2",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Action required 2"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Vs5YmC",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / All",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "All"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qSvfyt",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Releases",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Releases"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "SXbvum",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Promotion",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Promotion"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "GCqXdq",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "FrKriS",
+                      "ref": "ds:w7kIfD",
+                      "name": "Notification Row/Unread",
+                      "descendants": {
+                        "ds:eVpsWQ": {
+                          "icon": "circle-alert"
+                        },
+                        "ds:ZhjNeD": {
+                          "content": "Afterglow needs a rights confirmation"
+                        },
+                        "ds:cmpFmf": {
+                          "content": "Review feedback · 12 min ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Fv4aTM",
+                      "ref": "ds:w7kIfD",
+                      "name": "Notification Row/Unread",
+                      "descendants": {
+                        "ds:eVpsWQ": {
+                          "icon": "image"
+                        },
+                        "ds:ZhjNeD": {
+                          "content": "Night Signal artwork was flagged"
+                        },
+                        "ds:cmpFmf": {
+                          "content": "Required change · 1 h ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "dmJvzG",
+                      "ref": "ds:1ATiw1",
+                      "name": "Notification Row/Read",
+                      "descendants": {
+                        "ds:V2yFd8": {
+                          "icon": "check"
+                        },
+                        "ds:SA2HUG": {
+                          "content": "Audio checks completed · Afterglow"
+                        },
+                        "ds:VAD3PB": {
+                          "content": "Release · 2 h ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "tUVGcx",
+                      "ref": "ds:1ATiw1",
+                      "name": "Notification Row/Read",
+                      "descendants": {
+                        "ds:V2yFd8": {
+                          "icon": "megaphone"
+                        },
+                        "ds:SA2HUG": {
+                          "content": "Afterglow launch was scheduled"
+                        },
+                        "ds:VAD3PB": {
+                          "content": "Promotion · Yesterday"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "designed — header bell · current app: coming soon — Event, object, time and next step; action required is separated."
+    },
+    {
+      "type": "frame",
+      "id": "4jVeEn",
+      "name": "Artist / Notification center / Desktop / Dim",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "vECw22",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:3YKZVX": {
+              "type": "ref",
+              "id": "NvEUx5",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Dashboard",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "layout-dashboard"
+                },
+                "ds:GZQzF3": {
+                  "content": "Dashboard"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Notifications"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Create release"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "icon": "plus"
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "jXrea4",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "e8XQUd",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Notifications"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "What changed across your releases and campaigns."
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "UGWtsn",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "HSCpAo",
+                  "name": "Row",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "XiE6Aa",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Action required 2",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Action required 2"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "fNT9b2",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / All",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "All"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "zSnJww",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Releases",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Releases"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "B4wC2P",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Promotion",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Promotion"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "wWL9cE",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "AgCuWk",
+                      "ref": "ds:w7kIfD",
+                      "name": "Notification Row/Unread",
+                      "descendants": {
+                        "ds:eVpsWQ": {
+                          "icon": "circle-alert"
+                        },
+                        "ds:ZhjNeD": {
+                          "content": "Afterglow needs a rights confirmation"
+                        },
+                        "ds:cmpFmf": {
+                          "content": "Review feedback · 12 min ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "eeJiQ3",
+                      "ref": "ds:w7kIfD",
+                      "name": "Notification Row/Unread",
+                      "descendants": {
+                        "ds:eVpsWQ": {
+                          "icon": "image"
+                        },
+                        "ds:ZhjNeD": {
+                          "content": "Night Signal artwork was flagged"
+                        },
+                        "ds:cmpFmf": {
+                          "content": "Required change · 1 h ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ZVQeyf",
+                      "ref": "ds:1ATiw1",
+                      "name": "Notification Row/Read",
+                      "descendants": {
+                        "ds:V2yFd8": {
+                          "icon": "check"
+                        },
+                        "ds:SA2HUG": {
+                          "content": "Audio checks completed · Afterglow"
+                        },
+                        "ds:VAD3PB": {
+                          "content": "Release · 2 h ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "8LXrQ7",
+                      "ref": "ds:1ATiw1",
+                      "name": "Notification Row/Read",
+                      "descendants": {
+                        "ds:V2yFd8": {
+                          "icon": "megaphone"
+                        },
+                        "ds:SA2HUG": {
+                          "content": "Afterglow launch was scheduled"
+                        },
+                        "ds:VAD3PB": {
+                          "content": "Promotion · Yesterday"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "designed — header bell · current app: coming soon — Event, object, time and next step; action required is separated."
+    },
+    {
+      "type": "frame",
+      "id": "nT5Bsa",
+      "name": "Artist / Notification center / Mobile / Dark",
+      "width": 390,
+      "height": 1700,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "fykXij",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1700,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "4gPE4t",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "cFRoJY",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Notifications"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "What changed across your releases and campaigns."
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "nti5vN",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "BLivvL",
+                  "name": "Row",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "cZzqPK",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Action required 2",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Action required 2"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "3wvVji",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / All",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "All"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "NPa7vc",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Releases",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Releases"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "fHmdZZ",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Promotion",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Promotion"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "pyN5mf",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "NKAHTq",
+                      "ref": "ds:w7kIfD",
+                      "name": "Notification Row/Unread",
+                      "descendants": {
+                        "ds:eVpsWQ": {
+                          "icon": "circle-alert"
+                        },
+                        "ds:ZhjNeD": {
+                          "content": "Afterglow needs a rights confirmation"
+                        },
+                        "ds:cmpFmf": {
+                          "content": "Review feedback · 12 min ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "G8tKmf",
+                      "ref": "ds:w7kIfD",
+                      "name": "Notification Row/Unread",
+                      "descendants": {
+                        "ds:eVpsWQ": {
+                          "icon": "image"
+                        },
+                        "ds:ZhjNeD": {
+                          "content": "Night Signal artwork was flagged"
+                        },
+                        "ds:cmpFmf": {
+                          "content": "Required change · 1 h ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "8vDhPN",
+                      "ref": "ds:1ATiw1",
+                      "name": "Notification Row/Read",
+                      "descendants": {
+                        "ds:V2yFd8": {
+                          "icon": "check"
+                        },
+                        "ds:SA2HUG": {
+                          "content": "Audio checks completed · Afterglow"
+                        },
+                        "ds:VAD3PB": {
+                          "content": "Release · 2 h ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "4xWpFo",
+                      "ref": "ds:1ATiw1",
+                      "name": "Notification Row/Read",
+                      "descendants": {
+                        "ds:V2yFd8": {
+                          "icon": "megaphone"
+                        },
+                        "ds:SA2HUG": {
+                          "content": "Afterglow launch was scheduled"
+                        },
+                        "ds:VAD3PB": {
+                          "content": "Promotion · Yesterday"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — header bell · current app: coming soon — Event, object, time and next step; action required is separated."
+    },
+    {
+      "type": "frame",
+      "id": "yEcAjw",
+      "name": "Artist / Notification center / Empty (current app) / Desktop",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Fr7SSB",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:3YKZVX": {
+              "type": "ref",
+              "id": "RGzXoC",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Dashboard",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "layout-dashboard"
+                },
+                "ds:GZQzF3": {
+                  "content": "Dashboard"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Notifications"
+            },
+            "ds:YLdi4o": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "4mYF2H",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "qTy3mC",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "aoinPz",
+                      "ref": "ds:UacIqy",
+                      "name": "State / The notification center is coming soon.",
+                      "descendants": {
+                        "ds:QTS6fY": {
+                          "icon": "bell"
+                        },
+                        "ds:LaYbWr": {
+                          "content": "The notification center is coming soon."
+                        },
+                        "ds:IowS15": {
+                          "content": "No notifications are available in this workspace yet."
+                        },
+                        "ds:PKR600/ds:NVe7y": {
+                          "content": "Got it"
+                        },
+                        "ds:Sk1EVh": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — header bell · current app: coming soon — Event, object, time and next step; action required is separated."
+    },
+    {
+      "type": "frame",
+      "id": "y6Pa5i",
+      "name": "Artist / Notification center / Empty (current app) / Mobile",
+      "width": 390,
+      "height": 1200,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "WSR5We",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1200,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "CE2rqM",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "vvvBTG",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "6An8be",
+                      "ref": "ds:UacIqy",
+                      "name": "State / The notification center is coming soon.",
+                      "descendants": {
+                        "ds:QTS6fY": {
+                          "icon": "bell"
+                        },
+                        "ds:LaYbWr": {
+                          "content": "The notification center is coming soon."
+                        },
+                        "ds:IowS15": {
+                          "content": "No notifications are available in this workspace yet."
+                        },
+                        "ds:PKR600/ds:NVe7y": {
+                          "content": "Got it"
+                        },
+                        "ds:Sk1EVh": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — header bell · current app: coming soon — Event, object, time and next step; action required is separated."
+    }
+  ]
+}

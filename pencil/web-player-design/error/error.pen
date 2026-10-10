@@ -1,0 +1,945 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "uni6rs",
+      "name": "Error / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "GMAzHj",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "ref",
+              "id": "AX8Lsq",
+              "ref": "ds:OPciE",
+              "name": "App Layout",
+              "width": 1440,
+              "height": 900,
+              "descendants": {
+                "ds:xvsK3": {
+                  "type": "frame",
+                  "id": "nmBjgW",
+                  "name": "Main Panel",
+                  "clip": true,
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "layout": "vertical",
+                  "gap": 28,
+                  "padding": [
+                    24,
+                    32
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "3Xey9o",
+                      "name": "State Area",
+                      "width": "fill_container",
+                      "height": "fill_container",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "layout": "vertical",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "i7G5xY",
+                          "ref": "ds:LQ8GwL",
+                          "name": "State / Something went wrong",
+                          "descendants": {
+                            "ds:zG3uZd": {
+                              "icon": "triangle-alert"
+                            },
+                            "ds:ATKZVK": {
+                              "content": "Something went wrong"
+                            },
+                            "ds:h7OAoY": {
+                              "content": "This page could not be loaded. Try again, or head back home."
+                            },
+                            "ds:ydkfG5/ds:NVe7y": {
+                              "content": "Try again"
+                            },
+                            "ds:voqjVU/ds:i6a4e": {
+                              "content": "Back to home"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "ds:Nn2KW": {
+                  "enabled": false
+                },
+                "ds:VZD6U": {
+                  "enabled": true
+                },
+                "ds:z5MVM": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "KnEumB",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "S9AoWD",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app/main/error.tsx · app/error.tsx · global-error — Error boundaries: a page inside the player, the app root, and a failed start."
+    },
+    {
+      "type": "frame",
+      "id": "xySfzB",
+      "name": "Error / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "KnBBte",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "ref",
+              "id": "PPngeX",
+              "ref": "ds:OPciE",
+              "name": "App Layout",
+              "width": 1440,
+              "height": 900,
+              "descendants": {
+                "ds:xvsK3": {
+                  "type": "frame",
+                  "id": "3FuiZQ",
+                  "name": "Main Panel",
+                  "clip": true,
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "layout": "vertical",
+                  "gap": 28,
+                  "padding": [
+                    24,
+                    32
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "r8W2oB",
+                      "name": "State Area",
+                      "width": "fill_container",
+                      "height": "fill_container",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "layout": "vertical",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "kFLJUp",
+                          "ref": "ds:LQ8GwL",
+                          "name": "State / Something went wrong",
+                          "descendants": {
+                            "ds:zG3uZd": {
+                              "icon": "triangle-alert"
+                            },
+                            "ds:ATKZVK": {
+                              "content": "Something went wrong"
+                            },
+                            "ds:h7OAoY": {
+                              "content": "This page could not be loaded. Try again, or head back home."
+                            },
+                            "ds:ydkfG5/ds:NVe7y": {
+                              "content": "Try again"
+                            },
+                            "ds:voqjVU/ds:i6a4e": {
+                              "content": "Back to home"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "ds:Nn2KW": {
+                  "enabled": false
+                },
+                "ds:VZD6U": {
+                  "enabled": true
+                },
+                "ds:z5MVM": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "uTUtvb",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "KGhZXB",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "app/main/error.tsx · app/error.tsx · global-error — Error boundaries: a page inside the player, the app root, and a failed start."
+    },
+    {
+      "type": "frame",
+      "id": "nRCVWL",
+      "name": "Error / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "f74RpK",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "ref",
+              "id": "KhkQaW",
+              "ref": "ds:OPciE",
+              "name": "App Layout",
+              "width": 1440,
+              "height": 900,
+              "descendants": {
+                "ds:xvsK3": {
+                  "type": "frame",
+                  "id": "WgnPUP",
+                  "name": "Main Panel",
+                  "clip": true,
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "layout": "vertical",
+                  "gap": 28,
+                  "padding": [
+                    24,
+                    32
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "uAYmVX",
+                      "name": "State Area",
+                      "width": "fill_container",
+                      "height": "fill_container",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "layout": "vertical",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "CkEKVF",
+                          "ref": "ds:LQ8GwL",
+                          "name": "State / Something went wrong",
+                          "descendants": {
+                            "ds:zG3uZd": {
+                              "icon": "triangle-alert"
+                            },
+                            "ds:ATKZVK": {
+                              "content": "Something went wrong"
+                            },
+                            "ds:h7OAoY": {
+                              "content": "This page could not be loaded. Try again, or head back home."
+                            },
+                            "ds:ydkfG5/ds:NVe7y": {
+                              "content": "Try again"
+                            },
+                            "ds:voqjVU/ds:i6a4e": {
+                              "content": "Back to home"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "ds:Nn2KW": {
+                  "enabled": false
+                },
+                "ds:VZD6U": {
+                  "enabled": true
+                },
+                "ds:z5MVM": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "bsNwpa",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "FRgpgK",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "app/main/error.tsx · app/error.tsx · global-error — Error boundaries: a page inside the player, the app root, and a failed start."
+    },
+    {
+      "type": "frame",
+      "id": "9wdrQm",
+      "name": "Error / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "J2JPaA",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "ref",
+              "id": "tMo2u8",
+              "ref": "ds:xBZUrc",
+              "name": "Mobile/Status Bar",
+              "width": "fill_container"
+            },
+            {
+              "type": "ref",
+              "id": "umQtW4",
+              "ref": "ds:pmBZPg",
+              "name": "Mobile/Header",
+              "width": "fill_container",
+              "descendants": {
+                "ds:AfZgNi": {
+                  "content": ""
+                },
+                "ds:Du8iEf": {
+                  "enabled": false
+                },
+                "ds:GvquLa": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "fAw4gB",
+              "name": "Content",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                8,
+                16,
+                16,
+                16
+              ],
+              "clip": true,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "nrV2sX",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "edUs4s",
+                      "ref": "ds:LQ8GwL",
+                      "name": "State / Something went wrong",
+                      "descendants": {
+                        "ds:zG3uZd": {
+                          "icon": "triangle-alert"
+                        },
+                        "ds:ATKZVK": {
+                          "content": "Something went wrong"
+                        },
+                        "ds:h7OAoY": {
+                          "content": "This page could not be loaded. Try again, or head back home."
+                        },
+                        "ds:ydkfG5/ds:NVe7y": {
+                          "content": "Try again"
+                        },
+                        "ds:voqjVU/ds:i6a4e": {
+                          "content": "Back to home"
+                        }
+                      },
+                      "width": "fill_container"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "iQAkCT",
+              "name": "Mini Bar Slot",
+              "width": "fill_container",
+              "padding": [
+                8,
+                16
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "3VSYz8",
+                  "ref": "ds:CeyP3",
+                  "name": "Mini Bar",
+                  "width": "fill_container"
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "vLiyYd",
+              "ref": "ds:PmEet",
+              "name": "Tab Bar",
+              "width": "fill_container",
+              "descendants": {
+                "ds:lPxJb": {
+                  "fill": "$ds:--foreground"
+                },
+                "ds:ojzHV": {
+                  "fill": "$ds:--foreground",
+                  "fontWeight": "600"
+                },
+                "ds:kGpDm": {
+                  "fill": "$ds:--muted-foreground"
+                },
+                "ds:mG3wy": {
+                  "fill": "$ds:--muted-foreground",
+                  "fontWeight": "normal"
+                },
+                "ds:X78L7T": {
+                  "fill": "$ds:--muted-foreground"
+                },
+                "ds:HnsIZ": {
+                  "fill": "$ds:--muted-foreground",
+                  "fontWeight": "normal"
+                },
+                "ds:pjDzF": {
+                  "fill": "$ds:--muted-foreground",
+                  "icon": "square-plus"
+                },
+                "ds:j8Bscj": {
+                  "fill": "$ds:--muted-foreground",
+                  "fontWeight": "normal",
+                  "content": "Create"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "KNAHPs",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            16,
+            20,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "dtcqL3",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app/main/error.tsx · app/error.tsx · global-error — Error boundaries: a page inside the player, the app root, and a failed start."
+    },
+    {
+      "type": "frame",
+      "id": "VqN3G5",
+      "name": "Error / Root error / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "2Mrkc2",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "Yhgkx5",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "bsMDXm",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "ny3mUS",
+                  "ref": "ds:LQ8GwL",
+                  "name": "State / Something went wrong",
+                  "descendants": {
+                    "ds:zG3uZd": {
+                      "icon": "triangle-alert"
+                    },
+                    "ds:ATKZVK": {
+                      "content": "Something went wrong"
+                    },
+                    "ds:h7OAoY": {
+                      "content": "Something went wrong on our side. Try again, or head back home."
+                    },
+                    "ds:ydkfG5/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:voqjVU/ds:i6a4e": {
+                      "content": "Back to home"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "7JSnkJ",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "CLHdaA",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app/main/error.tsx · app/error.tsx · global-error — Error boundaries: a page inside the player, the app root, and a failed start."
+    },
+    {
+      "type": "frame",
+      "id": "2rewc5",
+      "name": "Error / Root error / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "XEprJ5",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "Xah5xd",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "KmvcqS",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "3vbx5g",
+                  "ref": "ds:LQ8GwL",
+                  "name": "State / Something went wrong",
+                  "descendants": {
+                    "ds:zG3uZd": {
+                      "icon": "triangle-alert"
+                    },
+                    "ds:ATKZVK": {
+                      "content": "Something went wrong"
+                    },
+                    "ds:h7OAoY": {
+                      "content": "Something went wrong on our side. Try again, or head back home."
+                    },
+                    "ds:ydkfG5/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:voqjVU/ds:i6a4e": {
+                      "content": "Back to home"
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "gMTPxm",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            16,
+            20,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "mKEEjw",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app/main/error.tsx · app/error.tsx · global-error — Error boundaries: a page inside the player, the app root, and a failed start."
+    },
+    {
+      "type": "frame",
+      "id": "RaLspE",
+      "name": "Error / Global failure / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "swxDnq",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "R5RdAw",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "NfzbNw",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "LaDykF",
+                  "ref": "ds:LQ8GwL",
+                  "name": "State / The app failed to load",
+                  "descendants": {
+                    "ds:zG3uZd": {
+                      "icon": "power"
+                    },
+                    "ds:ATKZVK": {
+                      "content": "The app failed to load"
+                    },
+                    "ds:h7OAoY": {
+                      "content": "An unexpected error stopped the player from starting. Reloading usually fixes it."
+                    },
+                    "ds:ydkfG5/ds:NVe7y": {
+                      "content": "Reload the app"
+                    },
+                    "ds:voqjVU": {
+                      "enabled": false
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "dqb3mr",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "RBUebo",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app/main/error.tsx · app/error.tsx · global-error — Error boundaries: a page inside the player, the app root, and a failed start."
+    },
+    {
+      "type": "frame",
+      "id": "Y35c5A",
+      "name": "Error / Global failure / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "FjKwTj",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "qPAssC",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "twNsxW",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "ibovfp",
+                  "ref": "ds:LQ8GwL",
+                  "name": "State / The app failed to load",
+                  "descendants": {
+                    "ds:zG3uZd": {
+                      "icon": "power"
+                    },
+                    "ds:ATKZVK": {
+                      "content": "The app failed to load"
+                    },
+                    "ds:h7OAoY": {
+                      "content": "An unexpected error stopped the player from starting. Reloading usually fixes it."
+                    },
+                    "ds:ydkfG5/ds:NVe7y": {
+                      "content": "Reload the app"
+                    },
+                    "ds:voqjVU": {
+                      "enabled": false
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "aUYYDL",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            16,
+            20,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "a7iEBo",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "app/main/error.tsx · app/error.tsx · global-error — Error boundaries: a page inside the player, the app root, and a failed start."
+    }
+  ]
+}

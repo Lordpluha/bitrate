@@ -1,0 +1,1557 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "dJWWd4",
+      "name": "AI assistant / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "frame",
+          "id": "45TARX",
+          "name": "Page",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "height": "fill_container",
+          "children": []
+        },
+        {
+          "type": "frame",
+          "id": "zfo6qm",
+          "name": "Assistant Dock",
+          "layout": "vertical",
+          "gap": 14,
+          "width": "fill_container",
+          "alignItems": "end",
+          "children": [
+            {
+              "type": "ref",
+              "id": "E8duBC",
+              "ref": "ds:krpNYY",
+              "name": "Assistant/Panel",
+              "width": 380,
+              "height": 540,
+              "descendants": {
+                "ds:L9A4MS": {
+                  "type": "frame",
+                  "id": "trUdVX",
+                  "name": "Messages",
+                  "layout": "vertical",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "padding": 14,
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "MuzgVu",
+                      "name": "Welcome",
+                      "layout": "vertical",
+                      "gap": 10,
+                      "width": "fill_container",
+                      "alignItems": "center",
+                      "padding": [
+                        24,
+                        0,
+                        8,
+                        0
+                      ],
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "H3bqTA",
+                          "ref": "ds:XtiIQ2",
+                          "name": "Assistant/Orb"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "cN23x5",
+                          "ref": "ds:fLuqjC",
+                          "name": "Text/H4",
+                          "content": "Hi, I am the Bitrate assistant"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "EgswFf",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "Ask about the player, plans or releasing your music."
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "5DmQwP",
+                      "name": "Suggestions",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "As5EES",
+                          "ref": "ds:axpJn8",
+                          "name": "Assistant/Suggestion",
+                          "descendants": {
+                            "ds:VoIiYi": {
+                              "content": "What is Bitrate?"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "3wmc96",
+                          "ref": "ds:axpJn8",
+                          "name": "Assistant/Suggestion",
+                          "descendants": {
+                            "ds:VoIiYi": {
+                              "content": "Is it free?"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "kVehwB",
+                      "name": "Suggestions",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "tJWMvV",
+                          "ref": "ds:axpJn8",
+                          "name": "Assistant/Suggestion",
+                          "descendants": {
+                            "ds:VoIiYi": {
+                              "content": "Release a single"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "wjJYb8",
+                          "ref": "ds:axpJn8",
+                          "name": "Assistant/Suggestion",
+                          "descendants": {
+                            "ds:VoIiYi": {
+                              "content": "Which devices work?"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "79BkmG",
+              "ref": "ds:9garaR",
+              "name": "Assistant/FAB Open"
+            }
+          ]
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+    },
+    {
+      "type": "frame",
+      "id": "oquqL8",
+      "name": "AI assistant / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "frame",
+          "id": "pEwcXc",
+          "name": "Page",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "height": "fill_container",
+          "children": []
+        },
+        {
+          "type": "frame",
+          "id": "85Pgwk",
+          "name": "Assistant Dock",
+          "layout": "vertical",
+          "gap": 14,
+          "width": "fill_container",
+          "alignItems": "end",
+          "children": [
+            {
+              "type": "ref",
+              "id": "tXckq6",
+              "ref": "ds:krpNYY",
+              "name": "Assistant/Panel",
+              "width": 380,
+              "height": 540,
+              "descendants": {
+                "ds:L9A4MS": {
+                  "type": "frame",
+                  "id": "r6SzaE",
+                  "name": "Messages",
+                  "layout": "vertical",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "padding": 14,
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "istved",
+                      "name": "Welcome",
+                      "layout": "vertical",
+                      "gap": 10,
+                      "width": "fill_container",
+                      "alignItems": "center",
+                      "padding": [
+                        24,
+                        0,
+                        8,
+                        0
+                      ],
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "6BFFF9",
+                          "ref": "ds:XtiIQ2",
+                          "name": "Assistant/Orb"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "5hbG5f",
+                          "ref": "ds:fLuqjC",
+                          "name": "Text/H4",
+                          "content": "Hi, I am the Bitrate assistant"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "JSkwof",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "Ask about the player, plans or releasing your music."
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "EFcaSp",
+                      "name": "Suggestions",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "sieWdn",
+                          "ref": "ds:axpJn8",
+                          "name": "Assistant/Suggestion",
+                          "descendants": {
+                            "ds:VoIiYi": {
+                              "content": "What is Bitrate?"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "uM5w34",
+                          "ref": "ds:axpJn8",
+                          "name": "Assistant/Suggestion",
+                          "descendants": {
+                            "ds:VoIiYi": {
+                              "content": "Is it free?"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "N4ou6b",
+                      "name": "Suggestions",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "gE4ofL",
+                          "ref": "ds:axpJn8",
+                          "name": "Assistant/Suggestion",
+                          "descendants": {
+                            "ds:VoIiYi": {
+                              "content": "Release a single"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "YvSJDw",
+                          "ref": "ds:axpJn8",
+                          "name": "Assistant/Suggestion",
+                          "descendants": {
+                            "ds:VoIiYi": {
+                              "content": "Which devices work?"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "tiacLL",
+              "ref": "ds:9garaR",
+              "name": "Assistant/FAB Open"
+            }
+          ]
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+    },
+    {
+      "type": "frame",
+      "id": "eonP8H",
+      "name": "AI assistant / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "frame",
+          "id": "t6M7yh",
+          "name": "Page",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "height": "fill_container",
+          "children": []
+        },
+        {
+          "type": "frame",
+          "id": "X75pR8",
+          "name": "Assistant Dock",
+          "layout": "vertical",
+          "gap": 14,
+          "width": "fill_container",
+          "alignItems": "end",
+          "children": [
+            {
+              "type": "ref",
+              "id": "cxRC7L",
+              "ref": "ds:krpNYY",
+              "name": "Assistant/Panel",
+              "width": 380,
+              "height": 540,
+              "descendants": {
+                "ds:L9A4MS": {
+                  "type": "frame",
+                  "id": "nVxehs",
+                  "name": "Messages",
+                  "layout": "vertical",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "padding": 14,
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "wNu96z",
+                      "name": "Welcome",
+                      "layout": "vertical",
+                      "gap": 10,
+                      "width": "fill_container",
+                      "alignItems": "center",
+                      "padding": [
+                        24,
+                        0,
+                        8,
+                        0
+                      ],
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "2C9euY",
+                          "ref": "ds:XtiIQ2",
+                          "name": "Assistant/Orb"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "kGqmqV",
+                          "ref": "ds:fLuqjC",
+                          "name": "Text/H4",
+                          "content": "Hi, I am the Bitrate assistant"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "QasUHT",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "Ask about the player, plans or releasing your music."
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "zUiKmW",
+                      "name": "Suggestions",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "DFxbSC",
+                          "ref": "ds:axpJn8",
+                          "name": "Assistant/Suggestion",
+                          "descendants": {
+                            "ds:VoIiYi": {
+                              "content": "What is Bitrate?"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ugKzR8",
+                          "ref": "ds:axpJn8",
+                          "name": "Assistant/Suggestion",
+                          "descendants": {
+                            "ds:VoIiYi": {
+                              "content": "Is it free?"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "5Ndgm8",
+                      "name": "Suggestions",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ND76zL",
+                          "ref": "ds:axpJn8",
+                          "name": "Assistant/Suggestion",
+                          "descendants": {
+                            "ds:VoIiYi": {
+                              "content": "Release a single"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "hhnFPP",
+                          "ref": "ds:axpJn8",
+                          "name": "Assistant/Suggestion",
+                          "descendants": {
+                            "ds:VoIiYi": {
+                              "content": "Which devices work?"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "wQbBXH",
+              "ref": "ds:9garaR",
+              "name": "Assistant/FAB Open"
+            }
+          ]
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+    },
+    {
+      "type": "frame",
+      "id": "XWgWpN",
+      "name": "AI assistant / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "ZZEjK9",
+          "ref": "ds:krpNYY",
+          "name": "Assistant/Panel",
+          "width": "fill_container",
+          "height": "fill_container",
+          "descendants": {
+            "ds:L9A4MS": {
+              "type": "frame",
+              "id": "SfVjtR",
+              "name": "Messages",
+              "layout": "vertical",
+              "width": "fill_container",
+              "height": "fill_container",
+              "padding": 14,
+              "gap": 10,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "pDvVhV",
+                  "name": "Welcome",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "width": "fill_container",
+                  "alignItems": "center",
+                  "padding": [
+                    24,
+                    0,
+                    8,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "4zeyTC",
+                      "ref": "ds:XtiIQ2",
+                      "name": "Assistant/Orb"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "YnNm3u",
+                      "ref": "ds:fLuqjC",
+                      "name": "Text/H4",
+                      "content": "Hi, I am the Bitrate assistant"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "LDD2Er",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "Ask about the player, plans or releasing your music."
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "iDQWKi",
+                  "name": "Suggestions",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "kVbkVg",
+                      "ref": "ds:axpJn8",
+                      "name": "Assistant/Suggestion",
+                      "descendants": {
+                        "ds:VoIiYi": {
+                          "content": "What is Bitrate?"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "MG2Cft",
+                      "ref": "ds:axpJn8",
+                      "name": "Assistant/Suggestion",
+                      "descendants": {
+                        "ds:VoIiYi": {
+                          "content": "Is it free?"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "biKhbV",
+                  "name": "Suggestions",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ZKwKWy",
+                      "ref": "ds:axpJn8",
+                      "name": "Assistant/Suggestion",
+                      "descendants": {
+                        "ds:VoIiYi": {
+                          "content": "Release a single"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "xqDumu",
+                      "ref": "ds:axpJn8",
+                      "name": "Assistant/Suggestion",
+                      "descendants": {
+                        "ds:VoIiYi": {
+                          "content": "Which devices work?"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+    },
+    {
+      "type": "frame",
+      "id": "YbMpF5",
+      "name": "AI assistant / Closed / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "frame",
+          "id": "UfRikR",
+          "name": "Page",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "height": "fill_container",
+          "children": []
+        },
+        {
+          "type": "frame",
+          "id": "srMoLM",
+          "name": "Assistant Dock",
+          "layout": "vertical",
+          "gap": 14,
+          "width": "fill_container",
+          "alignItems": "end",
+          "children": [
+            {
+              "type": "frame",
+              "id": "Bk2MKg",
+              "name": "Hint",
+              "gap": 12,
+              "alignItems": "center",
+              "padding": [
+                0,
+                4,
+                0,
+                0
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "9CxRAF",
+                  "ref": "ds:9ZFzt3",
+                  "name": "Tooltip/Action",
+                  "descendants": {
+                    "ds:l3DlKa": {
+                      "content": "Ask Bitrate"
+                    },
+                    "ds:manWut": {
+                      "content": "AI assistant"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "YDVLsK",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data. · no mobile frame: phones show only the button; the hint appears on hover"
+    },
+    {
+      "type": "frame",
+      "id": "7EH8oP",
+      "name": "AI assistant / Conversation / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "frame",
+          "id": "eroonz",
+          "name": "Page",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "height": "fill_container",
+          "children": []
+        },
+        {
+          "type": "frame",
+          "id": "JzYucA",
+          "name": "Assistant Dock",
+          "layout": "vertical",
+          "gap": 14,
+          "width": "fill_container",
+          "alignItems": "end",
+          "children": [
+            {
+              "type": "ref",
+              "id": "UMvATJ",
+              "ref": "ds:krpNYY",
+              "name": "Assistant/Panel",
+              "width": 380,
+              "height": 540,
+              "descendants": {
+                "ds:L9A4MS": {
+                  "type": "frame",
+                  "id": "Sxq2gU",
+                  "name": "Messages",
+                  "layout": "vertical",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "padding": 14,
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "e2GUab",
+                      "ref": "ds:k7btvH",
+                      "name": "Assistant/Message Mine",
+                      "descendants": {
+                        "ds:Sa0FCz": {
+                          "content": "Is Bitrate free?"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jxAJXc",
+                      "ref": "ds:r6G7wB",
+                      "name": "Assistant/Message",
+                      "descendants": {
+                        "ds:52AVgR": {
+                          "content": "Yes — listening in the browser is free. Plans for Premium are on the way; you can see your plan in Settings."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "wH2F8Y",
+                      "ref": "ds:k7btvH",
+                      "name": "Assistant/Message Mine",
+                      "descendants": {
+                        "ds:Sa0FCz": {
+                          "content": "How do I release a single?"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "LK3BLX",
+                      "ref": "ds:r6G7wB",
+                      "name": "Assistant/Message",
+                      "descendants": {
+                        "ds:52AVgR": {
+                          "content": "Open Bitrate for Artists → Create release, then follow the steps: audio, artwork, details, contributors and review."
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "wpcbes",
+                      "name": "Row",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "qkZxsa",
+                          "ref": "ds:G5tJp",
+                          "name": "Button / Open Bitrate for Artists",
+                          "descendants": {
+                            "ds:d2zCI": {
+                              "content": "Open Bitrate for Artists"
+                            },
+                            "ds:wFUna": {
+                              "icon": "arrow-up-right"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "Ux8G2h",
+              "ref": "ds:9garaR",
+              "name": "Assistant/FAB Open"
+            }
+          ]
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+    },
+    {
+      "type": "frame",
+      "id": "ZkzgkU",
+      "name": "AI assistant / Conversation / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "CUoXx5",
+          "ref": "ds:krpNYY",
+          "name": "Assistant/Panel",
+          "width": "fill_container",
+          "height": "fill_container",
+          "descendants": {
+            "ds:L9A4MS": {
+              "type": "frame",
+              "id": "wQTdtH",
+              "name": "Messages",
+              "layout": "vertical",
+              "width": "fill_container",
+              "height": "fill_container",
+              "padding": 14,
+              "gap": 10,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "TB7PDk",
+                  "ref": "ds:k7btvH",
+                  "name": "Assistant/Message Mine",
+                  "descendants": {
+                    "ds:Sa0FCz": {
+                      "content": "Is Bitrate free?"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "gvhkQd",
+                  "ref": "ds:r6G7wB",
+                  "name": "Assistant/Message",
+                  "descendants": {
+                    "ds:52AVgR": {
+                      "content": "Yes — listening in the browser is free. Plans for Premium are on the way; you can see your plan in Settings."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "rQXECL",
+                  "ref": "ds:k7btvH",
+                  "name": "Assistant/Message Mine",
+                  "descendants": {
+                    "ds:Sa0FCz": {
+                      "content": "How do I release a single?"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "eihyYg",
+                  "ref": "ds:r6G7wB",
+                  "name": "Assistant/Message",
+                  "descendants": {
+                    "ds:52AVgR": {
+                      "content": "Open Bitrate for Artists → Create release, then follow the steps: audio, artwork, details, contributors and review."
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "D5sh7Z",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "FNUZTG",
+                      "ref": "ds:G5tJp",
+                      "name": "Button / Open Bitrate for Artists",
+                      "descendants": {
+                        "ds:d2zCI": {
+                          "content": "Open Bitrate for Artists"
+                        },
+                        "ds:wFUna": {
+                          "icon": "arrow-up-right"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 8190,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+    },
+    {
+      "type": "frame",
+      "id": "CpVkyr",
+      "name": "AI assistant / Searching / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "frame",
+          "id": "uT4NUx",
+          "name": "Page",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "height": "fill_container",
+          "children": []
+        },
+        {
+          "type": "frame",
+          "id": "o9Tpxm",
+          "name": "Assistant Dock",
+          "layout": "vertical",
+          "gap": 14,
+          "width": "fill_container",
+          "alignItems": "end",
+          "children": [
+            {
+              "type": "ref",
+              "id": "a99TFN",
+              "ref": "ds:krpNYY",
+              "name": "Assistant/Panel",
+              "width": 380,
+              "height": 540,
+              "descendants": {
+                "ds:L9A4MS": {
+                  "type": "frame",
+                  "id": "VCfVAS",
+                  "name": "Messages",
+                  "layout": "vertical",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "padding": 14,
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "UewrtX",
+                      "ref": "ds:k7btvH",
+                      "name": "Assistant/Message Mine",
+                      "descendants": {
+                        "ds:Sa0FCz": {
+                          "content": "Is Bitrate free?"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "MF2QiG",
+                      "ref": "ds:r6G7wB",
+                      "name": "Assistant/Message",
+                      "descendants": {
+                        "ds:52AVgR": {
+                          "content": "Yes — listening in the browser is free. Plans for Premium are on the way; you can see your plan in Settings."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "hxeGDj",
+                      "ref": "ds:k7btvH",
+                      "name": "Assistant/Message Mine",
+                      "descendants": {
+                        "ds:Sa0FCz": {
+                          "content": "How do I release a single?"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "EN3yjY",
+                      "ref": "ds:PqDZSH",
+                      "name": "Assistant/Typing"
+                    }
+                  ]
+                },
+                "ds:EEjrpZ": {
+                  "content": "Searching the docs…"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "ruKHYr",
+              "ref": "ds:9garaR",
+              "name": "Assistant/FAB Open"
+            }
+          ]
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+    },
+    {
+      "type": "frame",
+      "id": "WDpJVL",
+      "name": "AI assistant / Searching / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "4PSS6M",
+          "ref": "ds:krpNYY",
+          "name": "Assistant/Panel",
+          "width": "fill_container",
+          "height": "fill_container",
+          "descendants": {
+            "ds:L9A4MS": {
+              "type": "frame",
+              "id": "nMarXC",
+              "name": "Messages",
+              "layout": "vertical",
+              "width": "fill_container",
+              "height": "fill_container",
+              "padding": 14,
+              "gap": 10,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "4ZECVR",
+                  "ref": "ds:k7btvH",
+                  "name": "Assistant/Message Mine",
+                  "descendants": {
+                    "ds:Sa0FCz": {
+                      "content": "Is Bitrate free?"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "dkXqiB",
+                  "ref": "ds:r6G7wB",
+                  "name": "Assistant/Message",
+                  "descendants": {
+                    "ds:52AVgR": {
+                      "content": "Yes — listening in the browser is free. Plans for Premium are on the way; you can see your plan in Settings."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "4o8ii6",
+                  "ref": "ds:k7btvH",
+                  "name": "Assistant/Message Mine",
+                  "descendants": {
+                    "ds:Sa0FCz": {
+                      "content": "How do I release a single?"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "JqxSjY",
+                  "ref": "ds:PqDZSH",
+                  "name": "Assistant/Typing"
+                }
+              ]
+            },
+            "ds:EEjrpZ": {
+              "content": "Searching the docs…"
+            }
+          }
+        }
+      ],
+      "x": 10220,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+    },
+    {
+      "type": "frame",
+      "id": "7TNiXj",
+      "name": "AI assistant / Error / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "frame",
+          "id": "FPrNTK",
+          "name": "Page",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "height": "fill_container",
+          "children": []
+        },
+        {
+          "type": "frame",
+          "id": "P2BkTT",
+          "name": "Assistant Dock",
+          "layout": "vertical",
+          "gap": 14,
+          "width": "fill_container",
+          "alignItems": "end",
+          "children": [
+            {
+              "type": "ref",
+              "id": "H9ofAC",
+              "ref": "ds:krpNYY",
+              "name": "Assistant/Panel",
+              "width": 380,
+              "height": 540,
+              "descendants": {
+                "ds:L9A4MS": {
+                  "type": "frame",
+                  "id": "xCHaRa",
+                  "name": "Messages",
+                  "layout": "vertical",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "padding": 14,
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "qgMKeF",
+                      "ref": "ds:k7btvH",
+                      "name": "Assistant/Message Mine",
+                      "descendants": {
+                        "ds:Sa0FCz": {
+                          "content": "How do I release a single?"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "KF8Y58",
+                      "ref": "ds:r6G7wB",
+                      "name": "Assistant/Message",
+                      "descendants": {
+                        "ds:52AVgR": {
+                          "content": "I could not reach the docs right now. Try again in a moment."
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "De6ueg",
+                      "name": "Row",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "K6yvfP",
+                          "ref": "ds:G5tJp",
+                          "name": "Button / Try again",
+                          "descendants": {
+                            "ds:d2zCI": {
+                              "content": "Try again"
+                            },
+                            "ds:wFUna": {
+                              "icon": "rotate-ccw"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "ds:EEjrpZ": {
+                  "content": "Unavailable right now"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "qC8HwD",
+              "ref": "ds:9garaR",
+              "name": "Assistant/FAB Open"
+            }
+          ]
+        }
+      ],
+      "x": 10710,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+    },
+    {
+      "type": "frame",
+      "id": "mZvSzV",
+      "name": "AI assistant / Error / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "rSXpig",
+          "ref": "ds:krpNYY",
+          "name": "Assistant/Panel",
+          "width": "fill_container",
+          "height": "fill_container",
+          "descendants": {
+            "ds:L9A4MS": {
+              "type": "frame",
+              "id": "3zHdLo",
+              "name": "Messages",
+              "layout": "vertical",
+              "width": "fill_container",
+              "height": "fill_container",
+              "padding": 14,
+              "gap": 10,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "kDgQGm",
+                  "ref": "ds:k7btvH",
+                  "name": "Assistant/Message Mine",
+                  "descendants": {
+                    "ds:Sa0FCz": {
+                      "content": "How do I release a single?"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "hHHnLW",
+                  "ref": "ds:r6G7wB",
+                  "name": "Assistant/Message",
+                  "descendants": {
+                    "ds:52AVgR": {
+                      "content": "I could not reach the docs right now. Try again in a moment."
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "HGbQDu",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "CJiuMj",
+                      "ref": "ds:G5tJp",
+                      "name": "Button / Try again",
+                      "descendants": {
+                        "ds:d2zCI": {
+                          "content": "Try again"
+                        },
+                        "ds:wFUna": {
+                          "icon": "rotate-ccw"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:EEjrpZ": {
+              "content": "Unavailable right now"
+            }
+          }
+        }
+      ],
+      "x": 12250,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+    },
+    {
+      "type": "frame",
+      "id": "xEpw5i",
+      "name": "AI assistant / Offline / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "frame",
+          "id": "DuWkXv",
+          "name": "Page",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "height": "fill_container",
+          "children": []
+        },
+        {
+          "type": "frame",
+          "id": "Z2bpEb",
+          "name": "Assistant Dock",
+          "layout": "vertical",
+          "gap": 14,
+          "width": "fill_container",
+          "alignItems": "end",
+          "children": [
+            {
+              "type": "ref",
+              "id": "aGkqGA",
+              "ref": "ds:krpNYY",
+              "name": "Assistant/Panel",
+              "width": 380,
+              "height": 540,
+              "descendants": {
+                "ds:L9A4MS": {
+                  "type": "frame",
+                  "id": "xfcwKS",
+                  "name": "Messages",
+                  "layout": "vertical",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "padding": 14,
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "udFbE8",
+                      "ref": "ds:r6G7wB",
+                      "name": "Assistant/Message",
+                      "descendants": {
+                        "ds:52AVgR": {
+                          "content": "You are offline. I will answer when the connection is back."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "ds:EEjrpZ": {
+                  "content": "Offline"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "aYvJQE",
+              "ref": "ds:9garaR",
+              "name": "Assistant/FAB Open"
+            }
+          ]
+        }
+      ],
+      "x": 12740,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+    },
+    {
+      "type": "frame",
+      "id": "2QKpbK",
+      "name": "AI assistant / Offline / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "NS43gR",
+          "ref": "ds:krpNYY",
+          "name": "Assistant/Panel",
+          "width": "fill_container",
+          "height": "fill_container",
+          "descendants": {
+            "ds:L9A4MS": {
+              "type": "frame",
+              "id": "GaFFQ9",
+              "name": "Messages",
+              "layout": "vertical",
+              "width": "fill_container",
+              "height": "fill_container",
+              "padding": 14,
+              "gap": 10,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "mzYNwB",
+                  "ref": "ds:r6G7wB",
+                  "name": "Assistant/Message",
+                  "descendants": {
+                    "ds:52AVgR": {
+                      "content": "You are offline. I will answer when the connection is back."
+                    }
+                  }
+                }
+              ]
+            },
+            "ds:EEjrpZ": {
+              "content": "Offline"
+            }
+          }
+        }
+      ],
+      "x": 14280,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — floating assistant on every page outside /main — Bottom-right button on the landing, auth, legal, verify, 404, error and offline pages (not inside the player). It expands into a 380×540 chat on desktop and a full-screen sheet on phones. While a request runs a thinking orb shows the phase: searching the docs, then composing. Answers cite Bitrate docs; never ask for passwords or payment data."
+    }
+  ]
+}
