@@ -204,33 +204,50 @@ const fitStates = (nodes, mobile) =>
         : rest
     })
 const line = (w, h = 12) => Ref('Jjegi', { name: 'Skeleton', width: w, height: h })
-/** Loading skeleton built from library Skeleton/Line instances, mirroring the final layout. */
-export function Skeleton(kind = 'list', mobile = false) {
-  const rows = (n) =>
+/** Loading skeletons for long lists: library skeleton rows repeated to fill the screen, mirroring the final layout.
+ *  kinds: list · table · collection · grid · artists · people · notifications · chart · artist-table */
+export function Skeleton(kind = 'list', mobile = false, { more = false } = {}) {
+  const many = (name, n, o = { width: 'fill_container' }) =>
+    Array.from({ length: n }, () => R(name, o))
+  const heading = () => line(mobile ? 140 : 220, 28)
+  const col = (children, gap = 4) =>
+    Col({ name: 'Skeleton Rows', gap, width: 'fill_container' }, children)
+  const tail = more ? [R('List/Load More')] : []
+  const cards = (name, perRow, rows) =>
     Col(
-      { name: 'Skeleton Rows', gap: 16, width: 'fill_container' },
-      Array.from({ length: n }, () =>
-        Row({ width: 'fill_container', gap: 12 }, [
-          line(mobile ? 48 : 40, mobile ? 48 : 40),
-          Col({ gap: 8, width: 'fill_container' }, [
-            line(mobile ? 170 : 280),
-            line(mobile ? 110 : 170, 10),
-          ]),
-        ]),
+      { name: 'Skeleton Grid', gap: 24, width: 'fill_container' },
+      Array.from({ length: rows }, () =>
+        Row({ name: 'Skeleton Cards', gap: mobile ? 12 : 20 }, many(name, perRow, {})),
       ),
     )
-  const cards = (n) =>
-    Row(
-      { name: 'Skeleton Cards', gap: 20 },
-      Array.from({ length: n }, () => Col({ gap: 10 }, [line(168, 168), line(130), line(90, 10)])),
-    )
+  const trackRows = (n) =>
+    mobile
+      ? col(many('Skeleton/Track Row Mobile', n), 16)
+      : col([R('Track Table/Header'), ...many('Skeleton/Track Row', n)])
+  const wrap = (children) =>
+    Col({ name: 'Loading', gap: 24, width: 'fill_container' }, [...children, ...tail])
   if (kind === 'grid')
-    return Col({ name: 'Loading', gap: 24, width: 'fill_container' }, [
-      line(mobile ? 140 : 220, 28),
-      mobile ? rows(6) : [cards(5), cards(5)],
+    return wrap([heading(), mobile ? cards('Skeleton/Card', 2, 3) : cards('Skeleton/Card', 6, 3)])
+  if (kind === 'artists')
+    return wrap([
+      heading(),
+      mobile ? cards('Skeleton/Artist Card', 2, 3) : cards('Skeleton/Artist Card', 6, 3),
+    ])
+  if (kind === 'table') return wrap([heading(), trackRows(mobile ? 10 : 14)])
+  if (kind === 'chart')
+    return wrap([
+      heading(),
+      mobile ? col(many('Skeleton/Track Row Mobile', 10), 16) : col(many('Skeleton/Chart Row', 14)),
+    ])
+  if (kind === 'people') return wrap([col(many('Skeleton/Person Row', mobile ? 10 : 12), 0)])
+  if (kind === 'notifications')
+    return wrap([col(many('Skeleton/Notification Row', mobile ? 10 : 12), 0)])
+  if (kind === 'artist-table')
+    return wrap([
+      mobile ? col(many('Skeleton/Track Row Mobile', 10), 16) : col(many('Skeleton/Table Row', 13)),
     ])
   if (kind === 'collection')
-    return Col({ name: 'Loading', gap: 28, width: 'fill_container' }, [
+    return wrap([
       Row({ gap: 24, alignItems: 'end', width: 'fill_container' }, [
         line(mobile ? 120 : 200, mobile ? 120 : 200),
         Col({ gap: 12, width: 'fill_container' }, [
@@ -239,13 +256,14 @@ export function Skeleton(kind = 'list', mobile = false) {
           line(mobile ? 120 : 220),
         ]),
       ]),
-      rows(mobile ? 5 : 6),
+      trackRows(mobile ? 7 : 10),
     ])
-  return Col({ name: 'Loading', gap: 24, width: 'fill_container' }, [
-    line(mobile ? 140 : 220, 28),
-    rows(mobile ? 7 : 8),
-  ])
+  return wrap([heading(), col(many('Skeleton/Track Row Mobile', mobile ? 10 : 12), 16)])
 }
+/** Footer of a long list while the next page streams in, or once everything is shown. */
+export const LoadMore = (count = '50 of 1,240') =>
+  R('List/Load More', {}, { count: { content: count } })
+export const ListEnd = (label) => R('List/End', {}, { label: { content: label } })
 
 /* containers with slots */
 export const Panel = (children, o = {}) =>
@@ -516,3 +534,32 @@ export const Blank = (name, w, h, children) => ({
 })
 /** A screen state; when it cannot occur on a phone, `reason` says why and is noted on the frame. */
 export const state = (label, desktop, mobile, reason) => ({ label, desktop, mobile, reason })
+/** A few skeleton rows of the same list followed by the load-more footer (infinite lists). */
+const MORE_ROW = {
+  track: ['Skeleton/Track Row', 'Skeleton/Track Row Mobile'],
+  chart: ['Skeleton/Chart Row', 'Skeleton/Track Row Mobile'],
+  people: ['Skeleton/Person Row', 'Skeleton/Person Row'],
+  notifications: ['Skeleton/Notification Row', 'Skeleton/Notification Row'],
+}
+export const MoreRows = (mobile, kind = 'track', count = '50 of 1,240') =>
+  Col({ name: 'Loading More', gap: mobile ? 16 : 4, width: 'fill_container' }, [
+    ...Array.from({ length: mobile ? 3 : 2 }, () =>
+      R(MORE_ROW[kind][mobile ? 1 : 0], { width: 'fill_container' }),
+    ),
+    LoadMore(count),
+  ])
+/** Appends the load-more tail to a finished screen (desktop Main Panel or mobile Content). */
+export const withMore = (frame, mobile, kind, count) => {
+  const host = (n) => {
+    if (!n || typeof n !== 'object') return null
+    if (n.name === (mobile ? 'Content' : 'Main Panel') && Array.isArray(n.children)) return n
+    for (const v of [...Object.values(n.descendants ?? {}), ...(n.children ?? [])]) {
+      const r = host(v)
+      if (r) return r
+    }
+    return null
+  }
+  host(frame)?.children.push(MoreRows(mobile, kind, count))
+  frame.name = `${frame.name} loading more`
+  return frame
+}

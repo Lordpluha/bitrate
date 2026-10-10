@@ -330,8 +330,8 @@ export const friends = {
     ),
     state(
       'Loading',
-      () => D('Loading', [title('Friends', findBtn(false)), Skeleton('list')]),
-      () => M('Loading', [Skeleton('list', true)], MHeader('Friends', { back: false })),
+      () => D('Loading', [title('Friends', findBtn(false)), Skeleton('people')]),
+      () => M('Loading', [Skeleton('people', true)], MHeader('Friends', { back: false })),
     ),
     state(
       'Error',
@@ -479,8 +479,8 @@ export const friendsFind = {
     ),
     state(
       'Searching',
-      () => findD('Searching', { q: 'maya', body: [Skeleton('list')] }),
-      () => findM('Searching', 'maya', [Skeleton('list', true)]),
+      () => findD('Searching', { q: 'maya', body: [Skeleton('people')] }),
+      () => findM('Searching', 'maya', [Skeleton('people', true)]),
     ),
     state(
       'Error',
@@ -588,8 +588,8 @@ export const friendsRequests = {
     ),
     state(
       'Loading',
-      () => reqD('Loading', 0, [Skeleton('list')]),
-      () => reqM('Loading', 0, [Skeleton('list', true)]),
+      () => reqD('Loading', 0, [Skeleton('people')]),
+      () => reqM('Loading', 0, [Skeleton('people', true)]),
     ),
     state(
       'Error',
