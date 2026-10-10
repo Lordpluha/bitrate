@@ -34,9 +34,9 @@ const DESIGNS = join(ROOT, 'pencil')
  * Designs drawn before the "assembled from library components only" rule. They are reported as
  * warnings until they are rebuilt from library instances; every other design must comply.
  */
-const LEGACY = [/^pencil\/web-artist/, /^pencil\/web-player-design\/landing\//]
+const LEGACY = []
 /** Archived designs are historical references, not live designs: the checks skip them. */
-const ARCHIVED = /^pencil\/web-player-design\/archive\//
+const ARCHIVED = /\/archive\//
 const SHAPES = new Set(['text', 'icon', 'rectangle', 'ellipse', 'path', 'polygon', 'line'])
 const VISUAL = ['fill', 'stroke', 'effect', 'cornerRadius']
 
