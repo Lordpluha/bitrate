@@ -1,6 +1,6 @@
 <title>Bitrate Signal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700;800&family=Poppins:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
 <style>
 /* Ten fullscreen scenes after the archived "Original Edition" landing. Each scene is a 1440x900 board scaled to
    the viewport, with layered windows over one fixed WebGL stage. One gesture = one scene. */
@@ -8,8 +8,8 @@
   --bg: #0b0d12; --card: #151923; --card-2: #1b2030; --glass: rgba(17, 20, 29, .86); --fg: #ffffff; --muted: #9ca3af; --subdued: #6b7280;
   --border: #2a303c; --primary: #7c3aed; --primary-fg: #ffffff; --accent: #a78bfa; --magenta: #ec4899; --blue: #3b82f6; --success: #10b981; --warning: #f59e0b;
   --grain: .07; --glow: rgba(124, 58, 237, .30); --shadow: rgba(0, 0, 0, .55);
-  --font-display: "Kanit", "Arial Narrow", system-ui, sans-serif;
-  --font-body: "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-data: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
   color-scheme: dark;
 }
@@ -80,7 +80,7 @@ body.static .scene { position: relative; visibility: visible; height: 100vh; min
 .disc { font-size: 12px; color: var(--subdued); }
 .sig { font: 600 9px/1 var(--font-data); letter-spacing: .3em; color: var(--subdued); }
 .h { font-family: var(--font-display); font-weight: 700; letter-spacing: -.03em; line-height: .98; margin: 0; }
-.h72 { font-size: 72px; } .h80 { font-size: 80px; line-height: .95; } .h56 { font-size: 56px; } .h48 { font-size: 48px; line-height: 1.04; } .h54 { font-size: 54px; }
+.h72 { font-size: 58px; } .h80 { font-size: 64px; line-height: .98; } .h56 { font-size: 46px; } .h48 { font-size: 40px; line-height: 1.06; } .h54 { font-size: 44px; }
 .line { display: block; overflow: hidden; padding: 0 .04em .08em 0; margin-bottom: -.06em; }
 .line > span { display: inline-block; }
 .hl { color: var(--accent); background: linear-gradient(100deg, var(--accent), var(--magenta) 60%, var(--blue)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
@@ -228,6 +228,42 @@ span.glitch { display: inline-block; }
 .stats { display: flex; gap: 26px; margin-top: 30px; }
 .stats b { display: block; font: 700 34px/1 var(--font-display); color: var(--fg); }
 
+/* AI assistant: bottom-right button that blooms into a chat; a thinking orb shows the phase */
+.ai-fab { position: fixed; right: 24px; bottom: 24px; z-index: 45; width: 52px; height: 52px; border-radius: 50%; border: 0; display: grid; place-items: center; color: #fff; background: linear-gradient(135deg, #7c3aed, #ec4899); box-shadow: 0 14px 34px -12px rgba(124, 58, 237, .7); cursor: pointer; }
+.ai-fab[aria-expanded="true"] { background: var(--card); color: var(--fg); border: 1px solid var(--border); box-shadow: none; }
+.ai-fab:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.ai-panel { position: fixed; right: 24px; bottom: 88px; z-index: 46; width: 380px; height: 540px; max-height: calc(100vh - 120px); display: flex; flex-direction: column; border-radius: 18px; background: var(--card); border: 1px solid var(--border); box-shadow: 0 30px 80px -30px var(--shadow); transform-origin: 100% 100%; visibility: hidden; overflow: hidden; }
+.ai-panel.open { visibility: visible; }
+.ai-head { display: flex; align-items: center; gap: 10px; height: 60px; padding: 0 14px; border-bottom: 1px solid var(--border); }
+.ai-head .mk { width: 32px; height: 32px; border-radius: 50%; background: var(--card-2); display: grid; place-items: center; }
+.ai-head .mk svg { width: 18px; height: 18px; }
+.ai-head small { display: block; color: var(--muted); font-size: 11px; }
+.ai-x { margin-left: auto; border: 0; background: none; color: var(--muted); cursor: pointer; padding: 6px; }
+.ai-msgs { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; overscroll-behavior: contain; }
+.ai-b { max-width: 82%; padding: 10px 12px; border-radius: 14px; font-size: 13px; line-height: 1.45; background: var(--card-2); align-self: flex-start; }
+.ai-b.me { align-self: flex-end; background: var(--primary); color: #fff; }
+.ai-typing { align-self: flex-start; display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 14px; background: var(--card-2); font-size: 12px; color: var(--muted); }
+.ai-welcome { display: grid; justify-items: center; gap: 8px; padding: 18px 0 6px; text-align: center; }
+.ai-welcome b { font: 600 15px/1.2 var(--font-display); }
+.ai-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.ai-chip { height: 32px; padding: 0 12px; border-radius: 16px; border: 1px solid var(--border); background: none; color: var(--fg); font: 500 12px/1 var(--font-body); cursor: pointer; }
+.ai-chip:hover { border-color: var(--accent); }
+.ai-comp { padding: 10px 12px 12px; border-top: 1px solid var(--border); display: grid; gap: 8px; }
+.ai-in { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 6px 0 12px; border-radius: 12px; background: var(--card-2); }
+.ai-in input { flex: 1; border: 0; outline: 0; background: none; color: var(--fg); font: 13px/1 var(--font-body); }
+.ai-send { width: 32px; height: 32px; border-radius: 10px; border: 0; background: var(--primary); color: #fff; display: grid; place-items: center; cursor: pointer; }
+.ai-comp small { font-size: 10px; color: var(--subdued); }
+.footer { padding-right: 96px; }
+@media (max-width: 820px) { .ai-fab { right: 16px; bottom: 16px; } .ai-panel { inset: 0; width: auto; height: auto; max-height: none; border-radius: 0; } }
+
+/* intro: the logo writes itself, then the hero takes over */
+.intro { position: fixed; inset: 0; z-index: 90; background: var(--bg); display: grid; place-content: center; justify-items: center; gap: 18px; }
+.intro-ll { width: 132px; height: 129px; }
+.intro-ll svg, .ll-box svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.intro b { font: 700 24px/1 var(--font-display); letter-spacing: -.02em; }
+body.static .intro { display: none; }
+.mark { width: 30px; height: 30px; }
+
 /* footer links: CSS-only underline reveals (left, right, centre) */
 .ulink { position: relative; color: inherit; text-decoration: none; }
 .ulink::after { content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 1.5px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .38s cubic-bezier(.2, .8, .2, 1); }
@@ -267,9 +303,9 @@ span.glitch { display: inline-block; }
   .board { position: static; transform: none; width: 100%; height: auto; display: flex; flex-direction: column; gap: 16px; }
   .abs, .pos { position: static !important; width: auto !important; height: auto !important; }
   .d-only { display: none !important; }
-  .h72, .h80 { font-size: 46px; }
-  .h56, .h54 { font-size: 40px; }
-  .h48 { font-size: 36px; }
+  .h72, .h80 { font-size: 36px; }
+  .h56, .h54 { font-size: 32px; }
+  .h48 { font-size: 29px; }
   .lede, .lede.s { font-size: 15px; }
   .ctas { flex-direction: column; }
   .ctas .btn { width: 100%; height: 48px; }
@@ -318,10 +354,12 @@ span.glitch { display: inline-block; }
 <div class="cursor-glow" aria-hidden="true"></div>
 <div class="sweep" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><path id="bitrate-logo" d="M 399 145 L 400 146 L 400 150 L 401 151 L 401 154 L 403 158 L 403 161 L 404 162 L 406 170 L 409 175 L 409 177 L 416 191 L 418 193 L 419 196 L 421 198 L 425 205 L 431 212 L 431 213 L 436 218 L 436 219 L 451 234 L 452 234 L 456 238 L 457 238 L 464 244 L 465 244 L 470 248 L 475 250 L 477 252 L 489 258 L 491 258 L 496 261 L 498 261 L 501 263 L 504 263 L 505 264 L 511 265 L 515 267 L 519 267 L 520 268 L 524 268 L 525 269 L 530 269 L 531 270 L 539 270 L 540 271 L 918 271 L 919 272 L 925 272 L 926 273 L 931 273 L 932 274 L 935 274 L 939 276 L 942 276 L 945 278 L 947 278 L 950 280 L 952 280 L 960 284 L 962 286 L 965 287 L 971 292 L 972 292 L 987 307 L 987 308 L 990 311 L 991 314 L 993 316 L 997 324 L 997 326 L 998 327 L 998 329 L 1000 333 L 1000 336 L 1001 337 L 1001 342 L 1002 343 L 1002 358 L 1001 359 L 1001 364 L 1000 365 L 1000 368 L 999 369 L 997 377 L 992 387 L 990 389 L 986 396 L 970 412 L 969 412 L 966 415 L 965 415 L 957 421 L 943 428 L 941 428 L 935 431 L 932 431 L 931 432 L 928 432 L 927 433 L 924 433 L 923 434 L 912 435 L 911 436 L 685 436 L 684 437 L 674 437 L 673 438 L 667 438 L 666 439 L 661 439 L 660 440 L 656 440 L 655 441 L 652 441 L 651 442 L 643 443 L 642 444 L 640 444 L 639 445 L 637 445 L 636 446 L 634 446 L 633 447 L 625 449 L 617 453 L 615 453 L 589 466 L 587 468 L 579 472 L 573 477 L 566 481 L 555 490 L 554 490 L 538 505 L 537 505 L 535 507 L 535 508 L 521 522 L 521 523 L 514 530 L 514 531 L 511 534 L 511 535 L 508 538 L 508 539 L 504 543 L 504 544 L 498 551 L 495 557 L 487 568 L 486 571 L 484 573 L 480 581 L 478 583 L 462 615 L 462 617 L 459 622 L 459 624 L 456 629 L 456 631 L 454 634 L 454 636 L 451 641 L 450 646 L 448 649 L 448 651 L 447 652 L 447 654 L 446 655 L 446 657 L 445 658 L 445 660 L 444 661 L 444 663 L 443 664 L 443 666 L 442 667 L 442 669 L 441 670 L 441 672 L 440 673 L 440 675 L 439 676 L 439 678 L 437 682 L 437 685 L 435 689 L 435 692 L 433 696 L 433 699 L 432 700 L 432 703 L 430 707 L 429 715 L 428 716 L 428 719 L 427 720 L 427 724 L 426 725 L 426 728 L 425 729 L 425 733 L 424 734 L 424 738 L 423 739 L 423 743 L 422 744 L 422 749 L 421 750 L 421 753 L 420 754 L 420 760 L 419 761 L 419 767 L 418 768 L 418 773 L 417 774 L 417 779 L 416 780 L 416 783 L 419 779 L 422 773 L 425 770 L 425 769 L 427 767 L 429 763 L 432 760 L 432 759 L 435 756 L 437 752 L 441 748 L 441 747 L 444 744 L 444 743 L 447 740 L 447 739 L 451 735 L 451 734 L 455 730 L 455 729 L 461 723 L 461 722 L 465 718 L 465 717 L 476 706 L 476 705 L 518 663 L 519 663 L 528 654 L 529 654 L 535 648 L 536 648 L 542 642 L 543 642 L 553 633 L 554 633 L 557 630 L 558 630 L 562 626 L 563 626 L 574 617 L 575 617 L 581 612 L 588 608 L 591 605 L 597 602 L 599 600 L 605 597 L 615 590 L 622 587 L 624 585 L 646 574 L 648 574 L 660 568 L 662 568 L 663 567 L 665 567 L 666 566 L 668 566 L 674 563 L 677 563 L 681 561 L 684 561 L 685 560 L 688 560 L 689 559 L 693 559 L 694 558 L 697 558 L 698 557 L 710 556 L 711 555 L 720 555 L 721 554 L 909 554 L 910 555 L 914 555 L 918 557 L 925 558 L 926 559 L 934 561 L 937 563 L 939 563 L 945 566 L 947 568 L 954 571 L 956 573 L 959 574 L 962 577 L 963 577 L 966 580 L 967 580 L 972 585 L 973 585 L 985 598 L 985 599 L 990 605 L 998 621 L 998 623 L 999 624 L 999 626 L 1001 630 L 1002 640 L 1003 641 L 1003 654 L 1002 655 L 1002 661 L 1001 662 L 1000 669 L 996 677 L 995 681 L 993 683 L 992 686 L 990 688 L 988 692 L 985 695 L 985 696 L 968 712 L 967 712 L 959 718 L 943 726 L 941 726 L 937 728 L 934 728 L 933 729 L 930 729 L 929 730 L 926 730 L 925 731 L 920 731 L 919 732 L 912 732 L 911 733 L 697 733 L 696 734 L 687 734 L 686 735 L 674 736 L 673 737 L 669 737 L 668 738 L 661 739 L 657 741 L 654 741 L 653 742 L 651 742 L 650 743 L 648 743 L 647 744 L 639 746 L 636 748 L 634 748 L 627 752 L 625 752 L 611 759 L 606 763 L 603 764 L 601 766 L 593 770 L 590 773 L 589 773 L 582 779 L 581 779 L 577 783 L 576 783 L 572 787 L 571 787 L 547 811 L 547 812 L 541 818 L 541 819 L 538 822 L 538 823 L 535 826 L 535 827 L 532 830 L 532 831 L 529 834 L 529 835 L 525 840 L 524 843 L 518 851 L 512 863 L 925 863 L 926 862 L 938 862 L 939 861 L 946 861 L 947 860 L 953 860 L 954 859 L 958 859 L 959 858 L 968 857 L 969 856 L 976 855 L 980 853 L 987 852 L 988 851 L 993 850 L 996 848 L 998 848 L 999 847 L 1004 846 L 1007 844 L 1009 844 L 1016 840 L 1018 840 L 1028 835 L 1030 833 L 1037 830 L 1047 823 L 1050 822 L 1053 819 L 1054 819 L 1057 816 L 1058 816 L 1061 813 L 1062 813 L 1065 810 L 1066 810 L 1086 791 L 1086 790 L 1092 784 L 1092 783 L 1101 773 L 1102 770 L 1110 759 L 1112 754 L 1114 752 L 1120 740 L 1120 738 L 1122 736 L 1122 734 L 1124 731 L 1124 729 L 1125 728 L 1127 720 L 1129 717 L 1129 714 L 1131 710 L 1131 707 L 1132 706 L 1132 703 L 1133 702 L 1133 698 L 1134 697 L 1134 694 L 1135 693 L 1135 685 L 1136 684 L 1136 676 L 1137 675 L 1137 650 L 1136 649 L 1136 641 L 1135 640 L 1134 628 L 1133 627 L 1133 624 L 1132 623 L 1131 616 L 1129 612 L 1129 609 L 1127 606 L 1127 604 L 1126 603 L 1125 598 L 1122 593 L 1122 591 L 1115 577 L 1113 575 L 1112 572 L 1110 570 L 1110 569 L 1108 567 L 1108 566 L 1106 564 L 1102 557 L 1092 546 L 1092 545 L 1080 533 L 1079 533 L 1067 522 L 1066 522 L 1059 516 L 1056 515 L 1051 511 L 1058 505 L 1059 505 L 1062 502 L 1063 502 L 1067 498 L 1068 498 L 1084 483 L 1084 482 L 1092 474 L 1092 473 L 1100 464 L 1100 463 L 1106 455 L 1107 452 L 1111 447 L 1112 444 L 1114 442 L 1119 432 L 1119 430 L 1123 423 L 1124 418 L 1126 415 L 1126 413 L 1127 412 L 1127 410 L 1129 406 L 1129 403 L 1131 399 L 1131 396 L 1132 395 L 1133 385 L 1134 384 L 1134 378 L 1135 377 L 1135 368 L 1136 367 L 1136 343 L 1135 342 L 1135 333 L 1134 332 L 1134 325 L 1133 324 L 1133 319 L 1132 318 L 1132 314 L 1131 313 L 1130 306 L 1129 305 L 1129 303 L 1127 299 L 1127 296 L 1126 295 L 1124 287 L 1122 284 L 1122 282 L 1120 279 L 1120 277 L 1110 257 L 1108 255 L 1106 250 L 1104 248 L 1100 241 L 1097 238 L 1097 237 L 1094 234 L 1094 233 L 1090 229 L 1090 228 L 1085 223 L 1085 222 L 1063 200 L 1062 200 L 1053 192 L 1052 192 L 1049 189 L 1042 185 L 1036 180 L 1024 174 L 1022 172 L 1012 167 L 1010 167 L 1003 163 L 998 162 L 995 160 L 993 160 L 992 159 L 990 159 L 989 158 L 987 158 L 986 157 L 984 157 L 983 156 L 981 156 L 977 154 L 974 154 L 973 153 L 970 153 L 969 152 L 966 152 L 965 151 L 961 151 L 960 150 L 957 150 L 956 149 L 951 149 L 950 148 L 946 148 L 945 147 L 938 147 L 937 146 L 927 146 L 926 145 Z"/><linearGradient id="bm" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#490AE5"/><stop offset=".45" stop-color="#6824F8"/><stop offset="1" stop-color="#C060FA"/></linearGradient></defs></svg>
+<div class="intro" id="intro" aria-hidden="true"><div class="intro-ll" id="introLL"></div><b>Bitrate</b><span class="mono">TUNING IN…</span></div>
 
 <header class="top">
   <a class="brand" href="#hero" aria-label="Bitrate home">
-    <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="bm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs><path d="M7 4h11a7 7 0 0 1 4 12.7A7.5 7.5 0 0 1 18.5 30H7V4Zm5 5v6h6a3 3 0 0 0 0-6h-6Zm0 11v5h6.5a2.5 2.5 0 0 0 0-5H12Z" fill="url(#bm)"/></svg>
+    <svg class="mark" viewBox="371 117 795 775" aria-hidden="true"><use href="#bitrate-logo" fill="url(#bm)"/></svg>
     Bitrate
   </a>
   <nav class="nav" aria-label="Primary"><a href="#hero">Web player</a><a href="#library">Your library</a><a href="#artists">For artists</a><a href="#rules">Features</a></nav>
@@ -337,6 +375,13 @@ span.glitch { display: inline-block; }
 <nav class="dots" aria-label="Scenes"></nav>
 <div class="counter" aria-hidden="true"><b id="num">01</b><span class="rail"><i id="rail"></i></span><span>12</span></div>
 
+<button class="ai-fab" id="aiFab" type="button" aria-expanded="false" aria-controls="aiPanel" aria-label="Open the Bitrate assistant"><svg aria-hidden="true" class="i" viewBox="0 0 24 24" style="width:22px;height:22px"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></svg></button>
+<section class="ai-panel" id="aiPanel" aria-label="Bitrate assistant">
+  <div class="ai-head"><span class="mk"><svg viewBox="371 117 795 775" aria-hidden="true"><use href="#bitrate-logo" fill="url(#bm)"/></svg></span><span><b style="font-size:14px">Bitrate assistant</b><small id="aiStatus">AI · can make mistakes · demo answers</small></span><button class="ai-x" id="aiClose" type="button" aria-label="Close the assistant">✕</button></div>
+  <div class="ai-msgs" id="aiMsgs"><div class="ai-welcome"><canvas class="orb" data-size="64" width="128" height="128" style="width:64px;height:64px"></canvas><b>Hi, I am the Bitrate assistant</b><span class="t-meta">Ask about the player, plans or releasing your music.</span><div class="ai-chips"><button class="ai-chip" type="button">What is Bitrate?</button><button class="ai-chip" type="button">Is it free?</button><button class="ai-chip" type="button">Release a single</button><button class="ai-chip" type="button">Which devices work?</button></div></div></div>
+  <form class="ai-comp" id="aiForm"><span class="ai-in"><input id="aiInput" type="text" autocomplete="off" placeholder="Ask about Bitrate…" aria-label="Message"><button class="ai-send" type="submit" aria-label="Send">↑</button></span><small>Answers come from Bitrate docs. Do not share passwords or payment details.</small></form>
+</section>
+
 <main>
   <!-- 01 hero -->
   <section class="scene is-active" id="hero" data-label="Signal" aria-label="Your music, already where you are">
@@ -350,7 +395,7 @@ span.glitch { display: inline-block; }
           <div class="row mono" data-a="up"><svg aria-hidden="true" class="i" style="width:15px;height:15px;color:var(--accent)"><use href="#i-signal"/></svg>INTERACTIVE PLAYER PREVIEW</div>
         </div>
       </div>
-      <div class="abs persp" style="--x:610;--y:170;--w:786">
+      <div class="abs persp d-only" style="--x:610;--y:170;--w:786">
         <div class="win" data-a="win" id="heroWin">
           <div class="wbar"><span class="live"><i></i><span class="glitch glitch-auto" data-text="NOW PLAYING">NOW PLAYING</span></span><span class="grow"></span><span class="d-only">PREVIEW SESSION</span><span class="live ok d-only"><i></i><span class="glitch glitch-auto" data-text="SIGNAL STABLE">SIGNAL STABLE</span></span></div>
           <div class="row m-fit" style="align-items:stretch;gap:0;height:520px">
@@ -759,6 +804,7 @@ span.glitch { display: inline-block; }
         <h2 class="h h56"><span class="line"><span>Partners who keep</span></span><span class="line"><span>the <span class="hl">signal on air.</span></span></span></h2>
         <p class="lede s" style="margin-top:22px" data-a="up">Labels, studios and services we build with. Grab one and throw it — they bounce back.</p>
         <div class="row mono" style="margin-top:28px" data-a="up"><svg aria-hidden="true" class="i" style="width:15px;color:var(--accent)"><use href="#i-grip"/></svg>DRAG · THROW · SQUEEZE</div>
+        <div class="ctas" style="margin-top:24px" data-a="up"><a class="btn btn-primary magnetic" href="#partners" data-cursor="hover">Become a partner <svg aria-hidden="true" class="i"><use href="#i-arrow"/></svg></a></div>
       </div>
       <div class="abs drag-zone" id="partnerZone" style="--x:520;--y:70;--w:900;--h:780" aria-hidden="true"></div>
       <div class="abs row d-only" style="--x:60;--y:854;--w:1320;justify-content:space-between"><span class="sig">MUSIC LIVES ON</span><span class="disc">Placeholder marks — replace with real partner logos</span></div>
@@ -773,6 +819,7 @@ span.glitch { display: inline-block; }
         <h2 class="h h56"><span class="line"><span>Small team.</span></span><span class="line"><span class="hl">Loud signal.</span></span></h2>
         <p class="lede s" style="margin-top:22px" data-a="up">Two people build Bitrate — the player, the artist portal, the API and everything in between. Hover a bubble to meet us, drag it to play.</p>
         <div class="stats" data-a="up"><span><b data-v="2">2</b><span class="t-meta">people</span></span><span><b data-v="9">9</b><span class="t-meta">workspaces</span></span><span><b data-v="1">1</b><span class="t-meta">palette</span></span></div>
+        <div class="ctas" style="margin-top:26px" data-a="up"><a class="btn btn-primary magnetic" href="https://github.com/Lordpluha/bitrate" target="_blank" rel="noopener noreferrer">Join us <svg aria-hidden="true" class="i"><use href="#i-arrow"/></svg></a><a class="btn btn-ghost magnetic" href="https://github.com/Lordpluha/bitrate/blob/develop/apps/docs/docs/guides/contributing.md" target="_blank" rel="noopener noreferrer">How we work</a></div>
       </div>
       <div class="abs pit drag-zone" id="pit" style="--x:520;--y:70;--w:880;--h:780"><div class="hc" id="hc" role="tooltip"></div></div>
       <div class="abs row d-only" style="--x:60;--y:854;--w:1320;justify-content:space-between"><span class="sig">MUSIC LIVES ON</span><span class="disc">Stack bubbles show where each technology lives in the repository</span></div>
@@ -807,6 +854,89 @@ span.glitch { display: inline-block; }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Observer.min.js"></script>
+<script>
+/* Bitrate logo loader — a brush mask along the two ribbon spines writes the real mark, a light runs the contour, then it erases. */
+window.BitrateLogoLoader = (() => {
+  const SPINE_A = 'M 405 152 C 430 200 470 211 560 211 L 900 211 C 1010 211 1050 280 1050 350 C 1050 430 990 493 900 493 L 720 493 C 560 493 470 600 425 780'
+  const SPINE_B = 'M 860 493 C 1000 493 1050 560 1050 650 C 1050 750 990 805 900 805 L 640 805 C 580 805 540 830 512 868'
+  const STOPS = [['0', '#490AE5'], ['.22', '#5515EF'], ['.45', '#6824F8'], ['.65', '#8037FB'], ['.82', '#9E4EFB'], ['1', '#C060FA']]
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
+  let uid = 0
+  const markup = (n, mini) => `<svg class="ll" viewBox="371 117 795 775" aria-hidden="true"><defs><linearGradient id="llg${n}" x1="0" y1="0" x2="1" y2="0">${STOPS.map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join('')}</linearGradient><mask id="llm${n}" maskUnits="userSpaceOnUse" x="371" y="117" width="795" height="775"><path class="sa" d="${SPINE_A}" fill="none" stroke="#fff" stroke-width="150" stroke-linecap="round"/><path class="sb" d="${SPINE_B}" fill="none" stroke="#fff" stroke-width="150" stroke-linecap="round"/></mask><filter id="llf${n}" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="16"/></filter></defs><use href="#bitrate-logo" fill="url(#llg${n})" opacity="${mini ? 0.25 : 0.1}"/>${mini ? '' : `<use href="#bitrate-logo" fill="url(#llg${n})" mask="url(#llm${n})"/>`}<use class="trace" href="#bitrate-logo" fill="none" stroke="${mini ? '#a78bfa' : '#fff'}" stroke-width="${mini ? 46 : 7}" stroke-linecap="round" opacity="0"/>${mini ? '' : `<circle class="head" r="40" fill="#d8b4fe" filter="url(#llf${n})" opacity="0"/>`}</svg>`
+  const mount = (el, mode = 'loop') => {
+    const n = ++uid
+    el.innerHTML = markup(n, mode === 'mini')
+    const svg = el.querySelector('svg')
+    const ref = document.getElementById('bitrate-logo')
+    const L = ref.getTotalLength()
+    const trace = svg.querySelector('.trace')
+    if (mode === 'mini') {
+      trace.setAttribute('stroke-dasharray', `${L * 0.16} ${L}`)
+      trace.setAttribute('opacity', '1')
+      return gsap.fromTo(trace, { strokeDashoffset: 0 }, { strokeDashoffset: -L * 1.16, duration: reduce ? 3 : 1.25, ease: 'none', repeat: -1 })
+    }
+    const sa = svg.querySelector('.sa')
+    const sb = svg.querySelector('.sb')
+    const head = svg.querySelector('.head')
+    const la = sa.getTotalLength()
+    const lb = sb.getTotalLength()
+    sa.setAttribute('stroke-dasharray', `${la} ${la}`)
+    sb.setAttribute('stroke-dasharray', `${lb} ${lb}`)
+    const draw = (path, len, p) => {
+      path.style.strokeDashoffset = String(len * (1 - p))
+    }
+    const headAt = (path, len, p) => {
+      const pt = path.getPointAtLength(Math.max(0, Math.min(len, len * p)))
+      head.setAttribute('cx', String(pt.x))
+      head.setAttribute('cy', String(pt.y))
+    }
+    draw(sa, la, 0)
+    draw(sb, lb, 0)
+    if (mode === 'progress') {
+      head.setAttribute('opacity', '.9')
+      return {
+        set(p) {
+          const a = Math.min(1, Math.max(0, p / 0.6))
+          const b = Math.min(1, Math.max(0, (p - 0.45) / 0.55))
+          draw(sa, la, a)
+          draw(sb, lb, b)
+          if (b > 0) headAt(sb, lb, b)
+          else headAt(sa, la, a)
+          head.setAttribute('opacity', p >= 1 ? '0' : '.9')
+        },
+      }
+    }
+    if (reduce) {
+      draw(sa, la, 1)
+      draw(sb, lb, 1)
+      return gsap.fromTo(svg, { opacity: 0.35 }, { opacity: 1, duration: 1.2, yoyo: true, repeat: -1, ease: 'sine.inOut' })
+    }
+    trace.setAttribute('stroke-dasharray', `${L * 0.12} ${L}`)
+    const A = { p: 0 }
+    const B = { p: 0 }
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.12 })
+    tl.set(head, { attr: { opacity: 0.95 } }, 0)
+    tl.fromTo(A, { p: 0 }, { p: 1, duration: 0.95, ease: 'power2.inOut', onUpdate: () => { draw(sa, la, A.p); headAt(sa, la, A.p) } }, 0)
+    tl.fromTo(B, { p: 0 }, { p: 1, duration: 0.8, ease: 'power2.inOut', onUpdate: () => { draw(sb, lb, B.p); if (B.p > 0.02) headAt(sb, lb, B.p) } }, 0.6)
+    tl.to(head, { attr: { opacity: 0 }, duration: 0.2 }, 1.35)
+    tl.fromTo(trace, { attr: { opacity: 1 }, strokeDashoffset: 0 }, { strokeDashoffset: -L * 1.12, duration: 1, ease: 'power1.inOut' }, 1.3)
+    tl.to(trace, { attr: { opacity: 0 }, duration: 0.2 }, 2.15)
+    tl.fromTo(A, { p: 1 }, { p: 2, duration: 0.7, ease: 'power2.in', onUpdate: () => draw(sa, la, A.p) }, 2.2)
+    tl.fromTo(B, { p: 1 }, { p: 2, duration: 0.6, ease: 'power2.in', onUpdate: () => draw(sb, lb, B.p) }, 2.35)
+    return tl
+  }
+  return { mount }
+})()
+
+/* intro: one write-on pass of the logo, then the scenes start */
+window.__bitrateIntro = new Promise((done) => {
+  const intro = document.getElementById('intro')
+  if (!window.gsap || matchMedia('(prefers-reduced-motion: reduce)').matches) { intro.remove(); done(); return }
+  window.BitrateLogoLoader.mount(document.getElementById('introLL'), 'loop')
+  gsap.from(intro.querySelectorAll('b, .mono'), { opacity: 0, y: 10, duration: .5, delay: .4, stagger: .1 })
+  gsap.to(intro, { opacity: 0, duration: .6, delay: 1.9, ease: 'power2.inOut', onStart: done, onComplete: () => intro.remove() })
+})
+</script>
 <script>
 (() => {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -879,7 +1009,16 @@ span.glitch { display: inline-block; }
   paintHighlights()
 
   /* ---------- WebGL stage ---------- */
-  if (window.THREE) {
+  /* the 3D stage is optional: without WebGL (blocked GPU, old device) the scenes, text and windows still animate */
+  const hasGL = (() => {
+    try {
+      const c = document.createElement('canvas')
+      return !!(c.getContext('webgl2') || c.getContext('webgl'))
+    } catch (e) {
+      return false
+    }
+  })()
+  if (window.THREE && hasGL) {
     const canvas = document.getElementById('stage')
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true })
     let dpr = Math.min(window.devicePixelRatio || 1, 1.25)
@@ -1125,7 +1264,7 @@ span.glitch { display: inline-block; }
       x.lineWidth = 6
       x.textAlign = 'center'
       x.textBaseline = 'middle'
-      x.font = `700 ${label.length > 4 ? 40 : 56}px Kanit, sans-serif`
+      x.font = `700 ${label.length > 4 ? 34 : 48}px Unbounded, sans-serif`
       for (const cx of [128, 384]) { x.beginPath(); x.arc(cx, 128, 74, 0, Math.PI * 2); x.stroke(); x.fillText(label, cx, 130) }
       const t = new THREE.CanvasTexture(c)
       t.anisotropy = 4
@@ -1742,6 +1881,111 @@ span.glitch { display: inline-block; }
   window.addEventListener('keydown', (e) => { if (e.key === 'Escape') setHealth(false) })
   document.addEventListener('pointerdown', (e) => { if (hOpen && !health.contains(e.target)) setHealth(false) })
 
+  /* ---------- AI assistant: thinking orb (own take on the reference: breathing, searching, composing) ---------- */
+  const orbs = new Set()
+  const drawOrb = (c, t) => {
+    const ctx = c.getContext('2d')
+    const w = c.width
+    const r = w / 2
+    const st = c.dataset.state || 'breathing'
+    const sp = st === 'composing' ? 2.4 : st === 'searching' ? 1.6 : 0.7
+    ctx.clearRect(0, 0, w, w)
+    ctx.save()
+    ctx.beginPath()
+    ctx.arc(r, r, r * (st === 'breathing' ? 0.86 + 0.06 * Math.sin(t * 2) : 0.9), 0, Math.PI * 2)
+    ctx.clip()
+    const bg = ctx.createRadialGradient(r * 0.7, r * 0.6, 0, r, r, r)
+    bg.addColorStop(0, '#c4b5fd')
+    bg.addColorStop(0.55, '#7c3aed')
+    bg.addColorStop(1, '#2e1065')
+    ctx.fillStyle = bg
+    ctx.fillRect(0, 0, w, w)
+    ctx.globalCompositeOperation = 'lighter'
+    for (let k = 0; k < 3; k++) {
+      const a = t * sp * (1 + k * 0.3) + k * 2.1
+      const x = r + Math.cos(a) * r * 0.38
+      const y = r + Math.sin(a * 1.3) * r * 0.32
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r * 0.7)
+      g.addColorStop(0, ['rgba(236,72,153,.75)', 'rgba(59,130,246,.65)', 'rgba(255,255,255,.45)'][k])
+      g.addColorStop(1, 'rgba(0,0,0,0)')
+      ctx.fillStyle = g
+      ctx.fillRect(0, 0, w, w)
+    }
+    ctx.restore()
+    if (st === 'searching') {
+      ctx.strokeStyle = 'rgba(255,255,255,.85)'
+      ctx.lineWidth = Math.max(1.5, w / 40)
+      ctx.lineCap = 'round'
+      ctx.beginPath()
+      ctx.arc(r, r, r * 0.95, t * 4, t * 4 + 1.1)
+      ctx.stroke()
+    }
+    if (st === 'composing') {
+      ctx.strokeStyle = `rgba(167,139,250,${0.6 - ((t * 1.5) % 1) * 0.6})`
+      ctx.lineWidth = Math.max(1, w / 60)
+      ctx.beginPath()
+      ctx.arc(r, r, r * (0.6 + ((t * 1.5) % 1) * 0.38), 0, Math.PI * 2)
+      ctx.stroke()
+    }
+  }
+  const aiFab = document.getElementById('aiFab')
+  const aiPanel = document.getElementById('aiPanel')
+  const aiMsgs = document.getElementById('aiMsgs')
+  const aiInput = document.getElementById('aiInput')
+  const aiStatus = document.getElementById('aiStatus')
+  const SPARK = aiFab.innerHTML
+  for (const c of aiPanel.querySelectorAll('canvas.orb')) orbs.add(c)
+  let aiOpen = false
+  const setAi = (open) => {
+    if (open === aiOpen) return
+    aiOpen = open
+    aiFab.setAttribute('aria-expanded', String(open))
+    aiFab.setAttribute('aria-label', open ? 'Close the assistant' : 'Open the Bitrate assistant')
+    aiFab.innerHTML = open ? '<span aria-hidden="true" style="font-size:18px">✕</span>' : SPARK
+    if (open) {
+      aiPanel.classList.add('open')
+      gsap.fromTo(aiPanel, { scale: 0.2, opacity: 0, borderRadius: 40 }, { scale: 1, opacity: 1, borderRadius: 18, duration: reduce ? 0.01 : 0.55, ease: 'elastic.out(1, .8)' })
+      setTimeout(() => aiInput.focus(), 120)
+    } else gsap.to(aiPanel, { scale: 0.2, opacity: 0, duration: reduce ? 0.01 : 0.25, ease: 'power3.in', onComplete: () => aiPanel.classList.remove('open') })
+  }
+  aiFab.addEventListener('click', () => setAi(!aiOpen))
+  document.getElementById('aiClose').addEventListener('click', () => setAi(false))
+  aiPanel.addEventListener('keydown', (e) => { if (e.key === 'Escape') { setAi(false); aiFab.focus() } e.stopPropagation() })
+  const ANSWERS = {
+    'what is bitrate?': 'Bitrate is a music player in your browser, with a portal for artists to release and grow their music.',
+    'is it free?': 'Yes — listening in the browser is free. Premium plans are on the way; your plan shows in Settings.',
+    'release a single': 'Open Bitrate for Artists → Create release, then follow the steps: audio, artwork, details, contributors and review.',
+    'which devices work?': 'Any modern browser on desktop or phone. Your queue follows you between devices.',
+  }
+  const bubble = (text, me) => { const b = document.createElement('div'); b.className = `ai-b${me ? ' me' : ''}`; b.textContent = text; aiMsgs.appendChild(b); gsap.from(b, { y: 8, opacity: 0, duration: 0.3 }); aiMsgs.scrollTop = aiMsgs.scrollHeight; return b }
+  const ask = (q) => {
+    if (!q.trim()) return
+    aiMsgs.querySelector('.ai-welcome')?.remove()
+    bubble(q, true)
+    const typing = document.createElement('div')
+    typing.className = 'ai-typing'
+    typing.innerHTML = '<canvas class="orb" width="40" height="40" style="width:20px;height:20px" data-state="searching"></canvas><span>Searching the docs…</span>'
+    aiMsgs.appendChild(typing)
+    const oc = typing.querySelector('canvas')
+    orbs.add(oc)
+    aiStatus.textContent = 'Searching the docs…'
+    aiMsgs.scrollTop = aiMsgs.scrollHeight
+    setTimeout(() => { oc.dataset.state = 'composing'; typing.querySelector('span').textContent = 'Composing…'; aiStatus.textContent = 'Composing…' }, 900)
+    setTimeout(() => {
+      orbs.delete(oc)
+      typing.remove()
+      aiStatus.textContent = 'AI · can make mistakes · demo answers'
+      const text = ANSWERS[q.trim().toLowerCase()] ?? 'This is a demo. In the product I answer from the Bitrate docs and link the right page.'
+      const b = bubble('', false)
+      const words = text.split(' ')
+      let k = 0
+      const iv = setInterval(() => { b.textContent = words.slice(0, ++k).join(' '); aiMsgs.scrollTop = aiMsgs.scrollHeight; if (k >= words.length) clearInterval(iv) }, reduce ? 0 : 45)
+    }, 1650)
+  }
+  aiMsgs.addEventListener('click', (e) => { const c = e.target.closest('.ai-chip'); if (c) ask(c.textContent) })
+  document.getElementById('aiForm').addEventListener('submit', (e) => { e.preventDefault(); ask(aiInput.value); aiInput.value = '' })
+  gsap.ticker.add((t) => { if (aiOpen) for (const c of orbs) drawOrb(c, t) })
+
   /* ---------- boot ---------- */
   drawWaves()
   const start = Math.max(0, scenes.findIndex((s) => `#${s.id}` === location.hash))
@@ -1758,10 +2002,10 @@ span.glitch { display: inline-block; }
   dotButtons.forEach((b, i) => { b.setAttribute('aria-current', String(i === start)) })
   num.textContent = String(start + 1).padStart(2, '0')
   gsap.set(rail, { scaleX: (start + 1) / scenes.length })
-  stage?.go(start, 1.8)
-  enter(scenes[start], 1)
-  Observer.create({ target: window, type: 'wheel,touch', wheelSpeed: -1, tolerance: 12, preventDefault: true, onUp: () => { if (!window.__dragging) go(index + 1) }, onDown: () => { if (!window.__dragging) go(index - 1) } })
+  window.__bitrateIntro.then(() => { stage?.go(start, 1.8); enter(scenes[start], 1) })
+  Observer.create({ target: window, type: 'wheel,touch', wheelSpeed: -1, tolerance: 12, preventDefault: true, onUp: (self) => { if (!window.__dragging && !self.event?.target?.closest?.('.ai-panel')) go(index + 1) }, onDown: (self) => { if (!window.__dragging && !self.event?.target?.closest?.('.ai-panel')) go(index - 1) } })
   window.addEventListener('keydown', (e) => {
+    if (e.target.closest?.('input, textarea, .ai-panel')) return
     if (['ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go(index + 1) }
     if (['ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); go(index - 1) }
     if (e.key === 'Home') go(0)
@@ -1769,9 +2013,106 @@ span.glitch { display: inline-block; }
   })
   for (const a of document.querySelectorAll('a[href^="#"]')) a.addEventListener('click', (e) => { const k = scenes.findIndex((s) => `#${s.id}` === a.getAttribute('href')); if (k >= 0) { e.preventDefault(); go(k) } })
   gsap.ticker.add((t) => {
-    if (an) { an.getByteFrequencyData(fb); let v = 0; for (let i = 0; i < 24; i++) v += fb[i]; level = v / (24 * 255) }
+    if (an) { an.getByteFrequencyData(fb); let v = 0; for (let i = 0; i < 24; i++) v += fb[i]; level = v / (24 * 255); window.__bitrateLevel = soundBtn.getAttribute('aria-pressed') === 'true' ? level : 0 }
     drawSpecs(t)
     if (TP.run && scenes[index].id === 'team') { const dt = Math.min(.033, gsap.ticker.deltaRatio() / 60); stepTeam(dt * .5); stepTeam(dt * .5) }
+  })
+})()
+</script>
+
+<style>
+/* Signal cursor — one custom cursor for the landing and the app (fine pointers only; touch keeps the system) */
+html.has-cursor, html.has-cursor * { cursor: none !important; }
+.cur { position: fixed; left: 0; top: 0; z-index: 9999; pointer-events: none; }
+.cur > * { position: fixed; left: 0; top: 0; pointer-events: none; will-change: transform; }
+.cur-dot { width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; background: var(--fg); transition: opacity .2s, scale .2s; }
+.cur-ring { width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%; border: 1.5px solid var(--accent); display: grid; place-items: center; transition: width .32s cubic-bezier(.2, .8, .2, 1), height .32s cubic-bezier(.2, .8, .2, 1), margin .32s cubic-bezier(.2, .8, .2, 1), background-color .3s, border-color .3s, opacity .2s, scale .2s; }
+.cur-ring > * { grid-area: 1 / 1; opacity: 0; transition: opacity .2s; }
+.cur-eq { display: flex; gap: 2px; align-items: center; height: 20px; }
+.cur-eq i { width: 2px; height: 18px; border-radius: 1px; background: var(--accent); transform-origin: center; transform: scaleY(.3); }
+.cur-arrows { font: 600 14px/1 var(--font-body, system-ui); color: var(--accent); letter-spacing: 6px; padding-left: 6px; }
+.cur-ban { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--muted); position: relative; }
+.cur-ban::after { content: ""; position: absolute; left: 50%; top: -1px; bottom: -1px; width: 1.5px; margin-left: -.75px; background: var(--muted); transform: rotate(45deg); }
+.cur-pill { display: flex; align-items: center; gap: 8px; height: 40px; margin: -20px 0 0 -38px; padding: 0 14px; border-radius: 20px; background: #fff; color: #0b0d12; font: 600 13px/1 var(--font-body, system-ui); opacity: 0; scale: .5; transition: opacity .2s, scale .32s cubic-bezier(.3, 1.6, .5, 1); }
+.cur-pill i { width: 0; height: 0; border-left: 9px solid #0b0d12; border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
+.cur-beam { width: 2px; height: 22px; margin: -11px 0 0 -1px; border-radius: 1px; background: var(--accent); opacity: 0; transition: opacity .15s; }
+.cur-scrub { display: grid; justify-items: center; gap: 4px; margin: -44px 0 0 -20px; width: 40px; opacity: 0; transition: opacity .15s; }
+.cur-scrub b { font: 600 11px/1 var(--font-data, monospace); color: var(--bg); background: var(--fg); padding: 4px 6px; border-radius: 6px; }
+.cur-scrub i { width: 2px; height: 28px; border-radius: 1px; background: var(--accent); }
+.cur.m-hover .cur-ring, .cur.m-drag .cur-ring { width: 56px; height: 56px; margin: -28px 0 0 -28px; background-color: color-mix(in srgb, var(--accent) 16%, transparent); }
+.cur.m-hover .cur-dot, .cur.m-drag .cur-dot, .cur.m-disabled .cur-dot { opacity: 0; }
+.cur.m-drag .cur-arrows, .cur.m-disabled .cur-ban { opacity: 1; }
+.cur.m-disabled .cur-ring { border-color: var(--muted); }
+.cur.m-play .cur-ring, .cur.m-play .cur-dot, .cur.m-text .cur-ring, .cur.m-text .cur-dot, .cur.m-scrub .cur-ring, .cur.m-scrub .cur-dot, .cur.m-hide > * { opacity: 0; }
+.cur.m-play .cur-pill { opacity: 1; scale: 1; }
+.cur.m-text .cur-beam, .cur.m-scrub .cur-scrub { opacity: 1; }
+.cur.is-press .cur-ring { scale: .75; }
+.cur.is-press .cur-pill { scale: .9; }
+.cur.is-listen:is(.m-default, .m-hover) .cur-eq { opacity: 1; }
+.cur.is-listen:is(.m-default, .m-hover) .cur-dot { opacity: 0; }
+.cur.is-out > * { opacity: 0 !important; }
+</style>
+<script>
+(() => {
+  if (!window.gsap || !matchMedia('(hover: hover) and (pointer: fine)').matches) return
+  const slow = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1
+  document.documentElement.classList.add('has-cursor')
+  const cur = document.createElement('div')
+  cur.className = 'cur m-default is-out'
+  cur.setAttribute('aria-hidden', 'true')
+  cur.innerHTML = '<div class="cur-ring"><span class="cur-eq"><i></i><i></i><i></i><i></i><i></i></span><span class="cur-arrows">‹›</span><span class="cur-ban"></span></div><div class="cur-pill"><i></i><span>Play</span></div><div class="cur-beam"></div><div class="cur-scrub"><b>Seek</b><i></i></div><div class="cur-dot"></div>'
+  document.body.appendChild(cur)
+  const [ringEl, pill, beam, scrub, dot] = cur.children
+  const follow = (el, d) => [gsap.quickTo(el, 'x', { duration: d * slow, ease: 'power3' }), gsap.quickTo(el, 'y', { duration: d * slow, ease: 'power3' })]
+  const ring = follow(ringEl, 0.38)
+  const pillTo = follow(pill, 0.22)
+  const beamTo = follow(beam, 0.06)
+  const scrubTo = follow(scrub, 0.08)
+  const dotTo = follow(dot, 0.05)
+  const bars = [...cur.querySelectorAll('.cur-eq i')]
+  const label = pill.querySelector('span')
+  let mode = 'default'
+  const modeOf = (el) => {
+    if (!el?.closest) return ['default']
+    const tagged = el.closest('[data-cursor]')
+    if (tagged) return [tagged.dataset.cursor, tagged]
+    if (el.closest('[disabled], [aria-disabled="true"]')) return ['disabled']
+    if (el.closest('input[type="range"], .prog')) return ['scrub']
+    if (el.closest('input, textarea, [contenteditable="true"]')) return ['text']
+    if (el.closest('.drag-zone, .ball')) return ['drag']
+    if (el.closest('.thumb')) return ['hide']
+    const play = el.closest('.art, .cv, .playbtn, .cover')
+    if (play) return ['play', play]
+    const hit = el.closest('a, button, [role="button"], [role="tab"], [role="option"], summary, label, .magnetic, .node')
+    if (hit) return ['hover', hit]
+    return ['default']
+  }
+  window.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse') return
+    cur.classList.remove('is-out')
+    const [m, el] = modeOf(e.target)
+    if (m !== mode) { cur.classList.replace(`m-${mode}`, `m-${m}`); mode = m }
+    let x = e.clientX
+    let y = e.clientY
+    if (m === 'hover' && el) { const r = el.getBoundingClientRect(); if (r.width < 260 && r.height < 120) { x += (r.left + r.width / 2 - x) * 0.25; y += (r.top + r.height / 2 - y) * 0.25 } }
+    if (m === 'play') label.textContent = el?.dataset?.cursorLabel ?? 'Play'
+    ring[0](x); ring[1](y)
+    pillTo[0](e.clientX); pillTo[1](e.clientY)
+    beamTo[0](e.clientX); beamTo[1](e.clientY)
+    scrubTo[0](e.clientX); scrubTo[1](e.clientY)
+    dotTo[0](e.clientX); dotTo[1](e.clientY)
+  }, { passive: true })
+  window.addEventListener('pointerdown', () => cur.classList.add('is-press'))
+  window.addEventListener('pointerup', () => cur.classList.remove('is-press'))
+  document.addEventListener('pointerleave', () => cur.classList.add('is-out'))
+  window.addEventListener('blur', () => cur.classList.add('is-out'))
+  /* listening: bars pulse with the playing track's level (the page publishes window.__bitrateLevel) */
+  gsap.ticker.add((t) => {
+    const lv = window.__bitrateLevel || 0
+    const on = lv > 0.02
+    cur.classList.toggle('is-listen', on)
+    if (!on) return
+    bars.forEach((b, i) => { b.style.transform = `scaleY(${Math.min(1, 0.25 + lv * 1.6 * (0.6 + 0.4 * Math.sin(t * 9 + i * 1.3)))})` })
   })
 })()
 </script>
