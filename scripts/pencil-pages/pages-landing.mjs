@@ -102,15 +102,16 @@ const SCENES = [
       Button('Open web player', 'large-default', { icon: 'arrow-right', width: 'fill_container' }),
       Button('Create account', 'large-outline', { width: 'fill_container' }),
     ],
-    signal: [200, 'SIGNAL · SPHERE'],
+    signal: [160, 'SIGNAL · SPHERE'],
     ui: (m) =>
+      !m &&
       Panel(
         [
           Row({ width: 'fill_container', justifyContent: 'space_between' }, [
             Tx('Eyebrow', 'NOW PLAYING'),
             R('Status/Success', {}, { label: { content: 'Signal stable' } }),
           ]),
-          BigCover('night', m ? 200 : 300),
+          BigCover('night', 392),
           Row({ width: 'fill_container' }, [
             Col({ gap: 2, width: 'fill_container' }, [
               Tx('H3', 'Night Signal'),
@@ -134,31 +135,34 @@ const SCENES = [
     },
     signal: [120, 'SIGNAL · WAVE'],
     ui: (m) =>
-      (m ? Col : Row)({ name: 'Loop Cards', gap: 20, width: 'fill_container' }, [
-        loopCard(
-          'play',
-          '01',
-          'Play without losing focus',
-          'The controls you need, within reach.',
-          [mt(TRACKS[0]), seek()],
-        ),
-        !m &&
+      (m ? Col : Row)(
+        { name: 'Loop Cards', gap: 20, width: 'fill_container', alignItems: 'start' },
+        [
           loopCard(
-            'heart',
-            '02',
-            'Save what matters',
-            'Build a library that sounds like you.',
-            TRACKS.slice(1, 4).map((t) => mt(t)),
+            'play',
+            '01',
+            'Play without losing focus',
+            'The controls you need, within reach.',
+            [mt(TRACKS[0]), seek()],
           ),
-        !m &&
-          loopCard(
-            'history',
-            '03',
-            'Find your way back',
-            'Your returns, together in recents.',
-            TRACKS.slice(3, 6).map((t) => mt(t, 'Today')),
-          ),
-      ]),
+          !m &&
+            loopCard(
+              'heart',
+              '02',
+              'Save what matters',
+              'Build a library that sounds like you.',
+              TRACKS.slice(1, 4).map((t) => mt(t)),
+            ),
+          !m &&
+            loopCard(
+              'history',
+              '03',
+              'Find your way back',
+              'Your returns, together in recents.',
+              TRACKS.slice(3, 6).map((t) => mt(t, 'Today')),
+            ),
+        ],
+      ),
     note: 'Enter: three cards rise with a 3D tilt; the seek bar fills, hearts pop. 3D: the surface becomes a wave ribbon over a 72-band particle spectrum.',
   },
   {
@@ -416,8 +420,8 @@ const SCENES = [
             ]),
           ]),
           ...[
-            ['avatar2', 'Maya', 'commented at 0:42', 'That synth swell'],
-            ['avatar1', 'Jonah', 'commented at 1:36', 'The whole city at 2 AM'],
+            ['avatar1', 'Maya', 'commented at 0:42', 'That synth swell'],
+            ['avatar2', 'Jonah', 'commented at 1:36', 'The whole city at 2 AM'],
             !m && ['avatar3', 'Demo artist', 'replied at 2:28', 'Recorded in one take'],
           ]
             .filter(Boolean)
@@ -577,17 +581,27 @@ const sceneD = (sc, i, open) => {
           name: 'Stage',
           width: 'fill_container',
           height: 'fill_container',
-          padding: [8, 64, 0, 120],
+          padding: [40, 64, 0, 120],
           gap: 40,
-          layout: 'vertical',
+          alignItems: 'start',
         },
         [
-          Row({ name: 'Head', width: 'fill_container', gap: 40, alignItems: 'start' }, [
-            Col({ name: 'Copy', gap: 14, width: 'fill_container' }, c.children),
-            SIGNAL(...sc.signal),
-            dots(i),
+          Col({ name: 'Main', width: 'fill_container', gap: 36 }, [
+            Row({ name: 'Head', width: 'fill_container', gap: 40, alignItems: 'start' }, [
+              Col({ name: 'Copy', gap: 14, width: 'fill_container' }, c.children),
+              SIGNAL(...sc.signal),
+            ]),
+            v,
           ]),
-          v,
+          L(
+            {
+              name: 'Rail',
+              height: 'fill_container',
+              layout: 'vertical',
+              justifyContent: 'center',
+            },
+            [dots(i)],
+          ),
         ],
       )
     : L(
@@ -596,13 +610,14 @@ const sceneD = (sc, i, open) => {
           width: 'fill_container',
           height: 'fill_container',
           padding: [0, 64, 0, 120],
-          gap: 56,
+          gap: 32,
           alignItems: 'center',
         },
         [
           ...(sc.reverse ? [v, c] : [c, v]),
           L({ name: 'Spacer', width: 'fill_container' }),
-          Col({ gap: 24, alignItems: 'center' }, [SIGNAL(...sc.signal), dots(i)]),
+          SIGNAL(...sc.signal),
+          dots(i),
         ],
       )
   return L({ name: sc.name, width: 'fill_container', height: 900, layout: 'vertical' }, [
@@ -696,7 +711,7 @@ const mobileHeader = () =>
     [Logo(), R('Button/Icon Ghost', {}, { icon: { icon: 'menu' } })],
   )
 const sceneM = (name, i, signal, body) =>
-  L({ name, width: 'fill_container', height: 844, layout: 'vertical' }, [
+  L({ name, width: 'fill_container', height: 844, layout: 'vertical', clip: true }, [
     R('Mobile/Status Bar', { width: 'fill_container' }),
     mobileHeader(),
     L(

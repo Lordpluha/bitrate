@@ -25,9 +25,11 @@ setMode('lib')
 const [libF, regF] = process.argv.slice(2)
 const lib = JSON.parse(readFileSync(libF, 'utf8'))
 const ids = []
+/* ids of the page-blocks page are regenerated deterministically below, so they are not reserved */
 const collect = (n) => {
   if (Array.isArray(n)) return n.forEach(collect)
   if (!n || typeof n !== 'object') return
+  if (n.name === '00E • Page Blocks' || n.name === '09 • Toasts') return
   if (n.id) ids.push(n.id)
   Object.values(n).forEach(collect)
 }
@@ -40,7 +42,37 @@ const at = row.children.findIndex((c) => c.name === '00E • Page Blocks')
 
 const reg = {}
 const part = (p, node) => Object.assign(node, { _part: p })
+/* stable ids: a component's nodes get ids hashed from its name and their position in the tree, so a
+   rebuild without structural changes keeps every id and open designs never point at vanished nodes */
+const ALPHA = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+const taken = new Set(ids)
+const stable = (key) => {
+  for (let salt = 0; ; salt++) {
+    let h = 2166136261
+    for (const ch of `${key}#${salt}`) h = Math.imul(h ^ ch.charCodeAt(0), 16777619) >>> 0
+    let out = ''
+    for (let i = 0; i < 6; i++) {
+      out += ALPHA[h % 62]
+      h = Math.imul(h ^ (h >>> 13), 2246822507) >>> 0
+    }
+    if (!taken.has(out)) {
+      taken.add(out)
+      return out
+    }
+  }
+}
+const restamp = (name, node) => {
+  const visit = (n, path) => {
+    if (!n || typeof n !== 'object' || !n.id) return
+    n.id = stable(`${name}/${path}`)
+    ;(n.children ?? []).forEach((c, i) => {
+      visit(c, `${path}.${i}`)
+    })
+  }
+  visit(node, '0')
+}
 const comp = (name, node) => {
+  restamp(name, node)
   node.reusable = true
   node.name = name
   const parts = {}
@@ -413,13 +445,20 @@ add(
         name: 'Track Table Header',
         width: 'fill_container',
         height: 36,
-        padding: [0, 12],
-        gap: 16,
+        padding: [0, 0],
+        gap: 0,
         stroke: C.border,
         strokeWidth: { bottom: 1 },
       },
       [
-        T('#', { fontSize: 12, fill: C.mutedForeground, width: 30, textGrowth: 'fixed-width' }),
+        /* same columns as Track Row/Default: 42 number cell, fluid title, 260 album, 130 added, 90 actions */
+        T('#', {
+          fontSize: 12,
+          fill: C.mutedForeground,
+          width: 42,
+          textGrowth: 'fixed-width',
+          textAlign: 'center',
+        }),
         T('Title', {
           fontSize: 12,
           fill: C.mutedForeground,
@@ -572,7 +611,10 @@ add(
       },
       [
         Col({ gap: 4, width: 'fill_container' }, [
-          part('title', T('Setting', { fontWeight: '600' })),
+          part(
+            'title',
+            T('Setting', { fontWeight: '600', textGrowth: 'fixed-width', width: 'fill_container' }),
+          ),
           part('desc', P('Description of what this setting changes.', { fontSize: 13 })),
         ]),
         slot('control', { width: 'fit_content', layout: 'horizontal', alignItems: 'center' }),
@@ -1179,7 +1221,8 @@ add(
         name: 'Equalizer',
         width: 'fill_container',
         height: 160,
-        gap: 28,
+        gap: 8,
+        justifyContent: 'space_between',
         padding: [12, 16],
         cornerRadius: 12,
         fill: C.muted,
@@ -3824,6 +3867,230 @@ add(
   ),
 )
 
+/* podcasts: episode rows (default, playing, in progress, played), podcast transport, chapters */
+const epRow = (name, kind) =>
+  comp(
+    name,
+    Row(
+      {
+        name: 'Episode',
+        width: 'fill_container',
+        padding: [14, 12],
+        gap: 16,
+        cornerRadius: 12,
+        alignItems: 'start',
+        ...(kind === 'playing' ? { fill: C.sidebarAccent } : {}),
+      },
+      [
+        part('cover', cover({ width: 64, height: 64, cornerRadius: 8, fill: img(ART.stage) })),
+        Col({ gap: 6, width: 'fill_container' }, [
+          Row({ name: 'Meta', gap: 8 }, [
+            part('date', T('8 Oct 2026', { fontSize: 12, fill: C.mutedForeground })),
+            T('·', { fontSize: 12, fill: C.mutedForeground }),
+            part('duration', T('48 min', { fontSize: 12, fill: C.mutedForeground })),
+            ...(kind === 'played'
+              ? [
+                  Row({ gap: 4 }, [
+                    I('circle-check', { width: 12, height: 12, fill: C.success }),
+                    T('Played', { fontSize: 12, fill: C.successText }),
+                  ]),
+                ]
+              : []),
+            ...(kind === 'progress'
+              ? [
+                  part(
+                    'left',
+                    T('23 min left', { fontSize: 12, fontWeight: '600', fill: C.accent }),
+                  ),
+                ]
+              : []),
+            ...(kind === 'playing'
+              ? [
+                  Row({ gap: 4 }, [
+                    I('audio-lines', { width: 12, height: 12, fill: C.accent }),
+                    T('Playing', { fontSize: 12, fontWeight: '600', fill: C.accent }),
+                  ]),
+                ]
+              : []),
+          ]),
+          part(
+            'title',
+            T('Episode title', {
+              fontSize: 15,
+              fontWeight: '600',
+              fill:
+                kind === 'playing'
+                  ? C.accent
+                  : kind === 'played'
+                    ? C.mutedForeground
+                    : C.foreground,
+            }),
+          ),
+          part(
+            'desc',
+            P('Episode description that wraps to two lines in the list.', {
+              fontSize: 13,
+              textGrowth: 'fixed-width',
+              width: 'fill_container',
+            }),
+          ),
+          ...(kind === 'progress' || kind === 'playing'
+            ? [
+                Row({ name: 'Progress', width: 'fill_container', gap: 0, height: 3 }, [
+                  part(
+                    'elapsedBar',
+                    F({ name: 'Elapsed', width: 180, height: 3, cornerRadius: 2, fill: C.primary }),
+                  ),
+                  F({
+                    name: 'Rest',
+                    width: 'fill_container',
+                    height: 3,
+                    cornerRadius: 2,
+                    fill: C.surface,
+                  }),
+                ]),
+              ]
+            : []),
+        ]),
+        Row({ name: 'Actions', gap: 10, alignItems: 'center' }, [
+          part(
+            'save',
+            I(kind === 'played' ? 'bookmark-plus' : 'bookmark-check', {
+              width: 18,
+              height: 18,
+              fill: kind === 'played' ? C.mutedForeground : C.accent,
+            }),
+          ),
+          I('ellipsis', { width: 18, height: 18, fill: C.mutedForeground }),
+          F(
+            {
+              name: 'Play',
+              width: 36,
+              height: 36,
+              cornerRadius: 18,
+              fill: kind === 'playing' ? C.primary : C.muted,
+              justifyContent: 'center',
+              alignItems: 'center',
+            },
+            [
+              I(kind === 'playing' ? 'pause' : 'play', {
+                width: 14,
+                height: 14,
+                fill: kind === 'playing' ? C.primaryForeground : C.foreground,
+              }),
+            ],
+          ),
+        ]),
+      ],
+    ),
+  )
+add(
+  epRow('Podcast/Episode', 'default'),
+  epRow('Podcast/Episode Playing', 'playing'),
+  epRow('Podcast/Episode Progress', 'progress'),
+  epRow('Podcast/Episode Played', 'played'),
+)
+const skip = (icon, n) =>
+  Col({ name: `Skip ${n}`, gap: 0, alignItems: 'center' }, [
+    I(icon, { width: 26, height: 26, fill: C.foreground }),
+    T(String(n), { fontSize: 10, fontWeight: '700', fill: C.mutedForeground }),
+  ])
+add(
+  comp(
+    'Podcast/Transport',
+    Row({ name: 'Podcast Transport', width: 'fill_container', justifyContent: 'space_between' }, [
+      Row(
+        {
+          name: 'Speed',
+          height: 30,
+          padding: [0, 10],
+          cornerRadius: 15,
+          stroke: C.border,
+          strokeWidth: 1,
+        },
+        [part('speed', T('1×', { fontSize: 13, fontWeight: '600' }))],
+      ),
+      skip('rotate-ccw', 15),
+      F(
+        {
+          name: 'Play',
+          width: 64,
+          height: 64,
+          cornerRadius: 32,
+          fill: C.primary,
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        [part('playIcon', I('pause', { width: 26, height: 26, fill: C.primaryForeground }))],
+      ),
+      skip('rotate-cw', 30),
+      Row({ name: 'Sleep', gap: 4 }, [
+        I('moon', { width: 18, height: 18, fill: C.mutedForeground }),
+        part('timer', T('Off', { fontSize: 12, fill: C.mutedForeground })),
+      ]),
+    ]),
+  ),
+  comp(
+    'Podcast/Chapter',
+    Row(
+      { name: 'Chapter', width: 'fill_container', padding: [10, 12], gap: 14, cornerRadius: 10 },
+      [
+        part(
+          'time',
+          T('12:40', { fontSize: 12, fontWeight: '600', fill: C.accent, fontFamily: 'font-sans' }),
+        ),
+        part('title', T('Chapter', { fontSize: 14, fill: C.foreground })),
+        F({ name: 'Spacer', width: 'fill_container', height: 1 }),
+        part('duration', T('8 min', { fontSize: 12, fill: C.mutedForeground })),
+      ],
+    ),
+  ),
+  comp(
+    'Podcast/Chapter Active',
+    Row(
+      {
+        name: 'Chapter',
+        width: 'fill_container',
+        padding: [10, 12],
+        gap: 14,
+        cornerRadius: 10,
+        fill: C.sidebarAccent,
+      },
+      [
+        I('audio-lines', { width: 14, height: 14, fill: C.accent }),
+        part('time', T('12:40', { fontSize: 12, fontWeight: '600', fill: C.accent })),
+        part('title', T('Chapter', { fontSize: 14, fontWeight: '600' })),
+        F({ name: 'Spacer', width: 'fill_container', height: 1 }),
+        part('duration', T('8 min', { fontSize: 12, fill: C.mutedForeground })),
+      ],
+    ),
+  ),
+  comp(
+    'Podcast/Seek Chapters',
+    Col({ name: 'Seek', width: 'fill_container', gap: 8 }, [
+      Row({ name: 'Rail', width: 'fill_container', height: 12, gap: 2 }, [
+        F({ name: 'Ch 1', width: 90, height: 4, cornerRadius: 2, fill: C.primary }),
+        F({ name: 'Ch 2', width: 120, height: 4, cornerRadius: 2, fill: C.primary }),
+        part(
+          'current',
+          F({ name: 'Ch 3', width: 60, height: 4, cornerRadius: 2, fill: C.primary }),
+        ),
+        F({ name: 'Thumb', width: 12, height: 12, cornerRadius: 6, fill: C.foreground }),
+        F({ name: 'Ch 3 rest', width: 50, height: 4, cornerRadius: 2, fill: C.surface }),
+        F({ name: 'Ch 4', width: 'fill_container', height: 4, cornerRadius: 2, fill: C.surface }),
+      ]),
+      Row({ name: 'Times', width: 'fill_container', justifyContent: 'space_between' }, [
+        part('elapsed', T('24:12', { fontSize: 12, fill: C.mutedForeground })),
+        part(
+          'chapter',
+          T('Chapter 3 · Headphone mixes', { fontSize: 12, fontWeight: '600', fill: C.accent }),
+        ),
+        part('duration', T('-23:48', { fontSize: 12, fill: C.mutedForeground })),
+      ]),
+    ]),
+  ),
+)
+
 /* lay the page out */
 const rows = []
 for (let i = 0; i < blocks.length; i += 6)
@@ -3851,6 +4118,158 @@ const page = F(
     ...rows,
   ],
 )
+/* fixes on persistent kit/library nodes (outside the page-blocks page), applied on every build */
+const FIXES = {
+  e2ahIG: { fill: C.foreground }, // Switch/Unchecked thumb: visible on the dark track (shadcn v4 dark)
+  jjufD: { stroke: C.border, strokeWidth: 1 }, // Card/Artist: keeps its edge on the light theme
+  dKgOu: { stroke: C.border, strokeWidth: 1 }, // Card/Playlist
+  m015cR: { stroke: C.border, strokeWidth: 1 }, // Card/Album
+  YSAj4: { fontSize: 13 },
+  eGEfP: { fontSize: 14 },
+  cNYVw: { fontSize: 12 },
+  REBNx: { fontSize: 13 },
+  QCCe4: { fontSize: 12 },
+  PiTbk: { fontSize: 12 },
+}
+const patch = (n) => {
+  if (Array.isArray(n)) return n.forEach(patch)
+  if (!n || typeof n !== 'object') return
+  if (n.id && FIXES[n.id]) Object.assign(n, FIXES[n.id])
+  Object.values(n).forEach(patch)
+}
+patch(lib.children)
+/* "09 • Toasts" pattern page in Product patterns: variants, stack, placement and rules */
+const toastRef = (kind, title, desc, w = 360) =>
+  Ref(
+    reg[`Toast/${kind}`].id,
+    { name: `Toast / ${kind}`, width: w },
+    {
+      [reg[`Toast/${kind}`].parts.title]: { content: title },
+      [reg[`Toast/${kind}`].parts.desc]: { content: desc },
+    },
+  )
+const VARIANTS = [
+  ['Success', 'Saved to Liked Songs', 'Night Signal · Mira Sol'],
+  ['Error', 'Could not save the playlist', 'Check your connection and try again.'],
+  ['Info', 'Playing on Desktop', 'Playback moved from this phone.'],
+  ['Warning', 'Storage almost full', 'Downloads will pause at 95%.'],
+  ['Undo', 'Removed from Night drive', '1 track removed.'],
+  ['Loading', 'Uploading cover…', 'Night drive · 64%'],
+  ['Offline', 'You are offline', 'Playing from downloads. Changes sync later.'],
+  ['Media', 'Added to queue', 'Night Signal · Mira Sol'],
+]
+const section = (title, children) =>
+  Col({ name: title, gap: 16 }, [H(title, 22, { fontWeight: '700' }), ...children])
+const toastPage = F(
+  {
+    name: '09 • Toasts',
+    layout: 'vertical',
+    gap: 48,
+    padding: 64,
+    fill: C.background,
+    width: 1440,
+  },
+  [
+    H('Toasts', 40, { fontWeight: '700' }),
+    P(
+      'Non-blocking feedback. One region per app: bottom-right above the player bar on desktop, top on phones. Newest in front, two peek behind; hover expands the stack. Auto-dismiss after 4 s (errors and loading stay until resolved or closed), swipe or ✕ to dismiss, Esc closes the newest. Success/info use aria-live polite, errors assertive.',
+      { width: 900 },
+    ),
+    section('Variants', [
+      Row({ name: 'Variant Columns', gap: 32, alignItems: 'start' }, [
+        Col(
+          { gap: 14 },
+          VARIANTS.slice(0, 4).map(([k, t, d]) =>
+            Col({ gap: 6 }, [T(k, { fontSize: 12, fill: C.mutedForeground }), toastRef(k, t, d)]),
+          ),
+        ),
+        Col(
+          { gap: 14 },
+          VARIANTS.slice(4).map(([k, t, d]) =>
+            Col({ gap: 6 }, [T(k, { fontSize: 12, fill: C.mutedForeground }), toastRef(k, t, d)]),
+          ),
+        ),
+      ]),
+    ]),
+    section('Stack', [
+      Row({ name: 'Stacks', gap: 56, alignItems: 'start' }, [
+        Col({ name: 'Collapsed', gap: 10 }, [
+          T('Collapsed · newest in front', { fontSize: 12, fill: C.mutedForeground }),
+          Col({ gap: 4, alignItems: 'center', width: 360 }, [
+            toastRef('Undo', 'Removed from Night drive', '1 track removed.', 328),
+            toastRef('Success', 'Saved to Liked Songs', 'Night Signal · Mira Sol', 344),
+            toastRef('Media', 'Added to queue', 'Night Signal · Mira Sol'),
+          ]),
+        ]),
+        Col({ name: 'Expanded', gap: 10 }, [
+          T('Expanded on hover', { fontSize: 12, fill: C.mutedForeground }),
+          Col({ gap: 10 }, [
+            toastRef('Media', 'Added to queue', 'Night Signal · Mira Sol'),
+            toastRef('Success', 'Saved to Liked Songs', 'Night Signal · Mira Sol'),
+            toastRef('Undo', 'Removed from Night drive', '1 track removed.'),
+          ]),
+        ]),
+      ]),
+    ]),
+    section('Placement', [
+      Row({ name: 'Placements', gap: 48, alignItems: 'start' }, [
+        Col({ gap: 8 }, [
+          T('Desktop · bottom-right, above the player bar', {
+            fontSize: 12,
+            fill: C.mutedForeground,
+          }),
+          Col(
+            {
+              name: 'Desktop Screen',
+              width: 640,
+              height: 380,
+              cornerRadius: 14,
+              fill: C.card,
+              stroke: C.border,
+              strokeWidth: 1,
+              padding: 16,
+              gap: 12,
+              justifyContent: 'end',
+              alignItems: 'end',
+            },
+            [
+              toastRef('Success', 'Saved to Liked Songs', 'Night Signal · Mira Sol', 300),
+              F({
+                name: 'Player Bar',
+                width: 'fill_container',
+                height: 44,
+                cornerRadius: 10,
+                fill: C.muted,
+              }),
+            ],
+          ),
+        ]),
+        Col({ gap: 8 }, [
+          T('Phone · top, under the status bar', { fontSize: 12, fill: C.mutedForeground }),
+          Col(
+            {
+              name: 'Phone Screen',
+              width: 220,
+              height: 420,
+              cornerRadius: 28,
+              fill: C.card,
+              stroke: C.border,
+              strokeWidth: 1,
+              padding: [36, 10, 10, 10],
+              gap: 10,
+            },
+            [toastRef('Info', 'Playing on Desktop', 'Moved from this phone.', 'fill_container')],
+          ),
+        ]),
+      ]),
+    ]),
+  ],
+)
+restamp('page:09 Toasts', toastPage)
+const prow = root.children.find((c) => c.id === 'dsRowP')
+const tAt = prow.children.findIndex((c) => c.name === '09 • Toasts')
+if (tAt >= 0) prow.children[tAt] = toastPage
+else prow.children.push(toastPage)
 if (at >= 0) row.children[at] = page
 else row.children.push(page)
 writeFileSync(libF, JSON.stringify(lib, null, 2))
