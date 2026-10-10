@@ -1,4 +1,11 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Bitrate App Motion</title>
+</head>
+<body>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
 <style>
@@ -256,8 +263,8 @@ h2 { font-size: 22px; }
     <span class="eyebrow">04 · Logo loader</span>
     <h2 id="h-ll">The mark writes itself.</h2>
     <div class="lls">
-      <div class="card llc"><div class="ll-box" id="llLoop" style="width:120px;height:117px"></div><b>Loop</b><span class="note">Splash and long waits: write, pulse, erase.</span></div>
-      <div class="card llc"><div class="ll-box" id="llProg" style="width:120px;height:117px"></div><b>Determinate · <span id="llPct">0%</span></b><input id="llRange" type="range" min="0" max="100" value="0" aria-label="Progress" style="width:80%"><button class="btn" id="llSim" type="button">Simulate load</button></div>
+      <div class="card llc"><div class="ll-box" id="llLoop" style="width:100%;height:220px;border-radius:12px;overflow:hidden;background:var(--bg)"></div><b>Loop</b><span class="note">The pen flies in past the edge, writes the mark in one gesture and flies out.</span><button class="btn" id="llSplash" type="button">Play full-screen splash</button></div>
+      <div class="card llc"><div class="ll-box" id="llProg" style="width:100%;height:220px;border-radius:12px;overflow:hidden;background:var(--bg)"></div><b>Determinate · <span id="llPct">0%</span></b><input id="llRange" type="range" min="0" max="100" value="0" aria-label="Progress" style="width:80%"><button class="btn" id="llSim" type="button">Simulate load</button></div>
       <div class="card llc"><div class="ll-box" id="llMini" style="width:40px;height:39px"></div><b>Mini</b><button class="btn" type="button"><span class="ll-box" id="llBtn" style="width:16px;height:16px;display:inline-block"></span>Saving…</button><span class="note">Inline: buttons, rows, toasts.</span></div>
     </div>
   </section>
@@ -309,77 +316,124 @@ h2 { font-size: 22px; }
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script>
-/* Bitrate logo loader — a brush mask along the two ribbon spines writes the real mark, a light runs the contour, then it erases. */
+/* Bitrate logo loader — a pen flies in from beyond the edge of the screen (or its container), writes the mark in one
+   gesture along its two ribbons and flies out past the opposite edge; the mark is revealed exactly where the pen passed. */
 window.BitrateLogoLoader = (() => {
   const SPINE_A = 'M 405 152 C 430 200 470 211 560 211 L 900 211 C 1010 211 1050 280 1050 350 C 1050 430 990 493 900 493 L 720 493 C 560 493 470 600 425 780'
   const SPINE_B = 'M 860 493 C 1000 493 1050 560 1050 650 C 1050 750 990 805 900 805 L 640 805 C 580 805 540 830 512 868'
+  /* the pen's flourish between the two ribbons runs through the open counter of the lower bowl */
+  const CONNECT = 'M 425 780 C 470 660 640 610 760 560 C 820 535 845 505 860 493'
   const STOPS = [['0', '#490AE5'], ['.22', '#5515EF'], ['.45', '#6824F8'], ['.65', '#8037FB'], ['.82', '#9E4EFB'], ['1', '#C060FA']]
+  const CX = 768.5
+  const CY = 504.5
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
   let uid = 0
-  const markup = (n, mini) => `<svg class="ll" viewBox="371 117 795 775" aria-hidden="true"><defs><linearGradient id="llg${n}" x1="0" y1="0" x2="1" y2="0">${STOPS.map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join('')}</linearGradient><mask id="llm${n}" maskUnits="userSpaceOnUse" x="371" y="117" width="795" height="775"><path class="sa" d="${SPINE_A}" fill="none" stroke="#fff" stroke-width="150" stroke-linecap="round"/><path class="sb" d="${SPINE_B}" fill="none" stroke="#fff" stroke-width="150" stroke-linecap="round"/></mask><filter id="llf${n}" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="16"/></filter></defs><use href="#bitrate-logo" fill="url(#llg${n})" opacity="${mini ? 0.25 : 0.1}"/>${mini ? '' : `<use href="#bitrate-logo" fill="url(#llg${n})" mask="url(#llm${n})"/>`}<use class="trace" href="#bitrate-logo" fill="none" stroke="${mini ? '#a78bfa' : '#fff'}" stroke-width="${mini ? 46 : 7}" stroke-linecap="round" opacity="0"/>${mini ? '' : `<circle class="head" r="40" fill="#d8b4fe" filter="url(#llf${n})" opacity="0"/>`}</svg>`
-  const mount = (el, mode = 'loop') => {
+  const grad = (id, x2 = '1') => `<linearGradient id="${id}" x1="0" y1="0" x2="${x2}" y2="0">${STOPS.map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join('')}</linearGradient>`
+  const measure = (svg, d) => {
+    const p = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+    p.setAttribute('d', d)
+    svg.appendChild(p)
+    const l = p.getTotalLength()
+    p.remove()
+    return l
+  }
+  const clamp = (v) => Math.min(1, Math.max(0, v))
+
+  /* draw: the full gesture inside `el` (use a full-viewport element for a splash) */
+  const draw = (el, { size = 0.34, loop = true, onDone } = {}) => {
     const n = ++uid
-    el.innerHTML = markup(n, mode === 'mini')
+    el.innerHTML = `<svg class="ll-draw" width="100%" height="100%" aria-hidden="true" style="display:block;overflow:hidden"><defs>${grad(`lg${n}`)}<linearGradient id="lt${n}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#c4b5fd" stop-opacity="0"/><stop offset="1" stop-color="#f5f3ff"/></linearGradient><mask id="lm${n}" maskUnits="userSpaceOnUse" x="-100000" y="-100000" width="200000" height="200000"><path class="sa" d="${SPINE_A}" fill="none" stroke="#fff" stroke-width="150" stroke-linecap="round"/><path class="sb" d="${SPINE_B}" fill="none" stroke="#fff" stroke-width="150" stroke-linecap="round"/></mask><filter id="lf${n}" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="14"/></filter></defs><g class="mark"><use href="#bitrate-logo" fill="url(#lg${n})" opacity=".07"/><use href="#bitrate-logo" fill="url(#lg${n})" mask="url(#lm${n})"/><use class="trace" href="#bitrate-logo" fill="none" stroke="#fff" stroke-width="6" opacity="0"/></g><path class="trail-glow" fill="none" stroke="#a78bfa" stroke-width="26" stroke-linecap="round" opacity=".5" style="filter:blur(8px)"/><path class="trail" fill="none" stroke="#f5f3ff" stroke-width="7" stroke-linecap="round"/><circle class="head" r="30" fill="#e9d5ff" style="filter:blur(10px)"/><circle class="tip" r="8" fill="#fff"/></svg>`
     const svg = el.querySelector('svg')
-    const ref = document.getElementById('bitrate-logo')
-    const L = ref.getTotalLength()
-    const trace = svg.querySelector('.trace')
-    if (mode === 'mini') {
-      trace.setAttribute('stroke-dasharray', `${L * 0.16} ${L}`)
-      trace.setAttribute('opacity', '1')
-      return gsap.fromTo(trace, { strokeDashoffset: 0 }, { strokeDashoffset: -L * 1.16, duration: reduce ? 3 : 1.25, ease: 'none', repeat: -1 })
-    }
     const sa = svg.querySelector('.sa')
     const sb = svg.querySelector('.sb')
+    const trail = svg.querySelector('.trail')
+    const glow = svg.querySelector('.trail-glow')
     const head = svg.querySelector('.head')
-    const la = sa.getTotalLength()
-    const lb = sb.getTotalLength()
+    const tip = svg.querySelector('.tip')
+    const mark = svg.querySelector('.mark')
+    const trace = svg.querySelector('.trace')
+    const LOGO = document.getElementById('bitrate-logo').getTotalLength()
+    const la = measure(svg, SPINE_A)
+    const lb = measure(svg, SPINE_B)
+    const lc = measure(svg, CONNECT)
     sa.setAttribute('stroke-dasharray', `${la} ${la}`)
     sb.setAttribute('stroke-dasharray', `${lb} ${lb}`)
-    const draw = (path, len, p) => {
-      path.style.strokeDashoffset = String(len * (1 - p))
+    trace.setAttribute('stroke-dasharray', `${LOGO * 0.12} ${LOGO}`)
+    const geo = { lin: 0, lout: 0, total: 0, comet: 0 }
+    /* the viewBox keeps the mark centred at `size` of the short side; lead-in and lead-out start beyond the edges */
+    const layout = () => {
+      const w = el.clientWidth || 1
+      const h = el.clientHeight || 1
+      const s = (Math.min(w, h) * size) / 775
+      const vw = w / s
+      const vh = h / s
+      const vx = CX - vw / 2
+      const vy = CY - vh / 2
+      svg.setAttribute('viewBox', `${vx} ${vy} ${vw} ${vh}`)
+      const lead = `M ${vx - 260} ${vy - 180} C ${vx + vw * 0.12} ${vy + vh * 0.04} 290 40 405 152`
+      const out = `M 512 868 C 430 990 ${vx + vw * 0.08} ${vy + vh * 0.96} ${vx - 320} ${vy + vh + 220}`
+      geo.lin = measure(svg, lead)
+      geo.lout = measure(svg, out)
+      const d = `${lead} ${SPINE_A.slice(1).replace(/^ 405 152/, '')} ${CONNECT.replace(/^M 425 780/, '')} L 860 493 ${SPINE_B.replace(/^M 860 493/, '')} ${out.replace(/^M 512 868/, '')}`
+      trail.setAttribute('d', d)
+      glow.setAttribute('d', d)
+      geo.total = trail.getTotalLength()
+      geo.comet = Math.min(geo.total * 0.22, 1400)
+      for (const p of [trail, glow]) p.setAttribute('stroke-dasharray', `${geo.comet} ${geo.total * 2}`)
     }
-    const headAt = (path, len, p) => {
-      const pt = path.getPointAtLength(Math.max(0, Math.min(len, len * p)))
-      head.setAttribute('cx', String(pt.x))
-      head.setAttribute('cy', String(pt.y))
+    layout()
+    const ro = new ResizeObserver(() => layout())
+    ro.observe(el)
+    const set = (P) => {
+      const pos = Math.min(geo.total, Math.max(0, P))
+      const off = String(geo.comet - pos)
+      trail.style.strokeDashoffset = off
+      glow.style.strokeDashoffset = off
+      const pt = trail.getPointAtLength(pos)
+      for (const c of [head, tip]) { c.setAttribute('cx', String(pt.x)); c.setAttribute('cy', String(pt.y)) }
+      const a = clamp((P - geo.lin) / la)
+      const b = clamp((P - geo.lin - la - lc) / lb)
+      sa.style.strokeDashoffset = String(la * (1 - a))
+      sb.style.strokeDashoffset = String(lb * (1 - b))
     }
-    draw(sa, la, 0)
-    draw(sb, lb, 0)
-    if (mode === 'progress') {
-      head.setAttribute('opacity', '.9')
-      return {
-        set(p) {
-          const a = Math.min(1, Math.max(0, p / 0.6))
-          const b = Math.min(1, Math.max(0, (p - 0.45) / 0.55))
-          draw(sa, la, a)
-          draw(sb, lb, b)
-          if (b > 0) headAt(sb, lb, b)
-          else headAt(sa, la, a)
-          head.setAttribute('opacity', p >= 1 ? '0' : '.9')
-        },
-      }
-    }
+    set(0)
     if (reduce) {
-      draw(sa, la, 1)
-      draw(sb, lb, 1)
-      return gsap.fromTo(svg, { opacity: 0.35 }, { opacity: 1, duration: 1.2, yoyo: true, repeat: -1, ease: 'sine.inOut' })
+      set(geo.lin + la + lc + lb)
+      for (const x of [trail, glow, head, tip]) x.setAttribute('opacity', '0')
+      gsap.fromTo(mark, { opacity: 0 }, { opacity: 1, duration: 0.6, onComplete: () => onDone?.() })
+      return { kill: () => ro.disconnect() }
     }
-    trace.setAttribute('stroke-dasharray', `${L * 0.12} ${L}`)
-    const A = { p: 0 }
-    const B = { p: 0 }
-    const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.12 })
-    tl.set(head, { attr: { opacity: 0.95 } }, 0)
-    tl.fromTo(A, { p: 0 }, { p: 1, duration: 0.95, ease: 'power2.inOut', onUpdate: () => { draw(sa, la, A.p); headAt(sa, la, A.p) } }, 0)
-    tl.fromTo(B, { p: 0 }, { p: 1, duration: 0.8, ease: 'power2.inOut', onUpdate: () => { draw(sb, lb, B.p); if (B.p > 0.02) headAt(sb, lb, B.p) } }, 0.6)
-    tl.to(head, { attr: { opacity: 0 }, duration: 0.2 }, 1.35)
-    tl.fromTo(trace, { attr: { opacity: 1 }, strokeDashoffset: 0 }, { strokeDashoffset: -L * 1.12, duration: 1, ease: 'power1.inOut' }, 1.3)
-    tl.to(trace, { attr: { opacity: 0 }, duration: 0.2 }, 2.15)
-    tl.fromTo(A, { p: 1 }, { p: 2, duration: 0.7, ease: 'power2.in', onUpdate: () => draw(sa, la, A.p) }, 2.2)
-    tl.fromTo(B, { p: 1 }, { p: 2, duration: 0.6, ease: 'power2.in', onUpdate: () => draw(sb, lb, B.p) }, 2.35)
-    return tl
+    const pen = { P: 0 }
+    const tl = gsap.timeline({ repeat: loop ? -1 : 0, repeatDelay: 0.2, onComplete: () => onDone?.() })
+    tl.set(mark, { opacity: 1 }, 0)
+    tl.set([head, tip], { attr: { opacity: 1 } }, 0)
+    tl.fromTo(pen, { P: 0 }, { P: () => geo.total + geo.comet, duration: 2.6, ease: 'power1.inOut', onUpdate: () => set(pen.P) }, 0)
+    tl.to([head, tip], { attr: { opacity: 0 }, duration: 0.2 }, 2.45)
+    tl.fromTo(trace, { attr: { opacity: 1 }, strokeDashoffset: 0 }, { strokeDashoffset: -LOGO * 1.12, duration: 0.9, ease: 'power1.inOut' }, 2.2)
+    tl.to(trace, { attr: { opacity: 0 }, duration: 0.2 }, 3.0)
+    if (loop) tl.to(mark, { opacity: 0, duration: 0.45, ease: 'power2.in' }, 3.35)
+    return { tl, kill: () => { tl.kill(); ro.disconnect() } }
   }
-  return { mount }
+
+  /* progress: the same gesture mapped to a 0–1 value (determinate loading) */
+  const progress = (el, opts = {}) => {
+    const api = draw(el, { ...opts, loop: false })
+    api.tl?.pause(0)
+    return { set: (p) => api.tl?.progress(Math.min(1, Math.max(0, p)) * (2.6 / api.tl.duration())) }
+  }
+
+  /* mini: a comet running the outline (buttons, rows, toasts) */
+  const mini = (el) => {
+    const n = ++uid
+    el.innerHTML = `<svg viewBox="371 117 795 775" width="100%" height="100%" aria-hidden="true" style="display:block;overflow:visible"><defs>${grad(`lgm${n}`)}</defs><use href="#bitrate-logo" fill="url(#lgm${n})" opacity=".25"/><use class="trace" href="#bitrate-logo" fill="none" stroke="#a78bfa" stroke-width="46" stroke-linecap="round"/></svg>`
+    const trace = el.querySelector('.trace')
+    const L = document.getElementById('bitrate-logo').getTotalLength()
+    trace.setAttribute('stroke-dasharray', `${L * 0.16} ${L}`)
+    return gsap.fromTo(trace, { strokeDashoffset: 0 }, { strokeDashoffset: -L * 1.16, duration: reduce ? 3 : 1.25, ease: 'none', repeat: -1 })
+  }
+
+  const mount = (el, mode = 'loop', opts) => (mode === 'mini' ? mini(el) : mode === 'progress' ? progress(el, opts) : draw(el, { ...opts, loop: mode !== 'once' }))
+  return { mount, draw }
 })()
 </script>
 <script>
@@ -460,10 +514,16 @@ window.BitrateLogoLoader = (() => {
   for (const b of document.querySelectorAll('#tdemo button')) b.addEventListener('click', () => DEMO[b.dataset.t]())
 
   /* ---------- logo loader demos ---------- */
-  window.BitrateLogoLoader.mount($('#llLoop'), 'loop')
+  window.BitrateLogoLoader.mount($('#llLoop'), 'loop', { size: 0.42 })
+  $('#llSplash').addEventListener('click', () => {
+    const o = document.createElement('div')
+    o.style.cssText = 'position:fixed;inset:0;z-index:80;background:var(--bg)'
+    document.body.appendChild(o)
+    window.BitrateLogoLoader.mount(o, 'once', { size: 0.3, onDone: () => gsap.to(o, { opacity: 0, duration: .5, onComplete: () => o.remove() }) })
+  })
   window.BitrateLogoLoader.mount($('#llMini'), 'mini')
   window.BitrateLogoLoader.mount($('#llBtn'), 'mini')
-  const prog = window.BitrateLogoLoader.mount($('#llProg'), 'progress')
+  const prog = window.BitrateLogoLoader.mount($('#llProg'), 'progress', { size: 0.42 })
   const setP = (v) => { prog.set(v / 100); $('#llPct').textContent = `${Math.round(v)}%`; $('#llRange').value = String(v) }
   $('#llRange').addEventListener('input', (e) => setP(Number(e.target.value)))
   $('#llSim').addEventListener('click', () => { const o = { v: 0 }; gsap.to(o, { v: 100, duration: reduce ? .01 : 2.4, ease: 'power1.inOut', onUpdate: () => setP(o.v) }) })
@@ -900,3 +960,5 @@ html.has-cursor, html.has-cursor * { cursor: none !important; }
   })
 })()
 </script>
+</body>
+</html>
