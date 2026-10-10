@@ -1,0 +1,1987 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "N22q8X",
+      "name": "Artist / Profile save & verification / Desktop / Dark",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "MQeQvv",
+          "ref": "ds:KyPyuH",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:8Z59Pr": {
+              "type": "ref",
+              "id": "ct3vnT",
+              "ref": "ds:XA4Fm9",
+              "name": "Nav / Profile",
+              "descendants": {
+                "ds:aEPX66": {
+                  "icon": "user-round"
+                },
+                "ds:CfKAFr": {
+                  "content": "Profile"
+                }
+              }
+            },
+            "ds:rze5zR": {
+              "content": "Workspace / Profile / Verification"
+            },
+            "ds:C2eynh/ds:E23bq6": {
+              "content": "Preview public profile"
+            },
+            "ds:C2eynh/ds:k0WCtI": {
+              "icon": "eye"
+            },
+            "ds:yayc2m": {
+              "type": "frame",
+              "id": "marMZa",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "JskAL8",
+                  "ref": "ds:m5cDdt",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:3TLCJk": {
+                      "enabled": false
+                    },
+                    "ds:CUcTF9": {
+                      "content": "Profile status"
+                    },
+                    "ds:FrUwgt": {
+                      "content": "Save recovery and verification concept"
+                    },
+                    "ds:NZRJcR": {
+                      "type": "frame",
+                      "id": "z9jqre",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "9MMQWB",
+                  "name": "Profile Head",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Dojbg4",
+                      "ref": "ds:c2MtrU",
+                      "name": "Media/Avatar",
+                      "width": 64,
+                      "height": 64,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/hero/luma-vale.png",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "bMKs3y",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "4Wh4ph",
+                          "ref": "ds:xMmVXq",
+                          "name": "Text/H3",
+                          "content": "Demo artist"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Mqf8jT",
+                          "ref": "ds:a5FsRz",
+                          "name": "Text/Muted",
+                          "content": "@demoartist · Public profile"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "mw5PfK",
+                      "ref": "ds:39ow9Y",
+                      "name": "Status/Error",
+                      "descendants": {
+                        "ds:A75Syq": {
+                          "content": "Save failed"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "LjnCr4",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "9G5Wkd",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Details",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "79k7Ff",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Catalog",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Catalog"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "JsRu5R",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Verification",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Verification"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "kfgRhD",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "6qfMpL",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "fhpRor",
+                          "ref": "ds:ogW5t",
+                          "name": "Alert / Profile changes could not be saved",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:L7SHNm": {
+                              "content": "Profile changes could not be saved"
+                            },
+                            "ds:F9kE6W": {
+                              "content": "The public handle is already in use. Your other changes are still here."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "jWxcme",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "oqzdDL",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "MyDWRZ",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "AjC2uP",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Changes to review"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "VCLxhV",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Display name",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Display name"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Demo artist"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "yFZHkg",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Public handle",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Public handle"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "@demoartist"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "9PUFoe",
+                                  "ref": "ds:K2cpYv",
+                                  "name": "Form/Field Error",
+                                  "descendants": {
+                                    "ds:acFiBV": {
+                                      "content": "This handle is already in use. Choose another."
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "myGLJc",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Bio",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Bio"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Independent electronic artist building late-night worlds."
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "GJ4TCT",
+                                  "ref": "ds:72H4bV",
+                                  "name": "Status/Info",
+                                  "descendants": {
+                                    "ds:g8boFZ": {
+                                      "content": "Changes preserved"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "qQ26ty",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "LUbc5w",
+                                      "ref": "ds:exjwf",
+                                      "name": "Button / Try saving again",
+                                      "descendants": {
+                                        "ds:E23bq6": {
+                                          "content": "Try saving again"
+                                        },
+                                        "ds:k0WCtI": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "XufsW2",
+                                      "ref": "ds:DTwJb",
+                                      "name": "Button / Cancel changes",
+                                      "descendants": {
+                                        "ds:GyGLK": {
+                                          "content": "Cancel changes"
+                                        },
+                                        "ds:DsOu2": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ZYYyjt",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "u4VEAW",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "EHSsqD",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "jHi6zn",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "TGWrRH",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Verification concept"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "bVvTnX",
+                                  "ref": "ds:gv8mJ3",
+                                  "name": "Status/Neutral",
+                                  "descendants": {
+                                    "ds:xxRo2P": {
+                                      "content": "Not applied"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "mXVpv8",
+                                  "ref": "ds:YY9EEy",
+                                  "name": "Text/Paragraph",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Verification criteria and submission are not connected in this prototype."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "bSJAVu",
+                                  "ref": "ds:qjfGYE",
+                                  "name": "Checklist Row/Pending",
+                                  "descendants": {
+                                    "ds:xuMZu5": {
+                                      "content": "Not applied"
+                                    },
+                                    "ds:idX3pf": {
+                                      "content": "No application or badge"
+                                    },
+                                    "ds:kknJAu": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "V2dLin",
+                                  "ref": "ds:qjfGYE",
+                                  "name": "Checklist Row/Pending",
+                                  "descendants": {
+                                    "ds:xuMZu5": {
+                                      "content": "Submitted"
+                                    },
+                                    "ds:idX3pf": {
+                                      "content": "Awaiting review"
+                                    },
+                                    "ds:kknJAu": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Nkhnwe",
+                                  "ref": "ds:mzabEx",
+                                  "name": "Checklist Row/Blocked",
+                                  "descendants": {
+                                    "ds:UiYviC": {
+                                      "content": "Needs information"
+                                    },
+                                    "ds:WNNtby": {
+                                      "content": "Artist action required"
+                                    },
+                                    "ds:UBrr5r": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "hDRJYv",
+                                  "ref": "ds:NsRkZ3",
+                                  "name": "Checklist Row/Done",
+                                  "descendants": {
+                                    "ds:QyowNs": {
+                                      "content": "Approved"
+                                    },
+                                    "ds:tkGwoj": {
+                                      "content": "Badge appears only after review"
+                                    },
+                                    "ds:Fs53tv": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "8tFaFU",
+                                  "ref": "ds:v3Wc3g",
+                                  "name": "Text/Caption",
+                                  "content": "Application unavailable. No automatic verification is shown."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/profile (Verification) — A field error never erases other changes; verification is a future process."
+    },
+    {
+      "type": "frame",
+      "id": "6SAoMc",
+      "name": "Artist / Profile save & verification / Desktop / Light",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "C8eLvr",
+          "ref": "ds:KyPyuH",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:8Z59Pr": {
+              "type": "ref",
+              "id": "NVvPvY",
+              "ref": "ds:XA4Fm9",
+              "name": "Nav / Profile",
+              "descendants": {
+                "ds:aEPX66": {
+                  "icon": "user-round"
+                },
+                "ds:CfKAFr": {
+                  "content": "Profile"
+                }
+              }
+            },
+            "ds:rze5zR": {
+              "content": "Workspace / Profile / Verification"
+            },
+            "ds:C2eynh/ds:E23bq6": {
+              "content": "Preview public profile"
+            },
+            "ds:C2eynh/ds:k0WCtI": {
+              "icon": "eye"
+            },
+            "ds:yayc2m": {
+              "type": "frame",
+              "id": "b2TLo6",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "zpXAxu",
+                  "ref": "ds:m5cDdt",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:3TLCJk": {
+                      "enabled": false
+                    },
+                    "ds:CUcTF9": {
+                      "content": "Profile status"
+                    },
+                    "ds:FrUwgt": {
+                      "content": "Save recovery and verification concept"
+                    },
+                    "ds:NZRJcR": {
+                      "type": "frame",
+                      "id": "gWwBCA",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "4EQMEq",
+                  "name": "Profile Head",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "RqA2s2",
+                      "ref": "ds:c2MtrU",
+                      "name": "Media/Avatar",
+                      "width": 64,
+                      "height": 64,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/hero/luma-vale.png",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "pLeBAF",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "DysoPQ",
+                          "ref": "ds:xMmVXq",
+                          "name": "Text/H3",
+                          "content": "Demo artist"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "z9nYNz",
+                          "ref": "ds:a5FsRz",
+                          "name": "Text/Muted",
+                          "content": "@demoartist · Public profile"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "8Yo3vz",
+                      "ref": "ds:39ow9Y",
+                      "name": "Status/Error",
+                      "descendants": {
+                        "ds:A75Syq": {
+                          "content": "Save failed"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ynEbY4",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "fAaGam",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Details",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "i7rbMg",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Catalog",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Catalog"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "rs3CAB",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Verification",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Verification"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "kJ2AVa",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "9cSEYg",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "LNvSsR",
+                          "ref": "ds:ogW5t",
+                          "name": "Alert / Profile changes could not be saved",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:L7SHNm": {
+                              "content": "Profile changes could not be saved"
+                            },
+                            "ds:F9kE6W": {
+                              "content": "The public handle is already in use. Your other changes are still here."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "XLouxK",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "BPjrNT",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "abocGG",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "5Vi2D6",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Changes to review"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "eAbjbF",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Display name",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Display name"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Demo artist"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "hpAP6J",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Public handle",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Public handle"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "@demoartist"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "q7oNJc",
+                                  "ref": "ds:K2cpYv",
+                                  "name": "Form/Field Error",
+                                  "descendants": {
+                                    "ds:acFiBV": {
+                                      "content": "This handle is already in use. Choose another."
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "tBAWjJ",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Bio",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Bio"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Independent electronic artist building late-night worlds."
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "C48kHR",
+                                  "ref": "ds:72H4bV",
+                                  "name": "Status/Info",
+                                  "descendants": {
+                                    "ds:g8boFZ": {
+                                      "content": "Changes preserved"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "4yAdrX",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "3G6Rov",
+                                      "ref": "ds:exjwf",
+                                      "name": "Button / Try saving again",
+                                      "descendants": {
+                                        "ds:E23bq6": {
+                                          "content": "Try saving again"
+                                        },
+                                        "ds:k0WCtI": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "THZaxC",
+                                      "ref": "ds:DTwJb",
+                                      "name": "Button / Cancel changes",
+                                      "descendants": {
+                                        "ds:GyGLK": {
+                                          "content": "Cancel changes"
+                                        },
+                                        "ds:DsOu2": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "TBGnxz",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "acL2dd",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "wsDBtm",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "g98qRW",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "SSPzkw",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Verification concept"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "gYSMXV",
+                                  "ref": "ds:gv8mJ3",
+                                  "name": "Status/Neutral",
+                                  "descendants": {
+                                    "ds:xxRo2P": {
+                                      "content": "Not applied"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "QAEk9a",
+                                  "ref": "ds:YY9EEy",
+                                  "name": "Text/Paragraph",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Verification criteria and submission are not connected in this prototype."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "bQahbX",
+                                  "ref": "ds:qjfGYE",
+                                  "name": "Checklist Row/Pending",
+                                  "descendants": {
+                                    "ds:xuMZu5": {
+                                      "content": "Not applied"
+                                    },
+                                    "ds:idX3pf": {
+                                      "content": "No application or badge"
+                                    },
+                                    "ds:kknJAu": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ypkeXU",
+                                  "ref": "ds:qjfGYE",
+                                  "name": "Checklist Row/Pending",
+                                  "descendants": {
+                                    "ds:xuMZu5": {
+                                      "content": "Submitted"
+                                    },
+                                    "ds:idX3pf": {
+                                      "content": "Awaiting review"
+                                    },
+                                    "ds:kknJAu": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "wweuAy",
+                                  "ref": "ds:mzabEx",
+                                  "name": "Checklist Row/Blocked",
+                                  "descendants": {
+                                    "ds:UiYviC": {
+                                      "content": "Needs information"
+                                    },
+                                    "ds:WNNtby": {
+                                      "content": "Artist action required"
+                                    },
+                                    "ds:UBrr5r": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ne5MGf",
+                                  "ref": "ds:NsRkZ3",
+                                  "name": "Checklist Row/Done",
+                                  "descendants": {
+                                    "ds:QyowNs": {
+                                      "content": "Approved"
+                                    },
+                                    "ds:tkGwoj": {
+                                      "content": "Badge appears only after review"
+                                    },
+                                    "ds:Fs53tv": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "cxdfcb",
+                                  "ref": "ds:v3Wc3g",
+                                  "name": "Text/Caption",
+                                  "content": "Application unavailable. No automatic verification is shown."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "designed — /dashboard/profile (Verification) — A field error never erases other changes; verification is a future process."
+    },
+    {
+      "type": "frame",
+      "id": "roXiBF",
+      "name": "Artist / Profile save & verification / Desktop / Dim",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "bFcQX6",
+          "ref": "ds:KyPyuH",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:8Z59Pr": {
+              "type": "ref",
+              "id": "63qiW9",
+              "ref": "ds:XA4Fm9",
+              "name": "Nav / Profile",
+              "descendants": {
+                "ds:aEPX66": {
+                  "icon": "user-round"
+                },
+                "ds:CfKAFr": {
+                  "content": "Profile"
+                }
+              }
+            },
+            "ds:rze5zR": {
+              "content": "Workspace / Profile / Verification"
+            },
+            "ds:C2eynh/ds:E23bq6": {
+              "content": "Preview public profile"
+            },
+            "ds:C2eynh/ds:k0WCtI": {
+              "icon": "eye"
+            },
+            "ds:yayc2m": {
+              "type": "frame",
+              "id": "ARaqep",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "sd5Buu",
+                  "ref": "ds:m5cDdt",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:3TLCJk": {
+                      "enabled": false
+                    },
+                    "ds:CUcTF9": {
+                      "content": "Profile status"
+                    },
+                    "ds:FrUwgt": {
+                      "content": "Save recovery and verification concept"
+                    },
+                    "ds:NZRJcR": {
+                      "type": "frame",
+                      "id": "MRn6Hx",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "3LVxh6",
+                  "name": "Profile Head",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Vi7vdt",
+                      "ref": "ds:c2MtrU",
+                      "name": "Media/Avatar",
+                      "width": 64,
+                      "height": 64,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/hero/luma-vale.png",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "NzfQ4A",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "LumWEN",
+                          "ref": "ds:xMmVXq",
+                          "name": "Text/H3",
+                          "content": "Demo artist"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "K8NZui",
+                          "ref": "ds:a5FsRz",
+                          "name": "Text/Muted",
+                          "content": "@demoartist · Public profile"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Hou9eA",
+                      "ref": "ds:39ow9Y",
+                      "name": "Status/Error",
+                      "descendants": {
+                        "ds:A75Syq": {
+                          "content": "Save failed"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "AFXQbL",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "wSNA3a",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Details",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "2CEgYM",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Catalog",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Catalog"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "VrnGAX",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Verification",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Verification"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ALbgRi",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "HamXdr",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "f4s3CZ",
+                          "ref": "ds:ogW5t",
+                          "name": "Alert / Profile changes could not be saved",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:L7SHNm": {
+                              "content": "Profile changes could not be saved"
+                            },
+                            "ds:F9kE6W": {
+                              "content": "The public handle is already in use. Your other changes are still here."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "sNnftK",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "RF4WX3",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "Wk5G3t",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "hYjZsb",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Changes to review"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "q9dgS7",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Display name",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Display name"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Demo artist"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "CLrmiW",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Public handle",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Public handle"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "@demoartist"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "yNTseF",
+                                  "ref": "ds:K2cpYv",
+                                  "name": "Form/Field Error",
+                                  "descendants": {
+                                    "ds:acFiBV": {
+                                      "content": "This handle is already in use. Choose another."
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "JbbwJj",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Bio",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Bio"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Independent electronic artist building late-night worlds."
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "NBLgj4",
+                                  "ref": "ds:72H4bV",
+                                  "name": "Status/Info",
+                                  "descendants": {
+                                    "ds:g8boFZ": {
+                                      "content": "Changes preserved"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "zosMg9",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "Gzvzwe",
+                                      "ref": "ds:exjwf",
+                                      "name": "Button / Try saving again",
+                                      "descendants": {
+                                        "ds:E23bq6": {
+                                          "content": "Try saving again"
+                                        },
+                                        "ds:k0WCtI": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "NpGQbM",
+                                      "ref": "ds:DTwJb",
+                                      "name": "Button / Cancel changes",
+                                      "descendants": {
+                                        "ds:GyGLK": {
+                                          "content": "Cancel changes"
+                                        },
+                                        "ds:DsOu2": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "YyBnb3",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "fGWUCP",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "w3NZUp",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "ie6Cye",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "xxeBsj",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Verification concept"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "A6gsg3",
+                                  "ref": "ds:gv8mJ3",
+                                  "name": "Status/Neutral",
+                                  "descendants": {
+                                    "ds:xxRo2P": {
+                                      "content": "Not applied"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "KAAry9",
+                                  "ref": "ds:YY9EEy",
+                                  "name": "Text/Paragraph",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Verification criteria and submission are not connected in this prototype."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "62iX9B",
+                                  "ref": "ds:qjfGYE",
+                                  "name": "Checklist Row/Pending",
+                                  "descendants": {
+                                    "ds:xuMZu5": {
+                                      "content": "Not applied"
+                                    },
+                                    "ds:idX3pf": {
+                                      "content": "No application or badge"
+                                    },
+                                    "ds:kknJAu": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "vvHK9y",
+                                  "ref": "ds:qjfGYE",
+                                  "name": "Checklist Row/Pending",
+                                  "descendants": {
+                                    "ds:xuMZu5": {
+                                      "content": "Submitted"
+                                    },
+                                    "ds:idX3pf": {
+                                      "content": "Awaiting review"
+                                    },
+                                    "ds:kknJAu": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "USqUvh",
+                                  "ref": "ds:mzabEx",
+                                  "name": "Checklist Row/Blocked",
+                                  "descendants": {
+                                    "ds:UiYviC": {
+                                      "content": "Needs information"
+                                    },
+                                    "ds:WNNtby": {
+                                      "content": "Artist action required"
+                                    },
+                                    "ds:UBrr5r": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "5FQXpR",
+                                  "ref": "ds:NsRkZ3",
+                                  "name": "Checklist Row/Done",
+                                  "descendants": {
+                                    "ds:QyowNs": {
+                                      "content": "Approved"
+                                    },
+                                    "ds:tkGwoj": {
+                                      "content": "Badge appears only after review"
+                                    },
+                                    "ds:Fs53tv": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "TRDXDm",
+                                  "ref": "ds:v3Wc3g",
+                                  "name": "Text/Caption",
+                                  "content": "Application unavailable. No automatic verification is shown."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "designed — /dashboard/profile (Verification) — A field error never erases other changes; verification is a future process."
+    },
+    {
+      "type": "frame",
+      "id": "WdydRp",
+      "name": "Artist / Profile save & verification / Mobile / Dark",
+      "width": 390,
+      "height": 1700,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "kiH4Rw",
+          "ref": "ds:nfUKC8",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1700,
+          "descendants": {
+            "ds:sc4jzZ": {
+              "type": "frame",
+              "id": "jVuPM7",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "BfxhzG",
+                  "ref": "ds:m5cDdt",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:3TLCJk": {
+                      "enabled": false
+                    },
+                    "ds:CUcTF9": {
+                      "content": "Profile status"
+                    },
+                    "ds:FrUwgt": {
+                      "content": "Save recovery and verification concept"
+                    },
+                    "ds:NZRJcR": {
+                      "type": "frame",
+                      "id": "wWyTqz",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "4qf5eP",
+                  "name": "Profile Head",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "jeJuwy",
+                      "ref": "ds:c2MtrU",
+                      "name": "Media/Avatar",
+                      "width": 64,
+                      "height": 64,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/hero/luma-vale.png",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "AYaHMe",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "VKvDxz",
+                          "ref": "ds:xMmVXq",
+                          "name": "Text/H3",
+                          "content": "Demo artist"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "7tGeyF",
+                          "ref": "ds:a5FsRz",
+                          "name": "Text/Muted",
+                          "content": "@demoartist · Public profile"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "KEJLQx",
+                      "ref": "ds:39ow9Y",
+                      "name": "Status/Error",
+                      "descendants": {
+                        "ds:A75Syq": {
+                          "content": "Save failed"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ZK87vy",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "94V9AQ",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Details",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "WTqnyh",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Catalog",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Catalog"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "XaMYnF",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Verification",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Verification"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "g36YKg",
+                  "ref": "ds:ogW5t",
+                  "name": "Alert / Profile changes could not be saved",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:L7SHNm": {
+                      "content": "Profile changes could not be saved"
+                    },
+                    "ds:F9kE6W": {
+                      "content": "The public handle is already in use. Your other changes are still here."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "d66j3v",
+                  "ref": "ds:3qeDYv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:DXQovz": {
+                      "type": "frame",
+                      "id": "eqqKkU",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Vp8oby",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "NZLcsD",
+                              "ref": "ds:CXpV9d",
+                              "name": "Text/H4",
+                              "content": "Changes to review"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "wyQpum",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Display name",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Display name"
+                            },
+                            "ds:iI0CE": {
+                              "content": "Demo artist"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "rRNoQX",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Public handle",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Public handle"
+                            },
+                            "ds:iI0CE": {
+                              "content": "@demoartist"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "UJw4S9",
+                          "ref": "ds:K2cpYv",
+                          "name": "Form/Field Error",
+                          "descendants": {
+                            "ds:acFiBV": {
+                              "content": "This handle is already in use. Choose another."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "BjvbBY",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Bio",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Bio"
+                            },
+                            "ds:iI0CE": {
+                              "content": "Independent electronic artist building late-night worlds."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "dFFGxe",
+                          "ref": "ds:72H4bV",
+                          "name": "Status/Info",
+                          "descendants": {
+                            "ds:g8boFZ": {
+                              "content": "Changes preserved"
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "zg7gmE",
+                          "name": "Row",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "ZMCHup",
+                              "ref": "ds:exjwf",
+                              "name": "Button / Try saving again",
+                              "descendants": {
+                                "ds:E23bq6": {
+                                  "content": "Try saving again"
+                                },
+                                "ds:k0WCtI": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "R9wpSw",
+                              "ref": "ds:DTwJb",
+                              "name": "Button / Cancel changes",
+                              "descendants": {
+                                "ds:GyGLK": {
+                                  "content": "Cancel changes"
+                                },
+                                "ds:DsOu2": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "ZPsdpi",
+                  "ref": "ds:3qeDYv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:DXQovz": {
+                      "type": "frame",
+                      "id": "T5HKdh",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "UZJoC3",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "EVq7SJ",
+                              "ref": "ds:CXpV9d",
+                              "name": "Text/H4",
+                              "content": "Verification concept"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ukZq7X",
+                          "ref": "ds:gv8mJ3",
+                          "name": "Status/Neutral",
+                          "descendants": {
+                            "ds:xxRo2P": {
+                              "content": "Not applied"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ug8ifQ",
+                          "ref": "ds:YY9EEy",
+                          "name": "Text/Paragraph",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Verification criteria and submission are not connected in this prototype."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "LTATHz",
+                          "ref": "ds:qjfGYE",
+                          "name": "Checklist Row/Pending",
+                          "descendants": {
+                            "ds:xuMZu5": {
+                              "content": "Not applied"
+                            },
+                            "ds:idX3pf": {
+                              "content": "No application or badge"
+                            },
+                            "ds:kknJAu": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "5V6BPZ",
+                          "ref": "ds:qjfGYE",
+                          "name": "Checklist Row/Pending",
+                          "descendants": {
+                            "ds:xuMZu5": {
+                              "content": "Submitted"
+                            },
+                            "ds:idX3pf": {
+                              "content": "Awaiting review"
+                            },
+                            "ds:kknJAu": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "z5wjeZ",
+                          "ref": "ds:mzabEx",
+                          "name": "Checklist Row/Blocked",
+                          "descendants": {
+                            "ds:UiYviC": {
+                              "content": "Needs information"
+                            },
+                            "ds:WNNtby": {
+                              "content": "Artist action required"
+                            },
+                            "ds:UBrr5r": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "6QRtoV",
+                          "ref": "ds:NsRkZ3",
+                          "name": "Checklist Row/Done",
+                          "descendants": {
+                            "ds:QyowNs": {
+                              "content": "Approved"
+                            },
+                            "ds:tkGwoj": {
+                              "content": "Badge appears only after review"
+                            },
+                            "ds:Fs53tv": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "5GEYpj",
+                          "ref": "ds:v3Wc3g",
+                          "name": "Text/Caption",
+                          "content": "Application unavailable. No automatic verification is shown."
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/profile (Verification) — A field error never erases other changes; verification is a future process."
+    }
+  ]
+}

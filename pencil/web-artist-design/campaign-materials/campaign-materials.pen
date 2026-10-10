@@ -1,0 +1,2003 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "mf9qSN",
+      "name": "Artist / Campaign materials & calendar / Desktop / Dark",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "z4ADFw",
+          "ref": "ds:KyPyuH",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6rjKLE": {
+              "type": "ref",
+              "id": "mH3S8G",
+              "ref": "ds:XA4Fm9",
+              "name": "Nav / Promotion",
+              "descendants": {
+                "ds:aEPX66": {
+                  "icon": "megaphone"
+                },
+                "ds:CfKAFr": {
+                  "content": "Promotion"
+                }
+              }
+            },
+            "ds:rze5zR": {
+              "content": "Workspace / Promotion / Materials & calendar"
+            },
+            "ds:C2eynh/ds:E23bq6": {
+              "content": "Save materials"
+            },
+            "ds:C2eynh/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:yayc2m": {
+              "type": "frame",
+              "id": "Mha4Vn",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "hhMSys",
+                  "ref": "ds:m5cDdt",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:3TLCJk": {
+                      "enabled": false
+                    },
+                    "ds:CUcTF9": {
+                      "content": "Materials & calendar"
+                    },
+                    "ds:FrUwgt": {
+                      "content": "Prepare the post, preview it and choose a schedule"
+                    },
+                    "ds:NZRJcR": {
+                      "type": "frame",
+                      "id": "UzNSJh",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "bXpxdt",
+                  "name": "Stepper",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "u6Agjy",
+                      "ref": "ds:5DtcsC",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:fafMsA": {
+                          "content": "Foundation"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "saujnQ",
+                      "ref": "ds:wo3Sui",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "bGdniH",
+                      "ref": "ds:5DtcsC",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:fafMsA": {
+                          "content": "Audience"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "7DPHaR",
+                      "ref": "ds:wo3Sui",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "EwtM9S",
+                      "ref": "ds:5DtcsC",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:fafMsA": {
+                          "content": "Channels"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "aUaqQr",
+                      "ref": "ds:wo3Sui",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "NDyJaf",
+                      "ref": "ds:ErmFvq",
+                      "name": "Stepper/Step Current",
+                      "descendants": {
+                        "ds:EoMwGK": {
+                          "content": "Materials"
+                        },
+                        "ds:FhEo5q": {
+                          "content": "4"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "aYx4BQ",
+                      "ref": "ds:Fp34ZX",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ZUG9rb",
+                      "ref": "ds:WiDHTZ",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:27umta": {
+                          "content": "Review"
+                        },
+                        "ds:A6e3om": {
+                          "content": "5"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "v9QfdU",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "hDgxGn",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "9Cgmah",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "hbbQdj",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "7U5JcT",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "ZqPATH",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Publication materials"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "ewHGMS",
+                                      "ref": "ds:72H4bV",
+                                      "name": "Status/Info",
+                                      "descendants": {
+                                        "ds:g8boFZ": {
+                                          "content": "Draft saved"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ieBQPx",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Post copy",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Post copy"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Afterglow is out now on Bitrate."
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "p7VWZG",
+                                  "ref": "ds:v3Wc3g",
+                                  "name": "Text/Caption",
+                                  "content": "128 / 500 characters · Artist edited"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "9cTC3i",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Afterglow artwork"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Uses the approved release cover"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "CKA42Y",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "fX4Qig",
+                                          "ref": "ds:koxqDX",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:3Zsgc7": {
+                                              "content": "Ready"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "b3JAe9",
+                                          "ref": "ds:DTwJb",
+                                          "name": "Button / Replace",
+                                          "descendants": {
+                                            "ds:GyGLK": {
+                                              "content": "Replace"
+                                            },
+                                            "ds:DsOu2": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "gxjZYJ",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Destination"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Bitrate release page · Available"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "pGenp4",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "tQyEbW",
+                                          "ref": "ds:koxqDX",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:3Zsgc7": {
+                                              "content": "Complete"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "3B8Zaa",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Schedule"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Sep 12, 2026 · 18:00 · Europe/Kyiv"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "65R2e9",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "savAJR",
+                                          "ref": "ds:72H4bV",
+                                          "name": "Status/Info",
+                                          "descendants": {
+                                            "ds:g8boFZ": {
+                                              "content": "Scheduled"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "nzMBaS",
+                                          "ref": "ds:DTwJb",
+                                          "name": "Button / Change time",
+                                          "descendants": {
+                                            "ds:GyGLK": {
+                                              "content": "Change time"
+                                            },
+                                            "ds:DsOu2": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "tDCEP3",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "8zLJ7q",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "D2Hqvs",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "RrvsH3",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "3v8kxJ",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Channel preview"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "GnmW7H",
+                                  "ref": "ds:gv8mJ3",
+                                  "name": "Status/Neutral",
+                                  "descendants": {
+                                    "ds:xxRo2P": {
+                                      "content": "Not published"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "4LXBja",
+                                  "ref": "ds:c6Hpvt",
+                                  "name": "Media/Hero Image",
+                                  "width": "fill_container",
+                                  "height": 200,
+                                  "fill": {
+                                    "type": "image",
+                                    "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                                    "mode": "cover"
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "dE9uHW",
+                                  "ref": "ds:yadC37",
+                                  "name": "Text/Body Strong",
+                                  "content": "Bitrate artist profile"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "rm6Kjz",
+                                  "ref": "ds:v3Wc3g",
+                                  "name": "Text/Caption",
+                                  "content": "bitrate.example/afterglow · Scheduled Sep 12 · 18:00"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "C4EYxo",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Continue to review",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Continue to review"
+                                    },
+                                    "ds:k0WCtI": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "8ASLr9",
+                                  "ref": "ds:v3Wc3g",
+                                  "name": "Text/Caption",
+                                  "content": "No channel receives this post until final approval."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/promotion/materials — Copy, artwork, destination and schedule stay editable until Review."
+    },
+    {
+      "type": "frame",
+      "id": "gLVT9E",
+      "name": "Artist / Campaign materials & calendar / Desktop / Light",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "vjJU6y",
+          "ref": "ds:KyPyuH",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6rjKLE": {
+              "type": "ref",
+              "id": "HitNiB",
+              "ref": "ds:XA4Fm9",
+              "name": "Nav / Promotion",
+              "descendants": {
+                "ds:aEPX66": {
+                  "icon": "megaphone"
+                },
+                "ds:CfKAFr": {
+                  "content": "Promotion"
+                }
+              }
+            },
+            "ds:rze5zR": {
+              "content": "Workspace / Promotion / Materials & calendar"
+            },
+            "ds:C2eynh/ds:E23bq6": {
+              "content": "Save materials"
+            },
+            "ds:C2eynh/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:yayc2m": {
+              "type": "frame",
+              "id": "Nz4ZwJ",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Y85Xgs",
+                  "ref": "ds:m5cDdt",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:3TLCJk": {
+                      "enabled": false
+                    },
+                    "ds:CUcTF9": {
+                      "content": "Materials & calendar"
+                    },
+                    "ds:FrUwgt": {
+                      "content": "Prepare the post, preview it and choose a schedule"
+                    },
+                    "ds:NZRJcR": {
+                      "type": "frame",
+                      "id": "jn9HcL",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "q63UC6",
+                  "name": "Stepper",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "feaT8J",
+                      "ref": "ds:5DtcsC",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:fafMsA": {
+                          "content": "Foundation"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "x9om5J",
+                      "ref": "ds:wo3Sui",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "LwVdbr",
+                      "ref": "ds:5DtcsC",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:fafMsA": {
+                          "content": "Audience"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "oMGUv3",
+                      "ref": "ds:wo3Sui",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qupKx8",
+                      "ref": "ds:5DtcsC",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:fafMsA": {
+                          "content": "Channels"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "epv2hV",
+                      "ref": "ds:wo3Sui",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Wt2cjK",
+                      "ref": "ds:ErmFvq",
+                      "name": "Stepper/Step Current",
+                      "descendants": {
+                        "ds:EoMwGK": {
+                          "content": "Materials"
+                        },
+                        "ds:FhEo5q": {
+                          "content": "4"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "2eXUeZ",
+                      "ref": "ds:Fp34ZX",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "gHWdzD",
+                      "ref": "ds:WiDHTZ",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:27umta": {
+                          "content": "Review"
+                        },
+                        "ds:A6e3om": {
+                          "content": "5"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "s2KByD",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "FPgcYT",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "asbUhV",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "4nbakM",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "sFBACN",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "Dp9hKH",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Publication materials"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "3drhnT",
+                                      "ref": "ds:72H4bV",
+                                      "name": "Status/Info",
+                                      "descendants": {
+                                        "ds:g8boFZ": {
+                                          "content": "Draft saved"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "b5W3Vw",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Post copy",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Post copy"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Afterglow is out now on Bitrate."
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "53NzVh",
+                                  "ref": "ds:v3Wc3g",
+                                  "name": "Text/Caption",
+                                  "content": "128 / 500 characters · Artist edited"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "tKWWZy",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Afterglow artwork"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Uses the approved release cover"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "vVEjoc",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "x8gDnN",
+                                          "ref": "ds:koxqDX",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:3Zsgc7": {
+                                              "content": "Ready"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "8CJQFd",
+                                          "ref": "ds:DTwJb",
+                                          "name": "Button / Replace",
+                                          "descendants": {
+                                            "ds:GyGLK": {
+                                              "content": "Replace"
+                                            },
+                                            "ds:DsOu2": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "JbXgWV",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Destination"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Bitrate release page · Available"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "QeMAps",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "Uot7tQ",
+                                          "ref": "ds:koxqDX",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:3Zsgc7": {
+                                              "content": "Complete"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "j3JZQA",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Schedule"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Sep 12, 2026 · 18:00 · Europe/Kyiv"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "WrWGGi",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "mgY5SB",
+                                          "ref": "ds:72H4bV",
+                                          "name": "Status/Info",
+                                          "descendants": {
+                                            "ds:g8boFZ": {
+                                              "content": "Scheduled"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "TX4cfU",
+                                          "ref": "ds:DTwJb",
+                                          "name": "Button / Change time",
+                                          "descendants": {
+                                            "ds:GyGLK": {
+                                              "content": "Change time"
+                                            },
+                                            "ds:DsOu2": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "TnG6N3",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "VxvgLJ",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "GF6PuN",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "ynXHh3",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "fG75pw",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Channel preview"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "TuCqbi",
+                                  "ref": "ds:gv8mJ3",
+                                  "name": "Status/Neutral",
+                                  "descendants": {
+                                    "ds:xxRo2P": {
+                                      "content": "Not published"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "EThfjW",
+                                  "ref": "ds:c6Hpvt",
+                                  "name": "Media/Hero Image",
+                                  "width": "fill_container",
+                                  "height": 200,
+                                  "fill": {
+                                    "type": "image",
+                                    "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                                    "mode": "cover"
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "bqD6AM",
+                                  "ref": "ds:yadC37",
+                                  "name": "Text/Body Strong",
+                                  "content": "Bitrate artist profile"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "UpG2Lq",
+                                  "ref": "ds:v3Wc3g",
+                                  "name": "Text/Caption",
+                                  "content": "bitrate.example/afterglow · Scheduled Sep 12 · 18:00"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "os5N37",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Continue to review",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Continue to review"
+                                    },
+                                    "ds:k0WCtI": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "8qmfjH",
+                                  "ref": "ds:v3Wc3g",
+                                  "name": "Text/Caption",
+                                  "content": "No channel receives this post until final approval."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "designed — /dashboard/promotion/materials — Copy, artwork, destination and schedule stay editable until Review."
+    },
+    {
+      "type": "frame",
+      "id": "rEwTKq",
+      "name": "Artist / Campaign materials & calendar / Desktop / Dim",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "h2sRQg",
+          "ref": "ds:KyPyuH",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6rjKLE": {
+              "type": "ref",
+              "id": "Vt4VPV",
+              "ref": "ds:XA4Fm9",
+              "name": "Nav / Promotion",
+              "descendants": {
+                "ds:aEPX66": {
+                  "icon": "megaphone"
+                },
+                "ds:CfKAFr": {
+                  "content": "Promotion"
+                }
+              }
+            },
+            "ds:rze5zR": {
+              "content": "Workspace / Promotion / Materials & calendar"
+            },
+            "ds:C2eynh/ds:E23bq6": {
+              "content": "Save materials"
+            },
+            "ds:C2eynh/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:yayc2m": {
+              "type": "frame",
+              "id": "e83aUG",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "FKhjdN",
+                  "ref": "ds:m5cDdt",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:3TLCJk": {
+                      "enabled": false
+                    },
+                    "ds:CUcTF9": {
+                      "content": "Materials & calendar"
+                    },
+                    "ds:FrUwgt": {
+                      "content": "Prepare the post, preview it and choose a schedule"
+                    },
+                    "ds:NZRJcR": {
+                      "type": "frame",
+                      "id": "2Nh7oM",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "eG4XC4",
+                  "name": "Stepper",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Tb55gT",
+                      "ref": "ds:5DtcsC",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:fafMsA": {
+                          "content": "Foundation"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "FMU7ip",
+                      "ref": "ds:wo3Sui",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jDorHi",
+                      "ref": "ds:5DtcsC",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:fafMsA": {
+                          "content": "Audience"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "rxbCTx",
+                      "ref": "ds:wo3Sui",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "GEERNs",
+                      "ref": "ds:5DtcsC",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:fafMsA": {
+                          "content": "Channels"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "cu7QRq",
+                      "ref": "ds:wo3Sui",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "VxBfzr",
+                      "ref": "ds:ErmFvq",
+                      "name": "Stepper/Step Current",
+                      "descendants": {
+                        "ds:EoMwGK": {
+                          "content": "Materials"
+                        },
+                        "ds:FhEo5q": {
+                          "content": "4"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "NtAc73",
+                      "ref": "ds:Fp34ZX",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "H3jdAK",
+                      "ref": "ds:WiDHTZ",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:27umta": {
+                          "content": "Review"
+                        },
+                        "ds:A6e3om": {
+                          "content": "5"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "8biF5J",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "hwLiJg",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "gd7AHV",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "QUx7tR",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "2b9bJw",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "qFG6hR",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Publication materials"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "rsRCgP",
+                                      "ref": "ds:72H4bV",
+                                      "name": "Status/Info",
+                                      "descendants": {
+                                        "ds:g8boFZ": {
+                                          "content": "Draft saved"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "mEoRDr",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Post copy",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Post copy"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Afterglow is out now on Bitrate."
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "SP2mj7",
+                                  "ref": "ds:v3Wc3g",
+                                  "name": "Text/Caption",
+                                  "content": "128 / 500 characters · Artist edited"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "EMZfUB",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Afterglow artwork"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Uses the approved release cover"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "NfjcGV",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "HwAPPS",
+                                          "ref": "ds:koxqDX",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:3Zsgc7": {
+                                              "content": "Ready"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "Ju2XZv",
+                                          "ref": "ds:DTwJb",
+                                          "name": "Button / Replace",
+                                          "descendants": {
+                                            "ds:GyGLK": {
+                                              "content": "Replace"
+                                            },
+                                            "ds:DsOu2": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "HRYRBZ",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Destination"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Bitrate release page · Available"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "Pg9Y9L",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "uSJ49U",
+                                          "ref": "ds:koxqDX",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:3Zsgc7": {
+                                              "content": "Complete"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "F5t6fP",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Schedule"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Sep 12, 2026 · 18:00 · Europe/Kyiv"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "Ar5ZL6",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "CXJsrX",
+                                          "ref": "ds:72H4bV",
+                                          "name": "Status/Info",
+                                          "descendants": {
+                                            "ds:g8boFZ": {
+                                              "content": "Scheduled"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "NqXLRJ",
+                                          "ref": "ds:DTwJb",
+                                          "name": "Button / Change time",
+                                          "descendants": {
+                                            "ds:GyGLK": {
+                                              "content": "Change time"
+                                            },
+                                            "ds:DsOu2": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "zLas8n",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "T8FCG6",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "TSubCo",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "R6NUEU",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "hyvgnn",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Channel preview"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "DJKAcX",
+                                  "ref": "ds:gv8mJ3",
+                                  "name": "Status/Neutral",
+                                  "descendants": {
+                                    "ds:xxRo2P": {
+                                      "content": "Not published"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "b7XsNp",
+                                  "ref": "ds:c6Hpvt",
+                                  "name": "Media/Hero Image",
+                                  "width": "fill_container",
+                                  "height": 200,
+                                  "fill": {
+                                    "type": "image",
+                                    "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                                    "mode": "cover"
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "odBMRR",
+                                  "ref": "ds:yadC37",
+                                  "name": "Text/Body Strong",
+                                  "content": "Bitrate artist profile"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "bXuz5p",
+                                  "ref": "ds:v3Wc3g",
+                                  "name": "Text/Caption",
+                                  "content": "bitrate.example/afterglow · Scheduled Sep 12 · 18:00"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "SuGx4E",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Continue to review",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Continue to review"
+                                    },
+                                    "ds:k0WCtI": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "4qTJti",
+                                  "ref": "ds:v3Wc3g",
+                                  "name": "Text/Caption",
+                                  "content": "No channel receives this post until final approval."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "designed — /dashboard/promotion/materials — Copy, artwork, destination and schedule stay editable until Review."
+    },
+    {
+      "type": "frame",
+      "id": "AYXhQ5",
+      "name": "Artist / Campaign materials & calendar / Mobile / Dark",
+      "width": 390,
+      "height": 1700,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "dHfd38",
+          "ref": "ds:nfUKC8",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1700,
+          "descendants": {
+            "ds:sc4jzZ": {
+              "type": "frame",
+              "id": "by5vd4",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "aa4cgW",
+                  "ref": "ds:m5cDdt",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:3TLCJk": {
+                      "enabled": false
+                    },
+                    "ds:CUcTF9": {
+                      "content": "Materials & calendar"
+                    },
+                    "ds:FrUwgt": {
+                      "content": "Prepare the post, preview it and choose a schedule"
+                    },
+                    "ds:NZRJcR": {
+                      "type": "frame",
+                      "id": "q6X7NH",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "RmwDy4",
+                  "name": "Stepper",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "kAEr43",
+                      "ref": "ds:5DtcsC",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:fafMsA": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "iRAAH9",
+                      "ref": "ds:wo3Sui",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "QAoFkV",
+                      "ref": "ds:5DtcsC",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:fafMsA": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "SMFnW5",
+                      "ref": "ds:wo3Sui",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "J8qLxg",
+                      "ref": "ds:5DtcsC",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:fafMsA": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ZEhusU",
+                      "ref": "ds:wo3Sui",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "miyxzj",
+                      "ref": "ds:ErmFvq",
+                      "name": "Stepper/Step Current",
+                      "descendants": {
+                        "ds:EoMwGK": {
+                          "content": "Materials"
+                        },
+                        "ds:FhEo5q": {
+                          "content": "4"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "gNLeMt",
+                      "ref": "ds:Fp34ZX",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ajBMWU",
+                      "ref": "ds:WiDHTZ",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:27umta": {
+                          "enabled": false
+                        },
+                        "ds:A6e3om": {
+                          "content": "5"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "sUjUC7",
+                  "ref": "ds:3qeDYv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:DXQovz": {
+                      "type": "frame",
+                      "id": "YNoHWp",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "qCbhfW",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "foQzr7",
+                              "ref": "ds:CXpV9d",
+                              "name": "Text/H4",
+                              "content": "Publication materials"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "7zrBVZ",
+                              "ref": "ds:72H4bV",
+                              "name": "Status/Info",
+                              "descendants": {
+                                "ds:g8boFZ": {
+                                  "content": "Draft saved"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "JUhfcy",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Post copy",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Post copy"
+                            },
+                            "ds:iI0CE": {
+                              "content": "Afterglow is out now on Bitrate."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "afFV5D",
+                          "ref": "ds:v3Wc3g",
+                          "name": "Text/Caption",
+                          "content": "128 / 500 characters · Artist edited"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ZK6isS",
+                          "ref": "ds:7EoqWG",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:4Gvuxi": {
+                              "content": "Afterglow artwork"
+                            },
+                            "ds:f5zU3r": {
+                              "content": "Uses the approved release cover"
+                            },
+                            "ds:UzLUPD": {
+                              "type": "frame",
+                              "id": "gwhJ2T",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "rwc2qH",
+                                  "ref": "ds:koxqDX",
+                                  "name": "Status/Success",
+                                  "descendants": {
+                                    "ds:3Zsgc7": {
+                                      "content": "Ready"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "QJBWuM",
+                                  "ref": "ds:DTwJb",
+                                  "name": "Button / Replace",
+                                  "descendants": {
+                                    "ds:GyGLK": {
+                                      "content": "Replace"
+                                    },
+                                    "ds:DsOu2": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "pBtfmb",
+                          "ref": "ds:7EoqWG",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:4Gvuxi": {
+                              "content": "Destination"
+                            },
+                            "ds:f5zU3r": {
+                              "content": "Bitrate release page · Available"
+                            },
+                            "ds:UzLUPD": {
+                              "type": "frame",
+                              "id": "EdRAPK",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "u3bgri",
+                                  "ref": "ds:koxqDX",
+                                  "name": "Status/Success",
+                                  "descendants": {
+                                    "ds:3Zsgc7": {
+                                      "content": "Complete"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "xF5pAT",
+                          "ref": "ds:7EoqWG",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:4Gvuxi": {
+                              "content": "Schedule"
+                            },
+                            "ds:f5zU3r": {
+                              "content": "Sep 12, 2026 · 18:00 · Europe/Kyiv"
+                            },
+                            "ds:UzLUPD": {
+                              "type": "frame",
+                              "id": "5zz9bz",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "dbXtN6",
+                                  "ref": "ds:72H4bV",
+                                  "name": "Status/Info",
+                                  "descendants": {
+                                    "ds:g8boFZ": {
+                                      "content": "Scheduled"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "tAtmfk",
+                                  "ref": "ds:DTwJb",
+                                  "name": "Button / Change time",
+                                  "descendants": {
+                                    "ds:GyGLK": {
+                                      "content": "Change time"
+                                    },
+                                    "ds:DsOu2": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "cUDKWM",
+                  "ref": "ds:3qeDYv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:DXQovz": {
+                      "type": "frame",
+                      "id": "4Hq38m",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "xtaoW7",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "FDR3Mv",
+                              "ref": "ds:CXpV9d",
+                              "name": "Text/H4",
+                              "content": "Channel preview"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "DEiZ9W",
+                          "ref": "ds:gv8mJ3",
+                          "name": "Status/Neutral",
+                          "descendants": {
+                            "ds:xxRo2P": {
+                              "content": "Not published"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "dEKWt6",
+                          "ref": "ds:c6Hpvt",
+                          "name": "Media/Hero Image",
+                          "width": "fill_container",
+                          "height": 200,
+                          "fill": {
+                            "type": "image",
+                            "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "94Gqka",
+                          "ref": "ds:yadC37",
+                          "name": "Text/Body Strong",
+                          "content": "Bitrate artist profile"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "fZpqqq",
+                          "ref": "ds:v3Wc3g",
+                          "name": "Text/Caption",
+                          "content": "bitrate.example/afterglow · Scheduled Sep 12 · 18:00"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "c32Gav",
+                          "ref": "ds:exjwf",
+                          "name": "Button / Continue to review",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:E23bq6": {
+                              "content": "Continue to review"
+                            },
+                            "ds:k0WCtI": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ri3CWY",
+                          "ref": "ds:v3Wc3g",
+                          "name": "Text/Caption",
+                          "content": "No channel receives this post until final approval."
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/promotion/materials — Copy, artwork, destination and schedule stay editable until Review."
+    }
+  ]
+}
