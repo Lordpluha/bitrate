@@ -228,6 +228,36 @@ span.glitch { display: inline-block; }
 .stats { display: flex; gap: 26px; margin-top: 30px; }
 .stats b { display: block; font: 700 34px/1 var(--font-display); color: var(--fg); }
 
+/* footer links: CSS-only underline reveals (left, right, centre) */
+.ulink { position: relative; color: inherit; text-decoration: none; }
+.ulink::after { content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 1.5px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .38s cubic-bezier(.2, .8, .2, 1); }
+.ulink:hover, .ulink:focus-visible { color: var(--fg); }
+.ulink:hover::after, .ulink:focus-visible::after { transform: scaleX(1); }
+.ulink.u-right::after { transform-origin: right; }
+.ulink.u-center::after { transform-origin: center; }
+
+/* service health: pill that blooms into a panel through an SVG goo filter */
+.health { position: relative; }
+.hpill { position: relative; z-index: 2; display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px; border-radius: 17px; border: 1px solid var(--border); background: var(--card); color: var(--fg); font: 500 13px/1 var(--font-body); cursor: pointer; }
+.hpill:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.hdot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 0 rgba(16, 185, 129, .55); animation: hping 2s infinite; }
+@keyframes hping { to { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0) } }
+.goo { position: absolute; right: 0; bottom: 0; width: 480px; height: 520px; pointer-events: none; filter: url(#goo); z-index: 1; }
+.blob { position: absolute; right: 0; background: var(--card); }
+.b-pill { bottom: 0; width: 210px; height: 34px; border-radius: 17px; }
+.b-panel { bottom: 46px; width: 460px; height: 440px; border-radius: 18px; transform-origin: 100% 100%; transform: scale(.12, .05); }
+.hpanel { position: absolute; right: 0; bottom: 46px; width: 460px; padding: 16px; box-sizing: border-box; z-index: 2; opacity: 0; visibility: hidden; text-align: left; color: var(--fg); }
+.health.open .hpanel { visibility: visible; }
+.hrow { display: grid; grid-template-columns: 140px 1fr auto; gap: 12px; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--border); }
+.hrow b { font: 600 13px/1.2 var(--font-body); display: block; }
+.hrow small { font-size: 11px; color: var(--muted); }
+.bars { display: flex; gap: 2px; align-items: center; }
+.bars i { width: 4px; height: 20px; border-radius: 1px; background: var(--success); opacity: .85; transform-origin: bottom; }
+.bars i.w { background: var(--warning); } .bars i.e { background: #ef4444; }
+.hstate { font: 600 12px/1 var(--font-body); color: var(--success); display: inline-flex; gap: 6px; align-items: center; }
+.hstate::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.hstate.w { color: var(--warning); }
+
 /* phone: the board turns into a flow; the large windows give way to one compact surface */
 @media (max-width: 820px) {
   body { font-size: 13px; }
@@ -249,6 +279,8 @@ span.glitch { display: inline-block; }
   .lrow { grid-template-columns: 26px 40px 1fr; }
   .lrow > :nth-child(n+4) { display: none; }
   .drag-zone { height: 46vh !important; position: relative !important; }
+  .hpanel, .b-panel { width: calc(100vw - 32px); }
+  .goo { width: calc(100vw - 16px); }
   #cradleSlot { height: 26vh !important; }
 }
 @media (prefers-reduced-motion: reduce) { .grain, .live i, .playing .sound-bars i { animation: none; } }
@@ -761,7 +793,12 @@ span.glitch { display: inline-block; }
       <div class="abs" id="cradleSlot" style="--x:520;--y:470;--w:400;--h:250" aria-hidden="true"></div>
       <p class="abs mono" style="--x:420;--y:738;--w:600;text-align:center" data-a="up">ENERGY CARRIES ON. SO DOES YOUR QUEUE.</p>
       <div class="abs" style="--x:0;--y:782;--w:1440;--h:118" data-a="up">
-        <div class="footer"><span class="row"><b style="font:600 20px/1 var(--font-display);color:var(--fg)">Bitrate</b><span class="d-only">Playback is the product.</span></span><span class="sig d-only">MUSIC LIVES ON</span><span class="row" style="gap:24px"><a href="#hero">Log in</a><a href="#hero">Create account</a><a href="#hero" class="d-only">Player preview</a></span></div>
+        <div class="footer"><span class="row"><b style="font:600 20px/1 var(--font-display);color:var(--fg)">Bitrate</b><span class="d-only">Playback is the product.</span></span><span class="sig d-only">MUSIC LIVES ON</span><span class="row" style="gap:24px"><a class="ulink" href="#hero">Log in</a><a class="ulink u-right" href="#hero">Create account</a><a class="ulink u-center d-only" href="#hero">Player preview</a><a class="ulink d-only" href="#hero">Legal</a>
+          <span class="health" id="health"><span class="goo" aria-hidden="true"><span class="blob b-panel"></span><span class="blob b-pill"></span></span>
+            <span class="hpanel" id="hpanel" role="dialog" aria-label="System status"><span class="row" style="justify-content:space-between;margin-bottom:6px"><span><b style="font:600 15px/1.2 var(--font-body);display:block">System status</b><small class="t-meta">Updated 30 s ago · last 30 days · demo data</small></span><span class="pill ok">Operational</span></span><span id="hrows"></span><span class="row" style="justify-content:space-between;margin-top:10px"><small class="t-meta" id="hinc">No incidents in the last 30 days</small><a class="ulink u-center" href="#cta" style="font:600 12px/1 var(--font-body);color:var(--accent)">Status page ↗</a></span></span>
+            <button class="hpill" id="hpill" type="button" aria-expanded="false" aria-controls="hpanel"><i class="hdot"></i><span>All systems operational</span><svg aria-hidden="true" class="i" style="width:14px;height:14px;color:var(--muted)"><use href="#i-arrow"/></svg></button>
+          </span></span></div>
+        <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="goo"><feGaussianBlur in="SourceGraphic" stdDeviation="9" result="b"/><feColorMatrix in="b" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10" result="g"/><feComposite in="SourceGraphic" in2="g" operator="atop"/></filter></svg>
       </div>
     </div>
   </section>
@@ -1673,6 +1710,37 @@ span.glitch { display: inline-block; }
       hc.style.transform = `translate(${Math.max(8, Math.min(TP.w - 298, b.x - 145))}px, ${above ? b.y - b.r - 12 - hc.offsetHeight : b.y + b.r + 12}px)`
     }
   }
+
+  /* ---------- service health (footer): gooey bloom from the pill into the panel ---------- */
+  const SERVICES = [['API', 'NestJS · apps/api', 'ok'], ['Web player', 'apps/web-player', 'ok'], ['Artist portal', 'apps/web-artists', 'ok'], ['Streaming', 'Audio delivery', 'ok'], ['Realtime', 'Socket.io · queue sync', 'ok'], ['Background jobs', 'BullMQ', 'ok'], ['Database', 'PostgreSQL', 'ok'], ['Cache', 'Redis', 'ok']]
+  const hrows = document.getElementById('hrows')
+  hrows.innerHTML = SERVICES.map(([n, meta, st]) => `<span class="hrow"><span><b>${n}</b><small>${st === 'w' ? '99.71%' : '99.98%'} · ${meta}</small></span><span class="bars">${Array.from({ length: 30 }, (_, i) => `<i class="${st === 'w' && i > 26 ? 'w' : ''}"></i>`).join('')}</span><span class="hstate ${st === 'w' ? 'w' : ''}">${st === 'w' ? 'Degraded' : 'Operational'}</span></span>`).join('')
+  const health = document.getElementById('health')
+  const hpill = document.getElementById('hpill')
+  const hpanel = document.getElementById('hpanel')
+  const blob = health.querySelector('.b-panel')
+  let hOpen = false
+  const setHealth = (open) => {
+    if (open === hOpen) return
+    hOpen = open
+    hpill.setAttribute('aria-expanded', String(open))
+    health.classList.toggle('open', open)
+    gsap.killTweensOf([blob, hpanel, ...hpanel.querySelectorAll('.hrow, .bars i')])
+    if (open) {
+      gsap.to(blob, { scaleX: 1, scaleY: 1, duration: .75, ease: 'elastic.out(1, .72)' })
+      gsap.fromTo(hpanel, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: .35, delay: .18 })
+      gsap.fromTo(hpanel.querySelectorAll('.hrow'), { opacity: 0, x: 12 }, { opacity: 1, x: 0, duration: .4, stagger: .035, delay: .22 })
+      gsap.fromTo(hpanel.querySelectorAll('.bars i'), { scaleY: .2 }, { scaleY: 1, duration: .35, stagger: { each: .002, from: 'end' }, delay: .3 })
+    } else {
+      gsap.to(hpanel, { opacity: 0, y: 6, duration: .18 })
+      gsap.to(blob, { scaleX: .12, scaleY: .05, duration: .45, ease: 'power3.in', delay: .05 })
+    }
+  }
+  hpill.addEventListener('click', () => setHealth(!hOpen))
+  health.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') setHealth(true) })
+  health.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') setHealth(false) })
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') setHealth(false) })
+  document.addEventListener('pointerdown', (e) => { if (hOpen && !health.contains(e.target)) setHealth(false) })
 
   /* ---------- boot ---------- */
   drawWaves()

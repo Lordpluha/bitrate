@@ -60,6 +60,7 @@ import { img, Ref } from './kit.mjs'
 import { landing } from './pages-landing.mjs'
 import { friends, friendsFind, friendsRequests } from './pages-friends.mjs'
 import { loading } from './pages-loading.mjs'
+import { APP_STATES } from './pages-app.mjs'
 
 const T5 = TRACKS.slice(0, 5)
 const mrows = (rows) => rows.map((t) => MobileTrack(t[0], t[1], t[4]))
@@ -2901,6 +2902,10 @@ for (const [key, [kind, count]] of Object.entries(MORE)) {
     ),
   ]
 }
+
+/* app motion patterns drawn as states (command search, atmosphere, mobile panels, video) */
+for (const [key, extra] of Object.entries(APP_STATES))
+  pages[key].states = [...(pages[key].states ?? []), ...extra]
 
 /* helpers used above */
 function quickGrid(cols = 4) {
