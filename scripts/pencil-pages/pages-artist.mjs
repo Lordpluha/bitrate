@@ -763,7 +763,7 @@ export const artistPages = {
       ]),
       st('Loading', { nav: 'music', crumb: 'Music', action: 'Create release' }, (m) => [
         PageHeader('Loading your tracks…', 'Manage tracks, releases and drafts.'),
-        Skeleton('list', m),
+        Skeleton('artist-table', m),
       ]),
       st('Load error', { nav: 'music', crumb: 'Music', action: 'Create release' }, (_m) => [
         ErrorState(

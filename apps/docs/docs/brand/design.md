@@ -320,6 +320,19 @@ Add the states the screen's own logic creates:
 - **Interactive overlays** — menus, dialogs, sheets and popovers the screen opens;
 - **Selection and playback** — active, selected, playing, disabled controls.
 
+Loading follows one vocabulary (see the `loading` design file and the library's `Loader/*`,
+`Skeleton/*`, `Status/*` and `List/*` blocks):
+
+- **Long lists** load with skeleton rows of that list's own shape — track rows, chart rows,
+  cards, people, notifications — repeated to fill the screen, never a generic block;
+- **Infinite lists** also draw **Loading more**: the loaded rows, a few skeleton rows and the
+  load-more footer with a count ("50 of 1,240"), plus the end-of-list marker;
+- **App start** shows the splash (`Loader/Splash`); **route changes** keep the shell and show
+  the route bar over the next screen's skeleton;
+- **Actions** show progress where they happen — a loading button, an inline status
+  (`Loading`, `Syncing`, `Queued offline`) or a progress toast — and **slow networks** say so
+  while the skeleton stays.
+
 Each state is drawn for desktop and mobile, and every frame works in all three themes —
 Dark, Light and Dim — because it is built from the shared tokens. A state that cannot occur is
 left out deliberately and the reason is noted next to the design, so a missing state is never

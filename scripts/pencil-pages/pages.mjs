@@ -26,6 +26,7 @@ import {
   TrackTable,
   MobileTrack,
   ErrorState,
+  withMore,
   EmptyState,
   OfflineState,
   Skeleton,
@@ -58,6 +59,7 @@ import {
 import { img, Ref } from './kit.mjs'
 import { landing } from './pages-landing.mjs'
 import { friends, friendsFind, friendsRequests } from './pages-friends.mjs'
+import { loading } from './pages-loading.mjs'
 
 const T5 = TRACKS.slice(0, 5)
 const mrows = (rows) => rows.map((t) => MobileTrack(t[0], t[1], t[4]))
@@ -2056,7 +2058,7 @@ export const pages = {
           ),
       ),
       ...std('Recents', {
-        loading: 'list',
+        loading: 'table',
         error: ['Recents could not be loaded', 'Something went wrong on our side. Try again.'],
       }),
     ],
@@ -2448,7 +2450,7 @@ export const pages = {
           ),
       ),
       ...std('Activity', {
-        loading: 'list',
+        loading: 'notifications',
         error: ['Activity is unavailable', 'Try again in a moment.'],
       }),
     ],
@@ -2474,7 +2476,7 @@ export const pages = {
         header: MHeader('Charts'),
       }),
     states: std('Charts', {
-      loading: 'list',
+      loading: 'chart',
       error: ['Charts are unavailable', 'Try again in a moment.'],
       mobileOpts: { tab: 'search' },
     }),
@@ -2803,6 +2805,7 @@ export const pages = {
       }),
     ],
   },
+  loading,
   friends,
   'friends-find': friendsFind,
   'friends-requests': friendsRequests,
@@ -2852,8 +2855,11 @@ export const pages = {
       ),
       state(
         'Loading',
-        () => Desktop('Loading', [Tx('H1', 'Notifications'), Skeleton('list')]),
-        () => Mobile('Loading', [Skeleton('list', true)], { header: MHeader('Notifications') }),
+        () => Desktop('Loading', [Tx('H1', 'Notifications'), Skeleton('notifications')]),
+        () =>
+          Mobile('Loading', [Skeleton('notifications', true)], {
+            header: MHeader('Notifications'),
+          }),
       ),
       state(
         'Error',
@@ -2871,6 +2877,29 @@ export const pages = {
       ),
     ],
   },
+}
+
+/* long lists stream in: every infinite list also draws its "loading more" state */
+const MORE = {
+  'liked-songs': ['track', '50 of 128'],
+  playlist: ['track', '20 of 24'],
+  recents: ['track', 'Loading earlier days'],
+  charts: ['chart', '50 of 100'],
+  search: ['track', '20 of 312 results'],
+  notifications: ['notifications', '20 of 64'],
+  'activity-feed': ['notifications', '20 of 80'],
+  'friends-find': ['people', '4 of 38 people'],
+}
+for (const [key, [kind, count]] of Object.entries(MORE)) {
+  const spec = pages[key]
+  spec.states = [
+    ...(spec.states ?? []),
+    state(
+      'Loading more',
+      () => withMore(spec.desktop(), false, kind, count),
+      () => withMore(spec.mobile(), true, kind, count),
+    ),
+  ]
 }
 
 /* helpers used above */
