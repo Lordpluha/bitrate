@@ -1,0 +1,2159 @@
+{
+  "version": "2.21",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "oQfNz",
+      "x": 3067,
+      "y": 3300,
+      "name": "Landing / Inspiration & References",
+      "context": "Internal reference board of links to study for landing improvements. Keep outside the public landing frames.",
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "clip": true,
+      "width": 1440,
+      "fill": {
+        "type": "gradient",
+        "gradientType": "radial",
+        "enabled": true,
+        "rotation": 0,
+        "size": {
+          "width": 1.2,
+          "height": 1.3
+        },
+        "colors": [
+          {
+            "color": "$ds:--background-highlight",
+            "position": 0
+          },
+          {
+            "color": "$ds:--background",
+            "position": 1
+          }
+        ],
+        "center": {
+          "x": 0.55
+        }
+      },
+      "layout": "vertical",
+      "gap": 40,
+      "padding": 56,
+      "children": [
+        {
+          "type": "frame",
+          "id": "X8pPd",
+          "name": "References Header",
+          "layout": "vertical",
+          "gap": 10,
+          "children": [
+            {
+              "type": "text",
+              "id": "NqVwY",
+              "name": "References Eyebrow",
+              "fill": "$ds:--accent",
+              "content": "INTERNAL · FOR FUTURE STUDY",
+              "fontFamily": "Hanken Grotesk",
+              "fontSize": 11,
+              "fontWeight": "normal",
+              "letterSpacing": 3
+            },
+            {
+              "type": "text",
+              "id": "S81VP",
+              "name": "References Title",
+              "fill": "$ds:--foreground",
+              "content": "Inspiration & references",
+              "fontFamily": "Bricolage Grotesque",
+              "fontSize": 48,
+              "fontWeight": "700",
+              "letterSpacing": -1.2
+            },
+            {
+              "type": "text",
+              "id": "7Hb1D",
+              "name": "References Lead",
+              "fill": "$ds:--muted-foreground",
+              "content": "Effects, text animations and shader backgrounds to study when improving the landing. Not part of the public page.",
+              "fontFamily": "Hanken Grotesk",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "l33SC",
+          "name": "Group / Componentry",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 18,
+          "children": [
+            {
+              "type": "frame",
+              "id": "lL2aE",
+              "name": "Group / Componentry Header",
+              "layout": "vertical",
+              "gap": 4,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "FqXST",
+                  "name": "Group / Componentry Title",
+                  "fill": "$ds:--foreground",
+                  "content": "Componentry",
+                  "fontFamily": "Bricolage Grotesque",
+                  "fontSize": 22,
+                  "fontWeight": "700",
+                  "letterSpacing": -0.4
+                },
+                {
+                  "type": "text",
+                  "id": "s98vP",
+                  "name": "Group / Componentry Subtitle",
+                  "fill": "$ds:--muted-foreground",
+                  "content": "Text, hover, shader and canvas effects",
+                  "fontFamily": "Hanken Grotesk",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "1Aw71",
+              "name": "Group / Componentry Links",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "JXquQ",
+                  "name": "Links Row",
+                  "width": "fill_container",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "XykWZ",
+                      "name": "Link / Kinetic Text Reveal",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "KpaUn",
+                          "name": "Link / Kinetic Text Reveal Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "5khxE",
+                              "name": "Link / Kinetic Text Reveal Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Kinetic Text Reveal",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "3pyIg",
+                              "name": "Link / Kinetic Text Reveal URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "componentry.dev/docs/components/kinetic-text-reveal",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "Arl63",
+                          "name": "Link / Kinetic Text Reveal Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "mI4RO",
+                      "name": "Link / Text Morph",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "nXn9k",
+                          "name": "Link / Text Morph Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "eiNNC",
+                              "name": "Link / Text Morph Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Text Morph",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "iia3a",
+                              "name": "Link / Text Morph URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "componentry.dev/docs/components/text-morph",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "3ksu9",
+                          "name": "Link / Text Morph Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "t0MLa",
+                      "name": "Link / Annotated Text",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "tbxAk",
+                          "name": "Link / Annotated Text Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "nl89S",
+                              "name": "Link / Annotated Text Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Annotated Text",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "m995y",
+                              "name": "Link / Annotated Text URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "componentry.dev/docs/components/annotated-text",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "7jqev",
+                          "name": "Link / Annotated Text Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "rDs0G",
+                  "name": "Links Row",
+                  "width": "fill_container",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "b8Vw2",
+                      "name": "Link / Hover Transition",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "SulEE",
+                          "name": "Link / Hover Transition Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "MRTve",
+                              "name": "Link / Hover Transition Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Hover Transition",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "tw0tE",
+                              "name": "Link / Hover Transition URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "componentry.dev/docs/components/hover-transition",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "Tldq8",
+                          "name": "Link / Hover Transition Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "p708D",
+                      "name": "Link / Circuit Board",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "CcTlN",
+                          "name": "Link / Circuit Board Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "zbJYA",
+                              "name": "Link / Circuit Board Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Circuit Board",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "xyL1a",
+                              "name": "Link / Circuit Board URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "componentry.dev/docs/components/circuit-board",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "99mhW",
+                          "name": "Link / Circuit Board Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "nvGNx",
+                      "name": "Link / Signature",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "VXZx3",
+                          "name": "Link / Signature Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "wGw5H",
+                              "name": "Link / Signature Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Signature",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "qXDgL",
+                              "name": "Link / Signature URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "componentry.dev/docs/components/signature",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "scB8f",
+                          "name": "Link / Signature Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "PRZww",
+                  "name": "Links Row",
+                  "width": "fill_container",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "EkUdf",
+                      "name": "Link / WebGL Liquid",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "utlZf",
+                          "name": "Link / WebGL Liquid Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "6jvr7",
+                              "name": "Link / WebGL Liquid Title",
+                              "fill": "$ds:--foreground",
+                              "content": "WebGL Liquid",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "SIftR",
+                              "name": "Link / WebGL Liquid URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "componentry.dev/docs/components/webgl-liquid",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "OjUSt",
+                          "name": "Link / WebGL Liquid Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Fv1ni",
+                      "name": "Link / Animated Gradient",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "qDPAj",
+                          "name": "Link / Animated Gradient Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "MI7zc",
+                              "name": "Link / Animated Gradient Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Animated Gradient",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "pVMw0",
+                              "name": "Link / Animated Gradient URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "componentry.dev/docs/components/animated-gradient",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "d6OcZ",
+                          "name": "Link / Animated Gradient Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "N2kHD",
+                      "name": "Link / Liquid Chrome",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Bxjd2",
+                          "name": "Link / Liquid Chrome Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "UK8iO",
+                              "name": "Link / Liquid Chrome Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Liquid Chrome",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "5YAgk",
+                              "name": "Link / Liquid Chrome URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "componentry.dev/docs/components/liquid-chrome",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "AsjD7",
+                          "name": "Link / Liquid Chrome Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "rPwV8",
+                  "name": "Links Row",
+                  "width": "fill_container",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "F3vlf",
+                      "name": "Link / Prism Gradient",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "5jhy0",
+                          "name": "Link / Prism Gradient Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "9FSUu",
+                              "name": "Link / Prism Gradient Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Prism Gradient",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "ErsEz",
+                              "name": "Link / Prism Gradient URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "componentry.dev/docs/components/prism-gradient",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "I9lO7",
+                          "name": "Link / Prism Gradient Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "JTQr1",
+                      "name": "Link / Pixel Canvas",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "YXwSL",
+                          "name": "Link / Pixel Canvas Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "FrGYJ",
+                              "name": "Link / Pixel Canvas Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Pixel Canvas",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "3GxeY",
+                              "name": "Link / Pixel Canvas URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "componentry.dev/docs/components/pixel-canvas",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "QcWtx",
+                          "name": "Link / Pixel Canvas Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "yy926",
+          "name": "Group / Libraries and tools",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 18,
+          "children": [
+            {
+              "type": "frame",
+              "id": "guK6N",
+              "name": "Group / Libraries and tools Header",
+              "layout": "vertical",
+              "gap": 4,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "9iMfw",
+                  "name": "Group / Libraries and tools Title",
+                  "fill": "$ds:--foreground",
+                  "content": "Libraries and tools",
+                  "fontFamily": "Bricolage Grotesque",
+                  "fontSize": 22,
+                  "fontWeight": "700",
+                  "letterSpacing": -0.4
+                },
+                {
+                  "type": "text",
+                  "id": "05Qay",
+                  "name": "Group / Libraries and tools Subtitle",
+                  "fill": "$ds:--muted-foreground",
+                  "content": "Component libraries, gradients and particles",
+                  "fontFamily": "Hanken Grotesk",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "oFsET",
+              "name": "Group / Libraries and tools Links",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "IjuO4",
+                  "name": "Links Row",
+                  "width": "fill_container",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "kNX7L",
+                      "name": "Link / React Bits",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "72EsS",
+                          "name": "Link / React Bits Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "x9vHj",
+                              "name": "Link / React Bits Title",
+                              "fill": "$ds:--foreground",
+                              "content": "React Bits",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "Hkm1x",
+                              "name": "Link / React Bits URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "reactbits.dev",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "fUQUA",
+                          "name": "Link / React Bits Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "oWRlO",
+                      "name": "Link / Aceternity UI",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "rUbmk",
+                          "name": "Link / Aceternity UI Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "HQ7At",
+                              "name": "Link / Aceternity UI Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Aceternity UI",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "NJX3O",
+                              "name": "Link / Aceternity UI URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "ui.aceternity.com/components",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "LCNPl",
+                          "name": "Link / Aceternity UI Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "QNeLn",
+                      "name": "Link / ShaderGradient",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "9lEmJ",
+                          "name": "Link / ShaderGradient Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "TcEok",
+                              "name": "Link / ShaderGradient Title",
+                              "fill": "$ds:--foreground",
+                              "content": "ShaderGradient",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "d5ihu",
+                              "name": "Link / ShaderGradient URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "shadergradient.co",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "cADwy",
+                          "name": "Link / ShaderGradient Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "5KyBB",
+                  "name": "Links Row",
+                  "width": "fill_container",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "NtgsI",
+                      "name": "Link / Particles (Casberry)",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "A3hS1",
+                          "name": "Link / Particles (Casberry) Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "pT5xa",
+                              "name": "Link / Particles (Casberry) Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Particles (Casberry)",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "wz8r2",
+                              "name": "Link / Particles (Casberry) URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "particles.casberry.in",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "Jx9cJ",
+                          "name": "Link / Particles (Casberry) Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "yKE9m",
+                      "name": "Link / SmoothUI",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "A0KPI",
+                          "name": "Link / SmoothUI Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "Gv8Ls",
+                              "name": "Link / SmoothUI Title",
+                              "fill": "$ds:--foreground",
+                              "content": "SmoothUI",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "9w0iA",
+                              "name": "Link / SmoothUI URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "smoothui.dev",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "xDjkM",
+                          "name": "Link / SmoothUI Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "fYeQ8",
+          "name": "Group / Motion.dev examples",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 18,
+          "children": [
+            {
+              "type": "frame",
+              "id": "jkESJ",
+              "name": "Group / Motion.dev examples Header",
+              "layout": "vertical",
+              "gap": 4,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "SXBLs",
+                  "name": "Group / Motion.dev examples Title",
+                  "fill": "$ds:--foreground",
+                  "content": "Motion.dev examples",
+                  "fontFamily": "Bricolage Grotesque",
+                  "fontSize": 22,
+                  "fontWeight": "700",
+                  "letterSpacing": -0.4
+                },
+                {
+                  "type": "text",
+                  "id": "PXE6t",
+                  "name": "Group / Motion.dev examples Subtitle",
+                  "fill": "$ds:--muted-foreground",
+                  "content": "Animation examples; Now Playing and Skeleton Shimmer relate directly to the player",
+                  "fontFamily": "Hanken Grotesk",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "eUor0",
+              "name": "Group / Motion.dev examples Links",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "4FvIj",
+                  "name": "Links Row",
+                  "width": "fill_container",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "QN9Cp",
+                      "name": "Link / Motion examples",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "u8tF7",
+                          "name": "Link / Motion examples Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "kMMqV",
+                              "name": "Link / Motion examples Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Motion examples",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "tFqAb",
+                              "name": "Link / Motion examples URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "motion.dev/examples",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "sjEbh",
+                          "name": "Link / Motion examples Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "jUssF",
+                      "name": "Link / Text Scroll Word Reveal (React)",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "rp7EY",
+                          "name": "Link / Text Scroll Word Reveal (React) Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "scYi0",
+                              "name": "Link / Text Scroll Word Reveal (React) Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Text Scroll Word Reveal (React)",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "zaEIJ",
+                              "name": "Link / Text Scroll Word Reveal (React) URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "motion.dev/examples/react-text-scroll-word-reveal",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "cpFr2",
+                          "name": "Link / Text Scroll Word Reveal (React) Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "UHbDw",
+                      "name": "Link / Now Playing (JS)",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "bWits",
+                          "name": "Link / Now Playing (JS) Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "MEHP3",
+                              "name": "Link / Now Playing (JS) Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Now Playing (JS)",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "M4V5h",
+                              "name": "Link / Now Playing (JS) URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "motion.dev/examples/js-now-playing",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "ITvNs",
+                          "name": "Link / Now Playing (JS) Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "BLIZd",
+                  "name": "Links Row",
+                  "width": "fill_container",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "XZBMK",
+                      "name": "Link / Curtains Wipe (JS)",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "DR6g4",
+                          "name": "Link / Curtains Wipe (JS) Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "xRV0L",
+                              "name": "Link / Curtains Wipe (JS) Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Curtains Wipe (JS)",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "icaqJ",
+                              "name": "Link / Curtains Wipe (JS) URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "motion.dev/examples/js-curtains-wipe#source",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "RImaB",
+                          "name": "Link / Curtains Wipe (JS) Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Wet1a",
+                      "name": "Link / Skeleton Shimmer (React)",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "EzR2U",
+                          "name": "Link / Skeleton Shimmer (React) Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "ST9OP",
+                              "name": "Link / Skeleton Shimmer (React) Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Skeleton Shimmer (React)",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "E261y",
+                              "name": "Link / Skeleton Shimmer (React) URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "motion.dev/examples/react-skeleton-shimmer",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "m5sD1",
+                          "name": "Link / Skeleton Shimmer (React) Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "cmTbK",
+          "name": "Group / More resources",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 18,
+          "children": [
+            {
+              "type": "frame",
+              "id": "w7Wxu",
+              "name": "Group / More resources Header",
+              "layout": "vertical",
+              "gap": 4,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "0kWsR",
+                  "name": "Group / More resources Title",
+                  "fill": "$ds:--foreground",
+                  "content": "More resources",
+                  "fontFamily": "Bricolage Grotesque",
+                  "fontSize": 22,
+                  "fontWeight": "700",
+                  "letterSpacing": -0.4
+                },
+                {
+                  "type": "text",
+                  "id": "pcE5c",
+                  "name": "Group / More resources Subtitle",
+                  "fill": "$ds:--muted-foreground",
+                  "content": "Other sites and tools to explore",
+                  "fontFamily": "Hanken Grotesk",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "DRpUk",
+              "name": "Group / More resources Links",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "8dSbR",
+                  "name": "Links Row",
+                  "width": "fill_container",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "isT6C",
+                      "name": "Link / OriginKit",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "1hoNP",
+                          "name": "Link / OriginKit Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "bvUBe",
+                              "name": "Link / OriginKit Title",
+                              "fill": "$ds:--foreground",
+                              "content": "OriginKit",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "zSFdh",
+                              "name": "Link / OriginKit URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "www.originkit.dev",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "08hT5",
+                          "name": "Link / OriginKit Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "KhVz4",
+                      "name": "Link / Motionsites",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "cJgQy",
+                          "name": "Link / Motionsites Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "jlNlA",
+                              "name": "Link / Motionsites Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Motionsites",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "ZkeNn",
+                              "name": "Link / Motionsites URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "motionsites.ai",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "VerdK",
+                          "name": "Link / Motionsites Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "KORGs",
+                      "name": "Link / Omma",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "w8Px6",
+                          "name": "Link / Omma Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "NiaBf",
+                              "name": "Link / Omma Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Omma",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "uRMFF",
+                              "name": "Link / Omma URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "omma.build",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "diSsj",
+                          "name": "Link / Omma Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "DE28j",
+                  "name": "Links Row",
+                  "width": "fill_container",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "DVyli",
+                      "name": "Link / Lapa Ninja",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "q1WsH",
+                          "name": "Link / Lapa Ninja Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "68JJN",
+                              "name": "Link / Lapa Ninja Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Lapa Ninja",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "oqeJp",
+                              "name": "Link / Lapa Ninja URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "www.lapa.ninja",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "iZp3x",
+                          "name": "Link / Lapa Ninja Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ugYHb",
+                      "name": "Link / Navbar Gallery",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "hGMDp",
+                          "name": "Link / Navbar Gallery Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "TbPvf",
+                              "name": "Link / Navbar Gallery Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Navbar Gallery",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "KQcf3",
+                              "name": "Link / Navbar Gallery URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "www.navbar.gallery",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "y4DE9",
+                          "name": "Link / Navbar Gallery Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "iSNyw",
+                      "name": "Link / Layers",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "YoVhf",
+                          "name": "Link / Layers Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "IUyd2",
+                              "name": "Link / Layers Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Layers",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "j88BR",
+                              "name": "Link / Layers URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "www.getlayers.ai",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "6QF0n",
+                          "name": "Link / Layers Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "hYQus",
+                  "name": "Links Row",
+                  "width": "fill_container",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "92xHc",
+                      "name": "Link / Magic UI",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "yiU1w",
+                          "name": "Link / Magic UI Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "1psv7",
+                              "name": "Link / Magic UI Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Magic UI",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "NTwYy",
+                              "name": "Link / Magic UI URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "magicui.design",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "PsZOB",
+                          "name": "Link / Magic UI Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "waBEt",
+                      "name": "Link / Godly",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "lmmcF",
+                          "name": "Link / Godly Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "LKnVl",
+                              "name": "Link / Godly Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Godly",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "zegcc",
+                              "name": "Link / Godly URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "godly.design",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "47EQW",
+                          "name": "Link / Godly Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "jJqhr",
+                      "name": "Link / Unlumen UI",
+                      "width": 432,
+                      "height": 76,
+                      "fill": "$ds:--background",
+                      "cornerRadius": 12,
+                      "stroke": "$ds:--border",
+                      "strokeWidth": 1,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "jPkex",
+                          "name": "Link / Unlumen UI Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "47N6B",
+                              "name": "Link / Unlumen UI Title",
+                              "fill": "$ds:--foreground",
+                              "content": "Unlumen UI",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "uDDgm",
+                              "name": "Link / Unlumen UI URL",
+                              "fill": "$ds:--muted-foreground",
+                              "content": "ui.unlumen.com",
+                              "fontFamily": "Hanken Grotesk",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "3y34E",
+                          "name": "Link / Unlumen UI Open",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "arrow-up-right",
+                          "library": "lucide",
+                          "fill": "$ds:--accent"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
