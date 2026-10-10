@@ -23,6 +23,22 @@
   --color-info: var(--color-blue-500);
   /* Text on an info surface. */
   --color-info-foreground: var(--color-white);
+
+  /* Status callout triads — a tinted surface, its border and the readable text written on it
+     (alerts, release-status cards). `*-foreground` above is text on the solid status fill;
+     `*-text` is text on the low-emphasis `*-surface`. Mirrored by the Pencil design library. */
+  --color-success-text: var(--color-green-400);
+  --color-success-surface: var(--color-green-950);
+  --color-success-border: var(--color-green-500);
+  --color-error-text: var(--color-red-400);
+  --color-error-surface: var(--color-red-950);
+  --color-error-border: var(--color-red-500);
+  --color-warning-text: var(--color-amber-400);
+  --color-warning-surface: var(--color-amber-950);
+  --color-warning-border: var(--color-amber-500);
+  --color-info-text: var(--color-blue-400);
+  --color-info-surface: var(--color-blue-950);
+  --color-info-border: var(--color-blue-500);
 }
 
 /**
@@ -37,4 +53,31 @@
   --color-warning-foreground: var(--color-white);
   --color-info: var(--color-blue-600);
   --color-info-foreground: var(--color-white);
+  --color-success-text: var(--color-green-800);
+  --color-success-surface: var(--color-green-50);
+  --color-success-border: var(--color-green-600);
+  --color-error-text: var(--color-red-800);
+  --color-error-surface: var(--color-red-50);
+  --color-error-border: var(--color-red-600);
+  --color-warning-text: var(--color-amber-800);
+  --color-warning-surface: var(--color-amber-50);
+  --color-warning-border: var(--color-amber-600);
+  --color-info-text: var(--color-blue-800);
+  --color-info-surface: var(--color-blue-50);
+  --color-info-border: var(--color-blue-600);
+}
+
+/**
+ * Dim Theme (low-light)
+ * Only the callout text and border step one shade lighter; surfaces inherit the dark values.
+ */
+:root.dim {
+  --color-success-text: var(--color-green-300);
+  --color-success-border: var(--color-green-400);
+  --color-error-text: var(--color-red-300);
+  --color-error-border: var(--color-red-400);
+  --color-warning-text: var(--color-amber-300);
+  --color-warning-border: var(--color-amber-400);
+  --color-info-text: var(--color-blue-300);
+  --color-info-border: var(--color-blue-400);
 }
