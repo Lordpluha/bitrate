@@ -1536,6 +1536,87 @@ add(
   ),
 )
 
+/* fullscreen scene landing: one scene per scroll gesture, a 3D signal behind the copy */
+const sceneDot = (name, active) =>
+  comp(
+    name,
+    F({
+      name: 'Dot',
+      width: active ? 14 : 10,
+      height: active ? 14 : 10,
+      cornerRadius: 7,
+      ...(active ? { fill: C.accent } : { stroke: C.mutedForeground, strokeWidth: 1 }),
+    }),
+  )
+add(
+  sceneDot('Landing/Scene Dot', false),
+  sceneDot('Landing/Scene Dot Active', true),
+  comp(
+    'Landing/Scene Counter',
+    Row({ name: 'Scene Counter', gap: 12 }, [
+      part('index', T('01', { fontSize: 12, fontWeight: '500', letterSpacing: 1.2 })),
+      F({ name: 'Rail', width: 120, height: 2, cornerRadius: 1, fill: C.border }, [
+        part(
+          'progress',
+          F({
+            name: 'Progress',
+            width: 17,
+            height: 2,
+            cornerRadius: 1,
+            fill: gradient(C.primary, C.magenta500, 90),
+          }),
+        ),
+      ]),
+      part('total', T('07', { fontSize: 12, letterSpacing: 1.2, fill: C.mutedForeground })),
+    ]),
+  ),
+  comp(
+    'Landing/Signal',
+    Col({ name: 'Signal', gap: 16, alignItems: 'center' }, [
+      part(
+        'image',
+        F({ name: 'Orb', width: 520, height: 520, cornerRadius: 260, fill: img(ART.hero) }),
+      ),
+      part(
+        'phase',
+        T('SIGNAL · SPHERE', {
+          fontSize: 11,
+          fontWeight: '600',
+          letterSpacing: 1.6,
+          fill: C.accent,
+        }),
+      ),
+    ]),
+  ),
+  comp(
+    'Landing/Motion Note',
+    Row(
+      {
+        name: 'Motion Note',
+        gap: 10,
+        padding: [8, 12],
+        cornerRadius: 10,
+        stroke: C.border,
+        strokeWidth: 1,
+        alignItems: 'start',
+      },
+      [
+        part('icon', I('sparkles', { width: 16, height: 16, fill: C.accent })),
+        part(
+          'note',
+          T('Motion', {
+            fontSize: 12,
+            fill: C.mutedForeground,
+            lineHeight: 1.45,
+            textGrowth: 'fixed-width',
+            width: 320,
+          }),
+        ),
+      ],
+    ),
+  ),
+)
+
 /* artist workspace */
 const pill = (name, fill, stroke, text) =>
   comp(
