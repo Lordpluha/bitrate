@@ -57,6 +57,7 @@ import {
 } from './ui.mjs'
 import { img, Ref } from './kit.mjs'
 import { landing } from './pages-landing.mjs'
+import { friends, friendsFind, friendsRequests } from './pages-friends.mjs'
 
 const T5 = TRACKS.slice(0, 5)
 const mrows = (rows) => rows.map((t) => MobileTrack(t[0], t[1], t[4]))
@@ -2802,6 +2803,9 @@ export const pages = {
       }),
     ],
   },
+  friends,
+  'friends-find': friendsFind,
+  'friends-requests': friendsRequests,
   notifications: {
     title: 'Notifications',
     route: 'concept — header popover exists; full page parked until a backend exists',
