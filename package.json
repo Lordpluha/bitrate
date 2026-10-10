@@ -35,6 +35,8 @@
     "knip": "knip",
     "check:artifacts": "bash scripts/check-repository-artifacts.sh",
     "check:tokens": "node scripts/check-design-tokens.mjs",
+    "design:tokens": "node scripts/sync-pen-tokens.mjs",
+    "check:pen-tokens": "node scripts/sync-pen-tokens.mjs --check",
     "clean:dist": "rimraf --glob \"apps/*/dist\" \"packages/*/dist\"",
     "clean:cache": "rimraf --glob \"apps/*/.next/dev/cache\" \"apps/*/.next/cache\" \".turbo/cache\""
   },
