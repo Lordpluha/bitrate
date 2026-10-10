@@ -892,6 +892,9 @@ window.BitrateLogoLoader = (() => {
      strokes, in the brand gradient, flies in past the edge, the mark is revealed exactly where it passes, and the ribbon
      leaves past the opposite edge; then its tail pulls through and out of the screen too. */
   const RIBBON = 118
+  /* the route skips the bars' pointed tips: the ribbons themselves cover them */
+  const A_REST = 'L 900 211 C 1010 211 1050 280 1050 350 C 1050 430 990 493 900 493 L 720 493 C 560 493 470 600 425 780'
+  const B_HEAD = 'M 860 493 C 1000 493 1050 560 1050 650 C 1050 750 990 805 900 805 L 640 805'
   const draw = (el, { size = 0.34, loop = true, onDone } = {}) => {
     const n = ++uid
     el.innerHTML = `<svg class="ll-draw" width="100%" height="100%" aria-hidden="true" style="display:block;overflow:hidden"><defs><linearGradient id="lg${n}" gradientUnits="userSpaceOnUse" x1="371" y1="0" x2="1166" y2="0">${STOPS.map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join('')}</linearGradient><linearGradient id="gi${n}" gradientUnits="userSpaceOnUse">${[...STOPS].reverse().map(([o, c]) => `<stop offset="${1 - Number(o)}" stop-color="${c}"/>`).join('')}</linearGradient><linearGradient id="go${n}" gradientUnits="userSpaceOnUse">${STOPS.map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join('')}</linearGradient><mask id="lm${n}" maskUnits="userSpaceOnUse" x="-100000" y="-100000" width="200000" height="200000"><path class="sa" d="${SPINE_A}" fill="none" stroke="#fff" stroke-width="150" stroke-linecap="round"/><path class="sb" d="${SPINE_B}" fill="none" stroke="#fff" stroke-width="150" stroke-linecap="round"/></mask></defs><g class="mark"><use href="#bitrate-logo" fill="url(#lg${n})" opacity=".07"/><use href="#bitrate-logo" fill="url(#lg${n})" mask="url(#lm${n})"/><use class="trace" href="#bitrate-logo" fill="none" stroke="#fff" stroke-width="6" opacity="0"/></g><path class="lead" fill="none" stroke="url(#gi${n})" stroke-width="${RIBBON}"/><path class="out" fill="none" stroke="url(#go${n})" stroke-width="${RIBBON}"/><path class="route" fill="none" stroke="none"/><circle class="head" r="46" fill="#e9d5ff" opacity="0" style="filter:blur(16px)"/></svg>`
@@ -908,6 +911,9 @@ window.BitrateLogoLoader = (() => {
     const la = measure(svg, SPINE_A)
     const lb = measure(svg, SPINE_B)
     const lc = measure(svg, CONNECT)
+    const aTip = measure(svg, 'M 405 152 C 430 200 470 211 560 211')
+    const laRest = measure(svg, `M 560 211 ${A_REST}`)
+    const lbHead = measure(svg, B_HEAD)
     sa.setAttribute('stroke-dasharray', `${la} ${la}`)
     sb.setAttribute('stroke-dasharray', `${lb} ${lb}`)
     trace.setAttribute('stroke-dasharray', `${LOGO * 0.12} ${LOGO}`)
@@ -923,34 +929,37 @@ window.BitrateLogoLoader = (() => {
       const vy = CY - vh / 2
       svg.setAttribute('viewBox', `${vx} ${vy} ${vw} ${vh}`)
       const pad = RIBBON * 2
-      const ld = `M ${vx - pad} ${vy - pad} C ${vx + vw * 0.12} ${vy + vh * 0.04} 290 40 405 152`
-      const od = `M 512 868 C 430 990 ${vx + vw * 0.08} ${vy + vh * 0.96} ${vx - pad * 1.4} ${vy + vh + pad}`
+      const ld = `M ${vx - pad} ${vy - pad} C ${vx + vw * 0.16} ${vy + vh * 0.02} 430 211 560 211`
+      const od = `M 640 805 C 520 805 ${vx + vw * 0.1} ${vy + vh * 0.92} ${vx - pad * 1.4} ${vy + vh + pad}`
       /* each ribbon carries the ramp along itself: light past the edge, the mark's own violet where it meets it */
       const gi = svg.querySelector(`#gi${n}`)
       const go = svg.querySelector(`#go${n}`)
       const set4 = (el, x1, y1, x2, y2) => { el.setAttribute('x1', x1); el.setAttribute('y1', y1); el.setAttribute('x2', x2); el.setAttribute('y2', y2) }
-      set4(gi, vx - pad, vy - pad, 405, 152)
-      set4(go, 512, 868, vx - pad * 1.4, vy + vh + pad)
+      set4(gi, vx - pad, vy - pad, 560, 211)
+      set4(go, 640, 805, vx - pad * 1.4, vy + vh + pad)
       lead.setAttribute('d', ld)
       out.setAttribute('d', od)
       g.lin = lead.getTotalLength()
       g.lout = out.getTotalLength()
       lead.setAttribute('stroke-dasharray', `${g.lin} ${g.lin}`)
       out.setAttribute('stroke-dasharray', `${g.lout} ${g.lout}`)
-      route.setAttribute('d', `${ld} ${SPINE_A.replace(/^M 405 152/, '')} ${CONNECT.replace(/^M 425 780/, '')} L 860 493 ${SPINE_B.replace(/^M 860 493/, '')} ${od.replace(/^M 512 868/, '')}`)
+      route.setAttribute('d', `${ld} ${A_REST} ${CONNECT.replace(/^M 425 780/, '')} L 860 493 ${B_HEAD.replace(/^M 860 493/, '')} ${od.replace(/^M 640 805/, '')}`)
       g.total = route.getTotalLength()
       paint()
     }
     /* P: where the pen is along the whole route; T: where the ribbon's tail is (only the in/out ribbons are pulled away) */
     function paint() {
       const { lin, lout, total, P, T } = g
-      const bStart = lin + la + lc
-      const oStart = bStart + lb
+      const bStart = lin + laRest + lc
+      const oStart = bStart + lbHead
       const drawn = (x, start, len) => clamp((x - start) / len)
       lead.style.strokeDashoffset = String(lin * (1 - drawn(P, 0, lin)) - lin * drawn(T, 0, lin))
       out.style.strokeDashoffset = String(lout * (1 - drawn(P, oStart, lout)) - lout * drawn(T, oStart, lout))
-      sa.style.strokeDashoffset = String(la * (1 - drawn(P, lin, la)))
-      sb.style.strokeDashoffset = String(lb * (1 - drawn(P, bStart, lb)))
+      /* the tip of bar A appears with the ribbon's arrival; bar B's tail tip completes when the ribbon leaves */
+      const a = P < lin ? 0 : (aTip + (la - aTip) * drawn(P, lin, laRest)) / la
+      const b = P < bStart ? 0 : P >= oStart ? 1 : (lbHead / lb) * drawn(P, bStart, lbHead)
+      sa.style.strokeDashoffset = String(la * (1 - a))
+      sb.style.strokeDashoffset = String(lb * (1 - b))
       const pt = route.getPointAtLength(Math.min(total, Math.max(0, P)))
       head.setAttribute('cx', String(pt.x))
       head.setAttribute('cy', String(pt.y))
@@ -1704,6 +1713,7 @@ window.__bitrateIntro = new Promise((done) => {
       }
       loops.push(gsap.fromTo(s.querySelectorAll('.sync-bar'), { scaleX: .3 }, { scaleX: .7, duration: 8, ease: 'none', repeat: -1 }))
     }
+    if (id === 'partners') window.__partnersReset?.()
     if (id === 'team') { resetTeam(); tl.fromTo(s.querySelectorAll('.stats b'), { textContent: 0 }, { textContent: (k, el) => el.dataset.v, duration: 1.2, snap: { textContent: 1 }, ease: 'power2.out' }, .8) }
     tl.call(() => { for (const ln of s.querySelectorAll('.line.glitch')) glitch(ln) }, null, 1.25)
     if (id === 'social' && !mob) {
@@ -1833,6 +1843,136 @@ window.__bitrateIntro = new Promise((done) => {
     ln.addEventListener('pointerenter', () => glitch(ln))
   }
   if (!reduce) setInterval(() => { const live = scenes[index].querySelectorAll('.glitch-auto'); if (live.length) glitch(live[Math.floor(Math.random() * live.length)]) }, 3200)
+
+  /* ---------- particles without WebGL: a 2D field on the same canvas (drifting dots in the palette) ---------- */
+  if (!(window.THREE && hasGL)) {
+    const cv = document.getElementById('stage')
+    const cx2 = cv.getContext('2d')
+    const DOTS = Array.from({ length: 520 }, (_, i) => {
+      const a = i * 2.39996
+      const r = Math.sqrt(i / 520)
+      return { a, r, z: 0.35 + ((i * 53) % 100) / 100, c: i % 5 === 0 ? '236,72,153' : i % 3 === 0 ? '59,130,246' : '167,139,250' }
+    })
+    let mx = 0
+    let my = 0
+    window.addEventListener('pointermove', (e) => { mx = e.clientX / window.innerWidth - 0.5; my = e.clientY / window.innerHeight - 0.5 }, { passive: true })
+    const size2d = () => { const d = Math.min(window.devicePixelRatio || 1, 1.5); cv.width = window.innerWidth * d; cv.height = window.innerHeight * d; cx2.setTransform(d, 0, 0, d, 0, 0) }
+    size2d()
+    window.addEventListener('resize', size2d)
+    gsap.ticker.add((t) => {
+      if (document.hidden) return
+      const w = window.innerWidth
+      const h = window.innerHeight
+      cx2.clearRect(0, 0, w, h)
+      const R = Math.hypot(w, h) * 0.62
+      for (const d of DOTS) {
+        const a = d.a + t * 0.02 * d.z
+        const rr = d.r * R * (0.92 + 0.08 * Math.sin(t * 0.6 + d.a))
+        const x = w * 0.62 + Math.cos(a) * rr + mx * 40 * d.z
+        const y = h * 0.5 + Math.sin(a) * rr * 0.62 + my * 30 * d.z
+        const tw = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * 1.7 + d.a * 3))
+        cx2.fillStyle = `rgba(${d.c},${(0.25 + 0.55 * d.z) * tw})`
+        cx2.beginPath()
+        cx2.arc(x, y, 0.8 + d.z * 1.6, 0, Math.PI * 2)
+        cx2.fill()
+      }
+    })
+  }
+
+  /* ---------- partners without WebGL: the same rubber balls as DOM bubbles with 2D physics ---------- */
+  if (!(window.THREE && hasGL)) {
+    const zoneEl = document.getElementById('partnerZone')
+    const MARKS2 = [['#7c3aed', '#ffffff', 'ON AIR'], ['#ec4899', '#ffffff', 'LABEL'], ['#3b82f6', '#ffffff', 'STUDIO'], ['#10b981', '#06281d', 'SYNC'], ['#f59e0b', '#2a1702', 'LIVE'], ['#f5f3ff', '#4c1d95', 'FM'], ['#111827', '#a78bfa', 'DSP'], ['#a78bfa', '#1e1b4b', 'MIX'], ['#0ea5e9', '#ffffff', 'WAVE'], ['#db2777', '#fff1f2', 'B-SIDE']]
+    const PBS = []
+    for (let i = 0; i < 22; i++) {
+      const [bg, fg, label] = MARKS2[i % MARKS2.length]
+      const r = 44 + ((i * 37) % 5) * 9
+      const el = document.createElement('div')
+      el.className = 'ball tech'
+      el.style.cssText = `width:${r * 2}px;height:${r * 2}px;background:radial-gradient(circle at 32% 28%, rgba(255,255,255,.55), transparent 34%), ${bg};color:${fg};font:700 ${r > 70 ? 16 : 12}px/1 var(--font-display)`
+      el.textContent = label
+      zoneEl.appendChild(el)
+      PBS.push({ el, r, x: 0, y: 0, vx: 0, vy: 0 })
+    }
+    const PF = { ptr: null, grab: null }
+    const local = (e) => {
+      const rc = zoneEl.getBoundingClientRect()
+      const k = zoneEl.offsetWidth / rc.width
+      return [(e.clientX - rc.left) * k, (e.clientY - rc.top) * k]
+    }
+    zoneEl.addEventListener('pointermove', (e) => { PF.ptr = local(e) })
+    zoneEl.addEventListener('pointerleave', () => { if (!PF.grab) PF.ptr = null })
+    zoneEl.addEventListener('pointerdown', (e) => {
+      const [x, y] = local(e)
+      PF.ptr = [x, y]
+      PF.grab = PBS.find((b) => Math.hypot(b.x - x, b.y - y) < b.r) ?? null
+      if (PF.grab) { zoneEl.setPointerCapture(e.pointerId); window.__dragging = true }
+    })
+    const letGo = () => { PF.grab = null; window.__dragging = false }
+    zoneEl.addEventListener('pointerup', letGo)
+    zoneEl.addEventListener('pointercancel', letGo)
+    window.__partnersReset = () => {
+      const W = zoneEl.offsetWidth
+      const H = zoneEl.offsetHeight
+      PBS.forEach((b, i) => {
+        const a = i * 2.4
+        b.x = W / 2 + Math.cos(a) * W * 0.75
+        b.y = H / 2 + Math.sin(a) * H * 0.75
+        b.vx = -Math.cos(a) * 320
+        b.vy = -Math.sin(a) * 320
+      })
+    }
+    window.__partnersReset()
+    const stepP = (dt) => {
+      const W = zoneEl.offsetWidth
+      const H = zoneEl.offsetHeight
+      for (const b of PBS) {
+        if (PF.grab === b && PF.ptr) { b.vx = (PF.ptr[0] - b.x) * 14; b.vy = (PF.ptr[1] - b.y) * 14 } else {
+          b.vx += (W / 2 - b.x) * 3.2 * dt
+          b.vy += (H / 2 - b.y) * 3.2 * dt
+          if (PF.ptr) {
+            const dx = b.x - PF.ptr[0]
+            const dy = b.y - PF.ptr[1]
+            const d = Math.hypot(dx, dy) || 1e-3
+            const min = b.r + 60
+            if (d < min) { b.vx += (dx / d) * (min - d) * 14; b.vy += (dy / d) * (min - d) * 14 }
+          }
+        }
+        const damp = Math.exp(-2.2 * dt)
+        b.vx *= damp
+        b.vy *= damp
+      }
+      for (let i = 0; i < PBS.length; i++) {
+        for (let j = i + 1; j < PBS.length; j++) {
+          const a = PBS[i]
+          const c = PBS[j]
+          const dx = c.x - a.x
+          const dy = c.y - a.y
+          const d = Math.hypot(dx, dy) || 1e-3
+          const min = a.r + c.r
+          if (d >= min) continue
+          const nx = dx / d
+          const ny = dy / d
+          const corr = (min - d) / 2
+          a.x -= nx * corr; a.y -= ny * corr; c.x += nx * corr; c.y += ny * corr
+          const rv = (c.vx - a.vx) * nx + (c.vy - a.vy) * ny
+          if (rv < 0) { const imp = -rv * 0.75; a.vx -= nx * imp; a.vy -= ny * imp; c.vx += nx * imp; c.vy += ny * imp }
+        }
+      }
+      for (const b of PBS) {
+        b.x += b.vx * dt
+        b.y += b.vy * dt
+        const sq = 1 + Math.min(0.12, Math.hypot(b.vx, b.vy) * 0.0004)
+        b.el.style.transform = `translate(${b.x - b.r}px, ${b.y - b.r}px) scale(${sq}, ${1 / sq})`
+      }
+    }
+    gsap.ticker.add(() => {
+      if (scenes[index]?.id !== 'partners') return
+      const dt = Math.min(0.033, gsap.ticker.deltaRatio() / 60)
+      stepP(dt / 2)
+      stepP(dt / 2)
+    })
+  }
 
   /* ---------- team: gravity bubbles with hover cards (2D physics, transforms only) ---------- */
   const REPO = 'https://github.com/Lordpluha/bitrate'
