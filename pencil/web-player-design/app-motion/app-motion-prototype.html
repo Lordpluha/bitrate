@@ -343,6 +343,9 @@ window.BitrateLogoLoader = (() => {
      strokes, in the brand gradient, flies in past the edge, the mark is revealed exactly where it passes, and the ribbon
      leaves past the opposite edge; then its tail pulls through and out of the screen too. */
   const RIBBON = 118
+  /* the route skips the bars' pointed tips: the ribbons themselves cover them */
+  const A_REST = 'L 900 211 C 1010 211 1050 280 1050 350 C 1050 430 990 493 900 493 L 720 493 C 560 493 470 600 425 780'
+  const B_HEAD = 'M 860 493 C 1000 493 1050 560 1050 650 C 1050 750 990 805 900 805 L 640 805'
   const draw = (el, { size = 0.34, loop = true, onDone } = {}) => {
     const n = ++uid
     el.innerHTML = `<svg class="ll-draw" width="100%" height="100%" aria-hidden="true" style="display:block;overflow:hidden"><defs><linearGradient id="lg${n}" gradientUnits="userSpaceOnUse" x1="371" y1="0" x2="1166" y2="0">${STOPS.map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join('')}</linearGradient><linearGradient id="gi${n}" gradientUnits="userSpaceOnUse">${[...STOPS].reverse().map(([o, c]) => `<stop offset="${1 - Number(o)}" stop-color="${c}"/>`).join('')}</linearGradient><linearGradient id="go${n}" gradientUnits="userSpaceOnUse">${STOPS.map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join('')}</linearGradient><mask id="lm${n}" maskUnits="userSpaceOnUse" x="-100000" y="-100000" width="200000" height="200000"><path class="sa" d="${SPINE_A}" fill="none" stroke="#fff" stroke-width="150" stroke-linecap="round"/><path class="sb" d="${SPINE_B}" fill="none" stroke="#fff" stroke-width="150" stroke-linecap="round"/></mask></defs><g class="mark"><use href="#bitrate-logo" fill="url(#lg${n})" opacity=".07"/><use href="#bitrate-logo" fill="url(#lg${n})" mask="url(#lm${n})"/><use class="trace" href="#bitrate-logo" fill="none" stroke="#fff" stroke-width="6" opacity="0"/></g><path class="lead" fill="none" stroke="url(#gi${n})" stroke-width="${RIBBON}"/><path class="out" fill="none" stroke="url(#go${n})" stroke-width="${RIBBON}"/><path class="route" fill="none" stroke="none"/><circle class="head" r="46" fill="#e9d5ff" opacity="0" style="filter:blur(16px)"/></svg>`
@@ -359,6 +362,9 @@ window.BitrateLogoLoader = (() => {
     const la = measure(svg, SPINE_A)
     const lb = measure(svg, SPINE_B)
     const lc = measure(svg, CONNECT)
+    const aTip = measure(svg, 'M 405 152 C 430 200 470 211 560 211')
+    const laRest = measure(svg, `M 560 211 ${A_REST}`)
+    const lbHead = measure(svg, B_HEAD)
     sa.setAttribute('stroke-dasharray', `${la} ${la}`)
     sb.setAttribute('stroke-dasharray', `${lb} ${lb}`)
     trace.setAttribute('stroke-dasharray', `${LOGO * 0.12} ${LOGO}`)
@@ -374,34 +380,37 @@ window.BitrateLogoLoader = (() => {
       const vy = CY - vh / 2
       svg.setAttribute('viewBox', `${vx} ${vy} ${vw} ${vh}`)
       const pad = RIBBON * 2
-      const ld = `M ${vx - pad} ${vy - pad} C ${vx + vw * 0.12} ${vy + vh * 0.04} 290 40 405 152`
-      const od = `M 512 868 C 430 990 ${vx + vw * 0.08} ${vy + vh * 0.96} ${vx - pad * 1.4} ${vy + vh + pad}`
+      const ld = `M ${vx - pad} ${vy - pad} C ${vx + vw * 0.16} ${vy + vh * 0.02} 430 211 560 211`
+      const od = `M 640 805 C 520 805 ${vx + vw * 0.1} ${vy + vh * 0.92} ${vx - pad * 1.4} ${vy + vh + pad}`
       /* each ribbon carries the ramp along itself: light past the edge, the mark's own violet where it meets it */
       const gi = svg.querySelector(`#gi${n}`)
       const go = svg.querySelector(`#go${n}`)
       const set4 = (el, x1, y1, x2, y2) => { el.setAttribute('x1', x1); el.setAttribute('y1', y1); el.setAttribute('x2', x2); el.setAttribute('y2', y2) }
-      set4(gi, vx - pad, vy - pad, 405, 152)
-      set4(go, 512, 868, vx - pad * 1.4, vy + vh + pad)
+      set4(gi, vx - pad, vy - pad, 560, 211)
+      set4(go, 640, 805, vx - pad * 1.4, vy + vh + pad)
       lead.setAttribute('d', ld)
       out.setAttribute('d', od)
       g.lin = lead.getTotalLength()
       g.lout = out.getTotalLength()
       lead.setAttribute('stroke-dasharray', `${g.lin} ${g.lin}`)
       out.setAttribute('stroke-dasharray', `${g.lout} ${g.lout}`)
-      route.setAttribute('d', `${ld} ${SPINE_A.replace(/^M 405 152/, '')} ${CONNECT.replace(/^M 425 780/, '')} L 860 493 ${SPINE_B.replace(/^M 860 493/, '')} ${od.replace(/^M 512 868/, '')}`)
+      route.setAttribute('d', `${ld} ${A_REST} ${CONNECT.replace(/^M 425 780/, '')} L 860 493 ${B_HEAD.replace(/^M 860 493/, '')} ${od.replace(/^M 640 805/, '')}`)
       g.total = route.getTotalLength()
       paint()
     }
     /* P: where the pen is along the whole route; T: where the ribbon's tail is (only the in/out ribbons are pulled away) */
     function paint() {
       const { lin, lout, total, P, T } = g
-      const bStart = lin + la + lc
-      const oStart = bStart + lb
+      const bStart = lin + laRest + lc
+      const oStart = bStart + lbHead
       const drawn = (x, start, len) => clamp((x - start) / len)
       lead.style.strokeDashoffset = String(lin * (1 - drawn(P, 0, lin)) - lin * drawn(T, 0, lin))
       out.style.strokeDashoffset = String(lout * (1 - drawn(P, oStart, lout)) - lout * drawn(T, oStart, lout))
-      sa.style.strokeDashoffset = String(la * (1 - drawn(P, lin, la)))
-      sb.style.strokeDashoffset = String(lb * (1 - drawn(P, bStart, lb)))
+      /* the tip of bar A appears with the ribbon's arrival; bar B's tail tip completes when the ribbon leaves */
+      const a = P < lin ? 0 : (aTip + (la - aTip) * drawn(P, lin, laRest)) / la
+      const b = P < bStart ? 0 : P >= oStart ? 1 : (lbHead / lb) * drawn(P, bStart, lbHead)
+      sa.style.strokeDashoffset = String(la * (1 - a))
+      sb.style.strokeDashoffset = String(lb * (1 - b))
       const pt = route.getPointAtLength(Math.min(total, Math.max(0, P)))
       head.setAttribute('cx', String(pt.x))
       head.setAttribute('cy', String(pt.y))
