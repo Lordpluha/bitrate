@@ -1,0 +1,3029 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "UeM6Y5",
+      "name": "Profile / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "YYkqKt",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "YhHnmm",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "zUbfy7",
+                  "ref": "ds:jg9Ydu",
+                  "name": "Profile Header",
+                  "descendants": {
+                    "ds:vFJvjc": {
+                      "content": "Maya"
+                    },
+                    "ds:WajQLQ": {
+                      "content": "Night-bus playlists and too many synth records."
+                    },
+                    "ds:BEPRGZ": {
+                      "type": "frame",
+                      "id": "GjKX3e",
+                      "name": "Action",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "wV5EFr",
+                          "ref": "ds:h2cTgy",
+                          "name": "Button/Icon Outline",
+                          "descendants": {
+                            "ds:WLsA4Y": {
+                              "icon": "settings"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "RvUfcz",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "tHpuLc",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "rSRVgV",
+                          "ref": "ds:ik5fhx",
+                          "name": "Text/H3",
+                          "content": "Top artists this month"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "WnZVfn",
+                          "ref": "ds:4zpiTg",
+                          "name": "Text/Muted",
+                          "content": "Only visible to you"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "RrCdJh",
+                      "ref": "ds:rx43Sm",
+                      "name": "Text/Link",
+                      "content": "Show all"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "BHhxMD",
+                  "name": "Card Row",
+                  "gap": 20,
+                  "alignItems": "start",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "558qAF",
+                      "ref": "ds:jjufD",
+                      "name": "Artist / Nova & the Static",
+                      "width": 150,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:S3S303": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-afterglow.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:N0I3i": {
+                          "content": "Nova & the Static"
+                        },
+                        "ds:Q4aRkj": {
+                          "content": "Artist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pnEVpo",
+                      "ref": "ds:jjufD",
+                      "name": "Artist / Mira Sol",
+                      "width": 150,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:S3S303": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:N0I3i": {
+                          "content": "Mira Sol"
+                        },
+                        "ds:Q4aRkj": {
+                          "content": "Artist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Ko5zJz",
+                      "ref": "ds:jjufD",
+                      "name": "Artist / Kite Harbor",
+                      "width": 150,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:S3S303": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-static-lines.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:N0I3i": {
+                          "content": "Kite Harbor"
+                        },
+                        "ds:Q4aRkj": {
+                          "content": "Artist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "cUn9qh",
+                      "ref": "ds:jjufD",
+                      "name": "Artist / Lumen Choir",
+                      "width": 150,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:S3S303": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:N0I3i": {
+                          "content": "Lumen Choir"
+                        },
+                        "ds:Q4aRkj": {
+                          "content": "Artist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "evqVKb",
+                      "ref": "ds:jjufD",
+                      "name": "Artist / Luma Vale",
+                      "width": 150,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:S3S303": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/hero/luma-vale.png",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:N0I3i": {
+                          "content": "Luma Vale"
+                        },
+                        "ds:Q4aRkj": {
+                          "content": "Artist"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/profile — The listener's own profile."
+    },
+    {
+      "type": "frame",
+      "id": "Uqjxo9",
+      "name": "Profile / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "98tmKh",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "9Nt834",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "SdrGuA",
+                  "ref": "ds:jg9Ydu",
+                  "name": "Profile Header",
+                  "descendants": {
+                    "ds:vFJvjc": {
+                      "content": "Maya"
+                    },
+                    "ds:WajQLQ": {
+                      "content": "Night-bus playlists and too many synth records."
+                    },
+                    "ds:BEPRGZ": {
+                      "type": "frame",
+                      "id": "GC6v3N",
+                      "name": "Action",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "rQtUCa",
+                          "ref": "ds:h2cTgy",
+                          "name": "Button/Icon Outline",
+                          "descendants": {
+                            "ds:WLsA4Y": {
+                              "icon": "settings"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "gAeUgu",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "9Q7X29",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "R64SGa",
+                          "ref": "ds:ik5fhx",
+                          "name": "Text/H3",
+                          "content": "Top artists this month"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "oHSRjC",
+                          "ref": "ds:4zpiTg",
+                          "name": "Text/Muted",
+                          "content": "Only visible to you"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "dE4pua",
+                      "ref": "ds:rx43Sm",
+                      "name": "Text/Link",
+                      "content": "Show all"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "oeifdT",
+                  "name": "Card Row",
+                  "gap": 20,
+                  "alignItems": "start",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "RuXnVP",
+                      "ref": "ds:jjufD",
+                      "name": "Artist / Nova & the Static",
+                      "width": 150,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:S3S303": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-afterglow.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:N0I3i": {
+                          "content": "Nova & the Static"
+                        },
+                        "ds:Q4aRkj": {
+                          "content": "Artist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "FBJ5qD",
+                      "ref": "ds:jjufD",
+                      "name": "Artist / Mira Sol",
+                      "width": 150,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:S3S303": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:N0I3i": {
+                          "content": "Mira Sol"
+                        },
+                        "ds:Q4aRkj": {
+                          "content": "Artist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "XEitj3",
+                      "ref": "ds:jjufD",
+                      "name": "Artist / Kite Harbor",
+                      "width": 150,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:S3S303": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-static-lines.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:N0I3i": {
+                          "content": "Kite Harbor"
+                        },
+                        "ds:Q4aRkj": {
+                          "content": "Artist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "VqbW7r",
+                      "ref": "ds:jjufD",
+                      "name": "Artist / Lumen Choir",
+                      "width": 150,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:S3S303": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:N0I3i": {
+                          "content": "Lumen Choir"
+                        },
+                        "ds:Q4aRkj": {
+                          "content": "Artist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "QDG6bw",
+                      "ref": "ds:jjufD",
+                      "name": "Artist / Luma Vale",
+                      "width": 150,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:S3S303": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/hero/luma-vale.png",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:N0I3i": {
+                          "content": "Luma Vale"
+                        },
+                        "ds:Q4aRkj": {
+                          "content": "Artist"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "/main/profile — The listener's own profile."
+    },
+    {
+      "type": "frame",
+      "id": "tkLbNr",
+      "name": "Profile / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "TW3MmL",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "8qSBnz",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "qsGGot",
+                  "ref": "ds:jg9Ydu",
+                  "name": "Profile Header",
+                  "descendants": {
+                    "ds:vFJvjc": {
+                      "content": "Maya"
+                    },
+                    "ds:WajQLQ": {
+                      "content": "Night-bus playlists and too many synth records."
+                    },
+                    "ds:BEPRGZ": {
+                      "type": "frame",
+                      "id": "t6CWSt",
+                      "name": "Action",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "RvEEYb",
+                          "ref": "ds:h2cTgy",
+                          "name": "Button/Icon Outline",
+                          "descendants": {
+                            "ds:WLsA4Y": {
+                              "icon": "settings"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "u6vdv5",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "TSCmoL",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ZtoApk",
+                          "ref": "ds:ik5fhx",
+                          "name": "Text/H3",
+                          "content": "Top artists this month"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "bD7HQu",
+                          "ref": "ds:4zpiTg",
+                          "name": "Text/Muted",
+                          "content": "Only visible to you"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "XuSHeC",
+                      "ref": "ds:rx43Sm",
+                      "name": "Text/Link",
+                      "content": "Show all"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "4SEh2w",
+                  "name": "Card Row",
+                  "gap": 20,
+                  "alignItems": "start",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "vzcDv9",
+                      "ref": "ds:jjufD",
+                      "name": "Artist / Nova & the Static",
+                      "width": 150,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:S3S303": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-afterglow.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:N0I3i": {
+                          "content": "Nova & the Static"
+                        },
+                        "ds:Q4aRkj": {
+                          "content": "Artist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "h4sqSL",
+                      "ref": "ds:jjufD",
+                      "name": "Artist / Mira Sol",
+                      "width": 150,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:S3S303": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:N0I3i": {
+                          "content": "Mira Sol"
+                        },
+                        "ds:Q4aRkj": {
+                          "content": "Artist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "P6bY3j",
+                      "ref": "ds:jjufD",
+                      "name": "Artist / Kite Harbor",
+                      "width": 150,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:S3S303": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-static-lines.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:N0I3i": {
+                          "content": "Kite Harbor"
+                        },
+                        "ds:Q4aRkj": {
+                          "content": "Artist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "U4zjw7",
+                      "ref": "ds:jjufD",
+                      "name": "Artist / Lumen Choir",
+                      "width": 150,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:S3S303": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:N0I3i": {
+                          "content": "Lumen Choir"
+                        },
+                        "ds:Q4aRkj": {
+                          "content": "Artist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "P6ofgK",
+                      "ref": "ds:jjufD",
+                      "name": "Artist / Luma Vale",
+                      "width": 150,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:S3S303": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/hero/luma-vale.png",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:N0I3i": {
+                          "content": "Luma Vale"
+                        },
+                        "ds:Q4aRkj": {
+                          "content": "Artist"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "/main/profile — The listener's own profile."
+    },
+    {
+      "type": "frame",
+      "id": "nwyXEo",
+      "name": "Profile / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "BFLKKj",
+          "ref": "ds:rJ7nC6",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "WcSJHP",
+          "ref": "ds:yr7XDa",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:YyLmeC": {
+              "content": "Profile"
+            },
+            "ds:CS6fU3": {
+              "enabled": false
+            },
+            "ds:N66thR": {
+              "icon": "settings"
+            },
+            "ds:XUdBL3": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "miuHgy",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "t698AG",
+              "name": "Row",
+              "gap": 16,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "2Fghgm",
+                  "ref": "ds:aX5s8j",
+                  "name": "Media/Avatar",
+                  "width": 88,
+                  "height": 88,
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/avatars/avatar2.jpg",
+                    "mode": "cover"
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "jZiSTL",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "6NEVxY",
+                      "ref": "ds:FmAykg",
+                      "name": "Text/Caption",
+                      "content": "Profile"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "edd2MK",
+                      "ref": "ds:YmcyZh",
+                      "name": "Text/H2",
+                      "content": "Maya"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "H3mZeo",
+                      "ref": "ds:4zpiTg",
+                      "name": "Text/Muted",
+                      "content": "3 public playlists · 12 following"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "SwYcmE",
+              "ref": "ds:MGqiFD",
+              "name": "Text/H4",
+              "content": "Top artists this month"
+            },
+            {
+              "type": "frame",
+              "id": "LTJsyM",
+              "name": "Row",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "EJhKgZ",
+                  "ref": "ds:jjufD",
+                  "name": "Artist / Nova & the Static",
+                  "width": 171,
+                  "height": "fit_content",
+                  "descendants": {
+                    "ds:S3S303": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/albums/album-afterglow.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:N0I3i": {
+                      "content": "Nova & the Static"
+                    },
+                    "ds:Q4aRkj": {
+                      "content": "Artist"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "SnMSpt",
+                  "ref": "ds:jjufD",
+                  "name": "Artist / Mira Sol",
+                  "width": 171,
+                  "height": "fit_content",
+                  "descendants": {
+                    "ds:S3S303": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/albums/album-night-signal.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:N0I3i": {
+                      "content": "Mira Sol"
+                    },
+                    "ds:Q4aRkj": {
+                      "content": "Artist"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "4q4n2m",
+              "ref": "ds:MGqiFD",
+              "name": "Text/H4",
+              "content": "Top tracks this month"
+            },
+            {
+              "type": "ref",
+              "id": "ENd3Pj",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Afterglow",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-afterglow.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Afterglow"
+                },
+                "ds:rFh9q": {
+                  "content": "Nova & the Static"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "MZ4pUA",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night Signal",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-night-signal.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night Signal"
+                },
+                "ds:rFh9q": {
+                  "content": "Mira Sol"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "nP8UtW",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Static Lines",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-static-lines.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Static Lines"
+                },
+                "ds:rFh9q": {
+                  "content": "Kite Harbor"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "bevwiN",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "qhyjLD",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "qdwGF9",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/profile — The listener's own profile."
+    },
+    {
+      "type": "frame",
+      "id": "SCSqhd",
+      "name": "Profile / Sections / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "xEYDiJ",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "PFgap9",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Ueu9L9",
+                  "ref": "ds:zmGKRX",
+                  "name": "Section Header",
+                  "descendants": {
+                    "ds:Jwg656": {
+                      "content": "Top tracks this month"
+                    },
+                    "ds:gn5d6t": {
+                      "content": "Show all"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "HyhiqM",
+                  "name": "Track Table",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "joYPD8",
+                      "ref": "ds:kJGWSh",
+                      "name": "Track Table/Header"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pXTAdV",
+                      "ref": "ds:WQxBT",
+                      "name": "Track / Afterglow",
+                      "descendants": {
+                        "ds:YSAj4": {
+                          "content": "1"
+                        },
+                        "ds:PptA9": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-afterglow.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:eGEfP": {
+                          "content": "Afterglow"
+                        },
+                        "ds:cNYVw": {
+                          "content": "Nova & the Static"
+                        },
+                        "ds:REBNx": {
+                          "content": "Afterglow"
+                        },
+                        "ds:QCCe4": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "DcvxfT",
+                      "ref": "ds:WQxBT",
+                      "name": "Track / Night Signal",
+                      "descendants": {
+                        "ds:YSAj4": {
+                          "content": "2"
+                        },
+                        "ds:PptA9": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:eGEfP": {
+                          "content": "Night Signal"
+                        },
+                        "ds:cNYVw": {
+                          "content": "Mira Sol"
+                        },
+                        "ds:REBNx": {
+                          "content": "Night Signal"
+                        },
+                        "ds:QCCe4": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "xvjNwh",
+                      "ref": "ds:WQxBT",
+                      "name": "Track / Static Lines",
+                      "descendants": {
+                        "ds:YSAj4": {
+                          "content": "3"
+                        },
+                        "ds:PptA9": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-static-lines.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:eGEfP": {
+                          "content": "Static Lines"
+                        },
+                        "ds:cNYVw": {
+                          "content": "Kite Harbor"
+                        },
+                        "ds:REBNx": {
+                          "content": "Static Lines"
+                        },
+                        "ds:QCCe4": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "kevuNA",
+                      "ref": "ds:WQxBT",
+                      "name": "Track / Echoes in Motion",
+                      "descendants": {
+                        "ds:YSAj4": {
+                          "content": "4"
+                        },
+                        "ds:PptA9": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:eGEfP": {
+                          "content": "Echoes in Motion"
+                        },
+                        "ds:cNYVw": {
+                          "content": "Lumen Choir"
+                        },
+                        "ds:REBNx": {
+                          "content": "Echoes in Motion"
+                        },
+                        "ds:QCCe4": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "zshkDr",
+                  "ref": "ds:zmGKRX",
+                  "name": "Section Header",
+                  "descendants": {
+                    "ds:Jwg656": {
+                      "content": "Your playlists"
+                    },
+                    "ds:gn5d6t": {
+                      "content": "Show all"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "XQHtwC",
+                  "name": "Card Row",
+                  "gap": 20,
+                  "alignItems": "start",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "LXFNKo",
+                      "ref": "ds:dKgOu",
+                      "name": "Playlist / Night Drive",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:D3rpRY": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:I1BLb": {
+                          "content": "Night Drive"
+                        },
+                        "ds:oEjKW": {
+                          "content": "Public playlist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pFxGhR",
+                      "ref": "ds:dKgOu",
+                      "name": "Playlist / Afterglow Sessions",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:D3rpRY": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-afterglow.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:I1BLb": {
+                          "content": "Afterglow Sessions"
+                        },
+                        "ds:oEjKW": {
+                          "content": "Public playlist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pkyCXE",
+                      "ref": "ds:dKgOu",
+                      "name": "Playlist / Focus",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:D3rpRY": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-static-lines.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:I1BLb": {
+                          "content": "Focus"
+                        },
+                        "ds:oEjKW": {
+                          "content": "Private playlist"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/profile — The listener's own profile."
+    },
+    {
+      "type": "frame",
+      "id": "U5ixcf",
+      "name": "Profile / Sections / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "JbTnYt",
+          "ref": "ds:rJ7nC6",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "KLPnGv",
+          "ref": "ds:yr7XDa",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:YyLmeC": {
+              "content": "Profile"
+            },
+            "ds:CS6fU3": {
+              "enabled": false
+            },
+            "ds:YpvVuM": {
+              "enabled": false
+            },
+            "ds:XUdBL3": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "KMXSCj",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "Z84zWG",
+              "ref": "ds:MGqiFD",
+              "name": "Text/H4",
+              "content": "Your playlists"
+            },
+            {
+              "type": "ref",
+              "id": "uiLwkW",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night Drive",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-night-signal.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night Drive"
+                },
+                "ds:rFh9q": {
+                  "content": "Public playlist"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "xgqmRP",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Focus",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-static-lines.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Focus"
+                },
+                "ds:rFh9q": {
+                  "content": "Private playlist"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "uGS6e3",
+              "ref": "ds:MGqiFD",
+              "name": "Text/H4",
+              "content": "Following"
+            },
+            {
+              "type": "ref",
+              "id": "ytTRRR",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Jonah",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/avatars/avatar3.jpg",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Jonah"
+                },
+                "ds:rFh9q": {
+                  "content": "Profile"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "psnVFt",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Ana",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/avatars/avatar1.jpg",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Ana"
+                },
+                "ds:rFh9q": {
+                  "content": "Profile"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "gP32Js",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "PsxzMu",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "SkdsmA",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/profile — The listener's own profile."
+    },
+    {
+      "type": "frame",
+      "id": "JGEjK3",
+      "name": "Profile / Empty / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "mKCPAJ",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "DVuQdy",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "6shpH6",
+                  "ref": "ds:jg9Ydu",
+                  "name": "Profile Header",
+                  "descendants": {
+                    "ds:vFJvjc": {
+                      "content": "Maya"
+                    },
+                    "ds:WajQLQ": {
+                      "content": "New listener"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "ij8yVT",
+                  "ref": "ds:xZAnf",
+                  "name": "State / No artists yet.",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "descendants": {
+                    "ds:i2Q9D": {
+                      "icon": "user-round"
+                    },
+                    "ds:yQD8U": {
+                      "content": "No artists yet."
+                    },
+                    "ds:hWHdI": {
+                      "content": "Your top artists this month will appear as you listen."
+                    },
+                    "ds:G1ZoX": {
+                      "content": "Find something to play →"
+                    }
+                  }
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/profile — The listener's own profile."
+    },
+    {
+      "type": "frame",
+      "id": "rPSevz",
+      "name": "Profile / Empty / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Kj27sG",
+          "ref": "ds:rJ7nC6",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "2CBUEZ",
+          "ref": "ds:yr7XDa",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:YyLmeC": {
+              "content": "Profile"
+            },
+            "ds:CS6fU3": {
+              "enabled": false
+            },
+            "ds:YpvVuM": {
+              "enabled": false
+            },
+            "ds:XUdBL3": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "Fnni9D",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "RXT4YJ",
+              "ref": "ds:xZAnf",
+              "name": "State / No artists yet.",
+              "width": "fill_container",
+              "height": "fill_container",
+              "descendants": {
+                "ds:i2Q9D": {
+                  "icon": "user-round"
+                },
+                "ds:yQD8U": {
+                  "content": "No artists yet."
+                },
+                "ds:hWHdI": {
+                  "content": "Your top artists this month will appear as you listen."
+                },
+                "ds:G1ZoX": {
+                  "content": "Find something to play →"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Ve3z7k",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "GwgCBM",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "ZsZ4xY",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/profile — The listener's own profile."
+    },
+    {
+      "type": "frame",
+      "id": "5VJXky",
+      "name": "Profile / Signed out / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "o8obbD",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "e7RMwh",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "5jFD7w",
+                  "ref": "ds:xZAnf",
+                  "name": "State / Sign in to view your profile.",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "descendants": {
+                    "ds:i2Q9D": {
+                      "icon": "log-in"
+                    },
+                    "ds:yQD8U": {
+                      "content": "Sign in to view your profile."
+                    },
+                    "ds:hWHdI": {
+                      "content": "Log in to see your top artists, tracks and playlists."
+                    },
+                    "ds:G1ZoX": {
+                      "content": "Log in →"
+                    }
+                  }
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 9170,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/profile — The listener's own profile."
+    },
+    {
+      "type": "frame",
+      "id": "GfQYoC",
+      "name": "Profile / Signed out / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "ENAGrA",
+          "ref": "ds:rJ7nC6",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "D9B6fc",
+          "ref": "ds:yr7XDa",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:YyLmeC": {
+              "content": "Profile"
+            },
+            "ds:CS6fU3": {
+              "enabled": false
+            },
+            "ds:YpvVuM": {
+              "enabled": false
+            },
+            "ds:XUdBL3": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "jrBX3q",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "Eog7Ds",
+              "ref": "ds:xZAnf",
+              "name": "State / Sign in to view your profile.",
+              "width": "fill_container",
+              "height": "fill_container",
+              "descendants": {
+                "ds:i2Q9D": {
+                  "icon": "log-in"
+                },
+                "ds:yQD8U": {
+                  "content": "Sign in to view your profile."
+                },
+                "ds:hWHdI": {
+                  "content": "Log in to see your top artists, tracks and playlists."
+                },
+                "ds:G1ZoX": {
+                  "content": "Log in →"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "YMQxon",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 10710,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/profile — The listener's own profile."
+    },
+    {
+      "type": "frame",
+      "id": "guBtHB",
+      "name": "Profile / Loading / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "QuiBS6",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "AuMGvu",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "ngBnED",
+                  "name": "Loading",
+                  "layout": "vertical",
+                  "gap": 24,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "jszE5Y",
+                      "ref": "ds:Jjegi",
+                      "name": "Skeleton",
+                      "width": 220,
+                      "height": 28
+                    },
+                    {
+                      "type": "frame",
+                      "id": "N4BR9j",
+                      "name": "Skeleton Cards",
+                      "gap": 20,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "A3KSxy",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "kFxS2A",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "SAfjS9",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "vVmffu",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "gU7RHK",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "sQ8prW",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "u7goCp",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "MgnbD8",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "XeKSxZ",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "f93m6F",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "7rbZTv",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "Gba9Yq",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "mBFgyZ",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "nkfsVC",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "Yk4VEk",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "LcEHGy",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "jMpmbr",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "fhFAtR",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "e5Vbqu",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "QEvkvb",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "SQYrpn",
+                      "name": "Skeleton Cards",
+                      "gap": 20,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "bAxVmj",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "UVRpLJ",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "MELUCa",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "AwCcbk",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "rD3Dtw",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "fpCujc",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "7Uw2cs",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "spoYEy",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "ZpmiS3",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "25HP3N",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "B28vej",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "bwbW6t",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "pHpigA",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "rxHttm",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "Bhwnkc",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "oxS6B8",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "V7qAwo",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "6ed9hv",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "nkpnG8",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "ZpKvVz",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 11200,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/profile — The listener's own profile."
+    },
+    {
+      "type": "frame",
+      "id": "hiiqBs",
+      "name": "Profile / Loading / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "kVd6h6",
+          "ref": "ds:rJ7nC6",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "pUKzrF",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "tdttfg",
+              "name": "Loading",
+              "layout": "vertical",
+              "gap": 24,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "aDdVq8",
+                  "ref": "ds:Jjegi",
+                  "name": "Skeleton",
+                  "width": 140,
+                  "height": 28
+                },
+                {
+                  "type": "frame",
+                  "id": "iGPdER",
+                  "name": "Skeleton Rows",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "VFkPyy",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "MfzUQB",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "uWbfC3",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "b6EYNa",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "bbhKPQ",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "7USSWQ",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "dB7ZjV",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "ykWTbD",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "hLhfFw",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "TxVpx8",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "9pzuMw",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "iP3427",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "sgCB6D",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "qvFusC",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "U88P5y",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "QKLLe7",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "NfpJFr",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "f7xJKK",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "gV64BQ",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "PDfoZg",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ZoxpRE",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "eq2zy2",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "RmPR88",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "G9EDx5",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "Xd2gFF",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "8C3REs",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Ye6ZjL",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "PF9xiK",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "z93Lrb",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "9274U4",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "9PAZQ4",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "66MKBD",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "T36qfw",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 12740,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/profile — The listener's own profile."
+    },
+    {
+      "type": "frame",
+      "id": "DVzKLn",
+      "name": "Profile / Error / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "EmAodz",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "UrBFCZ",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "3LDQAY",
+                  "ref": "ds:fNevX",
+                  "name": "State / Profile could not be loaded",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "descendants": {
+                    "ds:rXj3m": {
+                      "icon": "circle-alert"
+                    },
+                    "ds:ChMrP": {
+                      "content": "Profile could not be loaded"
+                    },
+                    "ds:K47N3": {
+                      "content": "Something went wrong on our side. Try again."
+                    },
+                    "ds:DYMu1": {
+                      "content": "Try again →"
+                    }
+                  }
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 13230,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/profile — The listener's own profile."
+    },
+    {
+      "type": "frame",
+      "id": "NmeA97",
+      "name": "Profile / Error / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "vh8mzv",
+          "ref": "ds:rJ7nC6",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "JryV4q",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "b7KLBW",
+              "ref": "ds:fNevX",
+              "name": "State / Profile could not be loaded",
+              "width": "fill_container",
+              "height": "fill_container",
+              "descendants": {
+                "ds:rXj3m": {
+                  "icon": "circle-alert"
+                },
+                "ds:ChMrP": {
+                  "content": "Profile could not be loaded"
+                },
+                "ds:K47N3": {
+                  "content": "Something went wrong on our side. Try again."
+                },
+                "ds:DYMu1": {
+                  "content": "Try again →"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "jSFyaN",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "vetzPA",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "KG3asG",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 14770,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/profile — The listener's own profile."
+    }
+  ]
+}

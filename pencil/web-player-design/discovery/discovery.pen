@@ -1,0 +1,3090 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "bsXqsR",
+      "name": "Discovery / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "GyEzQv",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "sCV9rL",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "x6kNEe",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "iH64NG",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "4Eprc8",
+                          "ref": "ds:BLCZ2j",
+                          "name": "Text/H1",
+                          "content": "Discover"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "jGotWt",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "6XxkhB",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "iTN4ZW",
+                      "ref": "ds:hMZrkL",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:otH6tw": {
+                          "content": "Unknown artists"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "8JJG8h",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "Less popular"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "bsQRyL",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "Synth pop"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "UaSece",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "Night"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "MtWwAC",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "2020s"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "wNW2CG",
+                      "ref": "ds:DTwJb",
+                      "name": "Button / More filters",
+                      "descendants": {
+                        "ds:GyGLK": {
+                          "content": "More filters"
+                        },
+                        "ds:DsOu2": {
+                          "icon": "sliders-horizontal"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "Tuq4C7",
+                  "ref": "ds:vgo2eN",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:gtiXzp": {
+                      "type": "frame",
+                      "id": "U38JiA",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "GUhqBX",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "KYjwVc",
+                              "name": "Column",
+                              "layout": "vertical",
+                              "gap": 24,
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "yCdVEn",
+                                  "ref": "ds:eYyDAY",
+                                  "name": "Graph Node",
+                                  "descendants": {
+                                    "ds:pwd2xT": {
+                                      "content": "Lumen Choir"
+                                    },
+                                    "ds:vVrkn9": {
+                                      "content": "Influence"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "i4LdeF",
+                                  "ref": "ds:eYyDAY",
+                                  "name": "Graph Node",
+                                  "descendants": {
+                                    "ds:pwd2xT": {
+                                      "content": "Kite Harbor"
+                                    },
+                                    "ds:vVrkn9": {
+                                      "content": "Influence"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ref",
+                              "id": "wMqrTe",
+                              "ref": "ds:hCiFfw",
+                              "name": "Icon/Muted",
+                              "icon": "arrow-right",
+                              "width": 28,
+                              "height": 28
+                            },
+                            {
+                              "type": "ref",
+                              "id": "zzGxsU",
+                              "ref": "ds:rnbU26",
+                              "name": "Graph Node/Focus",
+                              "descendants": {
+                                "ds:JExMXw": {
+                                  "content": "Luma Vale"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "uAHK46",
+                              "ref": "ds:9tVzp9",
+                              "name": "Icon/Primary",
+                              "icon": "arrow-right",
+                              "width": 28,
+                              "height": 28
+                            },
+                            {
+                              "type": "frame",
+                              "id": "49n3DW",
+                              "name": "Column",
+                              "layout": "vertical",
+                              "gap": 24,
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "wYnsUs",
+                                  "ref": "ds:eYyDAY",
+                                  "name": "Graph Node",
+                                  "descendants": {
+                                    "ds:pwd2xT": {
+                                      "content": "Mira Sol"
+                                    },
+                                    "ds:vVrkn9": {
+                                      "content": "Similar"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "vHFbTQ",
+                                  "ref": "ds:eYyDAY",
+                                  "name": "Graph Node",
+                                  "descendants": {
+                                    "ds:pwd2xT": {
+                                      "content": "Nova & the Static"
+                                    },
+                                    "ds:vVrkn9": {
+                                      "content": "Similar"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ref",
+                              "id": "N6BNLS",
+                              "ref": "ds:6wCg3X",
+                              "name": "Icon/Info",
+                              "icon": "arrow-right",
+                              "width": 28,
+                              "height": 28
+                            },
+                            {
+                              "type": "frame",
+                              "id": "43yMdt",
+                              "name": "Column",
+                              "layout": "vertical",
+                              "gap": 10,
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "d3kCni",
+                                  "ref": "ds:Fjw5fa",
+                                  "name": "Chip/Default",
+                                  "descendants": {
+                                    "ds:7qYiyW": {
+                                      "content": "Synth pop"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "2pNSoY",
+                                  "ref": "ds:Fjw5fa",
+                                  "name": "Chip/Default",
+                                  "descendants": {
+                                    "ds:7qYiyW": {
+                                      "content": "Dream pop"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "YiRWbH",
+                                  "ref": "ds:Fjw5fa",
+                                  "name": "Chip/Default",
+                                  "descendants": {
+                                    "ds:7qYiyW": {
+                                      "content": "Night drive"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "bojTba",
+                  "ref": "ds:zmGKRX",
+                  "name": "Section Header",
+                  "descendants": {
+                    "ds:Jwg656": {
+                      "content": "Picked with your filters"
+                    },
+                    "ds:gn5d6t": {
+                      "content": "Show all"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "tEDWpU",
+                  "name": "Card Row",
+                  "gap": 20,
+                  "alignItems": "start",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ieryqS",
+                      "ref": "ds:m015cR",
+                      "name": "Card / Night Drive",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:A8dMX": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:rr2BC": {
+                          "content": "Night Drive"
+                        },
+                        "ds:xhu8r": {
+                          "content": "Playlist · 24 songs"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "FXqdcm",
+                      "ref": "ds:m015cR",
+                      "name": "Card / Afterglow Sessions",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:A8dMX": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-afterglow.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:rr2BC": {
+                          "content": "Afterglow Sessions"
+                        },
+                        "ds:xhu8r": {
+                          "content": "Playlist · 18 songs"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "PepzjW",
+                      "ref": "ds:m015cR",
+                      "name": "Card / Static Lines",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:A8dMX": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-static-lines.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:rr2BC": {
+                          "content": "Static Lines"
+                        },
+                        "ds:xhu8r": {
+                          "content": "Album · Kite Harbor"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "QuzX64",
+                      "ref": "ds:m015cR",
+                      "name": "Card / Echoes in Motion",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:A8dMX": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:rr2BC": {
+                          "content": "Echoes in Motion"
+                        },
+                        "ds:xhu8r": {
+                          "content": "Album · Lumen Choir"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "y2kUU7",
+                      "ref": "ds:m015cR",
+                      "name": "Card / Drift Control",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:A8dMX": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-drift-control.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:rr2BC": {
+                          "content": "Drift Control"
+                        },
+                        "ds:xhu8r": {
+                          "content": "Album · Mira Sol"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"Smart Recommendations\", \"Music Discovery Graph\" — Listener-controlled recommendation filters and the influence graph. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "ocyFo3",
+      "name": "Discovery / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "3FZSFh",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "PRePTt",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Qo4xwp",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Q8Feku",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "DAuemS",
+                          "ref": "ds:BLCZ2j",
+                          "name": "Text/H1",
+                          "content": "Discover"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Lvimgx",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "NXfPRn",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "TaHGNw",
+                      "ref": "ds:hMZrkL",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:otH6tw": {
+                          "content": "Unknown artists"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qmuRA2",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "Less popular"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "hT5nAY",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "Synth pop"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "4HoxdX",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "Night"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "xUsjZe",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "2020s"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "UNDVBH",
+                      "ref": "ds:DTwJb",
+                      "name": "Button / More filters",
+                      "descendants": {
+                        "ds:GyGLK": {
+                          "content": "More filters"
+                        },
+                        "ds:DsOu2": {
+                          "icon": "sliders-horizontal"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "tpZbEf",
+                  "ref": "ds:vgo2eN",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:gtiXzp": {
+                      "type": "frame",
+                      "id": "5pdroE",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "amZCBU",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "Bo5EoM",
+                              "name": "Column",
+                              "layout": "vertical",
+                              "gap": 24,
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "c8SKvY",
+                                  "ref": "ds:eYyDAY",
+                                  "name": "Graph Node",
+                                  "descendants": {
+                                    "ds:pwd2xT": {
+                                      "content": "Lumen Choir"
+                                    },
+                                    "ds:vVrkn9": {
+                                      "content": "Influence"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "VCTBxr",
+                                  "ref": "ds:eYyDAY",
+                                  "name": "Graph Node",
+                                  "descendants": {
+                                    "ds:pwd2xT": {
+                                      "content": "Kite Harbor"
+                                    },
+                                    "ds:vVrkn9": {
+                                      "content": "Influence"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ref",
+                              "id": "gCFkkZ",
+                              "ref": "ds:hCiFfw",
+                              "name": "Icon/Muted",
+                              "icon": "arrow-right",
+                              "width": 28,
+                              "height": 28
+                            },
+                            {
+                              "type": "ref",
+                              "id": "WmA3yc",
+                              "ref": "ds:rnbU26",
+                              "name": "Graph Node/Focus",
+                              "descendants": {
+                                "ds:JExMXw": {
+                                  "content": "Luma Vale"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "CdHVs7",
+                              "ref": "ds:9tVzp9",
+                              "name": "Icon/Primary",
+                              "icon": "arrow-right",
+                              "width": 28,
+                              "height": 28
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Wvbw2N",
+                              "name": "Column",
+                              "layout": "vertical",
+                              "gap": 24,
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "L8B3bz",
+                                  "ref": "ds:eYyDAY",
+                                  "name": "Graph Node",
+                                  "descendants": {
+                                    "ds:pwd2xT": {
+                                      "content": "Mira Sol"
+                                    },
+                                    "ds:vVrkn9": {
+                                      "content": "Similar"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "X2tqUN",
+                                  "ref": "ds:eYyDAY",
+                                  "name": "Graph Node",
+                                  "descendants": {
+                                    "ds:pwd2xT": {
+                                      "content": "Nova & the Static"
+                                    },
+                                    "ds:vVrkn9": {
+                                      "content": "Similar"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ref",
+                              "id": "foav3Q",
+                              "ref": "ds:6wCg3X",
+                              "name": "Icon/Info",
+                              "icon": "arrow-right",
+                              "width": 28,
+                              "height": 28
+                            },
+                            {
+                              "type": "frame",
+                              "id": "yvSPLu",
+                              "name": "Column",
+                              "layout": "vertical",
+                              "gap": 10,
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "Tzo5ra",
+                                  "ref": "ds:Fjw5fa",
+                                  "name": "Chip/Default",
+                                  "descendants": {
+                                    "ds:7qYiyW": {
+                                      "content": "Synth pop"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "44bcUG",
+                                  "ref": "ds:Fjw5fa",
+                                  "name": "Chip/Default",
+                                  "descendants": {
+                                    "ds:7qYiyW": {
+                                      "content": "Dream pop"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "BQmPJY",
+                                  "ref": "ds:Fjw5fa",
+                                  "name": "Chip/Default",
+                                  "descendants": {
+                                    "ds:7qYiyW": {
+                                      "content": "Night drive"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "rJBfT9",
+                  "ref": "ds:zmGKRX",
+                  "name": "Section Header",
+                  "descendants": {
+                    "ds:Jwg656": {
+                      "content": "Picked with your filters"
+                    },
+                    "ds:gn5d6t": {
+                      "content": "Show all"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "9krVkd",
+                  "name": "Card Row",
+                  "gap": 20,
+                  "alignItems": "start",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "xX5QqA",
+                      "ref": "ds:m015cR",
+                      "name": "Card / Night Drive",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:A8dMX": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:rr2BC": {
+                          "content": "Night Drive"
+                        },
+                        "ds:xhu8r": {
+                          "content": "Playlist · 24 songs"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "bGJU6k",
+                      "ref": "ds:m015cR",
+                      "name": "Card / Afterglow Sessions",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:A8dMX": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-afterglow.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:rr2BC": {
+                          "content": "Afterglow Sessions"
+                        },
+                        "ds:xhu8r": {
+                          "content": "Playlist · 18 songs"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "4KR9dv",
+                      "ref": "ds:m015cR",
+                      "name": "Card / Static Lines",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:A8dMX": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-static-lines.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:rr2BC": {
+                          "content": "Static Lines"
+                        },
+                        "ds:xhu8r": {
+                          "content": "Album · Kite Harbor"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "V6LSNf",
+                      "ref": "ds:m015cR",
+                      "name": "Card / Echoes in Motion",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:A8dMX": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:rr2BC": {
+                          "content": "Echoes in Motion"
+                        },
+                        "ds:xhu8r": {
+                          "content": "Album · Lumen Choir"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "i3dynG",
+                      "ref": "ds:m015cR",
+                      "name": "Card / Drift Control",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:A8dMX": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-drift-control.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:rr2BC": {
+                          "content": "Drift Control"
+                        },
+                        "ds:xhu8r": {
+                          "content": "Album · Mira Sol"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "concept — backlog \"Smart Recommendations\", \"Music Discovery Graph\" — Listener-controlled recommendation filters and the influence graph. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "vau7u7",
+      "name": "Discovery / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "n7YGnk",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "mnTSbN",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "K8KEa6",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "MrCg8j",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "jTs5GY",
+                          "ref": "ds:BLCZ2j",
+                          "name": "Text/H1",
+                          "content": "Discover"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "gMXRjk",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "2HTwfM",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Z2LDhi",
+                      "ref": "ds:hMZrkL",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:otH6tw": {
+                          "content": "Unknown artists"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Num7QT",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "Less popular"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "96yjYk",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "Synth pop"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "NmuRjR",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "Night"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "HyyZWf",
+                      "ref": "ds:Fjw5fa",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:7qYiyW": {
+                          "content": "2020s"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "r8My9P",
+                      "ref": "ds:DTwJb",
+                      "name": "Button / More filters",
+                      "descendants": {
+                        "ds:GyGLK": {
+                          "content": "More filters"
+                        },
+                        "ds:DsOu2": {
+                          "icon": "sliders-horizontal"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "KjTAEk",
+                  "ref": "ds:vgo2eN",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:gtiXzp": {
+                      "type": "frame",
+                      "id": "uohrGL",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "2dRaD3",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "mTReRS",
+                              "name": "Column",
+                              "layout": "vertical",
+                              "gap": 24,
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "Bv5brY",
+                                  "ref": "ds:eYyDAY",
+                                  "name": "Graph Node",
+                                  "descendants": {
+                                    "ds:pwd2xT": {
+                                      "content": "Lumen Choir"
+                                    },
+                                    "ds:vVrkn9": {
+                                      "content": "Influence"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "zmeMdt",
+                                  "ref": "ds:eYyDAY",
+                                  "name": "Graph Node",
+                                  "descendants": {
+                                    "ds:pwd2xT": {
+                                      "content": "Kite Harbor"
+                                    },
+                                    "ds:vVrkn9": {
+                                      "content": "Influence"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ref",
+                              "id": "6VfXMT",
+                              "ref": "ds:hCiFfw",
+                              "name": "Icon/Muted",
+                              "icon": "arrow-right",
+                              "width": 28,
+                              "height": 28
+                            },
+                            {
+                              "type": "ref",
+                              "id": "frJiwQ",
+                              "ref": "ds:rnbU26",
+                              "name": "Graph Node/Focus",
+                              "descendants": {
+                                "ds:JExMXw": {
+                                  "content": "Luma Vale"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "ueDKUA",
+                              "ref": "ds:9tVzp9",
+                              "name": "Icon/Primary",
+                              "icon": "arrow-right",
+                              "width": 28,
+                              "height": 28
+                            },
+                            {
+                              "type": "frame",
+                              "id": "xvh253",
+                              "name": "Column",
+                              "layout": "vertical",
+                              "gap": 24,
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "F4KMbr",
+                                  "ref": "ds:eYyDAY",
+                                  "name": "Graph Node",
+                                  "descendants": {
+                                    "ds:pwd2xT": {
+                                      "content": "Mira Sol"
+                                    },
+                                    "ds:vVrkn9": {
+                                      "content": "Similar"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "LaCKXz",
+                                  "ref": "ds:eYyDAY",
+                                  "name": "Graph Node",
+                                  "descendants": {
+                                    "ds:pwd2xT": {
+                                      "content": "Nova & the Static"
+                                    },
+                                    "ds:vVrkn9": {
+                                      "content": "Similar"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ref",
+                              "id": "kSsYuu",
+                              "ref": "ds:6wCg3X",
+                              "name": "Icon/Info",
+                              "icon": "arrow-right",
+                              "width": 28,
+                              "height": 28
+                            },
+                            {
+                              "type": "frame",
+                              "id": "RyKJZ6",
+                              "name": "Column",
+                              "layout": "vertical",
+                              "gap": 10,
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "YySNzf",
+                                  "ref": "ds:Fjw5fa",
+                                  "name": "Chip/Default",
+                                  "descendants": {
+                                    "ds:7qYiyW": {
+                                      "content": "Synth pop"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "FjuvnJ",
+                                  "ref": "ds:Fjw5fa",
+                                  "name": "Chip/Default",
+                                  "descendants": {
+                                    "ds:7qYiyW": {
+                                      "content": "Dream pop"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "escMVY",
+                                  "ref": "ds:Fjw5fa",
+                                  "name": "Chip/Default",
+                                  "descendants": {
+                                    "ds:7qYiyW": {
+                                      "content": "Night drive"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "TLUGxC",
+                  "ref": "ds:zmGKRX",
+                  "name": "Section Header",
+                  "descendants": {
+                    "ds:Jwg656": {
+                      "content": "Picked with your filters"
+                    },
+                    "ds:gn5d6t": {
+                      "content": "Show all"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "dhbwaX",
+                  "name": "Card Row",
+                  "gap": 20,
+                  "alignItems": "start",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "mLzToH",
+                      "ref": "ds:m015cR",
+                      "name": "Card / Night Drive",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:A8dMX": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:rr2BC": {
+                          "content": "Night Drive"
+                        },
+                        "ds:xhu8r": {
+                          "content": "Playlist · 24 songs"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Vbafyv",
+                      "ref": "ds:m015cR",
+                      "name": "Card / Afterglow Sessions",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:A8dMX": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-afterglow.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:rr2BC": {
+                          "content": "Afterglow Sessions"
+                        },
+                        "ds:xhu8r": {
+                          "content": "Playlist · 18 songs"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5jADyv",
+                      "ref": "ds:m015cR",
+                      "name": "Card / Static Lines",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:A8dMX": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-static-lines.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:rr2BC": {
+                          "content": "Static Lines"
+                        },
+                        "ds:xhu8r": {
+                          "content": "Album · Kite Harbor"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "J2sAXH",
+                      "ref": "ds:m015cR",
+                      "name": "Card / Echoes in Motion",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:A8dMX": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:rr2BC": {
+                          "content": "Echoes in Motion"
+                        },
+                        "ds:xhu8r": {
+                          "content": "Album · Lumen Choir"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "xjbV3t",
+                      "ref": "ds:m015cR",
+                      "name": "Card / Drift Control",
+                      "width": 168,
+                      "height": "fit_content",
+                      "descendants": {
+                        "ds:A8dMX": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-drift-control.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:rr2BC": {
+                          "content": "Drift Control"
+                        },
+                        "ds:xhu8r": {
+                          "content": "Album · Mira Sol"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "concept — backlog \"Smart Recommendations\", \"Music Discovery Graph\" — Listener-controlled recommendation filters and the influence graph. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "VR3r4M",
+      "name": "Discovery / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "kTJK79",
+          "ref": "ds:rJ7nC6",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "H5ZYoC",
+          "ref": "ds:yr7XDa",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:YyLmeC": {
+              "content": "Discover"
+            },
+            "ds:CS6fU3": {
+              "enabled": false
+            },
+            "ds:N66thR": {
+              "icon": "sliders-horizontal"
+            },
+            "ds:XUdBL3": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "s3wLjD",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "f2QgXo",
+              "name": "Chips",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "fVDXnX",
+                  "ref": "ds:hMZrkL",
+                  "name": "Chip/Active",
+                  "descendants": {
+                    "ds:otH6tw": {
+                      "content": "Unknown artists"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "kos3vp",
+                  "ref": "ds:Fjw5fa",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:7qYiyW": {
+                      "content": "Synth pop"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "hTLD2j",
+                  "ref": "ds:Fjw5fa",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:7qYiyW": {
+                      "content": "Night"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "UT7gKg",
+              "ref": "ds:vgo2eN",
+              "name": "Surface/Panel",
+              "descendants": {
+                "ds:gtiXzp": {
+                  "type": "frame",
+                  "id": "FmVegq",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "WSgnGL",
+                      "ref": "ds:rnbU26",
+                      "name": "Graph Node/Focus",
+                      "descendants": {
+                        "ds:JExMXw": {
+                          "content": "Luma Vale"
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ZyPT9c",
+                      "name": "Row",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "fdqjpZ",
+                          "ref": "ds:eYyDAY",
+                          "name": "Graph Node",
+                          "descendants": {
+                            "ds:pwd2xT": {
+                              "content": "Mira Sol"
+                            },
+                            "ds:vVrkn9": {
+                              "content": "Similar"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "JzaFia",
+                          "ref": "ds:eYyDAY",
+                          "name": "Graph Node",
+                          "descendants": {
+                            "ds:pwd2xT": {
+                              "content": "Lumen Choir"
+                            },
+                            "ds:vVrkn9": {
+                              "content": "Influence"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "TdVs7V",
+              "ref": "ds:MGqiFD",
+              "name": "Text/H4",
+              "content": "Picked with your filters"
+            },
+            {
+              "type": "ref",
+              "id": "DwESDz",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Glass Horizon",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-afterglow.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Glass Horizon"
+                },
+                "ds:rFh9q": {
+                  "content": "Nova & the Static"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "mPE7F9",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Low Orbit",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-static-lines.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Low Orbit"
+                },
+                "ds:rFh9q": {
+                  "content": "Kite Harbor"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "4HXtNU",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Late Signal",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Late Signal"
+                },
+                "ds:rFh9q": {
+                  "content": "Lumen Choir"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "zuscwL",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "uVnxQo",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "HKBJK3",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"Smart Recommendations\", \"Music Discovery Graph\" — Listener-controlled recommendation filters and the influence graph. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "LZgJU9",
+      "name": "Discovery / No matches / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Dg4FAU",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "No66X4",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "eG7fRz",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "T2fpXu",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "mYM6if",
+                          "ref": "ds:BLCZ2j",
+                          "name": "Text/H1",
+                          "content": "Discover"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "xFAxLH",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "UDAHWt",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "E88uFp",
+                      "ref": "ds:hMZrkL",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:otH6tw": {
+                          "content": "Unknown artists"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "LdP9RL",
+                      "ref": "ds:hMZrkL",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:otH6tw": {
+                          "content": "Polka"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "inwKEo",
+                      "ref": "ds:hMZrkL",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:otH6tw": {
+                          "content": "1950s"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "KfkQwd",
+                  "ref": "ds:xZAnf",
+                  "name": "State / Nothing matches these filters",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "descendants": {
+                    "ds:i2Q9D": {
+                      "icon": "sliders-horizontal"
+                    },
+                    "ds:yQD8U": {
+                      "content": "Nothing matches these filters"
+                    },
+                    "ds:hWHdI": {
+                      "content": "Loosen a filter to see more music."
+                    },
+                    "ds:G1ZoX": {
+                      "content": "Clear filters →"
+                    }
+                  }
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"Smart Recommendations\", \"Music Discovery Graph\" — Listener-controlled recommendation filters and the influence graph. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "snUC8d",
+      "name": "Discovery / No matches / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "pLErTB",
+          "ref": "ds:rJ7nC6",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "WYJpw5",
+          "ref": "ds:yr7XDa",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:YyLmeC": {
+              "content": "Discover"
+            },
+            "ds:CS6fU3": {
+              "enabled": false
+            },
+            "ds:YpvVuM": {
+              "enabled": false
+            },
+            "ds:XUdBL3": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "hpZYuR",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "zZ9nUw",
+              "ref": "ds:xZAnf",
+              "name": "State / Nothing matches these filters",
+              "width": "fill_container",
+              "height": "fill_container",
+              "descendants": {
+                "ds:i2Q9D": {
+                  "icon": "sliders-horizontal"
+                },
+                "ds:yQD8U": {
+                  "content": "Nothing matches these filters"
+                },
+                "ds:hWHdI": {
+                  "content": "Loosen a filter to see more music."
+                },
+                "ds:G1ZoX": {
+                  "content": "Clear filters →"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "hi7dHF",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "DV7KUb",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "MGnKXZ",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"Smart Recommendations\", \"Music Discovery Graph\" — Listener-controlled recommendation filters and the influence graph. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "mufVDp",
+      "name": "Discovery / Loading / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "qjTcVb",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "cpgSW3",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "rTtw9s",
+                  "name": "Loading",
+                  "layout": "vertical",
+                  "gap": 24,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "M2js9p",
+                      "ref": "ds:Jjegi",
+                      "name": "Skeleton",
+                      "width": 220,
+                      "height": 28
+                    },
+                    {
+                      "type": "frame",
+                      "id": "H8oZfz",
+                      "name": "Skeleton Cards",
+                      "gap": 20,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "iwoimX",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "4gsS8n",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "nPs98E",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "RrhykR",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "EVQxWM",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "2DEguV",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "egcoyg",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "nMvjoi",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "5DAqYY",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "CM9Zni",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "FRDWLH",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "NviFFm",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "XQfgwM",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "GQHjoM",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "zZnQmL",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "xGHZhV",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "o7ufdH",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "zwkahS",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "U6SGoL",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "gbiqTt",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Rxg3Lt",
+                      "name": "Skeleton Cards",
+                      "gap": 20,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "BUBniU",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "xHY9px",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "Y7WcTW",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "JKBuZk",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "iwbgGQ",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "SQi3Yd",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "fWZiUk",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "Rcu5Ej",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "kmcXQk",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "4ozYED",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "MGTdc5",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "en7uba",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Darixn",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "Nv4w98",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "wNo7ER",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "KLSWYX",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "PaPNnW",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "iMCmra",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 168,
+                              "height": 168
+                            },
+                            {
+                              "type": "ref",
+                              "id": "ptukKm",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 130,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "bN3XUS",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 90,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"Smart Recommendations\", \"Music Discovery Graph\" — Listener-controlled recommendation filters and the influence graph. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "SJjSJM",
+      "name": "Discovery / Loading / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "G3zFAy",
+          "ref": "ds:rJ7nC6",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "Z7snC9",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "ehwbBA",
+              "name": "Loading",
+              "layout": "vertical",
+              "gap": 24,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "mfXbWB",
+                  "ref": "ds:Jjegi",
+                  "name": "Skeleton",
+                  "width": 140,
+                  "height": 28
+                },
+                {
+                  "type": "frame",
+                  "id": "K7cjMf",
+                  "name": "Skeleton Rows",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "jGLxGn",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "EZqsMw",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "MjVdou",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "CDM4yT",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "47H5Hs",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "sEsCAX",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "5qduAW",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "HF94A6",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "JtMpZJ",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "JSvUwe",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "VVHdqR",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Q5NFHz",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "uWgNdz",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "TsbzCX",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "r3DhU4",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "9N9RRE",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "LaTNZN",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "9cVUfG",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "2dBz7b",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "CnyFXv",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "J4c839",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "rdVrm9",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "MWErQ7",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "wntDCf",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "LxeagA",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "tU2faE",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "fP8nut",
+                          "ref": "ds:Jjegi",
+                          "name": "Skeleton",
+                          "width": 48,
+                          "height": 48
+                        },
+                        {
+                          "type": "frame",
+                          "id": "i8Qbdv",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "fpyPwd",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 170,
+                              "height": 12
+                            },
+                            {
+                              "type": "ref",
+                              "id": "mAAYAu",
+                              "ref": "ds:Jjegi",
+                              "name": "Skeleton",
+                              "width": 110,
+                              "height": 10
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "nPAYEv",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "niVaai",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "ejPzm7",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"Smart Recommendations\", \"Music Discovery Graph\" — Listener-controlled recommendation filters and the influence graph. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "PAf85S",
+      "name": "Discovery / Error / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "q5VpNy",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "iGT3as",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "kVYMFM",
+                  "ref": "ds:fNevX",
+                  "name": "State / Recommendations are unavailable",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "descendants": {
+                    "ds:rXj3m": {
+                      "icon": "circle-alert"
+                    },
+                    "ds:ChMrP": {
+                      "content": "Recommendations are unavailable"
+                    },
+                    "ds:K47N3": {
+                      "content": "Your recommendations could not be loaded."
+                    },
+                    "ds:DYMu1": {
+                      "content": "Try again →"
+                    }
+                  }
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 9170,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"Smart Recommendations\", \"Music Discovery Graph\" — Listener-controlled recommendation filters and the influence graph. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "hB3yPp",
+      "name": "Discovery / Error / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "F6MxXc",
+          "ref": "ds:rJ7nC6",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "iu3q3V",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "V3guPb",
+              "ref": "ds:fNevX",
+              "name": "State / Recommendations are unavailable",
+              "width": "fill_container",
+              "height": "fill_container",
+              "descendants": {
+                "ds:rXj3m": {
+                  "icon": "circle-alert"
+                },
+                "ds:ChMrP": {
+                  "content": "Recommendations are unavailable"
+                },
+                "ds:K47N3": {
+                  "content": "Your recommendations could not be loaded."
+                },
+                "ds:DYMu1": {
+                  "content": "Try again →"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "z8jXii",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "LnV9Jq",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "UzheRq",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 10710,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"Smart Recommendations\", \"Music Discovery Graph\" — Listener-controlled recommendation filters and the influence graph. Concept."
+    }
+  ]
+}

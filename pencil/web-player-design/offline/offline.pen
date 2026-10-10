@@ -1,0 +1,240 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "zTrYkt",
+      "name": "Offline / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "x5LQfG",
+          "ref": "ds:np7n3u",
+          "name": "Logo/Lockup"
+        },
+        {
+          "type": "frame",
+          "id": "n65PiH",
+          "name": "Column",
+          "layout": "vertical",
+          "gap": 12,
+          "width": 480,
+          "height": 320,
+          "children": [
+            {
+              "type": "ref",
+              "id": "BCKUbC",
+              "ref": "ds:FUNpG",
+              "name": "State / Offline",
+              "width": "fill_container",
+              "height": "fill_container",
+              "descendants": {
+                "ds:p2IPg": {
+                  "content": "You are offline"
+                },
+                "ds:m6SvC9": {
+                  "content": "Check your connection and try opening the page again."
+                },
+                "ds:Mj213": {
+                  "content": "Try again →"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/offline — Shown by the service worker without a connection."
+    },
+    {
+      "type": "frame",
+      "id": "sVSND3",
+      "name": "Offline / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "V6Kn6t",
+          "ref": "ds:np7n3u",
+          "name": "Logo/Lockup"
+        },
+        {
+          "type": "frame",
+          "id": "AheBdX",
+          "name": "Column",
+          "layout": "vertical",
+          "gap": 12,
+          "width": 480,
+          "height": 320,
+          "children": [
+            {
+              "type": "ref",
+              "id": "HQSTCf",
+              "ref": "ds:FUNpG",
+              "name": "State / Offline",
+              "width": "fill_container",
+              "height": "fill_container",
+              "descendants": {
+                "ds:p2IPg": {
+                  "content": "You are offline"
+                },
+                "ds:m6SvC9": {
+                  "content": "Check your connection and try opening the page again."
+                },
+                "ds:Mj213": {
+                  "content": "Try again →"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "/offline — Shown by the service worker without a connection."
+    },
+    {
+      "type": "frame",
+      "id": "SBtDvN",
+      "name": "Offline / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "ZdMe2f",
+          "ref": "ds:np7n3u",
+          "name": "Logo/Lockup"
+        },
+        {
+          "type": "frame",
+          "id": "wUSMBP",
+          "name": "Column",
+          "layout": "vertical",
+          "gap": 12,
+          "width": 480,
+          "height": 320,
+          "children": [
+            {
+              "type": "ref",
+              "id": "FkS8v6",
+              "ref": "ds:FUNpG",
+              "name": "State / Offline",
+              "width": "fill_container",
+              "height": "fill_container",
+              "descendants": {
+                "ds:p2IPg": {
+                  "content": "You are offline"
+                },
+                "ds:m6SvC9": {
+                  "content": "Check your connection and try opening the page again."
+                },
+                "ds:Mj213": {
+                  "content": "Try again →"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "/offline — Shown by the service worker without a connection."
+    },
+    {
+      "type": "frame",
+      "id": "oQQt2G",
+      "name": "Offline / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "gaEfyc",
+          "ref": "ds:np7n3u",
+          "name": "Logo/Lockup"
+        },
+        {
+          "type": "frame",
+          "id": "Rtfgfd",
+          "name": "Column",
+          "layout": "vertical",
+          "gap": 12,
+          "width": "fill_container",
+          "height": 320,
+          "children": [
+            {
+              "type": "ref",
+              "id": "F2wDBQ",
+              "ref": "ds:FUNpG",
+              "name": "State / Offline",
+              "width": "fill_container",
+              "height": "fill_container",
+              "descendants": {
+                "ds:p2IPg": {
+                  "content": "You are offline"
+                },
+                "ds:m6SvC9": {
+                  "content": "Check your connection and try opening the page again."
+                },
+                "ds:Mj213": {
+                  "content": "Try again →"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/offline — Shown by the service worker without a connection."
+    }
+  ]
+}
