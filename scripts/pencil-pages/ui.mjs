@@ -563,3 +563,52 @@ export const withMore = (frame, mobile, kind, count) => {
   frame.name = `${frame.name} loading more`
   return frame
 }
+/** Social sign-in: Google, Facebook and Apple stay visible; the other providers sit behind "More options". */
+const MORE_PROVIDERS = [
+  'Discord',
+  'GitHub',
+  'Microsoft',
+  'X',
+  'Instagram',
+  'TikTok',
+  'Twitch',
+  'LinkedIn',
+  'Reddit',
+  'Telegram',
+]
+const provider = (label, soon) =>
+  R(
+    'Auth/Provider',
+    { width: 'fill_container' },
+    { label: { content: label }, soon: soon ? undefined : { enabled: false } },
+  )
+export const OAuth = (open = false, { consent = true } = {}) =>
+  Col({ name: 'Social Sign-in', width: 'fill_container', gap: 10 }, [
+    consent && CheckRow('I accept the Terms of Use and Privacy Policy'),
+    Button('Continue with Google', 'outline', { width: 'fill_container' }),
+    Row({ name: 'Providers', width: 'fill_container', gap: 8 }, [
+      provider('Facebook', false),
+      provider('Apple', true),
+    ]),
+    open
+      ? Panel(
+          [
+            Row({ width: 'fill_container', justifyContent: 'space_between' }, [
+              Tx('Body Strong', 'More sign-in options'),
+              IconBtn('chevron-up'),
+            ]),
+            ...Array.from({ length: MORE_PROVIDERS.length / 2 }, (_, i) =>
+              Row({ name: 'Provider Row', width: 'fill_container', gap: 8 }, [
+                provider(MORE_PROVIDERS[i * 2], true),
+                provider(MORE_PROVIDERS[i * 2 + 1], true),
+              ]),
+            ),
+            Tx('Caption', 'Coming soon — Google and Facebook are live today.', { wrap: true }),
+          ],
+          { width: 'fill_container', gap: 8 },
+        )
+      : Button(`More options · ${MORE_PROVIDERS.length}`, 'ghost', {
+          icon: 'chevron-down',
+          width: 'fill_container',
+        }),
+  ])

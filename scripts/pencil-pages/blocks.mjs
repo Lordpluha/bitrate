@@ -1,6 +1,7 @@
 // Builds the "00E • Page Blocks" components into the library and records a registry of their
 // ids and overridable parts, so screens can be composed from library instances only.
 import { readFileSync, writeFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
 import {
   setMode,
   reserve,
@@ -17,6 +18,7 @@ import {
   Button,
   img,
   ART,
+  id,
 } from './kit.mjs'
 
 setMode('lib')
@@ -92,32 +94,32 @@ const add = (...n) => blocks.push(...n)
 add(
   txt('Text/Display', 'Display', {
     fontFamily: 'font-heading',
-    fontSize: 64,
+    fontSize: 54,
     fontWeight: '700',
-    letterSpacing: -1.2,
+    letterSpacing: -1.6,
     lineHeight: 1.05,
   }),
   txt('Text/Display Primary', '404', {
     fontFamily: 'font-heading',
-    fontSize: 120,
+    fontSize: 104,
     fontWeight: '700',
     fill: C.primary,
   }),
   txt('Text/H1', 'Heading 1', {
     fontFamily: 'font-heading',
-    fontSize: 36,
+    fontSize: 32,
     fontWeight: '700',
-    letterSpacing: -0.6,
+    letterSpacing: -0.8,
     lineHeight: 1.05,
   }),
   txt('Text/H2', 'Heading 2', {
     fontFamily: 'font-heading',
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: '600',
     letterSpacing: -0.4,
   }),
-  txt('Text/H3', 'Heading 3', { fontFamily: 'font-heading', fontSize: 22, fontWeight: '600' }),
-  txt('Text/H4', 'Heading 4', { fontFamily: 'font-heading', fontSize: 18, fontWeight: '600' }),
+  txt('Text/H3', 'Heading 3', { fontFamily: 'font-heading', fontSize: 19, fontWeight: '600' }),
+  txt('Text/H4', 'Heading 4', { fontFamily: 'font-heading', fontSize: 16, fontWeight: '600' }),
   txt('Text/Body', 'Body', {}),
   txt('Text/Body Strong', 'Body strong', { fontWeight: '600' }),
   txt('Text/Body Large', 'Body large', { fontSize: 16 }),
@@ -138,7 +140,7 @@ add(
   txt('Text/Link', 'Link', { fontSize: 13, fontWeight: '600', fill: C.primary }),
   txt('Text/Accent Heading', 'Accent', {
     fontFamily: 'font-heading',
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: '700',
     fill: C.accent,
   }),
@@ -150,14 +152,14 @@ add(
   }),
   txt('Text/Lyric Active', 'Current lyric line', {
     fontFamily: 'font-heading',
-    fontSize: 40,
+    fontSize: 34,
     fontWeight: '700',
     textGrowth: 'fixed-width',
     width: 720,
   }),
   txt('Text/Lyric', 'Upcoming lyric line', {
     fontFamily: 'font-heading',
-    fontSize: 40,
+    fontSize: 34,
     fontWeight: '700',
     fill: C.mutedForeground,
     textGrowth: 'fixed-width',
@@ -165,7 +167,7 @@ add(
   }),
   txt('Text/Lyric Past', 'Past lyric line', {
     fontFamily: 'font-heading',
-    fontSize: 40,
+    fontSize: 34,
     fontWeight: '700',
     fill: C.textSubdued,
     textGrowth: 'fixed-width',
@@ -174,7 +176,7 @@ add(
   txt('Text/On Media', 'On artwork', { fill: C.white }),
   txt('Text/On Media Display', 'On artwork', {
     fontFamily: 'font-heading',
-    fontSize: 72,
+    fontSize: 60,
     fontWeight: '700',
     fill: C.white,
   }),
@@ -1586,33 +1588,33 @@ add(
 add(
   txt('Text/Display Accent', 'Accent', {
     fontFamily: 'font-heading',
-    fontSize: 64,
+    fontSize: 54,
     fontWeight: '700',
-    letterSpacing: -1.2,
+    letterSpacing: -1.6,
     fill: C.accent,
     lineHeight: 1.05,
   }),
   txt('Text/H1 Accent', 'Accent', {
     fontFamily: 'font-heading',
-    fontSize: 36,
+    fontSize: 32,
     fontWeight: '700',
-    letterSpacing: -0.6,
+    letterSpacing: -0.8,
     fill: C.accent,
     lineHeight: 1.05,
   }),
   txt('Text/H1 Magenta', 'Magenta', {
     fontFamily: 'font-heading',
-    fontSize: 36,
+    fontSize: 32,
     fontWeight: '700',
-    letterSpacing: -0.6,
+    letterSpacing: -0.8,
     fill: C.magenta500,
     lineHeight: 1.05,
   }),
   txt('Text/Display Magenta', 'Magenta', {
     fontFamily: 'font-heading',
-    fontSize: 64,
+    fontSize: 54,
     fontWeight: '700',
-    letterSpacing: -1.2,
+    letterSpacing: -1.6,
     fill: C.magenta500,
     lineHeight: 1.05,
   }),
@@ -1901,6 +1903,53 @@ add(
   ),
 )
 
+/* the real Bitrate mark as a vector (packages/ui-react/assets/icons/logo-icon.svg) and its write-on loader keyframes.
+   The motion (brush mask along the ribbon spines, contour pulse, erase) lives in the prototypes; Pencil shows keyframes. */
+const LOGO_SVG = readFileSync(
+  join(
+    dirname(new URL(import.meta.url).pathname),
+    '../../packages/ui-react/assets/icons/logo-icon.svg',
+  ),
+  'utf8',
+)
+const LOGO_D = LOGO_SVG.match(/ d="([^"]+)"/)[1]
+const LOGO_BOX = [371, 117, 795, 775]
+const SPINE_A_HEAD =
+  'M 405 152 C 430 200 470 211 560 211 L 900 211 C 1010 211 1050 280 1050 350 C 1050 430 990 493 900 493'
+const TAILS = 'M 720 493 C 560 493 470 600 425 780 M 900 805 L 640 805 C 580 805 540 830 512 868'
+const brand = {
+  type: 'gradient',
+  gradientType: 'linear',
+  rotation: 90,
+  colors: [
+    { color: C.gradientPrimaryFrom, position: 0 },
+    { color: C.gradientPrimaryTo, position: 1 },
+  ],
+}
+const vec = (name, geometry, w, o = {}) => ({
+  type: 'path',
+  id: id(),
+  name,
+  geometry,
+  viewBox: LOGO_BOX,
+  width: w,
+  height: Math.round((w * 775) / 795),
+  ...o,
+})
+add(
+  comp('Logo/Mark Path', vec('Mark', LOGO_D, 72, { fill: brand })),
+  comp('Loader/Logo Write', vec('Write', SPINE_A_HEAD, 120, { stroke: brand, strokeWidth: 16 })),
+  comp(
+    'Loader/Logo Pulse',
+    vec('Pulse', LOGO_D, 120, { fill: brand, stroke: C.accent, strokeWidth: 2 }),
+  ),
+  comp('Loader/Logo Erase', vec('Erase', TAILS, 120, { stroke: brand, strokeWidth: 16 })),
+  comp(
+    'Loader/Logo Mini',
+    vec('Mini', LOGO_D, 24, { fill: C.muted, stroke: C.primary, strokeWidth: 1.5 }),
+  ),
+)
+
 /* loading: brand loader, spinners, progress, statuses and skeleton rows that mirror each long list */
 const sk = (w, h = 12, o = {}) => Ref('Jjegi', { name: 'Skeleton', width: w, height: h, ...o })
 const skCircle = (d) => sk(d, d, { cornerRadius: d / 2 })
@@ -1960,12 +2009,8 @@ add(
   comp(
     'Loader/Splash',
     Col({ name: 'Splash', width: 360, gap: 28, alignItems: 'center' }, [
-      Ref(reg['Logo/Lockup'].id, { name: 'Lockup' }),
-      Ref(
-        reg['Loader/Signal'].id,
-        { name: 'Signal' },
-        { [reg['Loader/Signal'].parts.label]: { enabled: false } },
-      ),
+      Ref(reg['Loader/Logo Pulse'].id, { name: 'Logo Loader' }),
+      T('Bitrate', { fontFamily: 'font-heading', fontSize: 26, fontWeight: '700' }),
       Col({ name: 'Progress', gap: 10, width: 240, alignItems: 'center' }, [
         track('Track', 240, 140),
         part('label', T('Connecting to your library…', { fontSize: 13, fill: C.mutedForeground })),
@@ -3401,6 +3446,154 @@ add(
         ),
       ),
     ]),
+  ),
+)
+
+/* signal cursor: one cursor everywhere (pointer devices); touch gets the press ripple instead */
+const ring = (size, o = {}, children = []) =>
+  F(
+    {
+      name: 'Ring',
+      width: size,
+      height: size,
+      cornerRadius: size / 2,
+      stroke: C.accent,
+      strokeWidth: 1.5,
+      justifyContent: 'center',
+      alignItems: 'center',
+      ...o,
+    },
+    children,
+  )
+const cdot = (d = 6, fill = C.foreground) =>
+  F({ name: 'Dot', width: d, height: d, cornerRadius: d / 2, fill })
+add(
+  comp('Cursor/Default', ring(40, {}, [cdot()])),
+  comp('Cursor/Hover', ring(56, { fill: C.sidebarAccent }, [])),
+  comp(
+    'Cursor/Play',
+    Row(
+      { name: 'Play Pill', height: 40, padding: [0, 14], gap: 8, cornerRadius: 20, fill: C.white },
+      [
+        I('play', { width: 14, height: 14, fill: C.background }),
+        part('label', T('Play', { fontSize: 13, fontWeight: '600', fill: C.background })),
+      ],
+    ),
+  ),
+  comp(
+    'Cursor/Drag',
+    ring(56, { gap: 6 }, [
+      I('chevron-left', { width: 14, height: 14, fill: C.accent }),
+      I('chevron-right', { width: 14, height: 14, fill: C.accent }),
+    ]),
+  ),
+  comp('Cursor/Text', F({ name: 'Beam', width: 2, height: 22, cornerRadius: 1, fill: C.accent })),
+  comp(
+    'Cursor/Scrub',
+    Col({ name: 'Scrub', gap: 4, alignItems: 'center' }, [
+      Row({ name: 'Label', height: 20, padding: [0, 6], cornerRadius: 6, fill: C.foreground }, [
+        part('label', T('1:48', { fontSize: 11, fontWeight: '600', fill: C.background })),
+      ]),
+      F({ name: 'Line', width: 2, height: 28, cornerRadius: 1, fill: C.accent }),
+    ]),
+  ),
+  comp(
+    'Cursor/Loading',
+    ring(40, { stroke: C.border }, [I('loader-circle', { width: 22, height: 22, fill: C.accent })]),
+  ),
+  comp('Cursor/Pressed', ring(30, {}, [cdot(6, C.accent)])),
+  comp(
+    'Cursor/Disabled',
+    ring(40, { stroke: C.mutedForeground }, [
+      I('ban', { width: 16, height: 16, fill: C.mutedForeground }),
+    ]),
+  ),
+  comp(
+    'Cursor/Listening',
+    ring(
+      44,
+      { gap: 2 },
+      [6, 12, 18, 12, 6].map((h, i) =>
+        F({ name: `Bar ${i + 1}`, width: 2, height: h, cornerRadius: 1, fill: C.accent }),
+      ),
+    ),
+  ),
+  comp(
+    'Cursor/Touch Ripple',
+    ring(72, { stroke: C.accent, strokeWidth: 1 }, [
+      F({ name: 'Press', width: 40, height: 40, cornerRadius: 20, fill: C.sidebarAccent }),
+    ]),
+  ),
+)
+
+/* toasts: one family, bottom-right on desktop (above the player bar), top on mobile; Sonner-like stack */
+const toastBase = (name, lead, { action, close = true, w = 360 } = {}) =>
+  comp(
+    name,
+    Row(
+      {
+        name: 'Toast',
+        width: w,
+        padding: [12, 12, 12, 14],
+        gap: 12,
+        cornerRadius: 12,
+        fill: C.popover,
+        stroke: C.border,
+        strokeWidth: 1,
+        alignItems: 'start',
+        effect: { type: 'shadow', color: C.shadow, offset: { x: 0, y: 12 }, blur: 32 },
+      },
+      [
+        lead,
+        Col({ gap: 2, width: 'fill_container' }, [
+          part('title', T('Title', { fontSize: 14, fontWeight: '600' })),
+          part('desc', T('Description', { fontSize: 12, fill: C.mutedForeground })),
+        ]),
+        action && part('action', Button(action, 'outline')),
+        close && I('x', { width: 14, height: 14, fill: C.mutedForeground }),
+      ].filter(Boolean),
+    ),
+  )
+const toastIcon = (icon, fill) =>
+  F({ name: 'Icon', width: 20, height: 20, justifyContent: 'center', alignItems: 'center' }, [
+    I(icon, { width: 18, height: 18, fill }),
+  ])
+add(
+  toastBase('Toast/Success', toastIcon('circle-check', C.success)),
+  toastBase('Toast/Error', toastIcon('circle-x', C.destructive), { action: 'Retry' }),
+  toastBase('Toast/Info', toastIcon('info', C.info)),
+  toastBase('Toast/Warning', toastIcon('triangle-alert', C.warning)),
+  toastBase('Toast/Undo', toastIcon('trash-2', C.mutedForeground), { action: 'Undo' }),
+  toastBase('Toast/Offline', toastIcon('wifi-off', C.mutedForeground), { close: false }),
+  toastBase(
+    'Toast/Loading',
+    Ref(reg['Loader/Logo Mini'].id, { name: 'Logo Loader', width: 20, height: 20 }),
+    { close: false },
+  ),
+  toastBase('Toast/Media', part('cover', cover({ width: 40, height: 40, cornerRadius: 6 })), {
+    action: 'View queue',
+  }),
+)
+
+/* 404 "signal lost": a flatline where the music should be */
+add(
+  comp(
+    'NotFound/Flatline',
+    Row(
+      { name: 'Flatline', gap: 4, alignItems: 'center', height: 64 },
+      [
+        10, 18, 30, 46, 30, 22, 38, 54, 30, 14, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 12, 26, 44, 60, 36,
+        20, 34, 48, 24, 12,
+      ].map((h, i) =>
+        F({
+          name: 'Bar',
+          width: 6,
+          height: h,
+          cornerRadius: 3,
+          fill: h <= 4 ? C.destructive : i < 10 ? C.primary : C.accent,
+        }),
+      ),
+    ),
   ),
 )
 

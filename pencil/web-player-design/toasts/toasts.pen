@@ -1,0 +1,3789 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "MTobQJ",
+      "name": "Toasts / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "rcBPmh",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "XTtomP",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "vkJzEo",
+                  "ref": "ds:5XCgwV",
+                  "name": "Section Header",
+                  "descendants": {
+                    "ds:J7CybM": {
+                      "content": "Jump back in"
+                    },
+                    "ds:TVYg65": {
+                      "content": "Show all"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "icqTGW",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "iETKAQ",
+                      "ref": "ds:4X98gK",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:VVPqtm": {
+                          "content": "All"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "muKuuH",
+                      "ref": "ds:HxBi6N",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:YajWyG": {
+                          "content": "Music"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "6F2XK8",
+                      "ref": "ds:HxBi6N",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:YajWyG": {
+                          "content": "Podcasts"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "CW5zj2",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Afterglow"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Nova & the Static · 3:42"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "4KSsHE",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Night Signal"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Mira Sol · 3:56"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "Qgz9vC",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Static Lines"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Kite Harbor · 3:47"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "witazW",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Echoes in Motion"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Lumen Choir · 4:21"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "UyuZZS",
+                  "name": "Spacer",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "children": []
+                },
+                {
+                  "type": "frame",
+                  "id": "mgn8iC",
+                  "name": "Toast Region",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "TxkJe4",
+                      "name": "Toast Stack",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "alignItems": "center",
+                      "width": 360,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "V3j7P4",
+                          "ref": "ds:tAikBg",
+                          "name": "Toast/Undo",
+                          "width": 328,
+                          "descendants": {
+                            "ds:eky8uC": {
+                              "content": "Removed from Night drive"
+                            },
+                            "ds:9V2cpU": {
+                              "content": "1 track removed."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "hmnh7k",
+                          "ref": "ds:8ANWji",
+                          "name": "Toast/Success",
+                          "width": 344,
+                          "descendants": {
+                            "ds:fRaVDU": {
+                              "content": "Saved to Liked Songs"
+                            },
+                            "ds:bcWfj6": {
+                              "content": "Night Signal · Mira Sol"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "EJCaVX",
+                          "ref": "ds:qma7Jh",
+                          "name": "Toast/Media",
+                          "width": 360,
+                          "descendants": {
+                            "ds:LBePBz": {
+                              "content": "Added to queue"
+                            },
+                            "ds:agYAns": {
+                              "content": "Night Signal · Mira Sol"
+                            },
+                            "ds:3zyBNM": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-night-signal.webp",
+                                "mode": "cover"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide toasts (Sonner-style region) — Feedback that does not block: success, error with Retry, info, warning, Undo, loading with the logo loader, offline and media (\"Added to queue\"). Bottom-right above the player bar on desktop, top on mobile; newest in front, stack expands on hover, 4 s auto-dismiss (errors stay until closed), swipe to dismiss on touch."
+    },
+    {
+      "type": "frame",
+      "id": "nwhZZt",
+      "name": "Toasts / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "YzsNCK",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "jErAw6",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "7gke7j",
+                  "ref": "ds:5XCgwV",
+                  "name": "Section Header",
+                  "descendants": {
+                    "ds:J7CybM": {
+                      "content": "Jump back in"
+                    },
+                    "ds:TVYg65": {
+                      "content": "Show all"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "9qZugm",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "GEziaN",
+                      "ref": "ds:4X98gK",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:VVPqtm": {
+                          "content": "All"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "cPRdmU",
+                      "ref": "ds:HxBi6N",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:YajWyG": {
+                          "content": "Music"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "rGxYMX",
+                      "ref": "ds:HxBi6N",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:YajWyG": {
+                          "content": "Podcasts"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "Z7Ha9p",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Afterglow"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Nova & the Static · 3:42"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "qcNmTT",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Night Signal"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Mira Sol · 3:56"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "7afXfh",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Static Lines"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Kite Harbor · 3:47"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "UwDZcY",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Echoes in Motion"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Lumen Choir · 4:21"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "uNZ3yC",
+                  "name": "Spacer",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "children": []
+                },
+                {
+                  "type": "frame",
+                  "id": "qxq3WX",
+                  "name": "Toast Region",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "aw4BMq",
+                      "name": "Toast Stack",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "alignItems": "center",
+                      "width": 360,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Dnr6oQ",
+                          "ref": "ds:tAikBg",
+                          "name": "Toast/Undo",
+                          "width": 328,
+                          "descendants": {
+                            "ds:eky8uC": {
+                              "content": "Removed from Night drive"
+                            },
+                            "ds:9V2cpU": {
+                              "content": "1 track removed."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ShWvce",
+                          "ref": "ds:8ANWji",
+                          "name": "Toast/Success",
+                          "width": 344,
+                          "descendants": {
+                            "ds:fRaVDU": {
+                              "content": "Saved to Liked Songs"
+                            },
+                            "ds:bcWfj6": {
+                              "content": "Night Signal · Mira Sol"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "QJWLfg",
+                          "ref": "ds:qma7Jh",
+                          "name": "Toast/Media",
+                          "width": 360,
+                          "descendants": {
+                            "ds:LBePBz": {
+                              "content": "Added to queue"
+                            },
+                            "ds:agYAns": {
+                              "content": "Night Signal · Mira Sol"
+                            },
+                            "ds:3zyBNM": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-night-signal.webp",
+                                "mode": "cover"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "system — app-wide toasts (Sonner-style region) — Feedback that does not block: success, error with Retry, info, warning, Undo, loading with the logo loader, offline and media (\"Added to queue\"). Bottom-right above the player bar on desktop, top on mobile; newest in front, stack expands on hover, 4 s auto-dismiss (errors stay until closed), swipe to dismiss on touch."
+    },
+    {
+      "type": "frame",
+      "id": "8nF2Tb",
+      "name": "Toasts / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "uq2RjU",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "eTEXEH",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "brdq9C",
+                  "ref": "ds:5XCgwV",
+                  "name": "Section Header",
+                  "descendants": {
+                    "ds:J7CybM": {
+                      "content": "Jump back in"
+                    },
+                    "ds:TVYg65": {
+                      "content": "Show all"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "6NYwaw",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "FJQEYb",
+                      "ref": "ds:4X98gK",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:VVPqtm": {
+                          "content": "All"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "BQaMHW",
+                      "ref": "ds:HxBi6N",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:YajWyG": {
+                          "content": "Music"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jLHCSY",
+                      "ref": "ds:HxBi6N",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:YajWyG": {
+                          "content": "Podcasts"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "PtDRqZ",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Afterglow"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Nova & the Static · 3:42"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "t6ZnLB",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Night Signal"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Mira Sol · 3:56"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "dRMvpe",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Static Lines"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Kite Harbor · 3:47"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "XoAnd7",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Echoes in Motion"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Lumen Choir · 4:21"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "qaA82f",
+                  "name": "Spacer",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "children": []
+                },
+                {
+                  "type": "frame",
+                  "id": "4QwPCD",
+                  "name": "Toast Region",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "fR3bNW",
+                      "name": "Toast Stack",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "alignItems": "center",
+                      "width": 360,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "bUoMbM",
+                          "ref": "ds:tAikBg",
+                          "name": "Toast/Undo",
+                          "width": 328,
+                          "descendants": {
+                            "ds:eky8uC": {
+                              "content": "Removed from Night drive"
+                            },
+                            "ds:9V2cpU": {
+                              "content": "1 track removed."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "G9iBHS",
+                          "ref": "ds:8ANWji",
+                          "name": "Toast/Success",
+                          "width": 344,
+                          "descendants": {
+                            "ds:fRaVDU": {
+                              "content": "Saved to Liked Songs"
+                            },
+                            "ds:bcWfj6": {
+                              "content": "Night Signal · Mira Sol"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "GDZoHk",
+                          "ref": "ds:qma7Jh",
+                          "name": "Toast/Media",
+                          "width": 360,
+                          "descendants": {
+                            "ds:LBePBz": {
+                              "content": "Added to queue"
+                            },
+                            "ds:agYAns": {
+                              "content": "Night Signal · Mira Sol"
+                            },
+                            "ds:3zyBNM": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-night-signal.webp",
+                                "mode": "cover"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "system — app-wide toasts (Sonner-style region) — Feedback that does not block: success, error with Retry, info, warning, Undo, loading with the logo loader, offline and media (\"Added to queue\"). Bottom-right above the player bar on desktop, top on mobile; newest in front, stack expands on hover, 4 s auto-dismiss (errors stay until closed), swipe to dismiss on touch."
+    },
+    {
+      "type": "frame",
+      "id": "wm8Ao4",
+      "name": "Toasts / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "AeNiCW",
+          "ref": "ds:PVPP6B",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "ZxjJMJ",
+          "ref": "ds:PdAHhU",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:bRKPHC": {
+              "content": "Home"
+            },
+            "ds:N4sE47": {
+              "enabled": false
+            },
+            "ds:jx6tVj": {
+              "enabled": false
+            },
+            "ds:UKgTGQ": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "kyiUXa",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "VMFs6B",
+              "name": "Toast Stack",
+              "layout": "vertical",
+              "gap": 4,
+              "alignItems": "center",
+              "width": 358,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "vP2QEX",
+                  "ref": "ds:tAikBg",
+                  "name": "Toast/Undo",
+                  "width": 326,
+                  "descendants": {
+                    "ds:eky8uC": {
+                      "content": "Removed from Night drive"
+                    },
+                    "ds:9V2cpU": {
+                      "content": "1 track removed."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "QEPP2B",
+                  "ref": "ds:8ANWji",
+                  "name": "Toast/Success",
+                  "width": 342,
+                  "descendants": {
+                    "ds:fRaVDU": {
+                      "content": "Saved to Liked Songs"
+                    },
+                    "ds:bcWfj6": {
+                      "content": "Night Signal · Mira Sol"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "RaBvwy",
+                  "ref": "ds:qma7Jh",
+                  "name": "Toast/Media",
+                  "width": 360,
+                  "descendants": {
+                    "ds:LBePBz": {
+                      "content": "Added to queue"
+                    },
+                    "ds:agYAns": {
+                      "content": "Night Signal · Mira Sol"
+                    },
+                    "ds:3zyBNM": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/albums/album-night-signal.webp",
+                        "mode": "cover"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "r3rALv",
+              "ref": "ds:5XCgwV",
+              "name": "Section Header",
+              "descendants": {
+                "ds:J7CybM": {
+                  "content": "Jump back in"
+                },
+                "ds:TVYg65": {
+                  "content": "Show all"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "Hh9ZGk",
+              "name": "Chips",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "8Ly7Ga",
+                  "ref": "ds:4X98gK",
+                  "name": "Chip/Active",
+                  "descendants": {
+                    "ds:VVPqtm": {
+                      "content": "All"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "fUA3GB",
+                  "ref": "ds:HxBi6N",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:YajWyG": {
+                      "content": "Music"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "G4LSty",
+                  "ref": "ds:HxBi6N",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:YajWyG": {
+                      "content": "Podcasts"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "sSHXzr",
+              "ref": "ds:BaPSTM",
+              "name": "Episode Row",
+              "descendants": {
+                "ds:jUWS67": {
+                  "content": "Afterglow"
+                },
+                "ds:xdvbRu": {
+                  "content": "Nova & the Static · 3:42"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "U7gmXq",
+              "ref": "ds:BaPSTM",
+              "name": "Episode Row",
+              "descendants": {
+                "ds:jUWS67": {
+                  "content": "Night Signal"
+                },
+                "ds:xdvbRu": {
+                  "content": "Mira Sol · 3:56"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "PDcCV2",
+              "ref": "ds:BaPSTM",
+              "name": "Episode Row",
+              "descendants": {
+                "ds:jUWS67": {
+                  "content": "Static Lines"
+                },
+                "ds:xdvbRu": {
+                  "content": "Kite Harbor · 3:47"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "3a9hat",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "dYSa4W",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "CSSiYW",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide toasts (Sonner-style region) — Feedback that does not block: success, error with Retry, info, warning, Undo, loading with the logo loader, offline and media (\"Added to queue\"). Bottom-right above the player bar on desktop, top on mobile; newest in front, stack expands on hover, 4 s auto-dismiss (errors stay until closed), swipe to dismiss on touch."
+    },
+    {
+      "type": "frame",
+      "id": "49PeVq",
+      "name": "Toasts / All variants / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "mjjnex",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "wGBGbs",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "PGVbQZ",
+                  "ref": "ds:zgucz3",
+                  "name": "Text/H1",
+                  "content": "Toasts"
+                },
+                {
+                  "type": "frame",
+                  "id": "Vnzfpf",
+                  "name": "Variants",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "yvuLoS",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "UjRQCW",
+                          "ref": "ds:8ANWji",
+                          "name": "Toast/Success",
+                          "width": 360,
+                          "descendants": {
+                            "ds:fRaVDU": {
+                              "content": "Saved to Liked Songs"
+                            },
+                            "ds:bcWfj6": {
+                              "content": "Night Signal · Mira Sol"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "CrKe8w",
+                          "ref": "ds:daEiTG",
+                          "name": "Toast/Error",
+                          "width": 360,
+                          "descendants": {
+                            "ds:4jK5Ep": {
+                              "content": "Could not save the playlist"
+                            },
+                            "ds:aXVS9j": {
+                              "content": "Check your connection and try again."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "u6LeoJ",
+                          "ref": "ds:ZkKREq",
+                          "name": "Toast/Info",
+                          "width": 360,
+                          "descendants": {
+                            "ds:sAquzs": {
+                              "content": "Playing on Desktop"
+                            },
+                            "ds:JAjseU": {
+                              "content": "Playback moved from this phone."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "sjtV69",
+                          "ref": "ds:rNij26",
+                          "name": "Toast/Warning",
+                          "width": 360,
+                          "descendants": {
+                            "ds:rcTx9E": {
+                              "content": "Storage almost full"
+                            },
+                            "ds:agA8pA": {
+                              "content": "Downloads will pause at 95%."
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "MKqYbs",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "SvpmBu",
+                          "ref": "ds:tAikBg",
+                          "name": "Toast/Undo",
+                          "width": 360,
+                          "descendants": {
+                            "ds:eky8uC": {
+                              "content": "Removed from Night drive"
+                            },
+                            "ds:9V2cpU": {
+                              "content": "1 track removed."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "erdQpy",
+                          "ref": "ds:pwJyCw",
+                          "name": "Toast/Loading",
+                          "width": 360,
+                          "descendants": {
+                            "ds:Zhx5xP": {
+                              "content": "Uploading cover…"
+                            },
+                            "ds:hdZyZk": {
+                              "content": "Night drive · 64%"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ESZvJ7",
+                          "ref": "ds:3ZhQFZ",
+                          "name": "Toast/Offline",
+                          "width": 360,
+                          "descendants": {
+                            "ds:gPpeYX": {
+                              "content": "You are offline"
+                            },
+                            "ds:7NSoKu": {
+                              "content": "Playing from downloads. Changes sync later."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "XizCbL",
+                          "ref": "ds:qma7Jh",
+                          "name": "Toast/Media",
+                          "width": 360,
+                          "descendants": {
+                            "ds:LBePBz": {
+                              "content": "Added to queue"
+                            },
+                            "ds:agYAns": {
+                              "content": "Night Signal · Mira Sol"
+                            },
+                            "ds:3zyBNM": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-night-signal.webp",
+                                "mode": "cover"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide toasts (Sonner-style region) — Feedback that does not block: success, error with Retry, info, warning, Undo, loading with the logo loader, offline and media (\"Added to queue\"). Bottom-right above the player bar on desktop, top on mobile; newest in front, stack expands on hover, 4 s auto-dismiss (errors stay until closed), swipe to dismiss on touch."
+    },
+    {
+      "type": "frame",
+      "id": "aJxyp5",
+      "name": "Toasts / All variants / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "YmpPhe",
+          "ref": "ds:PVPP6B",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "EcygxE",
+          "ref": "ds:PdAHhU",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:bRKPHC": {
+              "content": "Toasts"
+            },
+            "ds:jx6tVj": {
+              "enabled": false
+            },
+            "ds:UKgTGQ": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "5ad62a",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "9GTLPQ",
+              "ref": "ds:8ANWji",
+              "name": "Toast/Success",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fRaVDU": {
+                  "content": "Saved to Liked Songs"
+                },
+                "ds:bcWfj6": {
+                  "content": "Night Signal · Mira Sol"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "CyNGQs",
+              "ref": "ds:daEiTG",
+              "name": "Toast/Error",
+              "width": "fill_container",
+              "descendants": {
+                "ds:4jK5Ep": {
+                  "content": "Could not save the playlist"
+                },
+                "ds:aXVS9j": {
+                  "content": "Check your connection and try again."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "pZCuUQ",
+              "ref": "ds:ZkKREq",
+              "name": "Toast/Info",
+              "width": "fill_container",
+              "descendants": {
+                "ds:sAquzs": {
+                  "content": "Playing on Desktop"
+                },
+                "ds:JAjseU": {
+                  "content": "Playback moved from this phone."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "9VYHLa",
+              "ref": "ds:rNij26",
+              "name": "Toast/Warning",
+              "width": "fill_container",
+              "descendants": {
+                "ds:rcTx9E": {
+                  "content": "Storage almost full"
+                },
+                "ds:agA8pA": {
+                  "content": "Downloads will pause at 95%."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "NdPkd7",
+              "ref": "ds:tAikBg",
+              "name": "Toast/Undo",
+              "width": "fill_container",
+              "descendants": {
+                "ds:eky8uC": {
+                  "content": "Removed from Night drive"
+                },
+                "ds:9V2cpU": {
+                  "content": "1 track removed."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "uTqxDh",
+              "ref": "ds:pwJyCw",
+              "name": "Toast/Loading",
+              "width": "fill_container",
+              "descendants": {
+                "ds:Zhx5xP": {
+                  "content": "Uploading cover…"
+                },
+                "ds:hdZyZk": {
+                  "content": "Night drive · 64%"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "pgn74g",
+              "ref": "ds:3ZhQFZ",
+              "name": "Toast/Offline",
+              "width": "fill_container",
+              "descendants": {
+                "ds:gPpeYX": {
+                  "content": "You are offline"
+                },
+                "ds:7NSoKu": {
+                  "content": "Playing from downloads. Changes sync later."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "q2VaoQ",
+              "ref": "ds:qma7Jh",
+              "name": "Toast/Media",
+              "width": "fill_container",
+              "descendants": {
+                "ds:LBePBz": {
+                  "content": "Added to queue"
+                },
+                "ds:agYAns": {
+                  "content": "Night Signal · Mira Sol"
+                },
+                "ds:3zyBNM": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-night-signal.webp",
+                    "mode": "cover"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "zh6kRv",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "dD8rFw",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "ZpY2qC",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide toasts (Sonner-style region) — Feedback that does not block: success, error with Retry, info, warning, Undo, loading with the logo loader, offline and media (\"Added to queue\"). Bottom-right above the player bar on desktop, top on mobile; newest in front, stack expands on hover, 4 s auto-dismiss (errors stay until closed), swipe to dismiss on touch."
+    },
+    {
+      "type": "frame",
+      "id": "BCFukD",
+      "name": "Toasts / Expanded stack / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "gGWL9Y",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "XzSFxk",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "nkWkFm",
+                  "ref": "ds:5XCgwV",
+                  "name": "Section Header",
+                  "descendants": {
+                    "ds:J7CybM": {
+                      "content": "Jump back in"
+                    },
+                    "ds:TVYg65": {
+                      "content": "Show all"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "iLCaJa",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ky7kfm",
+                      "ref": "ds:4X98gK",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:VVPqtm": {
+                          "content": "All"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Y3nQYm",
+                      "ref": "ds:HxBi6N",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:YajWyG": {
+                          "content": "Music"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "L7BC58",
+                      "ref": "ds:HxBi6N",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:YajWyG": {
+                          "content": "Podcasts"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "pK3Tmf",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Afterglow"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Nova & the Static · 3:42"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "wHjEH7",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Night Signal"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Mira Sol · 3:56"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "HEMA3B",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Static Lines"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Kite Harbor · 3:47"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "fEs5Mt",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Echoes in Motion"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Lumen Choir · 4:21"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "GEGmep",
+                  "name": "Spacer",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "children": []
+                },
+                {
+                  "type": "frame",
+                  "id": "VHkwxN",
+                  "name": "Toast Region",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "kPRx3U",
+                      "name": "Toast Stack",
+                      "layout": "vertical",
+                      "gap": 10,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "v9EwDq",
+                          "ref": "ds:qma7Jh",
+                          "name": "Toast/Media",
+                          "width": 360,
+                          "descendants": {
+                            "ds:LBePBz": {
+                              "content": "Added to queue"
+                            },
+                            "ds:agYAns": {
+                              "content": "Night Signal · Mira Sol"
+                            },
+                            "ds:3zyBNM": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-night-signal.webp",
+                                "mode": "cover"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "TQegzt",
+                          "ref": "ds:8ANWji",
+                          "name": "Toast/Success",
+                          "width": 360,
+                          "descendants": {
+                            "ds:fRaVDU": {
+                              "content": "Saved to Liked Songs"
+                            },
+                            "ds:bcWfj6": {
+                              "content": "Night Signal · Mira Sol"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "zAAvZ7",
+                          "ref": "ds:tAikBg",
+                          "name": "Toast/Undo",
+                          "width": 360,
+                          "descendants": {
+                            "ds:eky8uC": {
+                              "content": "Removed from Night drive"
+                            },
+                            "ds:9V2cpU": {
+                              "content": "1 track removed."
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide toasts (Sonner-style region) — Feedback that does not block: success, error with Retry, info, warning, Undo, loading with the logo loader, offline and media (\"Added to queue\"). Bottom-right above the player bar on desktop, top on mobile; newest in front, stack expands on hover, 4 s auto-dismiss (errors stay until closed), swipe to dismiss on touch."
+    },
+    {
+      "type": "frame",
+      "id": "bjDpYH",
+      "name": "Toasts / Expanded stack / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "U9s87F",
+          "ref": "ds:PVPP6B",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "4vMWr7",
+          "ref": "ds:PdAHhU",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:bRKPHC": {
+              "content": "Home"
+            },
+            "ds:N4sE47": {
+              "enabled": false
+            },
+            "ds:jx6tVj": {
+              "enabled": false
+            },
+            "ds:UKgTGQ": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "ZzJngt",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "ooiDur",
+              "name": "Toast Stack",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "NqqiZS",
+                  "ref": "ds:qma7Jh",
+                  "name": "Toast/Media",
+                  "width": 360,
+                  "descendants": {
+                    "ds:LBePBz": {
+                      "content": "Added to queue"
+                    },
+                    "ds:agYAns": {
+                      "content": "Night Signal · Mira Sol"
+                    },
+                    "ds:3zyBNM": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/albums/album-night-signal.webp",
+                        "mode": "cover"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "FgUiGG",
+                  "ref": "ds:8ANWji",
+                  "name": "Toast/Success",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:fRaVDU": {
+                      "content": "Saved to Liked Songs"
+                    },
+                    "ds:bcWfj6": {
+                      "content": "Night Signal · Mira Sol"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "F4e6gp",
+              "ref": "ds:5XCgwV",
+              "name": "Section Header",
+              "descendants": {
+                "ds:J7CybM": {
+                  "content": "Jump back in"
+                },
+                "ds:TVYg65": {
+                  "content": "Show all"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "U8ZVuU",
+              "name": "Chips",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "voqfqj",
+                  "ref": "ds:4X98gK",
+                  "name": "Chip/Active",
+                  "descendants": {
+                    "ds:VVPqtm": {
+                      "content": "All"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "xJ9Ytt",
+                  "ref": "ds:HxBi6N",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:YajWyG": {
+                      "content": "Music"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "8BRqic",
+                  "ref": "ds:HxBi6N",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:YajWyG": {
+                      "content": "Podcasts"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "MY2Fs2",
+              "ref": "ds:BaPSTM",
+              "name": "Episode Row",
+              "descendants": {
+                "ds:jUWS67": {
+                  "content": "Afterglow"
+                },
+                "ds:xdvbRu": {
+                  "content": "Nova & the Static · 3:42"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "rnTDbV",
+              "ref": "ds:BaPSTM",
+              "name": "Episode Row",
+              "descendants": {
+                "ds:jUWS67": {
+                  "content": "Night Signal"
+                },
+                "ds:xdvbRu": {
+                  "content": "Mira Sol · 3:56"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "auwv9S",
+              "ref": "ds:BaPSTM",
+              "name": "Episode Row",
+              "descendants": {
+                "ds:jUWS67": {
+                  "content": "Static Lines"
+                },
+                "ds:xdvbRu": {
+                  "content": "Kite Harbor · 3:47"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "cvTC53",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "RLqrBf",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "VaLHsd",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide toasts (Sonner-style region) — Feedback that does not block: success, error with Retry, info, warning, Undo, loading with the logo loader, offline and media (\"Added to queue\"). Bottom-right above the player bar on desktop, top on mobile; newest in front, stack expands on hover, 4 s auto-dismiss (errors stay until closed), swipe to dismiss on touch."
+    },
+    {
+      "type": "frame",
+      "id": "E7d9Sx",
+      "name": "Toasts / Error with retry / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "TZdqra",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "L44ujA",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "JpPpDY",
+                  "ref": "ds:5XCgwV",
+                  "name": "Section Header",
+                  "descendants": {
+                    "ds:J7CybM": {
+                      "content": "Jump back in"
+                    },
+                    "ds:TVYg65": {
+                      "content": "Show all"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "cPEBo3",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Wokos9",
+                      "ref": "ds:4X98gK",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:VVPqtm": {
+                          "content": "All"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sSB6xw",
+                      "ref": "ds:HxBi6N",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:YajWyG": {
+                          "content": "Music"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jSFr6k",
+                      "ref": "ds:HxBi6N",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:YajWyG": {
+                          "content": "Podcasts"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "AeS54m",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Afterglow"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Nova & the Static · 3:42"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "HCZLLH",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Night Signal"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Mira Sol · 3:56"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "2fXJKk",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Static Lines"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Kite Harbor · 3:47"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "cwSuiQ",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Echoes in Motion"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Lumen Choir · 4:21"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "6z9Uod",
+                  "name": "Spacer",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "children": []
+                },
+                {
+                  "type": "frame",
+                  "id": "DBDu9r",
+                  "name": "Toast Region",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "n8kVze",
+                      "ref": "ds:daEiTG",
+                      "name": "Toast/Error",
+                      "width": 360,
+                      "descendants": {
+                        "ds:4jK5Ep": {
+                          "content": "Could not save the playlist"
+                        },
+                        "ds:aXVS9j": {
+                          "content": "Check your connection and try again."
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 9170,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide toasts (Sonner-style region) — Feedback that does not block: success, error with Retry, info, warning, Undo, loading with the logo loader, offline and media (\"Added to queue\"). Bottom-right above the player bar on desktop, top on mobile; newest in front, stack expands on hover, 4 s auto-dismiss (errors stay until closed), swipe to dismiss on touch."
+    },
+    {
+      "type": "frame",
+      "id": "kCwUbG",
+      "name": "Toasts / Error with retry / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "gqWTrA",
+          "ref": "ds:PVPP6B",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "aS3Jqt",
+          "ref": "ds:PdAHhU",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:bRKPHC": {
+              "content": "Home"
+            },
+            "ds:N4sE47": {
+              "enabled": false
+            },
+            "ds:jx6tVj": {
+              "enabled": false
+            },
+            "ds:UKgTGQ": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "jnKxXR",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "SbgabK",
+              "ref": "ds:daEiTG",
+              "name": "Toast/Error",
+              "width": "fill_container",
+              "descendants": {
+                "ds:4jK5Ep": {
+                  "content": "Could not save the playlist"
+                },
+                "ds:aXVS9j": {
+                  "content": "Check your connection and try again."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "DPU7zh",
+              "ref": "ds:5XCgwV",
+              "name": "Section Header",
+              "descendants": {
+                "ds:J7CybM": {
+                  "content": "Jump back in"
+                },
+                "ds:TVYg65": {
+                  "content": "Show all"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "e6V9uP",
+              "name": "Chips",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "fPja2G",
+                  "ref": "ds:4X98gK",
+                  "name": "Chip/Active",
+                  "descendants": {
+                    "ds:VVPqtm": {
+                      "content": "All"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "57G8sV",
+                  "ref": "ds:HxBi6N",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:YajWyG": {
+                      "content": "Music"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "6Msprt",
+                  "ref": "ds:HxBi6N",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:YajWyG": {
+                      "content": "Podcasts"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "zP2Fmw",
+              "ref": "ds:BaPSTM",
+              "name": "Episode Row",
+              "descendants": {
+                "ds:jUWS67": {
+                  "content": "Afterglow"
+                },
+                "ds:xdvbRu": {
+                  "content": "Nova & the Static · 3:42"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "iMNjbf",
+              "ref": "ds:BaPSTM",
+              "name": "Episode Row",
+              "descendants": {
+                "ds:jUWS67": {
+                  "content": "Night Signal"
+                },
+                "ds:xdvbRu": {
+                  "content": "Mira Sol · 3:56"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "KmZY6N",
+              "ref": "ds:BaPSTM",
+              "name": "Episode Row",
+              "descendants": {
+                "ds:jUWS67": {
+                  "content": "Static Lines"
+                },
+                "ds:xdvbRu": {
+                  "content": "Kite Harbor · 3:47"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "x2t2mz",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "odrDZJ",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "9KLA8X",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 10710,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide toasts (Sonner-style region) — Feedback that does not block: success, error with Retry, info, warning, Undo, loading with the logo loader, offline and media (\"Added to queue\"). Bottom-right above the player bar on desktop, top on mobile; newest in front, stack expands on hover, 4 s auto-dismiss (errors stay until closed), swipe to dismiss on touch."
+    },
+    {
+      "type": "frame",
+      "id": "xjMnBP",
+      "name": "Toasts / Loading to success / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "yGsGo3",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "MNvyXq",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "FgcbcT",
+                  "ref": "ds:5XCgwV",
+                  "name": "Section Header",
+                  "descendants": {
+                    "ds:J7CybM": {
+                      "content": "Jump back in"
+                    },
+                    "ds:TVYg65": {
+                      "content": "Show all"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "SJn9u5",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "nGeXYR",
+                      "ref": "ds:4X98gK",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:VVPqtm": {
+                          "content": "All"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "JcnAio",
+                      "ref": "ds:HxBi6N",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:YajWyG": {
+                          "content": "Music"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5MWmWi",
+                      "ref": "ds:HxBi6N",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:YajWyG": {
+                          "content": "Podcasts"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "bpnUW6",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Afterglow"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Nova & the Static · 3:42"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "nKnV8G",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Night Signal"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Mira Sol · 3:56"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "NbCZHz",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Static Lines"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Kite Harbor · 3:47"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "YKE6F5",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Echoes in Motion"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Lumen Choir · 4:21"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "fV5xu4",
+                  "name": "Spacer",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "children": []
+                },
+                {
+                  "type": "frame",
+                  "id": "EePeXc",
+                  "name": "Toast Region",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "xE9zMC",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 10,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ipFe35",
+                          "ref": "ds:pwJyCw",
+                          "name": "Toast/Loading",
+                          "width": 360,
+                          "descendants": {
+                            "ds:Zhx5xP": {
+                              "content": "Uploading cover…"
+                            },
+                            "ds:hdZyZk": {
+                              "content": "Night drive · 64%"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "nst3v7",
+                          "ref": "ds:8ANWji",
+                          "name": "Toast/Success",
+                          "width": 360,
+                          "descendants": {
+                            "ds:fRaVDU": {
+                              "content": "Cover updated"
+                            },
+                            "ds:bcWfj6": {
+                              "content": "Night drive"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 11200,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide toasts (Sonner-style region) — Feedback that does not block: success, error with Retry, info, warning, Undo, loading with the logo loader, offline and media (\"Added to queue\"). Bottom-right above the player bar on desktop, top on mobile; newest in front, stack expands on hover, 4 s auto-dismiss (errors stay until closed), swipe to dismiss on touch."
+    },
+    {
+      "type": "frame",
+      "id": "RLqU2d",
+      "name": "Toasts / Loading to success / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "HCpirW",
+          "ref": "ds:PVPP6B",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "7QujCx",
+          "ref": "ds:PdAHhU",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:bRKPHC": {
+              "content": "Home"
+            },
+            "ds:N4sE47": {
+              "enabled": false
+            },
+            "ds:jx6tVj": {
+              "enabled": false
+            },
+            "ds:UKgTGQ": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "H3roCa",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "ztpEkn",
+              "name": "Column",
+              "layout": "vertical",
+              "gap": 8,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "jS2z3v",
+                  "ref": "ds:pwJyCw",
+                  "name": "Toast/Loading",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:Zhx5xP": {
+                      "content": "Uploading cover…"
+                    },
+                    "ds:hdZyZk": {
+                      "content": "Night drive · 64%"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "ZD6FbU",
+                  "ref": "ds:8ANWji",
+                  "name": "Toast/Success",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:fRaVDU": {
+                      "content": "Cover updated"
+                    },
+                    "ds:bcWfj6": {
+                      "content": "Night drive"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "ZYTApo",
+              "ref": "ds:5XCgwV",
+              "name": "Section Header",
+              "descendants": {
+                "ds:J7CybM": {
+                  "content": "Jump back in"
+                },
+                "ds:TVYg65": {
+                  "content": "Show all"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "vspU63",
+              "name": "Chips",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "vVNcH7",
+                  "ref": "ds:4X98gK",
+                  "name": "Chip/Active",
+                  "descendants": {
+                    "ds:VVPqtm": {
+                      "content": "All"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "KzPVRX",
+                  "ref": "ds:HxBi6N",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:YajWyG": {
+                      "content": "Music"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "5oEDUL",
+                  "ref": "ds:HxBi6N",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:YajWyG": {
+                      "content": "Podcasts"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "puyrLj",
+              "ref": "ds:BaPSTM",
+              "name": "Episode Row",
+              "descendants": {
+                "ds:jUWS67": {
+                  "content": "Afterglow"
+                },
+                "ds:xdvbRu": {
+                  "content": "Nova & the Static · 3:42"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "DHkEE4",
+              "ref": "ds:BaPSTM",
+              "name": "Episode Row",
+              "descendants": {
+                "ds:jUWS67": {
+                  "content": "Night Signal"
+                },
+                "ds:xdvbRu": {
+                  "content": "Mira Sol · 3:56"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "9ipVFY",
+              "ref": "ds:BaPSTM",
+              "name": "Episode Row",
+              "descendants": {
+                "ds:jUWS67": {
+                  "content": "Static Lines"
+                },
+                "ds:xdvbRu": {
+                  "content": "Kite Harbor · 3:47"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "zLxJ2m",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "Z9mzEb",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "653Kas",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 12740,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide toasts (Sonner-style region) — Feedback that does not block: success, error with Retry, info, warning, Undo, loading with the logo loader, offline and media (\"Added to queue\"). Bottom-right above the player bar on desktop, top on mobile; newest in front, stack expands on hover, 4 s auto-dismiss (errors stay until closed), swipe to dismiss on touch."
+    },
+    {
+      "type": "frame",
+      "id": "qxWW3t",
+      "name": "Toasts / Undo / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "HZubtN",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "ReBti2",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "vLEvUc",
+                  "ref": "ds:5XCgwV",
+                  "name": "Section Header",
+                  "descendants": {
+                    "ds:J7CybM": {
+                      "content": "Jump back in"
+                    },
+                    "ds:TVYg65": {
+                      "content": "Show all"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "MydwmM",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "kXWgbA",
+                      "ref": "ds:4X98gK",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:VVPqtm": {
+                          "content": "All"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "b3jvP3",
+                      "ref": "ds:HxBi6N",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:YajWyG": {
+                          "content": "Music"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "PbPbqH",
+                      "ref": "ds:HxBi6N",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:YajWyG": {
+                          "content": "Podcasts"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "X5MCaj",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Afterglow"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Nova & the Static · 3:42"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "k67xCt",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Night Signal"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Mira Sol · 3:56"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "kN7rHR",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Static Lines"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Kite Harbor · 3:47"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "uCtPCf",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Echoes in Motion"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Lumen Choir · 4:21"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "2jvnfs",
+                  "name": "Spacer",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "children": []
+                },
+                {
+                  "type": "frame",
+                  "id": "rwMENf",
+                  "name": "Toast Region",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "UkyCNJ",
+                      "ref": "ds:tAikBg",
+                      "name": "Toast/Undo",
+                      "width": 360,
+                      "descendants": {
+                        "ds:eky8uC": {
+                          "content": "Removed from Night drive"
+                        },
+                        "ds:9V2cpU": {
+                          "content": "1 track removed."
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 13230,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide toasts (Sonner-style region) — Feedback that does not block: success, error with Retry, info, warning, Undo, loading with the logo loader, offline and media (\"Added to queue\"). Bottom-right above the player bar on desktop, top on mobile; newest in front, stack expands on hover, 4 s auto-dismiss (errors stay until closed), swipe to dismiss on touch."
+    },
+    {
+      "type": "frame",
+      "id": "Lup77N",
+      "name": "Toasts / Undo / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "iED6YD",
+          "ref": "ds:PVPP6B",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "3wZosX",
+          "ref": "ds:PdAHhU",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:bRKPHC": {
+              "content": "Home"
+            },
+            "ds:N4sE47": {
+              "enabled": false
+            },
+            "ds:jx6tVj": {
+              "enabled": false
+            },
+            "ds:UKgTGQ": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "vsJFuA",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "TuDT8u",
+              "ref": "ds:tAikBg",
+              "name": "Toast/Undo",
+              "width": "fill_container",
+              "descendants": {
+                "ds:eky8uC": {
+                  "content": "Removed from Night drive"
+                },
+                "ds:9V2cpU": {
+                  "content": "1 track removed."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "dNWbZN",
+              "ref": "ds:5XCgwV",
+              "name": "Section Header",
+              "descendants": {
+                "ds:J7CybM": {
+                  "content": "Jump back in"
+                },
+                "ds:TVYg65": {
+                  "content": "Show all"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "tCZCir",
+              "name": "Chips",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "4nHfn3",
+                  "ref": "ds:4X98gK",
+                  "name": "Chip/Active",
+                  "descendants": {
+                    "ds:VVPqtm": {
+                      "content": "All"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "KcgnvT",
+                  "ref": "ds:HxBi6N",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:YajWyG": {
+                      "content": "Music"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "e93UbK",
+                  "ref": "ds:HxBi6N",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:YajWyG": {
+                      "content": "Podcasts"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "TdFUhL",
+              "ref": "ds:BaPSTM",
+              "name": "Episode Row",
+              "descendants": {
+                "ds:jUWS67": {
+                  "content": "Afterglow"
+                },
+                "ds:xdvbRu": {
+                  "content": "Nova & the Static · 3:42"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "Vh3Jhq",
+              "ref": "ds:BaPSTM",
+              "name": "Episode Row",
+              "descendants": {
+                "ds:jUWS67": {
+                  "content": "Night Signal"
+                },
+                "ds:xdvbRu": {
+                  "content": "Mira Sol · 3:56"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "X4Da7i",
+              "ref": "ds:BaPSTM",
+              "name": "Episode Row",
+              "descendants": {
+                "ds:jUWS67": {
+                  "content": "Static Lines"
+                },
+                "ds:xdvbRu": {
+                  "content": "Kite Harbor · 3:47"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "hc5LFT",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "ovXeoV",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "hKohet",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 14770,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide toasts (Sonner-style region) — Feedback that does not block: success, error with Retry, info, warning, Undo, loading with the logo loader, offline and media (\"Added to queue\"). Bottom-right above the player bar on desktop, top on mobile; newest in front, stack expands on hover, 4 s auto-dismiss (errors stay until closed), swipe to dismiss on touch."
+    },
+    {
+      "type": "frame",
+      "id": "hL4BZ2",
+      "name": "Toasts / Offline / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "P7FigN",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "RrUohr",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "2CdkxA",
+                  "ref": "ds:5XCgwV",
+                  "name": "Section Header",
+                  "descendants": {
+                    "ds:J7CybM": {
+                      "content": "Jump back in"
+                    },
+                    "ds:TVYg65": {
+                      "content": "Show all"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "sGipnD",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "vGSNfQ",
+                      "ref": "ds:4X98gK",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:VVPqtm": {
+                          "content": "All"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "6A2jeL",
+                      "ref": "ds:HxBi6N",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:YajWyG": {
+                          "content": "Music"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "k3bzWB",
+                      "ref": "ds:HxBi6N",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:YajWyG": {
+                          "content": "Podcasts"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "X6Yz98",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Afterglow"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Nova & the Static · 3:42"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "VaT9nu",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Night Signal"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Mira Sol · 3:56"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "MEWrSF",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Static Lines"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Kite Harbor · 3:47"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "7CR2Rw",
+                  "ref": "ds:BaPSTM",
+                  "name": "Episode Row",
+                  "descendants": {
+                    "ds:jUWS67": {
+                      "content": "Echoes in Motion"
+                    },
+                    "ds:xdvbRu": {
+                      "content": "Lumen Choir · 4:21"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "79Fbdc",
+                  "name": "Spacer",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "children": []
+                },
+                {
+                  "type": "frame",
+                  "id": "giCQ9h",
+                  "name": "Toast Region",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "JZeiLD",
+                      "ref": "ds:3ZhQFZ",
+                      "name": "Toast/Offline",
+                      "width": 360,
+                      "descendants": {
+                        "ds:gPpeYX": {
+                          "content": "You are offline"
+                        },
+                        "ds:7NSoKu": {
+                          "content": "Playing from downloads. Changes sync later."
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 15260,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide toasts (Sonner-style region) — Feedback that does not block: success, error with Retry, info, warning, Undo, loading with the logo loader, offline and media (\"Added to queue\"). Bottom-right above the player bar on desktop, top on mobile; newest in front, stack expands on hover, 4 s auto-dismiss (errors stay until closed), swipe to dismiss on touch."
+    },
+    {
+      "type": "frame",
+      "id": "TuKfSA",
+      "name": "Toasts / Offline / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "GpwNf8",
+          "ref": "ds:PVPP6B",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "PqSj3Y",
+          "ref": "ds:PdAHhU",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:bRKPHC": {
+              "content": "Home"
+            },
+            "ds:N4sE47": {
+              "enabled": false
+            },
+            "ds:jx6tVj": {
+              "enabled": false
+            },
+            "ds:UKgTGQ": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "JLpi9F",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "kK6BE8",
+              "ref": "ds:3ZhQFZ",
+              "name": "Toast/Offline",
+              "width": "fill_container",
+              "descendants": {
+                "ds:gPpeYX": {
+                  "content": "You are offline"
+                },
+                "ds:7NSoKu": {
+                  "content": "Playing from downloads. Changes sync later."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "PCjtE8",
+              "ref": "ds:5XCgwV",
+              "name": "Section Header",
+              "descendants": {
+                "ds:J7CybM": {
+                  "content": "Jump back in"
+                },
+                "ds:TVYg65": {
+                  "content": "Show all"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "BKrqDC",
+              "name": "Chips",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "8fqMaE",
+                  "ref": "ds:4X98gK",
+                  "name": "Chip/Active",
+                  "descendants": {
+                    "ds:VVPqtm": {
+                      "content": "All"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "bLfQv4",
+                  "ref": "ds:HxBi6N",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:YajWyG": {
+                      "content": "Music"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "4Ld2Fw",
+                  "ref": "ds:HxBi6N",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:YajWyG": {
+                      "content": "Podcasts"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "sYeoHG",
+              "ref": "ds:BaPSTM",
+              "name": "Episode Row",
+              "descendants": {
+                "ds:jUWS67": {
+                  "content": "Afterglow"
+                },
+                "ds:xdvbRu": {
+                  "content": "Nova & the Static · 3:42"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "85hGkb",
+              "ref": "ds:BaPSTM",
+              "name": "Episode Row",
+              "descendants": {
+                "ds:jUWS67": {
+                  "content": "Night Signal"
+                },
+                "ds:xdvbRu": {
+                  "content": "Mira Sol · 3:56"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "QnS68D",
+              "ref": "ds:BaPSTM",
+              "name": "Episode Row",
+              "descendants": {
+                "ds:jUWS67": {
+                  "content": "Static Lines"
+                },
+                "ds:xdvbRu": {
+                  "content": "Kite Harbor · 3:47"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "AR68SZ",
+          "name": "Mini Bar Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "bceW9P",
+              "ref": "ds:CeyP3",
+              "name": "Mini Bar",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "xV8e82",
+          "ref": "ds:PmEet",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "descendants": {
+            "ds:lPxJb": {
+              "fill": "$ds:--foreground"
+            },
+            "ds:ojzHV": {
+              "fill": "$ds:--foreground",
+              "fontWeight": "600"
+            },
+            "ds:kGpDm": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:mG3wy": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:X78L7T": {
+              "fill": "$ds:--muted-foreground"
+            },
+            "ds:HnsIZ": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal"
+            },
+            "ds:pjDzF": {
+              "fill": "$ds:--muted-foreground",
+              "icon": "square-plus"
+            },
+            "ds:j8Bscj": {
+              "fill": "$ds:--muted-foreground",
+              "fontWeight": "normal",
+              "content": "Create"
+            }
+          }
+        }
+      ],
+      "x": 16800,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide toasts (Sonner-style region) — Feedback that does not block: success, error with Retry, info, warning, Undo, loading with the logo loader, offline and media (\"Added to queue\"). Bottom-right above the player bar on desktop, top on mobile; newest in front, stack expands on hover, 4 s auto-dismiss (errors stay until closed), swipe to dismiss on touch."
+    }
+  ]
+}
