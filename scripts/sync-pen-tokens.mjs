@@ -38,6 +38,29 @@ const LEGACY = [/^pencil\/web-artist/, /^pencil\/web-player-design\/(landing|pla
 const SHAPES = new Set(['text', 'icon', 'rectangle', 'ellipse', 'path', 'polygon', 'line'])
 const VISUAL = ['fill', 'stroke', 'effect', 'cornerRadius']
 
+/** Counts children placed by coordinates instead of flex: free frames, groups, absolute nodes. */
+function absoluteLayout(doc) {
+  let count = 0
+  const visit = (node) => {
+    if (Array.isArray(node)) {
+      for (const n of node) visit(n)
+      return
+    }
+    if (!node || typeof node !== 'object') return
+    if (
+      (node.type === 'frame' && node.layout === 'none' && node.children?.length) ||
+      node.type === 'group'
+    )
+      count++
+    if (node.layoutPosition === 'absolute') count++
+    for (const c of node.children ?? []) visit(c)
+    if (node.type === 'ref')
+      for (const v of Object.values(node.descendants ?? {})) if (v?.type) visit(v)
+  }
+  for (const t of doc.children) visit(t.children ?? [])
+  return count
+}
+
 /** Counts elements a screen draws itself instead of instancing a library component. */
 function localElements(doc) {
   let count = 0
@@ -295,6 +318,7 @@ function scanDesign(file, libraryNames, refPattern) {
     ownColours: ownColours.length,
     wrongAxis,
     local: localElements(doc),
+    absolute: absoluteLayout(doc),
   }
 }
 
@@ -338,11 +362,16 @@ for (const path of designs) {
   const pattern = isLibrary
     ? /^\$(--[a-z0-9-]+)$/
     : new RegExp(`^\\$${LIBRARY_ALIAS}:(--[a-z0-9-]+)$`)
-  const { hex, unknown, imports, ownColours, wrongAxis, local } = scanDesign(
+  const { hex, unknown, imports, ownColours, wrongAxis, local, absolute } = scanDesign(
     path,
     libraryNames,
     pattern,
   )
+  if (absolute) {
+    const line = `${file}: ${absolute} element(s) positioned by coordinates — lay them out with flex`
+    if (LEGACY.some((r) => r.test(file))) warnings.push(line)
+    else problems.push(line)
+  }
   if (!isLibrary && local) {
     const line = `${file}: ${local} element(s) drawn locally instead of instancing a library component`
     if (LEGACY.some((r) => r.test(file))) warnings.push(line)
@@ -364,7 +393,7 @@ for (const path of designs) {
 
 if (warnings.length)
   console.warn(
-    `⚠ legacy designs to rebuild from library components:\n${warnings.map((w) => `  ${w}`).join('\n')}`,
+    `⚠ legacy designs to rebuild from library components with flex layout:\n${warnings.map((w) => `  ${w}`).join('\n')}`,
   )
 if (problems.length === 0) {
   console.log(
