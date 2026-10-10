@@ -1150,7 +1150,7 @@ window.__bitrateIntro = new Promise((done) => {
       void main(){ float d = length(gl_PointCoord - .5); float a = smoothstep(.5, .0, d); gl_FragColor = vec4(mix(uCa, uCb, vUv.x), a * (.55 + vBurst * .4) * uAlpha); }`
     const U = {
       uTime: { value: 0 }, uA: { value: 0 }, uB: { value: 0 }, uMix: { value: 1 }, uAmp: { value: .18 }, uTwist: { value: 0 }, uLevel: { value: 0 },
-      uPx: { value: 14 * renderer.getPixelRatio() }, uCa: { value: new THREE.Color('#7c3aed') }, uCb: { value: new THREE.Color('#ec4899') }, uCc: { value: new THREE.Color('#3b82f6') }, uAlpha: { value: 1 },
+      uPx: { value: 20 * renderer.getPixelRatio() }, uCa: { value: new THREE.Color('#7c3aed') }, uCb: { value: new THREE.Color('#ec4899') }, uCc: { value: new THREE.Color('#3b82f6') }, uAlpha: { value: 1 },
     }
     const surfMat = new THREE.ShaderMaterial({ uniforms: U, vertexShader: VERT, fragmentShader: FRAG_SURF, transparent: true, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending })
     const ptsMat = new THREE.ShaderMaterial({ uniforms: U, vertexShader: VERT, fragmentShader: FRAG_PTS, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })
@@ -1207,7 +1207,7 @@ window.__bitrateIntro = new Promise((done) => {
     const seeds = new Float32Array(COUNT)
     for (let i = 0; i < COUNT; i++) seeds[i] = rnd(i, 22)
     pgeo.setAttribute('aSeed', new THREE.BufferAttribute(seeds, 1))
-    const fieldU = { uT: { value: 1 }, uTime: U.uTime, uSize: { value: 20 * renderer.getPixelRatio() }, uCol: { value: new THREE.Color('#a78bfa') }, uCol2: { value: new THREE.Color('#ec4899') }, uPulse: { value: 0 }, uBoard: { value: new THREE.Vector4(0, 0, 1, .01) }, uView: { value: new THREE.Vector2(1, 1) } }
+    const fieldU = { uT: { value: 1 }, uTime: U.uTime, uSize: { value: 32 * renderer.getPixelRatio() }, uCol: { value: new THREE.Color('#a78bfa') }, uCol2: { value: new THREE.Color('#ec4899') }, uPulse: { value: 0 }, uBoard: { value: new THREE.Vector4(0, 0, 1, .01) }, uView: { value: new THREE.Vector2(1, 1) } }
     const field = new THREE.Points(pgeo, new THREE.ShaderMaterial({
       transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, uniforms: fieldU,
       vertexShader: `
@@ -1454,7 +1454,16 @@ window.__bitrateIntro = new Promise((done) => {
       const frameDt = (now - last) / 1000
       slow = now - last > 28 ? slow + 1 : Math.max(0, slow - 1)
       last = now
-      if (slow > 20 && dpr > .6) { dpr = Math.max(.6, dpr - .2); renderer.setPixelRatio(dpr); renderer.setSize(window.innerWidth, window.innerHeight, false); slow = 0 }
+      if (document.getElementById('intro')) slow = 0 /* the intro's load must not lower the scene for good */
+      if (slow > 20 && dpr > .8) {
+        dpr = Math.max(.8, dpr - .15)
+        renderer.setPixelRatio(dpr)
+        renderer.setSize(window.innerWidth, window.innerHeight, false)
+        /* point sizes are in framebuffer pixels: keep particles the same size on screen */
+        U.uPx.value = 20 * dpr
+        fieldU.uSize.value = 32 * dpr
+        slow = 0
+      }
       const t = clock.getElapsedTime()
       let level = 0
       if (analyser) { analyser.getByteFrequencyData(freq); for (let i = 0; i < 24; i++) level += freq[i]; level /= 24 * 255 }
