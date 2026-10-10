@@ -1446,6 +1446,143 @@ add(
 )
 
 /* landing */
+/* footer: animated links (underline reveal on hover) and the service-health pill/panel */
+const footLink = (name, hover) =>
+  comp(
+    name,
+    Col({ name: 'Link', gap: 3 }, [
+      part('label', T('Link', { fontSize: 14, fill: hover ? C.foreground : C.mutedForeground })),
+      hover
+        ? F({ name: 'Underline', width: 'fill_container', height: 1.5, fill: C.foreground })
+        : F({ name: 'Underline', width: 'fill_container', height: 1.5 }),
+    ]),
+  )
+add(footLink('Link/Footer', false), footLink('Link/Footer Hover', true))
+const HEALTH = {
+  Operational: [C.success, C.successText, 'All systems operational'],
+  Degraded: [C.warning, C.warningText, 'Degraded performance'],
+  Outage: [C.destructive, C.errorText, 'Partial outage'],
+  Maintenance: [C.info, C.infoText, 'Scheduled maintenance'],
+  Checking: [C.mutedForeground, C.mutedForeground, 'Checking status…'],
+}
+const BARS = {
+  Operational: () => 'g',
+  Degraded: (i) => (i > 26 ? 'w' : 'g'),
+  Outage: (i) => (i === 29 ? 'e' : i === 28 || i === 12 ? 'w' : 'g'),
+  Maintenance: (i) => (i === 29 ? 'i' : 'g'),
+  Checking: () => 'm',
+}
+const barFill = { g: C.success, w: C.warning, e: C.destructive, i: C.info, m: C.muted }
+for (const [k, [dot, text, label]] of Object.entries(HEALTH)) {
+  add(
+    comp(
+      `Health/Pill ${k}`,
+      Row(
+        {
+          name: 'Health Pill',
+          height: 32,
+          padding: [0, 12],
+          gap: 8,
+          cornerRadius: 16,
+          fill: C.card,
+          stroke: C.border,
+          strokeWidth: 1,
+        },
+        [
+          F({ name: 'Dot', width: 8, height: 8, cornerRadius: 4, fill: dot }),
+          part('label', T(label, { fontSize: 13, fontWeight: '500' })),
+          I('chevron-up', { width: 14, height: 14, fill: C.mutedForeground }),
+        ],
+      ),
+    ),
+    comp(
+      `Health/Service ${k}`,
+      Row(
+        {
+          name: 'Service',
+          width: 'fill_container',
+          padding: [10, 0],
+          gap: 14,
+          stroke: C.border,
+          strokeWidth: { bottom: 1 },
+        },
+        [
+          Col({ gap: 2, width: 150 }, [
+            part('name', T('Service', { fontSize: 13, fontWeight: '600' })),
+            part('meta', T('99.98% · 90 days', { fontSize: 11, fill: C.mutedForeground })),
+          ]),
+          Row(
+            { name: 'Uptime', gap: 2, width: 'fill_container', alignItems: 'center' },
+            Array.from({ length: 30 }, (_, i) =>
+              F({ name: 'Day', width: 4, height: 22, cornerRadius: 1, fill: barFill[BARS[k](i)] }),
+            ),
+          ),
+          Row({ name: 'State', gap: 6 }, [
+            F({ name: 'Dot', width: 6, height: 6, cornerRadius: 3, fill: dot }),
+            part(
+              'state',
+              T(k === 'Checking' ? 'Checking' : k, { fontSize: 12, fontWeight: '600', fill: text }),
+            ),
+          ]),
+        ],
+      ),
+    ),
+  )
+}
+add(
+  comp(
+    'Health/Panel',
+    Col(
+      {
+        name: 'Health Panel',
+        width: 460,
+        padding: 16,
+        gap: 6,
+        cornerRadius: 16,
+        fill: C.popover,
+        stroke: C.border,
+        strokeWidth: 1,
+        effect: { type: 'shadow', color: C.shadow, offset: { x: 0, y: 16 }, blur: 40 },
+      },
+      [
+        Row({ name: 'Head', width: 'fill_container', justifyContent: 'space_between' }, [
+          Col({ gap: 2 }, [
+            T('System status', { fontSize: 15, fontWeight: '600' }),
+            part(
+              'meta',
+              T('Updated 30 s ago · last 30 days', { fontSize: 12, fill: C.mutedForeground }),
+            ),
+          ]),
+          part(
+            'overall',
+            F({
+              name: 'Overall Slot',
+              slot: [],
+              children: [Ref(reg['Health/Pill Operational'].id, { name: 'Overall' })],
+            }),
+          ),
+        ]),
+        slot('rows', { gap: 0 }),
+        Row(
+          {
+            name: 'Foot',
+            width: 'fill_container',
+            justifyContent: 'space_between',
+            padding: [8, 0, 0, 0],
+          },
+          [
+            part(
+              'incident',
+              T('No incidents in the last 30 days', { fontSize: 12, fill: C.mutedForeground }),
+            ),
+            T('Status page ↗', { fontSize: 12, fontWeight: '600', fill: C.accent }),
+          ],
+        ),
+      ],
+    ),
+  ),
+)
+
 add(
   txt('Text/Display Accent', 'Accent', {
     fontFamily: 'font-heading',
@@ -1518,12 +1655,26 @@ add(
             Ref(reg['Logo/Lockup'].id, { name: 'Lockup' }),
             T('Playback is the product.', { fontSize: 13, fill: C.mutedForeground }),
           ]),
-          Row(
-            { gap: 28 },
-            ['Log in', 'Create account', 'Player preview', 'Legal'].map((l) =>
-              T(l, { fontSize: 14, fill: C.mutedForeground }),
+          Col({ gap: 14, alignItems: 'end' }, [
+            Row(
+              { name: 'Links', gap: 28 },
+              ['Log in', 'Create account', 'Player preview', 'Legal'].map((l) =>
+                Ref(
+                  reg['Link/Footer'].id,
+                  { name: `Link / ${l}` },
+                  { [reg['Link/Footer'].parts.label]: { content: l } },
+                ),
+              ),
             ),
-          ),
+            part(
+              'status',
+              F({
+                name: 'Status Slot',
+                slot: [],
+                children: [Ref(reg['Health/Pill Operational'].id, { name: 'Health' })],
+              }),
+            ),
+          ]),
         ]),
         T('MUSIC LIVES ON', {
           fontSize: 12,
@@ -2701,6 +2852,556 @@ add(
   stateMessage('State/Message/Error', 'triangle-alert', C.errorSurface, C.destructive),
   stateMessage('State/Message/Empty', 'music', C.muted, C.foreground),
   stateMessage('State/Message/Offline', 'wifi-off', C.muted, C.foreground),
+)
+
+/* app: Vercel-like command search, atmosphere mode, video player, mobile player panels */
+const kbd = (label) =>
+  Ref(reg.Kbd.id, { name: `Kbd ${label}` }, { [reg.Kbd.parts.label]: { content: label } })
+const cmdItem = (name, active) =>
+  comp(
+    name,
+    Row(
+      {
+        name: 'Item',
+        width: 'fill_container',
+        height: 42,
+        padding: [0, 10],
+        gap: 12,
+        cornerRadius: 8,
+        ...(active ? { fill: C.sidebarAccent } : {}),
+      },
+      [
+        part(
+          'icon',
+          I('search', { width: 16, height: 16, fill: active ? C.primary : C.mutedForeground }),
+        ),
+        part(
+          'label',
+          T('Command', {
+            fontSize: 14,
+            fill: active ? C.foreground : C.foreground,
+            fontWeight: active ? '600' : 'normal',
+          }),
+        ),
+        F({ name: 'Spacer', width: 'fill_container', height: 1 }),
+        part('hint', T(active ? '↵' : '', { fontSize: 12, fill: C.mutedForeground })),
+      ],
+    ),
+  )
+add(
+  comp(
+    'Command/Trigger',
+    Row(
+      {
+        name: 'Search Trigger',
+        width: 360,
+        height: 40,
+        padding: [0, 8, 0, 12],
+        gap: 10,
+        cornerRadius: 10,
+        fill: C.muted,
+        stroke: C.border,
+        strokeWidth: 1,
+      },
+      [
+        I('search', { width: 16, height: 16, fill: C.mutedForeground }),
+        part(
+          'placeholder',
+          T('Search music, artists, commands…', { fontSize: 13, fill: C.mutedForeground }),
+        ),
+        F({ name: 'Spacer', width: 'fill_container', height: 1 }),
+        kbd('⌘ K'),
+      ],
+    ),
+  ),
+  comp(
+    'Command/Group',
+    part(
+      'label',
+      T('GROUP', { fontSize: 11, fontWeight: '600', letterSpacing: 0.8, fill: C.textSubdued }),
+    ),
+  ),
+  cmdItem('Command/Item', false),
+  cmdItem('Command/Item Active', true),
+  comp(
+    'Command/Item Media',
+    Row(
+      {
+        name: 'Item',
+        width: 'fill_container',
+        height: 52,
+        padding: [0, 10],
+        gap: 12,
+        cornerRadius: 8,
+      },
+      [
+        part('cover', cover({ width: 36, height: 36, cornerRadius: 6 })),
+        Col({ gap: 2, width: 'fill_container' }, [
+          part('title', T('Title', { fontSize: 14, fontWeight: '500' })),
+          part('meta', T('Track · Artist', { fontSize: 12, fill: C.mutedForeground })),
+        ]),
+        part('hint', T('', { fontSize: 12, fill: C.mutedForeground })),
+      ],
+    ),
+  ),
+)
+add(
+  comp(
+    'Command/Palette',
+    Col(
+      {
+        name: 'Command Palette',
+        width: 640,
+        cornerRadius: 16,
+        fill: C.popover,
+        stroke: C.border,
+        strokeWidth: 1,
+        effect: { type: 'shadow', color: C.shadow, offset: { x: 0, y: 24 }, blur: 60 },
+      },
+      [
+        Row(
+          {
+            name: 'Input',
+            width: 'fill_container',
+            height: 56,
+            padding: [0, 16],
+            gap: 12,
+            stroke: C.border,
+            strokeWidth: { bottom: 1 },
+          },
+          [
+            I('search', { width: 18, height: 18, fill: C.mutedForeground }),
+            part(
+              'query',
+              T('Search for a track, artist or command…', {
+                fontSize: 15,
+                fill: C.mutedForeground,
+              }),
+            ),
+            F({ name: 'Spacer', width: 'fill_container', height: 1 }),
+            kbd('Esc'),
+          ],
+        ),
+        slot('results', { padding: 8, gap: 2 }),
+        Row(
+          {
+            name: 'Footer',
+            width: 'fill_container',
+            height: 40,
+            padding: [0, 16],
+            gap: 16,
+            stroke: C.border,
+            strokeWidth: { top: 1 },
+          },
+          [
+            Row({ gap: 6 }, [kbd('↑↓'), T('Navigate', { fontSize: 12, fill: C.mutedForeground })]),
+            Row({ gap: 6 }, [kbd('↵'), T('Open', { fontSize: 12, fill: C.mutedForeground })]),
+            Row({ gap: 6 }, [kbd('Esc'), T('Close', { fontSize: 12, fill: C.mutedForeground })]),
+            F({ name: 'Spacer', width: 'fill_container', height: 1 }),
+            part('scope', T('Bitrate search', { fontSize: 12, fill: C.textSubdued })),
+          ],
+        ),
+      ],
+    ),
+  ),
+)
+const ATMO = {
+  type: 'gradient',
+  gradientType: 'linear',
+  rotation: 135,
+  colors: [
+    { color: C.primary, position: 0 },
+    { color: C.magenta500, position: 0.35 },
+    { color: C.info, position: 0.7 },
+    { color: C.accent, position: 1 },
+  ],
+}
+add(
+  comp(
+    'Atmosphere/Frame',
+    F(
+      {
+        name: 'Atmosphere',
+        width: 1440,
+        height: 900,
+        padding: 4,
+        cornerRadius: 28,
+        fill: ATMO,
+        effect: { type: 'shadow', color: C.primary, offset: { x: 0, y: 0 }, blur: 80 },
+      },
+      [
+        F(
+          {
+            name: 'Inner',
+            width: 'fill_container',
+            height: 'fill_container',
+            cornerRadius: 24,
+            fill: C.background,
+            layout: 'vertical',
+          },
+          [
+            slot('content', {
+              width: 'fill_container',
+              height: 'fill_container',
+              padding: 32,
+              gap: 24,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }),
+          ],
+        ),
+      ],
+    ),
+  ),
+  comp(
+    'Button/Atmosphere',
+    Row(
+      {
+        name: 'Atmosphere',
+        height: 36,
+        padding: [0, 12],
+        gap: 8,
+        cornerRadius: 18,
+        stroke: C.border,
+        strokeWidth: 1,
+      },
+      [
+        I('sparkles', { width: 16, height: 16, fill: C.mutedForeground }),
+        part('label', T('Atmosphere', { fontSize: 13, fill: C.mutedForeground })),
+      ],
+    ),
+  ),
+  comp(
+    'Button/Atmosphere Active',
+    Row(
+      { name: 'Atmosphere', height: 36, padding: [0, 12], gap: 8, cornerRadius: 18, fill: ATMO },
+      [
+        I('sparkles', { width: 16, height: 16, fill: C.white }),
+        part('label', T('Atmosphere on', { fontSize: 13, fontWeight: '600', fill: C.white })),
+      ],
+    ),
+  ),
+)
+const videoControls = () =>
+  Row(
+    {
+      name: 'Control Bar',
+      width: 'fill_container',
+      height: 44,
+      padding: [0, 14],
+      gap: 14,
+      cornerRadius: 12,
+      fill: C.popover,
+      stroke: C.border,
+      strokeWidth: 1,
+    },
+    [
+      part('play', I('pause', { width: 18, height: 18, fill: C.foreground })),
+      part('time', T('1:12', { fontSize: 12, fill: C.mutedForeground })),
+      Row({ name: 'Time Range', width: 'fill_container', height: 12, gap: 0 }, [
+        part(
+          'elapsedBar',
+          F({ name: 'Elapsed', width: 220, height: 4, cornerRadius: 2, fill: C.primary }),
+        ),
+        F({ name: 'Thumb', width: 12, height: 12, cornerRadius: 6, fill: C.foreground }),
+        F({
+          name: 'Remaining',
+          width: 'fill_container',
+          height: 4,
+          cornerRadius: 2,
+          fill: C.surface,
+        }),
+      ]),
+      part('duration', T('3:56', { fontSize: 12, fill: C.mutedForeground })),
+      part('mute', I('volume-2', { width: 18, height: 18, fill: C.foreground })),
+      I('captions', { width: 18, height: 18, fill: C.mutedForeground }),
+      I('maximize', { width: 18, height: 18, fill: C.mutedForeground }),
+    ],
+  )
+add(
+  comp(
+    'Video/Thumbnail',
+    Col({ name: 'Video', width: 320, gap: 10 }, [
+      part(
+        'image',
+        F(
+          {
+            name: 'Frame',
+            width: 'fill_container',
+            height: 180,
+            cornerRadius: 12,
+            fill: img(ART.stage),
+            layout: 'vertical',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 10,
+          },
+          [
+            Row(
+              {
+                name: 'Play',
+                height: 40,
+                padding: [0, 14],
+                gap: 8,
+                cornerRadius: 20,
+                fill: C.white,
+              },
+              [
+                I('play', { width: 14, height: 14, fill: C.background }),
+                T('Play', { fontSize: 13, fontWeight: '600', fill: C.background }),
+              ],
+            ),
+          ],
+        ),
+      ),
+      Row({ width: 'fill_container', justifyContent: 'space_between' }, [
+        part('title', T('Night Signal (Official video)', { fontSize: 14, fontWeight: '600' })),
+        part('duration', T('3:56', { fontSize: 12, fill: C.mutedForeground })),
+      ]),
+      part('meta', T('Luma Vale · 128K views', { fontSize: 12, fill: C.mutedForeground })),
+    ]),
+  ),
+  comp(
+    'Video/Player',
+    F(
+      {
+        name: 'Video Player',
+        width: 1120,
+        height: 630,
+        cornerRadius: 16,
+        fill: img(ART.stage),
+        layout: 'vertical',
+        justifyContent: 'end',
+        padding: [0, 24, 20, 24],
+      },
+      [videoControls()],
+    ),
+  ),
+  comp('Video/Control Bar', videoControls()),
+)
+const tabPill = (name, active) =>
+  comp(
+    name,
+    Row(
+      {
+        name: 'Tab',
+        height: 40,
+        padding: active ? [0, 14] : [0, 11],
+        gap: 8,
+        cornerRadius: 20,
+        ...(active ? { fill: C.primary } : { fill: C.muted }),
+      },
+      [
+        part(
+          'icon',
+          I('mic-vocal', {
+            width: 18,
+            height: 18,
+            fill: active ? C.primaryForeground : C.mutedForeground,
+          }),
+        ),
+        ...(active
+          ? [
+              part(
+                'label',
+                T('Lyrics', { fontSize: 13, fontWeight: '600', fill: C.primaryForeground }),
+              ),
+            ]
+          : []),
+      ],
+    ),
+  )
+add(
+  tabPill('Tabs/Expandable', false),
+  tabPill('Tabs/Expandable Active', true),
+  comp(
+    'Action/Icon',
+    F(
+      {
+        name: 'Action',
+        width: 44,
+        height: 44,
+        cornerRadius: 22,
+        fill: C.muted,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      [part('icon', I('heart', { width: 20, height: 20, fill: C.foreground }))],
+    ),
+  ),
+  comp(
+    'Action/Icon Badge',
+    Row(
+      {
+        name: 'Action',
+        width: 44,
+        height: 44,
+        cornerRadius: 22,
+        fill: C.muted,
+        justifyContent: 'center',
+        alignItems: 'start',
+        padding: [10, 0, 0, 0],
+        gap: 0,
+      },
+      [
+        part('icon', I('cast', { width: 20, height: 20, fill: C.foreground })),
+        F({ name: 'Badge', width: 8, height: 8, cornerRadius: 4, fill: C.magenta500 }),
+      ],
+    ),
+  ),
+  comp(
+    'Tooltip/Action',
+    Row(
+      {
+        name: 'Tooltip',
+        height: 30,
+        padding: [0, 8, 0, 10],
+        gap: 8,
+        cornerRadius: 8,
+        fill: C.foreground,
+      },
+      [
+        part('label', T('Devices', { fontSize: 12, fontWeight: '600', fill: C.background })),
+        part('hint', T('2 nearby', { fontSize: 11, fill: C.mutedForeground })),
+      ],
+    ),
+  ),
+)
+
+/* landing scenes 10-12: partner spheres, team bubbles + hover card, Newton's cradle (static stand-ins for the motion) */
+const sphereFill = (a, b) => ({
+  type: 'gradient',
+  gradientType: 'radial',
+  colors: [
+    { color: a, position: 0 },
+    { color: b, position: 1 },
+  ],
+})
+for (const [k, a, b] of [
+  ['Primary', C.accent, C.primary],
+  ['Magenta', C.magenta500, C.purple600],
+  ['Blue', C.info, C.primary],
+])
+  add(
+    comp(
+      `Landing/Partner Sphere ${k}`,
+      F(
+        {
+          name: 'Sphere',
+          width: 120,
+          height: 120,
+          cornerRadius: 60,
+          fill: sphereFill(a, b),
+          justifyContent: 'center',
+          alignItems: 'center',
+          effect: { type: 'shadow', color: C.shadow, offset: { x: 0, y: 14 }, blur: 30 },
+        },
+        [
+          part(
+            'label',
+            T('PARTNER', { fontSize: 13, fontWeight: '700', letterSpacing: 0.6, fill: C.white }),
+          ),
+        ],
+      ),
+    ),
+  )
+add(
+  comp(
+    'Landing/Bubble Person',
+    F(
+      {
+        name: 'Bubble',
+        width: 184,
+        height: 184,
+        cornerRadius: 92,
+        fill: gradient(C.primary, C.magenta500),
+        justifyContent: 'center',
+        alignItems: 'center',
+        effect: { type: 'shadow', color: C.shadow, offset: { x: 0, y: 12 }, blur: 30 },
+      },
+      [part('initials', H('VT', 44, { fontWeight: '700', fill: C.white }))],
+    ),
+  ),
+  comp(
+    'Landing/Bubble Tech',
+    F(
+      {
+        name: 'Bubble',
+        width: 90,
+        height: 90,
+        cornerRadius: 45,
+        fill: C.card,
+        stroke: C.border,
+        strokeWidth: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 6,
+      },
+      [part('label', T('Next.js', { fontSize: 12, fontWeight: '600', textAlign: 'center' }))],
+    ),
+  ),
+  comp(
+    'Landing/Hover Card',
+    Col(
+      {
+        name: 'Hover Card',
+        width: 290,
+        padding: 16,
+        gap: 10,
+        cornerRadius: 12,
+        fill: C.popover,
+        stroke: C.border,
+        strokeWidth: 1,
+        effect: { type: 'shadow', color: C.shadow, offset: { x: 0, y: 16 }, blur: 40 },
+      },
+      [
+        Row({ gap: 12, alignItems: 'start' }, [
+          F(
+            {
+              name: 'Avatar',
+              width: 48,
+              height: 48,
+              cornerRadius: 24,
+              fill: gradient(C.primary, C.magenta500),
+              justifyContent: 'center',
+              alignItems: 'center',
+            },
+            [part('initials', T('VT', { fontSize: 15, fontWeight: '700', fill: C.white }))],
+          ),
+          Col({ gap: 2 }, [
+            part('name', T('Vladyslav Tesliuk', { fontSize: 14, fontWeight: '600' })),
+            part('meta', T('@Lordpluha · Author', { fontSize: 12, fill: C.mutedForeground })),
+          ]),
+        ]),
+        part('bio', P('Author and maintainer of Bitrate.', { fontSize: 13, fill: C.foreground })),
+        Row({ name: 'Links', gap: 8 }, [
+          part('link1', Button('GitHub ↗', 'outline')),
+          part('link2', Button('Repository ↗', 'ghost')),
+        ]),
+      ],
+    ),
+  ),
+  comp(
+    'Landing/Cradle',
+    Col({ name: 'Cradle', width: 320, gap: 0, alignItems: 'center' }, [
+      F({ name: 'Bar', width: 320, height: 4, cornerRadius: 2, fill: C.mutedForeground }),
+      Row(
+        { name: 'Balls', gap: 2, alignItems: 'start' },
+        Array.from({ length: 5 }, (_, i) =>
+          Col({ name: `Pendulum ${i + 1}`, gap: 0, alignItems: 'center' }, [
+            F({ name: 'String', width: 1.5, height: i === 0 ? 96 : 120, fill: C.border }),
+            F({
+              name: 'Ball',
+              width: 56,
+              height: 56,
+              cornerRadius: 28,
+              fill: sphereFill(C.neutral200, C.mutedForeground),
+            }),
+          ]),
+        ),
+      ),
+    ]),
+  ),
 )
 
 /* lay the page out */
