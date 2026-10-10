@@ -37,3 +37,8 @@ paths:
   a page adds only layout-only frames (no fill, stroke, effect or corner radius of their own)
   and content overrides (text, cover images). Never draw a chip, row, card, skeleton, panel or
   text style locally — if the library lacks it, add it to the library as a component first.
+- Every element is laid out with flex (`layout: horizontal | vertical`, gap, padding, alignment);
+  grids are rows of flex frames. No `layout: none` frames with children, no groups and no
+  `layoutPosition: absolute`. Overlaps (a badge on an icon, a hole in a disc) become nesting —
+  the badge sits beside the icon, the hole is a child of the artwork. Only the canvas root
+  places pages by coordinates, in a tidy non-overlapping grid.
