@@ -27,6 +27,7 @@ import {
   MobileTrack,
   ErrorState,
   withMore,
+  MoreRows,
   OAuth,
   EmptyState,
   OfflineState,
@@ -63,7 +64,6 @@ import { friends, friendsFind, friendsRequests } from './pages-friends.mjs'
 import { loading } from './pages-loading.mjs'
 import { APP_STATES } from './pages-app.mjs'
 import { cursor } from './pages-cursor.mjs'
-import { toasts } from './pages-toasts.mjs'
 import { assistant, withAssistant } from './pages-assistant.mjs'
 
 const T5 = TRACKS.slice(0, 5)
@@ -288,75 +288,122 @@ const cardGrid = (items, cols = 5) =>
     ),
   )
 const libMobileHeader = () => MHeader('Your Library', { back: false, actions: ['search', 'plus'] })
-const settingsSections = (mobile, { twoFaOn, sessionsError } = {}) => {
-  const sel = (v) => Select(null, v, mobile ? 150 : 220)
-  const sec = (t, rows) =>
-    Col({ name: `Section / ${t}`, width: 'fill_container', gap: 0 }, [Tx('H4', t), ...rows])
-  return [
-    sec('Account', [
+/* Preferences as bento tiles: each section is a self-contained tile (future: user-arranged); device-only
+   settings are badged, because they live in this browser only (see the inventory in the design notes) */
+const settingsTiles = (mobile, { twoFaOn, sessionsError } = {}) => {
+  const sel = (v) => Select(null, v, mobile ? 150 : 200)
+  const tile = (t, rows, device) =>
+    Panel(
+      [
+        Row({ name: 'Tile Head', width: 'fill_container', justifyContent: 'space_between' }, [
+          Tx('H4', t, { wrap: true, width: 'fill_container' }),
+          device && Badge('This device', 'outline'),
+        ]),
+        ...rows,
+      ],
+      { width: 'fill_container', gap: 4 },
+    )
+  return {
+    account: tile('Account', [
       SettingRow('Edit login methods', null, Button('Edit', 'outline', { icon: 'external-link' })),
       SettingRow('Email address', 'maya@example.com', Badge('Verified', 'secondary')),
     ]),
-    sec(
+    sessions: tile(
       'Active sessions',
       sessionsError
         ? [Alert('Sessions could not be loaded.', 'Try again in a moment.')]
         : [
-            SettingRow('This browser', 'Started 9 Oct 2026', Badge('Current', 'outline')),
-            SettingRow('Browser session', 'Started 2 Oct 2026', IconBtn('log-out', false)),
-            Row({ padding: [14, 0] }, [Button('Log out all other sessions', 'outline')]),
+            SettingRow('This browser', 'Started 9 Oct 2026, 21:40', Badge('Current', 'outline')),
+            SettingRow('Browser session', 'Started 2 Oct 2026, 08:12', IconBtn('trash-2', false)),
+            Row({ padding: [12, 0, 0, 0] }, [Button('Log out all other sessions', 'outline')]),
           ],
     ),
-    sec('Your plan', [
-      SettingRow('Free', 'Review your subscription status.', Badge('Free', 'outline')),
+    plan: tile('Your plan', [
+      SettingRow('Free', 'Your subscription is active.', Badge('Active', 'secondary')),
     ]),
-    sec('Language', [
-      SettingRow('Choose the language used throughout the app', null, sel('English')),
-    ]),
-    sec('Audio quality', [
-      SettingRow('Streaming quality', null, sel('Automatic')),
+    language: tile(
+      'Language',
+      [SettingRow('Choose the language used throughout the app', null, sel('English'))],
+      true,
+    ),
+    audio: tile(
+      'Audio quality',
+      [
+        SettingRow('Streaming quality', null, sel('Automatic')),
+        SettingRow(
+          'Normalize volume',
+          'Set the same volume level for all songs and podcasts',
+          Switch('', true),
+        ),
+      ],
+      true,
+    ),
+    library: tile('Your Library', [
       SettingRow(
-        'Normalize volume',
-        'Set the same volume level for all songs and podcasts',
-        Switch('', true),
-      ),
-    ]),
-    sec('Videos and visuals', [
-      Tx('Muted', 'It may take some time for your experience to update.'),
-      SettingRow(
-        'Music videos',
-        'When off, music videos and live performances play as audio-only.',
-        Switch('', true),
-      ),
-      SettingRow(
-        'Looping visuals',
-        'Short, looping visuals when a song is playing.',
-        Switch('', true),
-      ),
-      SettingRow(
-        'Other videos',
-        'Vertically scrolling videos, video podcasts, and videos from creators.',
+        'Use compact library layout',
+        'Track lists gain a separate artist column and tighter rows.',
         Switch('', false),
       ),
     ]),
-    sec('Playback', [
-      Col({ padding: [14, 0], width: 'fill_container', gap: 10 }, [
+    display: tile('Display', [
+      SettingRow('Show the now-playing panel on click of play', null, Switch('', true)),
+    ]),
+    videos: tile(
+      'Videos and visuals',
+      [
+        Tx('Muted', 'It may take some time for your experience to update.'),
+        SettingRow(
+          'Music videos',
+          'When off, music videos and live performances play as audio-only.',
+          Switch('', true),
+        ),
+        SettingRow(
+          'Looping visuals',
+          'Short, looping visuals when a song is playing.',
+          Switch('', true),
+        ),
+        SettingRow(
+          'Other videos',
+          'Vertically scrolling videos, video podcasts, and videos from creators.',
+          Switch('', false),
+        ),
+      ],
+      true,
+    ),
+    playback: tile('Playback', [
+      Col({ padding: [10, 0, 0, 0], width: 'fill_container', gap: 10 }, [
         Tx('Body Strong', 'Equalizer'),
         R('Equalizer'),
       ]),
     ]),
-    sec('Listening activity and insights', [
-      SettingRow('Listening activity on desktop and mobile', null, Switch('', true)),
-    ]),
-    sec('What others can see on your profile', [
-      SettingRow('Followers and following', null, Switch('', true)),
-      SettingRow(
-        'People can see the playlists you have added to your profile.',
-        null,
-        Switch('', false),
-      ),
-    ]),
-    sec('Account privacy', [
+    activity: tile(
+      'Listening activity and insights',
+      [
+        SettingRow(
+          'Listening activity on desktop and mobile',
+          'People can see the music you are playing and compare listening activity.',
+          Switch('', false),
+        ),
+      ],
+      true,
+    ),
+    visible: tile(
+      'What others can see on your profile',
+      [
+        SettingRow(
+          'Followers and following',
+          'People can see who is following you and who you are following.',
+          Switch('', true),
+        ),
+        SettingRow(
+          'Playlists on your profile',
+          'People can see the playlists you have added to your profile.',
+          Switch('', false),
+        ),
+      ],
+      true,
+    ),
+    privacy: tile('Account privacy', [
       SettingRow(
         'Explicit content',
         'Allow tracks marked as explicit to appear in your account.',
@@ -368,20 +415,20 @@ const settingsSections = (mobile, { twoFaOn, sessionsError } = {}) => {
         Switch('', false),
       ),
     ]),
-    sec('Profile details', [
-      Col({ padding: [14, 0], gap: 14, width: 'fill_container' }, [
+    profile: tile('Profile details', [
+      Col({ padding: [10, 0, 0, 0], gap: 14, width: 'fill_container' }, [
         Input('Username', 'maya'),
         Input('Description', 'Tell people about yourself'),
         R('Form/Drop Zone'),
         Button('Save profile', 'default'),
       ]),
     ]),
-    sec(
+    twofa: tile(
       'Two-factor authentication',
       twoFaOn
         ? [
             SettingRow('2FA is enabled for this account.', null, Badge('Enabled', 'secondary')),
-            Col({ padding: [14, 0], gap: 12, width: 'fill_container' }, [
+            Col({ padding: [12, 0, 0, 0], gap: 12, width: 'fill_container' }, [
               Input('Current authentication code', '123456', mobile ? 'fill_container' : 280),
               Button('Disable 2FA', 'destructive'),
             ]),
@@ -394,25 +441,42 @@ const settingsSections = (mobile, { twoFaOn, sessionsError } = {}) => {
             ),
           ],
     ),
-  ]
+  }
 }
-const settingsDesktop = (name, o) =>
-  Desktop(
+const BENTO_L = ['account', 'plan', 'audio', 'library', 'display', 'videos', 'twofa']
+const BENTO_R = ['profile', 'sessions', 'language', 'playback', 'activity', 'visible', 'privacy']
+const settingsDesktop = (name, o) => {
+  const t = settingsTiles(false, o)
+  return Desktop(
     name,
     [
-      Col({ name: 'Settings Column', width: 760, gap: 32 }, [
-        pageTitle('Settings', IconBtn('search')),
-        ...settingsSections(false, o),
+      pageTitle('Settings', IconBtn('search')),
+      Row({ name: 'Bento', width: 'fill_container', gap: 20, alignItems: 'start' }, [
+        Col(
+          { name: 'Column A', width: 'fill_container', gap: 20 },
+          BENTO_L.map((k) => t[k]),
+        ),
+        Col(
+          { name: 'Column B', width: 'fill_container', gap: 20 },
+          BENTO_R.map((k) => t[k]),
+        ),
       ]),
     ],
-    { library: false, height: 2900 },
+    { library: false, height: 2020 },
   )
-const settingsMobile = (name, o) =>
-  Mobile(name, settingsSections(true, o), {
-    mini: false,
-    header: MHeader('Settings', { actions: ['search'] }),
-    height: 3200,
-  })
+}
+const settingsMobile = (name, o) => {
+  const t = settingsTiles(true, o)
+  return Mobile(
+    name,
+    [...BENTO_L, ...BENTO_R].map((k) => t[k]),
+    {
+      mini: false,
+      header: MHeader('Settings', { actions: ['search'] }),
+      height: 3700,
+    },
+  )
+}
 const twoFaSetup = (mobile) => [
   Tx('H3', 'Two-factor authentication'),
   Tx('Paragraph', 'Protect your account with an authenticator app.', { wrap: true }),
@@ -694,25 +758,22 @@ export const pages = {
   offline: {
     title: 'Offline',
     route: '/offline',
-    context: 'Shown by the service worker without a connection.',
-    desktop: () =>
-      Blank('Offline', 1440, 900, [
-        Logo(),
-        OfflineState(
-          'You are offline',
-          'Check your connection and try opening the page again.',
-          'Try again',
-        ),
-      ]),
-    mobile: () =>
-      Blank('Offline', 390, 844, [
-        Logo(),
-        OfflineState(
-          'You are offline',
-          'Check your connection and try opening the page again.',
-          'Try again',
-        ),
-      ]),
+    context:
+      'Shown by the service worker without a connection. Bitrate keeps working offline: the beta offline version plays downloaded and liked music and queues changes to sync later.',
+    desktop: () => offlinePage(false),
+    mobile: () => offlinePage(true),
+    states: [
+      state(
+        'Offline version (beta)',
+        () => offlineApp(false),
+        () => offlineApp(true),
+      ),
+      state(
+        'Back online',
+        () => offlineApp(false, true),
+        () => offlineApp(true, true),
+      ),
+    ],
   },
 
   /* ---------- main app ---------- */
@@ -1753,63 +1814,58 @@ export const pages = {
   podcast: {
     title: 'Podcast',
     route: '/main/podcast/[id]',
-    context: 'Podcast detail and episode list.',
-    desktop: () =>
-      Desktop('Podcast', [
-        Row({ width: 'fill_container', gap: 28, alignItems: 'end' }, [
-          BigCover('stage', 220),
-          Col({ gap: 8, width: 'fill_container' }, [
-            Tx('Eyebrow', 'PODCAST'),
-            Tx('Display', 'Signal & Noise'),
-            Tx('Body Strong', 'Bitrate Studios'),
-            Tx('Paragraph', 'Conversations with the people who make the music you love.', {
-              wrap: true,
-            }),
-          ]),
-        ]),
-        Tx('H3', 'All episodes'),
-        Col(
-          { gap: 0, width: 'fill_container' },
-          [
-            ['Ep. 12 — Mixing for headphones', '8 Oct 2026 · 48 min'],
-            ['Ep. 11 — The second album', '1 Oct 2026 · 52 min'],
-            ['Ep. 10 — Live from the night bus', '24 Sep 2026 · 39 min'],
-          ].map(([t, m]) => R('Episode Row', {}, { title: { content: t }, meta: { content: m } })),
-        ),
-      ]),
-    mobile: () =>
-      Mobile(
-        'Podcast',
-        [
-          BigCover('stage', 200),
-          Tx('Eyebrow', 'PODCAST'),
-          Tx('H2', 'Signal & Noise'),
-          Tx('Muted', 'Bitrate Studios'),
-          Tx('H4', 'All episodes'),
-          ...[
-            ['Ep. 12 — Mixing for headphones', '8 Oct · 48 min'],
-            ['Ep. 11 — The second album', '1 Oct · 52 min'],
-          ].map(([t, m]) => MobileTrack(t, m, 'stage')),
-        ],
-        { header: MHeader('') },
-      ),
+    context:
+      'Podcast show: header with play latest / follow / share, Episodes and About tabs, filters, episode search and rich episode rows (date, duration, description, progress, played, save). Concept (not in code yet): follow, progress, playing episodes in the player, chapters; the code today lists the first 50 episodes and lets signed-in listeners save them.',
+    desktop: () => podShow(false),
+    mobile: () => podShow(true),
     states: [
+      state(
+        'Episode playing',
+        () => podShow(false, { playing: true }),
+        () => podShow(true, { playing: true }),
+      ),
+      state(
+        'About',
+        () => podShow(false, { about: true }),
+        () => podShow(true, { about: true }),
+      ),
+      state(
+        'Saved filter',
+        () => podShow(false, { saved: true }),
+        () => podShow(true, { saved: true }),
+      ),
+      state(
+        'Search episodes',
+        () => podShow(false, { search: true }),
+        () => podShow(true, { search: true }),
+      ),
+      state(
+        'Signed out',
+        () => podShow(false, { guest: true }),
+        () => podShow(true, { guest: true }),
+      ),
+      state(
+        'Loading more',
+        () => podShow(false, { more: true }),
+        () => podShow(true, { more: true }),
+      ),
+      state(
+        'Now playing (podcast)',
+        () => podPlayer(false),
+        () => podPlayer(true),
+      ),
+      state(
+        'Episode',
+        () => podEpisode(false),
+        () => podEpisode(true),
+      ),
       state(
         'Empty',
         () =>
-          Desktop('Empty', [
-            Tx('H1', 'Signal & Noise'),
-            EmptyState(
-              'No episodes have been published yet.',
-              'New episodes will appear here.',
-              null,
-              'podcast',
-            ),
-          ]),
-        () =>
-          Mobile(
+          Desktop(
             'Empty',
             [
+              podHead(false),
               EmptyState(
                 'No episodes have been published yet.',
                 'New episodes will appear here.',
@@ -1817,17 +1873,55 @@ export const pages = {
                 'podcast',
               ),
             ],
-            { header: MHeader('Signal & Noise') },
+            { library: false },
+          ),
+        () =>
+          Mobile(
+            'Empty',
+            [
+              podHead(true),
+              EmptyState(
+                'No episodes have been published yet.',
+                'New episodes will appear here.',
+                null,
+                'podcast',
+              ),
+            ],
+            { header: MHeader('') },
           ),
       ),
-      ...std('Podcast', {
-        loading: 'collection',
-        error: [
-          'Podcast not found',
-          'This podcast may have been removed or is temporarily unavailable.',
-          'Try again →',
-        ],
-      }),
+      state(
+        'Loading',
+        () => Desktop('Loading', [Skeleton('collection')], { library: false }),
+        () => Mobile('Loading', [Skeleton('collection', true)], { header: MHeader('') }),
+      ),
+      state(
+        'Error',
+        () =>
+          Desktop(
+            'Error',
+            [
+              ErrorState(
+                'Podcast not found',
+                'This podcast may have been removed or is temporarily unavailable.',
+                'Try again',
+              ),
+            ],
+            { library: false },
+          ),
+        () =>
+          Mobile(
+            'Error',
+            [
+              ErrorState(
+                'Podcast not found',
+                'This podcast may have been removed or is temporarily unavailable.',
+                'Try again',
+              ),
+            ],
+            { header: MHeader('') },
+          ),
+      ),
     ],
   },
   queue: {
@@ -2042,89 +2136,11 @@ export const pages = {
   profile: {
     title: 'Profile',
     route: '/main/profile',
-    context: "The listener's own profile.",
-    desktop: () =>
-      Desktop(
-        'Profile',
-        [
-          R(
-            'Profile Header',
-            {},
-            {
-              name: { content: 'Maya' },
-              sub: { content: 'Night-bus playlists and too many synth records.' },
-              action: L({ name: 'Action' }, [IconBtn('settings', false)]),
-            },
-          ),
-          Row({ width: 'fill_container', justifyContent: 'space_between' }, [
-            Col({ gap: 2 }, [
-              Tx('H3', 'Top artists this month'),
-              Tx('Muted', 'Only visible to you'),
-            ]),
-            Tx('Link', 'Show all'),
-          ]),
-          artistRow(5),
-        ],
-        { library: false },
-      ),
-    mobile: () =>
-      Mobile(
-        'Profile',
-        [
-          Row({ gap: 16 }, [
-            Avatar('avatar2', 88),
-            Col({ gap: 4 }, [
-              Tx('Caption', 'Profile'),
-              Tx('H2', 'Maya'),
-              Tx('Muted', '3 public playlists · 12 following'),
-            ]),
-          ]),
-          Tx('H4', 'Top artists this month'),
-          Row(
-            { gap: 12 },
-            ARTISTS.slice(0, 2).map(([a, art]) => ArtistCard(a, 'Artist', art, 171)),
-          ),
-          Tx('H4', 'Top tracks this month'),
-          ...mrows(TRACKS.slice(0, 3)),
-        ],
-        { header: MHeader('Profile', { back: false, actions: ['settings'] }) },
-      ),
+    context:
+      "The listener's own profile as bento tiles (top artists, top tracks, playlists, following). Edit profile opens Settings › Profile details, where username, bio and avatar are edited.",
+    desktop: () => profileDesktop('Profile'),
+    mobile: () => profileMobile('Profile'),
     states: [
-      state(
-        'Sections',
-        () =>
-          Desktop(
-            'Sections',
-            [
-              SectionHeader('Top tracks this month'),
-              TrackTable(TRACKS.slice(0, 4), { playing: -1 }),
-              SectionHeader('Your playlists'),
-              CardRow([
-                PlaylistCard('Night Drive', 'Public playlist', 'night'),
-                PlaylistCard('Afterglow Sessions', 'Public playlist', 'afterglow'),
-                PlaylistCard('Focus', 'Private playlist', 'static'),
-              ]),
-            ],
-            { library: false },
-          ),
-        () =>
-          Mobile(
-            'Sections',
-            [
-              Tx('H4', 'Your playlists'),
-              ...[
-                ['Night Drive', 'Public playlist', 'night'],
-                ['Focus', 'Private playlist', 'static'],
-              ].map(([t, m, a]) => MobileTrack(t, m, a)),
-              Tx('H4', 'Following'),
-              ...[
-                ['Jonah', 'avatar3'],
-                ['Ana', 'avatar1'],
-              ].map(([n, a]) => MobileTrack(n, 'Profile', a)),
-            ],
-            { header: MHeader('Profile', { back: false }) },
-          ),
-      ),
       state(
         'Empty',
         () =>
@@ -2189,7 +2205,7 @@ export const pages = {
           ),
       ),
       ...std('Profile', {
-        loading: 'grid',
+        loading: 'profile',
         error: ['Profile could not be loaded', 'Something went wrong on our side. Try again.'],
         desktopOpts: { library: false },
       }),
@@ -2210,7 +2226,7 @@ export const pages = {
               avatar: {
                 fill: {
                   type: 'image',
-                  url: '../design-system/assets/avatars/avatar3.jpg',
+                  url: '../design-system/assets/avatars/avatar2.jpg',
                   mode: 'cover',
                 },
               },
@@ -2233,7 +2249,7 @@ export const pages = {
         'User',
         [
           Row({ gap: 16 }, [
-            Avatar('avatar3', 88),
+            Avatar('avatar2', 88),
             Col({ gap: 4 }, [Tx('Caption', 'Profile'), Tx('H2', 'Jonah')]),
           ]),
           Button('Follow', 'outline'),
@@ -2308,7 +2324,7 @@ export const pages = {
           Desktop(
             'Search settings',
             [
-              Col({ width: 760, gap: 24 }, [
+              Col({ width: 'fill_container', gap: 24 }, [
                 Row({ width: 'fill_container', gap: 10 }, [
                   Tx('H1', 'Settings'),
                   Spacer(),
@@ -2337,9 +2353,12 @@ export const pages = {
       ),
       state(
         'Loading',
-        () => Desktop('Loading', [Skeleton('list')], { library: false }),
+        () => Desktop('Loading', [Tx('H1', 'Settings'), Skeleton('settings')], { library: false }),
         () =>
-          Mobile('Loading', [Skeleton('list', true)], { mini: false, header: MHeader('Settings') }),
+          Mobile('Loading', [Skeleton('settings', true)], {
+            mini: false,
+            header: MHeader('Settings'),
+          }),
       ),
     ],
   },
@@ -2783,7 +2802,6 @@ export const pages = {
   },
   loading,
   cursor,
-  toasts,
   assistant,
   friends,
   'friends-find': friendsFind,
@@ -2990,6 +3008,488 @@ for (const key of PUBLIC) {
   }))
 }
 
+/* profile: bento tiles */
+function profileTile(title, sub, body, o = {}) {
+  return Panel(
+    [
+      Row({ name: 'Tile Head', width: 'fill_container', justifyContent: 'space_between' }, [
+        Col({ gap: 2 }, [Tx('H4', title), sub && Tx('Muted', sub)]),
+        o.all !== false && Tx('Link', 'Show all'),
+      ]),
+      ...body,
+    ],
+    { width: o.w ?? 'fill_container', gap: 14 },
+  )
+}
+function profileHead(m) {
+  const actions = Row({ name: 'Actions', gap: 10 }, [
+    Button('Edit profile', 'outline', { icon: 'pencil' }),
+    IconBtn('settings', false),
+  ])
+  return m
+    ? Col({ name: 'Head', gap: 14, width: 'fill_container' }, [
+        Row({ gap: 16 }, [
+          Avatar('avatar1', 88),
+          Col({ gap: 4, width: 'fill_container' }, [
+            Tx('Caption', 'Profile'),
+            Tx('H2', 'Maya'),
+            Tx('Muted', 'Night-bus playlists and too many synth records.'),
+          ]),
+        ]),
+        actions,
+      ])
+    : R(
+        'Profile Header',
+        {},
+        {
+          avatar: { fill: img(ART.avatar1) },
+          name: { content: 'Maya' },
+          sub: { content: 'Night-bus playlists and too many synth records.' },
+          action: L({ name: 'Action' }, [actions]),
+        },
+      )
+}
+function profileTiles(m) {
+  const artists = profileTile('Top artists this month', 'Only visible to you', [
+    Row(
+      { name: 'Artists', gap: m ? 10 : 16 },
+      ARTISTS.slice(0, m ? 3 : 5).map(([a, art]) => ArtistCard(a, 'Artist', art, m ? 106 : 148)),
+    ),
+  ])
+  const tracks = profileTile(
+    'Top tracks this month',
+    'Only visible to you',
+    m ? mrows(TRACKS.slice(0, 4)) : [TrackTable(TRACKS.slice(0, 4), { playing: -1 })],
+  )
+  const lists = profileTile('Your playlists', null, [
+    Row(
+      { name: 'Playlists', gap: m ? 10 : 16 },
+      [
+        ['Night Drive', 'Public playlist', 'night'],
+        ['Afterglow Sessions', 'Public playlist', 'afterglow'],
+        ['Focus', 'Private playlist', 'static'],
+        !m && ['Rain Drive', 'Public playlist', 'drift'],
+      ]
+        .filter(Boolean)
+        .slice(0, m ? 2 : 4)
+        .map(([t, sub, art]) => PlaylistCard(t, sub, art, m ? 164 : 150)),
+    ),
+  ])
+  const fArtists = profileTile(
+    'Following artists',
+    'Artists you follow',
+    ARTISTS.slice(0, 4).map(([a, art]) => MobileTrack(a, 'Artist', art)),
+    { w: m ? 'fill_container' : 340 },
+  )
+  const fPeople = profileTile(
+    'Following',
+    null,
+    [
+      Row(
+        { name: 'People', gap: 12 },
+        [
+          ['Jonah', 'avatar2'],
+          ['Ana', 'avatar3'],
+          ['Theo', 'avatar4'],
+        ].map(([n, a]) => Col({ gap: 6, alignItems: 'center' }, [Avatar(a, 64), Tx('Caption', n)])),
+      ),
+    ],
+    { w: m ? 'fill_container' : 340 },
+  )
+  return { artists, tracks, lists, fArtists, fPeople }
+}
+function profileDesktop(name) {
+  const t = profileTiles(false)
+  return Desktop(
+    name,
+    [
+      profileHead(false),
+      Row({ name: 'Bento', width: 'fill_container', gap: 20, alignItems: 'start' }, [
+        Col({ name: 'Main', width: 'fill_container', gap: 20 }, [t.artists, t.tracks, t.lists]),
+        Col({ name: 'Side', width: 340, gap: 20 }, [t.fArtists, t.fPeople]),
+      ]),
+    ],
+    { library: false, height: 1640 },
+  )
+}
+function profileMobile(name) {
+  const t = profileTiles(true)
+  return Mobile(name, [profileHead(true), t.artists, t.tracks, t.lists, t.fArtists, t.fPeople], {
+    header: MHeader('Profile', { back: false, actions: ['settings'] }),
+    height: 2600,
+  })
+}
+
+/* offline: the page offers the beta offline version, which plays what is on this device */
+function offlineBeta(m) {
+  return Panel(
+    [
+      Row({ name: 'Head', gap: 10, width: 'fill_container' }, [
+        Ic('hard-drive-download', 'Primary', 22),
+        Tx('H4', 'Offline version'),
+        Badge('Beta', 'default'),
+      ]),
+      Tx(
+        'Paragraph',
+        'Play your downloaded music and liked songs without a connection. Likes and playlist edits wait here and sync when you are back online.',
+        { wrap: true },
+      ),
+      Row({ name: 'Facts', gap: 16 }, [
+        Tx('Muted', '214 downloaded tracks'),
+        Tx('Muted', '1.8 GB on this device'),
+      ]),
+      Button('Try the offline version', 'large-default', {
+        icon: 'arrow-right',
+        width: m ? 'fill_container' : undefined,
+      }),
+    ],
+    { width: m ? 'fill_container' : 520 },
+  )
+}
+function offlinePage(m) {
+  return Blank('Offline', m ? 390 : 1440, m ? 844 : 900, [
+    Logo(),
+    OfflineState(
+      'You are offline',
+      'Check your connection and try opening the page again.',
+      'Try again',
+    ),
+    offlineBeta(m),
+  ])
+}
+function offlineApp(m, back) {
+  const banner = back
+    ? Alert('You are back online', 'Syncing 3 changes made offline — likes and one playlist edit.')
+    : Alert('Offline mode · Beta', 'Playing from this device. Changes sync when you reconnect.')
+  const rows = TRACKS.slice(0, 5)
+  const body = [
+    banner,
+    Row({ gap: 10 }, [
+      Tx(m ? 'H2' : 'H1', 'Downloaded'),
+      Badge('214 tracks', 'secondary'),
+      !m &&
+        R(
+          back ? 'Status/Syncing' : 'Status/Queued',
+          {},
+          { label: { content: back ? 'Syncing 3' : '3 changes queued' } },
+        ),
+    ]),
+    Chips(['All', 'Liked Songs', 'Night drive', 'Rain Drive']),
+    m ? mrows(rows) : TrackTable(rows),
+    Tx(
+      'Caption',
+      'Not downloaded items are hidden while offline. Search and recommendations return when you are back.',
+      { wrap: true },
+    ),
+  ]
+  return m
+    ? Mobile(back ? 'Back online' : 'Offline version', body.flat(), {
+        tab: 'library',
+        header: MHeader('Offline', { back: false }),
+      })
+    : Desktop(back ? 'Back online' : 'Offline version', body, { nowPlaying: true })
+}
+
+/* podcasts */
+const EPISODES = [
+  [
+    'Ep. 12 — Mixing for headphones',
+    '8 Oct 2026',
+    '48 min',
+    'How Mira Sol builds a mix that holds up on cheap earbuds and studio monitors alike.',
+    'progress',
+  ],
+  [
+    'Ep. 11 — The second album',
+    '1 Oct 2026',
+    '52 min',
+    'Nova & the Static on writing again after a record that went further than they expected.',
+    'default',
+  ],
+  [
+    'Ep. 10 — Live from the night bus',
+    '24 Sep 2026',
+    '39 min',
+    'A field recording special: three artists, one route, the city at 2 AM.',
+    'played',
+  ],
+  [
+    'Ep. 9 — Credits that pay',
+    '17 Sep 2026',
+    '44 min',
+    'Splits, roles and why the contributor list matters on release day.',
+    'default',
+  ],
+  [
+    'Ep. 8 — Remixes and rights',
+    '10 Sep 2026',
+    '41 min',
+    'When a remix becomes its own track, and who owns what.',
+    'played',
+  ],
+]
+function epRow([t, d, dur, desc, kind], playing, guest) {
+  const name = playing
+    ? 'Podcast/Episode Playing'
+    : ({ progress: 'Podcast/Episode Progress', played: 'Podcast/Episode Played' }[kind] ??
+      'Podcast/Episode')
+  return R(
+    name,
+    {},
+    {
+      cover: { fill: img(ART.stage) },
+      title: { content: t },
+      date: { content: d },
+      duration: { content: dur },
+      desc: { content: desc },
+      save: guest ? { enabled: false } : undefined,
+    },
+  )
+}
+function podHead(m, guest) {
+  const actions = Row({ name: 'Actions', gap: 12 }, [
+    R('Button/Play'),
+    !guest && Button('Follow', 'outline', { icon: 'plus' }),
+    IconBtn('share-2'),
+    IconBtn('ellipsis'),
+    !m && Concept(),
+  ])
+  const meta = Row({ name: 'Meta', gap: 8 }, [
+    Tx('Muted', '48 episodes'),
+    Tx('Muted', '·'),
+    Tx('Muted', 'Weekly'),
+    Badge('EN', 'outline'),
+    Badge('Explicit', 'outline'),
+  ])
+  return m
+    ? Col({ name: 'Show', gap: 14, width: 'fill_container', alignItems: 'center' }, [
+        BigCover('stage', 220),
+        Col({ gap: 4, width: 'fill_container' }, [
+          Tx('Eyebrow', 'PODCAST'),
+          Tx('H2', 'Signal & Noise'),
+          Tx('Link', 'Bitrate Studios'),
+          meta,
+        ]),
+        Tx('Paragraph', 'Conversations with the people who make the music you love.', {
+          wrap: true,
+        }),
+        actions,
+      ])
+    : Col({ name: 'Show', gap: 20, width: 'fill_container' }, [
+        Row({ width: 'fill_container', gap: 28, alignItems: 'end' }, [
+          BigCover('stage', 232),
+          Col({ gap: 8, width: 'fill_container' }, [
+            Tx('Eyebrow', 'PODCAST'),
+            Tx('Display', 'Signal & Noise'),
+            Tx('Body Strong', 'Bitrate Studios'),
+            meta,
+            Tx(
+              'Paragraph',
+              'Conversations with the people who make the music you love — producers, writers and the ones behind the credits.',
+              { wrap: true },
+            ),
+          ]),
+        ]),
+        actions,
+      ])
+}
+function podShow(m, o = {}) {
+  const tabs = Row({ name: 'Tabs', gap: 4 }, [Tab('Episodes', !o.about), Tab('About', !!o.about)])
+  const filters = Row(
+    { name: 'Filters', width: 'fill_container', gap: 12, justifyContent: 'space_between' },
+    [
+      Chips(['Newest', 'Unplayed', 'Saved'], o.saved ? 2 : 0),
+      !m && Input(null, o.search ? 'mixing' : 'Search episodes', 260),
+    ],
+  )
+  let list = EPISODES
+  if (o.saved) list = EPISODES.filter((e) => e[4] !== 'played').slice(0, 2)
+  if (o.search) list = EPISODES.slice(0, 1)
+  const rows = Col(
+    { name: 'Episodes', gap: 2, width: 'fill_container' },
+    list.slice(0, m ? 3 : 5).map((e, i) => epRow(e, o.playing && i === 1, o.guest)),
+  )
+  const about = Panel(
+    [
+      Tx('H4', 'About'),
+      Tx(
+        'Paragraph',
+        'Signal & Noise is a weekly show from Bitrate Studios. Each episode sits down with the producers, writers and engineers behind records you know.',
+        { wrap: true },
+      ),
+      SettingRow('Publisher', null, Tx('Body Strong', 'Bitrate Studios')),
+      SettingRow('Language', null, Tx('Body Strong', 'English')),
+      SettingRow('Content', null, Badge('Explicit', 'outline')),
+    ],
+    { width: m ? 'fill_container' : 640 },
+  )
+  const body = [
+    podHead(m, o.guest),
+    tabs,
+    ...(o.about
+      ? [about]
+      : [
+          filters,
+          m && o.search && Input(null, 'mixing'),
+          o.search && Tx('Muted', '1 episode for “mixing”'),
+          rows,
+          o.more && MoreRows(m, 'track', '20 of 48'),
+          o.guest &&
+            Alert(
+              'Save episodes for later',
+              'Log in to keep episodes in Your episodes and pick up where you left off.',
+            ),
+        ]),
+  ]
+  return m
+    ? Mobile('Podcast', body, { header: MHeader('', { actions: ['share-2'] }), height: 1200 })
+    : Desktop('Podcast', body, { library: false, nowPlaying: !!o.playing, height: 1300 })
+}
+function podPlayer(m) {
+  const body = [
+    BigCover('stage', m ? 300 : 360),
+    Col({ gap: 2, width: m ? 'fill_container' : 520 }, [
+      Tx('Eyebrow', 'SIGNAL & NOISE · EP. 12'),
+      Tx(m ? 'H2' : 'H1', 'Mixing for headphones'),
+      Tx('Link', 'Bitrate Studios'),
+    ]),
+    Col({ gap: 18, width: m ? 'fill_container' : 520 }, [
+      R('Podcast/Seek Chapters'),
+      R('Podcast/Transport'),
+    ]),
+    !m &&
+      Panel(
+        [
+          Tx('H4', 'Chapters'),
+          R(
+            'Podcast/Chapter',
+            {},
+            {
+              time: { content: '00:00' },
+              title: { content: 'Cold open' },
+              duration: { content: '4 min' },
+            },
+          ),
+          R(
+            'Podcast/Chapter',
+            {},
+            {
+              time: { content: '04:10' },
+              title: { content: 'Why earbuds lie' },
+              duration: { content: '9 min' },
+            },
+          ),
+          R(
+            'Podcast/Chapter Active',
+            {},
+            {
+              time: { content: '13:20' },
+              title: { content: 'Headphone mixes' },
+              duration: { content: '14 min' },
+            },
+          ),
+          R(
+            'Podcast/Chapter',
+            {},
+            {
+              time: { content: '27:40' },
+              title: { content: 'Listener questions' },
+              duration: { content: '20 min' },
+            },
+          ),
+        ],
+        { width: 520 },
+      ),
+  ]
+  return m
+    ? Mobile(
+        'Now playing (podcast)',
+        [Col({ gap: 20, width: 'fill_container', alignItems: 'center' }, body)],
+        {
+          mini: false,
+          header: MHeader('Now playing', { backIcon: 'chevron-down', actions: ['ellipsis'] }),
+        },
+      )
+    : Desktop(
+        'Now playing (podcast)',
+        [
+          Row({ width: 'fill_container', gap: 56, justifyContent: 'center', alignItems: 'start' }, [
+            Col({ gap: 20, alignItems: 'center' }, body.slice(0, 3)),
+            body[3],
+          ]),
+        ],
+        { library: false, height: 1000 },
+      )
+}
+function podEpisode(m) {
+  const e = EPISODES[0]
+  const body = [
+    Row({ gap: 20, width: 'fill_container', alignItems: 'end' }, [
+      BigCover('stage', m ? 120 : 180),
+      Col({ gap: 6, width: 'fill_container' }, [
+        Tx('Link', 'Signal & Noise'),
+        Tx(m ? 'H3' : 'H1', 'Mixing for headphones', { wrap: true }),
+        Tx('Muted', `${e[1]} · ${e[2]} · 23 min left`),
+      ]),
+    ]),
+    Row({ gap: 12 }, [
+      Button('Resume', 'large-default', { icon: 'play' }),
+      IconBtn('bookmark-check'),
+      IconBtn('share-2'),
+      !m && Concept(),
+    ]),
+    Panel(
+      [
+        Tx('H4', 'Show notes'),
+        Tx(
+          'Paragraph',
+          `${e[3]} We talk reference tracks, mono checks and the one plug-in Mira never turns off.`,
+          { wrap: true },
+        ),
+      ],
+      { width: 'fill_container' },
+    ),
+    Panel(
+      [
+        Tx('H4', 'Chapters'),
+        R(
+          'Podcast/Chapter',
+          {},
+          {
+            time: { content: '00:00' },
+            title: { content: 'Cold open' },
+            duration: { content: '4 min' },
+          },
+        ),
+        R(
+          'Podcast/Chapter Active',
+          {},
+          {
+            time: { content: '13:20' },
+            title: { content: 'Headphone mixes' },
+            duration: { content: '14 min' },
+          },
+        ),
+        R(
+          'Podcast/Chapter',
+          {},
+          {
+            time: { content: '27:40' },
+            title: { content: 'Listener questions' },
+            duration: { content: '20 min' },
+          },
+        ),
+      ],
+      { width: 'fill_container' },
+    ),
+    SectionHeader('More episodes'),
+    ...EPISODES.slice(1, 3).map((x) => epRow(x)),
+  ]
+  return m
+    ? Mobile('Episode', body, { header: MHeader(''), height: 1500 })
+    : Desktop('Episode', body, { library: false, height: 1300 })
+}
+
 /* helpers used above */
 function quickGrid(cols = 4) {
   const items = [
@@ -3027,7 +3527,7 @@ function homeAll() {
 function homeMobile() {
   return [
     Row({ width: 'fill_container', gap: 12 }, [
-      Avatar('avatar2', 36),
+      Avatar('avatar1', 36),
       Col({ gap: 2, width: 'fill_container' }, [
         Tx('Eyebrow', 'MADE FOR MAYA'),
         Tx('H2', 'Good evening'),
@@ -3141,10 +3641,10 @@ function legal() {
 }
 function activity() {
   return [
-    ['avatar3', 'Jonah', 'liked', 'Night Signal', 'night', '12 min ago'],
-    ['avatar1', 'Ana', 'added 3 tracks to', 'Rain Drive', 'drift', '1 h ago'],
+    ['avatar2', 'Jonah', 'liked', 'Night Signal', 'night', '12 min ago'],
+    ['avatar3', 'Ana', 'added 3 tracks to', 'Rain Drive', 'drift', '1 h ago'],
     ['avatar4', 'Leo', 'started following', 'Luma Vale', 'luma', '3 h ago'],
-    ['avatar2', 'Maya', 'is listening to', 'Afterglow', 'afterglow', 'now'],
+    ['avatar1', 'Maya', 'is listening to', 'Afterglow', 'afterglow', 'now'],
   ].map(([av, n, a, item, art, t]) =>
     R(
       'Activity Row',

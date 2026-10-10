@@ -243,7 +243,7 @@ Good uses:
 
 Avoid motion whose only purpose is to make the interface feel “alive.”
 
-Brand motion patterns, drawn in Pencil (`loading`, `cursor`, `toasts` designs) and live in the
+Brand motion patterns, drawn in Pencil (the `loading` and `cursor` designs and the library page “09 • Toasts”) and live in the
 motion prototypes:
 
 - **Logo loader** — a brush writes the mark along its two strokes, a light runs the contour, then

@@ -170,23 +170,24 @@ export const Ref = (ref, o = {}, descendants) => ({
 
 /* ---------- shadcn kit (forked in the library) ---------- */
 const BTN = {
-  default: ['exjwf', 'k0WCtI', 'E23bq6'],
-  secondary: ['Wveyx', 'HWhkZ', 'f8YTr'],
-  outline: ['G5tJp', 'wFUna', 'd2zCI'],
-  ghost: ['DTwJb', 'DsOu2', 'GyGLK'],
-  destructive: ['uT1Ux', 'w2aMIw', 'QLznA'],
-  'large-default': ['Y4ylzP', 'D3xnv', 'NVe7y'],
-  'large-secondary': ['q9t60e', 'hQB6X', 'KOjgg'],
-  'large-outline': ['qz3aI', 'vIxSI', 'i6a4e'],
+  default: ['exjwf', 'k0WCtI', 'E23bq6', 'o7NXW'],
+  secondary: ['Wveyx', 'HWhkZ', 'f8YTr', 'q1x1J'],
+  outline: ['G5tJp', 'wFUna', 'd2zCI', 'zDiHG'],
+  ghost: ['DTwJb', 'DsOu2', 'GyGLK', 'uRXDu'],
+  destructive: ['uT1Ux', 'w2aMIw', 'QLznA', 'CxlXV'],
+  'large-default': ['Y4ylzP', 'D3xnv', 'NVe7y', 'ksrFi'],
+  'large-secondary': ['q9t60e', 'hQB6X', 'KOjgg', 'X8D8m'],
+  'large-outline': ['qz3aI', 'vIxSI', 'i6a4e', 'MlIUw'],
 }
+/** A kit button; without an icon the whole icon slot is switched off so no empty gap stays before the label. */
 export const Button = (label, variant = 'default', { icon, width, name } = {}) => {
-  const [ref, iconId, labelId] = BTN[variant]
+  const [ref, iconId, labelId, slotId] = BTN[variant]
   return Ref(
     ref,
     { name: name ?? `Button / ${label}`, ...(width ? { width } : {}) },
     {
       [labelId]: { content: label },
-      [iconId]: icon ? { icon } : { enabled: false },
+      ...(icon ? { [iconId]: { icon } } : { [slotId]: { enabled: false } }),
     },
   )
 }

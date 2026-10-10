@@ -32,12 +32,12 @@ import {
 
 /* people (demo data); presence is visible to friends only */
 const FRIENDS = [
-  ['Maya Rivers', 'avatar2', 'Listening', 'Listening to Afterglow · Nova & the Static'],
-  ['Jonah Pike', 'avatar1', 'Online', 'Online'],
+  ['Maya Rivers', 'avatar1', 'Listening', 'Listening to Afterglow · Nova & the Static'],
+  ['Jonah Pike', 'avatar2', 'Online', 'Online'],
   ['Ana Sol', 'avatar3', 'Online', 'Online'],
   ['Theo Lark', 'avatar4', 'Away', 'Away · 12 min'],
   ['Iris Hale', 'avatar1', 'Offline', 'Last seen 2 h ago'],
-  ['Remy Cole', 'avatar3', 'Offline', 'Last seen yesterday'],
+  ['Remy Cole', 'avatar4', 'Offline', 'Last seen yesterday'],
 ]
 const ONLINE = FRIENDS.filter((f) => f[2] !== 'Offline')
 const OFFLINE = FRIENDS.filter((f) => f[2] === 'Offline')
@@ -372,15 +372,15 @@ export const friends = {
 
 /* ---------------- /friends/find ---------------- */
 const RESULTS = [
-  ['Maya Rivers', 'avatar2', '@mayarivers · 4 mutual friends', 'add'],
-  ['Maya Chen', 'avatar4', '@mchen · Similar taste: Dream pop', 'requested'],
+  ['Maya Rivers', 'avatar1', '@mayarivers · 4 mutual friends', 'add'],
+  ['Maya Chen', 'avatar3', '@mchen · Similar taste: Dream pop', 'requested'],
   ['Mayan Echo', 'avatar1', '@mayanecho · 1 mutual friend', 'incoming'],
-  ['Maya Ortiz', 'avatar3', '@maya.o · Friends', 'friends'],
+  ['Maya Ortiz', 'avatar1', '@maya.o · Friends', 'friends'],
 ]
 const SUGGESTED = [
   ['Lena Voss', 'avatar3', '6 mutual friends'],
-  ['Kai Moreno', 'avatar1', 'Also follows Luma Vale'],
-  ['Noor Aziz', 'avatar4', 'Similar taste: Ambient'],
+  ['Kai Moreno', 'avatar2', 'Also follows Luma Vale'],
+  ['Noor Aziz', 'avatar3', 'Similar taste: Ambient'],
 ]
 const resultAction = (kind, m) =>
   ({
@@ -502,7 +502,7 @@ const RECEIVED = [
   ['Mayan Echo', 'avatar1', '1 mutual friend · 2 h ago'],
   ['Lena Voss', 'avatar3', '6 mutual friends · Yesterday'],
 ]
-const SENT = [['Maya Chen', 'avatar4', 'Sent 3 days ago']]
+const SENT = [['Maya Chen', 'avatar3', 'Sent 3 days ago']]
 const received = (m) =>
   Col(
     { name: 'Received', gap: 0, width: 'fill_container' },

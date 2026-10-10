@@ -105,7 +105,17 @@ export const ArtistCard = (name, sub, art, w = 168) =>
   Ref(
     'jjufD',
     { name: `Artist / ${name}`, width: w, height: 'fit_content' },
-    { S3S303: { fill: img(ART[art]) }, N0I3i: { content: name }, Q4aRkj: { content: sub } },
+    {
+      /* artwork is square (round with the card radius) whatever the card width */
+      S3S303: {
+        fill: img(ART[art]),
+        ...(typeof w === 'number'
+          ? { width: w - 28, height: w - 28, cornerRadius: (w - 28) / 2 }
+          : {}),
+      },
+      N0I3i: { content: name },
+      Q4aRkj: { content: sub },
+    },
   )
 export const PlaylistCard = (title, sub, art, w = 168) =>
   Ref(
@@ -246,6 +256,55 @@ export function Skeleton(kind = 'list', mobile = false, { more = false } = {}) {
     return wrap([
       mobile ? col(many('Skeleton/Track Row Mobile', 10), 16) : col(many('Skeleton/Table Row', 13)),
     ])
+  if (kind === 'settings' || kind === 'profile') {
+    const tile = (rows) =>
+      Panel(
+        [
+          line(mobile ? 120 : 180, 18),
+          ...Array.from({ length: rows }, () =>
+            Row({ width: 'fill_container', gap: 16, padding: [10, 0] }, [
+              Col({ gap: 8, width: 'fill_container' }, [
+                line(mobile ? 150 : 220),
+                line(mobile ? 100 : 160, 10),
+              ]),
+              line(44, 24),
+            ]),
+          ),
+        ],
+        { width: 'fill_container' },
+      )
+    if (kind === 'profile')
+      return wrap([
+        Row({ gap: 24, alignItems: 'end', width: 'fill_container' }, [
+          Ref('Jjegi', {
+            name: 'Avatar',
+            width: mobile ? 120 : 200,
+            height: mobile ? 120 : 200,
+            cornerRadius: 100,
+          }),
+          Col({ gap: 12, width: 'fill_container' }, [
+            line(80),
+            line(mobile ? 180 : 360, mobile ? 28 : 44),
+            line(mobile ? 120 : 260),
+          ]),
+        ]),
+        Row(
+          { name: 'Circles', gap: mobile ? 12 : 20 },
+          Array.from({ length: mobile ? 3 : 6 }, () =>
+            R('Skeleton/Artist Card', mobile ? { width: 104 } : {}),
+          ),
+        ),
+        col(many(mobile ? 'Skeleton/Track Row Mobile' : 'Skeleton/Track Row', 4), mobile ? 16 : 4),
+      ])
+    return wrap([
+      mobile
+        ? Col({ gap: 16, width: 'fill_container' }, [tile(2), tile(3), tile(2), tile(3)])
+        : Row({ gap: 20, width: 'fill_container', alignItems: 'start' }, [
+            Col({ gap: 20, width: 'fill_container' }, [tile(2), tile(3), tile(2)]),
+            Col({ gap: 20, width: 'fill_container' }, [tile(3), tile(2), tile(3)]),
+          ]),
+    ])
+  }
   if (kind === 'collection')
     return wrap([
       Row({ gap: 24, alignItems: 'end', width: 'fill_container' }, [
