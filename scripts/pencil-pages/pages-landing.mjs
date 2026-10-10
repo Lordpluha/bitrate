@@ -20,6 +20,7 @@ import {
   Input,
   Badge,
   ART,
+  OAuth,
 } from './ui.mjs'
 
 const W = 1440
@@ -447,8 +448,14 @@ const SCENES = [
       eyebrow: 'OUR PARTNERS',
       parts: [['Partners who keep'], ['the signal on air.', 'accent']],
       desc: 'Labels, studios and services we build with. Grab one and throw it — they bounce back.',
-      extra: [Tx('Caption', 'Placeholder marks — replace with real partner logos')],
+      extra: [
+        Button('Become a partner', 'large-default', { icon: 'arrow-right' }),
+        Tx('Caption', 'Placeholder marks — replace with real partner logos'),
+      ],
     },
+    mobileExtra: () => [
+      Button('Become a partner', 'large-default', { icon: 'arrow-right', width: 'fill_container' }),
+    ],
     signal: [90, 'SIGNAL · BLOOM'],
     ui: (m) =>
       Col(
@@ -497,8 +504,15 @@ const SCENES = [
             { label: { content: 'Workspaces' }, value: { content: '9' }, sub: { enabled: false } },
           ),
         ]),
+        Row({ gap: 12 }, [
+          Button('Join us', 'large-default', { icon: 'arrow-right' }),
+          Button('How we work', 'large-outline'),
+        ]),
       ],
     },
+    mobileExtra: () => [
+      Button('Join us', 'large-default', { icon: 'arrow-right', width: 'fill_container' }),
+    ],
     signal: [90, 'SIGNAL · SPHERE'],
     ui: (m, open) =>
       Col({ name: 'Team Pit', gap: 0, width: m ? 'fill_container' : 700, alignItems: 'center' }, [
@@ -842,8 +856,7 @@ const loginModal = (w) =>
       Tx('Link', 'Forgot password?'),
       Button('Log in', 'large-default', { width: 'fill_container' }),
       R('Auth/Or Divider'),
-      CheckRow('I accept the Terms of Use and Privacy Policy'),
-      Button('Continue with Google', 'outline', { width: 'fill_container' }),
+      OAuth(),
       Row({ gap: 6 }, [Tx('Muted', "Don't have an account?"), Tx('Link', 'Sign up')]),
     ],
     { width: w },
@@ -863,7 +876,7 @@ const signUpModal = (w) =>
       ),
       Button('Register', 'large-default', { width: 'fill_container' }),
       R('Auth/Or Divider'),
-      Button('Continue with Google', 'outline', { width: 'fill_container' }),
+      OAuth(false, { consent: false }),
     ],
     { width: w },
   )

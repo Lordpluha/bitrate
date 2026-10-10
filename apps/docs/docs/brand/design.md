@@ -206,7 +206,12 @@ Avoid choosing a signature color solely because another music platform does not 
 
 ## 14. Typography direction
 
-Brand v1.0 does **not** lock a final typeface yet.
+The display/UI pairing is **Unbounded** for headings (Display, H1–H4, lyrics) and **Inter** for
+interface text, with JetBrains Mono for data labels. The Pencil library carries them as
+`--font-heading` and `--font-sans`; the heading scale is set ~15% smaller than for the previous
+Kanit because Unbounded runs wide (Display 54, H1 32, H2 24, H3 19, H4 16). The apps still load
+Kanit and Poppins — switching `next/font` and the artist portal's font link waits for design
+approval, together with the screenshot baselines it changes.
 
 Typography should be:
 
@@ -237,6 +242,19 @@ Good uses:
 - clarifying hierarchy changes.
 
 Avoid motion whose only purpose is to make the interface feel “alive.”
+
+Brand motion patterns, drawn in Pencil (`loading`, `cursor`, `toasts` designs) and live in the
+motion prototypes:
+
+- **Logo loader** — a brush writes the mark along its two strokes, a light runs the contour, then
+  it erases in the same direction; a determinate mode maps progress to the write, a mini comet
+  runs the outline in buttons, rows and toasts. Reduced motion fades the mark instead.
+- **Signal cursor** — one custom cursor on fine pointers across the landing and the app: a dot and
+  a trailing ring that opens over interactive targets, becomes a Play pill over media, a beam in
+  text, a seek line over timelines, and shows the playing level as bars. Touch keeps the system
+  behaviour with a press ripple; reduced motion removes the trailing spring.
+- **Toasts** — non-blocking feedback in one region (bottom-right above the player bar, top on
+  phones), newest in front, expand on hover, swipe or close to dismiss; errors stay until closed.
 
 ## 17. Advertising
 
@@ -412,7 +430,6 @@ artists lockup render the mark alone and their slots are square. A wordmark vect
 The following should be developed in the visual identity phase rather than invented prematurely:
 
 - final wordmark, and the mark-plus-wordmark lockup;
-- final typography;
 - exact spacing scale;
 - illustration system;
 - photography direction;

@@ -83,6 +83,49 @@ export const loading = {
   mobile: () => splash(390, 844),
   states: [
     state(
+      'Logo loader',
+      () =>
+        Blank('Logo loader', 1440, 900, [
+          Tx('H2', 'Logo loader — write, pulse, erase'),
+          Row({ name: 'Keyframes', gap: 56, alignItems: 'end' }, [
+            Col({ gap: 12, alignItems: 'center' }, [
+              R('Loader/Logo Write'),
+              Tx('Caption', '0–0.9 s · a brush writes the upper ribbon'),
+            ]),
+            Col({ gap: 12, alignItems: 'center' }, [
+              R('Loader/Logo Pulse'),
+              Tx('Caption', '0.9–1.6 s · the lower ribbon lands, a light runs the contour'),
+            ]),
+            Col({ gap: 12, alignItems: 'center' }, [
+              R('Loader/Logo Erase'),
+              Tx('Caption', '1.6–2.3 s · erased in the same direction, loop'),
+            ]),
+            Col({ gap: 12, alignItems: 'center' }, [
+              R('Loader/Logo Mini', { width: 48, height: 47 }),
+              Tx('Caption', 'Mini · comet on the outline'),
+            ]),
+          ]),
+          R(
+            'Landing/Motion Note',
+            {},
+            {
+              note: {
+                content:
+                  'A mask of two strokes along the ribbon spines reveals the real mark; a glowing head follows the brush tip. Determinate mode maps progress to the write. Reduced motion: the mark fades in and out.',
+                width: 620,
+              },
+            },
+          ),
+        ]),
+      () =>
+        Blank('Logo loader', 390, 844, [
+          R('Loader/Logo Pulse'),
+          Tx('Caption', 'Splash on phones: the same write-on, 120 px'),
+          R('Loader/Logo Mini', { width: 32, height: 31 }),
+          Tx('Caption', 'Inline: the mini comet beside a label'),
+        ]),
+    ),
+    state(
       'Route change',
       () => Desktop('Route change', [R('Progress/Route Bar'), Skeleton('grid')]),
       () =>

@@ -27,6 +27,7 @@ import {
   MobileTrack,
   ErrorState,
   withMore,
+  OAuth,
   EmptyState,
   OfflineState,
   Skeleton,
@@ -61,6 +62,8 @@ import { landing } from './pages-landing.mjs'
 import { friends, friendsFind, friendsRequests } from './pages-friends.mjs'
 import { loading } from './pages-loading.mjs'
 import { APP_STATES } from './pages-app.mjs'
+import { cursor } from './pages-cursor.mjs'
+import { toasts } from './pages-toasts.mjs'
 
 const T5 = TRACKS.slice(0, 5)
 const mrows = (rows) => rows.map((t) => MobileTrack(t[0], t[1], t[4]))
@@ -122,34 +125,10 @@ const std = (m, { loading = 'list', error, notFound, mobileOpts = {}, desktopOpt
   ].filter(Boolean)
 
 /* ---------------- auth ---------------- */
-const providers = () =>
-  Col({ name: 'Social Sign-in', width: 'fill_container', gap: 10 }, [
-    CheckRow('I accept the Terms of Use and Privacy Policy'),
-    Button('Continue with Google', 'outline', { width: 'fill_container' }),
-    Row(
-      { name: 'Providers 1', width: 'fill_container', gap: 8 },
-      [
-        ['Facebook', false],
-        ['Apple', true],
-      ].map(([p, soon]) =>
-        R(
-          'Auth/Provider',
-          {},
-          { label: { content: p }, soon: soon ? undefined : { enabled: false } },
-        ),
-      ),
-    ),
-    Row(
-      { name: 'Providers 2', width: 'fill_container', gap: 8 },
-      ['Discord', 'GitHub'].map((p) => R('Auth/Provider', {}, { label: { content: p } })),
-    ),
-    Tx('Caption', '+ 9 more: Microsoft, X, Instagram, TikTok, Twitch, LinkedIn, Reddit, Telegram', {
-      wrap: true,
-    }),
-  ])
+const providers = (open) => OAuth(open)
 const footer = (lead, link) =>
   Row({ name: 'Footer Link', gap: 6 }, [Tx('Muted', lead), Tx('Link', link)])
-const loginForm = (extra) => [
+const loginForm = (extra, open) => [
   title('Login to your account', 'Welcome back! Please sign in to continue.'),
   extra,
   Col({ name: 'Fields', gap: 14, width: 'fill_container' }, [
@@ -159,7 +138,7 @@ const loginForm = (extra) => [
   ]),
   Button('Log in', 'large-default', { width: 'fill_container' }),
   R('Auth/Or Divider'),
-  providers(),
+  providers(open),
   footer("Don't have an account?", 'Sign up'),
 ]
 const loggingIn = () => [
@@ -176,7 +155,7 @@ const twoFa = (err) => [
   err && FieldError('Invalid or expired 2FA code'),
   Button('Verify', 'large-default', { width: 'fill_container' }),
 ]
-const regForm = () => [
+const regForm = (open) => [
   title(
     'Create your account for free and start listening',
     'Sign up with your email or continue with a social account.',
@@ -192,7 +171,7 @@ const regForm = () => [
   ),
   Button('Register', 'large-default', { width: 'fill_container' }),
   R('Auth/Or Divider'),
-  Button('Continue with Google', 'outline', { width: 'fill_container' }),
+  OAuth(open, { consent: false }),
   footer('Already have an account?', 'Log in'),
 ]
 const regErrors = () => [
@@ -511,6 +490,7 @@ export const pages = {
       authState('Error', () =>
         loginForm(Alert('Sign-in failed', 'Check your email and password and try again.')),
       ),
+      authState('More sign-in options', () => loginForm(null, true)),
     ],
   },
   login: {
@@ -553,6 +533,7 @@ export const pages = {
     context: 'Single-step sign-up; password rules surface as validation errors.',
     ...auth('Registration', regForm, 'Start listening for free.'),
     states: [
+      authState('More sign-in options', () => regForm(true), 'Start listening for free.'),
       authState('Validation errors', regErrors, 'Start listening for free.'),
       authState(
         'Submitting',
@@ -623,29 +604,22 @@ export const pages = {
   'not-found': {
     title: 'Not found (404)',
     route: 'any unknown route',
-    context: 'Global not-found page (app/not-found.tsx).',
-    desktop: () =>
-      Blank('404', 1440, 900, [
-        Logo(),
-        Tx('Display Primary', '404'),
-        EmptyState(
-          'Page not found',
-          "We couldn't find the page you were looking for.",
-          'Back to home',
-          'compass',
-        ),
-      ]),
-    mobile: () =>
-      Blank('404', 390, 844, [
-        Logo(),
-        Tx('Display Primary', '404'),
-        EmptyState(
-          'Page not found',
-          "We couldn't find the page you were looking for.",
-          'Back to home',
-          'compass',
-        ),
-      ]),
+    context:
+      'Global not-found page (app/not-found.tsx) as "Signal lost": the page is a track that does not exist — The 404s, stuck at 4:04, a flatline in the middle of the spectrum. Play goes home; search and report a broken link; suggestions below.',
+    desktop: () => lost(false),
+    mobile: () => lost(true),
+    states: [
+      state(
+        'Broken link reported',
+        () => lost(false, true),
+        () => lost(true, true),
+      ),
+      state(
+        'Signed out',
+        () => lost(false, false, true),
+        () => lost(true, false, true),
+      ),
+    ],
   },
   error: {
     title: 'Error',
@@ -2807,6 +2781,8 @@ export const pages = {
     ],
   },
   loading,
+  cursor,
+  toasts,
   friends,
   'friends-find': friendsFind,
   'friends-requests': friendsRequests,
@@ -2906,6 +2882,84 @@ for (const [key, [kind, count]] of Object.entries(MORE)) {
 /* app motion patterns drawn as states (command search, atmosphere, mobile panels, video) */
 for (const [key, extra] of Object.entries(APP_STATES))
   pages[key].states = [...(pages[key].states ?? []), ...extra]
+
+/* 404 "signal lost": the missing page as a track that cannot play */
+function lost(m, reported, guest) {
+  const card = Panel(
+    [
+      Row({ width: 'fill_container', justifyContent: 'space_between' }, [
+        Tx('Eyebrow', 'NOW PLAYING · SIGNAL LOST'),
+        R('Status/Error', {}, { label: { content: 'No signal' } }),
+      ]),
+      Row({ name: 'Track', gap: 16, width: 'fill_container' }, [
+        R('Media/Cover', {
+          width: m ? 64 : 88,
+          height: m ? 64 : 88,
+          fill: img(ART.night),
+          opacity: 0.45,
+        }),
+        Col({ gap: 2, width: 'fill_container' }, [
+          Tx(m ? 'H3' : 'H2', 'Page not found'),
+          Tx('Muted', 'The 404s · Lost Frequencies (B-side)'),
+        ]),
+      ]),
+      R('NotFound/Flatline', m ? { width: 'fill_container' } : {}),
+      R(
+        'Seek Bar',
+        {},
+        {
+          elapsedBar: { width: m ? 260 : 420 },
+          elapsed: { content: '4:04' },
+          duration: { content: '4:04' },
+        },
+      ),
+      Row({ name: 'Actions', gap: 10, width: 'fill_container' }, [
+        Button(guest ? 'Back to the start' : 'Play something else', 'large-default', {
+          icon: 'play',
+          width: m ? 'fill_container' : undefined,
+        }),
+        !m && Button('Search', 'large-outline', { icon: 'search' }),
+      ]),
+      reported
+        ? Alert(
+            'Thanks — link reported',
+            'We will fix where it points. You can keep listening meanwhile.',
+          )
+        : Tx('Link', 'Report a broken link'),
+    ],
+    { width: m ? 'fill_container' : 620, gap: 18 },
+  )
+  const tips = guest
+    ? null
+    : Col({ name: 'Try instead', gap: 12, width: m ? 'fill_container' : 620 }, [
+        Tx('H4', 'Try these instead'),
+        (m ? Col : Row)({ gap: 12, width: 'fill_container' }, [
+          R('Quick Tile/Liked', { width: 'fill_container' }, { title: { content: 'Liked Songs' } }),
+          R(
+            'Quick Tile',
+            { width: 'fill_container' },
+            { cover: { fill: img(ART.luma) }, title: { content: 'Discover' } },
+          ),
+          !m &&
+            R(
+              'Quick Tile',
+              { width: 'fill_container' },
+              { cover: { fill: img(ART.drift) }, title: { content: 'Your Library' } },
+            ),
+        ]),
+      ])
+  return Blank(m ? '404' : '404', m ? 390 : 1440, m ? 844 : 900, [
+    Logo(),
+    Tx('Display Primary', '404'),
+    Tx('Paragraph', 'This track skipped. The page you are looking for is not on the setlist.', {
+      wrap: true,
+      textAlign: 'center',
+      width: m ? 'fill_container' : 520,
+    }),
+    card,
+    tips,
+  ])
+}
 
 /* helpers used above */
 function quickGrid(cols = 4) {
