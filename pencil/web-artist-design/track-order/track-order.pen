@@ -1,0 +1,1623 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "mGvwpM",
+      "name": "Artist / EP track order / Desktop / Dark",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "s4Y2hD",
+          "ref": "ds:KyPyuH",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:DANnhv": {
+              "type": "ref",
+              "id": "XVmHjz",
+              "ref": "ds:XA4Fm9",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:aEPX66": {
+                  "icon": "disc-3"
+                },
+                "ds:CfKAFr": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:rze5zR": {
+              "content": "Workspace / Music / Afterglow EP"
+            },
+            "ds:C2eynh/ds:E23bq6": {
+              "content": "Save order"
+            },
+            "ds:C2eynh/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:yayc2m": {
+              "type": "frame",
+              "id": "sHviuf",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "mboyTM",
+                  "ref": "ds:m5cDdt",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:3TLCJk": {
+                      "content": "AFTERGLOW · EP · DRAFT"
+                    },
+                    "ds:CUcTF9": {
+                      "content": "Track order"
+                    },
+                    "ds:FrUwgt": {
+                      "content": "Set the listening sequence before review"
+                    },
+                    "ds:NZRJcR": {
+                      "type": "frame",
+                      "id": "piPGjX",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "h9kQqf",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "VwL8Ub",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ifjVFR",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "Bz3hSz",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "UYoV4X",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "EJMUXq",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Afterglow EP"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "3JfX3f",
+                                      "ref": "ds:x9ZouB",
+                                      "name": "Status/Warning",
+                                      "descendants": {
+                                        "ds:Sw6tD5": {
+                                          "content": "Unsaved order"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "uzVxSz",
+                                  "ref": "ds:a5FsRz",
+                                  "name": "Text/Muted",
+                                  "content": "5 tracks · 18:42 total · draft order"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "FHvQbZ",
+                                  "ref": "ds:CfJbUq",
+                                  "name": "Candidate Row/Compact",
+                                  "descendants": {
+                                    "ds:Mzzrgc": {
+                                      "content": "1"
+                                    },
+                                    "ds:DpKm93": {
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    "ds:t9TVds": {
+                                      "content": "Night Signal"
+                                    },
+                                    "ds:HZj6ak": {
+                                      "content": "Original mix · 3:56 · Ready"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "nKxTD3",
+                                  "ref": "ds:CfJbUq",
+                                  "name": "Candidate Row/Compact",
+                                  "descendants": {
+                                    "ds:Mzzrgc": {
+                                      "content": "2"
+                                    },
+                                    "ds:DpKm93": {
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-static-lines.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    "ds:t9TVds": {
+                                      "content": "Static Lines"
+                                    },
+                                    "ds:HZj6ak": {
+                                      "content": "3:47 · Ready"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "JQGLGo",
+                                  "ref": "ds:CfJbUq",
+                                  "name": "Candidate Row/Compact",
+                                  "descendants": {
+                                    "ds:Mzzrgc": {
+                                      "content": "3"
+                                    },
+                                    "ds:DpKm93": {
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-drift-control.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    "ds:t9TVds": {
+                                      "content": "Drift Control"
+                                    },
+                                    "ds:HZj6ak": {
+                                      "content": "Radio edit · 3:19 · Needs details"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "gRd6QC",
+                                  "ref": "ds:CfJbUq",
+                                  "name": "Candidate Row/Compact",
+                                  "descendants": {
+                                    "ds:Mzzrgc": {
+                                      "content": "4"
+                                    },
+                                    "ds:DpKm93": {
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    "ds:t9TVds": {
+                                      "content": "Afterglow"
+                                    },
+                                    "ds:HZj6ak": {
+                                      "content": "4:02 · Processing"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "VKzzHm",
+                                  "ref": "ds:CfJbUq",
+                                  "name": "Candidate Row/Compact",
+                                  "descendants": {
+                                    "ds:Mzzrgc": {
+                                      "content": "5"
+                                    },
+                                    "ds:DpKm93": {
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-echoes-in-motion.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    "ds:t9TVds": {
+                                      "content": "Echoes in Motion"
+                                    },
+                                    "ds:HZj6ak": {
+                                      "content": "Extended mix · 3:38 · Ready"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "8qcExH",
+                                  "ref": "ds:v3Wc3g",
+                                  "name": "Text/Caption",
+                                  "content": "Drag tracks or use Move up / Move down from each row menu."
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "89Ycpd",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "dEUyoF",
+                                      "ref": "ds:G5tJp",
+                                      "name": "Button / Add track",
+                                      "descendants": {
+                                        "ds:d2zCI": {
+                                          "content": "Add track"
+                                        },
+                                        "ds:wFUna": {
+                                          "icon": "plus"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "xDngP6",
+                                      "ref": "ds:DTwJb",
+                                      "name": "Button / Reset",
+                                      "descendants": {
+                                        "ds:GyGLK": {
+                                          "content": "Reset"
+                                        },
+                                        "ds:DsOu2": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "VG5aSp",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "c8nzZr",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "pGES4c",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "9FPQfL",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "9pwfcY",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Order readiness"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "rK3nWW",
+                                  "ref": "ds:a5FsRz",
+                                  "name": "Text/Muted",
+                                  "content": "3 / 5 ready · Three tracks can proceed."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "QTT3Qh",
+                                  "ref": "ds:mzabEx",
+                                  "name": "Checklist Row/Blocked",
+                                  "descendants": {
+                                    "ds:UiYviC": {
+                                      "content": "Drift Control needs details"
+                                    },
+                                    "ds:WNNtby": {
+                                      "content": "Add the missing primary genre before review."
+                                    },
+                                    "ds:UBrr5r": {
+                                      "content": "Edit metadata"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "dohyko",
+                                  "ref": "ds:qjfGYE",
+                                  "name": "Checklist Row/Pending",
+                                  "descendants": {
+                                    "ds:xuMZu5": {
+                                      "content": "Afterglow is processing"
+                                    },
+                                    "ds:idX3pf": {
+                                      "content": "You can reorder it, but review stays unavailable."
+                                    },
+                                    "ds:kknJAu": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — release track order — Set the listening sequence before review."
+    },
+    {
+      "type": "frame",
+      "id": "LEJeex",
+      "name": "Artist / EP track order / Desktop / Light",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "gCiWzx",
+          "ref": "ds:KyPyuH",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:DANnhv": {
+              "type": "ref",
+              "id": "26gZJ5",
+              "ref": "ds:XA4Fm9",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:aEPX66": {
+                  "icon": "disc-3"
+                },
+                "ds:CfKAFr": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:rze5zR": {
+              "content": "Workspace / Music / Afterglow EP"
+            },
+            "ds:C2eynh/ds:E23bq6": {
+              "content": "Save order"
+            },
+            "ds:C2eynh/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:yayc2m": {
+              "type": "frame",
+              "id": "mJV4CE",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "LTPKjj",
+                  "ref": "ds:m5cDdt",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:3TLCJk": {
+                      "content": "AFTERGLOW · EP · DRAFT"
+                    },
+                    "ds:CUcTF9": {
+                      "content": "Track order"
+                    },
+                    "ds:FrUwgt": {
+                      "content": "Set the listening sequence before review"
+                    },
+                    "ds:NZRJcR": {
+                      "type": "frame",
+                      "id": "bW4R8h",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "vnfzXM",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "6bhWVq",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ECBmGM",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "fVCCKG",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "zAER2d",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "iAXrbY",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Afterglow EP"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "FUMjnE",
+                                      "ref": "ds:x9ZouB",
+                                      "name": "Status/Warning",
+                                      "descendants": {
+                                        "ds:Sw6tD5": {
+                                          "content": "Unsaved order"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "X9REBY",
+                                  "ref": "ds:a5FsRz",
+                                  "name": "Text/Muted",
+                                  "content": "5 tracks · 18:42 total · draft order"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "soEXDi",
+                                  "ref": "ds:CfJbUq",
+                                  "name": "Candidate Row/Compact",
+                                  "descendants": {
+                                    "ds:Mzzrgc": {
+                                      "content": "1"
+                                    },
+                                    "ds:DpKm93": {
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    "ds:t9TVds": {
+                                      "content": "Night Signal"
+                                    },
+                                    "ds:HZj6ak": {
+                                      "content": "Original mix · 3:56 · Ready"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "wQUR8w",
+                                  "ref": "ds:CfJbUq",
+                                  "name": "Candidate Row/Compact",
+                                  "descendants": {
+                                    "ds:Mzzrgc": {
+                                      "content": "2"
+                                    },
+                                    "ds:DpKm93": {
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-static-lines.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    "ds:t9TVds": {
+                                      "content": "Static Lines"
+                                    },
+                                    "ds:HZj6ak": {
+                                      "content": "3:47 · Ready"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "gGfYAp",
+                                  "ref": "ds:CfJbUq",
+                                  "name": "Candidate Row/Compact",
+                                  "descendants": {
+                                    "ds:Mzzrgc": {
+                                      "content": "3"
+                                    },
+                                    "ds:DpKm93": {
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-drift-control.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    "ds:t9TVds": {
+                                      "content": "Drift Control"
+                                    },
+                                    "ds:HZj6ak": {
+                                      "content": "Radio edit · 3:19 · Needs details"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "TPmRdg",
+                                  "ref": "ds:CfJbUq",
+                                  "name": "Candidate Row/Compact",
+                                  "descendants": {
+                                    "ds:Mzzrgc": {
+                                      "content": "4"
+                                    },
+                                    "ds:DpKm93": {
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    "ds:t9TVds": {
+                                      "content": "Afterglow"
+                                    },
+                                    "ds:HZj6ak": {
+                                      "content": "4:02 · Processing"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "2UkwE8",
+                                  "ref": "ds:CfJbUq",
+                                  "name": "Candidate Row/Compact",
+                                  "descendants": {
+                                    "ds:Mzzrgc": {
+                                      "content": "5"
+                                    },
+                                    "ds:DpKm93": {
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-echoes-in-motion.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    "ds:t9TVds": {
+                                      "content": "Echoes in Motion"
+                                    },
+                                    "ds:HZj6ak": {
+                                      "content": "Extended mix · 3:38 · Ready"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "sFtDuv",
+                                  "ref": "ds:v3Wc3g",
+                                  "name": "Text/Caption",
+                                  "content": "Drag tracks or use Move up / Move down from each row menu."
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "fvVVyG",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "PECnWm",
+                                      "ref": "ds:G5tJp",
+                                      "name": "Button / Add track",
+                                      "descendants": {
+                                        "ds:d2zCI": {
+                                          "content": "Add track"
+                                        },
+                                        "ds:wFUna": {
+                                          "icon": "plus"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "5GqFbH",
+                                      "ref": "ds:DTwJb",
+                                      "name": "Button / Reset",
+                                      "descendants": {
+                                        "ds:GyGLK": {
+                                          "content": "Reset"
+                                        },
+                                        "ds:DsOu2": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "TxNngJ",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "kygQyW",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "CWBUcs",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "hagHu7",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "7dCJXZ",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Order readiness"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "i4xaqu",
+                                  "ref": "ds:a5FsRz",
+                                  "name": "Text/Muted",
+                                  "content": "3 / 5 ready · Three tracks can proceed."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "7ueKJ4",
+                                  "ref": "ds:mzabEx",
+                                  "name": "Checklist Row/Blocked",
+                                  "descendants": {
+                                    "ds:UiYviC": {
+                                      "content": "Drift Control needs details"
+                                    },
+                                    "ds:WNNtby": {
+                                      "content": "Add the missing primary genre before review."
+                                    },
+                                    "ds:UBrr5r": {
+                                      "content": "Edit metadata"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Tef6JG",
+                                  "ref": "ds:qjfGYE",
+                                  "name": "Checklist Row/Pending",
+                                  "descendants": {
+                                    "ds:xuMZu5": {
+                                      "content": "Afterglow is processing"
+                                    },
+                                    "ds:idX3pf": {
+                                      "content": "You can reorder it, but review stays unavailable."
+                                    },
+                                    "ds:kknJAu": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "designed — release track order — Set the listening sequence before review."
+    },
+    {
+      "type": "frame",
+      "id": "FedeXs",
+      "name": "Artist / EP track order / Desktop / Dim",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "jna7VV",
+          "ref": "ds:KyPyuH",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:DANnhv": {
+              "type": "ref",
+              "id": "H6ZBkh",
+              "ref": "ds:XA4Fm9",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:aEPX66": {
+                  "icon": "disc-3"
+                },
+                "ds:CfKAFr": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:rze5zR": {
+              "content": "Workspace / Music / Afterglow EP"
+            },
+            "ds:C2eynh/ds:E23bq6": {
+              "content": "Save order"
+            },
+            "ds:C2eynh/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:yayc2m": {
+              "type": "frame",
+              "id": "2XvTgh",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "dEbWyn",
+                  "ref": "ds:m5cDdt",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:3TLCJk": {
+                      "content": "AFTERGLOW · EP · DRAFT"
+                    },
+                    "ds:CUcTF9": {
+                      "content": "Track order"
+                    },
+                    "ds:FrUwgt": {
+                      "content": "Set the listening sequence before review"
+                    },
+                    "ds:NZRJcR": {
+                      "type": "frame",
+                      "id": "LLA2Yg",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "vaVMWz",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "9GMirL",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ts7dNo",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "R8RGdr",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "VShzhH",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "hkMLCh",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Afterglow EP"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "P8sfW4",
+                                      "ref": "ds:x9ZouB",
+                                      "name": "Status/Warning",
+                                      "descendants": {
+                                        "ds:Sw6tD5": {
+                                          "content": "Unsaved order"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "yVZSMS",
+                                  "ref": "ds:a5FsRz",
+                                  "name": "Text/Muted",
+                                  "content": "5 tracks · 18:42 total · draft order"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "rWvo8j",
+                                  "ref": "ds:CfJbUq",
+                                  "name": "Candidate Row/Compact",
+                                  "descendants": {
+                                    "ds:Mzzrgc": {
+                                      "content": "1"
+                                    },
+                                    "ds:DpKm93": {
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    "ds:t9TVds": {
+                                      "content": "Night Signal"
+                                    },
+                                    "ds:HZj6ak": {
+                                      "content": "Original mix · 3:56 · Ready"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "naTuAm",
+                                  "ref": "ds:CfJbUq",
+                                  "name": "Candidate Row/Compact",
+                                  "descendants": {
+                                    "ds:Mzzrgc": {
+                                      "content": "2"
+                                    },
+                                    "ds:DpKm93": {
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-static-lines.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    "ds:t9TVds": {
+                                      "content": "Static Lines"
+                                    },
+                                    "ds:HZj6ak": {
+                                      "content": "3:47 · Ready"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "7V5mp8",
+                                  "ref": "ds:CfJbUq",
+                                  "name": "Candidate Row/Compact",
+                                  "descendants": {
+                                    "ds:Mzzrgc": {
+                                      "content": "3"
+                                    },
+                                    "ds:DpKm93": {
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-drift-control.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    "ds:t9TVds": {
+                                      "content": "Drift Control"
+                                    },
+                                    "ds:HZj6ak": {
+                                      "content": "Radio edit · 3:19 · Needs details"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "9RYUEY",
+                                  "ref": "ds:CfJbUq",
+                                  "name": "Candidate Row/Compact",
+                                  "descendants": {
+                                    "ds:Mzzrgc": {
+                                      "content": "4"
+                                    },
+                                    "ds:DpKm93": {
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    "ds:t9TVds": {
+                                      "content": "Afterglow"
+                                    },
+                                    "ds:HZj6ak": {
+                                      "content": "4:02 · Processing"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "9STFtm",
+                                  "ref": "ds:CfJbUq",
+                                  "name": "Candidate Row/Compact",
+                                  "descendants": {
+                                    "ds:Mzzrgc": {
+                                      "content": "5"
+                                    },
+                                    "ds:DpKm93": {
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-echoes-in-motion.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    "ds:t9TVds": {
+                                      "content": "Echoes in Motion"
+                                    },
+                                    "ds:HZj6ak": {
+                                      "content": "Extended mix · 3:38 · Ready"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "VKn2PR",
+                                  "ref": "ds:v3Wc3g",
+                                  "name": "Text/Caption",
+                                  "content": "Drag tracks or use Move up / Move down from each row menu."
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "rK36rm",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "o9AumX",
+                                      "ref": "ds:G5tJp",
+                                      "name": "Button / Add track",
+                                      "descendants": {
+                                        "ds:d2zCI": {
+                                          "content": "Add track"
+                                        },
+                                        "ds:wFUna": {
+                                          "icon": "plus"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "tzUdrM",
+                                      "ref": "ds:DTwJb",
+                                      "name": "Button / Reset",
+                                      "descendants": {
+                                        "ds:GyGLK": {
+                                          "content": "Reset"
+                                        },
+                                        "ds:DsOu2": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "qC5HFb",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "tPZtYa",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "3vhSLQ",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "JhxgZS",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "FVy4d9",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Order readiness"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "9rQNDE",
+                                  "ref": "ds:a5FsRz",
+                                  "name": "Text/Muted",
+                                  "content": "3 / 5 ready · Three tracks can proceed."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "XuBQRV",
+                                  "ref": "ds:mzabEx",
+                                  "name": "Checklist Row/Blocked",
+                                  "descendants": {
+                                    "ds:UiYviC": {
+                                      "content": "Drift Control needs details"
+                                    },
+                                    "ds:WNNtby": {
+                                      "content": "Add the missing primary genre before review."
+                                    },
+                                    "ds:UBrr5r": {
+                                      "content": "Edit metadata"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Q2E2Zz",
+                                  "ref": "ds:qjfGYE",
+                                  "name": "Checklist Row/Pending",
+                                  "descendants": {
+                                    "ds:xuMZu5": {
+                                      "content": "Afterglow is processing"
+                                    },
+                                    "ds:idX3pf": {
+                                      "content": "You can reorder it, but review stays unavailable."
+                                    },
+                                    "ds:kknJAu": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "designed — release track order — Set the listening sequence before review."
+    },
+    {
+      "type": "frame",
+      "id": "pAFHNX",
+      "name": "Artist / EP track order / Mobile / Dark",
+      "width": 390,
+      "height": 1600,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "mu4Jxd",
+          "ref": "ds:nfUKC8",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1600,
+          "descendants": {
+            "ds:sc4jzZ": {
+              "type": "frame",
+              "id": "EissBp",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "LTPrgb",
+                  "ref": "ds:m5cDdt",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:3TLCJk": {
+                      "content": "AFTERGLOW · EP · DRAFT"
+                    },
+                    "ds:CUcTF9": {
+                      "content": "Track order"
+                    },
+                    "ds:FrUwgt": {
+                      "content": "Set the listening sequence before review"
+                    },
+                    "ds:NZRJcR": {
+                      "type": "frame",
+                      "id": "in4Luu",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "fqiDFC",
+                  "ref": "ds:3qeDYv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:DXQovz": {
+                      "type": "frame",
+                      "id": "AZrgcN",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "ZNnd6h",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "Mw3xgT",
+                              "ref": "ds:CXpV9d",
+                              "name": "Text/H4",
+                              "content": "Afterglow EP"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "VjYUp9",
+                              "ref": "ds:x9ZouB",
+                              "name": "Status/Warning",
+                              "descendants": {
+                                "ds:Sw6tD5": {
+                                  "content": "Unsaved order"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "CefDYj",
+                          "ref": "ds:a5FsRz",
+                          "name": "Text/Muted",
+                          "content": "5 tracks · 18:42 total · draft order"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "6siV8Y",
+                          "ref": "ds:CfJbUq",
+                          "name": "Candidate Row/Compact",
+                          "descendants": {
+                            "ds:Mzzrgc": {
+                              "content": "1"
+                            },
+                            "ds:DpKm93": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-night-signal.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:t9TVds": {
+                              "content": "Night Signal"
+                            },
+                            "ds:HZj6ak": {
+                              "content": "Original mix · 3:56 · Ready"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "cdVHo9",
+                          "ref": "ds:CfJbUq",
+                          "name": "Candidate Row/Compact",
+                          "descendants": {
+                            "ds:Mzzrgc": {
+                              "content": "2"
+                            },
+                            "ds:DpKm93": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-static-lines.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:t9TVds": {
+                              "content": "Static Lines"
+                            },
+                            "ds:HZj6ak": {
+                              "content": "3:47 · Ready"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "jWtzeP",
+                          "ref": "ds:CfJbUq",
+                          "name": "Candidate Row/Compact",
+                          "descendants": {
+                            "ds:Mzzrgc": {
+                              "content": "3"
+                            },
+                            "ds:DpKm93": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-drift-control.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:t9TVds": {
+                              "content": "Drift Control"
+                            },
+                            "ds:HZj6ak": {
+                              "content": "Radio edit · 3:19 · Needs details"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "rBUYDV",
+                          "ref": "ds:CfJbUq",
+                          "name": "Candidate Row/Compact",
+                          "descendants": {
+                            "ds:Mzzrgc": {
+                              "content": "4"
+                            },
+                            "ds:DpKm93": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:t9TVds": {
+                              "content": "Afterglow"
+                            },
+                            "ds:HZj6ak": {
+                              "content": "4:02 · Processing"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "bQTS4F",
+                          "ref": "ds:CfJbUq",
+                          "name": "Candidate Row/Compact",
+                          "descendants": {
+                            "ds:Mzzrgc": {
+                              "content": "5"
+                            },
+                            "ds:DpKm93": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-echoes-in-motion.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:t9TVds": {
+                              "content": "Echoes in Motion"
+                            },
+                            "ds:HZj6ak": {
+                              "content": "Extended mix · 3:38 · Ready"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "yKshDv",
+                          "ref": "ds:v3Wc3g",
+                          "name": "Text/Caption",
+                          "content": "Drag tracks or use Move up / Move down from each row menu."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "9XQrPi",
+                          "name": "Row",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "Jpu52m",
+                              "ref": "ds:G5tJp",
+                              "name": "Button / Add track",
+                              "descendants": {
+                                "ds:d2zCI": {
+                                  "content": "Add track"
+                                },
+                                "ds:wFUna": {
+                                  "icon": "plus"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "WTnbHp",
+                              "ref": "ds:DTwJb",
+                              "name": "Button / Reset",
+                              "descendants": {
+                                "ds:GyGLK": {
+                                  "content": "Reset"
+                                },
+                                "ds:DsOu2": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "3fFhUG",
+                  "ref": "ds:3qeDYv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:DXQovz": {
+                      "type": "frame",
+                      "id": "A9uYff",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "mKqCt6",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "D9wKVX",
+                              "ref": "ds:CXpV9d",
+                              "name": "Text/H4",
+                              "content": "Order readiness"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "jg8b5n",
+                          "ref": "ds:a5FsRz",
+                          "name": "Text/Muted",
+                          "content": "3 / 5 ready · Three tracks can proceed."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "n2L7z8",
+                          "ref": "ds:mzabEx",
+                          "name": "Checklist Row/Blocked",
+                          "descendants": {
+                            "ds:UiYviC": {
+                              "content": "Drift Control needs details"
+                            },
+                            "ds:WNNtby": {
+                              "content": "Add the missing primary genre before review."
+                            },
+                            "ds:UBrr5r": {
+                              "content": "Edit metadata"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "TpjgZH",
+                          "ref": "ds:qjfGYE",
+                          "name": "Checklist Row/Pending",
+                          "descendants": {
+                            "ds:xuMZu5": {
+                              "content": "Afterglow is processing"
+                            },
+                            "ds:idX3pf": {
+                              "content": "You can reorder it, but review stays unavailable."
+                            },
+                            "ds:kknJAu": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — release track order — Set the listening sequence before review."
+    }
+  ]
+}

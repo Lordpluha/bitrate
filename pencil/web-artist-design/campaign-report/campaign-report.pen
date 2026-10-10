@@ -1,0 +1,2564 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "k7Ejso",
+      "name": "Artist / Campaign report & recovery / Desktop / Dark",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Tht2iP",
+          "ref": "ds:KyPyuH",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6rjKLE": {
+              "type": "ref",
+              "id": "855vV2",
+              "ref": "ds:XA4Fm9",
+              "name": "Nav / Promotion",
+              "descendants": {
+                "ds:aEPX66": {
+                  "icon": "megaphone"
+                },
+                "ds:CfKAFr": {
+                  "content": "Promotion"
+                }
+              }
+            },
+            "ds:rze5zR": {
+              "content": "Workspace / Promotion / Report & recovery"
+            },
+            "ds:C2eynh/ds:E23bq6": {
+              "content": "Export report"
+            },
+            "ds:C2eynh/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:yayc2m": {
+              "type": "frame",
+              "id": "zpJb4U",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "jHkTYv",
+                  "ref": "ds:m5cDdt",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:3TLCJk": {
+                      "enabled": false
+                    },
+                    "ds:CUcTF9": {
+                      "content": "Campaign report & recovery"
+                    },
+                    "ds:FrUwgt": {
+                      "content": "Understand available signals and repair channel issues"
+                    },
+                    "ds:NZRJcR": {
+                      "type": "frame",
+                      "id": "LQpCBK",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "ctLxwp",
+                  "ref": "ds:a5FsRz",
+                  "name": "Text/Muted",
+                  "content": "Afterglow launch · Sep 12–22, 2026 · Europe/Kyiv · Bitrate source"
+                },
+                {
+                  "type": "frame",
+                  "id": "NtB3hp",
+                  "name": "Stats",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "cjuHMy",
+                      "ref": "ds:HZSKEe",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:5sP47Z": {
+                          "content": "POST VIEWS"
+                        },
+                        "ds:im35oa": {
+                          "content": "1,284"
+                        },
+                        "ds:6cHJH5": {
+                          "content": "Bitrate profile impressions"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "CK7RjS",
+                      "ref": "ds:HZSKEe",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:5sP47Z": {
+                          "content": "LINK OPENS"
+                        },
+                        "ds:im35oa": {
+                          "content": "318"
+                        },
+                        "ds:6cHJH5": {
+                          "content": "Campaign link interactions"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "6vSWhE",
+                      "ref": "ds:HZSKEe",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:5sP47Z": {
+                          "content": "RELEASE PLAYS"
+                        },
+                        "ds:im35oa": {
+                          "content": "204"
+                        },
+                        "ds:6cHJH5": {
+                          "content": "Attributed plays in Bitrate"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "nxS7F8",
+                      "ref": "ds:HZSKEe",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:5sP47Z": {
+                          "content": "SAVES"
+                        },
+                        "ds:im35oa": {
+                          "content": "41"
+                        },
+                        "ds:6cHJH5": {
+                          "content": "Bitrate release saves"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "9b9yw7",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "bjba3C",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "cJeaHr",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "L9ELgq",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "4BqYaN",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "Hw943X",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Daily signals"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "x4dXP9",
+                                      "ref": "ds:FJUa1",
+                                      "name": "Badge / Updated 2h ago",
+                                      "descendants": {
+                                        "ds:BI0Pd": {
+                                          "content": "Updated 2h ago"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "hiRXvy",
+                                  "ref": "ds:AXtehy",
+                                  "name": "Table/Header Row",
+                                  "descendants": {
+                                    "ds:94g79Z": {
+                                      "type": "frame",
+                                      "id": "gcB4SC",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "fiFvYn",
+                                          "ref": "ds:v3Wc3g",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Date"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "dWSsxw",
+                                          "ref": "ds:v3Wc3g",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "Views"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "vsbQVs",
+                                          "ref": "ds:v3Wc3g",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "Opens"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "EapVFC",
+                                          "ref": "ds:v3Wc3g",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "Plays"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "3SzarK",
+                                          "ref": "ds:v3Wc3g",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "Saves"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "TLeqLy",
+                                  "ref": "ds:J43dZ6",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:LiJoJV": {
+                                      "type": "frame",
+                                      "id": "Tn9ApC",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "aHzK3C",
+                                          "ref": "ds:yadC37",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Sep 18"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "2MS9MQ",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "218"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "7QGmMJ",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "54"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "jGkPyL",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "39"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "x5tidS",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "8"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "3GY9Jc",
+                                  "ref": "ds:J43dZ6",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:LiJoJV": {
+                                      "type": "frame",
+                                      "id": "ANZvHg",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "tzUPXG",
+                                          "ref": "ds:yadC37",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Sep 19"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "YsfTHM",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "246"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "iHRp9E",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "61"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "rg9SzP",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "42"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "j9epjn",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "7"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "H4pkYQ",
+                                  "ref": "ds:J43dZ6",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:LiJoJV": {
+                                      "type": "frame",
+                                      "id": "AbomHZ",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "JSij2e",
+                                          "ref": "ds:yadC37",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Sep 20"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "HEWbsi",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "271"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "JUPcJd",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "69"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "Tbtphx",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "48"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "cnVV9K",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "10"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "N9F5aw",
+                                  "ref": "ds:J43dZ6",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:LiJoJV": {
+                                      "type": "frame",
+                                      "id": "m8mMWA",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "9d4rdb",
+                                          "ref": "ds:yadC37",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Sep 21"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "UYNCHF",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "289"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "GGCuET",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "72"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "oCBTTd",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "46"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "km9tjs",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "9"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "QfW6D8",
+                                  "ref": "ds:v3Wc3g",
+                                  "name": "Text/Caption",
+                                  "content": "Only Bitrate-owned signals are included. External results remain unavailable."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "bohg9n",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "UdPR4f",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "hUL7CQ",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "SSkKsW",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "EifKN4",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Channel delivery"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "RmGs7P",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Bitrate artist profile"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Published · Sep 12, 18:00"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "uirsES",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "zNBjA8",
+                                          "ref": "ds:koxqDX",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:3Zsgc7": {
+                                              "content": "Delivered"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "C5m3QS",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Social publishing sandbox"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Token expired · reconnect to resume"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "z6MuBo",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "R4t5zb",
+                                          "ref": "ds:39ow9Y",
+                                          "name": "Status/Error",
+                                          "descendants": {
+                                            "ds:A75Syq": {
+                                              "content": "Error"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Q8av77",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Reconnect channel",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Reconnect channel"
+                                    },
+                                    "ds:k0WCtI": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/promotion/report — Only Bitrate-owned signals; every metric has source, period and time."
+    },
+    {
+      "type": "frame",
+      "id": "WE4duD",
+      "name": "Artist / Campaign report & recovery / Desktop / Light",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Zsb7oV",
+          "ref": "ds:KyPyuH",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6rjKLE": {
+              "type": "ref",
+              "id": "E4xTEG",
+              "ref": "ds:XA4Fm9",
+              "name": "Nav / Promotion",
+              "descendants": {
+                "ds:aEPX66": {
+                  "icon": "megaphone"
+                },
+                "ds:CfKAFr": {
+                  "content": "Promotion"
+                }
+              }
+            },
+            "ds:rze5zR": {
+              "content": "Workspace / Promotion / Report & recovery"
+            },
+            "ds:C2eynh/ds:E23bq6": {
+              "content": "Export report"
+            },
+            "ds:C2eynh/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:yayc2m": {
+              "type": "frame",
+              "id": "Za3LAR",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "GoaH9i",
+                  "ref": "ds:m5cDdt",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:3TLCJk": {
+                      "enabled": false
+                    },
+                    "ds:CUcTF9": {
+                      "content": "Campaign report & recovery"
+                    },
+                    "ds:FrUwgt": {
+                      "content": "Understand available signals and repair channel issues"
+                    },
+                    "ds:NZRJcR": {
+                      "type": "frame",
+                      "id": "Qh99GQ",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "bDyHDF",
+                  "ref": "ds:a5FsRz",
+                  "name": "Text/Muted",
+                  "content": "Afterglow launch · Sep 12–22, 2026 · Europe/Kyiv · Bitrate source"
+                },
+                {
+                  "type": "frame",
+                  "id": "wwUnMY",
+                  "name": "Stats",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "9QqkGp",
+                      "ref": "ds:HZSKEe",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:5sP47Z": {
+                          "content": "POST VIEWS"
+                        },
+                        "ds:im35oa": {
+                          "content": "1,284"
+                        },
+                        "ds:6cHJH5": {
+                          "content": "Bitrate profile impressions"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "EfeyKY",
+                      "ref": "ds:HZSKEe",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:5sP47Z": {
+                          "content": "LINK OPENS"
+                        },
+                        "ds:im35oa": {
+                          "content": "318"
+                        },
+                        "ds:6cHJH5": {
+                          "content": "Campaign link interactions"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "tfdj7p",
+                      "ref": "ds:HZSKEe",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:5sP47Z": {
+                          "content": "RELEASE PLAYS"
+                        },
+                        "ds:im35oa": {
+                          "content": "204"
+                        },
+                        "ds:6cHJH5": {
+                          "content": "Attributed plays in Bitrate"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "xysnF4",
+                      "ref": "ds:HZSKEe",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:5sP47Z": {
+                          "content": "SAVES"
+                        },
+                        "ds:im35oa": {
+                          "content": "41"
+                        },
+                        "ds:6cHJH5": {
+                          "content": "Bitrate release saves"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "UVruCb",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "kBhACr",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "mZe4aU",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "d57ZuL",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "R4qGZG",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "QTWWWA",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Daily signals"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "DtyrR3",
+                                      "ref": "ds:FJUa1",
+                                      "name": "Badge / Updated 2h ago",
+                                      "descendants": {
+                                        "ds:BI0Pd": {
+                                          "content": "Updated 2h ago"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "8mLJiJ",
+                                  "ref": "ds:AXtehy",
+                                  "name": "Table/Header Row",
+                                  "descendants": {
+                                    "ds:94g79Z": {
+                                      "type": "frame",
+                                      "id": "zmPcX3",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "HoBZLY",
+                                          "ref": "ds:v3Wc3g",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Date"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "aBwryB",
+                                          "ref": "ds:v3Wc3g",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "Views"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "Yk7YBS",
+                                          "ref": "ds:v3Wc3g",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "Opens"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "hCvy9X",
+                                          "ref": "ds:v3Wc3g",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "Plays"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "yktLzD",
+                                          "ref": "ds:v3Wc3g",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "Saves"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "m4y7uS",
+                                  "ref": "ds:J43dZ6",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:LiJoJV": {
+                                      "type": "frame",
+                                      "id": "SYnYYs",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "7jChta",
+                                          "ref": "ds:yadC37",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Sep 18"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "bbciUs",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "218"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "LNKGNX",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "54"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "S8QLx2",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "39"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "PskZ9a",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "8"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "2ZNQY5",
+                                  "ref": "ds:J43dZ6",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:LiJoJV": {
+                                      "type": "frame",
+                                      "id": "VXmiKc",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "AV7cB8",
+                                          "ref": "ds:yadC37",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Sep 19"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "bC2gUN",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "246"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "NXcMWs",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "61"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "U8ADua",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "42"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "SxLQn3",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "7"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "c75Erh",
+                                  "ref": "ds:J43dZ6",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:LiJoJV": {
+                                      "type": "frame",
+                                      "id": "nRxwK9",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "WShB6L",
+                                          "ref": "ds:yadC37",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Sep 20"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "BcPakN",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "271"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "zQpU3W",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "69"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "d9eRGN",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "48"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "gA6cB9",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "10"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "GsK2s5",
+                                  "ref": "ds:J43dZ6",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:LiJoJV": {
+                                      "type": "frame",
+                                      "id": "xR72Rr",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "Yr4YrR",
+                                          "ref": "ds:yadC37",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Sep 21"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "7iCHiW",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "289"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "n3spT5",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "72"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "yFMWHm",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "46"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "Fogjyy",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "9"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "LWDonZ",
+                                  "ref": "ds:v3Wc3g",
+                                  "name": "Text/Caption",
+                                  "content": "Only Bitrate-owned signals are included. External results remain unavailable."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "CtUvB7",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "iEtWST",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "j2XFBK",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "EnhaPK",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "7mKHkU",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Channel delivery"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "pcaETd",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Bitrate artist profile"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Published · Sep 12, 18:00"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "srZFza",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "gMshJ7",
+                                          "ref": "ds:koxqDX",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:3Zsgc7": {
+                                              "content": "Delivered"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "92bGeQ",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Social publishing sandbox"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Token expired · reconnect to resume"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "CDPz9z",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "EiUHcK",
+                                          "ref": "ds:39ow9Y",
+                                          "name": "Status/Error",
+                                          "descendants": {
+                                            "ds:A75Syq": {
+                                              "content": "Error"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "kd6gBH",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Reconnect channel",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Reconnect channel"
+                                    },
+                                    "ds:k0WCtI": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "designed — /dashboard/promotion/report — Only Bitrate-owned signals; every metric has source, period and time."
+    },
+    {
+      "type": "frame",
+      "id": "3UGtv8",
+      "name": "Artist / Campaign report & recovery / Desktop / Dim",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "sHdhvQ",
+          "ref": "ds:KyPyuH",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6rjKLE": {
+              "type": "ref",
+              "id": "E6T4aQ",
+              "ref": "ds:XA4Fm9",
+              "name": "Nav / Promotion",
+              "descendants": {
+                "ds:aEPX66": {
+                  "icon": "megaphone"
+                },
+                "ds:CfKAFr": {
+                  "content": "Promotion"
+                }
+              }
+            },
+            "ds:rze5zR": {
+              "content": "Workspace / Promotion / Report & recovery"
+            },
+            "ds:C2eynh/ds:E23bq6": {
+              "content": "Export report"
+            },
+            "ds:C2eynh/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:yayc2m": {
+              "type": "frame",
+              "id": "VbCVdu",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "HRk4Lz",
+                  "ref": "ds:m5cDdt",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:3TLCJk": {
+                      "enabled": false
+                    },
+                    "ds:CUcTF9": {
+                      "content": "Campaign report & recovery"
+                    },
+                    "ds:FrUwgt": {
+                      "content": "Understand available signals and repair channel issues"
+                    },
+                    "ds:NZRJcR": {
+                      "type": "frame",
+                      "id": "PenesT",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "LgM4Np",
+                  "ref": "ds:a5FsRz",
+                  "name": "Text/Muted",
+                  "content": "Afterglow launch · Sep 12–22, 2026 · Europe/Kyiv · Bitrate source"
+                },
+                {
+                  "type": "frame",
+                  "id": "q2emeu",
+                  "name": "Stats",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "5i8FBz",
+                      "ref": "ds:HZSKEe",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:5sP47Z": {
+                          "content": "POST VIEWS"
+                        },
+                        "ds:im35oa": {
+                          "content": "1,284"
+                        },
+                        "ds:6cHJH5": {
+                          "content": "Bitrate profile impressions"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "E58bbH",
+                      "ref": "ds:HZSKEe",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:5sP47Z": {
+                          "content": "LINK OPENS"
+                        },
+                        "ds:im35oa": {
+                          "content": "318"
+                        },
+                        "ds:6cHJH5": {
+                          "content": "Campaign link interactions"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "xPsd8b",
+                      "ref": "ds:HZSKEe",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:5sP47Z": {
+                          "content": "RELEASE PLAYS"
+                        },
+                        "ds:im35oa": {
+                          "content": "204"
+                        },
+                        "ds:6cHJH5": {
+                          "content": "Attributed plays in Bitrate"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "gxjrb2",
+                      "ref": "ds:HZSKEe",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:5sP47Z": {
+                          "content": "SAVES"
+                        },
+                        "ds:im35oa": {
+                          "content": "41"
+                        },
+                        "ds:6cHJH5": {
+                          "content": "Bitrate release saves"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "USn5i3",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "UuxYw8",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ZrGXWt",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "vuYJe2",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "99zgEa",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "j2755A",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Daily signals"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "zHhphD",
+                                      "ref": "ds:FJUa1",
+                                      "name": "Badge / Updated 2h ago",
+                                      "descendants": {
+                                        "ds:BI0Pd": {
+                                          "content": "Updated 2h ago"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "V9REqo",
+                                  "ref": "ds:AXtehy",
+                                  "name": "Table/Header Row",
+                                  "descendants": {
+                                    "ds:94g79Z": {
+                                      "type": "frame",
+                                      "id": "oFWHzs",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "SkXdf8",
+                                          "ref": "ds:v3Wc3g",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Date"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "BxH9wB",
+                                          "ref": "ds:v3Wc3g",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "Views"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "V99FqE",
+                                          "ref": "ds:v3Wc3g",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "Opens"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "rQzjyM",
+                                          "ref": "ds:v3Wc3g",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "Plays"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "Ya5X9o",
+                                          "ref": "ds:v3Wc3g",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "Saves"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "s4v6wz",
+                                  "ref": "ds:J43dZ6",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:LiJoJV": {
+                                      "type": "frame",
+                                      "id": "gCmrZq",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "GostWH",
+                                          "ref": "ds:yadC37",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Sep 18"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "Kb9DhZ",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "218"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "ttKhDZ",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "54"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "u88nXm",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "39"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "mUDKku",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "8"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "FxvHk9",
+                                  "ref": "ds:J43dZ6",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:LiJoJV": {
+                                      "type": "frame",
+                                      "id": "NeX5yt",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "5bD48Q",
+                                          "ref": "ds:yadC37",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Sep 19"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "g9HPeE",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "246"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "SNVJuc",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "61"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "GPRv7B",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "42"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "aGZkha",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "7"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "jnLr72",
+                                  "ref": "ds:J43dZ6",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:LiJoJV": {
+                                      "type": "frame",
+                                      "id": "8r8L5D",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "MstFpr",
+                                          "ref": "ds:yadC37",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Sep 20"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "XcyuUp",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "271"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "HQGM3T",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "69"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "gYHLP5",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "48"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "d8v3oR",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "10"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "LFggG3",
+                                  "ref": "ds:J43dZ6",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:LiJoJV": {
+                                      "type": "frame",
+                                      "id": "tiof3o",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "sfkPpt",
+                                          "ref": "ds:yadC37",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Sep 21"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "fCxNnj",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "289"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "5ZbnEb",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "72"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "tCqcKV",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "46"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "tEoNAX",
+                                          "ref": "ds:a5FsRz",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "9"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Z3Snuw",
+                                  "ref": "ds:v3Wc3g",
+                                  "name": "Text/Caption",
+                                  "content": "Only Bitrate-owned signals are included. External results remain unavailable."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "QxpooJ",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "JruXCq",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "zJ5u3D",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "zni9fd",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "7M3RF2",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Channel delivery"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "8uuCTN",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Bitrate artist profile"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Published · Sep 12, 18:00"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "GQfBkb",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "c2RbY7",
+                                          "ref": "ds:koxqDX",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:3Zsgc7": {
+                                              "content": "Delivered"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "TbNT99",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Social publishing sandbox"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Token expired · reconnect to resume"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "YecfRE",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "Tw39sq",
+                                          "ref": "ds:39ow9Y",
+                                          "name": "Status/Error",
+                                          "descendants": {
+                                            "ds:A75Syq": {
+                                              "content": "Error"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "H5xhKN",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Reconnect channel",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Reconnect channel"
+                                    },
+                                    "ds:k0WCtI": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "designed — /dashboard/promotion/report — Only Bitrate-owned signals; every metric has source, period and time."
+    },
+    {
+      "type": "frame",
+      "id": "JNKGkB",
+      "name": "Artist / Campaign report & recovery / Mobile / Dark",
+      "width": 390,
+      "height": 1700,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "cnyPuR",
+          "ref": "ds:nfUKC8",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1700,
+          "descendants": {
+            "ds:sc4jzZ": {
+              "type": "frame",
+              "id": "aKcPmF",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "AoyiG7",
+                  "ref": "ds:m5cDdt",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:3TLCJk": {
+                      "enabled": false
+                    },
+                    "ds:CUcTF9": {
+                      "content": "Campaign report & recovery"
+                    },
+                    "ds:FrUwgt": {
+                      "content": "Understand available signals and repair channel issues"
+                    },
+                    "ds:NZRJcR": {
+                      "type": "frame",
+                      "id": "BTJd6s",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "Jgx5rw",
+                  "ref": "ds:a5FsRz",
+                  "name": "Text/Muted",
+                  "content": "Afterglow launch · Sep 12–22, 2026 · Europe/Kyiv · Bitrate source"
+                },
+                {
+                  "type": "frame",
+                  "id": "wzAbaY",
+                  "name": "Stats",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "VRMBMG",
+                      "ref": "ds:HZSKEe",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:5sP47Z": {
+                          "content": "POST VIEWS"
+                        },
+                        "ds:im35oa": {
+                          "content": "1,284"
+                        },
+                        "ds:6cHJH5": {
+                          "content": "Bitrate profile impressions"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "6FSiUe",
+                      "ref": "ds:HZSKEe",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:5sP47Z": {
+                          "content": "LINK OPENS"
+                        },
+                        "ds:im35oa": {
+                          "content": "318"
+                        },
+                        "ds:6cHJH5": {
+                          "content": "Campaign link interactions"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ppPy8g",
+                      "ref": "ds:HZSKEe",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:5sP47Z": {
+                          "content": "RELEASE PLAYS"
+                        },
+                        "ds:im35oa": {
+                          "content": "204"
+                        },
+                        "ds:6cHJH5": {
+                          "content": "Attributed plays in Bitrate"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "NvtqcK",
+                      "ref": "ds:HZSKEe",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:5sP47Z": {
+                          "content": "SAVES"
+                        },
+                        "ds:im35oa": {
+                          "content": "41"
+                        },
+                        "ds:6cHJH5": {
+                          "content": "Bitrate release saves"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "77gjfJ",
+                  "ref": "ds:3qeDYv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:DXQovz": {
+                      "type": "frame",
+                      "id": "mb4SSg",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "HfyuUw",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "Yrfgtp",
+                              "ref": "ds:CXpV9d",
+                              "name": "Text/H4",
+                              "content": "Daily signals"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "ytg24Z",
+                              "ref": "ds:FJUa1",
+                              "name": "Badge / Updated 2h ago",
+                              "descendants": {
+                                "ds:BI0Pd": {
+                                  "content": "Updated 2h ago"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "H4Bsqb",
+                          "ref": "ds:J43dZ6",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:LiJoJV": {
+                              "type": "frame",
+                              "id": "tex6kW",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "tvbsTo",
+                                  "ref": "ds:yadC37",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Sep 18"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "zWygog",
+                                  "ref": "ds:a5FsRz",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 110,
+                                  "content": "218 views"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "uELB9f",
+                          "ref": "ds:J43dZ6",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:LiJoJV": {
+                              "type": "frame",
+                              "id": "z9naDT",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "pr2QGa",
+                                  "ref": "ds:yadC37",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Sep 19"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "4YwYY4",
+                                  "ref": "ds:a5FsRz",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 110,
+                                  "content": "246 views"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "qYW2Ju",
+                          "ref": "ds:J43dZ6",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:LiJoJV": {
+                              "type": "frame",
+                              "id": "BjfQza",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "bMZzdQ",
+                                  "ref": "ds:yadC37",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Sep 20"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "xjQUNX",
+                                  "ref": "ds:a5FsRz",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 110,
+                                  "content": "271 views"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "RgHzgD",
+                          "ref": "ds:J43dZ6",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:LiJoJV": {
+                              "type": "frame",
+                              "id": "tkf6jv",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "K6epwo",
+                                  "ref": "ds:yadC37",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Sep 21"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "zVTisD",
+                                  "ref": "ds:a5FsRz",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 110,
+                                  "content": "289 views"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "fygUyZ",
+                          "ref": "ds:v3Wc3g",
+                          "name": "Text/Caption",
+                          "content": "Only Bitrate-owned signals are included. External results remain unavailable."
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "q2wHvN",
+                  "ref": "ds:3qeDYv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:DXQovz": {
+                      "type": "frame",
+                      "id": "wz3TTs",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "TSGvmS",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "6zZ8Jk",
+                              "ref": "ds:CXpV9d",
+                              "name": "Text/H4",
+                              "content": "Channel delivery"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "GSyqC3",
+                          "ref": "ds:7EoqWG",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:4Gvuxi": {
+                              "content": "Bitrate artist profile"
+                            },
+                            "ds:f5zU3r": {
+                              "content": "Published · Sep 12, 18:00"
+                            },
+                            "ds:UzLUPD": {
+                              "type": "frame",
+                              "id": "wLyMQW",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "i7DRUB",
+                                  "ref": "ds:koxqDX",
+                                  "name": "Status/Success",
+                                  "descendants": {
+                                    "ds:3Zsgc7": {
+                                      "content": "Delivered"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "v6NALR",
+                          "ref": "ds:7EoqWG",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:4Gvuxi": {
+                              "content": "Social publishing sandbox"
+                            },
+                            "ds:f5zU3r": {
+                              "content": "Token expired · reconnect to resume"
+                            },
+                            "ds:UzLUPD": {
+                              "type": "frame",
+                              "id": "AEKehn",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "Xf47NB",
+                                  "ref": "ds:39ow9Y",
+                                  "name": "Status/Error",
+                                  "descendants": {
+                                    "ds:A75Syq": {
+                                      "content": "Error"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "jjTL6L",
+                          "ref": "ds:exjwf",
+                          "name": "Button / Reconnect channel",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:E23bq6": {
+                              "content": "Reconnect channel"
+                            },
+                            "ds:k0WCtI": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/promotion/report — Only Bitrate-owned signals; every metric has source, period and time."
+    }
+  ]
+}

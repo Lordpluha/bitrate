@@ -1,0 +1,2119 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "z6V7v6",
+      "name": "Artist / Settings / Connected services / Desktop / Dark",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "mLrMwJ",
+          "ref": "ds:KyPyuH",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:Zmjcbe": {
+              "type": "ref",
+              "id": "z7t5PL",
+              "ref": "ds:XA4Fm9",
+              "name": "Nav / Settings",
+              "descendants": {
+                "ds:aEPX66": {
+                  "icon": "settings"
+                },
+                "ds:CfKAFr": {
+                  "content": "Settings"
+                }
+              }
+            },
+            "ds:rze5zR": {
+              "content": "Workspace / Settings / Connected services"
+            },
+            "ds:C2eynh/ds:E23bq6": {
+              "content": "Connection guide"
+            },
+            "ds:C2eynh/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:yayc2m": {
+              "type": "frame",
+              "id": "2c5zQZ",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "ARCwn7",
+                  "ref": "ds:m5cDdt",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:3TLCJk": {
+                      "enabled": false
+                    },
+                    "ds:CUcTF9": {
+                      "content": "Connected services"
+                    },
+                    "ds:FrUwgt": {
+                      "content": "Review connections, permissions and access"
+                    },
+                    "ds:NZRJcR": {
+                      "type": "frame",
+                      "id": "HJbPba",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "TopREn",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "vizzvi",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Account",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Account"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "dUX8p7",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Security",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Security"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "XKAdbG",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Notifications",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Notifications"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "oMQ48b",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Appearance",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Appearance"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "GxgZHZ",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Connected services",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Connected services"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "DFN7XZ",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Team & safety",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Team & safety"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "wuQXc9",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "cpYv5T",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "RsdT6H",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "YJKicB",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "SmABib",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "gGJNpD",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Services"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "6fEfrM",
+                                  "ref": "ds:a5FsRz",
+                                  "name": "Text/Muted",
+                                  "content": "Only implemented providers can expose a Connect action."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "832guT",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Social publishing sandbox"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Demo connection · no automatic publishing"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "BprpP6",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "9kmsa5",
+                                          "ref": "ds:koxqDX",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:3Zsgc7": {
+                                              "content": "Connected"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "XayxiM",
+                                          "ref": "ds:G5tJp",
+                                          "name": "Button / Review access",
+                                          "descendants": {
+                                            "ds:d2zCI": {
+                                              "content": "Review access"
+                                            },
+                                            "ds:wFUna": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "wvGkZf",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Spotify for Artists"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Provider integration is not verified"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "iwGQmZ",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "7hd99S",
+                                          "ref": "ds:gv8mJ3",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:xxRo2P": {
+                                              "content": "Not connected"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ew8y48",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Apple Music for Artists"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Provider integration is not verified"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "4ev4XY",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "owQB6j",
+                                          "ref": "ds:gv8mJ3",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:xxRo2P": {
+                                              "content": "Not connected"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Vp8GmU",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "External delivery network"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Separate from internal Bitrate review"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "72Rhhj",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "BLkHXf",
+                                          "ref": "ds:gv8mJ3",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:xxRo2P": {
+                                              "content": "Unavailable"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Cb86iw",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "qkZJ55",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "gq4XiQ",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "TstPvk",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "HqYA5f",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Permission review"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "VMS22Y",
+                                  "ref": "ds:4nR3Fi",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:xYDdKP": {
+                                      "content": "Read artist profile"
+                                    },
+                                    "ds:FJurHD": {
+                                      "type": "frame",
+                                      "id": "9jkJ7U",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "SMSWey",
+                                          "ref": "ds:koxqDX",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:3Zsgc7": {
+                                              "content": "Allowed"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "oQRT57",
+                                  "ref": "ds:4nR3Fi",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:xYDdKP": {
+                                      "content": "Create draft content"
+                                    },
+                                    "ds:FJurHD": {
+                                      "type": "frame",
+                                      "id": "HVNBiY",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "MDq6pQ",
+                                          "ref": "ds:koxqDX",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:3Zsgc7": {
+                                              "content": "Allowed"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "yhTfng",
+                                  "ref": "ds:4nR3Fi",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:xYDdKP": {
+                                      "content": "Publish without approval"
+                                    },
+                                    "ds:FJurHD": {
+                                      "type": "frame",
+                                      "id": "ykbgGk",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "BNCvtZ",
+                                          "ref": "ds:39ow9Y",
+                                          "name": "Status/Error",
+                                          "descendants": {
+                                            "ds:A75Syq": {
+                                              "content": "Never"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "88oEEE",
+                                  "ref": "ds:v3Wc3g",
+                                  "name": "Text/Caption",
+                                  "content": "Final publishing always requires the artist’s confirmation."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "umm95U",
+                                  "ref": "ds:uT1Ux",
+                                  "name": "Button / Review disconnect",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:QLznA": {
+                                      "content": "Review disconnect"
+                                    },
+                                    "ds:w2aMIw": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/settings/services — Connect appears only for a supported provider."
+    },
+    {
+      "type": "frame",
+      "id": "pii5di",
+      "name": "Artist / Settings / Connected services / Desktop / Light",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "cN37fS",
+          "ref": "ds:KyPyuH",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:Zmjcbe": {
+              "type": "ref",
+              "id": "LipF6o",
+              "ref": "ds:XA4Fm9",
+              "name": "Nav / Settings",
+              "descendants": {
+                "ds:aEPX66": {
+                  "icon": "settings"
+                },
+                "ds:CfKAFr": {
+                  "content": "Settings"
+                }
+              }
+            },
+            "ds:rze5zR": {
+              "content": "Workspace / Settings / Connected services"
+            },
+            "ds:C2eynh/ds:E23bq6": {
+              "content": "Connection guide"
+            },
+            "ds:C2eynh/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:yayc2m": {
+              "type": "frame",
+              "id": "q99MSD",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "UxbUmR",
+                  "ref": "ds:m5cDdt",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:3TLCJk": {
+                      "enabled": false
+                    },
+                    "ds:CUcTF9": {
+                      "content": "Connected services"
+                    },
+                    "ds:FrUwgt": {
+                      "content": "Review connections, permissions and access"
+                    },
+                    "ds:NZRJcR": {
+                      "type": "frame",
+                      "id": "yXuz4p",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "QqKpec",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "H98Nys",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Account",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Account"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "JW6iVF",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Security",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Security"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "7mxorB",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Notifications",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Notifications"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jB9vLR",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Appearance",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Appearance"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "zSGNkP",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Connected services",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Connected services"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "U3R9RG",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Team & safety",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Team & safety"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "j8DPXg",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "UV986s",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "8fxLDw",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "5gBMZd",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "zt9FFg",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "dfWKaB",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Services"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "uoi2cA",
+                                  "ref": "ds:a5FsRz",
+                                  "name": "Text/Muted",
+                                  "content": "Only implemented providers can expose a Connect action."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "7zNzfA",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Social publishing sandbox"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Demo connection · no automatic publishing"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "gpkozP",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "XErH87",
+                                          "ref": "ds:koxqDX",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:3Zsgc7": {
+                                              "content": "Connected"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "qaDvb4",
+                                          "ref": "ds:G5tJp",
+                                          "name": "Button / Review access",
+                                          "descendants": {
+                                            "ds:d2zCI": {
+                                              "content": "Review access"
+                                            },
+                                            "ds:wFUna": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "4f9Rc2",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Spotify for Artists"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Provider integration is not verified"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "TMGaVr",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "sCxZKn",
+                                          "ref": "ds:gv8mJ3",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:xxRo2P": {
+                                              "content": "Not connected"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "zixgid",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Apple Music for Artists"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Provider integration is not verified"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "gj7t2E",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "uTiSWE",
+                                          "ref": "ds:gv8mJ3",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:xxRo2P": {
+                                              "content": "Not connected"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "3DRbj5",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "External delivery network"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Separate from internal Bitrate review"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "GQGZxf",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "W3ZwMT",
+                                          "ref": "ds:gv8mJ3",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:xxRo2P": {
+                                              "content": "Unavailable"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ZpR7zB",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "4h59hd",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "2CoQWQ",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "A9ecS9",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "eoVGMP",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Permission review"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "bddxos",
+                                  "ref": "ds:4nR3Fi",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:xYDdKP": {
+                                      "content": "Read artist profile"
+                                    },
+                                    "ds:FJurHD": {
+                                      "type": "frame",
+                                      "id": "xzphzw",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "djJHWC",
+                                          "ref": "ds:koxqDX",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:3Zsgc7": {
+                                              "content": "Allowed"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "mBA4Ew",
+                                  "ref": "ds:4nR3Fi",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:xYDdKP": {
+                                      "content": "Create draft content"
+                                    },
+                                    "ds:FJurHD": {
+                                      "type": "frame",
+                                      "id": "DNHER9",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "HpeTnk",
+                                          "ref": "ds:koxqDX",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:3Zsgc7": {
+                                              "content": "Allowed"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "mpaZTo",
+                                  "ref": "ds:4nR3Fi",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:xYDdKP": {
+                                      "content": "Publish without approval"
+                                    },
+                                    "ds:FJurHD": {
+                                      "type": "frame",
+                                      "id": "ucuaBc",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "2LkzDV",
+                                          "ref": "ds:39ow9Y",
+                                          "name": "Status/Error",
+                                          "descendants": {
+                                            "ds:A75Syq": {
+                                              "content": "Never"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "7Dvopn",
+                                  "ref": "ds:v3Wc3g",
+                                  "name": "Text/Caption",
+                                  "content": "Final publishing always requires the artist’s confirmation."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "QULrGC",
+                                  "ref": "ds:uT1Ux",
+                                  "name": "Button / Review disconnect",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:QLznA": {
+                                      "content": "Review disconnect"
+                                    },
+                                    "ds:w2aMIw": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "designed — /dashboard/settings/services — Connect appears only for a supported provider."
+    },
+    {
+      "type": "frame",
+      "id": "x6qStf",
+      "name": "Artist / Settings / Connected services / Desktop / Dim",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "5bMLVG",
+          "ref": "ds:KyPyuH",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:Zmjcbe": {
+              "type": "ref",
+              "id": "d3CZUe",
+              "ref": "ds:XA4Fm9",
+              "name": "Nav / Settings",
+              "descendants": {
+                "ds:aEPX66": {
+                  "icon": "settings"
+                },
+                "ds:CfKAFr": {
+                  "content": "Settings"
+                }
+              }
+            },
+            "ds:rze5zR": {
+              "content": "Workspace / Settings / Connected services"
+            },
+            "ds:C2eynh/ds:E23bq6": {
+              "content": "Connection guide"
+            },
+            "ds:C2eynh/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:yayc2m": {
+              "type": "frame",
+              "id": "JCNzTc",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "nJtjzy",
+                  "ref": "ds:m5cDdt",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:3TLCJk": {
+                      "enabled": false
+                    },
+                    "ds:CUcTF9": {
+                      "content": "Connected services"
+                    },
+                    "ds:FrUwgt": {
+                      "content": "Review connections, permissions and access"
+                    },
+                    "ds:NZRJcR": {
+                      "type": "frame",
+                      "id": "Rt7F3t",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "ih6GuR",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "JHxhfo",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Account",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Account"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Xb545H",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Security",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Security"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "86YnWR",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Notifications",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Notifications"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "stJBp4",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Appearance",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Appearance"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "JDTATH",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Connected services",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Connected services"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "eQgPpT",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Team & safety",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Team & safety"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "T7xppd",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "CkaJma",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "JTcP2k",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "Bm3f5P",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "eAFoKU",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "xTYz92",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Services"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "HaF6g8",
+                                  "ref": "ds:a5FsRz",
+                                  "name": "Text/Muted",
+                                  "content": "Only implemented providers can expose a Connect action."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "j2KzWx",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Social publishing sandbox"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Demo connection · no automatic publishing"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "9woqoE",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "HbCFjh",
+                                          "ref": "ds:koxqDX",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:3Zsgc7": {
+                                              "content": "Connected"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "cUe3Jw",
+                                          "ref": "ds:G5tJp",
+                                          "name": "Button / Review access",
+                                          "descendants": {
+                                            "ds:d2zCI": {
+                                              "content": "Review access"
+                                            },
+                                            "ds:wFUna": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "egXpBz",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Spotify for Artists"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Provider integration is not verified"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "ycA7G6",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "rx4iS6",
+                                          "ref": "ds:gv8mJ3",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:xxRo2P": {
+                                              "content": "Not connected"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "FFdoZA",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "Apple Music for Artists"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Provider integration is not verified"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "LASMTt",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "J8Gmri",
+                                          "ref": "ds:gv8mJ3",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:xxRo2P": {
+                                              "content": "Not connected"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "e2eQ2e",
+                                  "ref": "ds:7EoqWG",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:4Gvuxi": {
+                                      "content": "External delivery network"
+                                    },
+                                    "ds:f5zU3r": {
+                                      "content": "Separate from internal Bitrate review"
+                                    },
+                                    "ds:UzLUPD": {
+                                      "type": "frame",
+                                      "id": "QnMKpF",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "9ew6GF",
+                                          "ref": "ds:gv8mJ3",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:xxRo2P": {
+                                              "content": "Unavailable"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "gNa5s6",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "8Lqbkd",
+                          "ref": "ds:3qeDYv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:DXQovz": {
+                              "type": "frame",
+                              "id": "aBsUs3",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "yjBJRi",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "JUqaKL",
+                                      "ref": "ds:CXpV9d",
+                                      "name": "Text/H4",
+                                      "content": "Permission review"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "neqiie",
+                                  "ref": "ds:4nR3Fi",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:xYDdKP": {
+                                      "content": "Read artist profile"
+                                    },
+                                    "ds:FJurHD": {
+                                      "type": "frame",
+                                      "id": "7d7x4L",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "PJCK7A",
+                                          "ref": "ds:koxqDX",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:3Zsgc7": {
+                                              "content": "Allowed"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "CHuyAe",
+                                  "ref": "ds:4nR3Fi",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:xYDdKP": {
+                                      "content": "Create draft content"
+                                    },
+                                    "ds:FJurHD": {
+                                      "type": "frame",
+                                      "id": "kuHHxE",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "ma8qoK",
+                                          "ref": "ds:koxqDX",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:3Zsgc7": {
+                                              "content": "Allowed"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "iePxfq",
+                                  "ref": "ds:4nR3Fi",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:xYDdKP": {
+                                      "content": "Publish without approval"
+                                    },
+                                    "ds:FJurHD": {
+                                      "type": "frame",
+                                      "id": "v5Mmkf",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "koojw4",
+                                          "ref": "ds:39ow9Y",
+                                          "name": "Status/Error",
+                                          "descendants": {
+                                            "ds:A75Syq": {
+                                              "content": "Never"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "VBBzLK",
+                                  "ref": "ds:v3Wc3g",
+                                  "name": "Text/Caption",
+                                  "content": "Final publishing always requires the artist’s confirmation."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "WFdNHW",
+                                  "ref": "ds:uT1Ux",
+                                  "name": "Button / Review disconnect",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:QLznA": {
+                                      "content": "Review disconnect"
+                                    },
+                                    "ds:w2aMIw": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "designed — /dashboard/settings/services — Connect appears only for a supported provider."
+    },
+    {
+      "type": "frame",
+      "id": "oFrSCu",
+      "name": "Artist / Settings / Connected services / Mobile / Dark",
+      "width": 390,
+      "height": 1700,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "BZMtC7",
+          "ref": "ds:nfUKC8",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1700,
+          "descendants": {
+            "ds:sc4jzZ": {
+              "type": "frame",
+              "id": "cSju5F",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "xNUhgq",
+                  "ref": "ds:m5cDdt",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:3TLCJk": {
+                      "enabled": false
+                    },
+                    "ds:CUcTF9": {
+                      "content": "Connected services"
+                    },
+                    "ds:FrUwgt": {
+                      "content": "Review connections, permissions and access"
+                    },
+                    "ds:NZRJcR": {
+                      "type": "frame",
+                      "id": "YKqH3V",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "mbXERs",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "5ptCLA",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Account",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Account"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "iMDLZL",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Security",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Security"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "zNp3g5",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Notifications",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Notifications"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "y3xV43",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Appearance",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Appearance"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "HeiNDk",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Connected services",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Connected services"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "cjQfop",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Team & safety",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Team & safety"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "YjExNm",
+                  "ref": "ds:3qeDYv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:DXQovz": {
+                      "type": "frame",
+                      "id": "v7pgLe",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "zL9e3a",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "vJjpGi",
+                              "ref": "ds:CXpV9d",
+                              "name": "Text/H4",
+                              "content": "Services"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "EmvRDJ",
+                          "ref": "ds:a5FsRz",
+                          "name": "Text/Muted",
+                          "content": "Only implemented providers can expose a Connect action."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Xm7Ue7",
+                          "ref": "ds:7EoqWG",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:4Gvuxi": {
+                              "content": "Social publishing sandbox"
+                            },
+                            "ds:f5zU3r": {
+                              "content": "Demo connection · no automatic publishing"
+                            },
+                            "ds:UzLUPD": {
+                              "type": "frame",
+                              "id": "LfUdCF",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "qyLRtL",
+                                  "ref": "ds:koxqDX",
+                                  "name": "Status/Success",
+                                  "descendants": {
+                                    "ds:3Zsgc7": {
+                                      "content": "Connected"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "MjEgvp",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Review access",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Review access"
+                                    },
+                                    "ds:wFUna": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "NqHxSQ",
+                          "ref": "ds:7EoqWG",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:4Gvuxi": {
+                              "content": "Spotify for Artists"
+                            },
+                            "ds:f5zU3r": {
+                              "content": "Provider integration is not verified"
+                            },
+                            "ds:UzLUPD": {
+                              "type": "frame",
+                              "id": "GdHkKX",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "RCZTJ7",
+                                  "ref": "ds:gv8mJ3",
+                                  "name": "Status/Neutral",
+                                  "descendants": {
+                                    "ds:xxRo2P": {
+                                      "content": "Not connected"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "8MZbuM",
+                          "ref": "ds:7EoqWG",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:4Gvuxi": {
+                              "content": "Apple Music for Artists"
+                            },
+                            "ds:f5zU3r": {
+                              "content": "Provider integration is not verified"
+                            },
+                            "ds:UzLUPD": {
+                              "type": "frame",
+                              "id": "sSY3m5",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "rhLsht",
+                                  "ref": "ds:gv8mJ3",
+                                  "name": "Status/Neutral",
+                                  "descendants": {
+                                    "ds:xxRo2P": {
+                                      "content": "Not connected"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "FdxSM6",
+                          "ref": "ds:7EoqWG",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:4Gvuxi": {
+                              "content": "External delivery network"
+                            },
+                            "ds:f5zU3r": {
+                              "content": "Separate from internal Bitrate review"
+                            },
+                            "ds:UzLUPD": {
+                              "type": "frame",
+                              "id": "vwdWSs",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "Te7dkM",
+                                  "ref": "ds:gv8mJ3",
+                                  "name": "Status/Neutral",
+                                  "descendants": {
+                                    "ds:xxRo2P": {
+                                      "content": "Unavailable"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "PXt3dV",
+                  "ref": "ds:3qeDYv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:DXQovz": {
+                      "type": "frame",
+                      "id": "D36228",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "7Ld29h",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "Vv3qFs",
+                              "ref": "ds:CXpV9d",
+                              "name": "Text/H4",
+                              "content": "Permission review"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "UqLxQx",
+                          "ref": "ds:4nR3Fi",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:xYDdKP": {
+                              "content": "Read artist profile"
+                            },
+                            "ds:FJurHD": {
+                              "type": "frame",
+                              "id": "qKPyVH",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "5D7DQj",
+                                  "ref": "ds:koxqDX",
+                                  "name": "Status/Success",
+                                  "descendants": {
+                                    "ds:3Zsgc7": {
+                                      "content": "Allowed"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "yfkJMf",
+                          "ref": "ds:4nR3Fi",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:xYDdKP": {
+                              "content": "Create draft content"
+                            },
+                            "ds:FJurHD": {
+                              "type": "frame",
+                              "id": "FzAY4B",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "SqXBLe",
+                                  "ref": "ds:koxqDX",
+                                  "name": "Status/Success",
+                                  "descendants": {
+                                    "ds:3Zsgc7": {
+                                      "content": "Allowed"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "PzwMKp",
+                          "ref": "ds:4nR3Fi",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:xYDdKP": {
+                              "content": "Publish without approval"
+                            },
+                            "ds:FJurHD": {
+                              "type": "frame",
+                              "id": "dpkZtu",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "qxxfbh",
+                                  "ref": "ds:39ow9Y",
+                                  "name": "Status/Error",
+                                  "descendants": {
+                                    "ds:A75Syq": {
+                                      "content": "Never"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "YEPheL",
+                          "ref": "ds:v3Wc3g",
+                          "name": "Text/Caption",
+                          "content": "Final publishing always requires the artist’s confirmation."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "yRuGYc",
+                          "ref": "ds:uT1Ux",
+                          "name": "Button / Review disconnect",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:QLznA": {
+                              "content": "Review disconnect"
+                            },
+                            "ds:w2aMIw": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/settings/services — Connect appears only for a supported provider."
+    }
+  ]
+}
