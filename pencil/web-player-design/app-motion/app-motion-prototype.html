@@ -432,9 +432,11 @@ window.BitrateLogoLoader = (() => {
     tl.to(g, { P: () => g.total, duration: 2.4, ease: 'power1.inOut', onUpdate: paint }, 0)
     tl.to(head, { attr: { opacity: 0 }, duration: 0.25 }, 2.2)
     tl.to(g, { T: () => g.total, duration: 1.3, ease: 'power2.in', onUpdate: paint }, 1.6)
-    tl.fromTo(trace, { attr: { opacity: 1 }, strokeDashoffset: 0 }, { strokeDashoffset: -LOGO * 1.12, duration: 0.9, ease: 'power1.inOut' }, 2.6)
-    tl.to(trace, { attr: { opacity: 0 }, duration: 0.2 }, 3.4)
-    if (loop) tl.to(mark, { opacity: 0, duration: 0.45, ease: 'power2.in' }, 3.8)
+    /* the white outline runs only once the mark is fully painted (the pen has reached the end of the route) */
+    tl.set(trace, { attr: { opacity: 0 } }, 0)
+    tl.fromTo(trace, { attr: { opacity: 1 }, strokeDashoffset: 0 }, { strokeDashoffset: -LOGO * 1.12, duration: 0.9, ease: 'power1.inOut', immediateRender: false }, 2.45)
+    tl.to(trace, { attr: { opacity: 0 }, duration: 0.2 }, 3.25)
+    if (loop) tl.to(mark, { opacity: 0, duration: 0.45, ease: 'power2.in' }, 3.7)
     return { tl, kill: () => { tl.kill(); ro.disconnect() } }
   }
 
