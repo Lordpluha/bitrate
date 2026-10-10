@@ -228,6 +228,34 @@ span.glitch { display: inline-block; }
 .stats { display: flex; gap: 26px; margin-top: 30px; }
 .stats b { display: block; font: 700 34px/1 var(--font-display); color: var(--fg); }
 
+/* AI assistant: bottom-right button that blooms into a chat; a thinking orb shows the phase */
+.ai-fab { position: fixed; right: 24px; bottom: 24px; z-index: 45; width: 52px; height: 52px; border-radius: 50%; border: 0; display: grid; place-items: center; color: #fff; background: linear-gradient(135deg, #7c3aed, #ec4899); box-shadow: 0 14px 34px -12px rgba(124, 58, 237, .7); cursor: pointer; }
+.ai-fab[aria-expanded="true"] { background: var(--card); color: var(--fg); border: 1px solid var(--border); box-shadow: none; }
+.ai-fab:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.ai-panel { position: fixed; right: 24px; bottom: 88px; z-index: 46; width: 380px; height: 540px; max-height: calc(100vh - 120px); display: flex; flex-direction: column; border-radius: 18px; background: var(--card); border: 1px solid var(--border); box-shadow: 0 30px 80px -30px var(--shadow); transform-origin: 100% 100%; visibility: hidden; overflow: hidden; }
+.ai-panel.open { visibility: visible; }
+.ai-head { display: flex; align-items: center; gap: 10px; height: 60px; padding: 0 14px; border-bottom: 1px solid var(--border); }
+.ai-head .mk { width: 32px; height: 32px; border-radius: 50%; background: var(--card-2); display: grid; place-items: center; }
+.ai-head .mk svg { width: 18px; height: 18px; }
+.ai-head small { display: block; color: var(--muted); font-size: 11px; }
+.ai-x { margin-left: auto; border: 0; background: none; color: var(--muted); cursor: pointer; padding: 6px; }
+.ai-msgs { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; overscroll-behavior: contain; }
+.ai-b { max-width: 82%; padding: 10px 12px; border-radius: 14px; font-size: 13px; line-height: 1.45; background: var(--card-2); align-self: flex-start; }
+.ai-b.me { align-self: flex-end; background: var(--primary); color: #fff; }
+.ai-typing { align-self: flex-start; display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 14px; background: var(--card-2); font-size: 12px; color: var(--muted); }
+.ai-welcome { display: grid; justify-items: center; gap: 8px; padding: 18px 0 6px; text-align: center; }
+.ai-welcome b { font: 600 15px/1.2 var(--font-display); }
+.ai-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.ai-chip { height: 32px; padding: 0 12px; border-radius: 16px; border: 1px solid var(--border); background: none; color: var(--fg); font: 500 12px/1 var(--font-body); cursor: pointer; }
+.ai-chip:hover { border-color: var(--accent); }
+.ai-comp { padding: 10px 12px 12px; border-top: 1px solid var(--border); display: grid; gap: 8px; }
+.ai-in { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 6px 0 12px; border-radius: 12px; background: var(--card-2); }
+.ai-in input { flex: 1; border: 0; outline: 0; background: none; color: var(--fg); font: 13px/1 var(--font-body); }
+.ai-send { width: 32px; height: 32px; border-radius: 10px; border: 0; background: var(--primary); color: #fff; display: grid; place-items: center; cursor: pointer; }
+.ai-comp small { font-size: 10px; color: var(--subdued); }
+.footer { padding-right: 96px; }
+@media (max-width: 820px) { .ai-fab { right: 16px; bottom: 16px; } .ai-panel { inset: 0; width: auto; height: auto; max-height: none; border-radius: 0; } }
+
 /* intro: the logo writes itself, then the hero takes over */
 .intro { position: fixed; inset: 0; z-index: 90; background: var(--bg); display: grid; place-content: center; justify-items: center; gap: 18px; }
 .intro-ll { width: 132px; height: 129px; }
@@ -346,6 +374,13 @@ body.static .intro { display: none; }
 </header>
 <nav class="dots" aria-label="Scenes"></nav>
 <div class="counter" aria-hidden="true"><b id="num">01</b><span class="rail"><i id="rail"></i></span><span>12</span></div>
+
+<button class="ai-fab" id="aiFab" type="button" aria-expanded="false" aria-controls="aiPanel" aria-label="Open the Bitrate assistant"><svg aria-hidden="true" class="i" viewBox="0 0 24 24" style="width:22px;height:22px"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></svg></button>
+<section class="ai-panel" id="aiPanel" aria-label="Bitrate assistant">
+  <div class="ai-head"><span class="mk"><svg viewBox="371 117 795 775" aria-hidden="true"><use href="#bitrate-logo" fill="url(#bm)"/></svg></span><span><b style="font-size:14px">Bitrate assistant</b><small id="aiStatus">AI · can make mistakes · demo answers</small></span><button class="ai-x" id="aiClose" type="button" aria-label="Close the assistant">✕</button></div>
+  <div class="ai-msgs" id="aiMsgs"><div class="ai-welcome"><canvas class="orb" data-size="64" width="128" height="128" style="width:64px;height:64px"></canvas><b>Hi, I am the Bitrate assistant</b><span class="t-meta">Ask about the player, plans or releasing your music.</span><div class="ai-chips"><button class="ai-chip" type="button">What is Bitrate?</button><button class="ai-chip" type="button">Is it free?</button><button class="ai-chip" type="button">Release a single</button><button class="ai-chip" type="button">Which devices work?</button></div></div></div>
+  <form class="ai-comp" id="aiForm"><span class="ai-in"><input id="aiInput" type="text" autocomplete="off" placeholder="Ask about Bitrate…" aria-label="Message"><button class="ai-send" type="submit" aria-label="Send">↑</button></span><small>Answers come from Bitrate docs. Do not share passwords or payment details.</small></form>
+</section>
 
 <main>
   <!-- 01 hero -->
@@ -1837,6 +1872,111 @@ window.__bitrateIntro = new Promise((done) => {
   window.addEventListener('keydown', (e) => { if (e.key === 'Escape') setHealth(false) })
   document.addEventListener('pointerdown', (e) => { if (hOpen && !health.contains(e.target)) setHealth(false) })
 
+  /* ---------- AI assistant: thinking orb (own take on the reference: breathing, searching, composing) ---------- */
+  const orbs = new Set()
+  const drawOrb = (c, t) => {
+    const ctx = c.getContext('2d')
+    const w = c.width
+    const r = w / 2
+    const st = c.dataset.state || 'breathing'
+    const sp = st === 'composing' ? 2.4 : st === 'searching' ? 1.6 : 0.7
+    ctx.clearRect(0, 0, w, w)
+    ctx.save()
+    ctx.beginPath()
+    ctx.arc(r, r, r * (st === 'breathing' ? 0.86 + 0.06 * Math.sin(t * 2) : 0.9), 0, Math.PI * 2)
+    ctx.clip()
+    const bg = ctx.createRadialGradient(r * 0.7, r * 0.6, 0, r, r, r)
+    bg.addColorStop(0, '#c4b5fd')
+    bg.addColorStop(0.55, '#7c3aed')
+    bg.addColorStop(1, '#2e1065')
+    ctx.fillStyle = bg
+    ctx.fillRect(0, 0, w, w)
+    ctx.globalCompositeOperation = 'lighter'
+    for (let k = 0; k < 3; k++) {
+      const a = t * sp * (1 + k * 0.3) + k * 2.1
+      const x = r + Math.cos(a) * r * 0.38
+      const y = r + Math.sin(a * 1.3) * r * 0.32
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r * 0.7)
+      g.addColorStop(0, ['rgba(236,72,153,.75)', 'rgba(59,130,246,.65)', 'rgba(255,255,255,.45)'][k])
+      g.addColorStop(1, 'rgba(0,0,0,0)')
+      ctx.fillStyle = g
+      ctx.fillRect(0, 0, w, w)
+    }
+    ctx.restore()
+    if (st === 'searching') {
+      ctx.strokeStyle = 'rgba(255,255,255,.85)'
+      ctx.lineWidth = Math.max(1.5, w / 40)
+      ctx.lineCap = 'round'
+      ctx.beginPath()
+      ctx.arc(r, r, r * 0.95, t * 4, t * 4 + 1.1)
+      ctx.stroke()
+    }
+    if (st === 'composing') {
+      ctx.strokeStyle = `rgba(167,139,250,${0.6 - ((t * 1.5) % 1) * 0.6})`
+      ctx.lineWidth = Math.max(1, w / 60)
+      ctx.beginPath()
+      ctx.arc(r, r, r * (0.6 + ((t * 1.5) % 1) * 0.38), 0, Math.PI * 2)
+      ctx.stroke()
+    }
+  }
+  const aiFab = document.getElementById('aiFab')
+  const aiPanel = document.getElementById('aiPanel')
+  const aiMsgs = document.getElementById('aiMsgs')
+  const aiInput = document.getElementById('aiInput')
+  const aiStatus = document.getElementById('aiStatus')
+  const SPARK = aiFab.innerHTML
+  for (const c of aiPanel.querySelectorAll('canvas.orb')) orbs.add(c)
+  let aiOpen = false
+  const setAi = (open) => {
+    if (open === aiOpen) return
+    aiOpen = open
+    aiFab.setAttribute('aria-expanded', String(open))
+    aiFab.setAttribute('aria-label', open ? 'Close the assistant' : 'Open the Bitrate assistant')
+    aiFab.innerHTML = open ? '<span aria-hidden="true" style="font-size:18px">✕</span>' : SPARK
+    if (open) {
+      aiPanel.classList.add('open')
+      gsap.fromTo(aiPanel, { scale: 0.2, opacity: 0, borderRadius: 40 }, { scale: 1, opacity: 1, borderRadius: 18, duration: reduce ? 0.01 : 0.55, ease: 'elastic.out(1, .8)' })
+      setTimeout(() => aiInput.focus(), 120)
+    } else gsap.to(aiPanel, { scale: 0.2, opacity: 0, duration: reduce ? 0.01 : 0.25, ease: 'power3.in', onComplete: () => aiPanel.classList.remove('open') })
+  }
+  aiFab.addEventListener('click', () => setAi(!aiOpen))
+  document.getElementById('aiClose').addEventListener('click', () => setAi(false))
+  aiPanel.addEventListener('keydown', (e) => { if (e.key === 'Escape') { setAi(false); aiFab.focus() } e.stopPropagation() })
+  const ANSWERS = {
+    'what is bitrate?': 'Bitrate is a music player in your browser, with a portal for artists to release and grow their music.',
+    'is it free?': 'Yes — listening in the browser is free. Premium plans are on the way; your plan shows in Settings.',
+    'release a single': 'Open Bitrate for Artists → Create release, then follow the steps: audio, artwork, details, contributors and review.',
+    'which devices work?': 'Any modern browser on desktop or phone. Your queue follows you between devices.',
+  }
+  const bubble = (text, me) => { const b = document.createElement('div'); b.className = `ai-b${me ? ' me' : ''}`; b.textContent = text; aiMsgs.appendChild(b); gsap.from(b, { y: 8, opacity: 0, duration: 0.3 }); aiMsgs.scrollTop = aiMsgs.scrollHeight; return b }
+  const ask = (q) => {
+    if (!q.trim()) return
+    aiMsgs.querySelector('.ai-welcome')?.remove()
+    bubble(q, true)
+    const typing = document.createElement('div')
+    typing.className = 'ai-typing'
+    typing.innerHTML = '<canvas class="orb" width="40" height="40" style="width:20px;height:20px" data-state="searching"></canvas><span>Searching the docs…</span>'
+    aiMsgs.appendChild(typing)
+    const oc = typing.querySelector('canvas')
+    orbs.add(oc)
+    aiStatus.textContent = 'Searching the docs…'
+    aiMsgs.scrollTop = aiMsgs.scrollHeight
+    setTimeout(() => { oc.dataset.state = 'composing'; typing.querySelector('span').textContent = 'Composing…'; aiStatus.textContent = 'Composing…' }, 900)
+    setTimeout(() => {
+      orbs.delete(oc)
+      typing.remove()
+      aiStatus.textContent = 'AI · can make mistakes · demo answers'
+      const text = ANSWERS[q.trim().toLowerCase()] ?? 'This is a demo. In the product I answer from the Bitrate docs and link the right page.'
+      const b = bubble('', false)
+      const words = text.split(' ')
+      let k = 0
+      const iv = setInterval(() => { b.textContent = words.slice(0, ++k).join(' '); aiMsgs.scrollTop = aiMsgs.scrollHeight; if (k >= words.length) clearInterval(iv) }, reduce ? 0 : 45)
+    }, 1650)
+  }
+  aiMsgs.addEventListener('click', (e) => { const c = e.target.closest('.ai-chip'); if (c) ask(c.textContent) })
+  document.getElementById('aiForm').addEventListener('submit', (e) => { e.preventDefault(); ask(aiInput.value); aiInput.value = '' })
+  gsap.ticker.add((t) => { if (aiOpen) for (const c of orbs) drawOrb(c, t) })
+
   /* ---------- boot ---------- */
   drawWaves()
   const start = Math.max(0, scenes.findIndex((s) => `#${s.id}` === location.hash))
@@ -1854,8 +1994,9 @@ window.__bitrateIntro = new Promise((done) => {
   num.textContent = String(start + 1).padStart(2, '0')
   gsap.set(rail, { scaleX: (start + 1) / scenes.length })
   window.__bitrateIntro.then(() => { stage?.go(start, 1.8); enter(scenes[start], 1) })
-  Observer.create({ target: window, type: 'wheel,touch', wheelSpeed: -1, tolerance: 12, preventDefault: true, onUp: () => { if (!window.__dragging) go(index + 1) }, onDown: () => { if (!window.__dragging) go(index - 1) } })
+  Observer.create({ target: window, type: 'wheel,touch', wheelSpeed: -1, tolerance: 12, preventDefault: true, onUp: (self) => { if (!window.__dragging && !self.event?.target?.closest?.('.ai-panel')) go(index + 1) }, onDown: (self) => { if (!window.__dragging && !self.event?.target?.closest?.('.ai-panel')) go(index - 1) } })
   window.addEventListener('keydown', (e) => {
+    if (e.target.closest?.('input, textarea, .ai-panel')) return
     if (['ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go(index + 1) }
     if (['ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); go(index - 1) }
     if (e.key === 'Home') go(0)

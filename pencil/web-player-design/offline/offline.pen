@@ -6,53 +6,86 @@
   "children": [
     {
       "type": "frame",
-      "id": "Qhp3RS",
+      "id": "8R4qLr",
       "name": "Offline / Desktop / Dark",
       "width": 1440,
       "height": 900,
       "clip": true,
-      "layout": "vertical",
-      "justifyContent": "center",
-      "alignItems": "center",
-      "gap": 20,
-      "padding": 24,
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
-          "id": "h6qTsQ",
-          "ref": "ds:z9dEdU",
-          "name": "Logo/Lockup"
-        },
-        {
           "type": "frame",
-          "id": "pfzPYQ",
-          "name": "State Area",
+          "id": "mJ7C9F",
+          "name": "Page",
           "width": "fill_container",
           "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
           "justifyContent": "center",
           "alignItems": "center",
-          "layout": "vertical",
           "children": [
             {
               "type": "ref",
-              "id": "kR9RLD",
-              "ref": "ds:LQ8E2x",
-              "name": "State / You are offline",
-              "descendants": {
-                "ds:ADgLq5": {
-                  "content": "You are offline"
-                },
-                "ds:iMJrVL": {
-                  "content": "Check your connection and try opening the page again."
-                },
-                "ds:yWAuFL/ds:NVe7y": {
-                  "content": "Try again"
-                },
-                "ds:Ep8f6v": {
-                  "enabled": false
+              "id": "jyPPEA",
+              "ref": "ds:ddzpBD",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "4QpfUj",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "ox7jKy",
+                  "ref": "ds:KmZHLF",
+                  "name": "State / You are offline",
+                  "descendants": {
+                    "ds:CDzoBP": {
+                      "content": "You are offline"
+                    },
+                    "ds:QC7EL9": {
+                      "content": "Check your connection and try opening the page again."
+                    },
+                    "ds:yLBe6k/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:VAJKbX": {
+                      "enabled": false
+                    }
+                  }
                 }
-              }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "dnMoho",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "w7m5tT",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
             }
           ]
         }
@@ -66,53 +99,86 @@
     },
     {
       "type": "frame",
-      "id": "dsuBSD",
+      "id": "4AE3Ru",
       "name": "Offline / Desktop / Light",
       "width": 1440,
       "height": 900,
       "clip": true,
-      "layout": "vertical",
-      "justifyContent": "center",
-      "alignItems": "center",
-      "gap": 20,
-      "padding": 24,
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
-          "id": "72m44m",
-          "ref": "ds:z9dEdU",
-          "name": "Logo/Lockup"
-        },
-        {
           "type": "frame",
-          "id": "kXiqsn",
-          "name": "State Area",
+          "id": "Rt4ATm",
+          "name": "Page",
           "width": "fill_container",
           "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
           "justifyContent": "center",
           "alignItems": "center",
-          "layout": "vertical",
           "children": [
             {
               "type": "ref",
-              "id": "MQQ27E",
-              "ref": "ds:LQ8E2x",
-              "name": "State / You are offline",
-              "descendants": {
-                "ds:ADgLq5": {
-                  "content": "You are offline"
-                },
-                "ds:iMJrVL": {
-                  "content": "Check your connection and try opening the page again."
-                },
-                "ds:yWAuFL/ds:NVe7y": {
-                  "content": "Try again"
-                },
-                "ds:Ep8f6v": {
-                  "enabled": false
+              "id": "3y3RC8",
+              "ref": "ds:ddzpBD",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "b89mqT",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "BYZkwP",
+                  "ref": "ds:KmZHLF",
+                  "name": "State / You are offline",
+                  "descendants": {
+                    "ds:CDzoBP": {
+                      "content": "You are offline"
+                    },
+                    "ds:QC7EL9": {
+                      "content": "Check your connection and try opening the page again."
+                    },
+                    "ds:yLBe6k/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:VAJKbX": {
+                      "enabled": false
+                    }
+                  }
                 }
-              }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "5sNnT2",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "fqx36P",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
             }
           ]
         }
@@ -126,53 +192,86 @@
     },
     {
       "type": "frame",
-      "id": "B8Dq9T",
+      "id": "HmWoVL",
       "name": "Offline / Desktop / Dim",
       "width": 1440,
       "height": 900,
       "clip": true,
-      "layout": "vertical",
-      "justifyContent": "center",
-      "alignItems": "center",
-      "gap": 20,
-      "padding": 24,
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
-          "id": "rWnjZz",
-          "ref": "ds:z9dEdU",
-          "name": "Logo/Lockup"
-        },
-        {
           "type": "frame",
-          "id": "eiEpKa",
-          "name": "State Area",
+          "id": "NqxtGy",
+          "name": "Page",
           "width": "fill_container",
           "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
           "justifyContent": "center",
           "alignItems": "center",
-          "layout": "vertical",
           "children": [
             {
               "type": "ref",
-              "id": "hJPerD",
-              "ref": "ds:LQ8E2x",
-              "name": "State / You are offline",
-              "descendants": {
-                "ds:ADgLq5": {
-                  "content": "You are offline"
-                },
-                "ds:iMJrVL": {
-                  "content": "Check your connection and try opening the page again."
-                },
-                "ds:yWAuFL/ds:NVe7y": {
-                  "content": "Try again"
-                },
-                "ds:Ep8f6v": {
-                  "enabled": false
+              "id": "7HePEq",
+              "ref": "ds:ddzpBD",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "eFxJLE",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "KVeHfm",
+                  "ref": "ds:KmZHLF",
+                  "name": "State / You are offline",
+                  "descendants": {
+                    "ds:CDzoBP": {
+                      "content": "You are offline"
+                    },
+                    "ds:QC7EL9": {
+                      "content": "Check your connection and try opening the page again."
+                    },
+                    "ds:yLBe6k/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:VAJKbX": {
+                      "enabled": false
+                    }
+                  }
                 }
-              }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "HvR5Vq",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "vbthJN",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
             }
           ]
         }
@@ -186,54 +285,87 @@
     },
     {
       "type": "frame",
-      "id": "J6HP56",
+      "id": "9seM6G",
       "name": "Offline / Mobile / Dark",
       "width": 390,
       "height": 844,
       "clip": true,
-      "layout": "vertical",
-      "justifyContent": "center",
-      "alignItems": "center",
-      "gap": 20,
-      "padding": 24,
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
-          "id": "o3HC9D",
-          "ref": "ds:z9dEdU",
-          "name": "Logo/Lockup"
-        },
-        {
           "type": "frame",
-          "id": "9GKMsB",
-          "name": "State Area",
+          "id": "wLtBvL",
+          "name": "Page",
           "width": "fill_container",
           "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
           "justifyContent": "center",
           "alignItems": "center",
-          "layout": "vertical",
           "children": [
             {
               "type": "ref",
-              "id": "5NthBh",
-              "ref": "ds:LQ8E2x",
-              "name": "State / You are offline",
-              "descendants": {
-                "ds:ADgLq5": {
-                  "content": "You are offline"
-                },
-                "ds:iMJrVL": {
-                  "content": "Check your connection and try opening the page again."
-                },
-                "ds:yWAuFL/ds:NVe7y": {
-                  "content": "Try again"
-                },
-                "ds:Ep8f6v": {
-                  "enabled": false
+              "id": "4grZkt",
+              "ref": "ds:ddzpBD",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "W6QiAK",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "mYtDyh",
+                  "ref": "ds:KmZHLF",
+                  "name": "State / You are offline",
+                  "descendants": {
+                    "ds:CDzoBP": {
+                      "content": "You are offline"
+                    },
+                    "ds:QC7EL9": {
+                      "content": "Check your connection and try opening the page again."
+                    },
+                    "ds:yLBe6k/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:VAJKbX": {
+                      "enabled": false
+                    }
+                  },
+                  "width": "fill_container"
                 }
-              },
-              "width": "fill_container"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "7DB5wS",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            16,
+            20,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "uyWD5U",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
             }
           ]
         }

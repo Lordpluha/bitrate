@@ -6,83 +6,116 @@
   "children": [
     {
       "type": "frame",
-      "id": "jFcy74",
+      "id": "V2RxaC",
       "name": "Error / Desktop / Dark",
       "width": 1440,
       "height": 900,
       "clip": true,
-      "layout": "vertical",
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
-          "id": "BakJBv",
-          "ref": "ds:OPciE",
-          "name": "App Layout",
-          "width": 1440,
-          "height": 900,
-          "descendants": {
-            "ds:xvsK3": {
-              "type": "frame",
-              "id": "Urftoi",
-              "name": "Main Panel",
-              "clip": true,
-              "width": "fill_container",
-              "height": "fill_container",
-              "layout": "vertical",
-              "gap": 28,
-              "padding": [
-                24,
-                32
-              ],
-              "children": [
-                {
+          "type": "frame",
+          "id": "VqSdZq",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "ref",
+              "id": "8AbYgo",
+              "ref": "ds:OPciE",
+              "name": "App Layout",
+              "width": 1440,
+              "height": 900,
+              "descendants": {
+                "ds:xvsK3": {
                   "type": "frame",
-                  "id": "pdbytL",
-                  "name": "State Area",
+                  "id": "Wcybii",
+                  "name": "Main Panel",
+                  "clip": true,
                   "width": "fill_container",
                   "height": "fill_container",
-                  "justifyContent": "center",
-                  "alignItems": "center",
                   "layout": "vertical",
+                  "gap": 28,
+                  "padding": [
+                    24,
+                    32
+                  ],
                   "children": [
                     {
-                      "type": "ref",
-                      "id": "Tc33AN",
-                      "ref": "ds:Y6vS73",
-                      "name": "State / Something went wrong",
-                      "descendants": {
-                        "ds:VKiPbE": {
-                          "icon": "triangle-alert"
-                        },
-                        "ds:JA9Ttn": {
-                          "content": "Something went wrong"
-                        },
-                        "ds:Sw6ZBh": {
-                          "content": "This page could not be loaded. Try again, or head back home."
-                        },
-                        "ds:3jhqZj/ds:NVe7y": {
-                          "content": "Try again"
-                        },
-                        "ds:bhzy45/ds:i6a4e": {
-                          "content": "Back to home"
+                      "type": "frame",
+                      "id": "GcDGLJ",
+                      "name": "State Area",
+                      "width": "fill_container",
+                      "height": "fill_container",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "layout": "vertical",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "aqZ2uG",
+                          "ref": "ds:CceMiH",
+                          "name": "State / Something went wrong",
+                          "descendants": {
+                            "ds:HLhX3a": {
+                              "icon": "triangle-alert"
+                            },
+                            "ds:k7vC8x": {
+                              "content": "Something went wrong"
+                            },
+                            "ds:nPjZF4": {
+                              "content": "This page could not be loaded. Try again, or head back home."
+                            },
+                            "ds:8gdLu4/ds:NVe7y": {
+                              "content": "Try again"
+                            },
+                            "ds:eU9FkR/ds:i6a4e": {
+                              "content": "Back to home"
+                            }
+                          }
                         }
-                      }
+                      ]
                     }
                   ]
+                },
+                "ds:Nn2KW": {
+                  "enabled": false
+                },
+                "ds:VZD6U": {
+                  "enabled": true
+                },
+                "ds:z5MVM": {
+                  "enabled": false
                 }
-              ]
-            },
-            "ds:Nn2KW": {
-              "enabled": false
-            },
-            "ds:VZD6U": {
-              "enabled": true
-            },
-            "ds:z5MVM": {
-              "enabled": false
+              }
             }
-          }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "qPpPP3",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "gm2LbX",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
+            }
+          ]
         }
       ],
       "x": 0,
@@ -94,83 +127,116 @@
     },
     {
       "type": "frame",
-      "id": "qQegq4",
+      "id": "49kieV",
       "name": "Error / Desktop / Light",
       "width": 1440,
       "height": 900,
       "clip": true,
-      "layout": "vertical",
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
-          "id": "oyYENM",
-          "ref": "ds:OPciE",
-          "name": "App Layout",
-          "width": 1440,
-          "height": 900,
-          "descendants": {
-            "ds:xvsK3": {
-              "type": "frame",
-              "id": "8xX7DT",
-              "name": "Main Panel",
-              "clip": true,
-              "width": "fill_container",
-              "height": "fill_container",
-              "layout": "vertical",
-              "gap": 28,
-              "padding": [
-                24,
-                32
-              ],
-              "children": [
-                {
+          "type": "frame",
+          "id": "WfXFuF",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "ref",
+              "id": "SskCeg",
+              "ref": "ds:OPciE",
+              "name": "App Layout",
+              "width": 1440,
+              "height": 900,
+              "descendants": {
+                "ds:xvsK3": {
                   "type": "frame",
-                  "id": "Jx37g6",
-                  "name": "State Area",
+                  "id": "kPAspS",
+                  "name": "Main Panel",
+                  "clip": true,
                   "width": "fill_container",
                   "height": "fill_container",
-                  "justifyContent": "center",
-                  "alignItems": "center",
                   "layout": "vertical",
+                  "gap": 28,
+                  "padding": [
+                    24,
+                    32
+                  ],
                   "children": [
                     {
-                      "type": "ref",
-                      "id": "7gs6eC",
-                      "ref": "ds:Y6vS73",
-                      "name": "State / Something went wrong",
-                      "descendants": {
-                        "ds:VKiPbE": {
-                          "icon": "triangle-alert"
-                        },
-                        "ds:JA9Ttn": {
-                          "content": "Something went wrong"
-                        },
-                        "ds:Sw6ZBh": {
-                          "content": "This page could not be loaded. Try again, or head back home."
-                        },
-                        "ds:3jhqZj/ds:NVe7y": {
-                          "content": "Try again"
-                        },
-                        "ds:bhzy45/ds:i6a4e": {
-                          "content": "Back to home"
+                      "type": "frame",
+                      "id": "MSdatQ",
+                      "name": "State Area",
+                      "width": "fill_container",
+                      "height": "fill_container",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "layout": "vertical",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "tLs7YS",
+                          "ref": "ds:CceMiH",
+                          "name": "State / Something went wrong",
+                          "descendants": {
+                            "ds:HLhX3a": {
+                              "icon": "triangle-alert"
+                            },
+                            "ds:k7vC8x": {
+                              "content": "Something went wrong"
+                            },
+                            "ds:nPjZF4": {
+                              "content": "This page could not be loaded. Try again, or head back home."
+                            },
+                            "ds:8gdLu4/ds:NVe7y": {
+                              "content": "Try again"
+                            },
+                            "ds:eU9FkR/ds:i6a4e": {
+                              "content": "Back to home"
+                            }
+                          }
                         }
-                      }
+                      ]
                     }
                   ]
+                },
+                "ds:Nn2KW": {
+                  "enabled": false
+                },
+                "ds:VZD6U": {
+                  "enabled": true
+                },
+                "ds:z5MVM": {
+                  "enabled": false
                 }
-              ]
-            },
-            "ds:Nn2KW": {
-              "enabled": false
-            },
-            "ds:VZD6U": {
-              "enabled": true
-            },
-            "ds:z5MVM": {
-              "enabled": false
+              }
             }
-          }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "43kuVc",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "2yM5P9",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
+            }
+          ]
         }
       ],
       "x": 1540,
@@ -182,83 +248,116 @@
     },
     {
       "type": "frame",
-      "id": "NrCmkj",
+      "id": "6AHqnQ",
       "name": "Error / Desktop / Dim",
       "width": 1440,
       "height": 900,
       "clip": true,
-      "layout": "vertical",
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
-          "id": "gyKcDr",
-          "ref": "ds:OPciE",
-          "name": "App Layout",
-          "width": 1440,
-          "height": 900,
-          "descendants": {
-            "ds:xvsK3": {
-              "type": "frame",
-              "id": "DMn86m",
-              "name": "Main Panel",
-              "clip": true,
-              "width": "fill_container",
-              "height": "fill_container",
-              "layout": "vertical",
-              "gap": 28,
-              "padding": [
-                24,
-                32
-              ],
-              "children": [
-                {
+          "type": "frame",
+          "id": "EbYFz7",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "ref",
+              "id": "kfg2Vh",
+              "ref": "ds:OPciE",
+              "name": "App Layout",
+              "width": 1440,
+              "height": 900,
+              "descendants": {
+                "ds:xvsK3": {
                   "type": "frame",
-                  "id": "sFNfFu",
-                  "name": "State Area",
+                  "id": "gw7p9E",
+                  "name": "Main Panel",
+                  "clip": true,
                   "width": "fill_container",
                   "height": "fill_container",
-                  "justifyContent": "center",
-                  "alignItems": "center",
                   "layout": "vertical",
+                  "gap": 28,
+                  "padding": [
+                    24,
+                    32
+                  ],
                   "children": [
                     {
-                      "type": "ref",
-                      "id": "LZwBZn",
-                      "ref": "ds:Y6vS73",
-                      "name": "State / Something went wrong",
-                      "descendants": {
-                        "ds:VKiPbE": {
-                          "icon": "triangle-alert"
-                        },
-                        "ds:JA9Ttn": {
-                          "content": "Something went wrong"
-                        },
-                        "ds:Sw6ZBh": {
-                          "content": "This page could not be loaded. Try again, or head back home."
-                        },
-                        "ds:3jhqZj/ds:NVe7y": {
-                          "content": "Try again"
-                        },
-                        "ds:bhzy45/ds:i6a4e": {
-                          "content": "Back to home"
+                      "type": "frame",
+                      "id": "j74Nay",
+                      "name": "State Area",
+                      "width": "fill_container",
+                      "height": "fill_container",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "layout": "vertical",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "jQTRCZ",
+                          "ref": "ds:CceMiH",
+                          "name": "State / Something went wrong",
+                          "descendants": {
+                            "ds:HLhX3a": {
+                              "icon": "triangle-alert"
+                            },
+                            "ds:k7vC8x": {
+                              "content": "Something went wrong"
+                            },
+                            "ds:nPjZF4": {
+                              "content": "This page could not be loaded. Try again, or head back home."
+                            },
+                            "ds:8gdLu4/ds:NVe7y": {
+                              "content": "Try again"
+                            },
+                            "ds:eU9FkR/ds:i6a4e": {
+                              "content": "Back to home"
+                            }
+                          }
                         }
-                      }
+                      ]
                     }
                   ]
+                },
+                "ds:Nn2KW": {
+                  "enabled": false
+                },
+                "ds:VZD6U": {
+                  "enabled": true
+                },
+                "ds:z5MVM": {
+                  "enabled": false
                 }
-              ]
-            },
-            "ds:Nn2KW": {
-              "enabled": false
-            },
-            "ds:VZD6U": {
-              "enabled": true
-            },
-            "ds:z5MVM": {
-              "enabled": false
+              }
             }
-          }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "oiwi73",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "iMrLnT",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
+            }
+          ]
         }
       ],
       "x": 3080,
@@ -270,150 +369,183 @@
     },
     {
       "type": "frame",
-      "id": "JyR4EJ",
+      "id": "HXikpJ",
       "name": "Error / Mobile / Dark",
       "width": 390,
       "height": 844,
       "clip": true,
-      "layout": "vertical",
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
-          "id": "Vwpc4D",
-          "ref": "ds:PVPP6B",
-          "name": "Mobile/Status Bar",
-          "width": "fill_container"
-        },
-        {
-          "type": "ref",
-          "id": "5QTb4c",
-          "ref": "ds:PdAHhU",
-          "name": "Mobile/Header",
-          "width": "fill_container",
-          "descendants": {
-            "ds:bRKPHC": {
-              "content": ""
-            },
-            "ds:jx6tVj": {
-              "enabled": false
-            },
-            "ds:UKgTGQ": {
-              "enabled": false
-            }
-          }
-        },
-        {
           "type": "frame",
-          "id": "degZsq",
-          "name": "Content",
+          "id": "Zjv8YM",
+          "name": "Page",
           "width": "fill_container",
           "height": "fill_container",
           "layout": "vertical",
-          "gap": 20,
-          "padding": [
-            8,
-            16,
-            16,
-            16
-          ],
-          "clip": true,
           "children": [
             {
+              "type": "ref",
+              "id": "cCE7HY",
+              "ref": "ds:iygje9",
+              "name": "Mobile/Status Bar",
+              "width": "fill_container"
+            },
+            {
+              "type": "ref",
+              "id": "i8JRSj",
+              "ref": "ds:BCuom7",
+              "name": "Mobile/Header",
+              "width": "fill_container",
+              "descendants": {
+                "ds:b9HGAC": {
+                  "content": ""
+                },
+                "ds:stTxsg": {
+                  "enabled": false
+                },
+                "ds:MiPMuy": {
+                  "enabled": false
+                }
+              }
+            },
+            {
               "type": "frame",
-              "id": "XpQmWT",
-              "name": "State Area",
+              "id": "QYKbvy",
+              "name": "Content",
               "width": "fill_container",
               "height": "fill_container",
-              "justifyContent": "center",
-              "alignItems": "center",
               "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                8,
+                16,
+                16,
+                16
+              ],
+              "clip": true,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "yd59SF",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "C7wxTN",
+                      "ref": "ds:CceMiH",
+                      "name": "State / Something went wrong",
+                      "descendants": {
+                        "ds:HLhX3a": {
+                          "icon": "triangle-alert"
+                        },
+                        "ds:k7vC8x": {
+                          "content": "Something went wrong"
+                        },
+                        "ds:nPjZF4": {
+                          "content": "This page could not be loaded. Try again, or head back home."
+                        },
+                        "ds:8gdLu4/ds:NVe7y": {
+                          "content": "Try again"
+                        },
+                        "ds:eU9FkR/ds:i6a4e": {
+                          "content": "Back to home"
+                        }
+                      },
+                      "width": "fill_container"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "8Niieg",
+              "name": "Mini Bar Slot",
+              "width": "fill_container",
+              "padding": [
+                8,
+                16
+              ],
               "children": [
                 {
                   "type": "ref",
-                  "id": "fU5W45",
-                  "ref": "ds:Y6vS73",
-                  "name": "State / Something went wrong",
-                  "descendants": {
-                    "ds:VKiPbE": {
-                      "icon": "triangle-alert"
-                    },
-                    "ds:JA9Ttn": {
-                      "content": "Something went wrong"
-                    },
-                    "ds:Sw6ZBh": {
-                      "content": "This page could not be loaded. Try again, or head back home."
-                    },
-                    "ds:3jhqZj/ds:NVe7y": {
-                      "content": "Try again"
-                    },
-                    "ds:bhzy45/ds:i6a4e": {
-                      "content": "Back to home"
-                    }
-                  },
+                  "id": "YxjfXU",
+                  "ref": "ds:CeyP3",
+                  "name": "Mini Bar",
                   "width": "fill_container"
                 }
               ]
+            },
+            {
+              "type": "ref",
+              "id": "MjwNjo",
+              "ref": "ds:PmEet",
+              "name": "Tab Bar",
+              "width": "fill_container",
+              "descendants": {
+                "ds:lPxJb": {
+                  "fill": "$ds:--foreground"
+                },
+                "ds:ojzHV": {
+                  "fill": "$ds:--foreground",
+                  "fontWeight": "600"
+                },
+                "ds:kGpDm": {
+                  "fill": "$ds:--muted-foreground"
+                },
+                "ds:mG3wy": {
+                  "fill": "$ds:--muted-foreground",
+                  "fontWeight": "normal"
+                },
+                "ds:X78L7T": {
+                  "fill": "$ds:--muted-foreground"
+                },
+                "ds:HnsIZ": {
+                  "fill": "$ds:--muted-foreground",
+                  "fontWeight": "normal"
+                },
+                "ds:pjDzF": {
+                  "fill": "$ds:--muted-foreground",
+                  "icon": "square-plus"
+                },
+                "ds:j8Bscj": {
+                  "fill": "$ds:--muted-foreground",
+                  "fontWeight": "normal",
+                  "content": "Create"
+                }
+              }
             }
           ]
         },
         {
           "type": "frame",
-          "id": "7W7LL2",
-          "name": "Mini Bar Slot",
+          "id": "7zmBMk",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
           "width": "fill_container",
+          "justifyContent": "end",
           "padding": [
-            8,
-            16
+            0,
+            16,
+            20,
+            0
           ],
           "children": [
             {
               "type": "ref",
-              "id": "D5JWXr",
-              "ref": "ds:CeyP3",
-              "name": "Mini Bar",
-              "width": "fill_container"
+              "id": "icQXPo",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
             }
           ]
-        },
-        {
-          "type": "ref",
-          "id": "WRW96b",
-          "ref": "ds:PmEet",
-          "name": "Tab Bar",
-          "width": "fill_container",
-          "descendants": {
-            "ds:lPxJb": {
-              "fill": "$ds:--foreground"
-            },
-            "ds:ojzHV": {
-              "fill": "$ds:--foreground",
-              "fontWeight": "600"
-            },
-            "ds:kGpDm": {
-              "fill": "$ds:--muted-foreground"
-            },
-            "ds:mG3wy": {
-              "fill": "$ds:--muted-foreground",
-              "fontWeight": "normal"
-            },
-            "ds:X78L7T": {
-              "fill": "$ds:--muted-foreground"
-            },
-            "ds:HnsIZ": {
-              "fill": "$ds:--muted-foreground",
-              "fontWeight": "normal"
-            },
-            "ds:pjDzF": {
-              "fill": "$ds:--muted-foreground",
-              "icon": "square-plus"
-            },
-            "ds:j8Bscj": {
-              "fill": "$ds:--muted-foreground",
-              "fontWeight": "normal",
-              "content": "Create"
-            }
-          }
         }
       ],
       "x": 4620,
@@ -425,56 +557,89 @@
     },
     {
       "type": "frame",
-      "id": "NhPUJu",
+      "id": "grK2X7",
       "name": "Error / Root error / Desktop",
       "width": 1440,
       "height": 900,
       "clip": true,
-      "layout": "vertical",
-      "justifyContent": "center",
-      "alignItems": "center",
-      "gap": 20,
-      "padding": 24,
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
-          "id": "nDpvrW",
-          "ref": "ds:z9dEdU",
-          "name": "Logo/Lockup"
-        },
-        {
           "type": "frame",
-          "id": "9xgdzX",
-          "name": "State Area",
+          "id": "yKxCEJ",
+          "name": "Page",
           "width": "fill_container",
           "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
           "justifyContent": "center",
           "alignItems": "center",
-          "layout": "vertical",
           "children": [
             {
               "type": "ref",
-              "id": "AWcySa",
-              "ref": "ds:Y6vS73",
-              "name": "State / Something went wrong",
-              "descendants": {
-                "ds:VKiPbE": {
-                  "icon": "triangle-alert"
-                },
-                "ds:JA9Ttn": {
-                  "content": "Something went wrong"
-                },
-                "ds:Sw6ZBh": {
-                  "content": "Something went wrong on our side. Try again, or head back home."
-                },
-                "ds:3jhqZj/ds:NVe7y": {
-                  "content": "Try again"
-                },
-                "ds:bhzy45/ds:i6a4e": {
-                  "content": "Back to home"
+              "id": "R7HvXB",
+              "ref": "ds:ddzpBD",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "vVgxsb",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "gSZD87",
+                  "ref": "ds:CceMiH",
+                  "name": "State / Something went wrong",
+                  "descendants": {
+                    "ds:HLhX3a": {
+                      "icon": "triangle-alert"
+                    },
+                    "ds:k7vC8x": {
+                      "content": "Something went wrong"
+                    },
+                    "ds:nPjZF4": {
+                      "content": "Something went wrong on our side. Try again, or head back home."
+                    },
+                    "ds:8gdLu4/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:eU9FkR/ds:i6a4e": {
+                      "content": "Back to home"
+                    }
+                  }
                 }
-              }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "tE3LCe",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "YGKqmd",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
             }
           ]
         }
@@ -488,57 +653,90 @@
     },
     {
       "type": "frame",
-      "id": "TSrkhK",
+      "id": "Q5ybeZ",
       "name": "Error / Root error / Mobile",
       "width": 390,
       "height": 844,
       "clip": true,
-      "layout": "vertical",
-      "justifyContent": "center",
-      "alignItems": "center",
-      "gap": 20,
-      "padding": 24,
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
-          "id": "rPc9Vt",
-          "ref": "ds:z9dEdU",
-          "name": "Logo/Lockup"
-        },
-        {
           "type": "frame",
-          "id": "fv5WRJ",
-          "name": "State Area",
+          "id": "Kq9UTw",
+          "name": "Page",
           "width": "fill_container",
           "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
           "justifyContent": "center",
           "alignItems": "center",
-          "layout": "vertical",
           "children": [
             {
               "type": "ref",
-              "id": "umTiDw",
-              "ref": "ds:Y6vS73",
-              "name": "State / Something went wrong",
-              "descendants": {
-                "ds:VKiPbE": {
-                  "icon": "triangle-alert"
-                },
-                "ds:JA9Ttn": {
-                  "content": "Something went wrong"
-                },
-                "ds:Sw6ZBh": {
-                  "content": "Something went wrong on our side. Try again, or head back home."
-                },
-                "ds:3jhqZj/ds:NVe7y": {
-                  "content": "Try again"
-                },
-                "ds:bhzy45/ds:i6a4e": {
-                  "content": "Back to home"
+              "id": "GMhseA",
+              "ref": "ds:ddzpBD",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "hNisPN",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "riT78H",
+                  "ref": "ds:CceMiH",
+                  "name": "State / Something went wrong",
+                  "descendants": {
+                    "ds:HLhX3a": {
+                      "icon": "triangle-alert"
+                    },
+                    "ds:k7vC8x": {
+                      "content": "Something went wrong"
+                    },
+                    "ds:nPjZF4": {
+                      "content": "Something went wrong on our side. Try again, or head back home."
+                    },
+                    "ds:8gdLu4/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:eU9FkR/ds:i6a4e": {
+                      "content": "Back to home"
+                    }
+                  },
+                  "width": "fill_container"
                 }
-              },
-              "width": "fill_container"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "SyT4Eu",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            16,
+            20,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "MQuroB",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
             }
           ]
         }
@@ -552,56 +750,89 @@
     },
     {
       "type": "frame",
-      "id": "dw8C66",
+      "id": "aQXWtQ",
       "name": "Error / Global failure / Desktop",
       "width": 1440,
       "height": 900,
       "clip": true,
-      "layout": "vertical",
-      "justifyContent": "center",
-      "alignItems": "center",
-      "gap": 20,
-      "padding": 24,
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
-          "id": "BeZ83s",
-          "ref": "ds:z9dEdU",
-          "name": "Logo/Lockup"
-        },
-        {
           "type": "frame",
-          "id": "GWFKth",
-          "name": "State Area",
+          "id": "GaRJmj",
+          "name": "Page",
           "width": "fill_container",
           "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
           "justifyContent": "center",
           "alignItems": "center",
-          "layout": "vertical",
           "children": [
             {
               "type": "ref",
-              "id": "rieoMJ",
-              "ref": "ds:Y6vS73",
-              "name": "State / The app failed to load",
-              "descendants": {
-                "ds:VKiPbE": {
-                  "icon": "power"
-                },
-                "ds:JA9Ttn": {
-                  "content": "The app failed to load"
-                },
-                "ds:Sw6ZBh": {
-                  "content": "An unexpected error stopped the player from starting. Reloading usually fixes it."
-                },
-                "ds:3jhqZj/ds:NVe7y": {
-                  "content": "Reload the app"
-                },
-                "ds:bhzy45": {
-                  "enabled": false
+              "id": "kKpEbR",
+              "ref": "ds:ddzpBD",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "iw2gAz",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "uD6C4i",
+                  "ref": "ds:CceMiH",
+                  "name": "State / The app failed to load",
+                  "descendants": {
+                    "ds:HLhX3a": {
+                      "icon": "power"
+                    },
+                    "ds:k7vC8x": {
+                      "content": "The app failed to load"
+                    },
+                    "ds:nPjZF4": {
+                      "content": "An unexpected error stopped the player from starting. Reloading usually fixes it."
+                    },
+                    "ds:8gdLu4/ds:NVe7y": {
+                      "content": "Reload the app"
+                    },
+                    "ds:eU9FkR": {
+                      "enabled": false
+                    }
+                  }
                 }
-              }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "iXAvHP",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "rJiBgh",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
             }
           ]
         }
@@ -615,57 +846,90 @@
     },
     {
       "type": "frame",
-      "id": "8sYAii",
+      "id": "yja8RG",
       "name": "Error / Global failure / Mobile",
       "width": 390,
       "height": 844,
       "clip": true,
-      "layout": "vertical",
-      "justifyContent": "center",
-      "alignItems": "center",
-      "gap": 20,
-      "padding": 24,
       "fill": "$ds:--background",
+      "layout": "vertical",
       "children": [
         {
-          "type": "ref",
-          "id": "yfXurS",
-          "ref": "ds:z9dEdU",
-          "name": "Logo/Lockup"
-        },
-        {
           "type": "frame",
-          "id": "hMJFJU",
-          "name": "State Area",
+          "id": "PwVVpy",
+          "name": "Page",
           "width": "fill_container",
           "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
           "justifyContent": "center",
           "alignItems": "center",
-          "layout": "vertical",
           "children": [
             {
               "type": "ref",
-              "id": "KLoyKu",
-              "ref": "ds:Y6vS73",
-              "name": "State / The app failed to load",
-              "descendants": {
-                "ds:VKiPbE": {
-                  "icon": "power"
-                },
-                "ds:JA9Ttn": {
-                  "content": "The app failed to load"
-                },
-                "ds:Sw6ZBh": {
-                  "content": "An unexpected error stopped the player from starting. Reloading usually fixes it."
-                },
-                "ds:3jhqZj/ds:NVe7y": {
-                  "content": "Reload the app"
-                },
-                "ds:bhzy45": {
-                  "enabled": false
+              "id": "C6tbkW",
+              "ref": "ds:ddzpBD",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "frame",
+              "id": "pzY4gB",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "VKu4FL",
+                  "ref": "ds:CceMiH",
+                  "name": "State / The app failed to load",
+                  "descendants": {
+                    "ds:HLhX3a": {
+                      "icon": "power"
+                    },
+                    "ds:k7vC8x": {
+                      "content": "The app failed to load"
+                    },
+                    "ds:nPjZF4": {
+                      "content": "An unexpected error stopped the player from starting. Reloading usually fixes it."
+                    },
+                    "ds:8gdLu4/ds:NVe7y": {
+                      "content": "Reload the app"
+                    },
+                    "ds:eU9FkR": {
+                      "enabled": false
+                    }
+                  },
+                  "width": "fill_container"
                 }
-              },
-              "width": "fill_container"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "s4nNsA",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            16,
+            20,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "TngMt5",
+              "ref": "ds:ntX8Fh",
+              "name": "Assistant/FAB"
             }
           ]
         }
