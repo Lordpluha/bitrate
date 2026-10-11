@@ -212,14 +212,42 @@ img { display: block; }
 .wave .bars { position: absolute; inset: 14px 0 0; display: flex; align-items: center; gap: 2px; }
 .wave .bars i { flex: 1; border-radius: 2px; background: rgba(255, 255, 255, .26); }
 .wave .bars i.on { background: #fff; }
-.wave .mo { position: absolute; top: 0; width: 18px; height: 18px; margin-left: -9px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; }
+.wave .mo { position: absolute; top: 0; width: 18px; height: 18px; margin-left: -9px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; cursor: pointer; }
+.wave .mo.mine { border-color: var(--accent); }
+.wave.nocm .mo { display: none; }
+/* timed comments: the bubble rises from the marker when playback reaches its second */
+.wavewrap { position: relative; }
+.cbub { position: absolute; bottom: calc(100% + 4px); left: 0; width: 232px; padding: 8px 10px; border-radius: 14px; background: rgba(12, 14, 20, .86); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border: 1px solid rgba(255, 255, 255, .12); display: grid; grid-template-columns: 26px 1fr; gap: 8px; align-items: start; opacity: 0; pointer-events: none; transform-origin: 50% 100%; z-index: 2; }
+.cbub img { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; }
+.cbub b { font-size: 12px; }
+.cbub p { margin: 2px 0 0; font-size: 13px; line-height: 1.35; }
+.tchip { display: inline-flex; align-items: center; gap: 3px; height: 18px; padding: 0 6px; border-radius: 9px; background: rgba(167, 139, 250, .18); color: var(--accent); font: 500 10px/1 var(--font-data); margin-left: 6px; border: 0; }
+button.tchip { cursor: pointer; }
+.csheet { position: absolute; left: 0; right: 0; bottom: 0; height: 74%; z-index: 3; display: flex; flex-direction: column; background: #12141c; color: #fff; border-radius: 26px 26px 0 0; border-top: 1px solid rgba(255, 255, 255, .08); transform: translateY(102%); box-shadow: 0 -20px 50px -20px rgba(0, 0, 0, .7); }
+.csheet .grab { width: 100px; height: 6px; border-radius: 3px; background: rgba(255, 255, 255, .16); margin: 10px auto 6px; }
+.csheet .ch { display: flex; align-items: center; gap: 8px; padding: 6px 18px 10px; }
+.csheet .ch h3 { font: 600 18px/1 var(--font-display); margin: 0; }
+.csheet .ch small { color: rgba(255, 255, 255, .55); }
+.csheet .ch label { margin-left: auto; display: inline-flex; gap: 8px; align-items: center; font-size: 12px; color: rgba(255, 255, 255, .7); }
+.csheet .ch input { accent-color: var(--primary); width: 16px; height: 16px; }
+.csheet .cl { flex: 1; overflow-y: auto; padding: 0 12px; display: grid; align-content: start; gap: 4px; overscroll-behavior: contain; }
+.crow { display: grid; grid-template-columns: 32px 1fr; gap: 10px; padding: 10px; border-radius: 14px; border: 1px solid transparent; }
+.crow.now { background: rgba(124, 58, 237, .16); border-color: rgba(167, 139, 250, .45); }
+.crow img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+.crow b { font-size: 13px; }
+.crow p { margin: 3px 0 0; font-size: 14px; line-height: 1.4; }
+.ccomp { display: flex; align-items: center; gap: 8px; margin: 8px 12px calc(env(safe-area-inset-bottom, 0px) + 14px); padding: 4px 4px 4px 12px; border-radius: 24px; background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .1); }
+.ccomp:focus-within { border-color: var(--accent); }
+.ccomp input { flex: 1; min-width: 0; border: 0; background: none; color: #fff; font: 500 14px var(--font-body); outline: none; }
+.ccomp .send { width: 36px; height: 36px; border-radius: 50%; background: var(--primary); color: #fff; display: grid; place-items: center; }
+.ccomp .send svg { width: 16px; height: 16px; }
 .times { display: flex; justify-content: space-between; font: 500 11px/1 var(--font-data); color: rgba(255, 255, 255, .6); margin-top: 8px; }
 .ctrls { display: flex; align-items: center; justify-content: space-between; }
 .ctrls .iconb { width: 48px; height: 48px; background: none; }
 .ctrls .big { width: 76px; height: 76px; border-radius: 50%; background: #fff; color: #0b0d12; display: grid; place-items: center; }
 .ctrls .big svg { width: 28px; height: 28px; }
 .ctrls .on { color: var(--accent); }
-.sig { display: flex; gap: 8px; align-items: center; }
+.sig { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .sig .q { white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border-radius: 999px; background: rgba(255, 255, 255, .1); font: 500 11px/1 var(--font-data); letter-spacing: .04em; }
 .sig .q i { width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
 .next { margin-top: auto; display: grid; grid-template-columns: 40px 1fr auto; gap: 12px; align-items: center; padding: 10px; border-radius: 18px; background: rgba(255, 255, 255, .08); }
@@ -254,6 +282,8 @@ img { display: block; }
     <symbol id="i-down2" viewBox="0 0 24 24"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14"/></symbol>
     <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.9 1.9 0 0 0 3.4 0"/></symbol>
     <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-5A8 8 0 1 1 21 12z"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
     <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
     <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
     <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10a7 7 0 0 1-14 0M12 17v5"/></symbol>
@@ -423,7 +453,8 @@ img { display: block; }
           <div class="tt"><h2 id="npT">Afterglow</h2><p id="npA">Nova &amp; the Static</p></div>
           <button class="iconb like" id="like" type="button" aria-pressed="false" aria-label="Like"><svg aria-hidden="true" class="i"><use href="#i-heart"/></svg></button>
         </div>
-        <div data-s>
+        <div data-s class="wavewrap">
+          <div class="cbub" id="cbub" aria-live="polite"></div>
           <div class="wave" id="wave" role="slider" tabindex="0" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="47"><div class="bars" id="waveBars"></div></div>
           <div class="times"><span id="tCur">1:48</span><span id="tDur">3:42</span></div>
         </div>
@@ -436,9 +467,16 @@ img { display: block; }
         </div>
         <div class="sig" data-s>
           <span class="q"><i></i><span id="qual">FLAC 24/96 · 2304 kbps</span></span>
+          <button class="q" type="button" id="npComments" aria-label="Open comments"><svg aria-hidden="true" class="i" style="width:13px;height:13px"><use href="#i-chat"/></svg><span id="cmCount">5</span></button>
           <button class="q" type="button" id="npConnect" aria-label="Bitrate Connect: playing on this phone"><svg aria-hidden="true" class="i" style="width:13px;height:13px"><use href="#i-device"/></svg>This phone</button>
         </div>
         <div class="next" data-s><img id="nxImg" src="../design-system/assets/albums/album-static-lines.webp" alt=""><span><small>Up next</small><b id="nxT">Static Lines · Kite Harbor</b></span><svg aria-hidden="true" class="i"><use href="#i-list"/></svg></div>
+      </div>
+      <div class="csheet" id="csheet" aria-hidden="true">
+        <div class="grab"></div>
+        <div class="ch"><h3>Comments</h3><small id="cmCount2">5</small><label><input type="checkbox" id="cmShow" checked>Show while listening</label></div>
+        <div class="cl" id="cl"></div>
+        <form class="ccomp" id="ccomp"><input id="cin" type="text" autocomplete="off" placeholder="Comment at 1:48" aria-label="Write a comment"><button class="send" type="submit" aria-label="Post comment"><svg aria-hidden="true" class="i"><use href="#i-up"/></svg></button></form>
       </div>
     </section>
   </div>
@@ -496,16 +534,26 @@ img { display: block; }
   const WB = 46
   const seed = (i, k) => 0.25 + 0.75 * Math.abs(Math.sin(i * 1.7 + k * 3.1) * Math.cos(i * 0.37 + k))
   const waveBars = $('#waveBars')
+  /* timed comments: each is pinned to a share of the track and shows up when playback reaches it */
+  const COMMENTS = [
+    { f: 0.12, av: 'avatar2', n: 'Jonah', t: 'This synth entrance gets me every time.' },
+    { f: 0.29, av: 'avatar3', n: 'Ava', t: 'Volume up for the bridge 🎧' },
+    { f: 0.46, av: 'avatar4', n: 'Leo', t: 'the drop here is unreal 🔥' },
+    { f: 0.64, av: 'avatar1', n: 'Maya', t: 'Saving this for the late set.' },
+    { f: 0.83, av: 'avatar2', n: 'Jonah', t: 'That outro fade 🥲' },
+  ]
+  let showCm = true
   const drawWave = () => {
     waveBars.innerHTML = Array.from({ length: WB }, (_, i) => `<i style="height:${Math.round(seed(i, cur) * 40)}px"></i>`).join('')
     const wave = $('#wave')
     for (const m of $$('.mo', wave)) m.remove()
-    for (const [p, av] of [[0.32, 'avatar2'], [0.71, 'avatar3']]) {
+    for (const c of COMMENTS) {
       const im = document.createElement('img')
-      im.className = 'mo'
-      im.alt = ''
-      im.src = `../design-system/assets/avatars/${av}.jpg`
-      im.style.left = `${p * 100}%`
+      im.className = c.mine ? 'mo mine' : 'mo'
+      im.alt = `${c.n}: ${c.t}`
+      im.src = `../design-system/assets/avatars/${c.av}.jpg`
+      im.style.left = `${c.f * 100}%`
+      im.dataset.k = String(COMMENTS.indexOf(c))
       wave.appendChild(im)
     }
   }
@@ -550,6 +598,7 @@ img { display: block; }
     pos += 1
     if (pos >= TRACKS[cur].len) { pos = 0; setTrack(cur + 1) }
     paint()
+    window.__cmTick?.()
   }, 1000)
   $('#islPlay').addEventListener('click', (e) => { e.stopPropagation(); setPlaying(!playing); gsap.fromTo('#islPlay', { scale: 0.86 }, { scale: 1, duration: dur(0.4), ease: 'back.out(3)' }) })
   $('#npPlay').addEventListener('click', () => { setPlaying(!playing); gsap.fromTo('#npPlay', { scale: 0.9 }, { scale: 1, duration: dur(0.4), ease: 'back.out(3)' }) })
@@ -724,6 +773,7 @@ img { display: block; }
   }
   function closeNP() {
     if (!npOpen) return
+    if (sheetOpen) { setSheet(false); return }
     npOpen = false
     gsap.killTweensOf([np, island])
     gsap.set(np, { y: 0 })
@@ -737,7 +787,7 @@ img { display: block; }
 
   /* drag the player down to put it back into the island */
   let d = null
-  np.addEventListener('pointerdown', (e) => { if (e.target.closest('button, .wave')) return; d = { y: e.clientY, x: e.clientX } })
+  np.addEventListener('pointerdown', (e) => { if (e.target.closest('button, .wave, .csheet, input')) return; d = { y: e.clientY, x: e.clientX } })
   np.addEventListener('pointermove', (e) => { if (!d) return; const dy = Math.max(0, e.clientY - d.y); gsap.set(np, { y: dy * 0.6 }) })
   const npUp = (e) => {
     if (!d) return
@@ -761,6 +811,89 @@ img { display: block; }
   wave.addEventListener('pointermove', (e) => { if (seeking) seekTo(e.clientX) })
   wave.addEventListener('pointerup', () => { seeking = false })
   wave.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { pos = Math.max(0, Math.min(TRACKS[cur].len - 1, pos + (e.key === 'ArrowRight' ? 5 : -5))); paint() } })
+
+  /* ---------- timed comments: live bubbles, the list sheet and the composer ---------- */
+  const cbub = $('#cbub')
+  const csheet = $('#csheet')
+  const cl = $('#cl')
+  const cin = $('#cin')
+  let bubTimer = null
+  let sheetOpen = false
+  const esc = (t) => t.replace(/[<>&"]/g, (ch) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' })[ch])
+  const showBubble = (c) => {
+    if (!showCm || !npOpen) return
+    const w = wave.clientWidth
+    const left = Math.max(0, Math.min(w - 232, c.f * w - 116))
+    cbub.innerHTML = `<img src="../design-system/assets/avatars/${c.av}.jpg" alt=""><span><b>${esc(c.n)}</b><span class="tchip">${fmt(c.f * TRACKS[cur].len)}</span><p>${esc(c.t)}</p></span>`
+    cbub.style.left = `${left}px`
+    gsap.killTweensOf(cbub)
+    gsap.fromTo(cbub, { opacity: 0, y: 8, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: dur(0.35), ease: 'back.out(2)' })
+    const m = wave.querySelector(`.mo[data-k="${COMMENTS.indexOf(c)}"]`)
+    if (m) gsap.fromTo(m, { scale: 1.5 }, { scale: 1, duration: dur(0.5), ease: 'back.out(3)' })
+    clearTimeout(bubTimer)
+    bubTimer = setTimeout(() => gsap.to(cbub, { opacity: 0, y: 4, duration: dur(0.25) }), 3400)
+  }
+  /* called every second by the playback clock: surface the comment pinned to this second */
+  window.__cmTick = () => {
+    const len = TRACKS[cur].len
+    const hit = COMMENTS.find((c) => Math.floor(c.f * len) === Math.floor(pos))
+    if (hit) showBubble(hit)
+    $('#cin').placeholder = `Comment at ${fmt(pos)}`
+    if (sheetOpen) markNow()
+  }
+  const sorted = () => [...COMMENTS].sort((a, b) => a.f - b.f)
+  const markNow = () => {
+    const p = pos / TRACKS[cur].len
+    const list = sorted()
+    let k = -1
+    list.forEach((c, i) => { if (c.f <= p) k = i })
+    $$('.crow', cl).forEach((r, i) => { r.classList.toggle('now', i === k) })
+  }
+  const renderList = () => {
+    cl.innerHTML = sorted().map((c) => `<div class="crow"><img src="../design-system/assets/avatars/${c.av}.jpg" alt=""><span><b>${esc(c.n)}</b><button class="tchip" type="button" data-f="${c.f}" aria-label="Play from ${fmt(c.f * TRACKS[cur].len)}">${fmt(c.f * TRACKS[cur].len)}</button><p>${esc(c.t)}</p></span></div>`).join('')
+    $('#cmCount').textContent = String(COMMENTS.length)
+    $('#cmCount2').textContent = String(COMMENTS.length)
+    markNow()
+  }
+  const setSheet = (on) => {
+    sheetOpen = on
+    csheet.setAttribute('aria-hidden', String(!on))
+    if (on) renderList()
+    gsap.to(csheet, { y: on ? '0%' : '102%', duration: dur(on ? 0.5 : 0.35), ease: on ? 'expo.out' : 'power3.in' })
+    if (on) setTimeout(() => cin.focus({ preventScroll: true }), 80)
+  }
+  $('#npComments').addEventListener('click', () => setSheet(!sheetOpen))
+  cl.addEventListener('click', (e) => {
+    const b = e.target.closest('.tchip')
+    if (!b) return
+    pos = Number(b.dataset.f) * TRACKS[cur].len
+    paint()
+    markNow()
+  })
+  $('#cmShow').addEventListener('change', (e) => {
+    showCm = e.target.checked
+    wave.classList.toggle('nocm', !showCm)
+    if (!showCm) gsap.to(cbub, { opacity: 0, duration: dur(0.2) })
+  })
+  $('#ccomp').addEventListener('submit', (e) => {
+    e.preventDefault()
+    const t = cin.value.trim()
+    if (!t) return
+    const c = { f: pos / TRACKS[cur].len, av: 'avatar1', n: 'You', t, mine: true }
+    COMMENTS.push(c)
+    cin.value = ''
+    drawWave()
+    paint()
+    renderList()
+    const was = showCm
+    showCm = true
+    showBubble(c)
+    showCm = was
+  })
+  wave.addEventListener('click', (e) => {
+    const m = e.target.closest('.mo')
+    if (m) showBubble(COMMENTS[Number(m.dataset.k)])
+  })
 
   /* ---------- tuner: drag the needle; the station and picks follow ---------- */
   const dial = $('#dial')

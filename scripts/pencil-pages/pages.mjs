@@ -68,6 +68,7 @@ import { cursor } from './pages-cursor.mjs'
 import { mobileIsland } from './pages-island.mjs'
 import { notificationSettings, Switch as NotificationSwitch } from './pages-notifications.mjs'
 import { CONTEXT_STATES } from './pages-context-menu.mjs'
+import { COMMENT_STATES } from './pages-comments.mjs'
 import { assistant, withAssistant } from './pages-assistant.mjs'
 
 const T5 = TRACKS.slice(0, 5)
@@ -2883,6 +2884,9 @@ for (const [key, [kind, count]] of Object.entries(MORE)) {
     ),
   ]
 }
+
+/* timed comments on the player (markers, live bubbles, list, composer) */
+pages.player.states = [...(pages.player.states ?? []), ...COMMENT_STATES]
 
 /* context menus (desktop) and drawers (mobile) as states of the screens they open on */
 for (const key of ['playlist', 'album', 'artist'])
