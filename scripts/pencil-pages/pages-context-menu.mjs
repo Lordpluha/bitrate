@@ -12,8 +12,9 @@ import {
   MHeader,
   TrackTable,
   MobileTrack,
-  ArtistCard,
   state,
+  CollectionHeader,
+  ActionBar,
 } from './ui.mjs'
 
 /* desktop */
@@ -45,28 +46,32 @@ const label = (t) => R('Context Menu/Label', {}, { label: { content: t } })
 const sep = () => R('Context Menu/Separator')
 const menu = (items) =>
   R('Context Menu', {}, { items: L({ name: 'Items', layout: 'vertical', width: 240 }, items) })
-const trackMenu = ({ offline = false, open = 'playlist' } = {}) =>
-  menu([
-    R('Context Menu/Header'),
-    sep(),
-    it('Active', 'Play next', 'list-start', '⇧N'),
-    it(null, 'Add to queue', 'list-plus', 'Q'),
-    it(open === 'playlist' ? 'Sub Open' : 'Sub', 'Add to playlist', 'list-music'),
-    check('Saved to Liked Songs', true, 'L'),
-    sep(),
-    it(null, 'Go to artist', 'mic-vocal', '⌥A'),
-    it(null, 'Go to album', 'disc-3', '⌥B'),
-    it(offline ? 'Disabled' : null, 'Start a Jam', 'users-round'),
-    it(open === 'connect' ? 'Sub Open' : 'Sub', 'Play on… (Bitrate Connect)', 'monitor-speaker'),
-    it('Sub', 'Share', 'share-2'),
-    sep(),
-    it(
-      offline ? null : 'Disabled',
-      offline ? 'Remove download' : 'Download',
-      offline ? 'circle-check' : 'download',
-    ),
-    it('Destructive', 'Remove from this playlist', 'trash-2', '⌫'),
-  ])
+const trackMenu = ({ offline = false, open = 'playlist', where = 'playlist' } = {}) =>
+  menu(
+    [
+      R('Context Menu/Header'),
+      sep(),
+      it('Active', 'Play next', 'list-start', '⇧N'),
+      it(null, 'Add to queue', 'list-plus', 'Q'),
+      it(open === 'playlist' ? 'Sub Open' : 'Sub', 'Add to playlist', 'list-music'),
+      check('Saved to Liked Songs', true, 'L'),
+      sep(),
+      it(null, 'Go to artist', 'mic-vocal', '⌥A'),
+      where === 'album'
+        ? it(null, 'Go to song radio', 'radio')
+        : it(null, 'Go to album', 'disc-3', '⌥B'),
+      it(offline ? 'Disabled' : null, 'Start a Jam', 'users-round'),
+      it(open === 'connect' ? 'Sub Open' : 'Sub', 'Play on… (Bitrate Connect)', 'monitor-speaker'),
+      it('Sub', 'Share', 'share-2'),
+      sep(),
+      it(
+        offline ? null : 'Disabled',
+        offline ? 'Remove download' : 'Download',
+        offline ? 'circle-check' : 'download',
+      ),
+      where === 'playlist' && it('Destructive', 'Remove from this playlist', 'trash-2', '⌫'),
+    ].filter(Boolean),
+  )
 const playlistSub = () =>
   menu([
     label('Add to playlist'),
@@ -154,25 +159,27 @@ const drawer = (
       footer: footer ? undefined : { enabled: false },
     },
   )
-const trackDrawer = ({ offline = false } = {}) =>
-  drawer([
-    dw(null, 'Play next', 'list-start'),
-    dw(null, 'Add to queue', 'list-plus'),
-    dw('Sub', 'Add to playlist', 'list-music'),
-    dw('Checked', 'Saved to Liked Songs', 'heart'),
-    dsep(),
-    dw(null, 'Go to artist', 'mic-vocal'),
-    dw(
-      offline ? 'Disabled' : null,
-      'Start a Jam',
-      'users-round',
-      offline ? 'Needs a connection' : undefined,
-    ),
-    dw('Sub', 'Play on… (Bitrate Connect)', 'monitor-speaker'),
-    dw('Sub', 'Share', 'share-2'),
-    dsep(),
-    dw('Destructive', 'Remove from this playlist', 'trash-2'),
-  ])
+const trackDrawer = ({ offline = false, where = 'playlist' } = {}) =>
+  drawer(
+    [
+      dw(null, 'Play next', 'list-start'),
+      dw(null, 'Add to queue', 'list-plus'),
+      dw('Sub', 'Add to playlist', 'list-music'),
+      dw('Checked', 'Saved to Liked Songs', 'heart'),
+      dsep(),
+      dw(null, 'Go to artist', 'mic-vocal'),
+      dw(
+        offline ? 'Disabled' : null,
+        'Start a Jam',
+        'users-round',
+        offline ? 'Needs a connection' : undefined,
+      ),
+      dw('Sub', 'Play on… (Bitrate Connect)', 'monitor-speaker'),
+      dw('Sub', 'Share', 'share-2'),
+      where === 'playlist' && dsep(),
+      where === 'playlist' && dw('Destructive', 'Remove from this playlist', 'trash-2'),
+    ].filter(Boolean),
+  )
 const title = (t, d) =>
   R('Drawer/Title', { width: 'fill_container' }, { title: { content: t }, desc: { content: d } })
 const playlistDrawer = () =>
@@ -225,8 +232,37 @@ const playlistMenuDrawer = () =>
       ),
     },
   )
+const artistDrawer = () =>
+  drawer(
+    [
+      dw(null, 'Play artist radio', 'radio'),
+      dw('Checked', 'Following', 'user-round-check'),
+      dw(null, 'Start a Jam', 'users-round'),
+      dw('Sub', 'Share', 'share-2'),
+      dsep(),
+      dw(null, "Don't play this artist", 'ban'),
+    ],
+    {
+      header: R(
+        'Drawer/Header',
+        { width: 'fill_container' },
+        {
+          title: { content: 'Luma Vale' },
+          meta: { content: 'Artist · 210K listeners' },
+          cover: {
+            fill: {
+              type: 'image',
+              url: '../design-system/assets/hero/luma-vale.png',
+              mode: 'cover',
+            },
+            cornerRadius: 24,
+          },
+        },
+      ),
+    },
+  )
 /** The list stays visible above the drawer, which rises from the bottom edge over the tab bar. */
-const mob = (name, d, height = 844) => ({
+const mob = (name, d, height = 844, heading = 'Night drive') => ({
   type: 'frame',
   id: id(),
   name,
@@ -237,7 +273,7 @@ const mob = (name, d, height = 844) => ({
   fill: '$ds:--background',
   children: [
     R('Mobile/Status Bar', { width: 'fill_container' }),
-    MHeader('Night drive', { actions: ['ellipsis'] }),
+    MHeader(heading, { actions: ['ellipsis'] }),
     L(
       { name: 'List', layout: 'vertical', gap: 4, width: 'fill_container', padding: [8, 16] },
       TRACKS.slice(0, 3).map(([t, a, , , art]) => MobileTrack(t, a, art)),
@@ -255,49 +291,61 @@ const mob = (name, d, height = 844) => ({
   ],
 })
 
-export const contextMenu = {
-  title: 'Context menu',
-  route: 'system — right-click / ⇧F10 / ⋯ on tracks, playlists, artists; long-press or ⋯ on mobile',
-  context:
-    'Desktop uses the Context Menu (shadcn): icons, shortcuts, group labels, separators, checkbox items, side submenus, disabled and destructive items. Mobile uses the Drawer (shadcn/vaul): media header, 52px rows, submenus open as the next drawer step, Cancel at the bottom.',
-  desktop: () => desk('Track menu', [trackMenu(), playlistSub()]),
-  mobile: () => mob('Track drawer', trackDrawer(), 1100),
-  states: [
+/* menus as states of the screens they open on (the components live in the library, page "10 • Context Menu") */
+const playlistDesk = (name, m) =>
+  Desktop(name, [
+    CollectionHeader({
+      type: 'Public playlist',
+      title: 'Night Drive',
+      owner: 'Maya',
+      meta: '· 24 songs',
+      art: 'night',
+    }),
+    Row({ name: 'Actions', gap: 24, alignItems: 'start' }, [ActionBar(['invite']), m]),
+  ])
+export const CONTEXT_STATES = {
+  playlist: [
     state(
-      'Play on (Bitrate Connect)',
+      'Track menu',
+      () => desk('Track menu', [trackMenu(), playlistSub()]),
+      () => mob('Track menu', trackDrawer(), 1100),
+    ),
+    state(
+      'Track menu · Add to playlist',
+      null,
+      () => mob('Add to playlist', playlistDrawer()),
+      'desktop shows it as the submenu in "Track menu"',
+    ),
+    state(
+      'Track menu · Bitrate Connect',
       () =>
         desk('Bitrate Connect', [trackMenu({ open: 'connect' }), connectSub()], { offset: 296 }),
       () => mob('Bitrate Connect', connectDrawer()),
     ),
     state(
-      'Add to playlist',
-      null,
-      () => mob('Add to playlist', playlistDrawer()),
-      'desktop shows it as the submenu in the default frame',
-    ),
-    state(
-      'Playlist',
-      () => desk('Playlist menu', [playlistMenu()]),
-      () => mob('Playlist drawer', playlistMenuDrawer()),
-    ),
-    state(
-      'Offline',
+      'Track menu · Offline',
       () => desk('Offline', [trackMenu({ offline: true, open: null })]),
       () => mob('Offline', trackDrawer({ offline: true }), 1100),
     ),
+  ],
+  playlistMore: state(
+    'More menu',
+    () => playlistDesk('Menu', playlistMenu()),
+    () => mob('Playlist menu', playlistMenuDrawer(), 844, 'Night Drive'),
+  ),
+  album: [
     state(
-      'Artist',
+      'Track menu',
       () =>
-        desk('Artist menu', [artistMenu()], {
-          heading: 'Following',
-          lead: Row({ name: 'Artists', gap: 16 }, [
-            ArtistCard('Luma Vale', 'Artist', 'luma'),
-            ArtistCard('Mira Sol', 'Artist', 'night'),
-            ArtistCard('Kite Harbor', 'Artist', 'static'),
-          ]),
-        }),
-      null,
-      'mobile uses the same drawer with the artist header',
+        desk('Track menu', [trackMenu({ open: null, where: 'album' })], { heading: 'Afterglow' }),
+      () => mob('Track menu', trackDrawer({ where: 'album' }), 1040, 'Afterglow'),
+    ),
+  ],
+  artist: [
+    state(
+      'Artist menu',
+      () => desk('Artist menu', [artistMenu()], { heading: 'Luma Vale' }),
+      () => mob('Artist menu', artistDrawer(), 844, 'Luma Vale'),
     ),
   ],
 }

@@ -67,7 +67,7 @@ import { APP_STATES } from './pages-app.mjs'
 import { cursor } from './pages-cursor.mjs'
 import { mobileIsland } from './pages-island.mjs'
 import { notificationSettings, Switch as NotificationSwitch } from './pages-notifications.mjs'
-import { contextMenu } from './pages-context-menu.mjs'
+import { CONTEXT_STATES } from './pages-context-menu.mjs'
 import { assistant, withAssistant } from './pages-assistant.mjs'
 
 const T5 = TRACKS.slice(0, 5)
@@ -1422,50 +1422,7 @@ export const pages = {
             { tab: 'library', header: MHeader('Night Drive') },
           ),
       ),
-      state(
-        'More menu',
-        () =>
-          Desktop('Menu', [
-            CollectionHeader({
-              type: 'Public playlist',
-              title: 'Night Drive',
-              owner: 'Maya',
-              meta: '· 24 songs',
-              art: 'night',
-            }),
-            Row({ gap: 24, alignItems: 'start' }, [
-              bar({ invite: true }),
-              Menu([
-                ['Add to queue', 'disabled'],
-                ['Add to profile'],
-                ['Edit details'],
-                ['Delete', 'destructive'],
-                ['Make private', 'disabled'],
-                ['Invite collaborators'],
-                ['Exclude from your taste profile'],
-                ['Move to folder'],
-                ['Share'],
-                ['Report'],
-                ['Open in Desktop app'],
-              ]),
-            ]),
-          ]),
-        () =>
-          Mobile(
-            'Menu',
-            [
-              Menu([
-                ['Add to profile'],
-                ['Edit details'],
-                ['Delete', 'destructive'],
-                ['Invite collaborators'],
-                ['Share'],
-                ['Report'],
-              ]),
-            ],
-            { tab: 'library', header: MHeader('Night Drive') },
-          ),
-      ),
+      CONTEXT_STATES.playlistMore,
       state(
         'Edit details',
         () =>
@@ -2830,7 +2787,6 @@ export const pages = {
   cursor,
   'mobile-island': mobileIsland,
   'notification-settings': notificationSettings,
-  'context-menu': contextMenu,
   assistant,
   friends,
   'friends-find': friendsFind,
@@ -2927,6 +2883,10 @@ for (const [key, [kind, count]] of Object.entries(MORE)) {
     ),
   ]
 }
+
+/* context menus (desktop) and drawers (mobile) as states of the screens they open on */
+for (const key of ['playlist', 'album', 'artist'])
+  pages[key].states = [...(pages[key].states ?? []), ...CONTEXT_STATES[key]]
 
 /* app motion patterns drawn as states (command search, atmosphere, mobile panels, video) */
 for (const [key, extra] of Object.entries(APP_STATES))
