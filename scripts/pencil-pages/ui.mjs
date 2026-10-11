@@ -202,7 +202,7 @@ export const EmptyState = (title, desc, action, icon = 'music', secondary) =>
   message('Empty', title, desc, action, secondary, icon)
 export const OfflineState = (title, desc, action) => message('Offline', title, desc, action, null)
 /** On a phone the message spans the screen instead of its 480px desktop measure. */
-const fitStates = (nodes, mobile) =>
+export const fitStates = (nodes, mobile) =>
   nodes
     .flat()
     .filter(Boolean)

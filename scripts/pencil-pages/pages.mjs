@@ -65,6 +65,7 @@ import { friends, friendsFind, friendsRequests } from './pages-friends.mjs'
 import { loading } from './pages-loading.mjs'
 import { APP_STATES } from './pages-app.mjs'
 import { cursor } from './pages-cursor.mjs'
+import { mobileIsland } from './pages-island.mjs'
 import { assistant, withAssistant } from './pages-assistant.mjs'
 
 const T5 = TRACKS.slice(0, 5)
@@ -860,7 +861,7 @@ export const pages = {
           ]),
       ),
       state(
-        'Connect to a device',
+        'Bitrate Connect',
         () =>
           Desktop(
             'Devices',
@@ -884,7 +885,7 @@ export const pages = {
                   content: L(
                     { name: 'Sheet Content', layout: 'vertical', gap: 8, width: 'fill_container' },
                     [
-                      Tx('H4', 'Connect to a device'),
+                      Tx('H4', 'Bitrate Connect'),
                       Tx('Muted', 'Afterglow · Nova & the Static'),
                       ...deviceRows(),
                     ],
@@ -2812,6 +2813,7 @@ export const pages = {
   },
   loading,
   cursor,
+  'mobile-island': mobileIsland,
   assistant,
   friends,
   'friends-find': friendsFind,
@@ -3561,9 +3563,9 @@ function deviceRows() {
       { name: { content: 'This computer' }, status: { content: 'Playing here' } },
     ),
     ...[
-      ['speaker', 'Living room speaker', 'Bitrate Connect'],
+      ['speaker', 'Studio speaker', 'Available'],
       ['smartphone', "Maya's iPhone", 'Available'],
-      ['tablet', 'Kitchen display', 'Available'],
+      ['tablet', 'Smart display', 'Available'],
     ].map(([icon, n, st]) =>
       R('Device Row', {}, { icon: { icon }, name: { content: n }, status: { content: st } }),
     ),
@@ -3572,11 +3574,7 @@ function deviceRows() {
 }
 function devices() {
   return Panel(
-    [
-      Tx('H4', 'Connect to a device'),
-      Tx('Muted', 'Afterglow · Nova & the Static'),
-      ...deviceRows(),
-    ],
+    [Tx('H4', 'Bitrate Connect'), Tx('Muted', 'Afterglow · Nova & the Static'), ...deviceRows()],
     { width: 340 },
   )
 }

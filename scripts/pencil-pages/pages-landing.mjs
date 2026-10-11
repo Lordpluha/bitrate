@@ -353,10 +353,10 @@ const SCENES = [
     copy: {
       eyebrow: 'KEEP THE SESSION GOING',
       parts: [['Same queue.'], ['New scene.', 'accent']],
-      desc: 'Move your listening between devices. Or open the room to friends.',
+      desc: 'Move playback between devices with Bitrate Connect. Or start a Jam with friends.',
       extra: [
-        feature('smartphone', 'Your devices', 'Move personal playback'),
-        feature('users-round', 'Listening room', 'Listen together'),
+        feature('smartphone', 'Bitrate Connect', 'Move playback to any device'),
+        feature('users-round', 'Jam', 'Listen together'),
       ],
     },
     signal: [110, 'SIGNAL · TWIST'],
@@ -364,8 +364,8 @@ const SCENES = [
       Panel(
         [
           Row({ width: 'fill_container', justifyContent: 'space_between' }, [
-            Tx('H4', 'Room: After hours'),
-            R('Status/Success', {}, { label: { content: 'Room live' } }),
+            Tx('H4', 'Jam: After hours'),
+            R('Status/Success', {}, { label: { content: 'Jam live' } }),
           ]),
           Row({ gap: 16, width: 'fill_container' }, [
             BigCover('night', m ? 120 : 160),

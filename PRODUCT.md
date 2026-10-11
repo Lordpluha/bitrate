@@ -200,7 +200,7 @@ concepts, previews, or planned directions, but must not present them as currentl
   class local library, friend taste histories, and cross-platform queues.
 - More experimental directions: an influence graph for exploring artist connections, timestamped
   comments, demo/remaster/draft track versions, discovery filters such as “unknown artists”, and
-  collaborative rooms with real-time queue control.
+  Jam — listening together with real-time queue control.
 
 **Artist workspace:**
 - An AI release producer that reviews release readiness and suggests the next step without making

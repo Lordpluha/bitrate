@@ -48,7 +48,7 @@ export const MiniPlayerControls = ({
       )}
     </button>
     <button
-      aria-label="Connect to a device"
+      aria-label="Open Bitrate Connect"
       className={`${buttonClass} hidden min-[620px]:flex`}
       type="button"
     >

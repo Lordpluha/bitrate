@@ -177,7 +177,7 @@ const privacyPanel = (w) =>
 
 export const friends = {
   title: 'Friends',
-  route: 'concept — /friends (roadmap "Friend Profiles", "Listening Rooms")',
+  route: 'concept — /friends (roadmap "Friend Profiles", "Jam")',
   context:
     'Friends with live presence: online, listening (with track), away, offline with last seen. Presence is shown to friends only and can be hidden in Privacy. Concept.',
   desktop: () =>

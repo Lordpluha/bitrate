@@ -181,7 +181,7 @@ const TABS = [
   ['mic-vocal', 'Lyrics'],
   ['list-music', 'Queue'],
   ['info', 'Credits'],
-  ['cast', 'Devices'],
+  ['cast', 'Connect'],
   ['radio', 'Related'],
 ]
 const tabs = (active) =>
@@ -215,7 +215,7 @@ const actions = (tip) =>
           R(
             'Tooltip/Action',
             {},
-            { label: { content: 'Devices' }, hint: { content: '2 nearby · new' } },
+            { label: { content: 'Bitrate Connect' }, hint: { content: '2 nearby · new' } },
           ),
         ],
       ),
