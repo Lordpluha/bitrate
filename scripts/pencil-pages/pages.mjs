@@ -67,6 +67,7 @@ import { APP_STATES } from './pages-app.mjs'
 import { cursor } from './pages-cursor.mjs'
 import { mobileIsland } from './pages-island.mjs'
 import { notificationSettings, Switch as NotificationSwitch } from './pages-notifications.mjs'
+import { contextMenu } from './pages-context-menu.mjs'
 import { assistant, withAssistant } from './pages-assistant.mjs'
 
 const T5 = TRACKS.slice(0, 5)
@@ -2829,6 +2830,7 @@ export const pages = {
   cursor,
   'mobile-island': mobileIsland,
   'notification-settings': notificationSettings,
+  'context-menu': contextMenu,
   assistant,
   friends,
   'friends-find': friendsFind,
