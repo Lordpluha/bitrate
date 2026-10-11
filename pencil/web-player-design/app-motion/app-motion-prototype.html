@@ -250,7 +250,7 @@ h2 { font-size: 22px; }
           <button class="act" type="button" data-l="Add to playlist" data-h="⇧ P" aria-label="Add to playlist"><svg aria-hidden="true" class="i"><use href="#i-plus"/></svg></button>
           <button class="act" type="button" data-l="Share" data-h="⇧ S" aria-label="Share"><svg aria-hidden="true" class="i"><use href="#i-share"/></svg></button>
           <button class="act" type="button" data-l="Sleep timer" data-h="30 min" aria-label="Sleep timer"><svg aria-hidden="true" class="i"><use href="#i-clock"/></svg></button>
-          <button class="act" type="button" data-l="Devices" data-h="2 nearby · new" aria-label="Devices"><svg aria-hidden="true" class="i"><use href="#i-cast"/></svg><span class="badge"></span></button>
+          <button class="act" type="button" data-l="Connect" data-h="Bitrate Connect · 2 nearby" aria-label="Bitrate Connect"><svg aria-hidden="true" class="i"><use href="#i-cast"/></svg><span class="badge"></span></button>
           <button class="act" type="button" data-l="Atmosphere" data-h="A" aria-label="Atmosphere"><svg aria-hidden="true" class="i"><use href="#i-spark"/></svg></button>
         </div>
         <div class="tabs" id="tabs" role="tablist" aria-label="Player panels"></div>
@@ -716,7 +716,7 @@ window.BitrateLogoLoader = (() => {
     ['i-mic', 'Lyrics', () => ['City lights in the rear view', 'We keep the signal on', 'Through the static and the rain', 'Until the morning comes'].map((l, i) => `<div class="ly${i === 1 ? ' on' : ''}">${l}</div>`).join('')],
     ['i-list', 'Queue', () => [['Echoes in Motion', 'Lumen Choir · 4:21', '#1d4ed8,#7c3aed'], ['Static Lines', 'Kite Harbor · 3:47', '#0ea5e9,#312e81'], ['Drift Control', 'Mira Sol · 3:12', '#be185d,#4c1d95'], ['Afterglow', 'Nova & the Static · 3:42', '#6d28d9,#ec4899']].map(([t, m, g]) => `<div class="qr"><i style="background:linear-gradient(135deg,${g})"></i><span><b>${t}</b><br><span class="muted" style="font-size:12px">${m}</span></span></div>`).join('')],
     ['i-info', 'Credits', () => '<div class="qr"><span><b>Written by</b><br><span class="muted">Mira Sol, J. Pike</span></span></div><div class="qr"><span><b>Produced by</b><br><span class="muted">Night Signal Studio</span></span></div>'],
-    ['i-cast', 'Devices', () => '<div class="qr"><span><b>This phone</b><br><span class="muted">Playing</span></span></div><div class="qr"><span><b>Desktop</b><br><span class="muted">Ready · in sync</span></span></div><button class="btn primary" type="button">Move playback</button>'],
+    ['i-cast', 'Connect', () => '<div class="qr"><span><b>This phone</b><br><span class="muted">Playing</span></span></div><div class="qr"><span><b>Desktop</b><br><span class="muted">Ready · in sync</span></span></div><button class="btn primary" type="button">Move playback</button>'],
     ['i-radio', 'Related', () => '<div class="qr"><i style="background:linear-gradient(135deg,#a78bfa,#ec4899)"></i><span><b>Luma Vale</b><br><span class="muted">Similar sound</span></span></div><div class="qr"><i style="background:linear-gradient(135deg,#3b82f6,#0ea5e9)"></i><span><b>Night Pulse Collective</b><br><span class="muted">Shared scene</span></span></div>'],
   ]
   const tabsEl = $('#tabs')
@@ -783,7 +783,7 @@ window.BitrateLogoLoader = (() => {
     b.addEventListener('click', () => {
       if (b.dataset.l === 'Like') { const on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', String(on)); gsap.fromTo(b, { scale: .8 }, { scale: 1, duration: dur(.5), ease: 'back.out(4)' }) }
       if (b.dataset.l === 'Atmosphere') setAtmo(!atmoOn)
-      if (b.dataset.l === 'Devices') b.querySelector('.badge')?.remove()
+      if (b.dataset.l === 'Connect') b.querySelector('.badge')?.remove()
     })
   }
   acts.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') hideTip() })
