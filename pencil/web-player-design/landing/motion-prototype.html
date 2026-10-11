@@ -288,15 +288,19 @@ body.static .intro { display: none; }
 .hpill:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .hdot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 0 rgba(16, 185, 129, .55); animation: hping 2s infinite; }
 @keyframes hping { to { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0) } }
-.goo { position: absolute; right: 0; bottom: 0; width: 480px; height: 520px; pointer-events: none; filter: url(#goo); z-index: 1; }
+.goo { position: absolute; right: 0; bottom: 0; width: 540px; height: 520px; pointer-events: none; filter: url(#goo); z-index: 1; }
 .blob { position: absolute; right: 0; background: var(--card); }
 .b-pill { bottom: 0; width: 210px; height: 34px; border-radius: 17px; }
-.b-panel { bottom: 46px; width: 460px; height: 440px; border-radius: 18px; transform-origin: 100% 100%; transform: scale(.12, .05); }
-.hpanel { position: absolute; right: 0; bottom: 46px; width: 460px; padding: 16px; box-sizing: border-box; z-index: 2; opacity: 0; visibility: hidden; text-align: left; color: var(--fg); }
+.b-panel { bottom: 46px; width: 520px; height: 440px; border-radius: 18px; transform-origin: 100% 100%; transform: scale(.12, .05); }
+.hpanel { position: absolute; right: 0; bottom: 46px; width: 520px; max-height: min(560px, calc(100vh - 120px)); padding: 16px; box-sizing: border-box; z-index: 2; opacity: 0; visibility: hidden; text-align: left; color: var(--fg); display: flex; flex-direction: column; }
+/* the rows scroll inside the panel when the window is short; the blob behind it is sized from the panel's own height */
+#hrows { display: block; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; margin-right: -6px; padding-right: 6px; }
 .health.open .hpanel { visibility: visible; }
-.hrow { display: grid; grid-template-columns: 140px 1fr auto; gap: 12px; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--border); }
+.hrow { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 12px; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--border); }
 .hrow b { font: 600 13px/1.2 var(--font-body); display: block; }
-.hrow small { font-size: 11px; color: var(--muted); }
+.hrow small { font-size: 11px; color: var(--muted); display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+body.health-open .dots { opacity: 0; pointer-events: none; }
+.dots { transition: opacity .2s; }
 .bars { display: flex; gap: 2px; align-items: center; }
 .bars i { width: 4px; height: 20px; border-radius: 1px; background: var(--success); opacity: .85; transform-origin: bottom; }
 .bars i.w { background: var(--warning); } .bars i.e { background: #ef4444; }
@@ -327,7 +331,30 @@ body.static .intro { display: none; }
   .drag-zone { height: 46vh !important; position: relative !important; }
   .hpanel, .b-panel { width: calc(100vw - 32px); }
   .goo { width: calc(100vw - 16px); }
+  .hrow { grid-template-columns: minmax(0, 1fr) auto auto; gap: 10px; }
+  .hrow small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+  .bars i:nth-child(-n+16) { display: none; }
   #cradleSlot { height: 26vh !important; }
+  /* mobile layout: every scene is a balanced column that fits one screen, nothing wider than the gutter */
+  .scene *, .scene *::before, .scene *::after { box-sizing: border-box; }
+  .scene { padding: calc(env(safe-area-inset-top, 0px) + 76px) 16px calc(env(safe-area-inset-bottom, 0px) + 84px); }
+  .board { height: 100%; justify-content: safe center; gap: 14px; }
+  .board > * { flex: 0 0 auto; max-width: 100%; min-width: 0; }
+  .btn { max-width: 100%; }
+  .ctas .btn { padding: 0 18px; }
+  /* the physics fields take whatever height is left instead of a fixed share of the screen */
+  .drag-zone { left: 0 !important; top: 0 !important; width: 100% !important; flex: 1 1 auto !important; height: auto !important; min-height: 200px; }
+  #cradleSlot { flex: 1 1 auto !important; height: auto !important; min-height: 150px; max-height: 240px; }
+  .pit { border-radius: 20px; }
+  /* the particle field steps back so headlines stay readable on a small screen */
+  #stage { opacity: .5; }
+  .counter { bottom: calc(env(safe-area-inset-bottom, 0px) + 28px) !important; }
+  /* footer: brand + status in one line, links below */
+  .footer { flex-wrap: wrap; height: auto; padding: 12px 0 0; gap: 10px 16px; justify-content: space-between; }
+  .footer > .row:last-child { gap: 14px !important; width: 100%; justify-content: space-between; flex-wrap: wrap; }
+  .footer .ulink { white-space: nowrap; }
+  .hpill { height: 32px; font-size: 12px; }
+  .hpanel { max-height: calc(100vh - 200px); }
 }
 @media (prefers-reduced-motion: reduce) { .grain, .live i, .playing .sound-bars i { animation: none; } }
 </style>
@@ -2080,14 +2107,25 @@ window.__bitrateIntro = new Promise((done) => {
   const hpill = document.getElementById('hpill')
   const hpanel = document.getElementById('hpanel')
   const blob = health.querySelector('.b-panel')
+  const goo = health.querySelector('.goo')
+  /* the blob takes the panel's real size, so the content never spills past the gooey surface */
+  const fitHealth = () => {
+    const h = hpanel.offsetHeight
+    blob.style.height = `${h}px`
+    goo.style.height = `${h + 46 + 40}px`
+  }
+  fitHealth()
+  window.addEventListener('resize', fitHealth)
   let hOpen = false
   const setHealth = (open) => {
     if (open === hOpen) return
     hOpen = open
     hpill.setAttribute('aria-expanded', String(open))
     health.classList.toggle('open', open)
+    document.body.classList.toggle('health-open', open)
     gsap.killTweensOf([blob, hpanel, ...hpanel.querySelectorAll('.hrow, .bars i')])
     if (open) {
+      fitHealth()
       gsap.to(blob, { scaleX: 1, scaleY: 1, duration: .75, ease: 'elastic.out(1, .72)' })
       gsap.fromTo(hpanel, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: .35, delay: .18 })
       gsap.fromTo(hpanel.querySelectorAll('.hrow'), { opacity: 0, x: 12 }, { opacity: 1, x: 0, duration: .4, stagger: .035, delay: .22 })
@@ -2097,8 +2135,10 @@ window.__bitrateIntro = new Promise((done) => {
       gsap.to(blob, { scaleX: .12, scaleY: .05, duration: .45, ease: 'power3.in', delay: .05 })
     }
   }
-  hpill.addEventListener('click', () => setHealth(!hOpen))
-  health.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') setHealth(true) })
+  /* hover already opened it: the click that follows must not close it again */
+  let hoverAt = 0
+  hpill.addEventListener('click', () => setHealth(performance.now() - hoverAt < 600 ? true : !hOpen))
+  health.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { if (!hOpen) hoverAt = performance.now(); setHealth(true) } })
   health.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') setHealth(false) })
   window.addEventListener('keydown', (e) => { if (e.key === 'Escape') setHealth(false) })
   document.addEventListener('pointerdown', (e) => { if (hOpen && !health.contains(e.target)) setHealth(false) })

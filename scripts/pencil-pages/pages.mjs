@@ -38,6 +38,7 @@ import {
   SectionHeader,
   CollectionHeader,
   FieldError,
+  OtpField,
   CheckRow,
   Desktop,
   Mobile,
@@ -152,8 +153,9 @@ const loggingIn = () => [
 ]
 const twoFa = (err) => [
   title('Enter your 2FA code', 'Use the 6-digit code from your authenticator app.'),
-  Input('Authentication code', '123456'),
-  err && FieldError('Invalid or expired 2FA code'),
+  err
+    ? OtpField('Authentication code', 'Error', 'Invalid or expired 2FA code')
+    : OtpField('Authentication code', 'Active'),
   Button('Verify', 'large-default', { width: 'fill_container' }),
 ]
 const regForm = (open) => [
@@ -429,7 +431,11 @@ const settingsTiles = (mobile, { twoFaOn, sessionsError } = {}) => {
         ? [
             SettingRow('2FA is enabled for this account.', null, Badge('Enabled', 'secondary')),
             Col({ padding: [12, 0, 0, 0], gap: 12, width: 'fill_container' }, [
-              Input('Current authentication code', '123456', mobile ? 'fill_container' : 280),
+              OtpField(
+                'Current authentication code',
+                'Filled',
+                'Enter a current code to turn 2FA off.',
+              ),
               Button('Disable 2FA', 'destructive'),
             ]),
           ]
@@ -481,7 +487,11 @@ const twoFaSetup = (mobile) => [
   Tx('H3', 'Two-factor authentication'),
   Tx('Paragraph', 'Protect your account with an authenticator app.', { wrap: true }),
   Panel([Tx('Muted', 'Manual code'), Tx('Code', 'JBSW Y3DP EHPK 3PXP')]),
-  Input('Authentication code', '123456', mobile ? 'fill_container' : 280),
+  OtpField(
+    'Code from your app',
+    'Filled',
+    'Scan the QR or type the manual code, then enter the 6 digits.',
+  ),
   Button(
     'Enable 2FA',
     mobile ? 'large-default' : 'default',
@@ -578,7 +588,7 @@ export const pages = {
         'Verifying',
         () => [
           title('Enter your 2FA code', 'Use the 6-digit code from your authenticator app.'),
-          Input('Authentication code', '482913'),
+          OtpField('Authentication code', 'Success', 'Code verified — signing you in…'),
           Button('Verifying...', 'large-default', { width: 'fill_container' }),
         ],
         'One more step.',

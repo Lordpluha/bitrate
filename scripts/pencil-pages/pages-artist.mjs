@@ -1,6 +1,7 @@
 // Artist workspace (web-artists): every route and designed screen, library instances only.
 import { img } from './kit.mjs'
 import {
+  OtpField,
   R,
   L,
   Row,
@@ -129,7 +130,7 @@ const artistLogin = (step) =>
     ? [
         Tx('H2', 'Verify your sign-in'),
         Tx('Paragraph', 'Enter the code from your authenticator app.', { wrap: true }),
-        Input('Authentication code', '000000'),
+        OtpField('Authentication code', 'Empty'),
         Button('Verify and sign in', 'large-default', { width: 'fill_container' }),
         Tx('Link', 'Back to sign-in'),
       ]
@@ -185,8 +186,7 @@ const verifyA = (done) =>
         Tx('H2', 'Verify your email'),
         Tx('Paragraph', 'One more step to your artist workspace.', { wrap: true }),
         Input('Email address', 'demoartist@example.com'),
-        Input('Verification code', '000000'),
-        Tx('Caption', 'Six digits. You can paste the entire code.'),
+        OtpField('Verification code', 'Active', 'Six digits. You can paste the entire code.'),
         Button('Verify and continue', 'large-default', { width: 'fill_container' }),
         Button('Resend verification email', 'large-secondary', { width: 'fill_container' }),
         Tx('Link', 'Back to login'),
@@ -849,7 +849,9 @@ const audioBody =
   (s = 'uploading') =>
   (m) => [
     panel('Choose release type', [
-      Tx('Muted', 'This controls how tracks are grouped. Delivery rules are checked later.'),
+      Tx('Muted', 'This controls how tracks are grouped. Delivery rules are checked later.', {
+        wrap: true,
+      }),
       (m ? Col : Row)({ gap: 10, width: 'fill_container' }, [
         Option('Single', 'Single focuses this release on one primary track.', true),
         Option('EP', null),
@@ -859,22 +861,25 @@ const audioBody =
     panel('Add audio', [
       s === 'ready'
         ? R('Form/Drop Zone', {}, { text: { content: 'Drop an audio file here' } })
-        : s === 'error'
-          ? Alert(
-              'Upload interrupted',
-              'Connection lost. Try again. Draft and file choice stay saved.',
-            )
-          : s === 'checking'
-            ? Upload('Night Signal.wav', 'Checking audio · You can save and return.', null)
-            : s === 'done'
-              ? Check('Done', 'Night Signal.wav', 'Audio ready · passed processing')
-              : Upload('Night Signal.wav', 'Uploading 42%'),
+        : s === 'drag'
+          ? R('Form/Drop Zone/Active', {}, { file: { content: 'Night Signal.wav · 48 MB' } })
+          : s === 'error'
+            ? Alert(
+                'Upload interrupted',
+                'Connection lost. Try again. Draft and file choice stay saved.',
+              )
+            : s === 'checking'
+              ? Upload('Night Signal.wav', 'Checking audio · You can save and return.', null)
+              : s === 'done'
+                ? Check('Done', 'Night Signal.wav', 'Audio ready · passed processing')
+                : Upload('Night Signal.wav', 'Uploading 42%'),
       s === 'error' && Button('Retry upload', 'default'),
       Tx(
         'Caption',
         s === 'uploading'
           ? 'Keep this page open while the current upload is in progress.'
           : 'File requirements will appear after a delivery service is confirmed.',
+        { wrap: true },
       ),
     ]),
   ]
@@ -900,6 +905,7 @@ export const releaseWizard = {
     ),
     more: [
       ['Ready', 'ready'],
+      ['Drag active', 'drag'],
       ['Checking', 'checking'],
       ['Upload error', 'error'],
       ['Audio ready', 'done'],

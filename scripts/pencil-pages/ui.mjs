@@ -420,6 +420,13 @@ export const ActionBar = (show = []) =>
       ]),
     ),
   )
+/** One-time code field (2FA, email verification): six branded cells; state Empty | Active | Filled | Error | Success. */
+export const OtpField = (label = 'Authentication code', state = 'Filled', hint) =>
+  R(
+    `Form/OTP/${state}`,
+    {},
+    { label: { content: label }, hint: hint ? { content: hint } : undefined },
+  )
 export const FieldError = (text) => R('Form/Field Error', {}, { text: { content: text } })
 export const CheckRow = (label, width = 'fill_container') =>
   R('Form/Checkbox Row', { width }, { label: { content: label } })
