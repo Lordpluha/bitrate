@@ -756,6 +756,19 @@ const cloneDesc = (d) =>
  * Writes pencil/web-player-design/<dir>/<dir>.pen: the desktop page in Dark, Light and Dim, the
  * mobile page, then every screen state as a desktop + mobile pair, laid out left to right.
  */
+/* pen.dev opens a document empty when any children array holds a non-node (e.g. a `cond && node`
+   left `false` inside a raw slot replacement), so strip them everywhere before writing */
+const prune = (nodes) => {
+  const visit = (n) => {
+    if (!n || typeof n !== 'object') return
+    if (Array.isArray(n.children)) {
+      n.children = n.children.filter((c) => c && typeof c === 'object')
+      n.children.forEach(visit)
+    }
+    if (n.descendants) Object.values(n.descendants).forEach(visit)
+  }
+  nodes.forEach(visit)
+}
 export function writePage(root, dir, spec) {
   const { title, route, context, desktop, mobile, extra = [], states = [] } = spec
   used = new Set()
@@ -797,6 +810,7 @@ export function writePage(root, dir, spec) {
   }
   const file = join(root, dir, spec.file ?? `${dir}.pen`)
   mkdirSync(dirname(file), { recursive: true })
+  prune(frames)
   writeFileSync(
     file,
     JSON.stringify(

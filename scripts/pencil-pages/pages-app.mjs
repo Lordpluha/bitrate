@@ -68,7 +68,7 @@ const palette = (query, results, w = 640) =>
         width: 'fill_container',
         padding: 8,
         gap: 2,
-        children: results,
+        children: results.filter(Boolean),
       },
     },
   )

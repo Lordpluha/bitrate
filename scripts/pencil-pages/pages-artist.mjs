@@ -791,17 +791,22 @@ export const artistPages = {
               ['Edit metadata'],
               ['Replace audio', 'disabled'],
               ['Open release workspace'],
-              ['Archive track'],
-              ['Delete permanently', 'destructive'],
+              ['Archive track', 'warning'],
+              ['Delete permanently', 'locked'],
             ].map(([l, k]) =>
               R(
-                k === 'destructive'
-                  ? 'Menu/Item Destructive'
-                  : k === 'disabled'
-                    ? 'Menu/Item Disabled'
-                    : 'Menu/Item',
+                k === 'locked'
+                  ? 'Menu/Item Locked'
+                  : k === 'warning'
+                    ? 'Menu/Item Warning'
+                    : k === 'disabled'
+                      ? 'Menu/Item Disabled'
+                      : 'Menu/Item',
                 {},
-                { label: { content: l } },
+                {
+                  label: { content: l },
+                  hint: k === 'locked' ? { content: 'Archive first' } : undefined,
+                },
               ),
             ),
           ),
