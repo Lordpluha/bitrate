@@ -122,6 +122,97 @@ const iconBtn = (icon) =>
 const blocks = []
 const add = (...n) => blocks.push(...n)
 
+/* one-time code: six roomy cells in two groups of three, the active cell carries the ring and a caret */
+const otpCell = (i, { digit, active, tone }) =>
+  F(
+    {
+      name: active ? 'Cell Active' : 'Cell',
+      width: 44,
+      height: 54,
+      cornerRadius: 12,
+      fill: tone === 'error' ? C.background : C.card,
+      stroke: active
+        ? C.ring
+        : tone === 'error'
+          ? C.destructive
+          : tone === 'success'
+            ? C.successBorder
+            : digit
+              ? C.border
+              : C.input,
+      strokeWidth: active ? 2 : 1,
+      ...(active
+        ? {
+            effect: {
+              type: 'shadow',
+              shadowType: 'outer',
+              color: C.ring,
+              offset: { x: 0, y: 0 },
+              blur: 12,
+            },
+          }
+        : {}),
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    [
+      active && !digit
+        ? F({ name: 'Caret', width: 2, height: 24, cornerRadius: 1, fill: C.primary })
+        : part(
+            `d${i + 1}`,
+            T(digit || '', {
+              fontSize: 22,
+              fontWeight: '600',
+              fontFamily: '$--font-heading',
+              fill: tone === 'error' ? C.destructive : C.foreground,
+            }),
+          ),
+    ],
+  )
+const otpField = ({ value = '', active = -1, tone, hint }) => {
+  const cells = Array.from({ length: 6 }, (_, i) =>
+    otpCell(i, { digit: value[i], active: i === active, tone }),
+  )
+  return Col({ name: 'OTP Field', gap: 8 }, [
+    part(
+      'label',
+      T('Authentication code', { fontSize: 13, fontWeight: '500', fill: C.foreground }),
+    ),
+    Row({ name: 'Cells', gap: 6, alignItems: 'center' }, [
+      ...cells.slice(0, 3),
+      F({ name: 'Separator', width: 10, height: 2, cornerRadius: 1, fill: C.border }),
+      ...cells.slice(3),
+    ]),
+    Row({ name: 'Hint', gap: 6 }, [
+      ...(tone === 'error'
+        ? [I('circle-alert', { width: 14, height: 14, fill: C.destructive })]
+        : []),
+      ...(tone === 'success'
+        ? [I('circle-check', { width: 14, height: 14, fill: C.successText })]
+        : []),
+      part(
+        'hint',
+        T(hint, {
+          fontSize: 12,
+          fill:
+            tone === 'error'
+              ? C.destructive
+              : tone === 'success'
+                ? C.successText
+                : C.mutedForeground,
+        }),
+      ),
+    ]),
+  ])
+}
+const OTP_STATES = [
+  ['Empty', { active: -1, hint: 'Enter the 6-digit code from your authenticator app.' }],
+  ['Active', { value: '48', active: 2, hint: 'Paste works too — all six digits at once.' }],
+  ['Filled', { value: '482913', hint: 'Code expires in 0:24' }],
+  ['Error', { value: '482913', tone: 'error', hint: 'Invalid or expired code. Try again.' }],
+  ['Success', { value: '482913', tone: 'success', hint: 'Code verified' }],
+]
+
 /* typography */
 add(
   txt('Text/Display', 'Display', {
@@ -658,6 +749,33 @@ add(
     ),
   ),
   comp(
+    'Form/Drop Zone/Active',
+    F(
+      {
+        name: 'Drop Zone Active',
+        width: 'fill_container',
+        height: 120,
+        cornerRadius: 12,
+        fill: C.infoSurface,
+        stroke: C.info,
+        strokeWidth: 2,
+        layout: 'vertical',
+        gap: 6,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      [
+        I('upload', { width: 24, height: 24, fill: C.infoText }),
+        part(
+          'text',
+          T('Release to upload', { fontSize: 14, fontWeight: '600', fill: C.foreground }),
+        ),
+        part('file', T('night-signal-master.wav · 48 MB', { fontSize: 12, fill: C.infoText })),
+      ],
+    ),
+  ),
+  ...OTP_STATES.map(([state, o]) => comp(`Form/OTP/${state}`, otpField(o))),
+  comp(
     'Auth/Or Divider',
     Row({ name: 'Or Divider', width: 'fill_container', gap: 12 }, [
       F({ width: 'fill_container', height: 1, fill: C.border }),
@@ -764,7 +882,13 @@ add(
         fill: C.popover,
         stroke: C.border,
         strokeWidth: 1,
-        effect: { type: 'shadow', color: C.shadow, offset: { x: 0, y: 12 }, blur: 32 },
+        effect: {
+          type: 'shadow',
+          shadowType: 'outer',
+          color: C.shadow,
+          offset: { x: 0, y: 12 },
+          blur: 32,
+        },
       },
       [slot('items', { gap: 0 })],
     ),
@@ -1587,7 +1711,13 @@ add(
         fill: C.popover,
         stroke: C.border,
         strokeWidth: 1,
-        effect: { type: 'shadow', color: C.shadow, offset: { x: 0, y: 16 }, blur: 40 },
+        effect: {
+          type: 'shadow',
+          shadowType: 'outer',
+          color: C.shadow,
+          offset: { x: 0, y: 16 },
+          blur: 40,
+        },
       },
       [
         Row({ name: 'Head', width: 'fill_container', justifyContent: 'space_between' }, [
@@ -3044,7 +3174,13 @@ add(
         fill: C.popover,
         stroke: C.border,
         strokeWidth: 1,
-        effect: { type: 'shadow', color: C.shadow, offset: { x: 0, y: 24 }, blur: 60 },
+        effect: {
+          type: 'shadow',
+          shadowType: 'outer',
+          color: C.shadow,
+          offset: { x: 0, y: 24 },
+          blur: 60,
+        },
       },
       [
         Row(
@@ -3112,10 +3248,38 @@ add(
         name: 'Atmosphere',
         width: 1440,
         height: 900,
-        padding: 4,
+        padding: 3,
         cornerRadius: 28,
-        fill: ATMO,
-        effect: { type: 'shadow', color: C.primary, offset: { x: 0, y: 0 }, blur: 80 },
+        clip: true,
+        /* the rim: the track colours chase each other around the screen edge */
+        fill: {
+          type: 'gradient',
+          gradientType: 'angular',
+          rotation: 200,
+          colors: [
+            { color: C.primary, position: 0 },
+            { color: C.magenta500, position: 0.28 },
+            { color: C.info, position: 0.55 },
+            { color: C.accent, position: 0.78 },
+            { color: C.primary, position: 1 },
+          ],
+        },
+        effect: [
+          {
+            type: 'shadow',
+            shadowType: 'outer',
+            color: C.primary,
+            offset: { x: -24, y: -16 },
+            blur: 90,
+          },
+          {
+            type: 'shadow',
+            shadowType: 'outer',
+            color: C.magenta500,
+            offset: { x: 24, y: 20 },
+            blur: 90,
+          },
+        ],
       },
       [
         F(
@@ -3123,9 +3287,27 @@ add(
             name: 'Inner',
             width: 'fill_container',
             height: 'fill_container',
-            cornerRadius: 24,
+            cornerRadius: 25,
+            clip: true,
             fill: C.background,
             layout: 'vertical',
+            /* the glow: light from the rim bleeds inwards and fades towards the centre, at any frame size */
+            effect: [
+              {
+                type: 'shadow',
+                shadowType: 'inner',
+                color: C.primary,
+                offset: { x: 0, y: 0 },
+                blur: 120,
+              },
+              {
+                type: 'shadow',
+                shadowType: 'inner',
+                color: C.magenta500,
+                offset: { x: 0, y: 0 },
+                blur: 56,
+              },
+            ],
           },
           [
             slot('content', {
@@ -3382,7 +3564,13 @@ for (const [k, a, b] of [
           fill: sphereFill(a, b),
           justifyContent: 'center',
           alignItems: 'center',
-          effect: { type: 'shadow', color: C.shadow, offset: { x: 0, y: 14 }, blur: 30 },
+          effect: {
+            type: 'shadow',
+            shadowType: 'outer',
+            color: C.shadow,
+            offset: { x: 0, y: 14 },
+            blur: 30,
+          },
         },
         [
           part(
@@ -3405,7 +3593,13 @@ add(
         fill: gradient(C.primary, C.magenta500),
         justifyContent: 'center',
         alignItems: 'center',
-        effect: { type: 'shadow', color: C.shadow, offset: { x: 0, y: 12 }, blur: 30 },
+        effect: {
+          type: 'shadow',
+          shadowType: 'outer',
+          color: C.shadow,
+          offset: { x: 0, y: 12 },
+          blur: 30,
+        },
       },
       [part('initials', H('VT', 44, { fontWeight: '700', fill: C.white }))],
     ),
@@ -3440,7 +3634,13 @@ add(
         fill: C.popover,
         stroke: C.border,
         strokeWidth: 1,
-        effect: { type: 'shadow', color: C.shadow, offset: { x: 0, y: 16 }, blur: 40 },
+        effect: {
+          type: 'shadow',
+          shadowType: 'outer',
+          color: C.shadow,
+          offset: { x: 0, y: 16 },
+          blur: 40,
+        },
       },
       [
         Row({ gap: 12, alignItems: 'start' }, [
@@ -3584,7 +3784,13 @@ const toastBase = (name, lead, { action, close = true, w = 360 } = {}) =>
         stroke: C.border,
         strokeWidth: 1,
         alignItems: 'start',
-        effect: { type: 'shadow', color: C.shadow, offset: { x: 0, y: 12 }, blur: 32 },
+        effect: {
+          type: 'shadow',
+          shadowType: 'outer',
+          color: C.shadow,
+          offset: { x: 0, y: 12 },
+          blur: 32,
+        },
       },
       [
         lead,
@@ -3697,7 +3903,13 @@ const orb = (name, d) =>
       height: d,
       cornerRadius: d / 2,
       fill: orbFill,
-      effect: { type: 'shadow', color: C.primary, offset: { x: 0, y: 0 }, blur: d / 2 },
+      effect: {
+        type: 'shadow',
+        shadowType: 'outer',
+        color: C.primary,
+        offset: { x: 0, y: 0 },
+        blur: d / 2,
+      },
     }),
   )
 add(orb('Assistant/Orb', 64), orb('Assistant/Orb Small', 20))
@@ -3713,7 +3925,13 @@ add(
         fill: ATMO_G,
         justifyContent: 'center',
         alignItems: 'center',
-        effect: { type: 'shadow', color: C.shadow, offset: { x: 0, y: 10 }, blur: 28 },
+        effect: {
+          type: 'shadow',
+          shadowType: 'outer',
+          color: C.shadow,
+          offset: { x: 0, y: 10 },
+          blur: 28,
+        },
       },
       [part('icon', I('sparkles', { width: 22, height: 22, fill: C.white }))],
     ),
@@ -3775,7 +3993,13 @@ add(
         fill: C.popover,
         stroke: C.border,
         strokeWidth: 1,
-        effect: { type: 'shadow', color: C.shadow, offset: { x: 0, y: 24 }, blur: 60 },
+        effect: {
+          type: 'shadow',
+          shadowType: 'outer',
+          color: C.shadow,
+          offset: { x: 0, y: 24 },
+          blur: 60,
+        },
       },
       [
         Row(

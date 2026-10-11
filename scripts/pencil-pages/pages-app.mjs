@@ -148,6 +148,7 @@ const nowPlaying = (on, m) =>
           Tx(
             'Caption',
             'A slow gradient glows around the screen in the track colours. Reduced motion keeps it still.',
+            { wrap: true },
           ),
       ]),
     ],

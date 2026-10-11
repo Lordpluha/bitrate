@@ -243,6 +243,9 @@ Good uses:
 
 Avoid motion whose only purpose is to make the interface feel “alive.”
 
+How to build every pattern in the apps — tokens, easings, tools, reduced motion and per-pattern
+recipes — is in [Motion](./motion.md).
+
 Brand motion patterns, drawn in Pencil (the `loading` and `cursor` designs and the library page “09 • Toasts”) and live in the
 motion prototypes:
 
