@@ -66,6 +66,7 @@ import { loading } from './pages-loading.mjs'
 import { APP_STATES } from './pages-app.mjs'
 import { cursor } from './pages-cursor.mjs'
 import { mobileIsland } from './pages-island.mjs'
+import { notificationSettings, Switch as NotificationSwitch } from './pages-notifications.mjs'
 import { assistant, withAssistant } from './pages-assistant.mjs'
 
 const T5 = TRACKS.slice(0, 5)
@@ -321,6 +322,10 @@ const settingsTiles = (mobile, { twoFaOn, sessionsError } = {}) => {
             Row({ padding: [12, 0, 0, 0] }, [Button('Log out all other sessions', 'outline')]),
           ],
     ),
+    notifications: tile('Notifications', [
+      Tx('Muted', 'One mode at a time.', { wrap: true }),
+      Row({ padding: [8, 0, 0, 0], width: 'fill_container' }, [NotificationSwitch('app')]),
+    ]),
     plan: tile('Your plan', [
       SettingRow('Free', 'Your subscription is active.', Badge('Active', 'secondary')),
     ]),
@@ -451,7 +456,16 @@ const settingsTiles = (mobile, { twoFaOn, sessionsError } = {}) => {
   }
 }
 const BENTO_L = ['account', 'plan', 'audio', 'library', 'display', 'videos', 'twofa']
-const BENTO_R = ['profile', 'sessions', 'language', 'playback', 'activity', 'visible', 'privacy']
+const BENTO_R = [
+  'profile',
+  'notifications',
+  'sessions',
+  'language',
+  'playback',
+  'activity',
+  'visible',
+  'privacy',
+]
 const settingsDesktop = (name, o) => {
   const t = settingsTiles(false, o)
   return Desktop(
@@ -469,7 +483,7 @@ const settingsDesktop = (name, o) => {
         ),
       ]),
     ],
-    { library: false, height: 2020 },
+    { library: false, height: 2560 },
   )
 }
 const settingsMobile = (name, o) => {
@@ -480,7 +494,7 @@ const settingsMobile = (name, o) => {
     {
       mini: false,
       header: MHeader('Settings', { actions: ['search'] }),
-      height: 3700,
+      height: 4300,
     },
   )
 }
@@ -2814,6 +2828,7 @@ export const pages = {
   loading,
   cursor,
   'mobile-island': mobileIsland,
+  'notification-settings': notificationSettings,
   assistant,
   friends,
   'friends-find': friendsFind,
