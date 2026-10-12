@@ -16,9 +16,12 @@ import {
   EmptyState,
   fitStates,
   state,
+  Chips,
+  MobileTrack,
+  Button,
 } from './ui.mjs'
 
-const TABS = ['home', 'search', 'library', 'jam']
+const TABS = ['home', 'search', 'library']
 /** The island with one tab active: the active tab gets the soft pill and the foreground icon. */
 const Island = (tab = 'home', o = {}) =>
   R(
@@ -130,12 +133,18 @@ const homeContent = () => [
   ]),
 ]
 const scrolledContent = () => homeContent().slice(3)
-const jamContent = () => [
+/* Library carries Jam as a filter: Everything shows the live Jam above the timeline, Jam lists them all */
+const libHead = (active) => [
   Col({ name: 'Title', gap: 4, width: 'fill_container', padding: [12, 0, 0, 0] }, [
-    Tx('H2', 'Jam.'),
-    Tx('Muted', 'Listen together: one queue, everyone hears the same second.', { wrap: true }),
+    Tx('H2', 'Your library remembers.'),
+    Tx('Muted', 'Everything you played, saved and changed, in order.', { wrap: true }),
   ]),
-  R('Jam/Card', { width: 'fill_container' }),
+  /* the filter row scrolls sideways when it overflows: it bleeds past the edge so the cut chip shows there is more */
+  L({ name: 'Filter Scroller', width: 374, clip: true }, [
+    Chips(['Everything', 'Jam · 2', 'Saved', 'Podcasts', 'Downloads', 'Offline'], active),
+  ]),
+]
+const lateSet = () =>
   R(
     'Jam/Card',
     { width: 'fill_container' },
@@ -153,7 +162,29 @@ const jamContent = () => [
       action: { fill: '$ds:--secondary' },
       footer: { enabled: false },
     },
-  ),
+  )
+const libraryContent = () => [
+  ...libHead(0),
+  Row({ name: 'Live Head', width: 'fill_container', justifyContent: 'space_between' }, [
+    Tx('H4', 'Live now'),
+    Tx('Link', 'All Jams'),
+  ]),
+  R('Jam/Card', { width: 'fill_container' }),
+  Tx('Eyebrow', 'TONIGHT'),
+  MobileTrack('Afterglow', 'Played 4 times · Nova & the Static', 'afterglow'),
+  MobileTrack('Night drive', 'Playlist · 3 tracks added', 'night'),
+  Tx('Eyebrow', 'YESTERDAY'),
+  MobileTrack('Drift Control', "Saved from Jonah's Jam", 'drift'),
+]
+const jamContent = () => [
+  ...libHead(1),
+  Tx('Muted', 'Listen together: one queue, everyone hears the same second.', { wrap: true }),
+  R('Jam/Card', { width: 'fill_container' }),
+  lateSet(),
+  Button('Start a Jam from what you are playing', 'outline', {
+    width: 'fill_container',
+    icon: 'plus',
+  }),
 ]
 const nowPlaying = () => ({
   id: id(),
@@ -239,7 +270,7 @@ export const mobileIsland = {
   title: 'Mobile island player',
   route: 'concept — mobile web player navigation',
   context:
-    'Navigation is one floating island that carries playback: artwork with a progress ring, four tabs (Home, Search, Library, Jam) and play. It shrinks to artwork + track while scrolling down, widens for live activity (Jam, Bitrate Connect, releases), shows quick actions on hold and blooms into the player on tap or swipe up. Swipe anywhere on it sideways to skip: the neighbour’s cover slides into the ring with its title above the island, past 46px it commits, short of it springs back; the compact island adds a next button; the first visit nudges the cover once. Home resumes, tunes by feeling and shows bento tiles instead of shelves.',
+    'Navigation is one floating island that carries playback: artwork with a progress ring, three tabs (Home, Search, Library — Jam lives in Library as a filter with live Jams on top) and play. It shrinks to artwork + track while scrolling down, widens for live activity (Jam, Bitrate Connect, releases), shows quick actions on hold and blooms into the player on tap or swipe up. Swipe anywhere on it sideways to skip: the neighbour’s cover slides into the ring with its title above the island, past 46px it commits, short of it springs back; the compact island adds a next button; the first visit nudges the cover once. Home resumes, tunes by feeling and shows bento tiles instead of shelves.',
   desktop: board,
   mobile: () => Screen('Home', homeContent(), { island: slot(Island('home')) }),
   states: [
@@ -296,9 +327,15 @@ export const mobileIsland = {
     ),
     state('Now playing', null, nowPlaying, 'mobile concept'),
     state(
-      'Jam tab',
+      'Library',
       null,
-      () => Screen('Jam', jamContent(), { island: slot(Island('jam')) }),
+      () => Screen('Library', libraryContent(), { island: slot(Island('library')) }),
+      'mobile concept · Jam is a Library filter, live Jams on top',
+    ),
+    state(
+      'Library · Jam',
+      null,
+      () => Screen('Library Jam', jamContent(), { island: slot(Island('library')) }),
       'mobile concept',
     ),
     state(
@@ -313,18 +350,13 @@ export const mobileIsland = {
       'mobile concept',
     ),
     state(
-      'No Jams',
+      'Library · no Jams',
       null,
       () =>
         Screen(
           'No Jams',
           [
-            Col({ name: 'Title', gap: 4, width: 'fill_container', padding: [12, 0, 0, 0] }, [
-              Tx('H2', 'Jam.'),
-              Tx('Muted', 'Listen together: one queue, everyone hears the same second.', {
-                wrap: true,
-              }),
-            ]),
+            ...libHead(1),
             EmptyState(
               'No Jams right now',
               'Start one from what you are playing, or wait for a friend to invite you.',
@@ -332,7 +364,7 @@ export const mobileIsland = {
               'users-round',
             ),
           ],
-          { island: slot(Island('jam')) },
+          { island: slot(Island('library')) },
         ),
       'mobile concept',
     ),
