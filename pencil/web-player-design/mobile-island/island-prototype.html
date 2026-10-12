@@ -141,10 +141,15 @@ img { display: block; }
 
 /* ---------- the island ---------- */
 .island { position: absolute; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 18px); z-index: 20; width: calc(100% - 28px); height: 66px; margin-left: calc((100% - 28px) / -2); border-radius: 33px; background: var(--glass); border: 1px solid var(--glass-border); -webkit-backdrop-filter: blur(22px) saturate(160%); backdrop-filter: blur(22px) saturate(160%); box-shadow: 0 18px 40px -18px var(--shadow), 0 2px 0 0 rgba(255, 255, 255, .03) inset; display: flex; align-items: center; padding: 0 8px; gap: 4px; touch-action: none; user-select: none; -webkit-user-select: none; transition: width .5s cubic-bezier(.34, 1.3, .64, 1), margin-left .5s cubic-bezier(.34, 1.3, .64, 1), height .45s cubic-bezier(.34, 1.3, .64, 1), border-radius .45s; }
-.island.compact { width: 212px; margin-left: -106px; }
+.island.compact { width: 248px; margin-left: -124px; }
 .island.live { height: 78px; border-radius: 39px; }
 .isl-art { position: relative; width: 50px; height: 50px; flex: none; border-radius: 50%; }
-.isl-art img { position: absolute; inset: 5px; width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+.isl-cv { position: absolute; inset: 5px; border-radius: 50%; overflow: hidden; }
+/* images must not start a native drag: it cancels the pointer mid-swipe */
+.island img, .qa img { -webkit-user-drag: none; user-select: none; }
+.isl-cv img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; will-change: transform; }
+.isl-next { width: 36px; height: 36px; flex: none; border-radius: 50%; display: grid; place-items: center; background: color-mix(in srgb, var(--fg) 10%, transparent); color: var(--fg); margin-right: 4px; }
+.isl-next svg { width: 16px; height: 16px; }
 .isl-art svg.ring { position: absolute; inset: 0; transform: rotate(-90deg); }
 .isl-art .ring circle { fill: none; stroke-width: 2.5; }
 .isl-art .ring .tr { stroke: var(--border); }
@@ -171,7 +176,7 @@ img { display: block; }
 .isl-mini .tt { flex: 1; min-width: 0; }
 .isl-mini b { display: block; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .isl-mini small { font-size: 11px; color: var(--muted); white-space: nowrap; }
-.eq { display: flex; gap: 2px; align-items: flex-end; height: 16px; margin-right: 10px; }
+.eq { display: flex; gap: 2px; align-items: flex-end; height: 16px; margin-right: 2px; }
 .eq i { width: 3px; height: 4px; border-radius: 1px; background: var(--accent); animation: eq .9s ease-in-out infinite alternate; }
 .eq i:nth-child(2) { animation-delay: -.3s } .eq i:nth-child(3) { animation-delay: -.6s } .eq i:nth-child(4) { animation-delay: -.15s }
 @keyframes eq { to { height: 16px } }
@@ -189,7 +194,7 @@ img { display: block; }
 .scrim.open { opacity: 1; pointer-events: auto; }
 
 /* toast-like swipe hint on track change */
-.skipcue { position: absolute; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 92px); z-index: 18; transform: translateX(-50%); font: 500 11px/1 var(--font-data); letter-spacing: .08em; color: var(--muted); opacity: 0; pointer-events: none; white-space: nowrap; }
+.skipcue { position: absolute; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 94px); z-index: 18; transform: translateX(-50%); padding: 7px 12px; border-radius: 999px; background: var(--glass); border: 1px solid var(--glass-border); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); font: 500 11px/1 var(--font-data); letter-spacing: .08em; color: var(--fg); opacity: 0; pointer-events: none; white-space: nowrap; }
 
 /* ---------- now playing: the island blooms into it ---------- */
 .np { position: absolute; inset: 0; z-index: 25; overflow: hidden; visibility: hidden; color: #fff; background: #0b0d12; }
@@ -421,7 +426,7 @@ button.tchip { cursor: pointer; }
     <nav class="island" id="island" aria-label="Navigation and playback">
       <button class="isl-art" id="islArt" type="button" aria-label="Open the player">
         <svg aria-hidden="true" class="ring" viewBox="0 0 50 50"><circle class="tr" cx="25" cy="25" r="23"/><circle class="pr" id="ringPr" cx="25" cy="25" r="23"/></svg>
-        <img id="islImg" src="../design-system/assets/albums/album-afterglow.webp" alt="">
+        <span class="isl-cv"><img id="islImg" draggable="false" src="../design-system/assets/albums/album-afterglow.webp" alt=""><img id="islPeek" draggable="false" src="../design-system/assets/albums/album-static-lines.webp" alt=""></span>
       </button>
       <div class="isl-body">
         <div class="isl-tabs" role="tablist" id="tabs">
@@ -434,6 +439,7 @@ button.tchip { cursor: pointer; }
         <div class="isl-mini" id="mini" aria-hidden="true">
           <span class="tt"><b id="miniT">Afterglow</b><small id="miniA">Nova &amp; the Static</small></span>
           <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <button class="isl-next" id="islNext" type="button" aria-label="Next track"><svg aria-hidden="true" class="i"><use href="#i-next"/></svg></button>
         </div>
         <div class="isl-live" id="live" aria-live="polite"></div>
       </div>
@@ -681,7 +687,7 @@ button.tchip { cursor: pointer; }
   const live = (k) => {
     const [img, t, s, act] = LIVE[k]
     const L = $('#live')
-    L.innerHTML = `${img ? `<img src="${img}" alt="">` : '<span class="iconb" style="width:40px;height:40px"><svg aria-hidden="true" class="i"><use href="#i-device"/></svg></span>'}<span class="tt"><b>${t}</b><small>${s}</small></span><button class="act" type="button">${act}</button>`
+    L.innerHTML = `${img ? `<img src="${img}" alt="" draggable="false">` : '<span class="iconb" style="width:40px;height:40px"><svg aria-hidden="true" class="i"><use href="#i-device"/></svg></span>'}<span class="tt"><b>${t}</b><small>${s}</small></span><button class="act" type="button">${act}</button>`
     L.querySelector('.act').addEventListener('click', (e) => { e.stopPropagation(); endLive() })
     const wasCompact = compact
     island.classList.remove('compact')
@@ -720,17 +726,71 @@ button.tchip { cursor: pointer; }
 
   /* ---------- gestures on the island: tap, swipe up, swipe sideways, hold ---------- */
   let g = null
+  /* skipping from the island: the cover follows the finger and the neighbour slides into the circle, with its
+     title above the island; past the threshold it commits, short of it springs back */
+  const islImg = $('#islImg')
+  const islPeek = $('#islPeek')
+  const cueEl = $('#skipcue')
+  const PEEK = 40
+  const SKIP_AT = 46
+  let peekDir = 0
+  gsap.set(islPeek, { x: PEEK })
+  const neighbour = (dir) => TRACKS[(cur + dir + TRACKS.length) % TRACKS.length]
+  const peek = (dx) => {
+    const dir = dx < 0 ? 1 : -1
+    if (dir !== peekDir) {
+      peekDir = dir
+      islPeek.src = A + neighbour(dir).img
+      cueEl.textContent = `${dir > 0 ? 'NEXT' : 'PREVIOUS'} · ${neighbour(dir).t.toUpperCase()}`
+    }
+    const x = Math.max(-PEEK, Math.min(PEEK, dx * 0.85))
+    gsap.set(islImg, { x })
+    gsap.set(islPeek, { x: x + (dir > 0 ? PEEK : -PEEK) })
+    gsap.set(cueEl, { opacity: Math.min(1, Math.abs(dx) / SKIP_AT), y: 0 })
+  }
+  const commitPeek = (dir) => {
+    gsap.to(islImg, { x: -PEEK * dir, duration: dur(0.18), ease: 'power2.out' })
+    gsap.to(islPeek, { x: 0, duration: dur(0.18), ease: 'power2.out', onComplete: () => {
+      pos = 0
+      setTrack(cur + dir)
+      gsap.set(islImg, { x: 0 })
+      gsap.set(islPeek, { x: PEEK })
+      peekDir = 0
+    } })
+    gsap.fromTo(island, { scale: 0.97 }, { scale: 1, duration: dur(0.45), ease: 'back.out(3)' })
+    gsap.to(cueEl, { opacity: 0, duration: dur(0.3), delay: 0.6 })
+  }
+  const cancelPeek = () => {
+    gsap.to(islImg, { x: 0, duration: dur(0.35), ease: 'back.out(2)' })
+    gsap.to(islPeek, { x: peekDir < 0 ? -PEEK : PEEK, duration: dur(0.35), ease: 'power3.out' })
+    gsap.to(cueEl, { opacity: 0, duration: dur(0.2) })
+    peekDir = 0
+  }
+  $('#islNext').addEventListener('click', (e) => { e.stopPropagation(); commitPeekFromButton(1) })
+  const commitPeekFromButton = (dir) => {
+    islPeek.src = A + neighbour(dir).img
+    gsap.set(islPeek, { x: PEEK * dir })
+    peekDir = dir
+    cueEl.textContent = `${dir > 0 ? 'NEXT' : 'PREVIOUS'} · ${neighbour(dir).t.toUpperCase()}`
+    gsap.set(cueEl, { opacity: 1, y: 0 })
+    commitPeek(dir)
+  }
   island.addEventListener('pointerdown', (e) => {
-    if (e.target.closest('.tab, .isl-play, .act')) return
-    g = { x: e.clientX, y: e.clientY, t: performance.now(), moved: false, onArt: !!e.target.closest('.isl-art, .isl-mini'), hold: setTimeout(() => { if (g && !g.moved) { g.held = true; setQA(true) } }, 480) }
-    island.setPointerCapture(e.pointerId)
+    if (e.target.closest('.isl-play, .act, .isl-next')) return
+    /* a swipe may start anywhere on the island, tabs included; the pointer is captured only once it moves,
+       so a plain tap still reaches the tab */
+    g = { x: e.clientX, y: e.clientY, t: performance.now(), moved: false, onTab: !!e.target.closest('.tab'), onArt: !!e.target.closest('.isl-art, .isl-mini'), hold: setTimeout(() => { if (g && !g.moved && !g.onTab) { g.held = true; setQA(true) } }, 480) }
   })
   island.addEventListener('pointermove', (e) => {
     if (!g) return
     const dx = e.clientX - g.x
     const dy = e.clientY - g.y
-    if (Math.hypot(dx, dy) > 8) { g.moved = true; clearTimeout(g.hold) }
-    if (g.moved && !g.held) gsap.set(island, { x: Math.max(-40, Math.min(40, dx * 0.35)), y: Math.min(0, dy * 0.3) })
+    if (!g.moved && Math.hypot(dx, dy) > 8) { g.moved = true; clearTimeout(g.hold); island.setPointerCapture(e.pointerId) }
+    if (g.moved && !g.held) {
+      if (!g.axis) g.axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y'
+      if (g.axis === 'x') { peek(dx); gsap.set(island, { x: dx * 0.08 }) }
+      else gsap.set(island, { y: Math.min(0, dy * 0.3) })
+    }
   })
   const release = (e) => {
     if (!g) return
@@ -739,17 +799,35 @@ button.tchip { cursor: pointer; }
     const dy = e.clientY - g.y
     gsap.to(island, { x: 0, y: 0, duration: dur(0.5), ease: 'elastic.out(1, .6)' })
     if (!g.held) {
-      if (dy < -36 && Math.abs(dy) > Math.abs(dx)) openNP()
-      else if (Math.abs(dx) > 46) skip(dx < 0 ? 1 : -1)
+      if (g.axis === 'x') { if (Math.abs(dx) > SKIP_AT) commitPeek(dx < 0 ? 1 : -1); else cancelPeek() }
+      else if (dy < -36 && Math.abs(dy) > Math.abs(dx)) openNP()
       else if (!g.moved && g.onArt) openNP()
       else if (!g.moved && compact) setCompact(false)
     }
     g = null
   }
   island.addEventListener('pointerup', release)
-  island.addEventListener('pointercancel', release)
+  /* the browser took the gesture over (scroll, native drag): undo the peek, never act on it */
+  island.addEventListener('pointercancel', () => {
+    if (!g) return
+    clearTimeout(g.hold)
+    if (g.axis === 'x') cancelPeek()
+    gsap.to(island, { x: 0, y: 0, duration: dur(0.5), ease: 'elastic.out(1, .6)' })
+    g = null
+  })
   island.addEventListener('keydown', (e) => { if (e.key === 'ArrowUp' && e.target === $('#islArt')) openNP() })
   $('#islArt').addEventListener('click', (e) => { if (e.detail === 0) openNP() })
+
+  /* first visit: the cover nudges once so the swipe is discoverable */
+  let hinted = false
+  try { hinted = localStorage.getItem('bitrate-island-skip-hint') === '1' } catch (e) { hinted = true }
+  if (!hinted && !reduce) setTimeout(() => {
+    if (npOpen || g) return
+    const o = { dx: 0 }
+    gsap.timeline({ onComplete: () => { cancelPeek(); try { localStorage.setItem('bitrate-island-skip-hint', '1') } catch (e) { /* storage unavailable */ } } })
+      .to(o, { dx: -30, duration: 0.45, ease: 'power2.out', onUpdate: () => { peek(o.dx); cueEl.textContent = 'SWIPE THE ISLAND TO SKIP' } })
+      .to(o, { dx: 0, duration: 0.5, ease: 'back.out(2)', delay: 0.9, onUpdate: () => peek(o.dx || -0.01) })
+  }, 2600)
 
   /* ---------- the island blooms into the player (clip-path from the island's own rect) ---------- */
   const islandClip = () => {
