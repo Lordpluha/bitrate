@@ -217,21 +217,31 @@ The pill blooms into a status panel through an SVG goo filter
 
 ### 4.11 Island navigation (mobile)
 
-Pencil components: `Mobile/Island`, `Mobile/Island Compact`, `Mobile/Island Live` and
-`Mobile/Island Actions`. The screens are in `mobile-island/mobile-island.pen`, and the prototype is
+Pencil components: `Mobile/Island`, `Mobile/Island Compact`, `Mobile/Island Skipping`,
+`Mobile/Island Cue`, `Mobile/Island Live` and `Mobile/Island Actions`. The screens are in `mobile-island/mobile-island.pen`, and the prototype is
 `mobile-island/island-prototype.html`.
 
 - **Shape.** One floating glass capsule, 18 px above the safe area, 66 px tall. It holds the
   artwork with a progress ring, four tabs (Home, Search, Library, Jam) and play. The active tab's
   pill slides between tabs over 0.45 s with `cubic-bezier(.34, 1.4, .64, 1)`.
-- **Compact.** Scrolling down past 80 px shrinks the island to 212 px: artwork, track and a level
-  meter. Scrolling up, or tapping it, restores it. The width uses a 0.5 s spring; the content
+- **Compact.** Scrolling down past 80 px shrinks the island to 248 px: artwork, track, a level
+  meter and a next button. Scrolling up, or tapping it, restores it. The width uses a 0.5 s spring; the content
   crossfades over 0.25 s. Scroll only toggles the state; it never drives the animation.
 - **Live activity.** Jam joins, Bitrate Connect handoffs and new releases widen the island to 78 px
   for about 4 s with one action, then it returns to its previous state.
-- **Gestures.** A tap or a swipe up opens the player. Swiping sideways more than 46 px skips a track:
-  the artwork slides out over 0.16 s and in over 0.38 s. Holding for 480 ms opens quick actions
-  (Like, Queue, Connect, Sleep), which rise over 0.42 s `back.out(2)` with a 40 ms stagger.
+- **Skipping.** A sideways swipe that starts anywhere on the island skips, including on the tabs.
+  The pointer is captured only after it moves 8 px, so a plain tap still reaches a tab.
+  - The cover follows the finger at 0.85× (up to 40 px) inside the ring, and the neighbour's cover
+    slides in from that edge.
+  - A cue above the island ("NEXT · STATIC LINES") fades in with the distance.
+  - Past 46 px the swap finishes over 0.18 s and the island pops (`back.out(3)`). Short of it, the
+    cover springs back (0.35 s `back.out(2)`).
+  - `pointercancel` (scroll, native image drag) always undoes the peek and never skips.
+  - The compact island has a next button, and the player keeps its previous and next buttons.
+  - On the first visit, the cover nudges 30 px once with "SWIPE THE ISLAND TO SKIP".
+  - Hardware and lock-screen keys map to the same actions through the Media Session API.
+- **Gestures.** A tap on the artwork or a swipe up opens the player. Holding for 480 ms opens quick
+  actions (Like, Queue, Connect, Sleep), which rise over 0.42 s `back.out(2)` with a 40 ms stagger.
 - **Bloom into the player.** The player's `clip-path` grows from the island's own rect to the screen
   over 0.62 s `expo.out`, and its content rises 26 px with a 45 ms stagger. Closing it (drag down
   past 110 px, ⌄ or Esc) shrinks it back over 0.42 s `power3.in`, and the island pops in again.

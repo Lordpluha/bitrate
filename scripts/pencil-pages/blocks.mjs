@@ -4537,10 +4537,10 @@ add(
     Row(
       {
         name: 'Island Compact',
-        width: 212,
+        width: 248,
         height: 66,
         cornerRadius: 33,
-        padding: [0, 14, 0, 8],
+        padding: [0, 10, 0, 8],
         gap: 10,
         ...GLASS,
       },
@@ -4551,8 +4551,94 @@ add(
           part('artist', T('Nova & the Static', { fontSize: 11, fill: C.mutedForeground })),
         ]),
         eqBars(),
+        part(
+          'next',
+          F(
+            {
+              name: 'Next',
+              width: 36,
+              height: 36,
+              cornerRadius: 18,
+              fill: C.secondary,
+              justifyContent: 'center',
+              alignItems: 'center',
+            },
+            [I('skip-forward', { width: 16, height: 16, fill: C.foreground })],
+          ),
+        ),
       ],
     ),
+  ),
+  /* mid-swipe: the current cover slides out of the ring while the neighbour slides in */
+  comp(
+    'Mobile/Island Skipping',
+    Row(
+      {
+        name: 'Island Skipping',
+        width: 358,
+        height: 66,
+        cornerRadius: 33,
+        padding: [0, 8],
+        gap: 4,
+        ...GLASS,
+      },
+      [
+        F(
+          {
+            name: 'Artwork',
+            width: 50,
+            height: 50,
+            cornerRadius: 25,
+            stroke: RING_GRAD,
+            strokeWidth: 2.5,
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          [
+            Row({ name: 'Covers', width: 40, height: 40, cornerRadius: 20, clip: true, gap: 0 }, [
+              part(
+                'current',
+                F({ name: 'Current', width: 17, height: 40, fill: img(ART.afterglow) }),
+              ),
+              part(
+                'neighbour',
+                F({ name: 'Neighbour', width: 23, height: 40, fill: img(ART.static) }),
+              ),
+            ]),
+          ],
+        ),
+        Row(
+          {
+            name: 'Tabs',
+            width: 'fill_container',
+            height: 'fill_container',
+            justifyContent: 'space_around',
+            alignItems: 'center',
+          },
+          [
+            islTab('home', 'house'),
+            islTab('search', 'search'),
+            islTab('library', 'library'),
+            islTab('jam', 'users-round'),
+          ],
+        ),
+        islPlay(),
+      ],
+    ),
+  ),
+  comp(
+    'Mobile/Island Cue',
+    Row({ name: 'Cue', height: 28, padding: [0, 12], cornerRadius: 14, ...GLASS }, [
+      part(
+        'text',
+        T('NEXT · STATIC LINES', {
+          fontSize: 11,
+          letterSpacing: 0.9,
+          fontFamily: 'JetBrains Mono',
+          fill: C.foreground,
+        }),
+      ),
+    ]),
   ),
   comp(
     'Mobile/Island Live',

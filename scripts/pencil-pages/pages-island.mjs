@@ -32,6 +32,15 @@ const Island = (tab = 'home', o = {}) =>
     ),
   )
 const Compact = (o = {}) => R('Mobile/Island Compact', o)
+/** Mid-swipe: split cover in the ring and the neighbour's title above the island. */
+const Skipping = (cue, o = {}) =>
+  Col({ name: 'Skipping', gap: 10, alignItems: 'center' }, [
+    R('Mobile/Island Cue', {}, { text: { content: cue } }),
+    R('Mobile/Island Skipping', o, {
+      home: { fill: '$ds:--secondary' },
+      homeIcon: { fill: '$ds:--foreground' },
+    }),
+  ])
 const Live = (kind, o = {}) => {
   const L1 = {
     jam: {
@@ -210,10 +219,14 @@ const board = () =>
     Tx('H3', 'The island carries playback'),
     Tx(
       'Muted',
-      'Default with tabs · compact while scrolling · live activity · quick actions on hold',
+      'Default with tabs · swipe sideways to skip · compact while scrolling · live activity · quick actions on hold',
     ),
     Row({ name: 'States', gap: 40, alignItems: 'center' }, [
-      Col({ gap: 24, alignItems: 'center' }, [Island('home'), Island('jam'), Compact()]),
+      Col({ gap: 24, alignItems: 'center' }, [
+        Island('home'),
+        Skipping('NEXT · STATIC LINES'),
+        Compact(),
+      ]),
       Col({ gap: 24, alignItems: 'center' }, [
         Live('jam'),
         Live('connect'),
@@ -226,7 +239,7 @@ export const mobileIsland = {
   title: 'Mobile island player',
   route: 'concept — mobile web player navigation',
   context:
-    'Navigation is one floating island that carries playback: artwork with a progress ring, four tabs (Home, Search, Library, Jam) and play. It shrinks to artwork + track while scrolling down, widens for live activity (Jam, Bitrate Connect, releases), shows quick actions on hold and blooms into the player on tap or swipe up; swipe sideways skips. Home resumes, tunes by feeling and shows bento tiles instead of shelves.',
+    'Navigation is one floating island that carries playback: artwork with a progress ring, four tabs (Home, Search, Library, Jam) and play. It shrinks to artwork + track while scrolling down, widens for live activity (Jam, Bitrate Connect, releases), shows quick actions on hold and blooms into the player on tap or swipe up. Swipe anywhere on it sideways to skip: the neighbour’s cover slides into the ring with its title above the island, past 46px it commits, short of it springs back; the compact island adds a next button; the first visit nudges the cover once. Home resumes, tunes by feeling and shows bento tiles instead of shelves.',
   desktop: board,
   mobile: () => Screen('Home', homeContent(), { island: slot(Island('home')) }),
   states: [
@@ -235,6 +248,19 @@ export const mobileIsland = {
       null,
       () => Screen('Scrolling', scrolledContent(), { island: slot(Compact()) }),
       'mobile concept',
+    ),
+    state(
+      'Skipping',
+      null,
+      () => Screen('Skipping', homeContent(), { island: slot(Skipping('NEXT · STATIC LINES')) }),
+      'mobile concept · swipe the island sideways; past 46px it commits',
+    ),
+    state(
+      'Skip hint',
+      null,
+      () =>
+        Screen('Skip hint', homeContent(), { island: slot(Skipping('SWIPE THE ISLAND TO SKIP')) }),
+      'mobile concept · first visit only: the cover nudges once',
     ),
     state(
       'Jam joined',
