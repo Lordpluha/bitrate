@@ -122,6 +122,8 @@ img { display: block; }
 .bands { display: grid; gap: 8px; }
 .band { height: 64px; border-radius: 18px; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; color: #fff; font: 600 15px/1 var(--font-display); }
 .seg { margin-inline: 0; min-width: 0; display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--card); border: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+.seg { scroll-snap-type: x proximity; scroll-padding-inline: 12px; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--fade-l, 0px), #000 calc(100% - var(--fade-r, 0px)), transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 var(--fade-l, 0px), #000 calc(100% - var(--fade-r, 0px)), transparent 100%); }
+.seg button { scroll-snap-align: start; }
 .seg button { flex: none; height: 30px; padding: 0 12px; border-radius: 999px; font-size: 12px; color: var(--muted); }
 .seg button[aria-pressed="true"] { background: var(--card-2); color: var(--fg); }
 .tl { position: relative; padding-left: 18px; display: grid; gap: 10px; }
@@ -134,6 +136,8 @@ img { display: block; }
 .li small { color: var(--muted); font-size: 12px; }
 .pill { height: 24px; padding: 0 9px; border-radius: 999px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; border: 1px solid var(--border); color: var(--muted); }
 .jam-card { padding: 14px; display: grid; gap: 12px; }
+.jam-list { display: grid; gap: 10px; }
+#s-lib [data-view][hidden] { display: none; }
 .jam-card .top { display: flex; align-items: center; gap: 12px; }
 .jam-card img.cv { width: 54px; height: 54px; border-radius: 14px; object-fit: cover; }
 .jam-card .join { margin-left: auto; height: 34px; padding: 0 14px; border-radius: 999px; background: var(--primary); color: #fff; font-weight: 600; font-size: 13px; }
@@ -304,7 +308,7 @@ button.tchip { cursor: pointer; }
       <li><b>The island is the player.</b> Tabs, artwork with a progress ring and play live in one floating shape. There is no strip stacked on a tab bar.</li>
       <li><b>Home resumes, then tunes.</b> It opens on where you stopped and on which device. A dial by feeling replaces "Good evening" and the tile grid.</li>
       <li><b>Bento, not shelves.</b> The tiles have different sizes and jobs: friends listening now, an artist's own note, offline space, your week in sound.</li>
-      <li><b>Jam is a tab.</b> Listening together is part of the product, not a buried share sheet. Moving playback between devices is Bitrate Connect, one tap from the player.</li>
+      <li><b>Jam lives in Library.</b> Listening together sits next to what you saved, as a filter with live Jams on top — no extra tab. Moving playback between devices is Bitrate Connect, one tap from the player.</li>
       <li><b>Moments on the waveform.</b> Friends' reactions sit on the track timeline.</li>
       <li><b>The name is visible.</b> A live quality badge (format, bit depth, kbps) and the output device sit next to the controls.</li>
     </ol>
@@ -390,8 +394,11 @@ button.tchip { cursor: pointer; }
       <div class="screen" id="s-lib" role="tabpanel" aria-labelledby="t-lib" hidden>
         <h1 class="h1" style="margin-top:8px">Your library remembers.</h1>
         <p class="sub">Everything you played, saved and changed, in order.</p>
-        <fieldset class="seg blk" aria-label="Filter"><button type="button" aria-pressed="true">Everything</button><button type="button" aria-pressed="false">Saved</button><button type="button" aria-pressed="false">Made by you</button><button type="button" aria-pressed="false">Offline</button></fieldset>
-        <div class="tl blk">
+        <fieldset class="seg blk" aria-label="Filter" id="libSeg"><button type="button" aria-pressed="true" data-v="all">Everything</button><button type="button" aria-pressed="false" data-v="jam">Jam <span class="livedot" style="margin-left:4px">2</span></button><button type="button" aria-pressed="false">Saved</button><button type="button" aria-pressed="false">Downloads</button><button type="button" aria-pressed="false">Podcasts</button><button type="button" aria-pressed="false">Made by you</button><button type="button" aria-pressed="false">Offline</button></fieldset>
+        <div class="blk" data-view="all"><div class="blk-h"><h2 class="h3">Live now</h2><button class="mono" type="button" data-goto="jam" style="color:var(--accent)">All Jams</button></div><div class="card jam-card"><div class="top"><img class="cv" src="../design-system/assets/albums/album-drift-control.webp" alt=""><div><b>Jonah's Jam</b><br><small class="sub">Luma Vale · Drift Control</small></div><button class="join" type="button">Join</button></div><div style="display:flex;align-items:center;justify-content:space-between"><div class="faces"><img src="../design-system/assets/avatars/avatar2.jpg" alt=""><img src="../design-system/assets/avatars/avatar3.jpg" alt=""><img src="../design-system/assets/avatars/avatar4.jpg" alt=""></div><span class="livedot">Live · 3</span></div></div></div>
+        <div class="blk jam-list" data-view="jam" hidden><p class="sub" style="margin:0">Listen together: one queue, everyone hears the same second.</p><div class="card jam-card"><div class="top"><img class="cv" src="../design-system/assets/albums/album-drift-control.webp" alt=""><div><b>Jonah's Jam</b><br><small class="sub">Luma Vale · Drift Control</small></div><button class="join" type="button">Join</button></div><div style="display:flex;align-items:center;justify-content:space-between"><div class="faces"><img src="../design-system/assets/avatars/avatar2.jpg" alt=""><img src="../design-system/assets/avatars/avatar3.jpg" alt=""><img src="../design-system/assets/avatars/avatar4.jpg" alt=""></div><span class="livedot">Live · 3</span></div></div>
+          <div class="card jam-card"><div class="top"><img class="cv" src="../design-system/assets/albums/album-static-lines.webp" alt=""><div><b>Late set crew</b><br><small class="sub">Starts at 23:00 · 6 going</small></div><button class="join" type="button" style="background:var(--card-2);color:var(--fg)">Remind me</button></div></div><button class="cta" type="button"><svg aria-hidden="true" class="i"><use href="#i-plus"/></svg>Start a Jam from what you're playing</button></div>
+        <div class="tl blk" data-view="all">
           <div class="day">Tonight</div>
           <div class="li"><img src="../design-system/assets/albums/album-afterglow.webp" alt=""><span><b>Afterglow</b><small>Played 4 times · Nova &amp; the Static</small></span><span class="pill">Liked</span></div>
           <div class="li"><img src="../design-system/assets/albums/album-night-signal.webp" alt=""><span><b>Night drive</b><small>Playlist · 3 tracks added</small></span><span class="pill">v6</span></div>
@@ -403,15 +410,6 @@ button.tchip { cursor: pointer; }
         </div>
       </div>
 
-      <div class="screen" id="s-jam" role="tabpanel" aria-labelledby="t-jam" hidden>
-        <h1 class="h1" style="margin-top:8px">Jam.</h1>
-        <p class="sub">Listen together: one queue, everyone hears the same second.</p>
-        <div class="blk" style="display:grid;gap:10px">
-          <div class="card jam-card"><div class="top"><img class="cv" src="../design-system/assets/albums/album-drift-control.webp" alt=""><div><b>Jonah's Jam</b><br><small class="sub">Luma Vale · Drift Control</small></div><button class="join" type="button">Join</button></div><div style="display:flex;align-items:center;justify-content:space-between"><div class="faces"><img src="../design-system/assets/avatars/avatar2.jpg" alt=""><img src="../design-system/assets/avatars/avatar3.jpg" alt=""><img src="../design-system/assets/avatars/avatar4.jpg" alt=""></div><span class="livedot">Live · 3</span></div></div>
-          <div class="card jam-card"><div class="top"><img class="cv" src="../design-system/assets/albums/album-static-lines.webp" alt=""><div><b>Late set crew</b><br><small class="sub">Starts at 23:00 · 6 going</small></div><button class="join" type="button" style="background:var(--card-2);color:var(--fg)">Remind me</button></div></div>
-          <button class="cta" type="button"><svg aria-hidden="true" class="i"><use href="#i-plus"/></svg>Start a Jam from what you're playing</button>
-        </div>
-      </div>
     </main>
 
     <div class="scrim" id="scrim"></div>
@@ -433,8 +431,7 @@ button.tchip { cursor: pointer; }
           <span class="isl-pill" id="pill" aria-hidden="true"></span>
           <button class="tab" id="t-home" role="tab" aria-selected="true" aria-controls="s-home" aria-label="Home" type="button"><svg aria-hidden="true" class="i"><use href="#i-home"/></svg><span class="dot"></span></button>
           <button class="tab" id="t-search" role="tab" aria-selected="false" aria-controls="s-search" aria-label="Search" type="button"><svg aria-hidden="true" class="i"><use href="#i-search"/></svg><span class="dot"></span></button>
-          <button class="tab" id="t-lib" role="tab" aria-selected="false" aria-controls="s-lib" aria-label="Library" type="button"><svg aria-hidden="true" class="i"><use href="#i-lib"/></svg><span class="dot"></span></button>
-          <button class="tab" id="t-jam" role="tab" aria-selected="false" aria-controls="s-jam" aria-label="Jam" type="button"><svg aria-hidden="true" class="i"><use href="#i-jam"/></svg><span class="dot"></span><span class="badge" aria-hidden="true"></span></button>
+          <button class="tab" id="t-lib" role="tab" aria-selected="false" aria-controls="s-lib" aria-label="Library" type="button"><svg aria-hidden="true" class="i"><use href="#i-lib"/></svg><span class="dot"></span><span class="badge" aria-hidden="true"></span></button>
         </div>
         <div class="isl-mini" id="mini" aria-hidden="true">
           <span class="tt"><b id="miniT">Afterglow</b><small id="miniA">Nova &amp; the Static</small></span>
@@ -688,7 +685,7 @@ button.tchip { cursor: pointer; }
     const [img, t, s, act] = LIVE[k]
     const L = $('#live')
     L.innerHTML = `${img ? `<img src="${img}" alt="" draggable="false">` : '<span class="iconb" style="width:40px;height:40px"><svg aria-hidden="true" class="i"><use href="#i-device"/></svg></span>'}<span class="tt"><b>${t}</b><small>${s}</small></span><button class="act" type="button">${act}</button>`
-    L.querySelector('.act').addEventListener('click', (e) => { e.stopPropagation(); endLive() })
+    L.querySelector('.act').addEventListener('click', (e) => { e.stopPropagation(); endLive(); if (k === 'jam') openJams() })
     const wasCompact = compact
     island.classList.remove('compact')
     compact = false
@@ -703,6 +700,40 @@ button.tchip { cursor: pointer; }
     if (island.dataset.back) setCompact(true)
   }
   for (const b of $$('[data-live]')) b.addEventListener('click', () => live(b.dataset.live))
+  /* Library filters: Everything (live Jams on top of the timeline) or Jam */
+  const libView = (v) => {
+    for (const b of $$('#libSeg button')) b.setAttribute('aria-pressed', String((b.dataset.v ?? '') === v || (!b.dataset.v && false)))
+    for (const el of $$('#s-lib [data-view]')) el.hidden = el.dataset.view !== v
+    if (!reduce) gsap.fromTo($$(`#s-lib [data-view="${v}"]`), { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: 'power3.out', stagger: 0.05 })
+  }
+  for (const b of $$('#libSeg button[data-v]')) b.addEventListener('click', () => libView(b.dataset.v))
+  /* filter rows scroll sideways when they overflow: the edges fade only where more chips hide, the chosen
+     chip scrolls into view, and a mouse wheel scrolls the row horizontally */
+  for (const seg of $$('.seg')) {
+    const edges = () => {
+      const max = seg.scrollWidth - seg.clientWidth
+      seg.style.setProperty('--fade-l', seg.scrollLeft > 2 ? '28px' : '0px')
+      seg.style.setProperty('--fade-r', seg.scrollLeft < max - 2 ? '28px' : '0px')
+    }
+    seg.addEventListener('scroll', edges, { passive: true })
+    new ResizeObserver(edges).observe(seg)
+    seg.addEventListener('wheel', (e) => {
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX) || seg.scrollWidth <= seg.clientWidth) return
+      e.preventDefault()
+      seg.scrollLeft += e.deltaY
+    }, { passive: false })
+    seg.addEventListener('click', (e) => {
+      const b = e.target.closest('button')
+      if (b) b.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest', inline: 'nearest' })
+    })
+    edges()
+  }
+  for (const b of $$('[data-goto="jam"]')) b.addEventListener('click', () => libView('jam'))
+  function openJams() {
+    if (npOpen) closeNP()
+    select($('#t-lib'))
+    libView('jam')
+  }
   setTimeout(() => live('jam'), 6500)
 
   /* ---------- quick actions: hold the island ---------- */

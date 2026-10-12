@@ -222,7 +222,12 @@ Pencil components: `Mobile/Island`, `Mobile/Island Compact`, `Mobile/Island Skip
 `mobile-island/island-prototype.html`.
 
 - **Shape.** One floating glass capsule, 18 px above the safe area, 66 px tall. It holds the
-  artwork with a progress ring, four tabs (Home, Search, Library, Jam) and play. The active tab's
+  artwork with a progress ring, three tabs (Home, Search, Library) and play. Jam is not a tab: it is a
+  Library filter, and a live Jam shows on top of Library; a Jam live activity opens Library › Jam.
+- **Filter rows.** Chip rows (Library: Everything, Jam, Saved, Podcasts…) scroll sideways when they
+  overflow; nothing wraps. The edges fade only on the side where more chips hide, and the chosen chip
+  scrolls into view. A mouse wheel scrolls the row horizontally. In Pencil the row bleeds past the
+  edge, so a cut chip shows there is more. The active tab's
   pill slides between tabs over 0.45 s with `cubic-bezier(.34, 1.4, .64, 1)`.
 - **Compact.** Scrolling down past 80 px shrinks the island to 248 px: artwork, track, a level
   meter and a next button. Scrolling up, or tapping it, restores it. The width uses a 0.5 s spring; the content
