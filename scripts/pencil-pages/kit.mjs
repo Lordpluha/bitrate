@@ -19,7 +19,7 @@ export const id = () => {
 }
 
 /* ---------- mode: building library components ('lib') or screens that import it ('page') ---------- */
-export let MODE = 'page'
+let MODE = 'page'
 const pre = () => (MODE === 'lib' ? '' : 'ds:')
 export const setMode = (m) => {
   MODE = m
@@ -34,8 +34,8 @@ export const C = new Proxy(
         .toLowerCase()}`,
   },
 )
-export const SANS = new String('font-sans')
-export const HEAD = new String('font-heading')
+const SANS = new String('font-sans')
+const HEAD = new String('font-heading')
 const font = (f) => `$${pre()}--${f}`
 const fontOf = (f = 'font-sans') => {
   const k = String(f).replace(/^\$(ds:)?--/, '')
@@ -103,7 +103,7 @@ export const H = (content, size = 28, o = {}) =>
     letterSpacing: size >= 32 ? -0.6 : 0,
     ...o,
   })
-export const Eyebrow = (content, o = {}) =>
+const Eyebrow = (content, o = {}) =>
   T(content.toUpperCase(), {
     fontSize: 12,
     fontWeight: '600',
@@ -131,9 +131,9 @@ export const F = (o = {}, children = []) => ({
 })
 export const Row = (o, ch) => F({ name: 'Row', gap: 12, alignItems: 'center', ...o }, ch)
 export const Col = (o, ch) => F({ name: 'Column', layout: 'vertical', gap: 12, ...o }, ch)
-export const Spacer = () => F({ name: 'Spacer', width: 'fill_container', height: 1 })
+const Spacer = () => F({ name: 'Spacer', width: 'fill_container', height: 1 })
 export const img = (url, mode = 'cover') => ({ type: 'image', url, mode })
-export const Cover = (art, size = 48, radius = 8, o = {}) =>
+const Cover = (art, size = 48, radius = 8, o = {}) =>
   F({
     name: 'Cover',
     width: size,
@@ -142,9 +142,8 @@ export const Cover = (art, size = 48, radius = 8, o = {}) =>
     fill: img(ART[art] ?? art),
     ...o,
   })
-export const Avatar = (art, size = 40, o = {}) =>
-  Cover(art, size, size / 2, { name: 'Avatar', ...o })
-export const Divider = (o = {}) =>
+const Avatar = (art, size = 40, o = {}) => Cover(art, size, size / 2, { name: 'Avatar', ...o })
+const Divider = (o = {}) =>
   F({ name: 'Divider', width: 'fill_container', height: 1, fill: C.border, ...o })
 /** In an importing file the children of a library component are addressed through the alias: `ds:<id>`. */
 const aliasPath = (key) =>
@@ -191,7 +190,7 @@ export const Button = (label, variant = 'default', { icon, width, name } = {}) =
     },
   )
 }
-export const IconButton = (icon, variant = 'ghost', name) =>
+const IconButton = (icon, variant = 'ghost', name) =>
   F(
     {
       name: name ?? `Icon Button / ${icon}`,
@@ -232,7 +231,7 @@ export const Switch = (label, on = true) =>
     { name: `Switch / ${label}` },
     { [on ? 'mNVZY' : 'T8vyQf']: { content: label } },
   )
-export const CheckRow = (label, on = false) =>
+const CheckRow = (label, on = false) =>
   Row(
     {
       name: `Checkbox / ${label.slice(0, 24)}`,
@@ -256,7 +255,7 @@ export const CheckRow = (label, on = false) =>
       P(label, { fontSize: 13, fill: C.foreground }),
     ],
   )
-export const Checkbox = (label, on = false) =>
+const Checkbox = (label, on = false) =>
   Ref(
     on ? 'u4ZPH' : 'FSq1c',
     { name: `Checkbox / ${label}` },
@@ -284,7 +283,7 @@ export const Alert = (title, body) =>
     { name: `Alert / ${title}`, width: 'fill_container' },
     { L7SHNm: { content: title }, F9kE6W: { content: body } },
   )
-export const Chip = (label, active = false) =>
+const Chip = (label, active = false) =>
   F(
     {
       name: `Chip / ${label}`,
@@ -302,19 +301,19 @@ export const Chip = (label, active = false) =>
       }),
     ],
   )
-export const Logo = (size = 28, fill = C.foreground) =>
+const Logo = (size = 28, fill = C.foreground) =>
   Row({ name: 'Brand', gap: 10 }, [
     Ref('OVOcb', { name: 'Bitrate Mark', width: size, height: size }),
     T('Bitrate', { fontFamily: 'font-heading', fontSize: size * 0.68, fontWeight: '600', fill }),
   ])
 
 /* ---------- composite blocks ---------- */
-export const SectionHeader = (title, action = 'Show all') =>
+const SectionHeader = (title, action = 'Show all') =>
   Row({ name: `Section / ${title}`, width: 'fill_container', justifyContent: 'space_between' }, [
     H(title, 22),
     action && T(action, { fontSize: 13, fontWeight: '600', fill: C.mutedForeground }),
   ])
-export const MediaCard = (title, meta, art, { w = 176, round = false } = {}) =>
+const MediaCard = (title, meta, art, { w = 176, round = false } = {}) =>
   Col({ name: `Card / ${title}`, width: w, gap: 10 }, [
     Cover(art, w, round ? w / 2 : 10),
     Col({ gap: 2, width: 'fill_container' }, [
@@ -327,12 +326,12 @@ export const MediaCard = (title, meta, art, { w = 176, round = false } = {}) =>
       }),
     ]),
   ])
-export const CardRow = (items, o = {}) =>
+const CardRow = (items, o = {}) =>
   Row(
     { name: 'Card Row', gap: 20, alignItems: 'start', ...o },
     items.map(([t, m, a]) => MediaCard(t, m, a, o)),
   )
-export const TrackTable = (rows, { album = true, added, active = 0 } = {}) =>
+const TrackTable = (rows, { album = true, added, active = 0 } = {}) =>
   Col({ name: 'Track Table', width: 'fill_container', gap: 0 }, [
     Row(
       {
@@ -417,7 +416,7 @@ export const TrackTable = (rows, { album = true, added, active = 0 } = {}) =>
       ),
     ),
   ])
-export const MobileTrack = (title, meta, art, o = {}) =>
+const MobileTrack = (title, meta, art, o = {}) =>
   Row({ name: `Track / ${title}`, width: 'fill_container', height: 60, gap: 12, ...o }, [
     Cover(art, 48, 6),
     Col({ gap: 2, width: 'fill_container' }, [
@@ -431,7 +430,7 @@ export const MobileTrack = (title, meta, art, o = {}) =>
     ]),
     I('ellipsis', { width: 18, height: 18 }),
   ])
-export const SettingRow = (title, desc, control) =>
+const SettingRow = (title, desc, control) =>
   Row(
     {
       name: `Setting / ${title}`,
@@ -449,7 +448,7 @@ export const SettingRow = (title, desc, control) =>
       control,
     ],
   )
-export const Panel = (o, ch) =>
+const Panel = (o, ch) =>
   Col(
     {
       name: 'Panel',
@@ -472,11 +471,7 @@ const TAB_IDS = {
   library: ['X78L7T', 'HnsIZ'],
   profile: ['pjDzF', 'j8Bscj'],
 }
-export function desktopApp(
-  name,
-  content,
-  { nowPlaying = false, library = true, height = 900 } = {},
-) {
+function desktopApp(name, content, { nowPlaying = false, library = true, height = 900 } = {}) {
   return F({ name, width: 1440, height, clip: true, layout: 'vertical', fill: C.background }, [
     Ref(
       'OPciE',
@@ -501,7 +496,7 @@ export function desktopApp(
     ),
   ])
 }
-export function mobileApp(name, content, { tab = 'home', mini = true, header } = {}) {
+function mobileApp(name, content, { tab = 'home', mini = true, header } = {}) {
   const desc = {}
   for (const [t, [ic, lb]] of Object.entries(TAB_IDS)) {
     desc[ic] = { fill: t === tab ? C.foreground : C.mutedForeground }
@@ -535,7 +530,7 @@ export function mobileApp(name, content, { tab = 'home', mini = true, header } =
     Ref('PmEet', { name: 'Tab Bar', width: 'fill_container' }, desc),
   ])
 }
-export const statusBar = () =>
+const statusBar = () =>
   Row(
     {
       name: 'Status Bar',
@@ -554,7 +549,7 @@ export const statusBar = () =>
       ),
     ],
   )
-export const mobileHeader = (title, { back = true, actions = [] } = {}) =>
+const mobileHeader = (title, { back = true, actions = [] } = {}) =>
   Row({ name: 'Mobile Header', width: 'fill_container', height: 52, padding: [0, 8], gap: 4 }, [
     back ? IconButton('chevron-left') : F({ width: 8, height: 1 }),
     T(title, {
@@ -568,11 +563,7 @@ export const mobileHeader = (title, { back = true, actions = [] } = {}) =>
   ])
 
 /** Signed-out shell: brand artwork on the left, the form on the right. */
-export function desktopAuth(
-  name,
-  form,
-  { art = 'hero', quote = 'Your music, ready when you are.' } = {},
-) {
+function desktopAuth(name, form, { art = 'hero', quote = 'Your music, ready when you are.' } = {}) {
   return F({ name, width: 1440, height: 900, clip: true, fill: C.background }, [
     F(
       {
@@ -607,7 +598,7 @@ export function desktopAuth(
     ),
   ])
 }
-export function mobileAuth(name, form) {
+function mobileAuth(name, form) {
   return F({ name, width: 390, height: 844, clip: true, layout: 'vertical', fill: C.background }, [
     statusBar(),
     Row({ name: 'Mobile Auth Header', width: 'fill_container', height: 56, padding: [0, 20] }, [
@@ -617,7 +608,7 @@ export function mobileAuth(name, form) {
   ])
 }
 /** Centered system/state screen (404, error, offline). */
-export const centered = (name, w, h, children, o = {}) =>
+const centered = (name, w, h, children, o = {}) =>
   F(
     {
       name,
@@ -639,7 +630,7 @@ export const centered = (name, w, h, children, o = {}) =>
 const bar = (w, h = 12, o = {}) =>
   F({ name: 'Skeleton', width: w, height: h, cornerRadius: h / 2, fill: C.muted, ...o })
 /** Skeleton that keeps the final layout: `list` rows, `grid` cards, or a `collection` header + rows. */
-export function skeleton(kind = 'list', mobile = false) {
+function skeleton(kind = 'list', mobile = false) {
   const rows = (n) =>
     Col(
       { name: 'Skeleton Rows', gap: 14, width: 'fill_container' },
@@ -680,7 +671,7 @@ export function skeleton(kind = 'list', mobile = false) {
   return [bar(mobile ? 140 : 220, 28, { cornerRadius: 8 }), rows(mobile ? 7 : 8)]
 }
 /** Centered message state: icon, title, description, actions (`[label, variant]`). */
-export function message(icon, title, desc, actions = [], mobile = false, tone) {
+function message(icon, title, desc, actions = [], mobile = false, tone) {
   return [
     F(
       {
@@ -737,7 +728,7 @@ export function message(icon, title, desc, actions = [], mobile = false, tone) {
     ),
   ]
 }
-export const errorMessage = (title, desc, mobile, actions = [['Try again']]) =>
+const errorMessage = (title, desc, mobile, actions = [['Try again']]) =>
   message('triangle-alert', title, desc, actions, mobile, C.destructive)
 
 /* ---------- file writer ---------- */

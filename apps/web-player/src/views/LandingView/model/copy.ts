@@ -4,7 +4,7 @@ import { pl } from './messages/pl'
 import { uk } from './messages/uk'
 
 /** Values interpolated into `{name}` placeholders. */
-export type LandingCopyValues = Record<string, number | string>
+type LandingCopyValues = Record<string, number | string>
 export type LandingCopy = (
   key: LandingKey,
   values?: LandingCopyValues,

@@ -18,7 +18,7 @@ import {
   Alert,
 } from './kit.mjs'
 
-export { Button, Input, Select, Switch, Badge, Tab, Otp, Progress, Alert, ART, C }
+export { Button, Input, Select, Switch, Badge, Tab, Progress, Alert, ART, C }
 const reg = JSON.parse(readFileSync(new URL('./registry.json', import.meta.url), 'utf8'))
 
 /** Instance of a page block by name; `parts` overrides its named parts, `o` its root. */
@@ -124,7 +124,7 @@ export const PlaylistCard = (title, sub, art, w = 168) =>
     { D3rpRY: { fill: img(ART[art]) }, I1BLb: { content: title }, oEjKW: { content: sub } },
   )
 export const CardRow = (cards) => Row({ name: 'Card Row', gap: 20, alignItems: 'start' }, cards)
-export const TrackRow = ([title, artist, album, _dur, art, when], i, { added = true } = {}) =>
+const TrackRow = ([title, artist, album, _dur, art, when], i, { added = true } = {}) =>
   Ref(
     'WQxBT',
     { name: `Track / ${title}` },
@@ -137,7 +137,7 @@ export const TrackRow = ([title, artist, album, _dur, art, when], i, { added = t
       QCCe4: added ? { content: when ?? '2 days ago' } : { enabled: false },
     },
   )
-export const PlayingRow = ([title, artist, album, dur, art], { added = true } = {}) =>
+const PlayingRow = ([title, artist, album, dur, art], { added = true } = {}) =>
   R(
     'Track Row/Playing',
     {},
@@ -161,7 +161,7 @@ export const MobileTrack = (title, meta, art) =>
     { name: `Track / ${title}`, width: 'fill_container' },
     { fjPYf: { fill: img(ART[art]) }, RJ2go: { content: title }, rFh9q: { content: meta } },
   )
-export const LibraryItem = (title, meta) =>
+const LibraryItem = (title, meta) =>
   Ref(
     'ZUzZL',
     { name: `Library / ${title}` },
@@ -320,8 +320,7 @@ export function Skeleton(kind = 'list', mobile = false, { more = false } = {}) {
   return wrap([heading(), col(many('Skeleton/Track Row Mobile', mobile ? 10 : 12), 16)])
 }
 /** Footer of a long list while the next page streams in, or once everything is shown. */
-export const LoadMore = (count = '50 of 1,240') =>
-  R('List/Load More', {}, { count: { content: count } })
+const LoadMore = (count = '50 of 1,240') => R('List/Load More', {}, { count: { content: count } })
 export const ListEnd = (label) => R('List/End', {}, { label: { content: label } })
 
 /* containers with slots */
@@ -469,7 +468,7 @@ export function Desktop(name, content, { nowPlaying = false, library = true, hei
 }
 /* mobile navigation is the floating island (Home, Search, Library + artwork and play); "Create" lives in Library */
 const ISLAND_TABS = ['home', 'search', 'library']
-export const Island = (tab = 'home', o = {}) => {
+const Island = (tab = 'home', o = {}) => {
   const t = tab === 'create' ? 'library' : tab
   return R(
     'Mobile/Island',

@@ -1,7 +1,7 @@
 import type { LandingCopy } from '../../model/copy'
 
 /** Mutable state the engine modules share while the landing is mounted. */
-export type EngineState = {
+type EngineState = {
   /** Index of the scene on screen. */
   index: number
   /** A scene change is running; input is ignored until it settles. */
@@ -28,7 +28,7 @@ export type EngineContext = {
 /** The archived composition every scene board is laid out on. */
 export const BOARD = { width: 1440, height: 900 } as const
 /** Below this width scenes become a single column and the 3D stage steps back. */
-export const MOBILE_MAX_WIDTH = 820
+const MOBILE_MAX_WIDTH = 820
 
 export const isMobile = () => window.innerWidth <= MOBILE_MAX_WIDTH
 
