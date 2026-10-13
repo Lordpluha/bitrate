@@ -166,61 +166,7 @@ const SCENES = [
     note: 'Enter: three cards rise with a 3D tilt; the seek bar fills, hearts pop. 3D: the surface becomes a wave ribbon over a 72-band particle spectrum.',
   },
   {
-    name: '03 • For Artists',
-    stack: true,
-    copy: {
-      eyebrow: 'FOR ARTISTS',
-      parts: [['Release work,'], ['in one line of sight.', 'accent']],
-      desc: 'Versions, tasks and delivery on one timeline. The system suggests. You stay in control.',
-    },
-    signal: [110, 'SIGNAL · TORUS'],
-    ui: (m) =>
-      Panel(
-        [
-          Row({ width: 'fill_container', gap: 14 }, [
-            R('Media/Cover', { width: 48, height: 48, fill: img(ART.afterglow) }),
-            Col({ gap: 2, width: 'fill_container' }, [
-              Tx('H4', 'Afterglow'),
-              Tx('Muted', 'Demo artist · EP'),
-            ]),
-            R('Status/Info', {}, { label: { content: 'Review in progress' } }),
-          ]),
-          !m &&
-            Row({ name: 'Stepper', width: 'fill_container', gap: 8 }, [
-              step('Done', 'Audio'),
-              R('Stepper/Connector Done'),
-              step('Done', 'Artwork'),
-              R('Stepper/Connector Done'),
-              step('Done', 'Details'),
-              R('Stepper/Connector Done'),
-              step('Current', 'Review', 4),
-              R('Stepper/Connector'),
-              step('Upcoming', 'Delivery', 5),
-            ]),
-          SettingRow(
-            'Release check',
-            'Align master, artwork and metadata.',
-            Badge('Now', 'default'),
-          ),
-          SettingRow(
-            'Prepare delivery',
-            'Select services and confirm the date.',
-            Badge('20 min', 'outline'),
-          ),
-          !m &&
-            SettingRow(
-              'Post-release review',
-              'Signals and follow-up tasks.',
-              Badge('After launch', 'outline'),
-            ),
-          Tx('Caption', 'Release workspace concept · Demonstration data'),
-        ],
-        { width: 'fill_container' },
-      ),
-    note: 'Enter: the workspace window rises; steps light up in sequence, tasks and versions slide in. 3D: the signal folds into a torus; particles draw the release timeline with five milestones.',
-  },
-  {
-    name: '04 • Playlist Workshop',
+    name: '03 • Playlist Workshop',
     copy: {
       eyebrow: 'PLAYLIST WORKSHOP · CONCEPT',
       parts: [['Start with a feeling.'], ['Finish with'], ['your playlist.', 'accent']],
@@ -261,7 +207,7 @@ const SCENES = [
     note: 'Enter: the prompt types itself, the four-step bar fills, candidates slide in and re-rank every 2.6 s (FLIP). 3D: a trefoil knot; four concentric particle orbits.',
   },
   {
-    name: '05 • Your Player. Your Rules.',
+    name: '04 • Your Player. Your Rules.',
     reverse: true,
     copy: {
       eyebrow: 'MAKE IT YOURS',
@@ -285,7 +231,7 @@ const SCENES = [
     note: 'Enter: the player canvas rises over its back plate; the floating queue is dropped in at −5° and keeps floating; the toggle switches on. 3D: a vinyl with grooves over a perspective floor grid.',
   },
   {
-    name: '06 • A Library With A Memory',
+    name: '05 • A Library With A Memory',
     stack: true,
     copy: {
       eyebrow: 'YOUR COLLECTION, CONNECTED',
@@ -318,7 +264,7 @@ const SCENES = [
     note: 'Enter: the search types "night", results and history rows cascade in. 3D: a double-helix ribbon (memory); particles stack into three version rings.',
   },
   {
-    name: '07 • Follow The Sound',
+    name: '06 • Follow The Sound',
     copy: {
       eyebrow: 'DISCOVER THE CONNECTIONS',
       parts: [['Follow the'], ['sound.', 'accent']],
@@ -349,7 +295,7 @@ const SCENES = [
     note: 'Enter: eight links draw from Luma Vale, nodes pop from the edges, connection tags fade in. 3D: a spiked bloom sits behind the focus node; particles trace the same graph.',
   },
   {
-    name: '08 • Same Queue. New Scene.',
+    name: '07 • Same Queue. New Scene.',
     copy: {
       eyebrow: 'KEEP THE SESSION GOING',
       parts: [['Same queue.'], ['New scene.', 'accent']],
@@ -401,7 +347,7 @@ const SCENES = [
     note: 'Enter: the phone slides in over the desktop window and the dashed link draws between them; both progress bars tick in sync. 3D: a twisted torus; particles outline both devices.',
   },
   {
-    name: '09 • Beyond The Play Button',
+    name: '08 • Beyond The Play Button',
     copy: {
       eyebrow: 'MUSIC IS A CONVERSATION',
       parts: [['Beyond the'], ['play button.', 'accent']],
@@ -447,7 +393,7 @@ const SCENES = [
     note: 'Enter: comment markers pop on the waveform, comments appear one by one. 3D: the sphere speaks — high noise amplitude; particles ripple out from the friend card.',
   },
   {
-    name: '10 • Our Partners',
+    name: '09 • Our Partners',
     copy: {
       eyebrow: 'OUR PARTNERS',
       parts: [['Partners who keep'], ['the signal on air.', 'accent']],
@@ -490,7 +436,7 @@ const SCENES = [
     note: 'Interactive: 30 inflated rubber spheres (clearcoat) pulled to the centre, colliding; the cursor pushes them, grab to drag and throw, they squash with speed. Enter: they fly in from the edges.',
   },
   {
-    name: '11 • About Our Team',
+    name: '10 • About Our Team',
     copy: {
       eyebrow: 'ABOUT OUR TEAM',
       parts: [['Small team.'], ['Loud signal.', 'accent']],
@@ -539,7 +485,7 @@ const SCENES = [
   },
 ]
 const FINAL = {
-  name: '12 • Start',
+  name: '11 • Start',
   note: 'Enter: the Newton\'s cradle swings in (chrome matcap balls, one sine split between the outer balls); the dome rises behind; glitch on "left off." Footer: the status pill opens the health panel.',
 }
 
@@ -981,7 +927,7 @@ export const landing = {
     ),
     state(
       'Team hover card',
-      () => pageFrame('Team hover card', W, [sceneD(SCENES[10], 10, true)]),
+      () => pageFrame('Team hover card', W, [sceneD(SCENES[9], 9, true)]),
       null,
       'hover cards need a pointer; on touch a tap opens the same card',
     ),
