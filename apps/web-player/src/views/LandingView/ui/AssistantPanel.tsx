@@ -1,6 +1,7 @@
 'use client'
 
 import { type FormEvent, useEffect, useRef, useState } from 'react'
+import { lc } from '../lib/styles/lc'
 import type { LandingKey } from '../model/messages/en'
 import { useLandingCopy } from '../model/useLandingCopy'
 import { AssistantOrb, type OrbState } from './AssistantOrb'
@@ -132,19 +133,19 @@ export const AssistantPanel = () => {
         aria-controls="aiPanel"
         aria-expanded={open}
         aria-label={c(open ? 'assistant.close' : 'assistant.open')}
-        className="ai-fab"
+        className={lc('ai-fab')}
         onClick={() => setOpen((v) => !v)}
         ref={fab}
         type="button"
       >
         {open ? (
-          <span aria-hidden="true" className="ai-fab-x">
+          <span aria-hidden="true" className={lc('ai-fab-x')}>
             ✕
           </span>
         ) : (
           <svg
             aria-hidden="true"
-            className="i ai-fab-spark"
+            className={lc('i ai-fab-spark')}
             viewBox="0 0 24 24"
           >
             <path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z" />
@@ -153,7 +154,7 @@ export const AssistantPanel = () => {
       </button>
       <section
         aria-label={c('assistant.title')}
-        className="ai-panel"
+        className={lc('ai-panel')}
         id="aiPanel"
         onKeyDown={(e) => {
           e.stopPropagation()
@@ -163,14 +164,14 @@ export const AssistantPanel = () => {
         }}
         ref={panel}
       >
-        <div className="ai-head">
-          <span className="mk">
+        <div className={lc('ai-head')}>
+          <span className={lc('mk')}>
             <svg aria-hidden="true" viewBox="371 117 795 775">
               <use fill="url(#bm)" href="#bitrate-logo" />
             </svg>
           </span>
           <span>
-            <b className="ai-title">{c('assistant.title')}</b>
+            <b className={lc('ai-title')}>{c('assistant.title')}</b>
             <small aria-live="polite">
               {phase === 'idle'
                 ? c('assistant.status')
@@ -179,23 +180,25 @@ export const AssistantPanel = () => {
           </span>
           <button
             aria-label={c('assistant.close')}
-            className="ai-x"
+            className={lc('ai-x')}
             onClick={() => setOpen(false)}
             type="button"
           >
             ✕
           </button>
         </div>
-        <div className="ai-msgs" ref={list}>
+        <div className={lc('ai-msgs')} ref={list}>
           {messages.length === 0 && (
-            <div className="ai-welcome">
+            <div className={lc('ai-welcome')}>
               <AssistantOrb running={open} size={64} state="breathing" />
               <b>{c('assistant.welcome')}</b>
-              <span className="t-meta">{c('assistant.welcome_hint')}</span>
-              <div className="ai-chips">
+              <span className={lc('t-meta')}>
+                {c('assistant.welcome_hint')}
+              </span>
+              <div className={lc('ai-chips')}>
                 {PRESETS.map(({ q }) => (
                   <button
-                    className="ai-chip"
+                    className={lc('ai-chip')}
                     key={q}
                     onClick={() => ask(c(q))}
                     type="button"
@@ -207,19 +210,19 @@ export const AssistantPanel = () => {
             </div>
           )}
           {messages.map((m) => (
-            <div className={m.me ? 'ai-b me' : 'ai-b'} key={m.id}>
+            <div className={lc(m.me ? 'ai-b me' : 'ai-b')} key={m.id}>
               {m.text}
             </div>
           ))}
           {phase !== 'idle' && (
-            <div className="ai-typing">
+            <div className={lc('ai-typing')}>
               <AssistantOrb running={open} size={20} state={phase} />
               <span>{c('assistant.thinking')}</span>
             </div>
           )}
         </div>
-        <form className="ai-comp" onSubmit={onSubmit}>
-          <span className="ai-in">
+        <form className={lc('ai-comp')} onSubmit={onSubmit}>
+          <span className={lc('ai-in')}>
             <input
               aria-label={c('assistant.message')}
               autoComplete="off"
@@ -231,7 +234,7 @@ export const AssistantPanel = () => {
             />
             <button
               aria-label={c('assistant.send')}
-              className="ai-send"
+              className={lc('ai-send')}
               type="submit"
             >
               ↑

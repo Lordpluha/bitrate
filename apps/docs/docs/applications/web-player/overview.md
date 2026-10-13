@@ -47,7 +47,10 @@ legal pages keep `app/(landing)/` with the shared Header and Footer. `views/Land
 eleven scenes on the server. Its motion engine (`lib/engine/`: GSAP scenes, a Three.js stage,
 physics, intro, cursor) is imported only on the client after mount. Without WebGL it switches to
 2D fallbacks, and with reduced motion it is a static, scrollable page. The landing copy is a
-local catalog (en, uk, pl; other locales read English). Behaviour and acceptance:
+local catalog (en, uk, pl; other locales read English). Styling is Tailwind: `lib/styles/landing.styles.ts` lists
+utilities per marker class in cascade order (context rules as arbitrary variants), and `lc()`
+merges an element's entries with `cn`; `ui/landing.css` keeps only keyframes, the `html` scroll
+and cursor locks and the grain data URI. Behaviour and acceptance:
 [web-player landing spec](../../specs/web-player-landing.md); motion reference:
 `pencil/web-player-design/landing/motion-prototype.html`.
 

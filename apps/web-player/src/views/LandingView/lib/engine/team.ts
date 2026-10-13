@@ -1,5 +1,6 @@
 import { gsap } from 'gsap'
 import type { LandingKey } from '../../model/messages/en'
+import { lc } from '../styles/lc'
 import { type EngineContext, must } from './context'
 
 const REPO = 'https://github.com/Lordpluha/bitrate'
@@ -158,7 +159,7 @@ export const mountTeam = (ctx: EngineContext) => {
   const hc = must({ root, selector: '#hc', type: HTMLElement })
   const bubbles: Bubble[] = members(ctx).map((d) => {
     const el = document.createElement('div')
-    el.className = `ball ${d.kind}`
+    el.className = lc(`ball ${d.kind}`)
     el.style.width = `${d.r * 2}px`
     el.style.height = `${d.r * 2}px`
     el.style.background = d.bg
@@ -207,28 +208,28 @@ export const mountTeam = (ctx: EngineContext) => {
   }
   const renderCard = (d: Member) => {
     const row = document.createElement('div')
-    row.className = 'row'
+    row.className = lc('row')
     const av = document.createElement('span')
-    av.className = 'av'
+    av.className = lc('av')
     av.style.background = d.bg
     av.textContent = d.kind === 'person' ? d.label : d.label.slice(0, 2)
     const who = document.createElement('div')
     const name = document.createElement('p')
-    name.className = 't-title'
+    name.className = lc('t-title')
     name.textContent = d.name
     const meta = document.createElement('p')
-    meta.className = 't-meta'
+    meta.className = lc('t-meta')
     meta.textContent = d.meta
     who.append(name, meta)
     row.append(av, who)
     const bio = document.createElement('p')
-    bio.className = 't-meta hc-bio'
+    bio.className = lc('t-meta hc-bio')
     bio.textContent = d.bio
     const links = document.createElement('div')
-    links.className = 'links'
+    links.className = lc('links')
     for (const { text, href } of d.links) {
       const a = document.createElement('a')
-      a.className = 'btn btn-ghost btn-xs'
+      a.className = lc('btn btn-ghost btn-xs')
       a.href = href
       a.target = '_blank'
       a.rel = 'noopener noreferrer'

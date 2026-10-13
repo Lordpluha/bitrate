@@ -24,7 +24,7 @@ const skipIntro = async (page: Page) => {
 const activeScene = (page: Page) => page.locator('.landing .scene.is-active')
 /** The engine is mounted once the dots reflect its state and the page is locked to scenes. */
 const engineReady = (page: Page) =>
-  expect(page.locator('html')).toHaveClass(/landing-lock/)
+  expect(page.locator('html')).toHaveClass(/(^|\s)landing-lock(\s|$)/)
 
 test.describe('landing page', () => {
   test('renders the eleven scenes and none of the old landing', async ({
@@ -127,7 +127,9 @@ test.describe('landing navigation on desktop', () => {
     }).toPass({ timeout: 8000 })
     await expect(page).toHaveURL(/#library$/)
 
-    await expect(page.locator('.landing')).not.toHaveClass(/is-static/)
+    await expect(page.locator('.landing')).not.toHaveClass(
+      /(^|\s)is-static(\s|$)/,
+    )
     await page.mouse.move(400, 400)
     await expect(async () => {
       await page.mouse.wheel(0, 240)
@@ -238,8 +240,10 @@ test.describe('landing with reduced motion', () => {
 
   test('shows every scene on one static, scrollable page', async ({ page }) => {
     await page.goto('/')
-    await expect(page.locator('.landing')).toHaveClass(/is-static/)
-    await expect(page.locator('html')).not.toHaveClass(/landing-lock/)
+    await expect(page.locator('.landing')).toHaveClass(/(^|\s)is-static(\s|$)/)
+    await expect(page.locator('html')).not.toHaveClass(
+      /(^|\s)landing-lock(\s|$)/,
+    )
     await expect(page.locator('.landing .scene.is-active')).toHaveCount(
       SCENES.length,
     )

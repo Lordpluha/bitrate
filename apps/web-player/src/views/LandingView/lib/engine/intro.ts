@@ -1,4 +1,5 @@
 import { gsap } from 'gsap'
+import { lc } from '../styles/lc'
 import type { EngineContext } from './context'
 
 /* The pen's route through the Bitrate mark, in the mark's own coordinates (viewBox 371 117 795 775). */
@@ -70,7 +71,7 @@ const drawLogo = ({ el, onDone }: { el: HTMLElement; onDone: () => void }) => {
     return () => {}
   }
   const svg = svgEl('svg', {
-    class: 'll-draw',
+    class: lc('ll-draw'),
     width: '100%',
     height: '100%',
     'aria-hidden': 'true',
@@ -110,7 +111,7 @@ const drawLogo = ({ el, onDone }: { el: HTMLElement; onDone: () => void }) => {
   const sb = spine(SPINE_B)
   mask.append(sa, sb)
   defs.append(mask)
-  const mark = svgEl('g', { class: 'mark' })
+  const mark = svgEl('g', { class: lc('mark') })
   const trace = svgEl('use', {
     href: '#bitrate-logo',
     fill: 'none',
@@ -143,7 +144,7 @@ const drawLogo = ({ el, onDone }: { el: HTMLElement; onDone: () => void }) => {
   })
   const route = svgEl('path', { fill: 'none', stroke: 'none' })
   const head = svgEl('circle', {
-    class: 'head',
+    class: lc('head'),
     r: '46',
     fill: 'var(--color-purple-200)',
     opacity: '0',
@@ -161,7 +162,7 @@ const drawLogo = ({ el, onDone }: { el: HTMLElement; onDone: () => void }) => {
   const LOGO = logo.getTotalLength()
   const la = measure(SPINE_A)
   const lb = measure(SPINE_B)
-  const lc = measure(CONNECT)
+  const lConnect = measure(CONNECT)
   const aTip = measure('M 405 152 C 430 200 470 211 560 211')
   const laRest = measure(`M 560 211 ${A_REST}`)
   const lbHead = measure(B_HEAD)
@@ -172,7 +173,7 @@ const drawLogo = ({ el, onDone }: { el: HTMLElement; onDone: () => void }) => {
   const g = { lin: 0, lout: 0, total: 0, P: 0, T: 0 }
   const paint = () => {
     const { lin, lout, total, P, T } = g
-    const bStart = lin + laRest + lc
+    const bStart = lin + laRest + lConnect
     const oStart = bStart + lbHead
     const drawn = (x: number, start: number, len: number) =>
       clamp((x - start) / len)

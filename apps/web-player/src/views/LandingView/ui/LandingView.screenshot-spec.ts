@@ -8,11 +8,11 @@ test('landing page default state', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1 })).toContainText(
     'Your music',
   )
-  await expect(page.locator('.landing')).toHaveClass(/is-static/)
+  await expect(page.locator('.landing')).toHaveClass(/(^|\s)is-static(\s|$)/)
   await page.evaluate(() => document.fonts.ready)
 
-  /* the stage canvas is GPU output, which differs between machines */
-  await expect(page).toHaveScreenshot('landing-default.png', {
-    mask: [page.locator('#stage')],
-  })
+  /* the stage canvas is GPU output, which differs between machines; it covers the whole
+     viewport, so it is hidden rather than masked (a mask would paint over the page) */
+  await page.addStyleTag({ content: '#stage { visibility: hidden; }' })
+  await expect(page).toHaveScreenshot('landing-default.png')
 })

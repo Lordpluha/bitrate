@@ -2,6 +2,7 @@
 
 import { ROUTES } from '@shared/routes'
 import Link from 'next/link'
+import { lc } from '../../lib/styles/lc'
 import { useLandingCopy } from '../../model/useLandingCopy'
 import { ServiceStatus } from '../ServiceStatus'
 import type { SceneProps } from './scene.types'
@@ -12,80 +13,61 @@ export const SceneStart = ({ signedIn }: SceneProps) => {
   return (
     <section
       aria-label={c('cta.pick_up_where_the_last_track_left_off')}
-      className="scene"
+      className={lc('scene')}
       data-label="Start"
       id="cta"
     >
-      <div className="board">
+      <div className={lc('board')}>
         <div
-          className="abs d-only"
-          style={{
-            '--x': '70',
-            '--y': '404',
-            '--w': '1300',
-            '--h': '378',
-            opacity: '.55',
-          }}
+          className={lc('abs d-only', 'opacity-[.55]')}
+          style={{ '--x': '70', '--y': '404', '--w': '1300', '--h': '378' }}
         >
-          <canvas className="spec" data-bars="90" data-tall="1"></canvas>
+          <canvas className={lc('spec')} data-bars="90" data-tall="1"></canvas>
         </div>
         <div
-          className="abs d-only"
+          className={lc('abs d-only')}
           style={{ '--x': '205', '--y': '555', '--w': '1030', '--h': '227' }}
         >
-          <div className="dome" style={{ height: '100%' }}></div>
+          <div className={lc('dome', 'h-full')}></div>
         </div>
         <div
-          className="abs"
-          style={{
-            '--x': '160',
-            '--y': '64',
-            '--w': '1120',
-            textAlign: 'center',
-          }}
+          className={lc('abs', 'text-center')}
+          style={{ '--x': '160', '--y': '64', '--w': '1120' }}
         >
-          <div
-            data-a="up"
-            style={{ display: 'flex', justifyContent: 'center' }}
-          >
+          <div className="flex justify-center" data-a="up">
             <span
-              className="pill"
-              style={{
-                padding: '11px 16px',
-                fontSize: '12px',
-                letterSpacing: '.14em',
-                fontFamily: 'var(--font-data)',
-              }}
+              className={lc(
+                'pill',
+                'p-[11px_16px] [font-size:12px] tracking-[.14em] font-[family-name:var(--font-data)]',
+              )}
             >
               {c('cta.ready_when_you_are')}
             </span>
           </div>
-          <h2 className="h h80" style={{ marginTop: '26px' }}>
-            <span className="line">
+          <h2 className={lc('h h80', 'mt-[26px]')}>
+            <span className={lc('line')}>
               <span>{c('cta.pick_up_where_the')}</span>
             </span>
-            <span className="line">
+            <span className={lc('line')}>
               <span>
                 {c('cta.last_track')}{' '}
-                <span className="hl">{c('cta.left_off')}</span>
+                <span className={lc('hl')}>{c('cta.left_off')}</span>
               </span>
             </span>
           </h2>
-          <p className="lede" data-a="up" style={{ marginTop: '20px' }}>
+          <p className={lc('lede', 'mt-[20px]')} data-a="up">
             {c('cta.open_bitrate_in_the_browser_and_make_the')}
           </p>
-          <div
-            className="ctas"
-            data-a="up"
-            style={{ justifyContent: 'center', marginTop: '26px' }}
-          >
+          <div className={lc('ctas', 'justify-center mt-[26px]')} data-a="up">
             <Link
-              className="btn btn-primary magnetic"
+              className={lc(
+                'btn btn-primary magnetic',
+                'h-[60px]! p-[0_30px]! [font-size:16px]',
+              )}
               href={ROUTES.main}
-              style={{ height: '60px', padding: '0 30px', fontSize: '16px' }}
             >
               {c('cta.open_web_player')}{' '}
-              <svg aria-hidden="true" className="i">
+              <svg aria-hidden="true" className={lc('i')}>
                 <use href="#i-arrow" />
               </svg>
             </Link>
@@ -93,66 +75,56 @@ export const SceneStart = ({ signedIn }: SceneProps) => {
         </div>
         <div
           aria-hidden="true"
-          className="abs"
+          className={lc('abs #cradleSlot')}
           id="cradleSlot"
           style={{ '--x': '520', '--y': '470', '--w': '400', '--h': '250' }}
         ></div>
         <p
-          className="abs mono"
+          className={lc('abs mono', 'text-center')}
           data-a="up"
-          style={{
-            '--x': '420',
-            '--y': '738',
-            '--w': '600',
-            textAlign: 'center',
-          }}
+          style={{ '--x': '420', '--y': '738', '--w': '600' }}
         >
           {c('cta.energy_carries_on_so_does_your_queue')}
         </p>
         <div
-          className="abs"
+          className={lc('abs')}
           data-a="up"
           style={{ '--x': '0', '--y': '782', '--w': '1440', '--h': '118' }}
         >
-          <div className="footer">
-            <span className="row">
-              <b
-                style={{
-                  font: '600 20px/1 var(--font-display)',
-                  color: 'var(--fg)',
-                }}
-              >
+          <div className={lc('footer')}>
+            <span className={lc('row')}>
+              <b className="font-[600] [font-size:20px] leading-[1] font-[family-name:var(--font-display)] text-foreground">
                 {c('cta.bitrate')}
               </b>
-              <span className="d-only">{c('cta.playback_is_the_product')}</span>
+              <span className={lc('d-only')}>
+                {c('cta.playback_is_the_product')}
+              </span>
             </span>
-            <span className="sig d-only">{c('cta.music_lives_on')}</span>
-            <span className="row" style={{ gap: '24px' }}>
+            <span className={lc('sig d-only')}>{c('cta.music_lives_on')}</span>
+            <span className={lc('row', 'gap-[24px]')}>
               {!signedIn && (
-                <Link className="ulink" href={ROUTES.auth.login}>
+                <Link className={lc('ulink')} href={ROUTES.auth.login}>
                   {c('cta.log_in')}
                 </Link>
               )}
               {!signedIn && (
-                <Link className="ulink u-right" href={ROUTES.auth.registration}>
+                <Link
+                  className={lc('ulink u-right')}
+                  href={ROUTES.auth.registration}
+                >
                   {c('cta.create_account')}
                 </Link>
               )}
-              <Link className="ulink u-center d-only" href={ROUTES.main}>
+              <Link className={lc('ulink u-center d-only')} href={ROUTES.main}>
                 {c('cta.player_preview')}
               </Link>
-              <Link className="ulink d-only" href={ROUTES.terms}>
+              <Link className={lc('ulink d-only')} href={ROUTES.terms}>
                 {c('cta.legal')}
               </Link>
               <ServiceStatus />
             </span>
           </div>
-          <svg
-            aria-hidden="true"
-            height="0"
-            style={{ position: 'absolute' }}
-            width="0"
-          >
+          <svg aria-hidden="true" className="absolute" height="0" width="0">
             <filter id="goo">
               <feGaussianBlur in="SourceGraphic" result="b" stdDeviation="9" />
               <feColorMatrix

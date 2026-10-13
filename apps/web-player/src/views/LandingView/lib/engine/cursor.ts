@@ -1,4 +1,5 @@
 import { gsap } from 'gsap'
+import { lc } from '../styles/lc'
 import type { EngineContext } from './context'
 
 type Mode =
@@ -45,17 +46,17 @@ export const mountCursor = (ctx: EngineContext & { level: () => number }) => {
   const html = document.documentElement
   html.classList.add('has-cursor')
   const cur = document.createElement('div')
-  cur.className = 'cur m-default is-out'
+  cur.className = lc('cur m-default is-out')
   cur.setAttribute('aria-hidden', 'true')
   const make = (cls: string, html = '') => {
     const d = document.createElement('div')
-    d.className = cls
+    d.className = lc(cls)
     d.innerHTML = html
     return d
   }
   const ringEl = make(
     'cur-ring',
-    '<span class="cur-eq"><i></i><i></i><i></i><i></i><i></i></span><span class="cur-arrows">‹›</span><span class="cur-ban"></span>',
+    `<span class="${lc('cur-eq')}"><i></i><i></i><i></i><i></i><i></i></span><span class="${lc('cur-arrows')}">‹›</span><span class="${lc('cur-ban')}"></span>`,
   )
   const pill = make('cur-pill', '<i></i><span></span>')
   const beam = make('cur-beam')

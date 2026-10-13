@@ -1,3 +1,4 @@
+import { lc, lcList } from '../styles/lc'
 import { all, type EngineContext } from './context'
 import { isLightTheme, mixRgb, type PaletteToken, token } from './palette'
 
@@ -27,7 +28,7 @@ const splitChars = (node: Node) => {
         word.style.whiteSpace = 'nowrap'
         for (const ch of w) {
           const c = document.createElement('span')
-          c.className = 'char'
+          c.className = lc('char')
           c.textContent = ch
           word.appendChild(c)
         }
@@ -79,7 +80,7 @@ export const mountHeadings = (ctx: EngineContext) => {
   })
   for (const ln of all({ root, selector: '.line', type: HTMLElement })) {
     if (!ln.querySelector('.hl')) continue
-    ln.classList.add('glitch')
+    ln.classList.add(...lcList('glitch'))
     ln.dataset.text = ln.textContent ?? ''
     ln.addEventListener('pointerenter', () => glitch(ln), { signal })
   }

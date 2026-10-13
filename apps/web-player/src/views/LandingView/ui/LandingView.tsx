@@ -20,6 +20,7 @@ import { SceneStart } from './scenes/SceneStart'
 import { SceneTeam } from './scenes/SceneTeam'
 import { SceneWorkshop } from './scenes/SceneWorkshop'
 import './landing.css'
+import { lc } from '../lib/styles/lc'
 
 export type LandingViewProps = {
   /** The visitor has a session: hide "Create account" and "Log in". */
@@ -56,19 +57,19 @@ const LandingContent = ({ signedIn }: LandingViewProps) => {
   }, [c])
 
   return (
-    <div className="landing" ref={root}>
+    <div className={lc('landing')} ref={root}>
       <LandingIcons />
-      <canvas id="stage" />
-      <div aria-hidden="true" className="cursor-glow" />
-      <div aria-hidden="true" className="sweep" />
-      <div aria-hidden="true" className="grain" />
-      <div aria-hidden="true" className="intro">
-        <div className="intro-ll" />
+      <canvas className={lc('#stage')} id="stage" />
+      <div aria-hidden="true" className={lc('cursor-glow')} />
+      <div aria-hidden="true" className={lc('sweep')} />
+      <div aria-hidden="true" className={lc('grain')} />
+      <div aria-hidden="true" className={lc('intro')}>
+        <div className={lc('intro-ll')} />
         <b>Bitrate</b>
-        <span className="mono">{c('chrome.tuning_in')}</span>
+        <span className={lc('mono')}>{c('chrome.tuning_in')}</span>
       </div>
       <LandingHeader />
-      <nav aria-label={c('chrome.scenes')} className="dots">
+      <nav aria-label={c('chrome.scenes')} className={lc('dots')}>
         {LANDING_SCENES.map(({ id, label }, i) => (
           <button
             aria-current={i === 0}
@@ -83,9 +84,9 @@ const LandingContent = ({ signedIn }: LandingViewProps) => {
           </button>
         ))}
       </nav>
-      <div aria-hidden="true" className="counter">
+      <div aria-hidden="true" className={lc('counter')}>
         <b data-scene-num="">{formatSceneNumber(1)}</b>
-        <span className="rail">
+        <span className={lc('rail')}>
           <i data-scene-rail="" />
         </span>
         <span>{formatSceneNumber(LANDING_SCENES.length)}</span>

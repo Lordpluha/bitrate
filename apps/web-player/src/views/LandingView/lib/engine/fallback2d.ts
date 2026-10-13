@@ -1,4 +1,5 @@
 import { gsap } from 'gsap'
+import { lc } from '../styles/lc'
 import { type EngineContext, must } from './context'
 import { PARTNER_MARKS } from './marks'
 import { type PaletteToken, tokenAlpha } from './palette'
@@ -99,7 +100,7 @@ export const mountPartners2d = (ctx: EngineContext) => {
     if (!mark) continue
     const r = 44 + ((i * 37) % 5) * 9
     const el = document.createElement('div')
-    el.className = 'ball tech'
+    el.className = lc('ball tech')
     el.style.width = `${r * 2}px`
     el.style.height = `${r * 2}px`
     el.style.background = `radial-gradient(circle at 32% 28%, color-mix(in srgb, var(--color-white) 55%, transparent), transparent 34%), var(--color-${mark.bg})`

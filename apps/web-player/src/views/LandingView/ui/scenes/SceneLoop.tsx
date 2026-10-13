@@ -1,5 +1,6 @@
 'use client'
 
+import { lc } from '../../lib/styles/lc'
 import { useLandingCopy } from '../../model/useLandingCopy'
 
 /** Scene "Loop" — ported from the motion prototype; the landing engine animates it after mount. */
@@ -8,238 +9,195 @@ export const SceneLoop = () => {
   return (
     <section
       aria-label={c('loop.play_save_return')}
-      className="scene"
+      className={lc('scene')}
       data-label="Loop"
       id="loop"
     >
-      <div className="board">
-        <div className="abs" style={{ '--x': '60', '--y': '64', '--w': '900' }}>
-          <h2 className="h h80">
-            <span className="line">
+      <div className={lc('board')}>
+        <div
+          className={lc('abs')}
+          style={{ '--x': '60', '--y': '64', '--w': '900' }}
+        >
+          <h2 className={lc('h h80')}>
+            <span className={lc('line')}>
               <span>
-                {c('loop.play')} <span className="hl">{c('loop.save')}</span>{' '}
+                {c('loop.play')}{' '}
+                <span className={lc('hl')}>{c('loop.save')}</span>{' '}
                 {c('loop.return')}
               </span>
             </span>
           </h2>
-          <p className="lede" data-a="up" style={{ marginTop: '18px' }}>
+          <p className={lc('lede', 'mt-[18px]')} data-a="up">
             {c('loop.one_listening_loop_built_around_the_musi')}
           </p>
         </div>
         <div
-          className="abs label d-only"
+          className={lc('abs label d-only', 'text-right')}
           data-a="up"
-          style={{
-            '--x': '1196',
-            '--y': '72',
-            '--w': '200',
-            textAlign: 'right',
-          }}
+          style={{ '--x': '1196', '--y': '72', '--w': '200' }}
         >
           {c('loop.interface_preview')}
         </div>
         <div
-          className="abs card tiltable"
+          className={lc('abs card tiltable')}
           data-a="win"
           style={{ '--x': '60', '--y': '254', '--w': '424', '--h': '542' }}
         >
-          <div
-            className="col"
-            style={{
-              padding: '24px',
-              gap: '18px',
-              height: '100%',
-              boxSizing: 'border-box',
-            }}
-          >
-            <div className="row" style={{ alignItems: 'flex-start' }}>
-              <span className="medal">
-                <svg aria-hidden="true" className="i">
+          <div className={lc('col', 'p-[24px] gap-[18px] h-full! box-border')}>
+            <div className={lc('row', 'items-start')}>
+              <span className={lc('medal')}>
+                <svg aria-hidden="true" className={lc('i')}>
                   <use href="#i-play" />
                 </svg>
               </span>
               <div>
-                <span className="num">{'01'}</span>
+                <span className={lc('num')}>{'01'}</span>
                 <p
-                  className="t-title"
-                  style={{
-                    font: '600 20px/1.2 var(--font-display)',
-                    marginTop: '6px',
-                  }}
+                  className={lc(
+                    't-title',
+                    'font-[600] [font-size:20px] leading-[1.2] font-[family-name:var(--font-display)] mt-[6px]',
+                  )}
                 >
                   {c('loop.play_without_losing_focus')}
                 </p>
-                <p className="t-meta">
+                <p className={lc('t-meta')}>
                   {c('loop.the_controls_you_need_within_reach')}
                 </p>
               </div>
             </div>
-            <div
-              className="soft col grow"
-              style={{ padding: '16px', gap: '14px' }}
-            >
-              <div className="row">
+            <div className={lc('soft col grow', 'p-[16px] gap-[14px]')}>
+              <div className={lc('row')}>
                 <span
-                  className="art"
-                  style={{
-                    width: '76px',
-                    height: '76px',
-                    borderRadius: '10px',
-                    flex: 'none',
-                  }}
+                  className={lc(
+                    'art',
+                    'w-[76px] h-[76px] rounded-[10px] flex-[none]',
+                  )}
                 ></span>
-                <div className="grow">
-                  <p className="t-title">{c('loop.night_signal')}</p>
-                  <p className="t-meta">{c('loop.demo_artist')}</p>
+                <div className={lc('grow')}>
+                  <p className={lc('t-title')}>{c('loop.night_signal')}</p>
+                  <p className={lc('t-meta')}>{c('loop.demo_artist')}</p>
                 </div>
-                <svg
-                  aria-hidden="true"
-                  className="i"
-                  style={{ color: 'var(--accent)' }}
-                >
+                <svg aria-hidden="true" className={lc('i', 'text-accent')}>
                   <use href="#i-heart" />
                 </svg>
               </div>
               <div>
-                <div className="prog">
-                  <i className="anim-prog"></i>
+                <div className={lc('prog')}>
+                  <i className={lc('anim-prog')}></i>
                 </div>
-                <div className="times">
+                <div className={lc('times')}>
                   <span>{'1:38'}</span>
                   <span>{'3:56'}</span>
                 </div>
               </div>
-              <div className="transport" style={{ gap: '22px' }}>
-                <svg aria-hidden="true" className="i">
+              <div className={lc('transport', 'gap-[22px]')}>
+                <svg aria-hidden="true" className={lc('i')}>
                   <use href="#i-prev" />
                 </svg>
-                <span
-                  className="playbtn"
-                  style={{ width: '44px', height: '44px' }}
-                >
-                  <svg aria-hidden="true" className="i">
+                <span className={lc('playbtn', 'w-[44px] h-[44px]')}>
+                  <svg aria-hidden="true" className={lc('i')}>
                     <use href="#i-pause" />
                   </svg>
                 </span>
-                <svg aria-hidden="true" className="i">
+                <svg aria-hidden="true" className={lc('i')}>
                   <use href="#i-next" />
                 </svg>
               </div>
-              <span className="grow"></span>
-              <div className="row" style={{ gap: '18px' }}>
+              <span className={lc('grow')}></span>
+              <div className={lc('row', 'gap-[18px]')}>
                 <div>
-                  <span className="label">{c('loop.bitrate')}</span>
+                  <span className={lc('label')}>{c('loop.bitrate')}</span>
                   <br />
-                  <b className="mono" style={{ color: 'var(--fg)' }}>
-                    {'320 KBPS'}
-                  </b>
+                  <b className={lc('mono', 'text-foreground')}>{'320 KBPS'}</b>
                 </div>
-                <div className="grow" style={{ height: '28px' }}>
-                  <canvas className="spec" data-bars="26"></canvas>
+                <div className={lc('grow', 'h-[28px]')}>
+                  <canvas className={lc('spec')} data-bars="26"></canvas>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div
-          className="abs card tiltable d-only"
+          className={lc('abs card tiltable d-only')}
           data-a="win"
           style={{ '--x': '508', '--y': '254', '--w': '424', '--h': '542' }}
         >
-          <div
-            className="col"
-            style={{
-              padding: '24px',
-              gap: '18px',
-              height: '100%',
-              boxSizing: 'border-box',
-            }}
-          >
-            <div className="row" style={{ alignItems: 'flex-start' }}>
-              <span className="medal">
-                <svg aria-hidden="true" className="i">
+          <div className={lc('col', 'p-[24px] gap-[18px] h-full! box-border')}>
+            <div className={lc('row', 'items-start')}>
+              <span className={lc('medal')}>
+                <svg aria-hidden="true" className={lc('i')}>
                   <use href="#i-heart" />
                 </svg>
               </span>
               <div>
-                <span className="num">{'02'}</span>
+                <span className={lc('num')}>{'02'}</span>
                 <p
-                  className="t-title"
-                  style={{
-                    font: '600 20px/1.2 var(--font-display)',
-                    marginTop: '6px',
-                  }}
+                  className={lc(
+                    't-title',
+                    'font-[600] [font-size:20px] leading-[1.2] font-[family-name:var(--font-display)] mt-[6px]',
+                  )}
                 >
                   {c('loop.save_what_matters')}
                 </p>
-                <p className="t-meta">
+                <p className={lc('t-meta')}>
                   {c('loop.build_a_library_that_sounds_more_like_yo')}
                 </p>
               </div>
             </div>
-            <div
-              className="soft col grow"
-              style={{ padding: '16px', gap: '10px' }}
-            >
-              <div className="row">
+            <div className={lc('soft col grow', 'p-[16px] gap-[10px]')}>
+              <div className={lc('row')}>
                 <span
-                  className="cv"
-                  style={{
-                    background: 'linear-gradient(135deg,#7c3aed,#ec4899)',
-                    display: 'grid',
-                    placeItems: 'center',
-                    color: '#fff',
-                  }}
+                  className={lc(
+                    'cv',
+                    'bg-[image:linear-gradient(135deg,var(--color-purple-500),var(--color-magenta-500))] grid place-items-center text-white',
+                  )}
                 >
-                  <svg aria-hidden="true" className="i">
+                  <svg aria-hidden="true" className={lc('i')}>
                     <use href="#i-heart" />
                   </svg>
                 </span>
-                <div className="grow">
-                  <p className="t-title">{c('loop.liked_songs')}</p>
-                  <p className="t-meta">
+                <div className={lc('grow')}>
+                  <p className={lc('t-title')}>{c('loop.liked_songs')}</p>
+                  <p className={lc('t-meta')}>
                     {c('loop.ready_for_your_next_visit_128')}
                   </p>
                 </div>
               </div>
-              <div className="qrow">
-                <span className="cv s cv1"></span>
-                <div className="grow">
-                  <p className="t-title">{c('loop.night_signal')}</p>
-                  <p className="t-meta">{c('loop.demo_artist')}</p>
+              <div className={lc('qrow')}>
+                <span className={lc('cv s cv1')}></span>
+                <div className={lc('grow')}>
+                  <p className={lc('t-title')}>{c('loop.night_signal')}</p>
+                  <p className={lc('t-meta')}>{c('loop.demo_artist')}</p>
                 </div>
                 <svg
                   aria-hidden="true"
-                  className="i like-pop"
-                  style={{ color: 'var(--magenta)' }}
+                  className={lc('i like-pop', 'text-magenta-500')}
                 >
                   <use href="#i-heart" />
                 </svg>
               </div>
-              <div className="qrow">
-                <span className="cv s cv3"></span>
-                <div className="grow">
-                  <p className="t-title">{c('loop.static_lines')}</p>
-                  <p className="t-meta">{c('loop.kite_harbor')}</p>
+              <div className={lc('qrow')}>
+                <span className={lc('cv s cv3')}></span>
+                <div className={lc('grow')}>
+                  <p className={lc('t-title')}>{c('loop.static_lines')}</p>
+                  <p className={lc('t-meta')}>{c('loop.kite_harbor')}</p>
                 </div>
                 <svg
                   aria-hidden="true"
-                  className="i like-pop"
-                  style={{ color: 'var(--magenta)' }}
+                  className={lc('i like-pop', 'text-magenta-500')}
                 >
                   <use href="#i-heart" />
                 </svg>
               </div>
-              <div className="qrow">
-                <span className="cv s cv5"></span>
-                <div className="grow">
-                  <p className="t-title">{c('loop.low_orbit')}</p>
-                  <p className="t-meta">{c('loop.luma_vale')}</p>
+              <div className={lc('qrow')}>
+                <span className={lc('cv s cv5')}></span>
+                <div className={lc('grow')}>
+                  <p className={lc('t-title')}>{c('loop.low_orbit')}</p>
+                  <p className={lc('t-meta')}>{c('loop.luma_vale')}</p>
                 </div>
                 <svg
                   aria-hidden="true"
-                  className="i like-pop"
-                  style={{ color: 'var(--magenta)' }}
+                  className={lc('i like-pop', 'text-magenta-500')}
                 >
                   <use href="#i-heart" />
                 </svg>
@@ -248,100 +206,76 @@ export const SceneLoop = () => {
           </div>
         </div>
         <div
-          className="abs card tiltable d-only"
+          className={lc('abs card tiltable d-only')}
           data-a="win"
           style={{ '--x': '956', '--y': '254', '--w': '424', '--h': '542' }}
         >
-          <div
-            className="col"
-            style={{
-              padding: '24px',
-              gap: '18px',
-              height: '100%',
-              boxSizing: 'border-box',
-            }}
-          >
-            <div className="row" style={{ alignItems: 'flex-start' }}>
-              <span className="medal">
-                <svg aria-hidden="true" className="i">
+          <div className={lc('col', 'p-[24px] gap-[18px] h-full! box-border')}>
+            <div className={lc('row', 'items-start')}>
+              <span className={lc('medal')}>
+                <svg aria-hidden="true" className={lc('i')}>
                   <use href="#i-history" />
                 </svg>
               </span>
               <div>
-                <span className="num">{'03'}</span>
+                <span className={lc('num')}>{'03'}</span>
                 <p
-                  className="t-title"
-                  style={{
-                    font: '600 20px/1.2 var(--font-display)',
-                    marginTop: '6px',
-                  }}
+                  className={lc(
+                    't-title',
+                    'font-[600] [font-size:20px] leading-[1.2] font-[family-name:var(--font-display)] mt-[6px]',
+                  )}
                 >
                   {c('loop.find_your_way_back')}
                 </p>
-                <p className="t-meta">
+                <p className={lc('t-meta')}>
                   {c('loop.your_returns_together_in_recents')}
                 </p>
               </div>
             </div>
-            <div
-              className="soft col grow"
-              style={{ padding: '16px', gap: '6px' }}
-            >
-              <div
-                className="row label"
-                style={{ justifyContent: 'space-between' }}
-              >
+            <div className={lc('soft col grow', 'p-[16px] gap-[6px]')}>
+              <div className={lc('row label', 'justify-between')}>
                 <span>{c('loop.recents')}</span>
-                <span style={{ letterSpacing: '.04em' }}>
-                  {c('loop.see_all')}
-                </span>
+                <span className="tracking-[.04em]">{c('loop.see_all')}</span>
               </div>
-              <span className="mono" style={{ marginTop: '8px' }}>
-                {c('loop.today')}
-              </span>
-              <div className="qrow">
-                <span className="cv s cv1"></span>
-                <div className="grow">
-                  <p className="t-title">{c('loop.night_signal')}</p>
-                  <p className="t-meta">{c('loop.played_3')}</p>
+              <span className={lc('mono', 'mt-[8px]')}>{c('loop.today')}</span>
+              <div className={lc('qrow')}>
+                <span className={lc('cv s cv1')}></span>
+                <div className={lc('grow')}>
+                  <p className={lc('t-title')}>{c('loop.night_signal')}</p>
+                  <p className={lc('t-meta')}>{c('loop.played_3')}</p>
                 </div>
-                <span className="mono">{'21:40'}</span>
+                <span className={lc('mono')}>{'21:40'}</span>
               </div>
-              <div className="qrow">
-                <span className="cv s cv4"></span>
-                <div className="grow">
-                  <p className="t-title">{c('loop.drift_control')}</p>
-                  <p className="t-meta">{c('loop.from_night_drive')}</p>
+              <div className={lc('qrow')}>
+                <span className={lc('cv s cv4')}></span>
+                <div className={lc('grow')}>
+                  <p className={lc('t-title')}>{c('loop.drift_control')}</p>
+                  <p className={lc('t-meta')}>{c('loop.from_night_drive')}</p>
                 </div>
-                <span className="mono">{'20:12'}</span>
+                <span className={lc('mono')}>{'20:12'}</span>
               </div>
-              <span className="mono" style={{ marginTop: '8px' }}>
+              <span className={lc('mono', 'mt-[8px]')}>
                 {c('loop.yesterday')}
               </span>
-              <div className="qrow">
-                <span className="cv s cv2"></span>
-                <div className="grow">
-                  <p className="t-title">{c('loop.echoes_in_motion')}</p>
-                  <p className="t-meta">{c('loop.album')}</p>
+              <div className={lc('qrow')}>
+                <span className={lc('cv s cv2')}></span>
+                <div className={lc('grow')}>
+                  <p className={lc('t-title')}>{c('loop.echoes_in_motion')}</p>
+                  <p className={lc('t-meta')}>{c('loop.album')}</p>
                 </div>
-                <span className="mono">{'23:05'}</span>
+                <span className={lc('mono')}>{'23:05'}</span>
               </div>
             </div>
           </div>
         </div>
         <div
-          className="abs row d-only"
-          style={{
-            '--x': '60',
-            '--y': '830',
-            '--w': '1320',
-            justifyContent: 'space-between',
-          }}
+          className={lc('abs row d-only', 'justify-between')}
+          style={{ '--x': '60', '--y': '830', '--w': '1320' }}
         >
-          <span className="disc">
+          <span className={lc('disc')}>
             {c('loop.product_preview_demonstration_library')}
           </span>
-          <span className="sig">{c('loop.music_lives_on')}</span>
+          <span className={lc('sig')}>{c('loop.music_lives_on')}</span>
         </div>
       </div>
     </section>

@@ -1,5 +1,6 @@
 'use client'
 
+import { lc } from '../../lib/styles/lc'
 import { useLandingCopy } from '../../model/useLandingCopy'
 
 /** Scene "Devices" — ported from the motion prototype; the landing engine animates it after mount. */
@@ -8,215 +9,189 @@ export const SceneDevices = () => {
   return (
     <section
       aria-label={c('devices.same_queue_new_scene')}
-      className="scene"
+      className={lc('scene')}
       data-label="Devices"
       id="devices"
     >
-      <div className="board">
+      <div className={lc('board')}>
         <div
-          className="abs d-only"
+          className={lc('abs d-only')}
           style={{ '--x': '0', '--y': '626', '--w': '380', '--h': '274' }}
         >
-          <div className="horizon" style={{ height: '100%' }}></div>
+          <div className={lc('horizon', 'h-full')}></div>
         </div>
         <div
-          className="abs"
+          className={lc('abs')}
           style={{ '--x': '48', '--y': '120', '--w': '380' }}
         >
-          <div className="eyebrow" data-a="up" style={{ marginBottom: '18px' }}>
+          <div className={lc('eyebrow', 'mb-[18px]')} data-a="up">
             {c('devices.keep_the_session_going')}
           </div>
-          <h2 className="h h54">
-            <span className="line">
+          <h2 className={lc('h h54')}>
+            <span className={lc('line')}>
               <span>{c('devices.same_queue')}</span>
             </span>
-            <span className="line">
-              <span className="hl">{c('devices.new_scene')}</span>
+            <span className={lc('line')}>
+              <span className={lc('hl')}>{c('devices.new_scene')}</span>
             </span>
           </h2>
-          <p className="lede s" data-a="up" style={{ marginTop: '22px' }}>
+          <p className={lc('lede s', 'mt-[22px]')} data-a="up">
             {c('devices.move_playback_between_devices_with_bitra')}
           </p>
-          <div
-            className="col d-only"
-            style={{ marginTop: '34px', gap: '20px' }}
-          >
-            <div className="row" data-a="up">
-              <svg
-                aria-hidden="true"
-                className="i"
-                style={{ color: 'var(--accent)' }}
-              >
+          <div className={lc('col d-only', 'mt-[34px] gap-[20px]')}>
+            <div className={lc('row')} data-a="up">
+              <svg aria-hidden="true" className={lc('i', 'text-accent')}>
                 <use href="#i-phone" />
               </svg>
               <div>
-                <p className="t-title">{c('devices.bitrate_connect')}</p>
-                <p className="t-meta">
+                <p className={lc('t-title')}>{c('devices.bitrate_connect')}</p>
+                <p className={lc('t-meta')}>
                   {c('devices.move_playback_to_any_device')}
                 </p>
               </div>
             </div>
-            <div className="row" data-a="up">
-              <svg
-                aria-hidden="true"
-                className="i"
-                style={{ color: 'var(--accent)' }}
-              >
+            <div className={lc('row')} data-a="up">
+              <svg aria-hidden="true" className={lc('i', 'text-accent')}>
                 <use href="#i-users" />
               </svg>
               <div>
-                <p className="t-title">{c('devices.jam')}</p>
-                <p className="t-meta">{c('devices.listen_together')}</p>
+                <p className={lc('t-title')}>{c('devices.jam')}</p>
+                <p className={lc('t-meta')}>{c('devices.listen_together')}</p>
               </div>
             </div>
           </div>
         </div>
         <div
-          className="abs persp d-only"
+          className={lc('abs persp d-only')}
           style={{ '--x': '553', '--y': '116', '--w': '855' }}
         >
-          <div className="win" data-a="win" style={{ height: '716px' }}>
-            <div className="wbar">
-              <span className="dots3">
+          <div className={lc('win', 'h-[716px]')} data-a="win">
+            <div className={lc('wbar')}>
+              <span className={lc('dots3')}>
                 <i></i>
                 <i></i>
                 <i></i>
               </span>
-              <span className="grow"></span>
-              <span className="live">
+              <span className={lc('grow')}></span>
+              <span className={lc('live')}>
                 <i></i>
-                <span className="glitch glitch-auto" data-text="JAM LIVE">
+                <span className={lc('glitch glitch-auto')} data-text="JAM LIVE">
                   {c('devices.jam_live')}
                 </span>
               </span>
             </div>
             <div
-              className="row"
-              style={{
-                alignItems: 'stretch',
-                gap: '18px',
-                padding: '0 18px 18px',
-                height: '648px',
-                boxSizing: 'border-box',
-              }}
+              className={lc(
+                'row',
+                'items-stretch gap-[18px] p-[0_18px_18px] h-[648px]! box-border',
+              )}
             >
               <div
-                className="col"
-                style={{
-                  width: '126px',
-                  gap: '16px',
-                  paddingTop: '18px',
-                  fontSize: '12px',
-                  color: 'var(--muted)',
-                }}
+                className={lc(
+                  'col',
+                  'w-[126px] gap-[16px] pt-[18px] [font-size:12px] text-muted-foreground',
+                )}
               >
-                <span
-                  className="row"
-                  style={{ gap: '8px', color: 'var(--fg)' }}
-                >
-                  <svg aria-hidden="true" className="i">
+                <span className={lc('row', 'gap-[8px] text-foreground')}>
+                  <svg aria-hidden="true" className={lc('i')}>
                     <use href="#i-home" />
                   </svg>
                   {c('devices.home')}
                 </span>
-                <span className="row" style={{ gap: '8px' }}>
-                  <svg aria-hidden="true" className="i">
+                <span className={lc('row', 'gap-[8px]')}>
+                  <svg aria-hidden="true" className={lc('i')}>
                     <use href="#i-lib" />
                   </svg>
                   {c('devices.library')}
                 </span>
-                <span className="row" style={{ gap: '8px' }}>
-                  <svg aria-hidden="true" className="i">
+                <span className={lc('row', 'gap-[8px]')}>
+                  <svg aria-hidden="true" className={lc('i')}>
                     <use href="#i-users" />
                   </svg>
                   {c('devices.jam')}
                 </span>
               </div>
               <div
-                className="col grow"
-                style={{
-                  paddingTop: '18px',
-                  gap: '14px',
-                  paddingLeft: '120px',
-                }}
+                className={lc('col grow', 'pt-[18px] gap-[14px] pl-[120px]')}
               >
-                <div className="row">
-                  <div className="grow">
-                    <span className="label" style={{ color: 'var(--accent)' }}>
+                <div className={lc('row')}>
+                  <div className={lc('grow')}>
+                    <span className={lc('label', 'text-accent')}>
                       {c('devices.jam_2')}
                     </span>
                     <p
-                      className="t-title"
-                      style={{
-                        font: '700 30px/1.1 var(--font-display)',
-                        marginTop: '6px',
-                      }}
+                      className={lc(
+                        't-title',
+                        'font-[700] [font-size:30px] leading-[1.1] font-[family-name:var(--font-display)] mt-[6px]',
+                      )}
                     >
                       {c('devices.jam_after_hours')}
                     </p>
                   </div>
-                  <div className="avs listeners">
-                    <span className="av" style={{ background: '#7c3aed' }}>
+                  <div className={lc('avs listeners')}>
+                    <span className={lc('av', 'bg-purple-500 bg-none')}>
                       {c('devices.mr')}
                     </span>
-                    <span className="av" style={{ background: '#db2777' }}>
+                    <span className={lc('av', 'bg-magenta-500 bg-none')}>
                       {c('devices.jp')}
                     </span>
-                    <span className="av" style={{ background: '#0ea5e9' }}>
+                    <span className={lc('av', 'bg-blue-400 bg-none')}>
                       {c('devices.as')}
                     </span>
-                    <span className="av" style={{ background: '#334155' }}>
+                    <span className={lc('av', 'bg-neutral-700 bg-none')}>
                       {'+2'}
                     </span>
                   </div>
                 </div>
-                <div
-                  className="row"
-                  style={{ gap: '18px', alignItems: 'stretch' }}
-                >
+                <div className={lc('row', 'gap-[18px] items-stretch')}>
                   <div
-                    className="art"
-                    style={{ width: '200px', height: '200px', flex: 'none' }}
+                    className={lc('art', 'w-[200px] h-[200px] flex-[none]')}
                   ></div>
-                  <div className="col grow" style={{ gap: '10px' }}>
-                    <span className="label">
+                  <div className={lc('col grow', 'gap-[10px]')}>
+                    <span className={lc('label')}>
                       {c('devices.now_playing_in_sync')}
                     </span>
                     <p
-                      className="t-title"
-                      style={{ font: '600 24px/1.1 var(--font-display)' }}
+                      className={lc(
+                        't-title',
+                        'font-[600] [font-size:24px] leading-[1.1] font-[family-name:var(--font-display)]',
+                      )}
                     >
                       {c('devices.night_signal')}
                     </p>
-                    <p className="t-meta">{c('devices.demo_artist')}</p>
-                    <span className="grow"></span>
-                    <div className="prog">
-                      <i className="sync-bar"></i>
+                    <p className={lc('t-meta')}>{c('devices.demo_artist')}</p>
+                    <span className={lc('grow')}></span>
+                    <div className={lc('prog')}>
+                      <i className={lc('sync-bar')}></i>
                     </div>
-                    <div className="times">
+                    <div className={lc('times')}>
                       <span>{'1:38'}</span>
                       <span>{'3:56'}</span>
                     </div>
                   </div>
                 </div>
-                <span className="label">
+                <span className={lc('label')}>
                   {c('devices.up_next_shared_queue')}
                 </span>
-                <div className="qrow">
-                  <span className="cv s cv2"></span>
-                  <div className="grow">
-                    <p className="t-title">{c('devices.echoes_in_motion')}</p>
-                    <p className="t-meta">{c('devices.added_by_maya')}</p>
+                <div className={lc('qrow')}>
+                  <span className={lc('cv s cv2')}></span>
+                  <div className={lc('grow')}>
+                    <p className={lc('t-title')}>
+                      {c('devices.echoes_in_motion')}
+                    </p>
+                    <p className={lc('t-meta')}>{c('devices.added_by_maya')}</p>
                   </div>
-                  <span className="mono">{'4:21'}</span>
+                  <span className={lc('mono')}>{'4:21'}</span>
                 </div>
-                <div className="qrow">
-                  <span className="cv s cv3"></span>
-                  <div className="grow">
-                    <p className="t-title">{c('devices.static_lines')}</p>
-                    <p className="t-meta">{c('devices.added_by_jonah')}</p>
+                <div className={lc('qrow')}>
+                  <span className={lc('cv s cv3')}></span>
+                  <div className={lc('grow')}>
+                    <p className={lc('t-title')}>{c('devices.static_lines')}</p>
+                    <p className={lc('t-meta')}>
+                      {c('devices.added_by_jonah')}
+                    </p>
                   </div>
-                  <span className="mono">{'3:47'}</span>
+                  <span className={lc('mono')}>{'3:47'}</span>
                 </div>
               </div>
             </div>
@@ -224,14 +199,9 @@ export const SceneDevices = () => {
         </div>
         <svg
           aria-hidden="true"
-          className="abs d-only"
+          className={lc('abs d-only', 'overflow-visible')}
           height="160"
-          style={{
-            '--x': '560',
-            '--y': '578',
-            '--w': '130',
-            overflow: 'visible',
-          }}
+          style={{ '--x': '560', '--y': '578', '--w': '130' }}
           viewBox="0 0 130 160"
           width="130"
         >
@@ -245,136 +215,111 @@ export const SceneDevices = () => {
           />
         </svg>
         <div
-          className="abs persp d-only"
+          className={lc('abs persp d-only')}
           style={{ '--x': '379', '--y': '196', '--w': '245' }}
         >
-          <div
-            className="phone"
-            data-a="win"
-            style={{ height: '595px', boxSizing: 'border-box' }}
-          >
-            <div
-              className="row mono"
-              style={{ justifyContent: 'space-between' }}
-            >
-              <span style={{ color: 'var(--fg)' }}>{'9:41'}</span>
+          <div className={lc('phone', 'h-[595px] box-border')} data-a="win">
+            <div className={lc('row mono', 'justify-between')}>
+              <span className="text-foreground">{'9:41'}</span>
               <span>{'\u25cf\u25cf\u25cf'}</span>
             </div>
-            <div className="row" style={{ marginTop: '22px', gap: '8px' }}>
-              <b style={{ font: '600 14px/1 var(--font-display)' }}>
+            <div className={lc('row', 'mt-[22px] gap-[8px]')}>
+              <b className="font-[600] [font-size:14px] leading-[1] font-[family-name:var(--font-display)]">
                 {c('devices.bitrate')}
               </b>
             </div>
-            <span
-              className="pill"
-              style={{ display: 'inline-block', marginTop: '14px' }}
-            >
+            <span className={lc('pill', 'inline-block mt-[14px]')}>
               {c('devices.jam_after_hours')}
             </span>
-            <div
-              className="art"
-              style={{ height: '190px', marginTop: '16px' }}
-            ></div>
+            <div className={lc('art', 'h-[190px] mt-[16px]')}></div>
             <p
-              className="t-title"
-              style={{
-                font: '600 18px/1.1 var(--font-display)',
-                marginTop: '16px',
-              }}
+              className={lc(
+                't-title',
+                'font-[600] [font-size:18px] leading-[1.1] font-[family-name:var(--font-display)] mt-[16px]',
+              )}
             >
               {c('devices.night_signal')}
             </p>
-            <p className="t-meta">{c('devices.demo_artist')}</p>
-            <div className="prog" style={{ marginTop: '16px' }}>
-              <i className="sync-bar"></i>
+            <p className={lc('t-meta')}>{c('devices.demo_artist')}</p>
+            <div className={lc('prog', 'mt-[16px]')}>
+              <i className={lc('sync-bar')}></i>
             </div>
-            <div className="times">
+            <div className={lc('times')}>
               <span>{'1:38'}</span>
               <span>{'3:56'}</span>
             </div>
-            <div
-              className="transport"
-              style={{ marginTop: '16px', gap: '20px' }}
-            >
-              <svg aria-hidden="true" className="i">
+            <div className={lc('transport', 'mt-[16px] gap-[20px]')}>
+              <svg aria-hidden="true" className={lc('i')}>
                 <use href="#i-prev" />
               </svg>
-              <span
-                className="playbtn"
-                style={{ width: '46px', height: '46px' }}
-              >
-                <svg aria-hidden="true" className="i">
+              <span className={lc('playbtn', 'w-[46px] h-[46px]')}>
+                <svg aria-hidden="true" className={lc('i')}>
                   <use href="#i-pause" />
                 </svg>
               </span>
-              <svg aria-hidden="true" className="i">
+              <svg aria-hidden="true" className={lc('i')}>
                 <use href="#i-next" />
               </svg>
             </div>
           </div>
         </div>
         <div
-          className="abs card"
+          className={lc('abs card')}
           data-a="win"
           style={{ '--x': '365', '--y': '682', '--w': '272' }}
         >
-          <div className="col" style={{ padding: '16px', gap: '10px' }}>
+          <div className={lc('col', 'p-[16px] gap-[10px]')}>
             <p
-              className="t-title"
-              style={{ font: '600 16px/1 var(--font-display)' }}
+              className={lc(
+                't-title',
+                'font-[600] [font-size:16px] leading-[1] font-[family-name:var(--font-display)]',
+              )}
             >
               {c('devices.bitrate_connect')}
             </p>
-            <div className="row">
-              <svg
-                aria-hidden="true"
-                className="i"
-                style={{ color: 'var(--accent)' }}
-              >
+            <div className={lc('row')}>
+              <svg aria-hidden="true" className={lc('i', 'text-accent')}>
                 <use href="#i-phone" />
               </svg>
-              <div className="grow">
-                <p className="t-title" style={{ fontSize: '12px' }}>
+              <div className={lc('grow')}>
+                <p className={lc('t-title', '[font-size:12px]')}>
                   {c('devices.this_phone')}
                 </p>
-                <p className="t-meta" style={{ fontSize: '10px' }}>
+                <p className={lc('t-meta', '[font-size:10px]')}>
                   {c('devices.ready_to_play')}
                 </p>
               </div>
             </div>
-            <div className="row">
+            <div className={lc('row')}>
               <svg
                 aria-hidden="true"
-                className="i"
-                style={{ color: 'var(--muted)' }}
+                className={lc('i', 'text-muted-foreground')}
               >
                 <use href="#i-laptop" />
               </svg>
-              <div className="grow">
-                <p className="t-title" style={{ fontSize: '12px' }}>
+              <div className={lc('grow')}>
+                <p className={lc('t-title', '[font-size:12px]')}>
                   {c('devices.desktop_playing')}
                 </p>
               </div>
-              <span className="live ok">
+              <span className={lc('live ok')}>
                 <i></i>
               </span>
             </div>
-            <a className="btn btn-primary btn-sm magnetic" href="#devices">
+            <a
+              className={lc('btn btn-primary btn-sm magnetic')}
+              href="#devices"
+            >
               {c('devices.move_playback_to_this_phone')}
             </a>
           </div>
         </div>
         <div
-          className="abs row d-only"
-          style={{
-            '--x': '48',
-            '--y': '854',
-            '--w': '1360',
-            justifyContent: 'space-between',
-          }}
+          className={lc('abs row d-only', 'justify-between')}
+          style={{ '--x': '48', '--y': '854', '--w': '1360' }}
         >
-          <span className="sig">{c('devices.music_lives_on')}</span>
-          <span className="disc">
+          <span className={lc('sig')}>{c('devices.music_lives_on')}</span>
+          <span className={lc('disc')}>
             {c('devices.feature_concept_demo_content')}
           </span>
         </div>
