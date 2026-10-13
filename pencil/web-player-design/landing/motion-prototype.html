@@ -410,7 +410,7 @@ body.health-open .dots { opacity: 0; pointer-events: none; }
   </div>
 </header>
 <nav class="dots" aria-label="Scenes"></nav>
-<div class="counter" aria-hidden="true"><b id="num">01</b><span class="rail"><i id="rail"></i></span><span>12</span></div>
+<div class="counter" aria-hidden="true"><b id="num">01</b><span class="rail"><i id="rail"></i></span><span id="numTotal">11</span></div>
 
 <button class="ai-fab" id="aiFab" type="button" aria-expanded="false" aria-controls="aiPanel" aria-label="Open the Bitrate assistant"><svg aria-hidden="true" class="i" viewBox="0 0 24 24" style="width:22px;height:22px"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></svg></button>
 <section class="ai-panel" id="aiPanel" aria-label="Bitrate assistant">
@@ -1624,6 +1624,7 @@ window.__bitrateIntro = new Promise((done) => {
   })
   const dotButtons = [...dots.children]
   const num = document.getElementById('num')
+  document.getElementById('numTotal').textContent = String(scenes.length).padStart(2, '0')
   const rail = document.getElementById('rail')
   const sweep = document.querySelector('.sweep')
   let index = 0
