@@ -1,6 +1,6 @@
 # Web-player landing: behavior and implementation
 
-> Status: approved — the user confirmed the plan on 2026-10-13; implementation in progress.
+> Status: implemented on 2026-10-13 on `design/web-player-restructure`; see the results below.
 > Reference prototype: `pencil/web-player-design/landing/motion-prototype.html`.
 > Static design: `pencil/web-player-design/landing/landing.pen`.
 > Motion rules: [Motion](../brand/motion.md).
@@ -85,17 +85,17 @@ Spotify.
 
 | ID | Observable criterion | Verification | Result / limitation |
 |---|---|---|---|
-| AC-1 | `/` renders the eleven scenes with the prototype's copy; the old landing and Spotify plan copy are gone | e2e: headings of every scene; grep for removed widgets | Pending |
-| AC-2 | Server HTML contains the hero heading and CTA links before hydration | e2e: request `/` with JavaScript disabled | Pending |
-| AC-3 | Wheel, keys, dots and hash navigation move between scenes on desktop | e2e (desktop) | Pending |
-| AC-4 | A vertical swipe changes scenes on touch; swipes inside the status panel, assistant and physics fields do not | e2e (mobile, touch events) | Pending |
-| AC-5 | Without WebGL the 2D fallbacks render and nothing throws | e2e with WebGL disabled, console clean | Pending |
-| AC-6 | Reduced motion shows a static, scrollable page without 3D or loops | e2e with `reducedMotion: 'reduce'`; screenshot baseline | Pending |
-| AC-7 | en, uk and pl copy switch with the app locale; de and ru show English | unit test of the landing catalog and fallback | Pending |
-| AC-8 | Status pill reflects `/health/ready`: 200, 503, network error, initial checking | unit test of the status hook with a mocked fetch | Pending |
-| AC-9 | CTAs point at `ROUTES`; a signed-in visitor sees "Open web player" | unit + e2e | Pending |
-| AC-10 | Other routes still render after the `ThemeProvider` change | existing e2e and screenshot suites, type check, lint | Pending |
-| AC-11 | Landing JavaScript for Three.js and GSAP is not in the first-load chunk | `next build` output: Three.js arrives as a dynamic chunk | Pending |
+| AC-1 | `/` renders the eleven scenes with the prototype's copy; the old landing and Spotify plan copy are gone | e2e: headings of every scene; grep for removed widgets | Pass: e2e asserts all eleven scene regions and no old copy; Welcome, QR code, For students, Plans and Premium features are deleted |
+| AC-2 | Server HTML contains the hero heading and CTA links before hydration | e2e: request `/` with JavaScript disabled | Pass: e2e with JavaScript disabled finds the hero h1 and the Open web player link |
+| AC-3 | Wheel, keys, dots and hash navigation move between scenes on desktop | e2e (desktop) | Pass: e2e (desktop) ArrowDown, a dot, the wheel, End and a `/#library` deep link. Input during a transition is dropped by design; a typed hash waits for it |
+| AC-4 | A vertical swipe changes scenes on touch; swipes inside the status panel, assistant and physics fields do not | e2e (mobile, touch events) | Pass: e2e (Pixel 5) a synthetic swipe flips the scene; a swipe on `#partnerZone` does not |
+| AC-5 | Without WebGL the 2D fallbacks render and nothing throws | e2e with WebGL disabled, console clean | Pass: e2e with WebGL context creation blocked: DOM partner bubbles render, no page errors |
+| AC-6 | Reduced motion shows a static, scrollable page without 3D or loops | e2e with `reducedMotion: 'reduce'`; screenshot baseline | Pass: e2e with reduced motion (static, scrollable, no scroll lock, intro hidden); new `landing-default.png` baseline, reproducible on a second run |
+| AC-7 | en, uk and pl copy switch with the app locale; de and ru show English | unit test of the landing catalog and fallback | Pass: `copy.unit-spec.ts` (uk, pl, de → English fallback, interpolation) |
+| AC-8 | Status pill reflects `/health/ready`: 200, 503, network error, initial checking | unit test of the status hook with a mocked fetch | Pass: `serviceStatus.unit-spec.ts` covers the mapping (pending, 200, 503, network error); the hook is a thin React Query call, not mocked end to end |
+| AC-9 | CTAs point at `ROUTES`; a signed-in visitor sees "Open web player" | unit + e2e | Pass: `SceneCtas.unit-spec.tsx` + e2e with and without an `access_token` cookie |
+| AC-10 | Other routes still render after the `ThemeProvider` change | existing e2e and screenshot suites, type check, lint | Pass: unit 277/277, check-types clean, auth e2e 4/4, `next build` green after adding Suspense boundaries the server-rendered ThemeProvider exposed (login, verify-email, search, library, header search). The login mobile screenshot differs only by dev-server overlays when run against `next start` |
+| AC-11 | Landing JavaScript for Three.js and GSAP is not in the first-load chunk | `next build` output: Three.js arrives as a dynamic chunk | Pass: `next build` + `next start`: the Three.js and gsap chunks are not among the 17 scripts in the `/` HTML; they load by dynamic import |
 
 ## Decisions and approval
 

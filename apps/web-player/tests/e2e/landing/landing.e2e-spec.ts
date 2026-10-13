@@ -33,7 +33,7 @@ test.describe('landing page', () => {
     await page.goto('/')
     for (const { name } of SCENES)
       await expect(
-        page.getByRole('region', { name, exact: true }),
+        page.getByRole('region', { name, exact: true, includeHidden: true }),
       ).toBeAttached()
     await expect(page.locator('.landing .scene')).toHaveCount(SCENES.length)
     await expect(
@@ -55,11 +55,13 @@ test.describe('landing page', () => {
     await expect(
       hero.getByRole('link', { name: 'Create account' }),
     ).toHaveAttribute('href', '/auth/registration')
-    const start = page.getByRole('region', { name: SCENES[10].name })
-    await expect(start.getByRole('link', { name: 'Log in' })).toHaveAttribute(
-      'href',
-      '/auth/login',
-    )
+    const start = page.getByRole('region', {
+      name: SCENES[10].name,
+      includeHidden: true,
+    })
+    await expect(
+      start.getByRole('link', { name: 'Log in', includeHidden: true }),
+    ).toHaveAttribute('href', '/auth/login')
   })
 
   test('a signed-in visitor sees no account calls to action', async ({
@@ -79,9 +81,11 @@ test.describe('landing page', () => {
       page.getByRole('link', { name: 'Open web player' }).first(),
     ).toHaveAttribute('href', '/main')
     await expect(
-      page.getByRole('link', { name: 'Create account' }),
+      page.getByRole('link', { name: 'Create account', includeHidden: true }),
     ).toHaveCount(0)
-    await expect(page.getByRole('link', { name: 'Log in' })).toHaveCount(0)
+    await expect(
+      page.getByRole('link', { name: 'Log in', includeHidden: true }),
+    ).toHaveCount(0)
   })
 })
 
@@ -116,8 +120,11 @@ test.describe('landing navigation on desktop', () => {
     await expect(activeScene(page)).toHaveId('loop')
     await expect(page).toHaveURL(/#loop$/)
 
-    await page.getByRole('button', { name: 'Go to Library' }).click()
-    await expect(activeScene(page)).toHaveId('library')
+    /* input during a scene change is dropped by design, so retry until the transition settles */
+    await expect(async () => {
+      await page.getByRole('button', { name: 'Go to Library' }).click()
+      await expect(activeScene(page)).toHaveId('library', { timeout: 1500 })
+    }).toPass({ timeout: 8000 })
     await expect(page).toHaveURL(/#library$/)
 
     await expect(page.locator('.landing')).not.toHaveClass(/is-static/)
@@ -127,8 +134,10 @@ test.describe('landing navigation on desktop', () => {
       await expect(activeScene(page)).toHaveId('discover', { timeout: 1500 })
     }).toPass({ timeout: 8000 })
 
-    await page.keyboard.press('End')
-    await expect(activeScene(page)).toHaveId('cta')
+    await expect(async () => {
+      await page.keyboard.press('End')
+      await expect(activeScene(page)).toHaveId('cta', { timeout: 1500 })
+    }).toPass({ timeout: 8000 })
   })
 
   test('a deep link opens its scene', async ({ page }) => {

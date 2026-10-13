@@ -490,6 +490,20 @@ export const mountScenes = (ctx: EngineContext, deps: SceneDeps) => {
       },
     })
     ctx.onDispose(() => obs.kill())
+    /* a hash typed into the address bar (or a same-page link from outside the landing) flips to its scene;
+       go() itself writes the hash with replaceState, which fires no hashchange */
+    window.addEventListener(
+      'hashchange',
+      () => {
+        /* unlike a wheel tick, a typed hash must not be lost to a running transition */
+        const flip = () => {
+          if (state.animating) gsap.delayedCall(0.3, flip)
+          else go(sceneFromHash({ hash: location.hash, ids }))
+        }
+        flip()
+      },
+      { signal },
+    )
     window.addEventListener(
       'keydown',
       (e) => {
