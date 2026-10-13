@@ -399,7 +399,7 @@ body.health-open .dots { opacity: 0; pointer-events: none; }
     <svg class="mark" viewBox="371 117 795 775" aria-hidden="true"><use href="#bitrate-logo" fill="url(#bm)"/></svg>
     Bitrate
   </a>
-  <nav class="nav" aria-label="Primary"><a href="#hero">Web player</a><a href="#library">Your library</a><a href="#artists">For artists</a><a href="#rules">Features</a></nav>
+  <nav class="nav" aria-label="Primary"><a href="#hero">Web player</a><a href="#library">Your library</a><a href="#discover">Discover</a><a href="#rules">Features</a></nav>
   <div class="top-actions">
     <fieldset class="themes" aria-label="Theme">
       <button type="button" data-set="dark" aria-pressed="false">Dark</button>
@@ -507,53 +507,7 @@ body.health-open .dots { opacity: 0; pointer-events: none; }
     </div>
   </section>
 
-  <!-- 03 artists -->
-  <section class="scene" id="artists" data-label="Artists" aria-label="Release work in one line of sight">
-    <div class="board">
-      <div class="abs" style="--x:62;--y:66;--w:640"><div class="eyebrow" data-a="up" style="margin-bottom:18px">For artists</div><h2 class="h h48"><span class="line"><span>Release work,</span></span><span class="line"><span class="hl">in one line of sight.</span></span></h2></div>
-      <p class="abs lede s d-only" style="--x:780;--y:104;--w:420" data-a="up">Versions, tasks and delivery on one timeline. The system suggests. You stay in control.</p>
-      <div class="abs label d-only" style="--x:1185;--y:66;--w:200;text-align:right" data-a="up">WORKSPACE CONCEPT</div>
-      <div class="abs persp" style="--x:60;--y:224;--w:1320">
-        <div class="win" data-a="win">
-          <div class="row" style="height:78px;padding:0 22px;border-bottom:1px solid var(--border);gap:14px">
-            <span class="cv cv1"></span><div><p class="t-title" style="font:600 18px/1.1 var(--font-display)">Afterglow</p><p class="t-meta">Demo artist · EP</p></div>
-            <span class="pill info">Review in progress</span><span class="grow"></span><span class="t-meta d-only">Updated 2h ago</span>
-            <div class="avs d-only"><span class="av" style="background:#7c3aed">AL</span><span class="av" style="background:#db2777">JK</span><span class="av" style="background:#334155">+3</span></div>
-          </div>
-          <div style="padding:22px 40px;border-bottom:1px solid var(--border)">
-            <div class="steps" style="grid-template-columns:repeat(5,1fr)"><span class="track"></span><span class="fill" id="relFill"></span>
-              <div class="step done"><b>✓</b>Audio</div><div class="step done"><b>✓</b>Artwork</div><div class="step done"><b>✓</b>Details</div><div class="step now"><b>4</b>Review</div><div class="step"><b>5</b>Delivery</div>
-            </div>
-          </div>
-          <div class="row d-only" style="align-items:stretch;gap:22px;padding:22px;height:330px;box-sizing:border-box">
-            <div class="col" style="width:360px;gap:10px">
-              <span class="label">NEXT IN LINE · 2 / 7</span>
-              <div class="task now"><svg aria-hidden="true" class="i" style="color:var(--accent)"><use href="#i-spark"/></svg><div class="grow"><p class="t-title">Release check</p><p class="t-meta">Align master, artwork and metadata. The pitch needs one decision.</p></div><span class="pill acc">Now</span></div>
-              <div class="task"><svg aria-hidden="true" class="i" style="color:var(--muted)"><use href="#i-layers"/></svg><div class="grow"><p class="t-title">Prepare delivery</p><p class="t-meta">Select services and confirm the date.</p></div><span class="pill">20 min</span></div>
-              <div class="task"><svg aria-hidden="true" class="i" style="color:var(--muted)"><use href="#i-history"/></svg><div class="grow"><p class="t-title">Post-release review</p><p class="t-meta">Signals and follow-up tasks.</p></div><span class="pill">After launch</span></div>
-            </div>
-            <div class="col grow" style="gap:10px">
-              <span class="label">VERSIONS</span>
-              <div class="ver"><span class="mono" style="width:24px">v1</span><div style="width:92px"><p class="t-title">Demo</p><p class="t-meta">Aug 02</p></div><canvas class="wave" data-seed="1"></canvas></div>
-              <div class="ver"><span class="mono" style="width:24px">v2</span><div style="width:92px"><p class="t-title">Mix</p><p class="t-meta">Sep 10</p></div><canvas class="wave" data-seed="2"></canvas></div>
-              <div class="ver sel"><span class="mono" style="width:24px;color:var(--accent)">v3</span><div style="width:92px"><p class="t-title">Master</p><p class="t-meta">Today</p></div><canvas class="wave" data-seed="3"></canvas><span class="pill ok">Selected</span></div>
-            </div>
-            <div class="soft col" style="width:280px;padding:18px;gap:12px">
-              <span class="label" style="color:var(--accent)">SUGGESTED NEXT STEP</span>
-              <p class="t-title" style="font:600 17px/1.3 var(--font-display)">Approve the master and lock the cover.</p>
-              <p class="t-meta">Two collaborators confirmed rights. One decision left for the pitch.</p>
-              <span class="grow"></span>
-              <a class="btn btn-primary btn-sm magnetic" href="#artists">Approve v3</a>
-            </div>
-          </div>
-          <div class="row d-only" style="height:62px;padding:0 22px;border-top:1px solid var(--border);gap:26px"><span class="live ok mono"><i></i>READY FOR DELIVERY 80%</span><span class="mono">3 SERVICES</span><span class="mono">RELEASE · 24 OCT</span><span class="grow"></span><span class="mono">2 PEOPLE WITH ROLES · RIGHTS CONFIRMED</span></div>
-        </div>
-      </div>
-      <span class="abs disc" style="--x:62;--y:840;--w:400">Release workspace concept · Demonstration data</span>
-    </div>
-  </section>
-
-  <!-- 04 workshop -->
+  <!-- 03 workshop -->
   <section class="scene" id="workshop" data-label="Workshop" aria-label="Start with a feeling, finish with your playlist">
     <div class="board">
       <div class="abs row d-only" style="--x:60;--y:96;--w:1320;border-bottom:1px solid var(--border);padding-bottom:14px" data-a="up"><span class="mono" style="color:var(--fg)">BITRATE</span><span class="t-meta grow">More music. More you.</span><span class="label">PLAYLIST BUILDER CONCEPT</span></div>
@@ -597,7 +551,7 @@ body.health-open .dots { opacity: 0; pointer-events: none; }
     </div>
   </section>
 
-  <!-- 05 your rules -->
+  <!-- 04 your rules -->
   <section class="scene" id="rules" data-label="Your rules" aria-label="Your player, your rules">
     <div class="board">
       <div class="abs d-only" style="--x:0;--y:560;--w:360;--h:340"><div class="horizon" style="height:100%"></div></div>
@@ -638,7 +592,7 @@ body.health-open .dots { opacity: 0; pointer-events: none; }
     </div>
   </section>
 
-  <!-- 06 library -->
+  <!-- 05 library -->
   <section class="scene" id="library" data-label="Library" aria-label="A library with a memory">
     <div class="board">
       <div class="abs" style="--x:48;--y:104;--w:700">
@@ -687,7 +641,7 @@ body.health-open .dots { opacity: 0; pointer-events: none; }
     </div>
   </section>
 
-  <!-- 07 discovery -->
+  <!-- 06 discovery -->
   <section class="scene" id="discover" data-label="Discover" aria-label="Follow the sound">
     <div class="board">
       <div class="abs card d-only" style="--x:24;--y:112;--w:82;--h:600" data-a="win"><div class="rail-nav"><span><svg aria-hidden="true" class="i"><use href="#i-home"/></svg>Home</span><span class="on"><svg aria-hidden="true" class="i" style="color:var(--accent)"><use href="#i-compass"/></svg>Discover</span><span><svg aria-hidden="true" class="i"><use href="#i-lib"/></svg>Library</span><span><svg aria-hidden="true" class="i"><use href="#i-layers"/></svg>Playlists</span><span><svg aria-hidden="true" class="i"><use href="#i-user"/></svg>Profile</span></div></div>
@@ -738,7 +692,7 @@ body.health-open .dots { opacity: 0; pointer-events: none; }
     </div>
   </section>
 
-  <!-- 08 devices -->
+  <!-- 07 devices -->
   <section class="scene" id="devices" data-label="Devices" aria-label="Same queue, new scene">
     <div class="board">
       <div class="abs d-only" style="--x:0;--y:626;--w:380;--h:274"><div class="horizon" style="height:100%"></div></div>
@@ -790,7 +744,7 @@ body.health-open .dots { opacity: 0; pointer-events: none; }
     </div>
   </section>
 
-  <!-- 09 social -->
+  <!-- 08 social -->
   <section class="scene" id="social" data-label="Social" aria-label="Beyond the play button">
     <div class="board">
       <div class="abs" style="--x:48;--y:120;--w:330">
@@ -833,7 +787,7 @@ body.health-open .dots { opacity: 0; pointer-events: none; }
     </div>
   </section>
 
-  <!-- 10 partners -->
+  <!-- 09 partners -->
   <section class="scene" id="partners" data-label="Partners" aria-label="Our partners">
     <div class="board">
       <div class="abs" style="--x:60;--y:170;--w:440">
@@ -848,7 +802,7 @@ body.health-open .dots { opacity: 0; pointer-events: none; }
     </div>
   </section>
 
-  <!-- 11 team -->
+  <!-- 10 team -->
   <section class="scene" id="team" data-label="Team" aria-label="About our team">
     <div class="board">
       <div class="abs" style="--x:60;--y:170;--w:420">
@@ -863,7 +817,7 @@ body.health-open .dots { opacity: 0; pointer-events: none; }
     </div>
   </section>
 
-  <!-- 12 final -->
+  <!-- 11 final -->
   <section class="scene" id="cta" data-label="Start" aria-label="Pick up where the last track left off">
     <div class="board">
       <div class="abs d-only" style="--x:70;--y:404;--w:1300;--h:378;opacity:.55"><canvas class="spec" data-bars="90" data-tall="1"></canvas></div>
@@ -1476,7 +1430,6 @@ window.__bitrateIntro = new Promise((done) => {
     const LOOK = [
       { shape: 0, x: 1000, y: 455, size: 560, rx: .2, amp: .2, twist: 0, c: ['#7c3aed', '#ec4899', '#3b82f6'] },
       { shape: 2, x: 1180, y: 150, size: 330, rx: .5, amp: .08, twist: 0, c: ['#7c3aed', '#a78bfa', '#ec4899'] },
-      { shape: 1, x: 1290, y: 150, size: 190, rx: 1.1, amp: .12, twist: .6, c: ['#3b82f6', '#7c3aed', '#a78bfa'] },
       { shape: 4, x: 250, y: 790, size: 300, rx: .4, amp: .1, twist: 0, c: ['#ec4899', '#7c3aed', '#3b82f6'] },
       { shape: 3, x: 180, y: 760, size: 360, rx: 1.15, amp: .03, twist: 0, c: ['#7c3aed', '#ec4899', '#a78bfa'] },
       { shape: 6, x: 1000, y: 150, size: 200, rx: 0, rz: 1.5708, amp: .06, twist: 0, c: ['#a78bfa', '#3b82f6', '#ec4899'] },
@@ -1698,11 +1651,6 @@ window.__bitrateIntro = new Promise((done) => {
       tl.fromTo(s.querySelectorAll('.anim-prog'), { scaleX: 0 }, { scaleX: .42, duration: 1.6, ease: 'power2.out' }, .8)
       tl.fromTo(s.querySelectorAll('.like-pop'), { scale: 0 }, { scale: 1, duration: .5, ease: 'back.out(4)', stagger: .15 }, 1.1)
     }
-    if (id === 'artists') {
-      tl.fromTo('#relFill', { scaleX: 0 }, { scaleX: .75, duration: 1.5, ease: 'power2.inOut' }, .7)
-      tl.fromTo(s.querySelectorAll('.step b'), { scale: .3 }, { scale: 1, duration: .5, ease: 'back.out(3)', stagger: .16 }, .75)
-      tl.fromTo(s.querySelectorAll('.task, .ver'), { x: -24, opacity: 0 }, { x: 0, opacity: 1, duration: .6, stagger: .08 }, 1.1)
-    }
     if (id === 'workshop') {
       typed.textContent = ''
       const o = { n: 0 }
@@ -1767,7 +1715,7 @@ window.__bitrateIntro = new Promise((done) => {
     leave(cur, dir).then(() => {
       cur.classList.remove('is-active')
       nxt.classList.add('is-active')
-      if (nxt.id === 'artists' || nxt.id === 'social') drawWaves()
+      if (nxt.id === 'social') drawWaves()
       enter(nxt, dir)
       gsap.delayedCall(.7, () => { animating = false })
     })
@@ -2265,7 +2213,10 @@ window.__bitrateIntro = new Promise((done) => {
   num.textContent = String(start + 1).padStart(2, '0')
   gsap.set(rail, { scaleX: (start + 1) / scenes.length })
   window.__bitrateIntro.then(() => { stage?.go(start, 1.8); enter(scenes[start], 1) })
-  Observer.create({ target: window, type: 'wheel,touch', wheelSpeed: -1, tolerance: 12, preventDefault: true, onUp: (self) => { if (!window.__dragging && !self.event?.target?.closest?.('.ai-panel')) go(index + 1) }, onDown: (self) => { if (!window.__dragging && !self.event?.target?.closest?.('.ai-panel')) go(index - 1) } })
+  /* wheel and touch flip scenes; panels that scroll on their own (assistant chat, status list) and the physics
+     fields (partner spheres, team pit) keep their native gestures on touch screens */
+  const OWN_GESTURES = '.ai-panel, .hpanel, .drag-zone, input, textarea'
+  Observer.create({ target: window, type: 'wheel,touch', wheelSpeed: -1, tolerance: 12, preventDefault: true, ignore: OWN_GESTURES, onUp: (self) => { if (!window.__dragging && !self.event?.target?.closest?.(OWN_GESTURES)) go(index + 1) }, onDown: (self) => { if (!window.__dragging && !self.event?.target?.closest?.(OWN_GESTURES)) go(index - 1) } })
   window.addEventListener('keydown', (e) => {
     if (e.target.closest?.('input, textarea, .ai-panel')) return
     if (['ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go(index + 1) }
