@@ -69,7 +69,7 @@ palette 0.5 s in and 0.32 s out.
 | Hover, press, focus, simple enter or exit | CSS transitions on transform and opacity (Tailwind `transition-*`, `duration-*`) |
 | Enter or exit of mounted elements in React | CSS plus the `data-state` attributes Base UI already exposes (`data-[starting-style]`, `data-[ending-style]`) |
 | FLIP, measured height morphs, staggered lists | Web Animations API (`element.animate`) in a small hook, or GSAP if the surface already uses it |
-| Timelines with several tracks (logo loader, landing scenes) | GSAP 3 (`gsap`, `@gsap/react` `useGSAP` for cleanup). This is a proposed dependency that no app installs yet, so add it per workspace only when a surface needs a timeline. |
+| Timelines with several tracks (logo loader, landing scenes) | GSAP 3 (`gsap`, `@gsap/react` `useGSAP` for cleanup). `apps/web-player` installs it for the landing, loaded lazily; add it to another workspace only when a surface there needs a timeline. |
 | Scroll-linked effects | CSS scroll or view timelines when supported, otherwise an `IntersectionObserver` trigger. Never scroll-event handlers. |
 
 Shared motion code belongs in `packages/ui-react` (for example `src/motion/`), next to the
@@ -214,6 +214,9 @@ The pill blooms into a status panel through an SVG goo filter
 - The panel caps at the viewport height and scrolls inside.
 - Hover opens it with a mouse. A click right after a hover-open keeps it open. Tap toggles it on
   touch.
+- In the web player the panel shows one row, Bitrate, fed by `GET /health/ready` (polled every
+  60 s while the tab is visible), so it has no per-service rows or uptime bars yet. See the
+  [landing spec](../specs/web-player-landing.md).
 
 ### 4.11 Island navigation (mobile)
 
