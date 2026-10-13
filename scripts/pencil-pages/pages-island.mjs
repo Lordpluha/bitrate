@@ -114,7 +114,7 @@ const header = (title, sub) => [
   ]),
   Col({ name: 'Title', gap: 4, width: 'fill_container' }, [Tx('H2', title), Tx('Muted', sub)]),
 ]
-const homeContent = () => [
+export const homeContent = () => [
   ...header('Pick up the signal.', 'You left off on Desktop an hour ago.'),
   R('Home/Resume', { width: 'fill_container' }),
   R('Home/Tuner', { width: 'fill_container' }),

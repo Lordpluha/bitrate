@@ -432,12 +432,6 @@ export const CheckRow = (label, width = 'fill_container') =>
   R('Form/Checkbox Row', { width }, { label: { content: label } })
 
 /* shells */
-const TAB = {
-  home: ['lPxJb', 'ojzHV'],
-  search: ['kGpDm', 'mG3wy'],
-  library: ['X78L7T', 'HnsIZ'],
-  create: ['pjDzF', 'j8Bscj'],
-}
 export function Desktop(name, content, { nowPlaying = false, library = true, height = 900 } = {}) {
   return {
     type: 'frame',
@@ -473,17 +467,22 @@ export function Desktop(name, content, { nowPlaying = false, library = true, hei
     ],
   }
 }
-export function Mobile(name, content, { tab = 'home', mini = true, header, height = 844 } = {}) {
-  const desc = {}
-  for (const [t, [ic, lb]] of Object.entries(TAB)) {
-    desc[ic] = { fill: t === tab ? C.foreground : C.mutedForeground }
-    desc[lb] = {
-      fill: t === tab ? C.foreground : C.mutedForeground,
-      fontWeight: t === tab ? '600' : 'normal',
-    }
-  }
-  Object.assign(desc.pjDzF, { icon: 'square-plus' })
-  Object.assign(desc.j8Bscj, { content: 'Create' })
+/* mobile navigation is the floating island (Home, Search, Library + artwork and play); "Create" lives in Library */
+const ISLAND_TABS = ['home', 'search', 'library']
+export const Island = (tab = 'home', o = {}) => {
+  const t = tab === 'create' ? 'library' : tab
+  return R(
+    'Mobile/Island',
+    o,
+    Object.fromEntries(
+      ISLAND_TABS.flatMap((k) => [
+        [k, k === t ? { fill: C.secondary } : undefined],
+        [`${k}Icon`, k === t ? { fill: C.foreground } : undefined],
+      ]),
+    ),
+  )
+}
+export function Mobile(name, content, { tab = 'home', header, height = 844 } = {}) {
   return {
     type: 'frame',
     id: id(),
@@ -503,16 +502,20 @@ export function Mobile(name, content, { tab = 'home', mini = true, header, heigh
           height: 'fill_container',
           layout: 'vertical',
           gap: 20,
-          padding: [8, 16, 16, 16],
+          padding: [8, 16, 12, 16],
           clip: true,
         },
         fitStates(content, true),
       ),
-      mini &&
-        L({ name: 'Mini Bar Slot', width: 'fill_container', padding: [8, 16] }, [
-          Ref('CeyP3', { name: 'Mini Bar', width: 'fill_container' }),
-        ]),
-      Ref('PmEet', { name: 'Tab Bar', width: 'fill_container' }, desc),
+      L(
+        {
+          name: 'Island Slot',
+          width: 'fill_container',
+          padding: [8, 16, 18, 16],
+          justifyContent: 'center',
+        },
+        [Island(tab, { width: 'fill_container' })],
+      ),
     ].filter(Boolean),
   }
 }

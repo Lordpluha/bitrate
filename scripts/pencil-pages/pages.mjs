@@ -65,7 +65,7 @@ import { friends, friendsFind, friendsRequests } from './pages-friends.mjs'
 import { loading } from './pages-loading.mjs'
 import { APP_STATES } from './pages-app.mjs'
 import { cursor } from './pages-cursor.mjs'
-import { mobileIsland } from './pages-island.mjs'
+import { mobileIsland, homeContent as islandHome } from './pages-island.mjs'
 import { notificationSettings, Switch as NotificationSwitch } from './pages-notifications.mjs'
 import { CONTEXT_STATES } from './pages-context-menu.mjs'
 import { COMMENT_STATES } from './pages-comments.mjs'
@@ -1185,12 +1185,20 @@ export const pages = {
       Mobile(
         'Library',
         [
-          Chips(['Playlists', 'Liked tracks', 'Albums', 'History']),
+          /* Jam is a Library filter; the row scrolls sideways when it overflows */
+          L({ name: 'Filter Scroller', width: 374, clip: true }, [
+            Chips(['Playlists', 'Jam · 2', 'Liked tracks', 'Albums', 'History']),
+          ]),
+          Row({ name: 'Live Head', width: 'fill_container', justifyContent: 'space_between' }, [
+            Tx('H4', 'Live now'),
+            Tx('Link', 'All Jams'),
+          ]),
+          R('Jam/Card', { width: 'fill_container' }),
           Row({ width: 'fill_container', justifyContent: 'space_between' }, [
             Row({ gap: 6 }, [Ic('arrow-down-up', 'Foreground', 16), Tx('Body Strong', 'Recents')]),
             Ic('layout-grid'),
           ]),
-          ...LIB_ITEMS.slice(0, 6).map(([t, m, a]) => MobileTrack(t, m, a)),
+          ...LIB_ITEMS.slice(0, 4).map(([t, m, a]) => MobileTrack(t, m, a)),
         ],
         { tab: 'library', header: libMobileHeader() },
       ),
@@ -3517,24 +3525,9 @@ function homeAll() {
     artistRow(4),
   ]
 }
+/* mobile Home follows the island concept: resume where you stopped, tune by feeling, bento tiles */
 function homeMobile() {
-  return [
-    Row({ width: 'fill_container', gap: 12 }, [
-      Avatar('avatar1', 36),
-      Col({ gap: 2, width: 'fill_container' }, [
-        Tx('Eyebrow', 'MADE FOR MAYA'),
-        Tx('H2', 'Good evening'),
-      ]),
-      IconBtn('bell'),
-    ]),
-    Chips(['All', 'Music', 'Podcasts']),
-    quickGrid(2),
-    SectionHeader('Recommended for you'),
-    Row(
-      { gap: 12 },
-      LIB_ITEMS.slice(0, 3).map(([t, m, a]) => AlbumCard(t, m, a, 148)),
-    ),
-  ]
+  return islandHome()
 }
 function deviceRows() {
   return [
