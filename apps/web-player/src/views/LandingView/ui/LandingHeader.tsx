@@ -3,6 +3,7 @@
 import { Theme, Themes } from '@shared/constants'
 import { useTheme } from '@shared/contexts'
 import { ROUTES } from '@shared/routes'
+import { lc } from '../lib/styles/lc'
 import type { LandingKey } from '../model/messages/en'
 import { useLandingCopy } from '../model/useLandingCopy'
 
@@ -23,26 +24,30 @@ export const LandingHeader = () => {
   const c = useLandingCopy()
   const { theme, setTheme } = useTheme()
   return (
-    <header className="top">
+    <header className={lc('top')}>
       <a
         aria-label={c('chrome.home')}
-        className="brand"
+        className={lc('brand')}
         href={ROUTES.landingScene('hero')}
       >
-        <svg aria-hidden="true" className="mark" viewBox="371 117 795 775">
+        <svg
+          aria-hidden="true"
+          className={lc('mark')}
+          viewBox="371 117 795 775"
+        >
           <use fill="url(#bm)" href="#bitrate-logo" />
         </svg>
         Bitrate
       </a>
-      <nav aria-label={c('chrome.nav')} className="nav">
+      <nav aria-label={c('chrome.nav')} className={lc('nav')}>
         {NAV.map(({ scene, label }) => (
           <a href={ROUTES.landingScene(scene)} key={scene}>
             {c(label)}
           </a>
         ))}
       </nav>
-      <div className="top-actions">
-        <fieldset aria-label={c('chrome.theme')} className="themes">
+      <div className={lc('top-actions')}>
+        <fieldset aria-label={c('chrome.theme')} className={lc('themes')}>
           {Themes.map((t) => (
             <button
               aria-pressed={theme === t}
@@ -56,16 +61,16 @@ export const LandingHeader = () => {
         </fieldset>
         <button
           aria-pressed="false"
-          className="btn btn-ghost btn-sm"
+          className={lc('btn btn-ghost btn-sm')}
           data-landing-sound=""
           type="button"
         >
-          <span aria-hidden="true" className="sound-bars">
+          <span aria-hidden="true" className={lc('sound-bars')}>
             <i />
             <i />
             <i />
           </span>
-          <span className="label">{c('chrome.play_signal')}</span>
+          <span className={lc('label')}>{c('chrome.play_signal')}</span>
         </button>
       </div>
     </header>

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { rgbOf, token, tokenAlpha } from '../lib/engine/palette'
+import { lc } from '../lib/styles/lc'
 
 export type OrbState = 'breathing' | 'searching' | 'composing'
 
@@ -126,7 +127,7 @@ export const AssistantOrb = ({ size, state, running }: AssistantOrbProps) => {
   }, [running, state])
   return (
     <canvas
-      className="orb"
+      className={lc('orb')}
       height={size * 2}
       ref={ref}
       style={{ width: `${size}px`, height: `${size}px` }}

@@ -1,5 +1,6 @@
 'use client'
 
+import { lc } from '../../lib/styles/lc'
 import { useLandingCopy } from '../../model/useLandingCopy'
 
 /** Scene "Your rules" — ported from the motion prototype; the landing engine animates it after mount. */
@@ -8,118 +9,85 @@ export const SceneRules = () => {
   return (
     <section
       aria-label={c('rules.your_player_your_rules')}
-      className="scene"
+      className={lc('scene')}
       data-label="Your rules"
       id="rules"
     >
-      <div className="board">
+      <div className={lc('board')}>
         <div
-          className="abs d-only"
+          className={lc('abs d-only')}
           style={{ '--x': '0', '--y': '560', '--w': '360', '--h': '340' }}
         >
-          <div className="horizon" style={{ height: '100%' }}></div>
+          <div className={lc('horizon', 'h-full')}></div>
         </div>
         <div
-          className="abs d-only"
-          style={{
-            '--x': '40',
-            '--y': '110',
-            '--w': '300',
-            '--h': '120',
-            opacity: '.7',
-          }}
+          className={lc('abs d-only', 'opacity-[.7]')}
+          style={{ '--x': '40', '--y': '110', '--w': '300', '--h': '120' }}
         >
-          <div className="bands" id="bands"></div>
+          <div className={lc('bands')} id="bands"></div>
         </div>
         <div
-          className="abs"
+          className={lc('abs')}
           style={{ '--x': '50', '--y': '236', '--w': '320' }}
         >
-          <div className="eyebrow" data-a="up" style={{ marginBottom: '18px' }}>
+          <div className={lc('eyebrow', 'mb-[18px]')} data-a="up">
             {c('rules.make_it_yours')}
           </div>
-          <h2 className="h h56">
-            <span className="line">
+          <h2 className={lc('h h56')}>
+            <span className={lc('line')}>
               <span>{c('rules.your_player')}</span>
             </span>
-            <span className="line">
-              <span className="hl">{c('rules.your_rules')}</span>
+            <span className={lc('line')}>
+              <span className={lc('hl')}>{c('rules.your_rules')}</span>
             </span>
           </h2>
-          <p
-            className="lede"
-            data-a="up"
-            style={{ marginTop: '26px', color: 'var(--fg)' }}
-          >
+          <p className={lc('lede', 'mt-[26px] text-foreground')} data-a="up">
             {c('rules.less_clutter_more_of_what_you_use')}
           </p>
-          <p className="lede s" data-a="up" style={{ marginTop: '14px' }}>
+          <p className={lc('lede s', 'mt-[14px]')} data-a="up">
             {c('rules.change_the_layout_choose_your_tools_find')}
           </p>
         </div>
         <span
-          className="abs sig d-only"
+          className={lc('abs sig d-only')}
           style={{ '--x': '72', '--y': '834', '--w': '200' }}
         >
           {c('rules.music_lives_on')}
         </span>
         <div
-          className="abs d-only"
+          className={lc(
+            'abs d-only',
+            'rounded-[24px] bg-[image:linear-gradient(135deg,color-mix(in_srgb,var(--color-purple-500)_25%,transparent),color-mix(in_srgb,var(--color-magenta-500)_12%,transparent))]! border border-solid border-border',
+          )}
           data-a="up"
-          style={{
-            '--x': '378',
-            '--y': '110',
-            '--w': '1024',
-            '--h': '718',
-            borderRadius: '24px',
-            background:
-              'linear-gradient(135deg,rgba(124,58,237,.25),rgba(236,72,153,.12))',
-            border: '1px solid var(--border)',
-          }}
+          style={{ '--x': '378', '--y': '110', '--w': '1024', '--h': '718' }}
         ></div>
         <div
-          className="abs persp"
+          className={lc('abs persp')}
           style={{ '--x': '392', '--y': '126', '--w': '1008' }}
         >
-          <div
-            className="win m-fit"
-            data-a="win"
-            style={{ position: 'relative', height: '690px' }}
-          >
+          <div className={lc('win m-fit', 'relative h-[690px]')} data-a="win">
             <div
-              className="row d-only"
-              style={{
-                height: '56px',
-                padding: '0 22px',
-                gap: '22px',
-                fontSize: '12px',
-                color: 'var(--muted)',
-              }}
+              className={lc(
+                'row d-only',
+                'h-[56px] p-[0_22px] gap-[22px] [font-size:12px] text-muted-foreground',
+              )}
             >
-              <b
-                style={{
-                  font: '600 16px/1 var(--font-display)',
-                  color: 'var(--fg)',
-                }}
-              >
+              <b className="font-[600] [font-size:16px] leading-[1] font-[family-name:var(--font-display)] text-foreground">
                 {c('rules.bitrate')}
               </b>
-              <span style={{ color: 'var(--fg)' }}>{c('rules.home')}</span>
+              <span className="text-foreground">{c('rules.home')}</span>
               <span>{c('rules.library')}</span>
               <span>{c('rules.discover')}</span>
               <span
-                className="soft row"
-                style={{
-                  padding: '8px 12px',
-                  gap: '8px',
-                  width: '190px',
-                  borderRadius: '999px',
-                }}
+                className={lc(
+                  'soft row',
+                  'p-[8px_12px] gap-[8px] w-[190px] rounded-[999px]',
+                )}
               >
                 <svg
                   aria-hidden="true"
-                  className="i"
-                  style={{ width: '14px', height: '14px' }}
+                  className={lc('i', 'w-[14px]! h-[14px]!')}
                 >
                   <use href="#i-search" />
                 </svg>
@@ -127,305 +95,255 @@ export const SceneRules = () => {
               </span>
             </div>
             <div
-              className="pos d-only"
-              style={{
-                left: '14px',
-                top: '70px',
-                width: '246px',
-                height: '604px',
-              }}
+              className={lc(
+                'pos d-only',
+                'left-[14px] top-[70px] w-[246px] h-[604px]',
+              )}
             >
               <div
-                className="card col"
-                style={{
-                  height: '100%',
-                  padding: '14px',
-                  gap: '14px',
-                  boxSizing: 'border-box',
-                }}
+                className={lc(
+                  'card col',
+                  'h-full p-[14px] gap-[14px] box-border',
+                )}
               >
-                <span className="label">{c('rules.now_playing')}</span>
-                <div className="art" style={{ height: '218px' }}></div>
+                <span className={lc('label')}>{c('rules.now_playing')}</span>
+                <div className={lc('art', 'h-[218px]')}></div>
                 <p
-                  className="t-title"
-                  style={{ font: '600 18px/1 var(--font-display)' }}
+                  className={lc(
+                    't-title',
+                    'font-[600] [font-size:18px] leading-[1] font-[family-name:var(--font-display)]',
+                  )}
                 >
                   {c('rules.night_signal')}
                 </p>
-                <p className="t-meta" style={{ marginTop: '-8px' }}>
+                <p className={lc('t-meta', 'mt-[-8px]')}>
                   {c('rules.demo_artist')}
                 </p>
-                <div className="prog">
-                  <i className="anim-prog"></i>
+                <div className={lc('prog')}>
+                  <i className={lc('anim-prog')}></i>
                 </div>
-                <div className="transport" style={{ gap: '18px' }}>
-                  <svg aria-hidden="true" className="i">
+                <div className={lc('transport', 'gap-[18px]')}>
+                  <svg aria-hidden="true" className={lc('i')}>
                     <use href="#i-prev" />
                   </svg>
-                  <span
-                    className="playbtn"
-                    style={{ width: '42px', height: '42px' }}
-                  >
-                    <svg aria-hidden="true" className="i">
+                  <span className={lc('playbtn', 'w-[42px] h-[42px]')}>
+                    <svg aria-hidden="true" className={lc('i')}>
                       <use href="#i-pause" />
                     </svg>
                   </span>
-                  <svg aria-hidden="true" className="i">
+                  <svg aria-hidden="true" className={lc('i')}>
                     <use href="#i-next" />
                   </svg>
                 </div>
-                <span className="grow"></span>
-                <div style={{ height: '44px' }}>
-                  <canvas className="spec" data-bars="20"></canvas>
+                <span className={lc('grow')}></span>
+                <div className="h-[44px]!">
+                  <canvas className={lc('spec')} data-bars="20"></canvas>
                 </div>
               </div>
             </div>
             <div
-              className="pos d-only"
-              style={{
-                left: '268px',
-                top: '70px',
-                width: '238px',
-                height: '425px',
-              }}
+              className={lc(
+                'pos d-only',
+                'left-[268px] top-[70px] w-[238px] h-[425px]',
+              )}
             >
               <div
-                className="card col"
-                style={{
-                  height: '100%',
-                  padding: '14px',
-                  gap: '6px',
-                  boxSizing: 'border-box',
-                }}
+                className={lc(
+                  'card col',
+                  'h-full p-[14px] gap-[6px] box-border',
+                )}
               >
-                <span className="label">{c('rules.library_2')}</span>
-                <div className="qrow">
+                <span className={lc('label')}>{c('rules.library_2')}</span>
+                <div className={lc('qrow')}>
                   <span
-                    className="cv s"
-                    style={{
-                      background: 'linear-gradient(135deg,#7c3aed,#ec4899)',
-                    }}
+                    className={lc(
+                      'cv s',
+                      'bg-[image:linear-gradient(135deg,var(--color-purple-500),var(--color-magenta-500))]',
+                    )}
                   ></span>
                   <div>
-                    <p className="t-title">{c('rules.liked_songs')}</p>
-                    <p className="t-meta">{c('rules.128_tracks')}</p>
+                    <p className={lc('t-title')}>{c('rules.liked_songs')}</p>
+                    <p className={lc('t-meta')}>{c('rules.128_tracks')}</p>
                   </div>
                 </div>
-                <div className="qrow">
-                  <span className="cv s cv2"></span>
+                <div className={lc('qrow')}>
+                  <span className={lc('cv s cv2')}></span>
                   <div>
-                    <p className="t-title">{c('rules.night_drive')}</p>
-                    <p className="t-meta">{c('rules.playlist')}</p>
+                    <p className={lc('t-title')}>{c('rules.night_drive')}</p>
+                    <p className={lc('t-meta')}>{c('rules.playlist')}</p>
                   </div>
                 </div>
-                <div className="qrow">
-                  <span className="cv s cv3"></span>
+                <div className={lc('qrow')}>
+                  <span className={lc('cv s cv3')}></span>
                   <div>
-                    <p className="t-title">{c('rules.rain_drive')}</p>
-                    <p className="t-meta">{c('rules.playlist')}</p>
+                    <p className={lc('t-title')}>{c('rules.rain_drive')}</p>
+                    <p className={lc('t-meta')}>{c('rules.playlist')}</p>
                   </div>
                 </div>
-                <div className="qrow">
-                  <span className="cv s cv5"></span>
+                <div className={lc('qrow')}>
+                  <span className={lc('cv s cv5')}></span>
                   <div>
-                    <p className="t-title">{c('rules.luma_vale')}</p>
-                    <p className="t-meta">{c('rules.artist')}</p>
+                    <p className={lc('t-title')}>{c('rules.luma_vale')}</p>
+                    <p className={lc('t-meta')}>{c('rules.artist')}</p>
                   </div>
                 </div>
-                <div className="qrow">
-                  <span className="cv s cv4"></span>
+                <div className={lc('qrow')}>
+                  <span className={lc('cv s cv4')}></span>
                   <div>
-                    <p className="t-title">{c('rules.ambient_mornings')}</p>
-                    <p className="t-meta">{c('rules.playlist')}</p>
+                    <p className={lc('t-title')}>
+                      {c('rules.ambient_mornings')}
+                    </p>
+                    <p className={lc('t-meta')}>{c('rules.playlist')}</p>
                   </div>
                 </div>
               </div>
             </div>
             <div
-              className="pos d-only"
-              style={{
-                left: '268px',
-                top: '507px',
-                width: '238px',
-                height: '167px',
-              }}
+              className={lc(
+                'pos d-only',
+                'left-[268px] top-[507px] w-[238px] h-[167px]',
+              )}
             >
-              <div
-                className="drop"
-                style={{ height: '100%', boxSizing: 'border-box' }}
-              >
+              <div className={lc('drop', 'h-full box-border')}>
                 {c('rules.drop_a_panel_here')}
                 <br />
                 {c('rules.lyrics_credits_visualizer')}
               </div>
             </div>
             <div
-              className="pos d-only"
-              style={{
-                left: '514px',
-                top: '70px',
-                width: '188px',
-                height: '604px',
-              }}
+              className={lc(
+                'pos d-only',
+                'left-[514px] top-[70px] w-[188px] h-[604px]',
+              )}
             >
               <div
-                className="card col"
-                style={{
-                  height: '100%',
-                  padding: '14px',
-                  gap: '6px',
-                  boxSizing: 'border-box',
-                  opacity: '.55',
-                }}
+                className={lc(
+                  'card col',
+                  'h-full p-[14px] gap-[6px] box-border opacity-[.55]',
+                )}
               >
-                <span className="label">{c('rules.queue_dock')}</span>
-                <div
-                  className="drop"
-                  style={{ height: '150px', marginTop: '6px' }}
-                >
+                <span className={lc('label')}>{c('rules.queue_dock')}</span>
+                <div className={lc('drop', 'h-[150px] mt-[6px]')}>
                   {c('rules.queue_moved')}
                 </div>
               </div>
             </div>
             <div
-              className="pos"
-              style={{
-                left: '714px',
-                top: '2px',
-                width: '280px',
-                height: '674px',
-              }}
+              className={lc(
+                'pos',
+                'left-[714px] top-[2px] w-[280px] h-[674px]',
+              )}
             >
               <div
-                className="card col"
-                style={{
-                  height: '100%',
-                  padding: '20px',
-                  gap: '16px',
-                  boxSizing: 'border-box',
-                }}
+                className={lc(
+                  'card col',
+                  'h-full p-[20px] gap-[16px] box-border',
+                )}
               >
-                <div className="row">
-                  <svg
-                    aria-hidden="true"
-                    className="i"
-                    style={{ color: 'var(--accent)' }}
-                  >
+                <div className={lc('row')}>
+                  <svg aria-hidden="true" className={lc('i', 'text-accent')}>
                     <use href="#i-sliders" />
                   </svg>
                   <p
-                    className="t-title"
-                    style={{ font: '600 18px/1 var(--font-display)' }}
+                    className={lc(
+                      't-title',
+                      'font-[600] [font-size:18px] leading-[1] font-[family-name:var(--font-display)]',
+                    )}
                   >
                     {c('rules.make_it_yours')}
                   </p>
                 </div>
-                <span className="label">{c('rules.layout')}</span>
-                <div className="row" style={{ gap: '8px' }}>
-                  <span className="chip on">{c('rules.focus')}</span>
-                  <span className="chip">{c('rules.studio')}</span>
-                  <span className="chip">{c('rules.mini')}</span>
+                <span className={lc('label')}>{c('rules.layout')}</span>
+                <div className={lc('row', 'gap-[8px]')}>
+                  <span className={lc('chip on')}>{c('rules.focus')}</span>
+                  <span className={lc('chip')}>{c('rules.studio')}</span>
+                  <span className={lc('chip')}>{c('rules.mini')}</span>
                 </div>
-                <span className="label">{c('rules.panels')}</span>
-                <div className="row t-title" style={{ fontWeight: '500' }}>
-                  <span className="grow">{c('rules.lyrics')}</span>
-                  <span className="toggle on"></span>
+                <span className={lc('label')}>{c('rules.panels')}</span>
+                <div className={lc('row t-title', 'font-[500]')}>
+                  <span className={lc('grow')}>{c('rules.lyrics')}</span>
+                  <span className={lc('toggle on')}></span>
                 </div>
-                <div className="row t-title" style={{ fontWeight: '500' }}>
-                  <span className="grow">{c('rules.floating_queue')}</span>
-                  <span className="toggle" id="tgQueue"></span>
+                <div className={lc('row t-title', 'font-[500]')}>
+                  <span className={lc('grow')}>
+                    {c('rules.floating_queue')}
+                  </span>
+                  <span className={lc('toggle')} id="tgQueue"></span>
                 </div>
-                <div className="row t-title" style={{ fontWeight: '500' }}>
-                  <span className="grow">{c('rules.visualizer')}</span>
-                  <span className="toggle"></span>
+                <div className={lc('row t-title', 'font-[500]')}>
+                  <span className={lc('grow')}>{c('rules.visualizer')}</span>
+                  <span className={lc('toggle')}></span>
                 </div>
-                <div className="row t-title" style={{ fontWeight: '500' }}>
-                  <span className="grow">{c('rules.credits')}</span>
-                  <span className="toggle"></span>
+                <div className={lc('row t-title', 'font-[500]')}>
+                  <span className={lc('grow')}>{c('rules.credits')}</span>
+                  <span className={lc('toggle')}></span>
                 </div>
-                <span className="label">{c('rules.accent')}</span>
-                <div className="row" style={{ gap: '10px' }}>
+                <span className={lc('label')}>{c('rules.accent')}</span>
+                <div className={lc('row', 'gap-[10px]')}>
                   <span
-                    className="av"
-                    style={{ background: '#7c3aed', borderColor: 'var(--fg)' }}
+                    className={lc(
+                      'av',
+                      'bg-purple-500 bg-none border-foreground',
+                    )}
                   ></span>
-                  <span className="av" style={{ background: '#ec4899' }}></span>
-                  <span className="av" style={{ background: '#3b82f6' }}></span>
-                  <span className="av" style={{ background: '#10b981' }}></span>
+                  <span className={lc('av', 'bg-magenta-500 bg-none')}></span>
+                  <span className={lc('av', 'bg-blue-500 bg-none')}></span>
+                  <span className={lc('av', 'bg-green-500 bg-none')}></span>
                 </div>
-                <span className="grow"></span>
-                <p className="t-meta">
+                <span className={lc('grow')}></span>
+                <p className={lc('t-meta')}>
                   {c('rules.saved_to_this_device_reset_any_time')}
                 </p>
               </div>
             </div>
             <div
-              className="pos d-only"
+              className={lc(
+                'pos d-only',
+                'left-[544px] top-[246px] w-[192px] h-[328px]',
+              )}
               id="floatQ"
-              style={{
-                left: '544px',
-                top: '246px',
-                width: '192px',
-                height: '328px',
-              }}
             >
               <div
-                className="card col"
-                style={{
-                  height: '100%',
-                  padding: '12px',
-                  gap: '4px',
-                  boxSizing: 'border-box',
-                  boxShadow: '0 30px 60px -20px var(--shadow)',
-                  borderColor: 'var(--accent)',
-                }}
+                className={lc(
+                  'card col',
+                  'h-full p-[12px] gap-[4px] box-border [box-shadow:0_30px_60px_-20px_var(--shadow)] border-accent',
+                )}
               >
-                <div
-                  className="row label"
-                  style={{ justifyContent: 'space-between' }}
-                >
+                <div className={lc('row label', 'justify-between')}>
                   <span>{c('rules.floating_queue_2')}</span>
-                  <svg
-                    aria-hidden="true"
-                    className="i"
-                    style={{ width: '14px' }}
-                  >
+                  <svg aria-hidden="true" className={lc('i', 'w-[14px]!')}>
                     <use href="#i-grip" />
                   </svg>
                 </div>
-                <div className="qrow" style={{ padding: '8px 4px' }}>
+                <div className={lc('qrow', 'p-[8px_4px]')}>
                   <span
-                    className="cv s cv2"
-                    style={{ width: '32px', height: '32px' }}
+                    className={lc('cv s cv2', 'w-[32px]! h-[32px]!')}
                   ></span>
-                  <p className="t-title" style={{ fontSize: '12px' }}>
+                  <p className={lc('t-title', '[font-size:12px]')}>
                     {c('rules.echoes_in_motion')}
                   </p>
                 </div>
-                <div className="qrow" style={{ padding: '8px 4px' }}>
+                <div className={lc('qrow', 'p-[8px_4px]')}>
                   <span
-                    className="cv s cv3"
-                    style={{ width: '32px', height: '32px' }}
+                    className={lc('cv s cv3', 'w-[32px]! h-[32px]!')}
                   ></span>
-                  <p className="t-title" style={{ fontSize: '12px' }}>
+                  <p className={lc('t-title', '[font-size:12px]')}>
                     {c('rules.static_lines')}
                   </p>
                 </div>
-                <div className="qrow" style={{ padding: '8px 4px' }}>
+                <div className={lc('qrow', 'p-[8px_4px]')}>
                   <span
-                    className="cv s cv4"
-                    style={{ width: '32px', height: '32px' }}
+                    className={lc('cv s cv4', 'w-[32px]! h-[32px]!')}
                   ></span>
-                  <p className="t-title" style={{ fontSize: '12px' }}>
+                  <p className={lc('t-title', '[font-size:12px]')}>
                     {c('rules.drift_control')}
                   </p>
                 </div>
-                <div className="qrow" style={{ padding: '8px 4px' }}>
+                <div className={lc('qrow', 'p-[8px_4px]')}>
                   <span
-                    className="cv s cv1"
-                    style={{ width: '32px', height: '32px' }}
+                    className={lc('cv s cv1', 'w-[32px]! h-[32px]!')}
                   ></span>
-                  <p className="t-title" style={{ fontSize: '12px' }}>
+                  <p className={lc('t-title', '[font-size:12px]')}>
                     {c('rules.afterglow')}
                   </p>
                 </div>
@@ -434,13 +352,8 @@ export const SceneRules = () => {
           </div>
         </div>
         <span
-          className="abs disc d-only"
-          style={{
-            '--x': '1196',
-            '--y': '844',
-            '--w': '220',
-            textAlign: 'right',
-          }}
+          className={lc('abs disc d-only', 'text-right')}
+          style={{ '--x': '1196', '--y': '844', '--w': '220' }}
         >
           {c('rules.feature_concept_demo_content')}
         </span>

@@ -1,5 +1,6 @@
 'use client'
 
+import { lc } from '../../lib/styles/lc'
 import { useLandingCopy } from '../../model/useLandingCopy'
 
 /** Scene "Team" — ported from the motion prototype; the landing engine animates it after mount. */
@@ -8,57 +9,57 @@ export const SceneTeam = () => {
   return (
     <section
       aria-label={c('team.about_our_team')}
-      className="scene"
+      className={lc('scene')}
       data-label="Team"
       id="team"
     >
-      <div className="board">
+      <div className={lc('board')}>
         <div
-          className="abs"
+          className={lc('abs')}
           style={{ '--x': '60', '--y': '170', '--w': '420' }}
         >
-          <div className="eyebrow" data-a="up" style={{ marginBottom: '18px' }}>
+          <div className={lc('eyebrow', 'mb-[18px]')} data-a="up">
             {c('team.about_our_team')}
           </div>
-          <h2 className="h h56">
-            <span className="line">
+          <h2 className={lc('h h56')}>
+            <span className={lc('line')}>
               <span>{c('team.small_team')}</span>
             </span>
-            <span className="line">
-              <span className="hl">{c('team.loud_signal')}</span>
+            <span className={lc('line')}>
+              <span className={lc('hl')}>{c('team.loud_signal')}</span>
             </span>
           </h2>
-          <p className="lede s" data-a="up" style={{ marginTop: '22px' }}>
+          <p className={lc('lede s', 'mt-[22px]')} data-a="up">
             {c('team.two_people_build_bitrate_the_player_the')}
           </p>
-          <div className="stats" data-a="up">
+          <div className={lc('stats')} data-a="up">
             <span>
               <b data-v="2">{'2'}</b>
-              <span className="t-meta">{c('team.people')}</span>
+              <span className={lc('t-meta')}>{c('team.people')}</span>
             </span>
             <span>
               <b data-v="9">{'9'}</b>
-              <span className="t-meta">{c('team.workspaces')}</span>
+              <span className={lc('t-meta')}>{c('team.workspaces')}</span>
             </span>
             <span>
               <b data-v="1">{'1'}</b>
-              <span className="t-meta">{c('team.palette')}</span>
+              <span className={lc('t-meta')}>{c('team.palette')}</span>
             </span>
           </div>
-          <div className="ctas" data-a="up" style={{ marginTop: '26px' }}>
+          <div className={lc('ctas', 'mt-[26px]')} data-a="up">
             <a
-              className="btn btn-primary magnetic"
+              className={lc('btn btn-primary magnetic')}
               href="https://github.com/Lordpluha/bitrate"
               rel="noopener noreferrer"
               target="_blank"
             >
               {c('team.join_us')}{' '}
-              <svg aria-hidden="true" className="i">
+              <svg aria-hidden="true" className={lc('i')}>
                 <use href="#i-arrow" />
               </svg>
             </a>
             <a
-              className="btn btn-ghost magnetic"
+              className={lc('btn btn-ghost magnetic')}
               href="https://github.com/Lordpluha/bitrate/blob/develop/apps/docs/docs/guides/contributing.md"
               rel="noopener noreferrer"
               target="_blank"
@@ -68,23 +69,18 @@ export const SceneTeam = () => {
           </div>
         </div>
         <div
-          className="abs pit drag-zone"
+          className={lc('abs pit drag-zone')}
           id="pit"
           style={{ '--x': '520', '--y': '70', '--w': '880', '--h': '780' }}
         >
-          <div className="hc" id="hc" role="tooltip"></div>
+          <div className={lc('hc')} id="hc" role="tooltip"></div>
         </div>
         <div
-          className="abs row d-only"
-          style={{
-            '--x': '60',
-            '--y': '854',
-            '--w': '1320',
-            justifyContent: 'space-between',
-          }}
+          className={lc('abs row d-only', 'justify-between')}
+          style={{ '--x': '60', '--y': '854', '--w': '1320' }}
         >
-          <span className="sig">{c('team.music_lives_on')}</span>
-          <span className="disc">
+          <span className={lc('sig')}>{c('team.music_lives_on')}</span>
+          <span className={lc('disc')}>
             {c('team.stack_bubbles_show_where_each_technology')}
           </span>
         </div>

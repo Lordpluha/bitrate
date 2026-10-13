@@ -90,7 +90,7 @@ Spotify.
 | AC-3 | Wheel, keys, dots and hash navigation move between scenes on desktop | e2e (desktop) | Pass: e2e (desktop) ArrowDown, a dot, the wheel, End and a `/#library` deep link. Input during a transition is dropped by design; a typed hash waits for it |
 | AC-4 | A vertical swipe changes scenes on touch; swipes inside the status panel, assistant and physics fields do not | e2e (mobile, touch events) | Pass: e2e (Pixel 5) a synthetic swipe flips the scene; a swipe on `#partnerZone` does not |
 | AC-5 | Without WebGL the 2D fallbacks render and nothing throws | e2e with WebGL disabled, console clean | Pass: e2e with WebGL context creation blocked: DOM partner bubbles render, no page errors |
-| AC-6 | Reduced motion shows a static, scrollable page without 3D or loops | e2e with `reducedMotion: 'reduce'`; screenshot baseline | Pass: e2e with reduced motion (static, scrollable, no scroll lock, intro hidden); new `landing-default.png` baseline, reproducible on a second run |
+| AC-6 | Reduced motion shows a static, scrollable page without 3D or loops | e2e with `reducedMotion: 'reduce'`; screenshot baseline | Pass: e2e with reduced motion (static, scrollable, no scroll lock, intro hidden); new `landing-default.png` baseline, reproducible on a second run. The stage canvas is hidden for the shot: masking it painted the whole viewport, so the first baseline checked nothing |
 | AC-7 | en, uk and pl copy switch with the app locale; de and ru show English | unit test of the landing catalog and fallback | Pass: `copy.unit-spec.ts` (uk, pl, de → English fallback, interpolation) |
 | AC-8 | Status pill reflects `/health/ready`: 200, 503, network error, initial checking | unit test of the status hook with a mocked fetch | Pass: `serviceStatus.unit-spec.ts` covers the mapping (pending, 200, 503, network error); the hook is a thin React Query call, not mocked end to end |
 | AC-9 | CTAs point at `ROUTES`; a signed-in visitor sees "Open web player" | unit + e2e | Pass: `SceneCtas.unit-spec.tsx` + e2e with and without an `access_token` cookie |
@@ -116,6 +116,24 @@ The user agreed in this session's interview (2026-10-13):
 11. Service status: the real `/health/ready` with a single row, option (a).
 
 Plan confirmation: the user confirmed the plan in the same session on 2026-10-13 ("Подтверждаю, начинай реализацию").
+
+## Styling
+
+The landing is styled with Tailwind on the design tokens (the user asked for a full migration
+after the first port shipped as hand-written CSS):
+
+- `lib/styles/landing.styles.ts` holds the former stylesheet as `[marker, utilities]` entries in
+  cascade order; context selectors are arbitrary variants (`[.win_&]:`, `max-[820px]:`).
+- `lc(markers, extra)` merges the entries an element carries with `cn`; former inline styles are
+  `extra` utilities. Where an inline value used to beat a selector, or a rule was `!important`,
+  the utility carries Tailwind's `!` so the cascade is unchanged.
+- Hex values from the prototype markup map to palette tokens; the brand-mark gradient stays.
+- Inside the landing, text inherits the landing fonts (the app's `* { font-family }` base rule
+  had put Poppins on unstyled text).
+- Verification: computed styles of every landing element compared before and after in nine
+  states (desktop and phone; dark, light and dim; no JavaScript; assistant and status open) on a
+  production build: identical apart from zero-width border colours and equivalent
+  `background-position` values.
 
 ## Implementation plan
 

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useServiceStatus } from '../api/useServiceStatus'
+import { lc } from '../lib/styles/lc'
 import type { LandingKey } from '../model/messages/en'
 import type { ServiceState } from '../model/serviceStatus'
 import { useLandingCopy } from '../model/useLandingCopy'
@@ -110,7 +111,7 @@ export const ServiceStatus = () => {
 
   return (
     <span
-      className={`health is-${state}${open ? ' open' : ''}`}
+      className={lc(`health is-${state}${open ? ' open' : ''}`)}
       onPointerEnter={(e) => {
         if (e.pointerType !== 'mouse') return
         if (!open) hoverAt.current = performance.now()
@@ -121,46 +122,38 @@ export const ServiceStatus = () => {
       }}
       ref={root}
     >
-      <span aria-hidden="true" className="goo" ref={goo}>
-        <span className="blob b-panel" ref={blob} />
-        <span className="blob b-pill" />
+      <span aria-hidden="true" className={lc('goo')} ref={goo}>
+        <span className={lc('blob b-panel')} ref={blob} />
+        <span className={lc('blob b-pill')} />
       </span>
       <span
         aria-label={c('status.label')}
-        className="hpanel"
+        className={lc('hpanel')}
         id="hpanel"
         ref={panel}
         role="dialog"
       >
-        <span
-          className="row"
-          style={{ justifyContent: 'space-between', marginBottom: '6px' }}
-        >
+        <span className={lc('row', 'justify-between mb-[6px]')}>
           <span>
-            <b
-              style={{
-                font: '600 15px/1.2 var(--font-body)',
-                display: 'block',
-              }}
-            >
+            <b className="font-[600] [font-size:15px] leading-[1.2] font-[family-name:var(--font-body)] block">
               {c('status.label')}
             </b>
-            <small className="t-meta">{checked}</small>
+            <small className={lc('t-meta')}>{checked}</small>
           </span>
         </span>
-        <span className="hrow is-single">
+        <span className={lc('hrow is-single')}>
           <span>
             <b>{c('status.row')}</b>
             <small>{c('status.scope')}</small>
           </span>
-          <span className={`hstate is-${state}`}>{c(ROW[state])}</span>
+          <span className={lc(`hstate is-${state}`)}>{c(ROW[state])}</span>
         </span>
       </span>
       <button
         aria-controls="hpanel"
         aria-expanded={open}
         aria-label={c('status.toggle')}
-        className="hpill"
+        className={lc('hpill')}
         id="hpill"
         onClick={() =>
           setOpen((v) =>
@@ -169,12 +162,11 @@ export const ServiceStatus = () => {
         }
         type="button"
       >
-        <i className={`hdot is-${state}`} />
+        <i className={lc(`hdot is-${state}`)} />
         <span>{c(PILL[state])}</span>
         <svg
           aria-hidden="true"
-          className="i"
-          style={{ width: '14px', height: '14px', color: 'var(--muted)' }}
+          className={lc('i', 'w-[14px]! h-[14px]! text-muted-foreground')}
         >
           <use href="#i-arrow" />
         </svg>
