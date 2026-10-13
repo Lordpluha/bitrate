@@ -1,7 +1,13 @@
 'use client'
 
 import { cn, Input, ReviewIcon, SearchIcon } from '@bitrate/ui-react'
-import { type FocusEvent, type KeyboardEvent, useId, useState } from 'react'
+import {
+  type FocusEvent,
+  type KeyboardEvent,
+  Suspense,
+  useId,
+  useState,
+} from 'react'
 import { useI18n } from '@/shared/i18n'
 import { HeaderSearchDropdown } from '@/widgets/MainHeader/ui/HeaderSearch/HeaderSearchDropdown'
 import { useHeaderSearch } from '@/widgets/MainHeader/ui/HeaderSearch/model/useHeaderSearch'
@@ -10,7 +16,14 @@ type HeaderSearchProps = {
   className?: string
 }
 
-export const HeaderSearch = ({ className }: HeaderSearchProps) => {
+/** The search reads `?q=` with useSearchParams; its boundary keeps every main route prerenderable. */
+export const HeaderSearch = (props: HeaderSearchProps) => (
+  <Suspense fallback={null}>
+    <HeaderSearchField {...props} />
+  </Suspense>
+)
+
+const HeaderSearchField = ({ className }: HeaderSearchProps) => {
   const { t } = useI18n()
   const search = useHeaderSearch()
   const listboxId = useId()
