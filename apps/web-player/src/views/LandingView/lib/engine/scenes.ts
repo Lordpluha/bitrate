@@ -5,7 +5,7 @@ import { formatSceneNumber, sceneFromHash, targetScene } from './navigation'
 import type { Stage } from './stage'
 
 /** Panels that scroll on their own and the physics fields keep their native gestures. */
-export const OWN_GESTURES = '.ai-panel, .hpanel, .drag-zone, input, textarea'
+const OWN_GESTURES = '.ai-panel, .hpanel, .drag-zone, input, textarea'
 const SHUFFLE_EVERY_MS = 2600
 const GLITCH_EVERY_MS = 3200
 /** Lock after a scene change so one trackpad swipe moves one scene. */

@@ -142,6 +142,10 @@ html.landing-lock body {
     14px;
   pointer-events: none;
 }
+html.has-cursor,
+html.has-cursor * {
+  cursor: none !important;
+}
 .landing .top > * {
   pointer-events: auto;
 }
@@ -261,6 +265,64 @@ html.landing-lock body {
   background: currentColor;
   border-radius: 1px;
 }
+.landing .live i {
+  width: 7px;
+  height: 7px;
+  background: var(--magenta);
+  border-radius: 50%;
+  box-shadow: 0 0 0 0
+    color-mix(in srgb, var(--color-magenta-500) 60%, transparent);
+  animation: ping 1.6s infinite;
+}
+.landing .prog i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--magenta));
+  transform: scaleX(0.42);
+  transform-origin: left;
+}
+.landing .bands i {
+  flex: 1;
+  height: 100%;
+  background: linear-gradient(to top, transparent, var(--accent));
+  border-radius: 2px;
+  opacity: 0.5;
+  transform-origin: bottom;
+}
+.landing .legend i {
+  width: 18px;
+  height: 2px;
+  border-radius: 1px;
+}
+.landing .bars i {
+  width: 4px;
+  height: 20px;
+  background: var(--success);
+  border-radius: 1px;
+  opacity: 0.85;
+  transform-origin: bottom;
+}
+.landing .cur-eq i {
+  width: 2px;
+  height: 18px;
+  background: var(--accent);
+  border-radius: 1px;
+  transform: scaleY(0.3);
+  transform-origin: center;
+}
+.landing .cur-pill i {
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 9px solid var(--color-background);
+}
+.landing .cur-scrub i {
+  width: 2px;
+  height: 28px;
+  background: var(--accent);
+  border-radius: 1px;
+}
 .landing .playing .sound-bars i {
   animation: eq 0.8s ease-in-out infinite alternate;
 }
@@ -306,6 +368,19 @@ html.landing-lock body {
   background: var(--accent);
   border-color: var(--accent);
   transform: scale(1.4);
+}
+.landing .line > span {
+  display: inline-block;
+}
+.landing .rail-nav span {
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+}
+.landing .legend span {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 .landing .dots button span {
   position: absolute;
@@ -458,9 +533,6 @@ html.landing-lock body {
   margin-bottom: -0.06em;
   overflow: hidden;
 }
-.landing .line > span {
-  display: inline-block;
-}
 .landing .hl {
   color: var(--accent);
   -webkit-text-fill-color: transparent;
@@ -538,15 +610,6 @@ html.landing-lock body {
   gap: 8px;
   align-items: center;
   color: var(--fg);
-}
-.landing .live i {
-  width: 7px;
-  height: 7px;
-  background: var(--magenta);
-  border-radius: 50%;
-  box-shadow: 0 0 0 0
-    color-mix(in srgb, var(--color-magenta-500) 60%, transparent);
-  animation: ping 1.6s infinite;
 }
 .landing .live.ok i {
   background: var(--success);
@@ -674,13 +737,6 @@ html.landing-lock body {
   background: var(--border);
   border-radius: 2px;
 }
-.landing .prog i {
-  display: block;
-  height: 100%;
-  background: linear-gradient(90deg, var(--primary), var(--magenta));
-  transform: scaleX(0.42);
-  transform-origin: left;
-}
 .landing .times {
   display: flex;
   justify-content: space-between;
@@ -764,6 +820,22 @@ html.landing-lock body {
 }
 .landing .avs {
   display: flex;
+}
+.landing .node .av {
+  width: 40px;
+  height: 40px;
+  font-size: 12px;
+  border: 0;
+}
+.landing .listeners .av {
+  width: 32px;
+  height: 32px;
+}
+.landing .hc .av {
+  width: 48px;
+  height: 48px;
+  font-size: 15px;
+  border: 0;
 }
 .landing .avs .av + .av {
   margin-left: -8px;
@@ -861,6 +933,39 @@ html.landing-lock body {
   border: 1px solid var(--border);
   border-radius: 50%;
 }
+.landing .stats b {
+  display: block;
+  font: 700 34px / 1 var(--font-display);
+  color: var(--fg);
+}
+.landing .ai-welcome b {
+  font: 600 15px / 1.2 var(--font-display);
+}
+.landing .intro b,
+.landing .intro .mono {
+  position: absolute;
+  left: 50%;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+.landing .intro b {
+  top: calc(50% + min(100vw, 100vh) * 0.15 + 26px);
+}
+.landing .intro b {
+  font: 700 24px / 1 var(--font-display);
+  letter-spacing: -0.02em;
+}
+.landing .hrow b {
+  display: block;
+  font: 600 13px / 1.2 var(--font-body);
+}
+.landing .cur-scrub b {
+  padding: 4px 6px;
+  font: 600 11px / 1 var(--font-data, monospace);
+  color: var(--bg);
+  background: var(--fg);
+  border-radius: 6px;
+}
 .landing .step.done b,
 .landing .step.now b {
   color: var(--color-white);
@@ -922,14 +1027,6 @@ html.landing-lock body {
   gap: 8px;
   align-items: flex-end;
   height: 100%;
-}
-.landing .bands i {
-  flex: 1;
-  height: 100%;
-  background: linear-gradient(to top, transparent, var(--accent));
-  border-radius: 2px;
-  opacity: 0.5;
-  transform-origin: bottom;
 }
 .landing .horizon {
   overflow: hidden;
@@ -1038,11 +1135,6 @@ html.landing-lock body {
   font-size: 11px;
   color: var(--muted);
 }
-.landing .rail-nav span {
-  display: grid;
-  gap: 6px;
-  justify-items: center;
-}
 .landing .rail-nav .on {
   padding: 12px 10px;
   color: var(--fg);
@@ -1059,12 +1151,6 @@ html.landing-lock body {
   background: var(--glass);
   border: 1px solid var(--border);
   border-radius: 14px;
-}
-.landing .node .av {
-  width: 40px;
-  height: 40px;
-  font-size: 12px;
-  border: 0;
 }
 .landing .node small {
   display: block;
@@ -1115,16 +1201,6 @@ html.landing-lock body {
   font-size: 11px;
   color: var(--muted);
 }
-.landing .legend span {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-.landing .legend i {
-  width: 18px;
-  height: 2px;
-  border-radius: 1px;
-}
 .landing .route {
   display: flex;
   gap: 18px;
@@ -1147,10 +1223,6 @@ html.landing-lock body {
   border: 1px solid var(--border);
   border-radius: 38px;
   box-shadow: 0 50px 100px -40px var(--shadow);
-}
-.landing .listeners .av {
-  width: 32px;
-  height: 32px;
 }
 .landing .cmark {
   position: absolute;
@@ -1393,12 +1465,6 @@ html.landing-lock body {
 .landing .hc .row {
   align-items: flex-start;
 }
-.landing .hc .av {
-  width: 48px;
-  height: 48px;
-  font-size: 15px;
-  border: 0;
-}
 .landing .hc .links {
   display: flex;
   flex-wrap: wrap;
@@ -1409,11 +1475,6 @@ html.landing-lock body {
   display: flex;
   gap: 26px;
   margin-top: 30px;
-}
-.landing .stats b {
-  display: block;
-  font: 700 34px / 1 var(--font-display);
-  color: var(--fg);
 }
 
 /* AI assistant: bottom-right button that blooms into a chat; a thinking orb shows the phase */
@@ -1485,6 +1546,13 @@ html.landing-lock body {
   background: var(--card-2);
   border-radius: 50%;
 }
+.landing .intro-ll svg,
+.landing .ll-box svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
 .landing .ai-head .mk svg {
   width: 18px;
   height: 18px;
@@ -1542,9 +1610,6 @@ html.landing-lock body {
   justify-items: center;
   padding: 18px 0 6px;
   text-align: center;
-}
-.landing .ai-welcome b {
-  font: 600 15px / 1.2 var(--font-display);
 }
 .landing .ai-chips {
   display: flex;
@@ -1635,29 +1700,8 @@ html.landing-lock body {
   position: absolute;
   inset: 0;
 }
-.landing .intro b,
-.landing .intro .mono {
-  position: absolute;
-  left: 50%;
-  white-space: nowrap;
-  transform: translateX(-50%);
-}
-.landing .intro b {
-  top: calc(50% + min(100vw, 100vh) * 0.15 + 26px);
-}
 .landing .intro .mono {
   top: calc(50% + min(100vw, 100vh) * 0.15 + 62px);
-}
-.landing .intro-ll svg,
-.landing .ll-box svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-.landing .intro b {
-  font: 700 24px / 1 var(--font-display);
-  letter-spacing: -0.02em;
 }
 .landing.is-static .intro {
   display: none;
@@ -1803,10 +1847,6 @@ html.landing-lock body {
   padding: 9px 0;
   border-bottom: 1px solid var(--border);
 }
-.landing .hrow b {
-  display: block;
-  font: 600 13px / 1.2 var(--font-body);
-}
 .landing .hrow small {
   display: block;
   overflow: hidden;
@@ -1815,25 +1855,17 @@ html.landing-lock body {
   color: var(--muted);
   white-space: nowrap;
 }
+.landing .dots {
+  transition: opacity 0.2s;
+}
 .landing.is-health-open .dots {
   pointer-events: none;
   opacity: 0;
-}
-.landing .dots {
-  transition: opacity 0.2s;
 }
 .landing .bars {
   display: flex;
   gap: 2px;
   align-items: center;
-}
-.landing .bars i {
-  width: 4px;
-  height: 20px;
-  background: var(--success);
-  border-radius: 1px;
-  opacity: 0.85;
-  transform-origin: bottom;
 }
 .landing .bars i.w {
   background: var(--warning);
@@ -1912,6 +1944,9 @@ html.landing-lock body {
   .landing .ctas {
     flex-direction: column;
   }
+  .landing .btn {
+    max-width: 100%;
+  }
   .landing .ctas .btn {
     width: 100%;
     height: 48px;
@@ -1980,9 +2015,6 @@ html.landing-lock body {
     min-width: 0;
     max-width: 100%;
   }
-  .landing .btn {
-    max-width: 100%;
-  }
   .landing .ctas .btn {
     padding: 0 18px;
   }
@@ -2044,10 +2076,6 @@ html.landing-lock body {
   }
 }
 /* Signal cursor — one custom cursor for the landing and the app (fine pointers only; touch keeps the system) */
-html.has-cursor,
-html.has-cursor * {
-  cursor: none !important;
-}
 .landing .cur {
   position: fixed;
   top: 0;
@@ -2100,14 +2128,6 @@ html.has-cursor * {
   align-items: center;
   height: 20px;
 }
-.landing .cur-eq i {
-  width: 2px;
-  height: 18px;
-  background: var(--accent);
-  border-radius: 1px;
-  transform: scaleY(0.3);
-  transform-origin: center;
-}
 .landing .cur-arrows {
   padding-left: 6px;
   font: 600 14px / 1 var(--font-body, system-ui);
@@ -2149,13 +2169,6 @@ html.has-cursor * {
     opacity 0.2s,
     scale 0.32s cubic-bezier(0.3, 1.6, 0.5, 1);
 }
-.landing .cur-pill i {
-  width: 0;
-  height: 0;
-  border-top: 6px solid transparent;
-  border-bottom: 6px solid transparent;
-  border-left: 9px solid var(--color-background);
-}
 .landing .cur-beam {
   width: 2px;
   height: 22px;
@@ -2173,19 +2186,6 @@ html.has-cursor * {
   margin: -44px 0 0 -20px;
   opacity: 0;
   transition: opacity 0.15s;
-}
-.landing .cur-scrub b {
-  padding: 4px 6px;
-  font: 600 11px / 1 var(--font-data, monospace);
-  color: var(--bg);
-  background: var(--fg);
-  border-radius: 6px;
-}
-.landing .cur-scrub i {
-  width: 2px;
-  height: 28px;
-  background: var(--accent);
-  border-radius: 1px;
 }
 .landing .cur.m-hover .cur-ring,
 .landing .cur.m-drag .cur-ring {
