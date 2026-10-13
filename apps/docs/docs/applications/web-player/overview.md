@@ -40,6 +40,17 @@ apps/web-player/src/
 Route files under `app/` are thin adapters that render a view — see
 [ADR-0010](../../architecture/0010-next-routes-as-adapters.md).
 
+## 🎬 Landing (`/`)
+
+`app/(home)/` serves the landing with its own fonts (Unbounded, Inter, JetBrains Mono); auth and
+legal pages keep `app/(landing)/` with the shared Header and Footer. `views/LandingView` renders
+eleven scenes on the server. Its motion engine (`lib/engine/`: GSAP scenes, a Three.js stage,
+physics, intro, cursor) is imported only on the client after mount. Without WebGL it switches to
+2D fallbacks, and with reduced motion it is a static, scrollable page. The landing copy is a
+local catalog (en, uk, pl; other locales read English). Behaviour and acceptance:
+[web-player landing spec](../../specs/web-player-landing.md); motion reference:
+`pencil/web-player-design/landing/motion-prototype.html`.
+
 ## 🎨 Tech Stack
 
 - **Next.js (App Router)** + **React 19** + **TypeScript**

@@ -1,5 +1,7 @@
 export const ROUTES = {
   landing: '/',
+  /** A landing scene by its id, e.g. `/#library`. */
+  landingScene: (id: string) => `/#${id}`,
   auth: {
     login: '/auth/login',
     twoFactorLogin: '/auth/login/2fa',
@@ -38,7 +40,4 @@ export const ROUTES = {
   community: '/legal/community',
   complaints: '/legal/complaints',
   copyright: '/legal/copyright',
-  download: '#download',
-  plans: '#plans',
-  forStudents: '#for-students',
 } as const
