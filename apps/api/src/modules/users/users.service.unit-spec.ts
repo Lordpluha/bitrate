@@ -1,5 +1,6 @@
 import { LEGAL_VERSION } from '@common/legal'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
+import type { NotificationsProducer } from '@modules/notifications'
 import { ForbiddenException, NotFoundException } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
@@ -10,11 +11,15 @@ import { UsersService } from './users.service'
 describe('UsersService', () => {
   let service: UsersService
   let prisma: PrismaMock
+  let producer: jest.Mocked<NotificationsProducer>
 
   beforeEach(() => {
     resetPrismaMock()
     prisma = prismaMock
-    service = new UsersService(prisma)
+    producer = {
+      followed: jest.fn(async () => undefined),
+    } as unknown as jest.Mocked<NotificationsProducer>
+    service = new UsersService(prisma, producer)
   })
 
   it('findById should filter deletedAt and select the public projection', async () => {
@@ -282,6 +287,38 @@ describe('UsersService', () => {
         ['friend-2', 'track-2'],
       ])
       jest.restoreAllMocks()
+    })
+  })
+
+  describe('followUser', () => {
+    it('notifies the followed user about a new follow', async () => {
+      prisma.user.findFirst.mockResolvedValue({ id: 'b' } as never)
+      prisma.userFollow.findUnique.mockResolvedValue(null)
+      prisma.userFollow.upsert.mockResolvedValue({} as never)
+
+      await service.followUser('a', 'b')
+
+      expect(prisma.userFollow.upsert).toHaveBeenCalled()
+      expect(producer.followed).toHaveBeenCalledWith({ followerId: 'a', followingId: 'b' })
+    })
+
+    it('does not notify again for a follow that already existed', async () => {
+      prisma.user.findFirst.mockResolvedValue({ id: 'b' } as never)
+      prisma.userFollow.findUnique.mockResolvedValue({ followerId: 'a' } as never)
+
+      await service.followUser('a', 'b')
+
+      expect(producer.followed).not.toHaveBeenCalled()
+    })
+
+    it('still follows when the notification cannot be queued', async () => {
+      prisma.user.findFirst.mockResolvedValue({ id: 'b' } as never)
+      prisma.userFollow.findUnique.mockResolvedValue(null)
+      prisma.userFollow.upsert.mockResolvedValue({} as never)
+      producer.followed.mockRejectedValue(new Error('redis down'))
+
+      await expect(service.followUser('a', 'b')).resolves.toBeUndefined()
+      expect(prisma.userFollow.upsert).toHaveBeenCalled()
     })
   })
 })

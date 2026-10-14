@@ -2,10 +2,12 @@ import { isLegalAcceptanceCurrent, LEGAL_VERSION } from '@common/legal'
 import { normalizePagination } from '@common/pagination'
 import { readUserSettings } from '@common/user-settings'
 import { PrismaService } from '@infra/prisma/prisma.service'
+import { NotificationsProducer } from '@modules/notifications'
 import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
@@ -24,7 +26,12 @@ const ACTIVITY_MAX = 100
 @Injectable()
 export class UsersService {
   /** Creates a new instance. */
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notifications: NotificationsProducer,
+  ) {}
+
+  private readonly logger = new Logger(UsersService.name)
 
   /**
    * Runs the find by id operation. Filters `deletedAt` — a soft-deleted account's public
@@ -139,11 +146,24 @@ export class UsersService {
     if (followerId === followingId) throw new BadRequestException('You cannot follow yourself')
     const user = await this.prisma.user.findFirst({ where: { id: followingId, deletedAt: null } })
     if (!user) throw new NotFoundException('User not found')
+    const existing = await this.prisma.userFollow.findUnique({
+      where: { followerId_followingId: { followerId, followingId } },
+      select: { followerId: true },
+    })
+    if (existing) return
     await this.prisma.userFollow.upsert({
       where: { followerId_followingId: { followerId, followingId } },
       create: { followerId, followingId },
       update: {},
     })
+    /* best effort: a queue outage must not fail the follow itself */
+    try {
+      await this.notifications.followed({ followerId, followingId })
+    } catch (error) {
+      this.logger.warn(
+        `Could not queue the follow notification: ${error instanceof Error ? error.message : String(error)}`,
+      )
+    }
   }
 
   async unfollowUser(followerId: string, followingId: string) {
