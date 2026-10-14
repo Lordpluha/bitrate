@@ -8,6 +8,7 @@ export const en = {
   'common.loggingOut': 'Logging out…',
   'profile.updates': 'Your Updates',
   'profile.caughtUp': "You're all caught up",
+  'profile.updatesUnavailable': 'Updates are unavailable right now.',
   'profile.updatesDescription':
     'Watch this space for news on your followers, playlists, events and more.',
   'common.all': 'All',

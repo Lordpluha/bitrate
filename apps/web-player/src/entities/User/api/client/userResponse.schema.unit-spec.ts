@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { mergePublicUserIntoAuthUser } from './hooks'
-import { publicUserResponseSchema } from './userResponse.schema'
+import {
+  followingActivityResponseSchema,
+  publicUserResponseSchema,
+} from './userResponse.schema'
 
 describe('publicUserResponseSchema', () => {
   it('accepts the public API projection without an email', () => {
@@ -56,5 +59,32 @@ describe('publicUserResponseSchema', () => {
       email: 'private@example.com',
       twoFactorEnabled: true,
     })
+  })
+})
+
+describe('followingActivityResponseSchema', () => {
+  it('keeps who listened, to what and when, and drops private user fields', () => {
+    const [activity] = followingActivityResponseSchema.parse([
+      {
+        listenedAt: '2026-10-14T10:00:00.000Z',
+        track: {
+          artistId: 'artist-1',
+          cover: null,
+          id: 'track-1',
+          title: 'Song',
+          playCount: 3,
+        },
+        user: {
+          avatar: null,
+          email: 'private@example.com',
+          id: 'user-1',
+          username: 'friend',
+        },
+      },
+    ])
+
+    expect(activity?.listenedAt).toEqual(new Date('2026-10-14T10:00:00.000Z'))
+    expect(activity?.track.title).toBe('Song')
+    expect(activity?.user).not.toHaveProperty('email')
   })
 })

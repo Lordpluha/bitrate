@@ -1,6 +1,7 @@
 export * from './useAuth'
 export * from './useHorizontalResize'
 export * from './useImageColor'
+export * from './useInstallPrompt'
 export * from './useOverlayFocus'
 export * from './usePersistedState'
 export * from './useWindowWidth'

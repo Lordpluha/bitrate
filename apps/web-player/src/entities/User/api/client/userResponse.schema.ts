@@ -34,3 +34,25 @@ export type FollowedUser = z.infer<
 >['data'][number]
 
 export type PublicUser = z.infer<typeof publicUserResponseSchema>
+
+/** `GET /users/me/following/activity`: the last listen of each followed person who shares it. */
+export const followingActivityResponseSchema = z.array(
+  z.object({
+    listenedAt: z.coerce.date(),
+    track: z.object({
+      artistId: z.string(),
+      cover: z.string().nullable(),
+      id: z.string(),
+      title: z.string(),
+    }),
+    user: z.object({
+      avatar: z.string().nullable(),
+      id: z.string(),
+      username: z.string(),
+    }),
+  }),
+)
+
+export type FollowingActivity = z.infer<
+  typeof followingActivityResponseSchema
+>[number]

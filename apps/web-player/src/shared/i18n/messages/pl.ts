@@ -10,6 +10,7 @@ export const pl = {
   'common.loggingOut': 'Wylogowywanie…',
   'profile.updates': 'Twoje aktualności',
   'profile.caughtUp': 'Wszystko przejrzane',
+  'profile.updatesUnavailable': 'Aktualności są teraz niedostępne.',
   'profile.updatesDescription':
     'Tutaj pojawią się nowości o obserwujących, playlistach, wydarzeniach i nie tylko.',
   'common.all': 'Wszystko',

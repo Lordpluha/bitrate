@@ -1,10 +1,12 @@
 'use client'
 
-import { useLikedTracks, useLikeTrack, useUnlikeTrack } from '@entities/Track'
 import { showApiSuccessToast } from '@shared/api/feedback'
 import { useCallback, useMemo } from 'react'
+import { useLikeTrack, useUnlikeTrack } from './useTrackLikeMutations'
+import { useLikedTracks } from './useTrackQueries'
 
-export const useCurrentTrackLike = (trackId?: string) => {
+/** Like state of one track from the server's liked list, with a toggle. */
+export const useTrackLike = (trackId?: string) => {
   const { data: likedTracks } = useLikedTracks()
   const likeTrack = useLikeTrack()
   const unlikeTrack = useUnlikeTrack()

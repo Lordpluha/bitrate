@@ -16,6 +16,7 @@ import {
 } from '@tanstack/react-query'
 import {
   followedUsersResponseSchema,
+  followingActivityResponseSchema,
   type PublicUser,
   publicUserResponseSchema,
   publicUsersResponseSchema,
@@ -78,6 +79,21 @@ export const useFollowedUsers = (enabled = true) =>
     queryFn: getAllFollowedUsers,
     enabled,
     staleTime: 5 * 60_000,
+  })
+
+/** What followed people last played; refreshed every minute while a panel shows it. */
+export const useFollowingActivity = (enabled = true) =>
+  useTanStackQuery({
+    queryKey: apiQueryKeys.users.followingActivity,
+    queryFn: async () => {
+      const { data, response } = await clientFetchClient.GET(
+        '/api/v1/users/me/following/activity',
+      )
+      ensureOkResponse(response, 'Failed to load friend activity')
+      return followingActivityResponseSchema.parse(data)
+    },
+    enabled,
+    refetchInterval: 60_000,
   })
 
 const FOLLOWED_USERS_PAGE_SIZE = 100
