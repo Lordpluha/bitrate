@@ -1,4 +1,3 @@
-export * from './AuthBanner'
 export * from './LegalFooter'
 export * from './Logo'
 export * from './MenuItem'

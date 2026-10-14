@@ -8,7 +8,10 @@ type LegalConsentLabelProps = {
 
 /** The sentence next to every "I accept" checkbox, with links to the three documents. */
 export const LegalConsentLabel = ({ id }: LegalConsentLabelProps) => (
-  <Label className="font-normal leading-snug" htmlFor={id}>
+  <Label
+    className="text-[13px] font-normal leading-normal text-foreground"
+    htmlFor={id}
+  >
     I am at least 16 years old, I accept the{' '}
     <Link
       className="text-primary hover:opacity-70"
