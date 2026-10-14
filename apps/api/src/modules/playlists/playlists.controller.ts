@@ -22,6 +22,7 @@ import {
   AddTracksToPlaylistSwagger,
   CreatePlaylistSwagger,
   DeletePlaylistSwagger,
+  GetLikedPlaylistsSwagger,
   GetMyPlaylistsSwagger,
   GetPlaylistByIdSwagger,
   GetPlaylistsSwagger,
@@ -49,8 +50,9 @@ export class PlaylistsController {
   async getAll(
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+    @Query('userId', new ParseUUIDPipe({ optional: true })) userId?: string,
   ) {
-    return await this.playlistService.getAll({ limit, page })
+    return await this.playlistService.getAll({ limit, page, userId })
   }
 
   /** Runs the get mine operation. */
@@ -67,6 +69,18 @@ export class PlaylistsController {
   }
 
   /** Runs the get by id operation. */
+  /** Playlists the signed-in user liked. Declared before `:id` so `liked` is not parsed as an id. */
+  @GetLikedPlaylistsSwagger()
+  @UserAuth()
+  @Get('liked')
+  getLiked(
+    @Req() req: UserAuthRequest,
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+  ) {
+    return this.playlistService.findLiked(req.user.id, { page, limit })
+  }
+
   @GetPlaylistByIdSwagger()
   @Throttle({ default: { ttl: 60_000, limit: 240 } })
   @OptionalUserAuth()

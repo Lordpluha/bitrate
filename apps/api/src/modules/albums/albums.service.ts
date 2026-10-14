@@ -1,4 +1,4 @@
-import { normalizePagination } from '@common/pagination'
+import { normalizePagination, type PaginationInput } from '@common/pagination'
 import { rightsConfirmationRecord } from '@common/rights-confirmation'
 import { isPrismaP2025 } from '@common/utils/prisma'
 import { NS, TTL } from '@infra/cache/cache.constants'
@@ -86,6 +86,35 @@ export class AlbumsService {
         return { data, total, page: pagination.page, limit: pagination.limit }
       },
     )
+  }
+
+  /**
+   * The user's saved albums, newest like first. Not cached: a like or unlike must show at once.
+   * Deleted albums drop out; their tracks keep the same shape as the album list.
+   */
+  async findLiked(userId: UserEntity['id'], { page = 1, limit = 10 }: PaginationInput) {
+    const pagination = normalizePagination(page, limit)
+    const where = { userId, album: { deletedAt: null } }
+    const [likes, total] = await this.prisma.$transaction([
+      this.prisma.userLikedAlbum.findMany({
+        where,
+        include: { album: { include: ALBUM_TRACKS_INCLUDE } },
+        orderBy: [{ createdAt: 'desc' }, { albumId: 'desc' }],
+        skip: pagination.skip,
+        take: pagination.limit,
+      }),
+      this.prisma.userLikedAlbum.count({ where }),
+    ])
+    return {
+      data: likes.map(({ album, createdAt }) => ({
+        ...album,
+        tracks: album.tracks.map(flattenAlbumTrack),
+        likedAt: createdAt,
+      })),
+      total,
+      page: pagination.page,
+      limit: pagination.limit,
+    }
   }
 
   /** Runs the get by id operation. */
