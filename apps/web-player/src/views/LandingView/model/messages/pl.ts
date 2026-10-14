@@ -12,6 +12,7 @@ export const pl: LandingCatalog = {
   'hero.listen_save_and_return_to_your_library':
     'Słuchaj, zapisuj i wracaj do swojej biblioteki.',
   'hero.open_web_player': 'Otwórz odtwarzacz',
+  'hero.log_in': 'Zaloguj się',
   'hero.create_account': 'Załóż konto',
   'hero.interactive_player_preview': 'INTERAKTYWNY PODGLĄD ODTWARZACZA',
   'hero.now_playing': 'TERAZ GRA',

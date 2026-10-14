@@ -9,6 +9,7 @@ export const en = {
   'hero.listen_save_and_return_to_your_library':
     'Listen, save and return to your library.',
   'hero.open_web_player': 'Open web player',
+  'hero.log_in': 'Log in',
   'hero.create_account': 'Create account',
   'hero.interactive_player_preview': 'INTERACTIVE PLAYER PREVIEW',
   'hero.now_playing': 'NOW PLAYING',

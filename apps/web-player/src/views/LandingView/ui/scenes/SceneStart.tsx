@@ -64,9 +64,9 @@ export const SceneStart = ({ signedIn }: SceneProps) => {
                 'btn btn-primary magnetic',
                 'h-[60px]! p-[0_30px]! [font-size:16px]',
               )}
-              href={ROUTES.main}
+              href={signedIn ? ROUTES.main : ROUTES.auth.registration}
             >
-              {c('cta.open_web_player')}{' '}
+              {c(signedIn ? 'cta.open_web_player' : 'cta.create_account')}{' '}
               <svg aria-hidden="true" className={lc('i')}>
                 <use href="#i-arrow" />
               </svg>
@@ -115,9 +115,14 @@ export const SceneStart = ({ signedIn }: SceneProps) => {
                   {c('cta.create_account')}
                 </Link>
               )}
-              <Link className={lc('ulink u-center d-only')} href={ROUTES.main}>
-                {c('cta.player_preview')}
-              </Link>
+              {signedIn && (
+                <Link
+                  className={lc('ulink u-center d-only')}
+                  href={ROUTES.main}
+                >
+                  {c('cta.player_preview')}
+                </Link>
+              )}
               <Link className={lc('ulink d-only')} href={ROUTES.terms}>
                 {c('cta.legal')}
               </Link>

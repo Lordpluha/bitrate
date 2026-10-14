@@ -11,6 +11,7 @@ export const uk: LandingCatalog = {
   'hero.listen_save_and_return_to_your_library':
     'Слухайте, зберігайте й повертайтеся до своєї бібліотеки.',
   'hero.open_web_player': 'Відкрити вебплеєр',
+  'hero.log_in': 'Увійти',
   'hero.create_account': 'Створити акаунт',
   'hero.interactive_player_preview': 'ІНТЕРАКТИВНИЙ ПЕРЕГЛЯД ПЛЕЄРА',
   'hero.now_playing': 'ЗАРАЗ ГРАЄ',

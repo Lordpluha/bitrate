@@ -42,11 +42,12 @@ export const SceneSignal = ({ signedIn }: SceneProps) => {
               {c('hero.listen_save_and_return_to_your_library')}
             </p>
             <div className={lc('ctas')} data-a="up">
+              {/* the player needs an account: guests are offered one instead of a login redirect */}
               <Link
                 className={lc('btn btn-primary magnetic')}
-                href={ROUTES.main}
+                href={signedIn ? ROUTES.main : ROUTES.auth.registration}
               >
-                {c('hero.open_web_player')}{' '}
+                {c(signedIn ? 'hero.open_web_player' : 'hero.create_account')}{' '}
                 <svg aria-hidden="true" className={lc('i')}>
                   <use href="#i-arrow" />
                 </svg>
@@ -54,9 +55,9 @@ export const SceneSignal = ({ signedIn }: SceneProps) => {
               {!signedIn && (
                 <Link
                   className={lc('btn btn-ghost magnetic')}
-                  href={ROUTES.auth.registration}
+                  href={ROUTES.auth.login}
                 >
-                  {c('hero.create_account')}
+                  {c('hero.log_in')}
                 </Link>
               )}
             </div>

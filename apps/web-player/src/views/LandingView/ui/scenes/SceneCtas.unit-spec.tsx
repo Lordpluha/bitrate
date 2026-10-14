@@ -21,7 +21,22 @@ describe('landing calls to action', () => {
     vi.stubGlobal('matchMedia', () => ({ matches: false }))
   })
 
-  it('sends a guest to the player, registration and login', () => {
+  it('never sends a guest into the player, which needs an account', () => {
+    const { container } = render(
+      withQuery(
+        <>
+          <SceneSignal signedIn={false} />
+          <SceneStart signedIn={false} />
+        </>,
+      ),
+    )
+    expect(container.querySelectorAll('a[href^="/main"]')).toHaveLength(0)
+    expect(
+      screen.queryByRole('link', { name: /Open web player/, hidden: true }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('offers a guest registration and login in the hero and the final scene', () => {
     render(
       withQuery(
         <>
@@ -30,30 +45,19 @@ describe('landing calls to action', () => {
         </>,
       ),
     )
-    const hero = within(
-      screen.getByRole('region', { name: 'Your music, already where you are' }),
-    )
-    expect(hero.getByRole('link', { name: /Open web player/ })).toHaveAttribute(
-      'href',
-      '/main',
-    )
-    expect(hero.getByRole('link', { name: 'Create account' })).toHaveAttribute(
-      'href',
-      '/auth/registration',
-    )
-    const start = within(
-      screen.getByRole('region', {
-        name: 'Pick up where the last track left off',
-      }),
-    )
-    expect(start.getByRole('link', { name: 'Log in' })).toHaveAttribute(
-      'href',
-      '/auth/login',
-    )
-    expect(start.getByRole('link', { name: 'Create account' })).toHaveAttribute(
-      'href',
-      '/auth/registration',
-    )
+    for (const name of [
+      'Your music, already where you are',
+      'Pick up where the last track left off',
+    ]) {
+      const scene = within(screen.getByRole('region', { name }))
+      expect(
+        scene.getAllByRole('link', { name: /Create account/ })[0],
+      ).toHaveAttribute('href', '/auth/registration')
+      expect(scene.getAllByRole('link', { name: /Log in/ })[0]).toHaveAttribute(
+        'href',
+        '/auth/login',
+      )
+    }
   })
 
   it('shows a signed-in visitor only the way into the player', () => {
