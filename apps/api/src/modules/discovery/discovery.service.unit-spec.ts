@@ -109,4 +109,66 @@ describe('DiscoveryService public artist projections', () => {
       expect(query.values).toContain('Ukraine')
     }
   })
+
+  it('filters the track chart to one genre and keys the cache by it', async () => {
+    prisma.genre.findUnique.mockResolvedValue({ id: 'genre-1' } as never)
+    prisma.queryRaw
+      .mockResolvedValueOnce([] as never)
+      .mockResolvedValueOnce([{ total: 0n }] as never)
+    prisma.track.findMany.mockResolvedValue([])
+
+    await service.getCharts('global', undefined, 1, 20, 'house')
+
+    expect(prisma.genre.findUnique).toHaveBeenCalledWith({
+      where: { slug: 'house' },
+      select: { id: true },
+    })
+    for (const [query] of prisma.queryRaw.mock.calls) {
+      const sql = (query as Prisma.Sql).strings.join(' ')
+      expect(sql).toContain('FROM "TrackGenre" tg')
+      expect((query as Prisma.Sql).values).toContain('genre-1')
+    }
+  })
+
+  it('rejects an unknown genre with NotFound', async () => {
+    prisma.genre.findUnique.mockResolvedValue(null)
+
+    await expect(service.getCharts('global', undefined, 1, 20, 'nope')).rejects.toThrow(
+      'errors.discovery.category_not_found',
+    )
+    expect(prisma.queryRaw).not.toHaveBeenCalled()
+  })
+
+  it('ranks artists by distinct listeners in the chart window', async () => {
+    const now = Date.UTC(2026, 9, 14, 12)
+    jest.spyOn(Date, 'now').mockReturnValue(now)
+    prisma.queryRaw
+      .mockResolvedValueOnce([
+        { artistId: 'artist-2', listeners: 9n },
+        { artistId: 'artist-1', listeners: 4n },
+      ] as never)
+      .mockResolvedValueOnce([{ total: 2n }] as never)
+    prisma.artist.findMany.mockResolvedValue([
+      { id: 'artist-1', username: 'one' },
+      { id: 'artist-2', username: 'two' },
+    ] as never)
+
+    const result = await service.getArtistCharts('global', undefined, 1, 20)
+
+    expect(result).toMatchObject({ total: 2, page: 1, limit: 20 })
+    expect(result.data).toMatchObject([
+      { id: 'artist-2', listeners: 9 },
+      { id: 'artist-1', listeners: 4 },
+    ])
+    const ranking = prisma.queryRaw.mock.calls[0]?.[0] as Prisma.Sql
+    const sql = ranking.strings.join(' ')
+    expect(sql).toContain('COUNT(DISTINCT h."userId")')
+    expect(sql).toContain('GROUP BY t."artistId"')
+    expect(sql).toContain('a."deletedAt" IS NULL')
+    expect(ranking.values).toContainEqual(new Date(now - 28 * 24 * 60 * 60 * 1000))
+    expect(prisma.artist.findMany).toHaveBeenCalledWith({
+      where: { id: { in: ['artist-2', 'artist-1'] }, deletedAt: null },
+      select: PUBLIC_ARTIST_SELECT,
+    })
+  })
 })

@@ -4,6 +4,7 @@ import {
   AUDIO_PROCESSING_QUEUE,
 } from '@infra/queues/audio-processing.queue'
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals'
+import { LISTENING_STATS_QUEUE } from '@modules/history/listening-stats.consumer'
 import { getQueueToken } from '@nestjs/bullmq'
 import type { TestingModule } from '@nestjs/testing'
 import { Test } from '@nestjs/testing'
@@ -37,7 +38,7 @@ jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
  *   `PrismaClient`) never runs. Harmless either way (the pool is lazy and `$connect()` only
  *   happens in `onModuleInit`), but keeping the test independent of a reachable Postgres is
  *   cheap insurance.
- * - The two BullMQ queue tokens (`getQueueToken(...)`) — `@nestjs/bullmq`'s `registerQueue`
+ * - The BullMQ queue tokens (`getQueueToken(...)`) — `@nestjs/bullmq`'s `registerQueue`
  *   provider is a `useFactory` that eagerly constructs a real BullMQ `Queue`, which opens an
  *   ioredis connection **at provider-instantiation time**, i.e. during `.compile()` itself, not
  *   `.init()`. This is the one genuinely network-touching step a bare `.compile()` cannot avoid
@@ -75,6 +76,8 @@ describe('AppModule DI graph (boot smoke)', () => {
       .overrideProvider(getQueueToken(AUDIO_PROCESSING_QUEUE))
       .useValue(makeQueueMock())
       .overrideProvider(getQueueToken(AUDIO_PROCESSING_DEAD_LETTER_QUEUE))
+      .useValue(makeQueueMock())
+      .overrideProvider(getQueueToken(LISTENING_STATS_QUEUE))
       .useValue(makeQueueMock())
       .compile()
 
