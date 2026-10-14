@@ -1,30 +1,30 @@
 'use client'
 
 import { cn } from '@bitrate/ui-react'
-import { useLikeAlbum, useUnlikeAlbum } from '@entities/Album/api/client'
+import {
+  useLikeAlbum,
+  useLikedAlbums,
+  useUnlikeAlbum,
+} from '@entities/Album/api/client'
 import { showApiErrorToast, showApiSuccessToast } from '@shared/api/feedback'
+import { useAuth } from '@shared/hooks'
 import { CheckCircle, Heart } from 'lucide-react'
-import { useState } from 'react'
 
 export type LikeAlbumButtonProps = {
   albumId: string
   albumTitle?: string
   className?: string
-  initialLiked?: boolean
 }
 
-/**
- * Saves or removes an album from the user's library.
- * The API exposes no "is liked" flag on the album payload, so state starts from
- * `initialLiked` and is tracked locally for the session.
- */
+/** Saves or removes an album; the state comes from the server's saved list (`GET /albums/liked`). */
 export const LikeAlbumButton = ({
   albumId,
   albumTitle = 'album',
   className,
-  initialLiked = false,
 }: LikeAlbumButtonProps) => {
-  const [isLiked, setIsLiked] = useState(initialLiked)
+  const { user } = useAuth()
+  const { data: likedAlbums } = useLikedAlbums(Boolean(user))
+  const isLiked = likedAlbums?.some((album) => album.id === albumId) ?? false
   const likeAlbum = useLikeAlbum()
   const unlikeAlbum = useUnlikeAlbum()
   const isPending = likeAlbum.isPending || unlikeAlbum.isPending
@@ -35,13 +35,11 @@ export const LikeAlbumButton = ({
     try {
       if (isLiked) {
         await unlikeAlbum.mutateAsync({ params: { path: { id: albumId } } })
-        setIsLiked(false)
         showApiSuccessToast('Album removed from library')
         return
       }
 
       await likeAlbum.mutateAsync({ params: { path: { id: albumId } } })
-      setIsLiked(true)
       showApiSuccessToast('Album saved to library')
     } catch (error) {
       showApiErrorToast(error, 'Could not update your library')

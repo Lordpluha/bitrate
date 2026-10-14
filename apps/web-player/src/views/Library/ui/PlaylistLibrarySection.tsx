@@ -1,6 +1,7 @@
 import { cn } from '@bitrate/ui-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { LIKED_SONGS_ID } from '@/entities/Playlist'
 import { ROUTES } from '@/shared/routes'
 import type {
   LibraryPlaylist,
@@ -25,7 +26,7 @@ export const PlaylistLibrarySection = ({
     isEmpty={playlists.length === 0}
   >
     {playlists.map((playlist) => {
-      const isLikedSongs = playlist.id === 'liked-songs'
+      const isLikedSongs = playlist.id === LIKED_SONGS_ID
       const href = isLikedSongs
         ? ROUTES.likedSongs
         : ROUTES.playlist(playlist.id)

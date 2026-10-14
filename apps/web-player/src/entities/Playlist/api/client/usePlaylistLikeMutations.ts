@@ -1,6 +1,7 @@
 'use client'
 
 import { useMutation } from '@shared/api/client'
+import { apiQueryKeys } from '@shared/api/queryKeys'
 import { useQueryClient } from '@tanstack/react-query'
 import { invalidatePlaylistDetail } from './playlistQuery'
 
@@ -9,7 +10,12 @@ export const useLikePlaylist = () => {
 
   return useMutation('post', '/api/v1/playlists/{id}/like', {
     onSuccess: async (_data, variables) => {
-      await invalidatePlaylistDetail(queryClient, variables.params.path.id)
+      await Promise.all([
+        invalidatePlaylistDetail(queryClient, variables.params.path.id),
+        queryClient.invalidateQueries({
+          queryKey: apiQueryKeys.playlists.liked,
+        }),
+      ])
     },
   })
 }
@@ -19,7 +25,12 @@ export const useUnlikePlaylist = () => {
 
   return useMutation('delete', '/api/v1/playlists/{id}/like', {
     onSuccess: async (_data, variables) => {
-      await invalidatePlaylistDetail(queryClient, variables.params.path.id)
+      await Promise.all([
+        invalidatePlaylistDetail(queryClient, variables.params.path.id),
+        queryClient.invalidateQueries({
+          queryKey: apiQueryKeys.playlists.liked,
+        }),
+      ])
     },
   })
 }

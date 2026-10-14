@@ -1,13 +1,10 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
-import { useMyPlaylists } from '@/entities/Playlist/api/client'
+import { useMemo } from 'react'
 import {
-  getSavedPlaylists,
-  getSavedPlaylistsStorageKey,
-  type SavedPlaylistLibraryItem,
-  savedPlaylistsChangedEvent,
-} from '@/entities/Playlist/models/savedPlaylistLibrary'
+  useLikedPlaylists,
+  useMyPlaylists,
+} from '@/entities/Playlist/api/client'
 import { fallbackPlaylistCover } from '@/shared/constants'
 import { useAuth } from '@/shared/hooks'
 import { getPlaylistCoverUrl } from '@/shared/utils/mediaUrl'
@@ -22,9 +19,12 @@ export type PlaylistLibraryItem = {
   username: string
 }
 
+/** The library entry for Liked Songs; its count comes from the liked-tracks list. */
+export const LIKED_SONGS_ID = 'liked-songs'
+
 const likedSongsItem: PlaylistLibraryItem = {
   cover: '/images/liked-songs.svg',
-  id: 'liked-songs',
+  id: LIKED_SONGS_ID,
   title: 'Liked Songs',
   tracksCount: 0,
   type: 'playlist',
@@ -34,28 +34,8 @@ const likedSongsItem: PlaylistLibraryItem = {
 export const usePlaylistLibraryItems = () => {
   const { user } = useAuth()
   const { data: playlists, isLoading } = useMyPlaylists()
-  const [savedPlaylists, setSavedPlaylists] = useState<
-    SavedPlaylistLibraryItem[]
-  >([])
-  const storageKey = useMemo(
-    () => getSavedPlaylistsStorageKey(user?.id),
-    [user?.id],
-  )
-
-  useEffect(() => {
-    const readSavedPlaylists = () => {
-      setSavedPlaylists(getSavedPlaylists(storageKey))
-    }
-
-    readSavedPlaylists()
-    window.addEventListener(savedPlaylistsChangedEvent, readSavedPlaylists)
-    window.addEventListener('storage', readSavedPlaylists)
-
-    return () => {
-      window.removeEventListener(savedPlaylistsChangedEvent, readSavedPlaylists)
-      window.removeEventListener('storage', readSavedPlaylists)
-    }
-  }, [storageKey])
+  const { data: likedPlaylists, isLoading: areLikedLoading } =
+    useLikedPlaylists(Boolean(user))
 
   const items = useMemo(() => {
     const result: PlaylistLibraryItem[] = [likedSongsItem]
@@ -73,21 +53,22 @@ export const usePlaylistLibraryItems = () => {
     }
 
     const ids = new Set(result.map((item) => item.id))
-    for (const playlist of savedPlaylists) {
+    for (const playlist of likedPlaylists ?? []) {
       if (ids.has(playlist.id)) continue
 
       result.push({
-        cover: playlist.cover || getPlaylistCoverUrl(null),
+        cover: getPlaylistCoverUrl(playlist.cover || fallbackPlaylistCover),
+        createdAt: playlist.likedAt ?? playlist.createdAt,
         id: playlist.id,
         title: playlist.title,
-        tracksCount: playlist.tracksCount ?? 0,
+        tracksCount: 0,
         type: 'playlist',
-        username: playlist.username,
+        username: playlist.user?.username ?? 'Playlist',
       })
     }
 
     return result
-  }, [playlists, savedPlaylists, user?.username])
+  }, [likedPlaylists, playlists, user?.username])
 
-  return { isLoading, items }
+  return { isLoading: isLoading || areLikedLoading, items }
 }

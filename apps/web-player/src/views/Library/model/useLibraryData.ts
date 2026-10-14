@@ -1,9 +1,9 @@
 'use client'
 
 import { useMemo } from 'react'
-import { useAlbums } from '@/entities/Album'
+import { useLikedAlbums } from '@/entities/Album'
 import { useListeningHistory } from '@/entities/History'
-import { usePlaylistLibraryItems } from '@/entities/Playlist'
+import { LIKED_SONGS_ID, usePlaylistLibraryItems } from '@/entities/Playlist'
 import { useLikedTracks } from '@/entities/Track'
 import type {
   LibraryData,
@@ -29,10 +29,7 @@ export const useLibraryData = ({
   const { items: libraryPlaylists, isLoading: isPlaylistsPending } =
     usePlaylistLibraryItems()
   const { data: likedTracks, isPending: isLikedPending } = useLikedTracks()
-  const { data: albums, isPending: isAlbumsPending } = useAlbums({
-    page: 1,
-    limit: 50,
-  })
+  const { data: albums, isPending: isAlbumsPending } = useLikedAlbums()
   const { data: history, isPending: isHistoryPending } = useListeningHistory({
     page: 1,
     limit: 50,
@@ -40,10 +37,15 @@ export const useLibraryData = ({
 
   const playlists = useMemo(() => {
     return libraryPlaylists
+      .map((playlist) =>
+        playlist.id === LIKED_SONGS_ID
+          ? { ...playlist, tracksCount: likedTracks?.length ?? 0 }
+          : playlist,
+      )
       .filter((playlist) => includesQuery(playlist.title, query))
       .sort((first, second) => {
-        if (first.id === 'liked-songs') return -1
-        if (second.id === 'liked-songs') return 1
+        if (first.id === LIKED_SONGS_ID) return -1
+        if (second.id === LIKED_SONGS_ID) return 1
 
         return compareByTitleOrDate(
           first.title,
@@ -53,7 +55,7 @@ export const useLibraryData = ({
           sortMode,
         )
       })
-  }, [libraryPlaylists, query, sortMode])
+  }, [likedTracks, libraryPlaylists, query, sortMode])
 
   const tracks = useMemo(
     () =>

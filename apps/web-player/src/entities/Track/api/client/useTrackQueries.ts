@@ -151,3 +151,15 @@ export const useLikedTracks = (
 
   return query
 }
+
+/** How many songs the user liked; shares the liked-tracks cache with `useLikedTracks`. */
+export const useLikedTracksCount = (enabled = true) =>
+  useTanStackQuery({
+    enabled,
+    queryFn: getAllLikedTracks,
+    queryKey: apiQueryKeys.tracks.likedAll,
+    refetchOnWindowFocus: false,
+    retry: false,
+    select: (tracks) => tracks.length,
+    staleTime: 30_000,
+  })

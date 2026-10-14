@@ -3,6 +3,7 @@ export const apiQueryKeys = {
     all: ['albums'] as const,
     artist: (artistId: string) => ['albums', 'artist', artistId] as const,
     detail: (albumId: string) => ['albums', 'detail', albumId] as const,
+    liked: ['albums', 'liked'] as const,
     list: (params: {
       artistId?: string
       page?: number
@@ -56,6 +57,7 @@ export const apiQueryKeys = {
       ['playlists', 'detail', playlistId] as const,
     list: (params: { page?: number; limit?: number }) =>
       ['playlists', 'list', params] as const,
+    liked: ['playlists', 'liked'] as const,
     mine: ['playlists', 'mine'] as const,
   },
   me: {
@@ -109,5 +111,7 @@ export const apiQueryKeys = {
       ['users', 'search', params] as const,
     following: ['users', 'following'] as const,
     followingActivity: ['users', 'following', 'activity'] as const,
+    follows: (userId: string, kind: 'followers' | 'following') =>
+      ['users', 'follows', userId, kind] as const,
   },
 } as const
