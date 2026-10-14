@@ -1,3 +1,4 @@
+export * from './artist-catalogue.decorator'
 export * from './delete-artist.decorator'
 export * from './follow-artist.decorator'
 export * from './get-artist-by-id.decorator'
