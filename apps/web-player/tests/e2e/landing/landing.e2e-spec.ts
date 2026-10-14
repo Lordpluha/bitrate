@@ -44,17 +44,19 @@ test.describe('landing page', () => {
     ).toHaveCount(0)
   })
 
-  test('calls to action point at the player and the auth pages for a guest', async ({
+  test('a guest is offered an account, never sent into the player', async ({
     page,
   }) => {
     await page.goto('/')
+    await expect(page.locator('.landing a[href^="/main"]')).toHaveCount(0)
     const hero = page.getByRole('region', { name: SCENES[0].name })
     await expect(
-      hero.getByRole('link', { name: 'Open web player' }),
-    ).toHaveAttribute('href', '/main')
-    await expect(
-      hero.getByRole('link', { name: 'Create account' }),
+      hero.getByRole('link', { name: /Create account/ }),
     ).toHaveAttribute('href', '/auth/registration')
+    await expect(hero.getByRole('link', { name: 'Log in' })).toHaveAttribute(
+      'href',
+      '/auth/login',
+    )
     const start = page.getByRole('region', {
       name: SCENES[10].name,
       includeHidden: true,
@@ -100,8 +102,8 @@ test.describe('landing without JavaScript', () => {
       'Your music',
     )
     await expect(
-      page.getByRole('link', { name: /Open web player/ }).first(),
-    ).toHaveAttribute('href', '/main')
+      page.getByRole('link', { name: /Create account/ }).first(),
+    ).toHaveAttribute('href', '/auth/registration')
   })
 })
 
@@ -140,6 +142,21 @@ test.describe('landing navigation on desktop', () => {
       await page.keyboard.press('End')
       await expect(activeScene(page)).toHaveId('cta', { timeout: 1500 })
     }).toPass({ timeout: 8000 })
+  })
+
+  test('a guest goes through every scene without being sent to log in', async ({
+    page,
+  }) => {
+    await skipIntro(page)
+    await page.goto('/')
+    await engineReady(page)
+    for (const { id } of SCENES.slice(1)) {
+      await page.keyboard.press('ArrowDown')
+      await expect(activeScene(page)).toHaveId(id, { timeout: 4000 })
+      expect(new URL(page.url()).pathname).toBe('/')
+      /* the scene change locks input until it settles (leave 0.5 s + 0.7 s) */
+      await page.waitForTimeout(1300)
+    }
   })
 
   test('a deep link opens its scene', async ({ page }) => {
