@@ -42,6 +42,7 @@ export const ArtistPage = ({ artistId }: ArtistPageProps) => {
     artistId,
     artistName: artist?.username ?? '',
     tracks: content.tracks,
+    popularTracks: content.popularTracks,
   })
 
   if (isPending) return <ArtistPageState variant="loading" />
@@ -96,10 +97,10 @@ export const ArtistPage = ({ artistId }: ArtistPageProps) => {
         <ArtistCatalogue
           artist={artist}
           content={content}
-          heroImageUrl={heroImageUrl}
           isContextActive={playback.isContextActive}
           isPlaying={playback.isPlaying}
           likedTrackIds={likedTrackIds}
+          onPlayPopular={playback.handlePlayPopular}
           onPlayTrack={playback.handlePlayTrack}
           onShuffle={playback.handleShuffle}
           onTogglePlay={playback.handleTogglePlay}

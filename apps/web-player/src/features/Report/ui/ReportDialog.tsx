@@ -7,11 +7,29 @@ import { showApiErrorToast, showApiSuccessToast } from '@/shared/api/feedback'
 import { Z_INDEX_CLASS } from '@/shared/constants'
 import { useOverlayFocus } from '@/shared/hooks/useOverlayFocus'
 
-type ReportPlaylistDialogProps = {
+/** What can be reported, as `POST /moderation/reports` names it. */
+export type ReportableEntity =
+  | 'playlist'
+  | 'artist'
+  | 'album'
+  | 'track'
+  | 'user'
+
+const ENTITY_LABEL: Record<ReportableEntity, string> = {
+  album: 'album',
+  artist: 'artist',
+  playlist: 'playlist',
+  track: 'track',
+  user: 'profile',
+}
+
+type ReportDialogProps = {
   isOpen: boolean
   onClose: () => void
-  playlistId: string
-  playlistTitle: string
+  entityType: ReportableEntity
+  entityId: string
+  /** The name shown under the heading, e.g. the playlist title or artist name. */
+  entityName: string
 }
 
 const REPORT_REASONS = [
@@ -22,12 +40,14 @@ const REPORT_REASONS = [
   'Other',
 ] as const
 
-export const ReportPlaylistDialog = ({
+/** Report dialog for any reportable entity; the report goes to the moderation queue. */
+export const ReportDialog = ({
   isOpen,
   onClose,
-  playlistId,
-  playlistTitle,
-}: ReportPlaylistDialogProps) => {
+  entityType,
+  entityId,
+  entityName,
+}: ReportDialogProps) => {
   const [reason, setReason] = useState<(typeof REPORT_REASONS)[number]>(
     REPORT_REASONS[0],
   )
@@ -42,12 +62,12 @@ export const ReportPlaylistDialog = ({
       await createReport.mutateAsync({
         body: {
           details: details.trim() || undefined,
-          entityId: playlistId,
-          entityType: 'playlist',
+          entityId,
+          entityType,
           reason,
         },
       })
-      showApiSuccessToast(`Report for ${playlistTitle} was submitted`)
+      showApiSuccessToast(`Report for ${entityName} was submitted`)
       setDetails('')
       onClose()
     } catch (error) {
@@ -70,15 +90,15 @@ export const ReportPlaylistDialog = ({
         type="button"
       />
       <div
-        aria-labelledby="report-playlist-title"
+        aria-labelledby="report-dialog-title"
         aria-modal="true"
         className="relative w-full max-w-md rounded-lg bg-popover p-6 shadow-2xl"
         role="dialog"
       >
-        <h2 className="text-xl font-bold text-text" id="report-playlist-title">
-          Report playlist
+        <h2 className="text-xl font-bold text-text" id="report-dialog-title">
+          Report {ENTITY_LABEL[entityType]}
         </h2>
-        <p className="mt-1 text-sm text-text-subdued">{playlistTitle}</p>
+        <p className="mt-1 text-sm text-text-subdued">{entityName}</p>
 
         <label className="mt-5 block text-sm font-semibold text-text">
           Reason

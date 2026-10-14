@@ -32,6 +32,8 @@ export const apiQueryKeys = {
       genre?: string,
     ) =>
       ['discovery', 'charts', { scope, country, page, limit, genre }] as const,
+    artistPlaylists: (artistId: string, page: number, limit: number) =>
+      ['discovery', 'artist-playlists', { artistId, page, limit }] as const,
     artistCharts: (scope: string, page: number, limit: number) =>
       ['discovery', 'artist-charts', { scope, page, limit }] as const,
     feed: ['discovery', 'feed'] as const,
@@ -83,6 +85,8 @@ export const apiQueryKeys = {
   tracks: {
     all: ['tracks'] as const,
     artist: (artistId: string) => ['tracks', 'artist', artistId] as const,
+    artistTop: (artistId: string, limit: number) =>
+      ['tracks', 'artist', artistId, 'top', { limit }] as const,
     detail: (trackId: string) => ['tracks', 'detail', trackId] as const,
     liked: (params: { page?: number; limit?: number }) =>
       ['tracks', 'liked', params] as const,
