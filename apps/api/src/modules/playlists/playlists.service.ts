@@ -1,4 +1,5 @@
 import { normalizePagination, type PaginationInput } from '@common/pagination'
+import { readUserSettings } from '@common/user-settings'
 import { isPrismaP2002, isPrismaP2025 } from '@common/utils/prisma'
 import { NS } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
@@ -40,6 +41,10 @@ export class PlaylistsService {
   /** Runs the get all operation. */
   async getAll({ page = 1, limit = 10, userId }: PaginationInput & { userId?: UserEntity['id'] }) {
     const pagination = normalizePagination(page, limit)
+    /* a profile lists the owner's public playlists only while they keep them on their profile */
+    if (userId && !(await readUserSettings(this.prisma, userId)).publicPlaylistsOnProfile) {
+      return { data: [], total: 0, page: pagination.page, limit: pagination.limit }
+    }
     /* only public playlists, optionally one owner's (a profile page) */
     const where = { isPublic: true, deletedAt: null, ...(userId ? { userId } : {}) }
     const [data, total] = await this.prisma.$transaction([

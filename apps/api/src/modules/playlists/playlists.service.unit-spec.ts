@@ -92,7 +92,17 @@ describe('PlaylistsService', () => {
     expect(result).toEqual({ data: playlists, total: 1, page: 2, limit: 5 })
   })
 
+  it('getAll should list nothing for an owner who keeps playlists off their profile', async () => {
+    prisma.userSettings.findUnique.mockResolvedValue({ publicPlaylistsOnProfile: false } as never)
+
+    const result = await service.getAll({ userId: 'owner-1', page: 1, limit: 10 })
+
+    expect(prisma.playlist.findMany).not.toHaveBeenCalled()
+    expect(result).toEqual({ data: [], total: 0, page: 1, limit: 10 })
+  })
+
   it('getAll should list one owner public playlists when userId is given', async () => {
+    prisma.userSettings.findUnique.mockResolvedValue(null)
     prisma.$transaction.mockResolvedValue([[], 0] as never)
 
     await service.getAll({ userId: 'owner-1' })
