@@ -22,7 +22,7 @@ Spotify.
 ## Observable behavior and contracts
 
 - **Route.** `/` is served by its own route group with the landing header (scene nav, Dark/Light/Dim
-  theme switch, the play-signal sound toggle) and the landing footer. `/auth/*`, `/login*`,
+  theme switch) and the landing footer. `/auth/*`, `/login*`,
   `/verify-email` and `/legal/*` keep the current header and footer. The `proxy.ts` public-route
   rules stay as they are. Static assets the landing needs must not be redirected to login.
 - **Scenes**, in the prototype's order and copy:
@@ -75,7 +75,6 @@ Spotify.
     no service list and no uptime bars.
 - **Demo features** stay and are labelled as demo where they show data:
   - the assistant with canned answers;
-  - the sound toggle, which is a WebAudio synth;
   - team bubbles with GitHub links;
   - partner placeholder marks.
 - **Accessibility.** Each scene is a labelled region and the counter and dots are buttons with
@@ -116,6 +115,11 @@ The user agreed in this session's interview (2026-10-13):
 11. Service status: the real `/health/ready` with a single row, option (a).
 
 Plan confirmation: the user confirmed the plan in the same session on 2026-10-13 ("Подтверждаю, начинай реализацию").
+
+## Removed after review
+
+- The header's "Play signal" sound toggle (a WebAudio synth) and everything that reacted to its
+  level: the stage pulse, the spectra lift and the cursor equalizer. The user asked for it to go.
 
 ## Styling
 

@@ -8,8 +8,6 @@ type EngineState = {
   animating: boolean
   /** A physics ball is held; scene gestures are ignored. */
   dragging: boolean
-  /** Output level of the sound toggle, 0–1, while it plays. */
-  level: number
 }
 
 /** Everything an engine module needs: the landing root, its cleanup and shared state. */

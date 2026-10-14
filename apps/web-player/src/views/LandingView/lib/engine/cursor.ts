@@ -16,7 +16,6 @@ type Mode =
 /** Large hover targets do not pull the ring towards their centre. */
 const MAGNET_MAX = { width: 260, height: 120 }
 const MAGNET_PULL = 0.25
-const LISTEN_THRESHOLD = 0.02
 
 const modeOf = (el: EventTarget | null): [Mode, Element | null] => {
   if (!(el instanceof Element)) return ['default', null]
@@ -39,7 +38,7 @@ const modeOf = (el: EventTarget | null): [Mode, Element | null] => {
 }
 
 /** The Signal cursor: a ring that changes with what it is over (fine pointers only; touch keeps the system cursor). */
-export const mountCursor = (ctx: EngineContext & { level: () => number }) => {
+export const mountCursor = (ctx: EngineContext) => {
   if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return
   const { root, signal } = ctx
   const slow = ctx.reduce ? 0 : 1
@@ -56,7 +55,7 @@ export const mountCursor = (ctx: EngineContext & { level: () => number }) => {
   }
   const ringEl = make(
     'cur-ring',
-    `<span class="${lc('cur-eq')}"><i></i><i></i><i></i><i></i><i></i></span><span class="${lc('cur-arrows')}">‹›</span><span class="${lc('cur-ban')}"></span>`,
+    `<span class="${lc('cur-arrows')}">‹›</span><span class="${lc('cur-ban')}"></span>`,
   )
   const pill = make('cur-pill', '<i></i><span></span>')
   const beam = make('cur-beam')
@@ -85,7 +84,6 @@ export const mountCursor = (ctx: EngineContext & { level: () => number }) => {
     follow(scrub, 0.08),
     follow(dot, 0.05),
   ]
-  const bars = [...ringEl.querySelectorAll<HTMLElement>('.cur-eq i')]
   let mode: Mode = 'default'
   window.addEventListener(
     'pointermove',
@@ -129,16 +127,4 @@ export const mountCursor = (ctx: EngineContext & { level: () => number }) => {
     signal,
   })
   window.addEventListener('blur', () => cur.classList.add('is-out'), { signal })
-  /* listening: bars pulse with the sound toggle's level */
-  const tick = (t: number) => {
-    const lv = ctx.level()
-    const on = lv > LISTEN_THRESHOLD
-    cur.classList.toggle('is-listen', on)
-    if (!on) return
-    bars.forEach((b, i) => {
-      b.style.transform = `scaleY(${Math.min(1, 0.25 + lv * 1.6 * (0.6 + 0.4 * Math.sin(t * 9 + i * 1.3)))})`
-    })
-  }
-  gsap.ticker.add(tick)
-  ctx.onDispose(() => gsap.ticker.remove(tick))
 }

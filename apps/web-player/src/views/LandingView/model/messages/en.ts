@@ -406,7 +406,6 @@ export const en = {
   'chrome.dark': 'Dark',
   'chrome.light': 'Light',
   'chrome.dim': 'Dim',
-  'chrome.play_signal': 'Play signal',
   'chrome.scenes': 'Scenes',
   'chrome.go_to': 'Go to {scene}',
   'chrome.tuning_in': 'TUNING IN…',
@@ -448,8 +447,6 @@ export const en = {
   'assistant.a_default':
     'This is a demo assistant with a few prepared answers. Try asking what Bitrate is, how Jams work or whether it is free.',
   'status.scope': 'API · web player · artist portal',
-  'chrome.pause_signal': 'Pause signal',
-  'chrome.sound_unavailable': 'Sound unavailable',
   'team.role_author': 'Author',
   'team.role_contributor': 'Contributor',
   'team.bio_author': 'Author and maintainer of Bitrate.',

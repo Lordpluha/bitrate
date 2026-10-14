@@ -19,7 +19,7 @@ const THEME_LABEL: Record<Theme, LandingKey> = {
   [Theme.dim]: 'chrome.dim',
 }
 
-/** Landing header: brand, scene links, the app theme switch and the demo "Play signal" sound toggle. */
+/** Landing header: brand, scene links and the app theme switch. */
 export const LandingHeader = () => {
   const c = useLandingCopy()
   const { theme, setTheme } = useTheme()
@@ -59,19 +59,6 @@ export const LandingHeader = () => {
             </button>
           ))}
         </fieldset>
-        <button
-          aria-pressed="false"
-          className={lc('btn btn-ghost btn-sm')}
-          data-landing-sound=""
-          type="button"
-        >
-          <span aria-hidden="true" className={lc('sound-bars')}>
-            <i />
-            <i />
-            <i />
-          </span>
-          <span className={lc('label')}>{c('chrome.play_signal')}</span>
-        </button>
       </div>
     </header>
   )

@@ -90,11 +90,6 @@ export const LANDING_RULES: readonly (readonly [string, string])[] = [
     'dots',
     '[&_button:focus-visible]:[outline:2px_solid_var(--accent)] [&_button:focus-visible]:[outline-offset:3px]',
   ],
-  ['sound-bars', 'inline-flex gap-[2px] [align-items:end] h-[12px]'],
-  [
-    'sound-bars',
-    '[&_i]:w-[2px] [&_i]:h-[4px] [&_i]:[background:currentColor] [&_i]:rounded-[1px]',
-  ],
   [
     'live',
     '[&_i]:w-[7px] [&_i]:h-[7px] [&_i]:bg-magenta-500 [&_i]:bg-none [&_i]:rounded-[50%] [&_i]:[box-shadow:0_0_0_0_color-mix(in_srgb,var(--color-magenta-500)_60%,transparent)] [&_i]:animate-[landing-ping_1.6s_infinite]',
@@ -109,10 +104,6 @@ export const LANDING_RULES: readonly (readonly [string, string])[] = [
   ],
   ['legend', '[&_i]:w-[18px] [&_i]:h-[2px] [&_i]:rounded-[1px]'],
   [
-    'cur-eq',
-    '[&_i]:w-[2px] [&_i]:h-[18px] [&_i]:bg-accent [&_i]:bg-none [&_i]:rounded-[1px] [&_i]:[transform:scaleY(0.3)] [&_i]:origin-[center]',
-  ],
-  [
     'cur-pill',
     '[&_i]:w-0 [&_i]:h-0 [&_i]:[border-top:6px_solid_transparent] [&_i]:[border-bottom:6px_solid_transparent] [&_i]:[border-left:9px_solid_var(--color-background)]',
   ],
@@ -120,12 +111,6 @@ export const LANDING_RULES: readonly (readonly [string, string])[] = [
     'cur-scrub',
     '[&_i]:w-[2px] [&_i]:h-[28px] [&_i]:bg-accent [&_i]:bg-none [&_i]:rounded-[1px]',
   ],
-  [
-    'sound-bars',
-    '[.playing_&_i]:animate-[landing-eq_0.8s_ease-in-out_infinite_alternate]',
-  ],
-  ['sound-bars', '[.playing_&_i:nth-child(2)]:[animation-delay:-0.3s]'],
-  ['sound-bars', '[.playing_&_i:nth-child(3)]:[animation-delay:-0.6s]'],
   [
     'dots',
     'fixed top-1/2 right-[clamp(10px,1.6vw,26px)] z-[40] flex flex-col gap-[12px] [transform:translateY(-50%)]',
@@ -859,7 +844,6 @@ export const LANDING_RULES: readonly (readonly [string, string])[] = [
   ['hpanel', 'max-[820px]:max-h-[calc(100vh_-_200px)]'],
   ['grain', 'motion-reduce:animate-[none]'],
   ['live', 'motion-reduce:[&_i]:animate-[none]'],
-  ['sound-bars', 'motion-reduce:[.playing_&_i]:animate-[none]'],
   /* Signal cursor — one custom cursor for the landing and the app (fine pointers only; touch keeps the system) */
   ['cur', 'fixed top-0 left-0 z-[9999] pointer-events-none'],
   [
@@ -878,7 +862,6 @@ export const LANDING_RULES: readonly (readonly [string, string])[] = [
     'cur-ring',
     '[&_>_*]:[grid-area:1_/_1] [&_>_*]:opacity-[0] [&_>_*]:[transition:opacity_0.2s]',
   ],
-  ['cur-eq', 'flex gap-[2px] items-center h-[20px]'],
   [
     'cur-arrows',
     'pl-[6px] font-[600] [font-size:14px] leading-[1] font-[family-name:var(--font-body,system-ui)] text-accent tracking-[6px]',
@@ -928,8 +911,6 @@ export const LANDING_RULES: readonly (readonly [string, string])[] = [
   ['cur-scrub', '[.cur.m-scrub_&]:opacity-[1]'],
   ['cur-ring', '[.cur.is-press_&]:[scale:0.75]'],
   ['cur-pill', '[.cur.is-press_&]:[scale:0.9]'],
-  ['cur-eq', '[.cur.is-listen:is(.m-default,.m-hover)_&]:opacity-[1]'],
-  ['cur-dot', '[.cur.is-listen:is(.m-default,.m-hover)_&]:opacity-[0]'],
   ['cur', '[&.is-out_>_*]:opacity-[0]!'],
   /* service status states (the footer pill reads the real readiness endpoint) */
   [
