@@ -8,18 +8,11 @@ import {
 } from '@/entities/Playlist/hooks'
 
 type LikePlaylistButtonProps = {
-  initialLiked?: boolean
   playlist: LikeablePlaylist
 }
 
-export const LikePlaylistButton = ({
-  initialLiked = false,
-  playlist,
-}: LikePlaylistButtonProps) => {
-  const { isLiked, isPending, toggleLike } = usePlaylistLike({
-    initialLiked,
-    playlist,
-  })
+export const LikePlaylistButton = ({ playlist }: LikePlaylistButtonProps) => {
+  const { isLiked, isPending, toggleLike } = usePlaylistLike({ playlist })
   const playlistTitle = playlist.title ?? 'playlist'
 
   return (

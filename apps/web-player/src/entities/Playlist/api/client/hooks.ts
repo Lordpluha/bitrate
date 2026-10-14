@@ -1,4 +1,5 @@
 export * from './playlist.types'
+export type { LikedPlaylist } from './playlistResponse.schema'
 export * from './usePlaylistCrudMutations'
 export * from './usePlaylistLikeMutations'
 export * from './usePlaylistQueries'

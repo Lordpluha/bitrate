@@ -3,10 +3,8 @@ import { LikePlaylistButton } from '@/entities/Playlist'
 import type { PlaylistPlayback } from '@/views/Playlist/model/playlist.types'
 
 export type PlaylistActionDetails = {
-  cover: string
   id: string
   isOwner: boolean
-  ownerName: string
   title: string
   tracksCount: number
 }
@@ -51,13 +49,7 @@ export const PlaylistPrimaryActions = ({
           <Shuffle aria-hidden="true" className="h-7 w-7 sm:h-7.5 sm:w-7.5" />
         </button>
         <LikePlaylistButton
-          playlist={{
-            cover: details.cover,
-            id: details.id,
-            ownerName: details.ownerName,
-            title: details.title,
-            tracksCount: details.tracksCount,
-          }}
+          playlist={{ id: details.id, title: details.title }}
         />
       </>
     )}

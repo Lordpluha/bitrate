@@ -195,3 +195,43 @@ export const useUploadUserAvatar = () => {
     },
   })
 }
+
+export type UserFollowKind = 'followers' | 'following'
+
+type UseUserFollowsInput = {
+  kind: UserFollowKind
+  limit?: number
+  userId: string
+}
+
+const getUserFollowsPage = async ({
+  kind,
+  limit = 20,
+  userId,
+}: UseUserFollowsInput) => {
+  const params = { path: { id: userId }, query: { limit, page: 1 } }
+  const { data, response } =
+    kind === 'followers'
+      ? await clientFetchClient.GET('/api/v1/users/{id}/followers', { params })
+      : await clientFetchClient.GET('/api/v1/users/{id}/following', { params })
+  /** The person keeps these lists private (`followersVisible`); not an error to show. */
+  if (response.status === 403) return { isHidden: true as const }
+  ensureOkResponse(response, `Failed to load ${kind}`)
+  return {
+    isHidden: false as const,
+    ...followedUsersResponseSchema.parse(data),
+  }
+}
+
+/** First page of who follows a person, or whom they follow (`GET /users/{id}/followers|following`). */
+export const useUserFollows = ({
+  kind,
+  limit = 20,
+  userId,
+}: UseUserFollowsInput) =>
+  useTanStackQuery({
+    enabled: Boolean(userId),
+    queryFn: () => getUserFollowsPage({ kind, limit, userId }),
+    queryKey: apiQueryKeys.users.follows(userId, kind),
+    retry: false,
+  })

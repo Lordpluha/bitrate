@@ -1,7 +1,9 @@
 'use client'
 
+import { usePersistedState } from '@shared/hooks'
 import { useState } from 'react'
 import type { LibraryItemType } from '@/widgets/LeftSidebar/model/library.types'
+import { isLibrarySort } from '@/widgets/LeftSidebar/model/sortLibraryItems'
 import { LibraryControls } from './LibraryControls'
 import { LibraryHeader } from './LibraryHeader'
 import { LibraryMusic } from './LibraryMusic'
@@ -21,6 +23,11 @@ export const LeftSidebar = ({
   onToggleExpanded,
 }: LeftSidebarProps) => {
   const [selectedTypes, setSelectedTypes] = useState<LibraryItemType[]>([])
+  const [storedSort, setSort] = usePersistedState<unknown>(
+    'bitrate:library-sort',
+    'recent',
+  )
+  const sort = isLibrarySort(storedSort) ? storedSort : 'recent'
 
   const toggleType = (type: LibraryItemType) =>
     setSelectedTypes((previous) =>
@@ -46,11 +53,12 @@ export const LeftSidebar = ({
       {!isCollapsed && (
         <LibraryTags onToggle={toggleType} selectedTypes={selectedTypes} />
       )}
-      {!isCollapsed && <LibraryControls />}
+      {!isCollapsed && <LibraryControls onSortChange={setSort} sort={sort} />}
       <LibraryMusic
         isCollapsed={isCollapsed}
         isExpanded={isExpanded}
         selectedTypes={selectedTypes}
+        sort={sort}
       />
     </div>
   )

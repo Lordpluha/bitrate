@@ -75,6 +75,39 @@ export const useArtistAlbums = (artistId: string) =>
     staleTime: 5 * 60_000,
   })
 
+const LIKED_ALBUMS_PAGE_SIZE = 100
+
+const getLikedAlbumsPage = async (page: number) => {
+  const { data, response } = await clientFetchClient.GET(
+    '/api/v1/albums/liked',
+    { params: { query: { limit: LIKED_ALBUMS_PAGE_SIZE, page } } },
+  )
+  ensureOkResponse(response, 'Failed to load saved albums')
+  return albumsPaginatedResponseSchema.parse(data)
+}
+
+const getAllLikedAlbums = async () => {
+  const firstPage = await getLikedAlbumsPage(1)
+  const pageCount = Math.ceil(firstPage.total / firstPage.limit)
+  const remainingPages = await Promise.all(
+    Array.from({ length: Math.max(pageCount - 1, 0) }, (_, index) =>
+      getLikedAlbumsPage(index + 2),
+    ),
+  )
+  return [firstPage, ...remainingPages].flatMap(({ data }) => data)
+}
+
+/**
+ * Every album the signed-in user saved, newest first (`GET /albums/liked`). Lives under
+ * `albums.all`, so a like or unlike refreshes it.
+ */
+export const useLikedAlbums = (enabled = true) =>
+  useQuery({
+    enabled,
+    queryFn: getAllLikedAlbums,
+    queryKey: apiQueryKeys.albums.liked,
+  })
+
 export const useAlbum = (albumId?: string) =>
   useQuery({
     queryKey: apiQueryKeys.albums.detail(albumId ?? ''),

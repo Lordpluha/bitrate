@@ -1,12 +1,13 @@
 'use client'
 
-import { usePlaylists } from '@entities/Playlist'
+import { useUserPlaylists } from '@entities/Playlist'
 import { FollowUserButton, useUserById } from '@entities/User'
 import { ROUTES } from '@shared/routes'
 import { getPlaylistCoverUrl, getUserAvatarUrl } from '@shared/utils/mediaUrl'
 import { UserRound } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { ProfileFollowsSection } from '@/views/Profile/ui/ProfileFollowsSection'
 
 type PublicProfilePageProps = {
   userId: string
@@ -14,10 +15,8 @@ type PublicProfilePageProps = {
 
 export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
   const userQuery = useUserById(userId)
-  const playlistsQuery = usePlaylists(1, 100)
-  const playlists = (playlistsQuery.data ?? []).filter(
-    (playlist) => playlist.userId === userId && playlist.isPublic,
-  )
+  const playlistsQuery = useUserPlaylists(userId)
+  const playlists = playlistsQuery.data ?? []
 
   if (userQuery.isPending) {
     return (
@@ -110,6 +109,17 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
           </div>
         )}
       </section>
+
+      <ProfileFollowsSection
+        kind="followers"
+        title="Followers"
+        userId={user.id}
+      />
+      <ProfileFollowsSection
+        kind="following"
+        title="Following"
+        userId={user.id}
+      />
     </div>
   )
 }
