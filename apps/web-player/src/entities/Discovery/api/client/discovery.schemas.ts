@@ -115,7 +115,23 @@ export const topArtistsSchema = paginationSchema.extend({
   data: z.array(topArtistSchema),
 })
 
+/** One row of `GET /charts/artists`: a public artist and their distinct listeners in the window. */
+const chartArtistSchema = z.object({
+  avatar: z.string().nullable(),
+  backgroundImage: z.string().nullable().optional(),
+  bio: z.string().nullable(),
+  id: z.string(),
+  listeners: z.number(),
+  username: z.string(),
+  verified: z.boolean().optional(),
+})
+
+export const artistChartsSchema = paginationSchema.extend({
+  data: z.array(chartArtistSchema),
+})
+
 export type BrowseCategoryResponse = z.infer<typeof browseCategorySchema>
 export type DiscoveryFeedItem = z.infer<typeof discoveryFeedItemSchema>
 export type DiscoveryPlaylist = z.infer<typeof discoveryPlaylistSchema>
 export type DiscoveryTrack = z.infer<typeof discoveryTrackSchema>
+export type ChartArtist = z.infer<typeof chartArtistSchema>

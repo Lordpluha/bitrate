@@ -27,7 +27,14 @@ const input: BuildSearchRowsInput = {
     },
   ],
   tracks: [
-    { id: 'track-1', title: 'Track One', cover: null, artistId: 'a1', rank: 1 },
+    {
+      id: 'track-1',
+      title: 'Track One',
+      cover: null,
+      artistId: 'a1',
+      artistName: 'Artist One',
+      rank: 1,
+    },
   ],
   users: [
     {
