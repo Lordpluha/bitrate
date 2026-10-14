@@ -2,16 +2,11 @@ import { cn } from '@bitrate/ui-react'
 import {
   Check,
   Flag,
-  FolderInput,
   List,
-  Lock,
-  MonitorUp,
+  ListPlus,
   Pencil,
   Share2,
-  SlidersHorizontal,
   Trash2,
-  UserPlus,
-  UserRoundPlus,
 } from 'lucide-react'
 import { Z_INDEX_CLASS } from '@/shared/constants'
 import { MenuItem } from '@/shared/ui'
@@ -56,6 +51,8 @@ export const TrackViewMenu = ({ onChange, value }: TrackViewMenuProps) => (
 
 type PlaylistMoreMenuProps = {
   canEdit: boolean
+  hasTracks: boolean
+  onAddToQueue: () => void
   onCopyLink: () => void
   onDelete: () => void
   onEdit: () => void
@@ -64,6 +61,8 @@ type PlaylistMoreMenuProps = {
 
 export const PlaylistMoreMenu = ({
   canEdit,
+  hasTracks,
+  onAddToQueue,
   onCopyLink,
   onDelete,
   onEdit,
@@ -77,11 +76,11 @@ export const PlaylistMoreMenu = ({
     )}
     role="menu"
   >
-    <MenuItem disabled icon={<List size={17} />} label="Add to queue" />
     <MenuItem
-      disabled={!canEdit}
-      icon={<UserRoundPlus size={17} />}
-      label="Add to profile"
+      disabled={!hasTracks}
+      icon={<ListPlus size={17} />}
+      label="Add to queue"
+      onClick={onAddToQueue}
     />
     <MenuItem
       disabled={!canEdit}
@@ -96,31 +95,9 @@ export const PlaylistMoreMenu = ({
       onClick={onDelete}
     />
     <div className="mx-2 my-1 border-t border-white/10" />
-    <MenuItem disabled icon={<Lock size={17} />} label="Make private" />
-    <MenuItem
-      disabled={!canEdit}
-      icon={<UserPlus size={17} />}
-      label="Invite collaborators"
-    />
-    <MenuItem
-      disabled
-      icon={<SlidersHorizontal size={17} />}
-      label="Exclude from your taste profile"
-    />
-    <MenuItem
-      disabled
-      icon={<FolderInput size={17} />}
-      label="Move to folder"
-    />
     <MenuItem icon={<Share2 size={17} />} label="Share" onClick={onCopyLink} />
     {!canEdit && (
       <MenuItem icon={<Flag size={17} />} label="Report" onClick={onReport} />
     )}
-    <div className="mx-2 my-1 border-t border-white/10" />
-    <MenuItem
-      disabled
-      icon={<MonitorUp size={17} />}
-      label="Open in Desktop app"
-    />
   </div>
 )

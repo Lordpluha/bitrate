@@ -1,4 +1,4 @@
-import { Download, Pause, Play, Shuffle, UserPlus } from 'lucide-react'
+import { Pause, Play, Shuffle } from 'lucide-react'
 import { LikePlaylistButton } from '@/entities/Playlist'
 import type { PlaylistPlayback } from '@/views/Playlist/model/playlist.types'
 
@@ -59,31 +59,7 @@ export const PlaylistPrimaryActions = ({
             tracksCount: details.tracksCount,
           }}
         />
-        <button
-          aria-label="Download playlist"
-          className="transition-colors hover:text-text max-[480px]:hidden"
-          type="button"
-        >
-          <Download aria-hidden="true" className="h-7 w-7 sm:h-7.5 sm:w-7.5" />
-        </button>
       </>
-    )}
-    {details.isOwner && (
-      <button
-        aria-label="Invite collaborators"
-        className="transition-colors hover:text-text max-[480px]:hidden"
-        type="button"
-      >
-        <UserPlus aria-hidden="true" className="h-7 w-7 sm:h-8 sm:w-8" />
-      </button>
-    )}
-    {details.tracksCount > 0 && (
-      <button
-        className="rounded-full border border-white/40 px-4 py-1.5 text-sm font-bold text-text transition-colors hover:border-white max-[640px]:hidden"
-        type="button"
-      >
-        Mix
-      </button>
     )}
   </>
 )
