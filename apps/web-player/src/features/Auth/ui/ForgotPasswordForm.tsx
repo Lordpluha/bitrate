@@ -1,69 +1,91 @@
 'use client'
 
-import { Button, Input } from '@bitrate/ui-react'
+import { Button } from '@bitrate/ui-react'
 import { useMutation } from '@shared/api/client'
-import { showApiErrorToast, showApiSuccessToast } from '@shared/api/feedback'
+import { showApiErrorToast } from '@shared/api/feedback'
 import { ROUTES } from '@shared/routes'
 import Link from 'next/link'
 import { type FormEvent, useState } from 'react'
-import { AuthRecoveryCard } from './AuthRecoveryCard'
+import { z } from 'zod'
+import { AuthAlert } from './AuthAlert'
+import { AuthHeading } from './AuthHeading'
+import { AuthTextInput } from './AuthTextInput'
+import { AuthTextLink } from './AuthTextLink'
+
+const emailSchema = z.email()
 
 export const ForgotPasswordForm = () => {
   const [email, setEmail] = useState('')
+  const [emailError, setEmailError] = useState<string | null>(null)
+  const [isSent, setIsSent] = useState(false)
   const forgotPassword = useMutation('post', '/api/v1/auth/forgot-password', {
     meta: { suppressErrorToast: true },
   })
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    const nextEmail = email.trim()
+    if (!emailSchema.safeParse(nextEmail).success) {
+      setEmailError('Enter a valid email address')
+      return
+    }
 
     try {
-      await forgotPassword.mutateAsync({ body: { email: email.trim() } })
-      showApiSuccessToast(
-        'If an account exists for this email, a reset link has been sent.',
-      )
+      await forgotPassword.mutateAsync({ body: { email: nextEmail } })
+      setIsSent(true)
     } catch (error) {
       showApiErrorToast(error, 'Unable to request a password reset.')
     }
   }
 
   return (
-    <AuthRecoveryCard
-      description="Enter the email associated with your account."
-      title="Reset your password"
-    >
-      <form
-        aria-busy={forgotPassword.isPending}
-        className="grid gap-5"
-        onSubmit={handleSubmit}
-      >
-        <label className="text-sm font-semibold" htmlFor="recovery-email">
-          Email address
-        </label>
-        <Input
-          autoComplete="email"
-          id="recovery-email"
-          onChange={(event) => setEmail(event.target.value)}
-          required
-          type="email"
-          value={email}
-          variant="contrast"
-        />
-        <Button
-          className="rounded"
-          disabled={forgotPassword.isPending}
-          type="submit"
-          variant="primary"
-        >
-          Send reset link
-        </Button>
-      </form>
-      <Link
-        className="text-center text-sm font-bold hover:underline"
-        href={ROUTES.auth.login}
-      >
-        Back to login
-      </Link>
-    </AuthRecoveryCard>
+    <>
+      <AuthHeading
+        description="Enter the email associated with your account."
+        title="Reset your password"
+      />
+      {isSent ? (
+        <>
+          <AuthAlert title="Check your inbox">
+            If an account exists for this email, a reset link has been sent.
+          </AuthAlert>
+          <Button asChild className="w-full font-medium" variant="outline">
+            <Link href={ROUTES.auth.login}>Back to login</Link>
+          </Button>
+        </>
+      ) : (
+        <>
+          <form
+            aria-busy={forgotPassword.isPending}
+            className="flex flex-col gap-5"
+            noValidate
+            onSubmit={handleSubmit}
+          >
+            <AuthTextInput
+              autoComplete="email"
+              error={emailError}
+              id="recovery-email"
+              label="Email address"
+              onChange={(event) => {
+                setEmail(event.target.value)
+                setEmailError(null)
+              }}
+              placeholder="you@example.com"
+              type="email"
+              value={email}
+            />
+            <Button
+              className="w-full font-medium"
+              disabled={forgotPassword.isPending}
+              type="submit"
+              variant="primary"
+            >
+              {forgotPassword.isPending ? 'Sending...' : 'Send reset link'}
+            </Button>
+          </form>
+          <AuthTextLink href={ROUTES.auth.login}>Back to login</AuthTextLink>
+        </>
+      )}
+    </>
   )
 }

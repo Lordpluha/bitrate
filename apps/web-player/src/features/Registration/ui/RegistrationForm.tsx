@@ -1,103 +1,133 @@
 'use client'
 
 import {
+  Button,
   Form,
   FormField,
   FormItem,
-  FormMessage,
   Input,
   PasswordInput,
 } from '@bitrate/ui-react'
+import type { RegistrationFormData } from '@entities/User'
 import {
-  AuthFormFooter,
-  AuthFormHeader,
-  FloatingAuthField,
+  AuthField,
+  AuthFooterLink,
+  AuthHeading,
+  AuthOrDivider,
   LegalAcceptanceField,
+  OAuthButtons,
   useAuthenticatedRedirect,
 } from '@features/Auth'
 import { ROUTES } from '@shared/routes'
 import { useRegistrationForm } from '../model/useRegistrationForm'
+
+type TextFieldName = Exclude<keyof RegistrationFormData, 'acceptLegal'>
+
+const FIELDS: {
+  autoComplete: string
+  label: string
+  name: TextFieldName
+  placeholder: string
+  secret?: boolean
+}[] = [
+  {
+    autoComplete: 'name',
+    label: 'Full Name',
+    name: 'fullName',
+    placeholder: 'Maya Rivers',
+  },
+  {
+    autoComplete: 'email',
+    label: 'Email Address',
+    name: 'email',
+    placeholder: 'you@example.com',
+  },
+  {
+    autoComplete: 'new-password',
+    label: 'Password',
+    name: 'password',
+    placeholder: '••••••••',
+    secret: true,
+  },
+  {
+    autoComplete: 'new-password',
+    label: 'Confirm Password',
+    name: 'confirmPassword',
+    placeholder: '••••••••',
+    secret: true,
+  },
+]
 
 export const RegistrationForm = () => {
   useAuthenticatedRedirect()
   const { form, isSubmitting, onSubmit } = useRegistrationForm()
 
   return (
-    <div className="flex flex-col items-stretch justify-center gap-4 px-14 py-32 bg-contrast text-text-contrast rounded-[10px_0_0_10px] basis-[50%] max-xl:basis-full max-xl:rounded-[10px] max-lg:p-6 box-border">
-      <AuthFormHeader
+    <>
+      <AuthHeading
         description="Sign up with your email or continue with a social account."
         title="Create your account for free and start listening"
       />
 
       <Form {...form}>
         <form
-          className="flex flex-col gap-2"
+          aria-busy={isSubmitting}
+          className="flex flex-col gap-5.5"
+          noValidate
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          <FormField
-            control={form.control}
-            name="fullName"
-            render={({ field }) => (
-              <FormItem className="pt-2">
-                <FloatingAuthField label="Full Name">
-                  <Input placeholder="" variant="contrast" {...field} />
-                </FloatingAuthField>
-                <FormMessage />
-              </FormItem>
+          <div className="flex flex-col gap-3">
+            {FIELDS.map(
+              ({ autoComplete, label, name, placeholder, secret }) => (
+                <FormField
+                  control={form.control}
+                  key={name}
+                  name={name}
+                  render={({ field }) => (
+                    <FormItem className="space-y-0">
+                      <AuthField label={label}>
+                        {secret ? (
+                          <PasswordInput
+                            autoComplete={autoComplete}
+                            placeholder={placeholder}
+                            {...field}
+                          />
+                        ) : (
+                          <Input
+                            autoComplete={autoComplete}
+                            placeholder={placeholder}
+                            type={name === 'email' ? 'email' : 'text'}
+                            {...field}
+                          />
+                        )}
+                      </AuthField>
+                    </FormItem>
+                  )}
+                />
+              ),
             )}
-          />
-
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem className="pt-2">
-                <FloatingAuthField label="Email Address">
-                  <Input placeholder="" variant="contrast" {...field} />
-                </FloatingAuthField>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem className="pt-2">
-                <FloatingAuthField label="Password">
-                  <PasswordInput placeholder="" variant="contrast" {...field} />
-                </FloatingAuthField>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="confirmPassword"
-            render={({ field }) => (
-              <FormItem className="pt-2">
-                <FloatingAuthField label="Confirm Password">
-                  <PasswordInput placeholder="" variant="contrast" {...field} />
-                </FloatingAuthField>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          </div>
 
           <LegalAcceptanceField control={form.control} id="accept-legal" />
 
-          <AuthFormFooter
-            alternateHref={ROUTES.auth.login}
-            alternateLink="Log in."
-            alternateText="Already have an account?"
-            isSubmitting={isSubmitting}
-            socialAccepted={form.watch('acceptLegal')}
-            submitLabel="Register"
-          />
+          <Button
+            className="w-full font-medium"
+            disabled={isSubmitting}
+            type="submit"
+            variant="primary"
+          >
+            {isSubmitting ? 'Registering...' : 'Register'}
+          </Button>
         </form>
       </Form>
-    </div>
+
+      <AuthOrDivider />
+      <OAuthButtons accepted={form.watch('acceptLegal')} />
+      <AuthFooterLink
+        href={ROUTES.auth.login}
+        lead="Already have an account?"
+        link="Log in"
+      />
+    </>
   )
 }

@@ -1,13 +1,14 @@
 'use client'
 
-import { Button, Input } from '@bitrate/ui-react'
-import Link from 'next/link'
+import { Button } from '@bitrate/ui-react'
 import { useSearchParams } from 'next/navigation'
 import { type FormEvent, useState } from 'react'
 import { useMutation } from '@/shared/api/client'
 import { showApiErrorToast, showApiSuccessToast } from '@/shared/api/feedback'
 import { ROUTES } from '@/shared/routes'
-import { AuthRecoveryCard } from './AuthRecoveryCard'
+import { AuthHeading } from './AuthHeading'
+import { AuthTextInput } from './AuthTextInput'
+import { AuthTextLink } from './AuthTextLink'
 
 export const VerifyEmailForm = () => {
   const searchParams = useSearchParams()
@@ -47,17 +48,19 @@ export const VerifyEmailForm = () => {
   }
 
   return (
-    <AuthRecoveryCard
-      description={
-        token
-          ? 'Confirm the email address connected to your account.'
-          : 'Check your inbox or request a new verification link.'
-      }
-      title="Verify your email"
-    >
-      {token && (
+    <>
+      <AuthHeading
+        description={
+          token
+            ? 'Confirm the email address connected to your account.'
+            : 'Check your inbox or request a new verification link.'
+        }
+        title="Verify your email"
+      />
+
+      {token ? (
         <Button
-          className="rounded"
+          className="w-full font-medium"
           disabled={verifyEmail.isPending}
           onClick={() => void handleVerify()}
           type="button"
@@ -65,23 +68,21 @@ export const VerifyEmailForm = () => {
         >
           {verifyEmail.isPending ? 'Verifying...' : 'Verify email'}
         </Button>
-      )}
+      ) : null}
 
-      <form className="grid gap-4" onSubmit={handleResend}>
-        <label className="text-sm font-semibold" htmlFor="verification-email">
-          Email address
-        </label>
-        <Input
+      <form className="flex flex-col gap-5" onSubmit={handleResend}>
+        <AuthTextInput
           autoComplete="email"
           id="verification-email"
+          label="Email address"
           onChange={(event) => setEmail(event.target.value)}
+          placeholder="you@example.com"
           required
           type="email"
           value={email}
-          variant="contrast"
         />
         <Button
-          className="rounded"
+          className="w-full font-medium"
           disabled={resendVerification.isPending}
           type="submit"
           variant="secondary"
@@ -90,12 +91,7 @@ export const VerifyEmailForm = () => {
         </Button>
       </form>
 
-      <Link
-        className="text-center text-sm font-bold hover:underline"
-        href={ROUTES.auth.login}
-      >
-        Back to login
-      </Link>
-    </AuthRecoveryCard>
+      <AuthTextLink href={ROUTES.auth.login}>Back to login</AuthTextLink>
+    </>
   )
 }
