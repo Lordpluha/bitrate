@@ -135,7 +135,6 @@ export const de = {
   'main.madeFor': 'Für',
   'main.newAlbums': 'Neue Alben',
   'main.noAlbums': 'Keine Alben gefunden',
-  'main.noArtists': 'Keine Künstler gefunden',
   'main.noPlaylists': 'Keine Playlists gefunden',
   'main.popularArtists': 'Beliebte Künstler',
   'main.popularPlaylists': 'Beliebte Playlists',

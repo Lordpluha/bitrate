@@ -1,4 +1,5 @@
 export * from './AuthBanner'
+export * from './LegalFooter'
 export * from './Logo'
 export * from './MenuItem'
 export * from './MusicCardLg'

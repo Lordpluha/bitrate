@@ -136,7 +136,6 @@ export const uk = {
   'main.madeFor': 'Створено для',
   'main.newAlbums': 'Нові альбоми',
   'main.noAlbums': 'Альбомів не знайдено',
-  'main.noArtists': 'Виконавців не знайдено',
   'main.noPlaylists': 'Плейлистів не знайдено',
   'main.popularArtists': 'Популярні виконавці',
   'main.popularPlaylists': 'Популярні плейлисти',
