@@ -1,5 +1,4 @@
 import { z } from 'zod'
-import { arrayOrPaginated } from '@/shared/api/paginated'
 import { fallbackTrackCover } from '@/shared/constants'
 
 const albumTrackResponseSchema = z.object({
@@ -46,8 +45,6 @@ export const albumResponseSchema = z.object({
   tracks: z.array(albumTrackResponseSchema).optional(),
   updatedAt: z.string(),
 })
-
-export const albumsResponseSchema = arrayOrPaginated(albumResponseSchema)
 
 export const albumsPaginatedResponseSchema = z.object({
   data: z.array(albumResponseSchema),

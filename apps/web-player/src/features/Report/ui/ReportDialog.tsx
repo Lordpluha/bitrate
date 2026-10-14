@@ -8,12 +8,7 @@ import { Z_INDEX_CLASS } from '@/shared/constants'
 import { useOverlayFocus } from '@/shared/hooks/useOverlayFocus'
 
 /** What can be reported, as `POST /moderation/reports` names it. */
-export type ReportableEntity =
-  | 'playlist'
-  | 'artist'
-  | 'album'
-  | 'track'
-  | 'user'
+type ReportableEntity = 'playlist' | 'artist' | 'album' | 'track' | 'user'
 
 const ENTITY_LABEL: Record<ReportableEntity, string> = {
   album: 'album',

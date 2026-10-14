@@ -3,45 +3,11 @@
 import {
   albumResponseSchema,
   albumsPaginatedResponseSchema,
-  albumsResponseSchema,
 } from '@entities/Album/api/client/albumResponse.schema'
 import { clientFetchClient, useMutation } from '@shared/api/client'
 import { ensureOkResponse } from '@shared/api/errors'
 import { apiQueryKeys } from '@shared/api/queryKeys'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-
-type UseAlbumsParams = {
-  artistId?: string
-  page?: number
-  limit?: number
-  title?: string
-}
-
-export const useAlbums = ({
-  artistId,
-  page = 1,
-  limit = 20,
-  title,
-}: UseAlbumsParams = {}) =>
-  useQuery({
-    queryKey: apiQueryKeys.albums.list({ artistId, page, limit, title }),
-    queryFn: async () => {
-      const { data, response } = await clientFetchClient.GET('/api/v1/albums', {
-        params: {
-          query: {
-            ...(artistId ? { artistId } : {}),
-            page,
-            limit,
-            ...(title ? { title } : {}),
-          },
-        },
-      })
-
-      ensureOkResponse(response, 'Failed to fetch albums')
-
-      return albumsResponseSchema.parse(data)
-    },
-  })
 
 const ARTIST_ALBUMS_PAGE_SIZE = 100
 

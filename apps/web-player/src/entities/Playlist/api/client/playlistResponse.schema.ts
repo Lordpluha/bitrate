@@ -80,7 +80,3 @@ export const likedPlaylistsPageSchema = z.object({
   page: z.number(),
   total: z.number(),
 })
-
-export type LikedPlaylist = z.infer<
-  typeof likedPlaylistsPageSchema
->['data'][number]

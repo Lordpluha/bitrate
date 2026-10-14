@@ -15,7 +15,7 @@ import {
 } from './discovery.schemas'
 
 export type DiscoveryRange = 'short' | 'medium' | 'long'
-export type ChartScope = 'global' | 'viral' | 'country'
+type ChartScope = 'global' | 'viral' | 'country'
 
 export const useBrowseCategories = (page = 1, limit = 100) =>
   useQuery({

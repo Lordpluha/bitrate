@@ -52,7 +52,3 @@ export const followingActivityResponseSchema = z.array(
     }),
   }),
 )
-
-export type FollowingActivity = z.infer<
-  typeof followingActivityResponseSchema
->[number]

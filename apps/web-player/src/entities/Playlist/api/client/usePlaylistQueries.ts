@@ -16,18 +16,6 @@ import {
 const normalizeLibraryPlaylistsResponse = (data: unknown) =>
   libraryPlaylistsResponseSchema.parse(data)
 
-export const usePlaylists = (page = 1, limit = 20) =>
-  useQuery(
-    'get',
-    '/api/v1/playlists',
-    { params: { query: { page, limit } } },
-    {
-      retry: false,
-      select: normalizePlaylistsResponse,
-      staleTime: 60_000,
-    },
-  )
-
 /** A person's public playlists for their profile; empty when they hide them (`publicPlaylistsOnProfile`). */
 export const useUserPlaylists = (userId: string) =>
   useQuery(
