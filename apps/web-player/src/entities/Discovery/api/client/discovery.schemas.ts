@@ -134,4 +134,3 @@ export type BrowseCategoryResponse = z.infer<typeof browseCategorySchema>
 export type DiscoveryFeedItem = z.infer<typeof discoveryFeedItemSchema>
 export type DiscoveryPlaylist = z.infer<typeof discoveryPlaylistSchema>
 export type DiscoveryTrack = z.infer<typeof discoveryTrackSchema>
-export type ChartArtist = z.infer<typeof chartArtistSchema>

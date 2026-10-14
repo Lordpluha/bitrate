@@ -22,30 +22,7 @@ export type ArtistEntity = {
   updatedAt?: string
 }
 
-export type UseArtistsInput = {
-  page?: number
-  limit?: number
-}
-
 const ARTIST_STALE_TIME = 5 * 60_000
-
-export const useArtists = ({ page = 1, limit = 100 }: UseArtistsInput = {}) =>
-  useQuery({
-    queryKey: apiQueryKeys.artists.list({ page, limit }),
-    queryFn: async () => {
-      const { data, response } = await clientFetchClient.GET(
-        '/api/v1/artists',
-        {
-          params: { query: { page, limit } },
-        },
-      )
-
-      ensureOkResponse(response, 'Failed to fetch artists')
-
-      return artistsResponseSchema.parse(data)
-    },
-    staleTime: ARTIST_STALE_TIME,
-  })
 
 export const useArtist = (artistId?: string) =>
   useQuery({

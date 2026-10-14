@@ -5,7 +5,6 @@ export {
   useDeletePlaylist,
   useMyPlaylists,
   usePlaylist,
-  usePlaylists,
   useRemoveTrackFromPlaylist,
   useUpdatePlaylist,
   useUserPlaylists,
