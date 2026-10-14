@@ -585,15 +585,6 @@ export const pages = {
       authState('More sign-in options', () => loginForm(null, true)),
     ],
   },
-  login: {
-    title: 'Login (redirect)',
-    route: '/login',
-    context: 'Redirects to /auth/login keeping ?error; same screen.',
-    ...auth('Login', () => loginForm()),
-    states: [
-      authState('With redirect error', () => loginForm(Alert('Sign-in failed', 'Try again.'))),
-    ],
-  },
   'auth-login-2fa': {
     title: 'Auth / Login / 2FA',
     route: '/auth/login/2fa',
@@ -611,13 +602,6 @@ export const pages = {
         'One more step.',
       ),
     ],
-  },
-  'login-2fa': {
-    title: 'Login / 2FA (redirect)',
-    route: '/login/2fa',
-    context: 'Redirects to /auth/login/2fa; same screen.',
-    ...auth('2FA', () => twoFa(), 'One more step.'),
-    states: [authState('Invalid code', () => twoFa(true), 'One more step.')],
   },
   'auth-registration': {
     title: 'Auth / Registration',
@@ -662,8 +646,8 @@ export const pages = {
     mobile: () => AuthMobile('Reset', reset()),
     states: [cardState('Mismatch', resetMismatch), cardState('Missing token', noToken)],
   },
-  'verify-email': {
-    title: 'Verify email',
+  'auth-verify-email': {
+    title: 'Auth / Verify email',
     route: '/verify-email?email=',
     context: 'Confirm the account email or resend the link.',
     desktop: () => CardDesktop('Verify', verify(true)),
@@ -2985,13 +2969,11 @@ function lost(m, reported, guest) {
 /* public pages (outside /main) dock the AI assistant button bottom-right */
 const PUBLIC = [
   'auth-login',
-  'login',
   'auth-login-2fa',
-  'login-2fa',
   'auth-registration',
   'auth-forgot-password',
   'auth-reset-password',
-  'verify-email',
+  'auth-verify-email',
   'legal',
   'not-found',
   'error',
