@@ -39,10 +39,10 @@ describe('useSettingsStore', () => {
   })
 
   it('restores defaults on reset', () => {
-    useSettingsStore.getState().setSetting('normalizeVolume', true)
+    useSettingsStore.getState().setSetting('streamingQuality', 'Low')
 
     useSettingsStore.getState().reset()
 
-    expect(useSettingsStore.getState().normalizeVolume).toBe(false)
+    expect(useSettingsStore.getState().streamingQuality).toBe('Automatic')
   })
 })

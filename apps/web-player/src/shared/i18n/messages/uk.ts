@@ -39,7 +39,6 @@ export const uk = {
   'settings.account': 'Обліковий запис',
   'settings.account.edit': 'Змінити способи входу',
   'settings.audio': 'Якість аудіо',
-  'settings.audio.normalize': 'Нормалізувати гучність усіх пісень і подкастів',
   'settings.audio.quality': 'Якість трансляції',
   'settings.audio.quality.automatic': 'Автоматично',
   'settings.audio.quality.high': 'Висока',
@@ -54,12 +53,11 @@ export const uk = {
   'settings.library.compact': 'Компактний вигляд медіатеки',
   'settings.library.compact.description':
     'Списки треків матимуть окрему колонку виконавця та щільніші рядки.',
-  'settings.playback': 'Відтворення',
   'settings.privacy.activity': 'Активність прослуховування',
   'settings.privacy.activity.description':
-    'Інші можуть бачити, що ви слухаєте, і порівнювати активність.',
+    'Ваші підписники бачать, що ви слухали цього тижня.',
   'settings.privacy.activity.label':
-    'Активність прослуховування на комп’ютері й телефоні',
+    'Показувати мою активність прослуховування',
   'settings.privacy.followers': 'Підписники та підписки',
   'settings.privacy.followers.description':
     'Люди можуть бачити ваших підписників і ваші підписки.',
@@ -91,17 +89,6 @@ export const uk = {
   'settings.twoFactor.setup': 'Налаштувати 2FA',
   'settings.twoFactor.setupDescription':
     'Захистіть обліковий запис за допомогою застосунку-автентифікатора.',
-  'settings.video': 'Відео та візуалізації',
-  'settings.video.canvas': 'Зациклені візуалізації',
-  'settings.video.canvas.description':
-    'Короткі зациклені візуальні ефекти під час відтворення.',
-  'settings.video.info': 'Оновлення налаштувань може зайняти деякий час.',
-  'settings.video.music': 'Музичні відео',
-  'settings.video.music.description':
-    'Коли вимкнено, музичні відео відтворюються лише як аудіо.',
-  'settings.video.other': 'Інші відео',
-  'settings.video.other.description':
-    'Вертикальні відео, відеоподкасти та відео авторів.',
   'queue.clear': 'Очистити чергу',
   'queue.empty': 'Черга порожня',
   'queue.empty.description': 'Увімкніть щось, і наступні треки з’являться тут.',

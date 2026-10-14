@@ -1,37 +1,22 @@
 'use client'
 
 import { Search, X } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { useMeSettings } from '@/entities/Me'
-import { useSettingsStore } from '@/entities/Settings'
-import { useAuth } from '@/shared/hooks'
+import { useState } from 'react'
 import { useI18n } from '@/shared/i18n'
 import { SettingsSearchProvider } from '@/views/Settings/model/settingsSearchContext'
 import { AccountSettingsSection } from '@/views/Settings/ui/AccountSettingsSection'
 import { ActiveSessionsSection } from '@/views/Settings/ui/ActiveSessionsSection'
 import { AudioSettingsSection } from '@/views/Settings/ui/AudioSettingsSection'
 import { LibraryDisplaySettings } from '@/views/Settings/ui/LibraryDisplaySettings'
-import { PlaybackSettingsSection } from '@/views/Settings/ui/PlaybackSettingsSection'
-import { PrivacySettingsSections } from '@/views/Settings/ui/PrivacySettingsSections'
 import { ProfileDetailsSection } from '@/views/Settings/ui/ProfileDetailsSection'
 import { ServerPrivacySettingsSection } from '@/views/Settings/ui/ServerPrivacySettingsSection'
 import { SubscriptionSettingsSection } from '@/views/Settings/ui/SubscriptionSettingsSection'
 import { TwoFactorSettingsSection } from '@/views/Settings/ui/TwoFactorSettingsSection'
-import { VideoSettingsSection } from '@/views/Settings/ui/VideoSettingsSection'
 
 export const SettingsPage = () => {
   const { t } = useI18n()
-  const { isAuthenticated } = useAuth()
-  const { data: serverSettings } = useMeSettings(isAuthenticated)
-  const setSetting = useSettingsStore((state) => state.setSetting)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [query, setQuery] = useState('')
-
-  useEffect(() => {
-    if (!serverSettings) return
-    setSetting('compactLibrary', serverSettings.compactLibrary)
-    setSetting('nowPlayingPanel', serverSettings.showNowPlaying)
-  }, [serverSettings, setSetting])
 
   const closeSearch = () => {
     setIsSearchOpen(false)
@@ -86,9 +71,6 @@ export const SettingsPage = () => {
             <SubscriptionSettingsSection />
             <AudioSettingsSection />
             <LibraryDisplaySettings />
-            <VideoSettingsSection />
-            <PlaybackSettingsSection />
-            <PrivacySettingsSections />
             <ServerPrivacySettingsSection />
             <ProfileDetailsSection />
             <TwoFactorSettingsSection />
