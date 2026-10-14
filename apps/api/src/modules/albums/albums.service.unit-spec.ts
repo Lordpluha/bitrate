@@ -306,4 +306,40 @@ describe('AlbumsService', () => {
     })
     expect(result).toBe(album)
   })
+
+  it('findLiked should return the user saved albums, newest like first', async () => {
+    const album = buildAlbumWithTracks()
+    const likedAt = new Date('2026-10-01T00:00:00.000Z')
+    prisma.$transaction.mockResolvedValue([[{ album, createdAt: likedAt }], 1] as never)
+
+    const result = await service.findLiked('user-1', { page: 2, limit: 5 })
+
+    expect(prisma.userLikedAlbum.findMany).toHaveBeenCalledWith({
+      where: { userId: 'user-1', album: { deletedAt: null } },
+      include: { album: { include: ALBUM_TRACKS_INCLUDE } },
+      orderBy: [{ createdAt: 'desc' }, { albumId: 'desc' }],
+      skip: 5,
+      take: 5,
+    })
+    expect(prisma.userLikedAlbum.count).toHaveBeenCalledWith({
+      where: { userId: 'user-1', album: { deletedAt: null } },
+    })
+    expect(result).toEqual({
+      data: [{ ...album, tracks: [], likedAt }],
+      total: 1,
+      page: 2,
+      limit: 5,
+    })
+  })
+
+  it('findLiked should use default pagination', async () => {
+    prisma.$transaction.mockResolvedValue([[], 0] as never)
+
+    const result = await service.findLiked('user-1', {})
+
+    expect(prisma.userLikedAlbum.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ skip: 0, take: 10 }),
+    )
+    expect(result).toEqual({ data: [], total: 0, page: 1, limit: 10 })
+  })
 })

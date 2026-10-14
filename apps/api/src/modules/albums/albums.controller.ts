@@ -24,6 +24,7 @@ import {
   DeleteAlbumSwagger,
   GetAlbumByIdSwagger,
   GetAlbumsSwagger,
+  GetLikedAlbumsSwagger,
   LikeAlbumSwagger,
   UnlikeAlbumSwagger,
   UpdateAlbumByIdSwagger,
@@ -53,6 +54,18 @@ export class AlbumsController {
       page,
       title,
     })
+  }
+
+  /** The signed-in user's saved albums. Declared before `:id` so `liked` is not parsed as an id. */
+  @GetLikedAlbumsSwagger()
+  @UserAuth()
+  @Get('liked')
+  getLikedAlbums(
+    @Req() req: UserAuthRequest,
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+  ) {
+    return this.albumsService.findLiked(req.user.id, { page, limit })
   }
 
   /** Runs the get by id operation. */

@@ -1,4 +1,4 @@
-import { normalizePagination } from '@common/pagination'
+import { normalizePagination, type PaginationInput } from '@common/pagination'
 import { isPrismaP2002, isPrismaP2025 } from '@common/utils/prisma'
 import { NS } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
@@ -38,9 +38,10 @@ export class PlaylistsService {
   }
 
   /** Runs the get all operation. */
-  async getAll({ page = 1, limit = 10 }: { page?: number; limit?: number }) {
+  async getAll({ page = 1, limit = 10, userId }: PaginationInput & { userId?: UserEntity['id'] }) {
     const pagination = normalizePagination(page, limit)
-    const where = { isPublic: true, deletedAt: null }
+    /* only public playlists, optionally one owner's (a profile page) */
+    const where = { isPublic: true, deletedAt: null, ...(userId ? { userId } : {}) }
     const [data, total] = await this.prisma.$transaction([
       this.prisma.playlist.findMany({
         where,
@@ -60,6 +61,34 @@ export class PlaylistsService {
     ])
 
     return { data, total, page: pagination.page, limit: pagination.limit }
+  }
+
+  /**
+   * Playlists the user liked, newest like first. A liked playlist stays listed while it is
+   * public or the user's own; one its owner made private drops out. Not cached.
+   */
+  async findLiked(userId: UserEntity['id'], { page = 1, limit = 10 }: PaginationInput) {
+    const pagination = normalizePagination(page, limit)
+    const where = {
+      userId,
+      playlist: { deletedAt: null, OR: [{ isPublic: true }, { userId }] },
+    }
+    const [likes, total] = await this.prisma.$transaction([
+      this.prisma.userLikedPlaylist.findMany({
+        where,
+        include: { playlist: { include: { user: { select: { id: true, username: true } } } } },
+        orderBy: [{ createdAt: 'desc' }, { playlistId: 'desc' }],
+        skip: pagination.skip,
+        take: pagination.limit,
+      }),
+      this.prisma.userLikedPlaylist.count({ where }),
+    ])
+    return {
+      data: likes.map(({ playlist, createdAt }) => ({ ...playlist, likedAt: createdAt })),
+      total,
+      page: pagination.page,
+      limit: pagination.limit,
+    }
   }
 
   /** Runs the get by id operation. */
