@@ -5,6 +5,7 @@ import {
 } from '@infra/queues/audio-processing.queue'
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals'
 import { LISTENING_STATS_QUEUE } from '@modules/history/listening-stats.consumer'
+import { NOTIFICATIONS_QUEUE } from '@modules/notifications'
 import { getQueueToken } from '@nestjs/bullmq'
 import type { TestingModule } from '@nestjs/testing'
 import { Test } from '@nestjs/testing'
@@ -78,6 +79,8 @@ describe('AppModule DI graph (boot smoke)', () => {
       .overrideProvider(getQueueToken(AUDIO_PROCESSING_DEAD_LETTER_QUEUE))
       .useValue(makeQueueMock())
       .overrideProvider(getQueueToken(LISTENING_STATS_QUEUE))
+      .useValue(makeQueueMock())
+      .overrideProvider(getQueueToken(NOTIFICATIONS_QUEUE))
       .useValue(makeQueueMock())
       .compile()
 
