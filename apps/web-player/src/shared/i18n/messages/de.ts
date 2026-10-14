@@ -39,7 +39,6 @@ export const de = {
   'settings.account': 'Konto',
   'settings.account.edit': 'Anmeldemethoden bearbeiten',
   'settings.audio': 'Audioqualität',
-  'settings.audio.normalize': 'Lautstärke für Songs und Podcasts normalisieren',
   'settings.audio.quality': 'Streaming-Qualität',
   'settings.audio.quality.automatic': 'Automatisch',
   'settings.audio.quality.high': 'Hoch',
@@ -53,11 +52,10 @@ export const de = {
   'settings.library.compact': 'Kompakte Bibliothek verwenden',
   'settings.library.compact.description':
     'Titellisten erhalten eine eigene Künstler-Spalte und kompaktere Zeilen.',
-  'settings.playback': 'Wiedergabe',
   'settings.privacy.activity': 'Höraktivität',
-  'settings.privacy.activity.description': 'Andere können sehen, was du hörst.',
-  'settings.privacy.activity.label':
-    'Höraktivität auf Desktop und Mobilgeräten',
+  'settings.privacy.activity.description':
+    'Personen, die dir folgen, sehen, was du diese Woche gehört hast.',
+  'settings.privacy.activity.label': 'Meine Höraktivität teilen',
   'settings.privacy.followers': 'Follower und Gefolgte',
   'settings.privacy.followers.description':
     'Andere können sehen, wem du folgst.',
@@ -89,17 +87,6 @@ export const de = {
   'settings.twoFactor.setup': '2FA einrichten',
   'settings.twoFactor.setupDescription':
     'Schütze dein Konto mit einer Authenticator-App.',
-  'settings.video': 'Videos und Visuals',
-  'settings.video.canvas': 'Endlos-Visuals',
-  'settings.video.canvas.description':
-    'Kurze Animationen während der Wiedergabe.',
-  'settings.video.info': 'Die Aktualisierung kann einen Moment dauern.',
-  'settings.video.music': 'Musikvideos',
-  'settings.video.music.description':
-    'Ausgeschaltet werden Videos nur als Audio abgespielt.',
-  'settings.video.other': 'Andere Videos',
-  'settings.video.other.description':
-    'Vertikale Videos, Video-Podcasts und Creator-Videos.',
   'queue.clear': 'Warteschlange leeren',
   'queue.empty': 'Deine Warteschlange ist leer',
   'queue.empty.description':

@@ -4,6 +4,10 @@ import {
 } from '@/entities/Player/lib/adaptiveBitrate'
 import { mbps, playerLog } from '@/entities/Player/lib/playerLog'
 import {
+  capBitrate,
+  getMaxStreamBitrate,
+} from '@/entities/Player/lib/streamQuality'
+import {
   pickStartBitrate,
   readRememberedThroughput,
   rememberThroughput,
@@ -15,6 +19,8 @@ export type BitrateSelectorInput = {
   manifest: TrackManifest
   /** Overrides the throughput-derived starting rendition. */
   initialBitrate?: number
+  /** Highest automatic rendition (kbps); defaults to the listener's quality setting. */
+  maxBitrate?: number | null
   onChange?: (bitrate: number) => void
 }
 
@@ -28,6 +34,7 @@ export class BitrateSelector {
   private readonly abr = new AdaptiveBitrateController()
   private readonly manifest: TrackManifest
   private readonly onChange?: (bitrate: number) => void
+  private readonly maxBitrate: number | null
 
   private current: number
   private automatic = true
@@ -35,18 +42,28 @@ export class BitrateSelector {
   private label: string
 
   /** Creates a new instance, seeded from throughput remembered across sessions. */
-  constructor({ manifest, initialBitrate, onChange }: BitrateSelectorInput) {
+  constructor({
+    manifest,
+    initialBitrate,
+    maxBitrate = getMaxStreamBitrate(),
+    onChange,
+  }: BitrateSelectorInput) {
     this.manifest = manifest
     this.onChange = onChange
+    this.maxBitrate = maxBitrate
     this.label = 'плеер'
 
     const remembered = readRememberedThroughput()
     if (remembered !== null) this.abr.seed(remembered)
 
-    this.current =
-      initialBitrate ??
-      pickStartBitrate({ manifest, throughputBps: remembered }) ??
-      0
+    this.current = capBitrate({
+      bitrate:
+        initialBitrate ??
+        pickStartBitrate({ manifest, throughputBps: remembered }) ??
+        0,
+      manifest,
+      maxBitrate,
+    })
   }
 
   /** The rendition currently being downloaded. */
@@ -121,12 +138,16 @@ export class BitrateSelector {
   /** Chooses the rendition for the next fragment, logging any switch. */
   next(bufferedAhead: number): number {
     const chosen = this.automatic
-      ? this.abr.decide({
-          bufferedAhead,
-          currentBitrate: this.current,
-          hadStall: this.hadStall,
+      ? capBitrate({
+          bitrate: this.abr.decide({
+            bufferedAhead,
+            currentBitrate: this.current,
+            hadStall: this.hadStall,
+            manifest: this.manifest,
+            nowMs: Date.now(),
+          }),
           manifest: this.manifest,
-          nowMs: Date.now(),
+          maxBitrate: this.maxBitrate,
         })
       : this.current
     this.hadStall = false

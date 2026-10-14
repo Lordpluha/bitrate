@@ -16,6 +16,7 @@ import { usePlayerHotkeys } from './usePlayerHotkeys'
 import { usePlayerSessionPersistence } from './usePlayerSessionPersistence'
 import { usePlaylistShuffle } from './usePlaylistShuffle'
 import { useRecordListenedTrack } from './useRecordListenedTrack'
+import { useStreamQualityCap } from './useStreamQualityCap'
 
 type UsePlayerControllerInput = {
   isExpanded: boolean
@@ -33,6 +34,7 @@ export const usePlayerController = ({
   const setVolume = usePlayerStore((state) => state.setVolume)
   const { currentTrack, playlist } = player
   const { data: artist } = useArtist(currentTrack?.artistId)
+  useStreamQualityCap()
   const trackLike = useTrackLike(currentTrack?.id)
   const floatingPlayer = useFloatingPlayerWindow(currentTrack?.title)
   const audio = useAudioPlayer()
