@@ -68,6 +68,25 @@ type UseChartsInput = {
   genre?: string
 }
 
+/** Public playlists that contain an artist's tracks, most followed first. */
+export const useArtistPlaylists = (artistId: string, page = 1, limit = 12) =>
+  useQuery({
+    enabled: Boolean(artistId),
+    queryKey: apiQueryKeys.discovery.artistPlaylists(artistId, page, limit),
+    queryFn: async () => {
+      const { data, response } = await clientFetchClient.GET(
+        '/api/v1/artists/{id}/playlists',
+        { params: { path: { id: artistId }, query: { page, limit } } },
+      )
+      ensureOkResponse(
+        response,
+        'Failed to load playlists featuring the artist',
+      )
+      return categoryPlaylistsSchema.parse(data)
+    },
+    staleTime: 5 * 60 * 1000,
+  })
+
 /** The tracks chart, ranked by real listening (`GET /charts/tracks`). */
 export const useCharts = ({
   scope = 'global',
