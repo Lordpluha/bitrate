@@ -9,7 +9,7 @@ export const Footer = ({ className }: FooterProps) => (
   <div className={className}>
     <div className="bg-background-secondary pt-12 pb-4">
       <div className="container">
-        <LegalFooter leading={<Logo />} />
+        <LegalFooter className="border-t-0 pt-0" leading={<Logo />} />
       </div>
     </div>
   </div>
