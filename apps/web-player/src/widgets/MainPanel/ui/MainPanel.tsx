@@ -2,13 +2,13 @@
 
 import { Typography } from '@bitrate/ui-react'
 import { useAuth } from '@shared/hooks'
+import { LegalFooter } from '@shared/ui'
 import { useState } from 'react'
 import { useI18n } from '@/shared/i18n'
 import {
   type HomeTabId,
   homeTabs,
 } from '@/widgets/MainPanel/model/mainPanel.constants'
-import { Footer } from './Footer'
 import { LibraryQuickGrid } from './LibraryQuickGrid'
 import { PodcastsPanel } from './PodcastsPanel'
 import { PopularArtists } from './PopularArtists'
@@ -58,7 +58,7 @@ export const MainPanel = () => {
           ) : (
             <PodcastsPanel />
           )}
-          <Footer />
+          <LegalFooter className="mt-12 sm:mt-16" />
         </div>
       </div>
     </div>

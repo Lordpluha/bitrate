@@ -8,12 +8,12 @@ import { getTrackById } from '@/entities/Track'
 import { useFollowedUsers } from '@/entities/User'
 import { showApiErrorToast } from '@/shared/api/feedback'
 import { useAuth } from '@/shared/hooks'
+import { LegalFooter } from '@/shared/ui'
 import { getUserAvatarUrl } from '@/shared/utils/mediaUrl'
 import type { ProfileTrack } from '@/views/Profile/model/profile.types'
 import { ProfileActions } from '@/views/Profile/ui/ProfileActions'
 import { ProfileArtistsSection } from '@/views/Profile/ui/ProfileArtistsSection'
 import { ProfileFollowingUsersSection } from '@/views/Profile/ui/ProfileFollowingUsersSection'
-import { ProfileFooter } from '@/views/Profile/ui/ProfileFooter'
 import { ProfileHeader } from '@/views/Profile/ui/ProfileHeader'
 import { ProfilePlaylistsSection } from '@/views/Profile/ui/ProfilePlaylistsSection'
 import { ProfileTracksSection } from '@/views/Profile/ui/ProfileTracksSection'
@@ -99,7 +99,7 @@ export const ProfilePage = () => {
           isPending={areFollowedUsersPending}
           users={followedUsers}
         />
-        <ProfileFooter />
+        <LegalFooter className="mt-28" />
       </section>
     </div>
   )

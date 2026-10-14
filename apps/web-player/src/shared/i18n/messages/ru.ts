@@ -137,7 +137,6 @@ export const ru = {
   'main.madeFor': 'Создано для',
   'main.newAlbums': 'Новые альбомы',
   'main.noAlbums': 'Альбомы не найдены',
-  'main.noArtists': 'Исполнители не найдены',
   'main.noPlaylists': 'Плейлисты не найдены',
   'main.popularArtists': 'Популярные исполнители',
   'main.popularPlaylists': 'Популярные плейлисты',
