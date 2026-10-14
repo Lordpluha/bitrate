@@ -2,7 +2,7 @@
 
 Date: 2026-10-14
 
-Status: Approved — the user confirmed the plan on 2026-10-14 ("Подтверждаю, начинай реализацию"); implementation in progress.
+Status: Implemented — the user confirmed the plan on 2026-10-14 ("Подтверждаю, начинай реализацию"); built on `design/web-player-restructure`.
 
 ## Problem
 
@@ -100,16 +100,33 @@ fails on drift.
 
 ## Acceptance criteria
 
-- [ ] No production file under `apps/web-player/src` contains hardcoded catalogue content or a
+- [x] No production file under `apps/web-player/src` contains hardcoded catalogue content or a
       control without a handler. An audit grep returns no hits outside UI config.
-- [ ] Every new endpoint has Jest unit and integration specs: auth, pagination, deleted or private
+- [x] Every new endpoint has Jest unit and integration specs: auth, pagination, deleted or private
       rows excluded, privacy settings applied.
-- [ ] Rankings ("popular", "top", monthly listeners) change when `ListeningHistory` changes.
+- [x] Rankings ("popular", "top", monthly listeners) change when `ListeningHistory` changes.
 - [ ] Likes for albums and playlists survive a new browser profile.
 - [ ] A queue started in one browser continues in another after sign-in.
-- [ ] A FOLLOW and a NEW_RELEASE notification reach the bell.
-- [ ] Contracts are regenerated without drift; web-player type checks, unit, integration and the
+- [x] A FOLLOW and a NEW_RELEASE notification reach the bell.
+- [x] Contracts are regenerated without drift; web-player type checks, unit, integration and the
       affected e2e/screenshot specs pass.
+
+## Results (2026-10-14)
+
+- **API:** every endpoint in the table is built with unit and integration specs; rankings and
+  monthly listeners are recomputed from `ListeningHistory` every 15 minutes by a BullMQ job;
+  FOLLOW and NEW_RELEASE notifications are produced through the `notifications` queue.
+- **Contracts:** regenerated from the running API; 8 routes added, none removed.
+- **Web player:** all 24 audit items are either wired to the API or removed. Notable choices:
+  - liked playlists from the server carry no track count, so the library shows none for them;
+  - notifications link to the follower's profile or the artist (there is no track page);
+  - Bitrate Connect saves the playing list (at most 500 ids, the window holding the current
+    track) and restores it only into an empty player, paused;
+  - the quality cap applies from the next track; a rendition pinned by hand still wins;
+  - notification titles and bodies are the server's English copy.
+- **Not verified here:** the two cross-browser criteria (likes on a new profile, a queue
+  continuing in another browser) were checked through unit tests of the sync logic, not by a
+  manual two-browser run.
 
 ## Risks
 
