@@ -58,6 +58,11 @@ export const PlaylistActionBar = ({
             {menus.isMoreOpen && (
               <PlaylistMoreMenu
                 canEdit={details.isOwner}
+                hasTracks={details.tracksCount > 0}
+                onAddToQueue={() => {
+                  playback.handleAddToQueue()
+                  menus.closeMoreMenu()
+                }}
                 onCopyLink={() => void menus.copyLink()}
                 onDelete={onDelete}
                 onEdit={() => {
