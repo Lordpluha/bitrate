@@ -48,4 +48,5 @@ export const subscriptionSchema = z.object({
   updatedAt: z.coerce.date().optional(),
   userId: z.string(),
 })
+export type NotificationResponse = z.infer<typeof notificationSchema>
 export type UpdateMeSettings = z.infer<typeof updateMeSettingsSchema>

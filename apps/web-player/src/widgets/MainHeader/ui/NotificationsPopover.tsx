@@ -7,22 +7,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@bitrate/ui-react'
-import {
-  useNotifications,
-  useReadAllNotifications,
-  useReadNotification,
-} from '@/entities/Me'
+import { useNotifications, useReadAllNotifications } from '@/entities/Me'
 import { showApiErrorToast } from '@/shared/api/feedback'
 import { Z_INDEX_CLASS } from '@/shared/constants'
-
-const notificationDateFormatter = new Intl.DateTimeFormat(undefined, {
-  day: 'numeric',
-  month: 'short',
-})
+import { NotificationItem } from './NotificationItem'
 
 export const NotificationsPopover = () => {
   const { data, isError, isPending } = useNotifications(1, 20)
-  const readNotification = useReadNotification()
   const readAll = useReadAllNotifications()
 
   const markAllAsRead = () => {
@@ -86,36 +77,10 @@ export const NotificationsPopover = () => {
             </p>
           ) : data?.data.length ? (
             data.data.map((notification) => (
-              <button
-                className={cn(
-                  'relative block w-full rounded px-3 py-3 text-left transition-colors hover:bg-surface-hover',
-                  !notification.readAt && 'bg-white/5',
-                )}
+              <NotificationItem
                 key={notification.id}
-                onClick={() => {
-                  if (!notification.readAt) {
-                    readNotification.mutate(notification.id)
-                  }
-                }}
-                type="button"
-              >
-                <span className="flex items-start justify-between gap-3">
-                  <span className="min-w-0">
-                    <span className="block text-sm font-bold">
-                      {notification.title}
-                    </span>
-                    <span className="mt-1 block text-xs leading-5 text-text-subdued">
-                      {notification.body}
-                    </span>
-                  </span>
-                  <span className="shrink-0 text-xs text-text-subdued">
-                    {notificationDateFormatter.format(notification.createdAt)}
-                  </span>
-                </span>
-                {!notification.readAt && (
-                  <span className="absolute bottom-3 right-3 h-2 w-2 rounded-full bg-primary" />
-                )}
-              </button>
+                notification={notification}
+              />
             ))
           ) : (
             <p className="px-3 py-8 text-center text-sm text-text-subdued">

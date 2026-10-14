@@ -10,6 +10,7 @@ export const ru = {
   'common.loggingOut': 'Выходим…',
   'profile.updates': 'Обновления',
   'profile.caughtUp': 'Вы всё просмотрели',
+  'profile.updatesUnavailable': 'Обновления сейчас недоступны.',
   'profile.updatesDescription':
     'Здесь появятся новости о подписчиках, плейлистах, событиях и не только.',
   'common.all': 'Все',

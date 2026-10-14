@@ -8,9 +8,9 @@ import {
   useAudioPlayer,
   usePlayerStore,
 } from '@entities/Player'
+import { useTrackLike } from '@entities/Track'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import { useEffect } from 'react'
-import { useCurrentTrackLike } from './useCurrentTrackLike'
 import { useFloatingPlayerWindow } from './useFloatingPlayerWindow'
 import { usePlayerHotkeys } from './usePlayerHotkeys'
 import { usePlayerSessionPersistence } from './usePlayerSessionPersistence'
@@ -33,7 +33,7 @@ export const usePlayerController = ({
   const setVolume = usePlayerStore((state) => state.setVolume)
   const { currentTrack, playlist } = player
   const { data: artist } = useArtist(currentTrack?.artistId)
-  const trackLike = useCurrentTrackLike(currentTrack?.id)
+  const trackLike = useTrackLike(currentTrack?.id)
   const floatingPlayer = useFloatingPlayerWindow(currentTrack?.title)
   const audio = useAudioPlayer()
   const toggleShuffle = usePlaylistShuffle({

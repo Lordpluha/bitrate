@@ -10,6 +10,7 @@ export const uk = {
   'common.loggingOut': 'Виходимо…',
   'profile.updates': 'Оновлення',
   'profile.caughtUp': 'Ви все переглянули',
+  'profile.updatesUnavailable': 'Оновлення зараз недоступні.',
   'profile.updatesDescription':
     'Тут з’являться новини про підписників, плейлисти, події та інше.',
   'common.all': 'Усе',

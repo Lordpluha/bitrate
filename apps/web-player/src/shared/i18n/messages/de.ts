@@ -10,6 +10,7 @@ export const de = {
   'common.loggingOut': 'Wird abgemeldet…',
   'profile.updates': 'Deine Neuigkeiten',
   'profile.caughtUp': 'Du bist auf dem neuesten Stand',
+  'profile.updatesUnavailable': 'Neuigkeiten sind gerade nicht verfügbar.',
   'profile.updatesDescription':
     'Hier erscheinen Neuigkeiten zu Follower:innen, Playlists, Events und mehr.',
   'common.all': 'Alle',

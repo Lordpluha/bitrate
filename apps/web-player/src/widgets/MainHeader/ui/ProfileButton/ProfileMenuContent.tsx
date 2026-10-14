@@ -3,7 +3,12 @@
 import { ROUTES } from '@shared/routes'
 import { Check } from 'lucide-react'
 import Link from 'next/link'
+import { useNotifications } from '@/entities/Me'
 import { useI18n } from '@/shared/i18n'
+import { NotificationItem } from '../NotificationItem'
+
+/** How many unread notifications the profile menu previews; the bell holds the full list. */
+const UPDATES_PREVIEW_LIMIT = 3
 
 type ProfileMenuContentProps = {
   isLogoutPending: boolean
@@ -15,6 +20,10 @@ export const ProfileMenuContent = ({
   onLogout,
 }: ProfileMenuContentProps) => {
   const { t } = useI18n()
+  const { data, isError, isPending } = useNotifications(1, 20)
+  const unread = (data?.data ?? [])
+    .filter((notification) => !notification.readAt)
+    .slice(0, UPDATES_PREVIEW_LIMIT)
 
   return (
     <>
@@ -37,13 +46,38 @@ export const ProfileMenuContent = ({
         <h3 className="text-base font-bold text-text">
           {t('profile.updates')}
         </h3>
-        <div className="grid justify-items-center py-7 text-center">
-          <Check aria-hidden="true" className="mb-3 text-text" size={36} />
-          <p className="font-bold text-text">{t('profile.caughtUp')}</p>
-          <p className="mt-2 max-w-60 text-xs leading-5 text-text-subdued">
-            {t('profile.updatesDescription')}
+        {isPending ? (
+          <p
+            className="py-7 text-center text-sm text-text-subdued"
+            role="status"
+          >
+            {t('common.loading')}
           </p>
-        </div>
+        ) : isError ? (
+          <p
+            className="py-7 text-center text-sm text-text-subdued"
+            role="status"
+          >
+            {t('profile.updatesUnavailable')}
+          </p>
+        ) : unread.length > 0 ? (
+          <div className="-mx-3 mt-2 grid gap-1">
+            {unread.map((notification) => (
+              <NotificationItem
+                key={notification.id}
+                notification={notification}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="grid justify-items-center py-7 text-center">
+            <Check aria-hidden="true" className="mb-3 text-text" size={36} />
+            <p className="font-bold text-text">{t('profile.caughtUp')}</p>
+            <p className="mt-2 max-w-60 text-xs leading-5 text-text-subdued">
+              {t('profile.updatesDescription')}
+            </p>
+          </div>
+        )}
       </section>
     </>
   )

@@ -7,8 +7,11 @@ import {
   selectCurrentTrack,
   usePlayerStore,
 } from '@entities/Player'
+import { useTrackLike } from '@entities/Track'
+import { showApiErrorToast } from '@shared/api/feedback'
 import { ROUTES } from '@shared/routes'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
+import { Heart } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -21,6 +24,7 @@ export const CurrentPlaylist = ({ onCollapse }: CurrentPlaylistProps) => {
   const playlistName = usePlayerStore(selectCurrentPlaylistName)
   const { data: artist } = useArtist(currentTrack?.artistId)
   const artistName = artist?.username || 'Unknown Artist'
+  const { isLiked, isPending, toggleLike } = useTrackLike(currentTrack?.id)
 
   if (!currentTrack) {
     return null
@@ -68,7 +72,28 @@ export const CurrentPlaylist = ({ onCollapse }: CurrentPlaylistProps) => {
             >
               {artistName}
             </Link>
-            <SavedSongIcon />
+            <button
+              aria-label={
+                isLiked
+                  ? `Remove ${currentTrack.title} from Liked Songs`
+                  : `Save ${currentTrack.title} to Liked Songs`
+              }
+              aria-pressed={isLiked}
+              className="shrink-0 rounded-full p-1 text-text-subdued transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text disabled:opacity-60"
+              disabled={isPending}
+              onClick={() =>
+                void toggleLike().catch((error: unknown) =>
+                  showApiErrorToast(error, 'Unable to update Liked Songs.'),
+                )
+              }
+              type="button"
+            >
+              {isLiked ? (
+                <SavedSongIcon />
+              ) : (
+                <Heart aria-hidden="true" size={18} />
+              )}
+            </button>
           </div>
         </div>
       </div>

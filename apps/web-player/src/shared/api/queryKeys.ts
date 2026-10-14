@@ -62,6 +62,7 @@ export const apiQueryKeys = {
     all: ['me'] as const,
     notifications: (page: number, limit: number) =>
       ['me', 'notifications', { page, limit }] as const,
+    playerDevices: ['me', 'player', 'devices'] as const,
     settings: ['me', 'settings'] as const,
     subscription: ['me', 'subscription'] as const,
   },
@@ -107,5 +108,6 @@ export const apiQueryKeys = {
     search: (params: { username: string; page?: number; limit?: number }) =>
       ['users', 'search', params] as const,
     following: ['users', 'following'] as const,
+    followingActivity: ['users', 'following', 'activity'] as const,
   },
 } as const

@@ -7,6 +7,7 @@ import type { PlayerState } from './playerStore.types'
 export type {
   PlayerSnapshot,
   PlayerState,
+  PlayerTrack,
   RepeatMode,
 } from './playerStore.types'
 export {
