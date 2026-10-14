@@ -5,6 +5,7 @@ import { clientFetchClient } from '@/shared/api/client'
 import { ensureOkResponse } from '@/shared/api/errors'
 import { apiQueryKeys } from '@/shared/api/queryKeys'
 import {
+  artistChartsSchema,
   browseCategoriesSchema,
   categoryPlaylistsSchema,
   chartsSchema,
@@ -58,21 +59,51 @@ export const useRecommendationsFeed = () =>
     staleTime: 60 * 1000,
   })
 
-export const useCharts = (
-  scope: ChartScope = 'global',
+type UseChartsInput = {
+  scope?: ChartScope
+  page?: number
+  limit?: number
+  country?: string
+  /** Browse category slug: only tracks in that genre. */
+  genre?: string
+}
+
+/** The tracks chart, ranked by real listening (`GET /charts/tracks`). */
+export const useCharts = ({
+  scope = 'global',
   page = 1,
   limit = 20,
-  country?: string,
-) =>
+  country,
+  genre,
+}: UseChartsInput = {}) =>
   useQuery({
-    queryKey: apiQueryKeys.discovery.charts(scope, country, page, limit),
+    queryKey: apiQueryKeys.discovery.charts(scope, country, page, limit, genre),
     queryFn: async () => {
       const { data, response } = await clientFetchClient.GET(
         '/api/v1/charts/tracks',
-        { params: { query: { country, limit, page, scope } } },
+        { params: { query: { country, genre, limit, page, scope } } },
       )
       ensureOkResponse(response, 'Failed to load charts')
       return chartsSchema.parse(data)
+    },
+    staleTime: 5 * 60 * 1000,
+  })
+
+/** Artists ranked by distinct listeners (`GET /charts/artists`). */
+export const useArtistCharts = ({
+  scope = 'global',
+  page = 1,
+  limit = 20,
+}: Omit<UseChartsInput, 'country' | 'genre'> = {}) =>
+  useQuery({
+    queryKey: apiQueryKeys.discovery.artistCharts(scope, page, limit),
+    queryFn: async () => {
+      const { data, response } = await clientFetchClient.GET(
+        '/api/v1/charts/artists',
+        { params: { query: { limit, page, scope } } },
+      )
+      ensureOkResponse(response, 'Failed to load the artists chart')
+      return artistChartsSchema.parse(data)
     },
     staleTime: 5 * 60 * 1000,
   })

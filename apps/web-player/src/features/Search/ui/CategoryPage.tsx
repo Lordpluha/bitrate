@@ -4,10 +4,8 @@ import {
   type BrowseCategoryResponse,
   useCategoryPlaylists,
   useCharts,
-  useRecommendationsFeed,
 } from '@/entities/Discovery'
 import {
-  mapDiscoveryFeedItem,
   mapDiscoveryPlaylist,
   mapDiscoveryTrack,
 } from '@/features/Search/lib/mapDiscoveryFeed'
@@ -26,14 +24,10 @@ const CATEGORY_SECTION_SKELETON_IDS = [
 
 export const CategoryPage = ({ category }: CategoryPageProps) => {
   const playlistsQuery = useCategoryPlaylists(category.slug, 1, 20)
-  const chartsQuery = useCharts('global', 1, 20)
-  const feedQuery = useRecommendationsFeed()
+  /* this genre's own chart; the category shows nothing that is not about it */
+  const chartsQuery = useCharts({ genre: category.slug, limit: 20 })
 
-  if (
-    playlistsQuery.isPending ||
-    chartsQuery.isPending ||
-    feedQuery.isPending
-  ) {
+  if (playlistsQuery.isPending || chartsQuery.isPending) {
     return (
       <div
         aria-label={`Loading ${category.name}`}
@@ -50,16 +44,12 @@ export const CategoryPage = ({ category }: CategoryPageProps) => {
     )
   }
 
-  if (playlistsQuery.isError || chartsQuery.isError || feedQuery.isError) {
+  if (playlistsQuery.isError || chartsQuery.isError) {
     return (
       <ErrorState
         description="This category could not be loaded from the server."
         onRetry={() => {
-          void Promise.all([
-            playlistsQuery.refetch(),
-            chartsQuery.refetch(),
-            feedQuery.refetch(),
-          ])
+          void Promise.all([playlistsQuery.refetch(), chartsQuery.refetch()])
         }}
         title={`${category.name} is unavailable`}
       />
@@ -68,10 +58,6 @@ export const CategoryPage = ({ category }: CategoryPageProps) => {
 
   const playlistItems = playlistsQuery.data.data.map(mapDiscoveryPlaylist)
   const chartItems = chartsQuery.data.data.map(mapDiscoveryTrack)
-  const feedSections = feedQuery.data.sections.map((section) => ({
-    ...section,
-    items: section.items.map((item) => mapDiscoveryFeedItem(section.id, item)),
-  }))
   const color = category.color ?? 'var(--color-surface)'
 
   return (
@@ -96,14 +82,13 @@ export const CategoryPage = ({ category }: CategoryPageProps) => {
 
       <div className="mx-auto w-full max-w-290 space-y-8 px-4 py-6 sm:space-y-10 sm:px-6 sm:py-8">
         <MediaRow items={playlistItems} title={`Popular ${category.name}`} />
-        {feedSections.map((section) => (
-          <MediaRow
-            items={section.items}
-            key={section.id}
-            title={section.title}
-          />
-        ))}
-        <MediaRow items={chartItems} title="Featured charts" />
+        <MediaRow items={chartItems} title={`Top ${category.name} tracks`} />
+        {playlistItems.length === 0 && chartItems.length === 0 ? (
+          <p className="py-10 text-center text-text-subdued">
+            Nothing in {category.name} yet. Playlists and tracks appear here as
+            people add and play them.
+          </p>
+        ) : null}
       </div>
     </div>
   )

@@ -1,9 +1,3 @@
-export type BrowseCategory = {
-  color: string
-  image: string
-  title: string
-}
-
 export type MediaCardItem = {
   /**
    * Stable entity id. Required because titles are not unique — a user can own

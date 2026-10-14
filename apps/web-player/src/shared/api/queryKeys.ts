@@ -29,7 +29,11 @@ export const apiQueryKeys = {
       country: string | undefined,
       page: number,
       limit: number,
-    ) => ['discovery', 'charts', { scope, country, page, limit }] as const,
+      genre?: string,
+    ) =>
+      ['discovery', 'charts', { scope, country, page, limit, genre }] as const,
+    artistCharts: (scope: string, page: number, limit: number) =>
+      ['discovery', 'artist-charts', { scope, page, limit }] as const,
     feed: ['discovery', 'feed'] as const,
     topArtists: (range: string, page: number, limit: number) =>
       ['discovery', 'top-artists', { range, page, limit }] as const,
