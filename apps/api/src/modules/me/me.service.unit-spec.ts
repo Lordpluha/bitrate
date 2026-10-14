@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from '@jest/globals'
 import { ConflictException, NotFoundException } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
+import { UpdateSettingsSchema } from './dtos'
 import { MeService } from './me.service'
 
 describe('MeService device activation', () => {
@@ -78,5 +79,45 @@ describe('MeService device activation', () => {
       }),
     ).rejects.toThrow(ConflictException)
     expect(prisma.$transaction).toHaveBeenCalledTimes(3)
+  })
+})
+
+describe('MeService settings', () => {
+  let prisma: PrismaMock
+  let service: MeService
+
+  beforeEach(() => {
+    resetPrismaMock()
+    prisma = prismaMock
+    service = new MeService(prisma)
+  })
+
+  it('creates privacy settings open by default on first read', async () => {
+    prisma.userSettings.upsert.mockResolvedValue({} as never)
+
+    await service.getSettings('user-1')
+
+    expect(prisma.userSettings.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        create: expect.objectContaining({
+          userId: 'user-1',
+          showListeningActivity: true,
+          followersVisible: true,
+          publicPlaylistsOnProfile: true,
+          privateSession: false,
+        }),
+      }),
+    )
+  })
+
+  it('accepts the privacy toggles and rejects non-boolean values', () => {
+    expect(
+      UpdateSettingsSchema.safeParse({
+        showListeningActivity: false,
+        followersVisible: false,
+        publicPlaylistsOnProfile: false,
+      }).success,
+    ).toBe(true)
+    expect(UpdateSettingsSchema.safeParse({ followersVisible: 'no' }).success).toBe(false)
   })
 })

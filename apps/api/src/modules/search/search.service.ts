@@ -1,4 +1,5 @@
 import { normalizePagination } from '@common/pagination'
+import { readUserSettings } from '@common/user-settings'
 import { NS, TTL } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
@@ -74,7 +75,13 @@ export class SearchService {
   async search(query: string, options: Partial<SearchOptions> = {}) {
     const types = options.types ?? ALL_SEARCH_TYPES
     const pagination = normalizePagination(options.page ?? 1, options.limit ?? 10)
-    const filters = this.toFilters(options)
+    const filters = {
+      ...this.toFilters(options),
+      /* a user who turned explicit content off never sees explicit tracks */
+      ...(options.userId && !(await readUserSettings(this.prisma, options.userId)).explicitContent
+        ? { hideExplicit: true }
+        : {}),
+    }
     const key = JSON.stringify({
       query: query.toLowerCase(),
       types: [...types].sort(),

@@ -2,7 +2,8 @@ import { removePublicImage, storePublicImage } from '@infra/storage/public-image
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
 import { SafeUserEntity } from '@modules/users'
-import { UserAuth } from '@modules/users-auth/users-auth.guard'
+import type { OptionalUserAuthRequest } from '@modules/users-auth/types'
+import { OptionalUserAuth, UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
   BadRequestException,
   Body,
@@ -29,7 +30,9 @@ import { ZodValidationPipe } from 'nestjs-zod'
 import * as z from 'zod'
 import {
   FollowUserSwagger,
+  GetFollowingActivitySwagger,
   GetFollowingSwagger,
+  GetFollowListSwagger,
   GetUserByUsernameSwagger,
   GetUserSwagger,
   GetUsersSwagger,
@@ -161,5 +164,40 @@ export class UsersController {
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
     return this.usersService.getFollowing((req.user as UserEntity).id, page, limit)
+  }
+
+  /** What the people the caller follows last played. Declared after `me/following`, before `:id/…`. */
+  @GetFollowingActivitySwagger()
+  @UserAuth()
+  @Get('me/following/activity')
+  followingActivity(
+    @Req() req: Request,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+  ) {
+    return this.usersService.getFollowingActivity((req.user as UserEntity).id, limit)
+  }
+
+  @GetFollowListSwagger('followers')
+  @OptionalUserAuth()
+  @Get(':id/followers')
+  followers(
+    @Req() req: OptionalUserAuthRequest,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+  ) {
+    return this.usersService.listFollows('followers', id, req.user?.id, page, limit)
+  }
+
+  @GetFollowListSwagger('following')
+  @OptionalUserAuth()
+  @Get(':id/following')
+  followingOf(
+    @Req() req: OptionalUserAuthRequest,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+  ) {
+    return this.usersService.listFollows('following', id, req.user?.id, page, limit)
   }
 }

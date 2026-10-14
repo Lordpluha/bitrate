@@ -171,4 +171,37 @@ describe('DiscoveryService public artist projections', () => {
       select: PUBLIC_ARTIST_SELECT,
     })
   })
+
+  describe('feed explicit content', () => {
+    const stubFeedQueries = () => {
+      prisma.queryRaw.mockResolvedValue([] as never)
+      prisma.track.findMany.mockResolvedValue([])
+      prisma.album.findMany.mockResolvedValue([])
+      prisma.playlist.findMany.mockResolvedValue([])
+      jest
+        .spyOn(PersonalTopService.prototype, 'getTopTracks')
+        .mockResolvedValue({ data: [] } as never)
+    }
+
+    it('drops explicit tracks for a user who turned explicit content off', async () => {
+      stubFeedQueries()
+      prisma.userSettings.findUnique.mockResolvedValue({ explicitContent: false } as never)
+
+      await service.getFeed('user-1')
+
+      expect(prisma.track.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({ where: expect.objectContaining({ explicit: false }) }),
+      )
+    })
+
+    it('keeps explicit tracks for guests', async () => {
+      stubFeedQueries()
+
+      await service.getFeed()
+
+      const where = prisma.track.findMany.mock.calls[0]?.[0]?.where
+      expect(where).not.toHaveProperty('explicit')
+      expect(prisma.userSettings.findUnique).not.toHaveBeenCalled()
+    })
+  })
 })

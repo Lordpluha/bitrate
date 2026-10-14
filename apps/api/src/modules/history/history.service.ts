@@ -1,4 +1,5 @@
 import { normalizePagination } from '@common/pagination'
+import { readUserSettings } from '@common/user-settings'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { UserEntity } from '@modules/users'
 import { Injectable } from '@nestjs/common'
@@ -20,12 +21,18 @@ export class HistoryService {
   /** Creates a new instance. */
   constructor(private readonly prisma: PrismaService) {}
 
-  /** Runs the record operation. */
+  /**
+   * Records a listen. During a private session nothing is stored, so the listen never reaches
+   * history, recommendations, charts, play counts or friend activity.
+   */
   async record(userId: UserEntity['id'], trackId: string) {
-    return await this.prisma.listeningHistory.create({
+    const { privateSession } = await readUserSettings(this.prisma, userId)
+    if (privateSession) return { recorded: false as const, id: null, listenedAt: null }
+    const entry = await this.prisma.listeningHistory.create({
       data: { userId, trackId },
       select: { id: true, listenedAt: true },
     })
+    return { recorded: true as const, ...entry }
   }
 
   /** Runs the get history operation. */

@@ -1,4 +1,5 @@
 import { normalizePagination } from '@common/pagination'
+import { readUserSettings } from '@common/user-settings'
 import { NS, TTL } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
@@ -65,13 +66,18 @@ export class DiscoveryService {
     })
   }
 
-  getFeed(userId?: string) {
-    const key = userId ?? 'anonymous'
+  async getFeed(userId?: string) {
+    /* a user who turned explicit content off gets no explicit tracks; part of the cache key */
+    const hideExplicit = userId
+      ? !(await readUserSettings(this.prisma, userId)).explicitContent
+      : false
+    const key = `${userId ?? 'anonymous'}:${hideExplicit ? 'clean' : 'all'}`
     return this.cache.wrap(NS.RECOMMENDATIONS, `feed:${key}`, TTL.SHORT, async () => {
       const preferredGenreIds = userId ? await this.getPreferredGenreIds(userId) : []
       const trackWhere = {
         processingStatus: 'READY' as const,
         deletedAt: null,
+        ...(hideExplicit ? { explicit: false } : {}),
         ...(preferredGenreIds.length > 0
           ? { genres: { some: { genreId: { in: preferredGenreIds } } } }
           : {}),
