@@ -311,7 +311,6 @@ export const uk: LandingCatalog = {
   'chrome.dark': 'Темна',
   'chrome.light': 'Світла',
   'chrome.dim': 'Приглушена',
-  'chrome.play_signal': 'Увімкнути сигнал',
   'chrome.scenes': 'Сцени',
   'chrome.go_to': 'Перейти до: {scene}',
   'chrome.tuning_in': 'НАЛАШТОВУЄМОСЬ…',
@@ -352,8 +351,6 @@ export const uk: LandingCatalog = {
   'assistant.a_default':
     'Це демоасистент із кількома заготовленими відповідями. Спробуйте запитати, що таке Bitrate, як працюють Jam або чи це безкоштовно.',
   'status.scope': 'API · вебплеєр · портал артистів',
-  'chrome.pause_signal': 'Зупинити сигнал',
-  'chrome.sound_unavailable': 'Звук недоступний',
   'team.role_author': 'Автор',
   'team.role_contributor': "Контриб'ютор",
   'team.bio_author': 'Автор і мейнтейнер Bitrate.',

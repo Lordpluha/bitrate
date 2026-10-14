@@ -8,7 +8,6 @@ import { mountHeadings } from './headings'
 import { playIntro } from './intro'
 import { mountPointer } from './pointer'
 import { mountScenes } from './scenes'
-import { mountSound } from './sound'
 import { createStage, hasWebGL, type Stage } from './stage'
 import { mountTeam } from './team'
 
@@ -33,7 +32,7 @@ export const mountLanding = ({
     scenes: all({ root, selector: '.scene', type: HTMLElement }),
     copy,
     reduce: matchMedia('(prefers-reduced-motion: reduce)').matches,
-    state: { index: 0, animating: false, dragging: false, level: 0 },
+    state: { index: 0, animating: false, dragging: false },
     signal: controller.signal,
     onDispose: (fn) => {
       disposers.push(fn)
@@ -61,9 +60,8 @@ export const mountLanding = ({
 
   const headings = mountHeadings(ctx)
   const canvases = createCanvases(ctx)
-  const level = mountSound(ctx)
   mountPointer(ctx)
-  mountCursor({ ...ctx, level: () => ctx.state.level })
+  mountCursor(ctx)
   const resetTeam = mountTeam(ctx)
   const canvas = root.querySelector<HTMLCanvasElement>('#stage')
   const webgl = Boolean(canvas) && hasWebGL()
@@ -89,11 +87,8 @@ export const mountLanding = ({
   themeWatch.observe(html, { attributes: true, attributeFilter: ['class'] })
   ctx.onDispose(() => themeWatch.disconnect())
 
-  const tick = (t: number) => {
-    ctx.state.level = level()
-    canvases.drawSpecs({ t, level: ctx.state.level })
-  }
-  if (ctx.reduce) canvases.drawSpecs({ t: 0, level: 0 })
+  const tick = (t: number) => canvases.drawSpecs(t)
+  if (ctx.reduce) canvases.drawSpecs(0)
   else {
     gsap.ticker.add(tick)
     ctx.onDispose(() => gsap.ticker.remove(tick))

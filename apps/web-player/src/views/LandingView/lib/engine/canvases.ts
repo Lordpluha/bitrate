@@ -40,8 +40,8 @@ export const createCanvases = ({ root }: EngineContext) => {
     rest: tokenAlpha({ name: 'neutral-400', alpha: 0.45 }),
   }
 
-  /** Redraws the spectra of the scene on screen; `level` lifts them with the sound toggle. */
-  const drawSpecs = ({ t, level }: { t: number; level: number }) => {
+  /** Redraws the spectra of the scene on screen. */
+  const drawSpecs = (t: number) => {
     for (const s of specs) {
       if (!s.scene?.classList.contains('is-active')) continue
       const w = Math.round(s.c.clientWidth * RES)
@@ -57,7 +57,7 @@ export const createCanvases = ({ root }: EngineContext) => {
         const v =
           (Math.sin(t * 2.1 + i * 0.5) * 0.5 + 0.5) *
           (Math.sin(t * 1.3 + i * 0.19) * 0.35 + 0.65) *
-          (0.7 + level * 0.8)
+          0.7
         const bh = Math.max(2, v * h * (s.tall ? 0.9 : 0.85))
         s.ctx.fillStyle = s.tall
           ? ink.tall(0.15 + v * 0.45)

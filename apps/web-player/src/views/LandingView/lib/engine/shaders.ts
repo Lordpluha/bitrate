@@ -25,7 +25,7 @@ const SHAPES = `
       }`
 
 export const SURFACE_VERT = `${NOISE}${SHAPES}
-      uniform float uA, uB, uMix, uAmp, uTwist, uLevel, uPx;
+      uniform float uA, uB, uMix, uAmp, uTwist, uPx;
       varying vec3 vN; varying vec3 vW; varying float vD; varying vec2 vUv; varying float vBurst;
       vec3 morph(vec2 uv, float m){ return mix(shapeAt(uA, uv), shapeAt(uB, uv), m); }
       void main(){
@@ -36,7 +36,7 @@ export const SURFACE_VERT = `${NOISE}${SHAPES}
         vec3 n = length(cr) > 1e-9 ? normalize(cr) : normalize(p + vec3(1e-4));
         float burst = sin(m * PI);
         float nz = snoise(p * 1.4 + vec3(uTime * .32, uTime * .21, 0.0));
-        float d = nz * (uAmp + burst * .38 + uLevel * .55);
+        float d = nz * (uAmp + burst * .38);
         p += n * d;
         float ang = uTwist * p.y + burst * 1.4 * sin(uTime * .7);
         p.xz = mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * p.xz;
@@ -68,14 +68,14 @@ export const SKIN_FRAG = `
 
 /** The structured particle field: per-scene layouts in board pixels, morphed by uT. */
 export const FIELD_VERT = `
-        attribute vec3 aFrom; attribute vec3 aTo; attribute float aSeed; uniform float uT, uTime, uSize, uPulse; uniform vec4 uBoard; uniform vec2 uView; varying float vSeed;
+        attribute vec3 aFrom; attribute vec3 aTo; attribute float aSeed; uniform float uT, uTime, uSize; uniform vec4 uBoard; uniform vec2 uView; varying float vSeed;
         void main(){
           float t = smoothstep(0.0, 1.0, clamp(uT * 1.4 - aSeed * .4, 0.0, 1.0));
           vec3 b = mix(aFrom, aTo, t);
           float lift = sin(t * 3.14159) * 140.0 * (aSeed - .5);
           vec2 sp = uBoard.xy + (b.xy + vec2(lift, -abs(lift) * .6)) * uBoard.z;
           vec3 p = vec3((sp.x - uView.x * .5) * uBoard.w, -(sp.y - uView.y * .5) * uBoard.w, b.z * uBoard.z * uBoard.w);
-          p += vec3(sin(uTime * .6 + aSeed * 40.0), cos(uTime * .5 + aSeed * 30.0), 0.0) * (.012 + uPulse * .18);
+          p += vec3(sin(uTime * .6 + aSeed * 40.0), cos(uTime * .5 + aSeed * 30.0), 0.0) * .012;
           vSeed = aSeed;
           vec4 mv = modelViewMatrix * vec4(p, 1.0);
           gl_PointSize = uSize * (.35 + aSeed * .8) / -mv.z;

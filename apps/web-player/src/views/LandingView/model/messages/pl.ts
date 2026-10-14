@@ -312,7 +312,6 @@ export const pl: LandingCatalog = {
   'chrome.dark': 'Ciemny',
   'chrome.light': 'Jasny',
   'chrome.dim': 'Przyciemniony',
-  'chrome.play_signal': 'Włącz sygnał',
   'chrome.scenes': 'Sceny',
   'chrome.go_to': 'Przejdź do: {scene}',
   'chrome.tuning_in': 'DOSTRAJANIE…',
@@ -353,8 +352,6 @@ export const pl: LandingCatalog = {
   'assistant.a_default':
     'To asystent demo z kilkoma przygotowanymi odpowiedziami. Zapytaj, czym jest Bitrate, jak działają Jamy albo czy to za darmo.',
   'status.scope': 'API · odtwarzacz · portal artystów',
-  'chrome.pause_signal': 'Zatrzymaj sygnał',
-  'chrome.sound_unavailable': 'Dźwięk niedostępny',
   'team.role_author': 'Autor',
   'team.role_contributor': 'Współtwórca',
   'team.bio_author': 'Autor i opiekun Bitrate.',

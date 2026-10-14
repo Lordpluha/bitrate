@@ -204,7 +204,6 @@ export const createStage = async ({
     uMix: { value: 1 },
     uAmp: { value: 0.18 },
     uTwist: { value: 0 },
-    uLevel: { value: 0 },
     uPx: { value: 20 * renderer.getPixelRatio() },
     uCa: { value: color('purple-500') },
     uCb: { value: color('magenta-500') },
@@ -259,7 +258,6 @@ export const createStage = async ({
     uSize: { value: 32 * renderer.getPixelRatio() },
     uCol: { value: color('purple-400') },
     uCol2: { value: color('magenta-500') },
-    uPulse: { value: 0 },
     uBoard: { value: new THREE.Vector4(0, 0, 1, 0.01) },
     uView: { value: new THREE.Vector2(1, 1) },
   }
@@ -580,7 +578,7 @@ export const createStage = async ({
     }
   }
 
-  const tw = { amp: 0.2, level: 0 }
+  const tw = { amp: 0.2 }
   const rgb = (name: PaletteToken) => {
     const c = color(name)
     return { r: c.r, g: c.g, b: c.b }
@@ -620,11 +618,8 @@ export const createStage = async ({
     }
     timer.update(now)
     const t = timer.getElapsed()
-    tw.level += (state.level - tw.level) * 0.12
     U.uTime.value = t
     U.uAmp.value = tw.amp
-    U.uLevel.value = tw.level
-    fieldU.uPulse.value = tw.level
     if (cradle.visible) {
       updateCradle(t)
       placeCradle()
