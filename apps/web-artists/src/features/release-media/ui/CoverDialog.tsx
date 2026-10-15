@@ -1,4 +1,4 @@
-import { Button } from '@bitrate/ui-react'
+import { Button, cn } from '@bitrate/ui-react'
 import {
   COVER_ACCEPT,
   coverFileProblem,
@@ -9,7 +9,7 @@ import {
 } from '@entities/release'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { useEffect, useState } from 'react'
-import { MediaFilePicker, UploadProgress } from './MediaFilePicker'
+import { MediaFilePicker, UploadProgress, useFileDrop } from './MediaFilePicker'
 
 interface CoverDialogProps {
   artistId: string
@@ -47,6 +47,14 @@ export function CoverDialog({
 
   const shown =
     preview ?? (release.cover ? releaseCoverUrl(release.cover) : null)
+
+  const choose = (next: File | null) => {
+    setProblem(next ? coverFileProblem(next) : null)
+    upload.reset()
+    remove.reset()
+    setFile(next)
+  }
+  const drop = useFileDrop(pending, choose)
 
   const submit = async () => {
     if (!file) {
@@ -99,18 +107,26 @@ export function CoverDialog({
           void submit()
         }}
       >
-        <div className="flex justify-center">
+        <div className="flex justify-center" {...drop.handlers}>
           {shown ? (
             <img
               alt={
                 file ? 'Selected artwork preview' : `${release.title} artwork`
               }
-              className="aspect-square w-48 rounded-lg border border-border object-cover"
+              className={cn(
+                'aspect-square w-48 rounded-lg border border-border object-cover',
+                drop.over && 'border-accent',
+              )}
               src={shown}
             />
           ) : (
-            <div className="flex aspect-square w-48 items-center justify-center rounded-lg border border-dashed border-border text-sm text-text-secondary">
-              No artwork yet
+            <div
+              className={cn(
+                'flex aspect-square w-48 items-center justify-center rounded-lg border border-dashed border-border p-4 text-center text-sm text-text-secondary',
+                drop.over && 'border-accent',
+              )}
+            >
+              No artwork yet. Drop an image here.
             </div>
           )}
         </div>
@@ -120,12 +136,7 @@ export function CoverDialog({
           file={file}
           hint="Square JPEG, PNG or WebP, up to 20 MB. Stores ask for at least 3000 × 3000 px."
           label="Artwork image"
-          onChange={(next) => {
-            setProblem(next ? coverFileProblem(next) : null)
-            upload.reset()
-            remove.reset()
-            setFile(next)
-          }}
+          onChange={choose}
           problem={problem}
         />
         <UploadProgress fraction={progress} />

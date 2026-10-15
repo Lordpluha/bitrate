@@ -1,6 +1,38 @@
-import { Button } from '@bitrate/ui-react'
+import { Button, cn } from '@bitrate/ui-react'
 import { formatBytes } from '@entities/release'
-import { useId, useRef } from 'react'
+import { type DragEvent, useId, useRef, useState } from 'react'
+
+const carriesFiles = (event: DragEvent<HTMLElement>) =>
+  event.dataTransfer.types.includes('Files')
+
+/**
+ * Drag-and-drop of one file onto an element. A file drag is always caught, even while
+ * `disabled`, so a stray drop never makes the browser navigate away from an upload in progress.
+ */
+export function useFileDrop(disabled: boolean, onFile: (file: File) => void) {
+  const [over, setOver] = useState(false)
+  const handlers = {
+    onDragOver: (event: DragEvent<HTMLElement>) => {
+      if (!carriesFiles(event)) return
+      event.preventDefault()
+      event.dataTransfer.dropEffect = disabled ? 'none' : 'copy'
+      setOver(!disabled)
+    },
+    onDragLeave: (event: DragEvent<HTMLElement>) => {
+      const next = event.relatedTarget
+      if (next instanceof Node && event.currentTarget.contains(next)) return
+      setOver(false)
+    },
+    onDrop: (event: DragEvent<HTMLElement>) => {
+      if (!carriesFiles(event)) return
+      event.preventDefault()
+      setOver(false)
+      const file = event.dataTransfer.files[0]
+      if (file && !disabled) onFile(file)
+    },
+  }
+  return { over, handlers }
+}
 
 interface MediaFilePickerProps {
   label: string
@@ -24,8 +56,15 @@ export function MediaFilePicker({
 }: MediaFilePickerProps) {
   const id = useId()
   const input = useRef<HTMLInputElement>(null)
+  const drop = useFileDrop(disabled, onChange)
   return (
-    <div className="space-y-2">
+    <div
+      className={cn(
+        'space-y-2 rounded-lg',
+        drop.over && 'outline-2 outline-offset-4 outline-accent outline-dashed',
+      )}
+      {...drop.handlers}
+    >
       <label className="block text-sm font-medium" htmlFor={`${id}-file`}>
         {label}
       </label>
@@ -51,7 +90,9 @@ export function MediaFilePicker({
           {file ? 'Choose another file' : 'Choose file'}
         </Button>
         <span className="min-w-0 truncate text-sm text-text-secondary">
-          {file ? `${file.name} · ${formatBytes(file.size)}` : 'No file chosen'}
+          {file
+            ? `${file.name} · ${formatBytes(file.size)}`
+            : 'No file chosen, or drop a file here'}
         </span>
       </div>
       <p className="text-sm text-text-secondary" id={`${id}-hint`}>

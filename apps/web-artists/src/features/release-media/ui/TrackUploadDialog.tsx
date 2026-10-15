@@ -1,4 +1,4 @@
-import { Button, Input } from '@bitrate/ui-react'
+import { Button, cn, Input } from '@bitrate/ui-react'
 import {
   AUDIO_ACCEPT,
   audioFileProblem,
@@ -8,7 +8,7 @@ import {
 } from '@entities/release'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { useId, useState } from 'react'
-import { MediaFilePicker, UploadProgress } from './MediaFilePicker'
+import { MediaFilePicker, UploadProgress, useFileDrop } from './MediaFilePicker'
 
 const MAX_TITLE_LENGTH = 255
 
@@ -43,6 +43,17 @@ export function TrackUploadDialog({
   const [titleProblem, setTitleProblem] = useState<string | null>(null)
   const [progress, setProgress] = useState<number | null>(null)
   const pending = upload.isPending
+
+  const choose = (next: File | null) => {
+    setProblem(next ? audioFileProblem(next) : null)
+    upload.reset()
+    setFile(next)
+    if (next && !replacing && !titleTouched) {
+      setTitle(titleFromFileName(next.name))
+      setTitleProblem(null)
+    }
+  }
+  const drop = useFileDrop(pending, choose)
 
   const submit = async () => {
     if (!file) {
@@ -100,21 +111,22 @@ export function TrackUploadDialog({
               : `Add the master for ${existing?.title ?? 'this recording'}.`}
           </p>
         )}
+        <div
+          className={cn(
+            'flex min-h-24 items-center justify-center rounded-lg border border-dashed border-border p-4 text-center text-sm text-text-secondary',
+            drop.over && 'border-accent',
+          )}
+          {...drop.handlers}
+        >
+          {file ? file.name : 'Drop an audio file here'}
+        </div>
         <MediaFilePicker
           accept={AUDIO_ACCEPT}
           disabled={pending}
           file={file}
           hint="WAV or FLAC masters are preferred; MP3 and OGG are accepted. Up to 512 MB. The file stays private to your workspace."
           label="Audio file"
-          onChange={(next) => {
-            setProblem(next ? audioFileProblem(next) : null)
-            upload.reset()
-            setFile(next)
-            if (next && !replacing && !titleTouched) {
-              setTitle(titleFromFileName(next.name))
-              setTitleProblem(null)
-            }
-          }}
+          onChange={choose}
           problem={problem}
         />
         {!replacing && (
