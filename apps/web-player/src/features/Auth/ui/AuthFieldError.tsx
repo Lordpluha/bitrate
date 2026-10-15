@@ -16,7 +16,7 @@ export const AuthFieldError = ({
 }: AuthFieldErrorProps) => (
   <p
     className={cn(
-      'flex items-center gap-2 text-xs text-destructive',
+      'flex items-center gap-2 text-xs leading-[1.25] text-destructive',
       className,
     )}
     id={id}

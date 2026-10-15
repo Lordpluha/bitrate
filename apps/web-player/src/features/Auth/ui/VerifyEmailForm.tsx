@@ -9,6 +9,7 @@ import { ROUTES } from '@/shared/routes'
 import { AuthHeading } from './AuthHeading'
 import { AuthTextInput } from './AuthTextInput'
 import { AuthTextLink } from './AuthTextLink'
+import { AUTH_BUTTON_CLASS } from './authStyles'
 
 export const VerifyEmailForm = () => {
   const searchParams = useSearchParams()
@@ -60,7 +61,7 @@ export const VerifyEmailForm = () => {
 
       {token ? (
         <Button
-          className="w-full font-medium"
+          className={AUTH_BUTTON_CLASS}
           disabled={verifyEmail.isPending}
           onClick={() => void handleVerify()}
           type="button"
@@ -82,7 +83,7 @@ export const VerifyEmailForm = () => {
           value={email}
         />
         <Button
-          className="w-full font-medium"
+          className={AUTH_BUTTON_CLASS}
           disabled={resendVerification.isPending}
           type="submit"
           variant="secondary"

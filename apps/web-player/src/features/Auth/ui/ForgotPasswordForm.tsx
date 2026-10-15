@@ -11,6 +11,7 @@ import { AuthAlert } from './AuthAlert'
 import { AuthHeading } from './AuthHeading'
 import { AuthTextInput } from './AuthTextInput'
 import { AuthTextLink } from './AuthTextLink'
+import { AUTH_BUTTON_CLASS } from './authStyles'
 
 const emailSchema = z.email()
 
@@ -41,7 +42,11 @@ export const ForgotPasswordForm = () => {
   return (
     <>
       <AuthHeading
-        description="Enter the email associated with your account."
+        description={
+          emailError
+            ? undefined
+            : 'Enter the email associated with your account.'
+        }
         title="Reset your password"
       />
       {isSent ? (
@@ -49,7 +54,7 @@ export const ForgotPasswordForm = () => {
           <AuthAlert title="Check your inbox">
             If an account exists for this email, a reset link has been sent.
           </AuthAlert>
-          <Button asChild className="w-full font-medium" variant="outline">
+          <Button asChild className={AUTH_BUTTON_CLASS} variant="outline">
             <Link href={ROUTES.auth.login}>Back to login</Link>
           </Button>
         </>
@@ -75,7 +80,7 @@ export const ForgotPasswordForm = () => {
               value={email}
             />
             <Button
-              className="w-full font-medium"
+              className={AUTH_BUTTON_CLASS}
               disabled={forgotPassword.isPending}
               type="submit"
               variant="primary"
@@ -83,7 +88,9 @@ export const ForgotPasswordForm = () => {
               {forgotPassword.isPending ? 'Sending...' : 'Send reset link'}
             </Button>
           </form>
-          <AuthTextLink href={ROUTES.auth.login}>Back to login</AuthTextLink>
+          {emailError ? null : (
+            <AuthTextLink href={ROUTES.auth.login}>Back to login</AuthTextLink>
+          )}
         </>
       )}
     </>

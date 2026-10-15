@@ -6,6 +6,8 @@ import { LegalConsentLabel } from './LegalConsentLabel'
 
 type LegalAcceptanceFieldProps = {
   control: Control<RegistrationFormData>
+  /** The form lists its messages elsewhere. */
+  hideError?: boolean
   id: string
 }
 
@@ -15,6 +17,7 @@ type LegalAcceptanceFieldProps = {
  */
 export const LegalAcceptanceField = ({
   control,
+  hideError = false,
   id,
 }: LegalAcceptanceFieldProps) => (
   <FormField
@@ -33,7 +36,7 @@ export const LegalAcceptanceField = ({
           />
           <LegalConsentLabel id={id} />
         </div>
-        {fieldState.error?.message ? (
+        {!hideError && fieldState.error?.message ? (
           <AuthFieldError>{fieldState.error.message}</AuthFieldError>
         ) : null}
       </FormItem>

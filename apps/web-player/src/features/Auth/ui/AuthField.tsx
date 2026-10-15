@@ -6,11 +6,17 @@ import { AuthFieldError } from './AuthFieldError'
 
 type AuthFieldProps = {
   children: ReactElement
+  /** The form lists its messages elsewhere (sign-up shows them together under the fields). */
+  hideError?: boolean
   label: string
 }
 
 /** A labelled form field with its validation message; use inside `FormItem`. */
-export const AuthField = ({ children, label }: AuthFieldProps) => {
+export const AuthField = ({
+  children,
+  hideError = false,
+  label,
+}: AuthFieldProps) => {
   const { error, formMessageId } = useFormField()
 
   return (
@@ -19,7 +25,7 @@ export const AuthField = ({ children, label }: AuthFieldProps) => {
         {label}
       </FormLabel>
       <FormControl>{children}</FormControl>
-      {error?.message ? (
+      {!hideError && error?.message ? (
         <AuthFieldError id={formMessageId}>
           {String(error.message)}
         </AuthFieldError>

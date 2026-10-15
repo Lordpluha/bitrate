@@ -7,6 +7,7 @@ import { ROUTES } from '@shared/routes'
 import { useRouter } from 'next/navigation'
 import { type FormEvent, useState } from 'react'
 import { AuthHeading } from './AuthHeading'
+import { AUTH_BUTTON_CLASS } from './authStyles'
 import { OTP_LENGTH, OtpCodeField } from './OtpCodeField'
 
 /**
@@ -84,7 +85,7 @@ export const TwoFactorLoginForm = () => {
           value={code}
         />
         <Button
-          className="w-full font-medium"
+          className={AUTH_BUTTON_CLASS}
           disabled={isBusy}
           type="submit"
           variant="primary"

@@ -37,7 +37,10 @@ export const OtpCodeField = ({
 
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-[13px] font-medium text-foreground" htmlFor={id}>
+      <label
+        className="w-fit text-[13px] leading-[1.25] font-medium text-foreground"
+        htmlFor={id}
+      >
         {label}
       </label>
       <div className="relative w-fit">
@@ -96,7 +99,7 @@ export const OtpCodeField = ({
       </div>
       <p
         className={cn(
-          'flex items-center gap-1.5 text-xs',
+          'flex items-center gap-1.5 text-xs leading-[1.25]',
           status === 'error' && 'text-destructive',
           status === 'success' && 'text-success-text',
           status === 'idle' && 'text-muted-foreground',

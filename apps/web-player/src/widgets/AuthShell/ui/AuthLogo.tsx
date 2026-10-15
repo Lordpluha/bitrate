@@ -26,7 +26,9 @@ export const AuthLogo = ({ className, size = 'form' }: AuthLogoProps) => (
     <span
       className={cn(
         'font-[family-name:var(--font-landing-display)] font-semibold',
-        size === 'panel' ? 'text-[22px] text-white' : 'text-xl text-foreground',
+        size === 'panel'
+          ? 'text-[22px] leading-[1.25] text-white'
+          : 'text-xl leading-[1.25] text-foreground',
       )}
     >
       Bitrate
