@@ -44,7 +44,7 @@ and a clear next step. Artwork and music-production imagery carry personality; t
 the artist manage work without competing with the music.
 
 This document describes the system used by the static designs in this directory. It is not a new
-brand identity and it is not proof of implemented behavior. `web-artist.pen` is the source of truth
+brand identity and it is not proof of implemented behavior. `web-artist-dim.pen` is the source of truth
 for variables, masters, instances, layouts, and annotations. Dim is the primary neutral theme;
 dark is the higher-contrast alternative; light is the bright alternative.
 

@@ -3,7 +3,7 @@
 Updated: September 16, 2026.
 
 The canonical product checklist and screen inventory live in
-[`../web-artist-design/web-artist.md`](../web-artist-design/web-artist.md). This file records only
+[`../web-artist.md`](../web-artist.md). This file records only
 the dark-theme pass. The editable source of truth is `web-artist-dark.pen`.
 
 ## Direction
