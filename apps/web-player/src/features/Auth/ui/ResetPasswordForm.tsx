@@ -10,6 +10,7 @@ import { type FormEvent, useState } from 'react'
 import { AuthAlert } from './AuthAlert'
 import { AuthHeading } from './AuthHeading'
 import { AuthTextInput } from './AuthTextInput'
+import { AUTH_BUTTON_CLASS } from './authStyles'
 
 const MIN_PASSWORD_LENGTH = 8
 
@@ -55,11 +56,11 @@ export const ResetPasswordForm = () => {
     return (
       <>
         <AuthHeading title="Create a new password" />
-        <AuthAlert title="Link incomplete" tone="destructive">
+        <AuthAlert title="Link incomplete">
           This password reset link is missing its token. Request a new link and
           try again.
         </AuthAlert>
-        <Button asChild className="w-full font-medium" variant="outline">
+        <Button asChild className={AUTH_BUTTON_CLASS} variant="outline">
           <Link href={ROUTES.auth.forgotPassword}>Request another link</Link>
         </Button>
       </>
@@ -99,7 +100,7 @@ export const ResetPasswordForm = () => {
           value={confirmPassword}
         />
         <Button
-          className="w-full font-medium"
+          className={AUTH_BUTTON_CLASS}
           disabled={resetPassword.isPending}
           type="submit"
           variant="primary"

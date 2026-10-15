@@ -8,6 +8,7 @@ import {
 } from '@features/Auth/model/oauthProviders'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { useId, useState } from 'react'
+import { AUTH_BUTTON_CLASS } from './authStyles'
 import { SocialLegalConsent } from './SocialLegalConsent'
 
 /** Shown up front; the rest of the providers wait behind "More options". */
@@ -19,7 +20,7 @@ const LIVE_LABELS = socialProviders
   .map((provider) => provider.label)
 
 const SoonBadge = () => (
-  <span className="rounded-full bg-secondary px-2 py-0.5 text-xs font-semibold text-secondary-foreground">
+  <span className="rounded-full bg-secondary px-2 py-0.5 text-xs leading-4 font-semibold text-secondary-foreground">
     Soon
   </span>
 )
@@ -32,7 +33,7 @@ type ProviderTileProps = {
 /** A compact provider: a link once usable, otherwise its name (and "Soon" when not built yet). */
 const ProviderTile = ({ isUnlocked, provider }: ProviderTileProps) => {
   const tileClass =
-    'flex h-10 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-lg border border-border text-xs font-semibold text-foreground'
+    'flex h-10 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-lg border border-border text-xs leading-[1.25] font-semibold text-foreground'
 
   if (!provider.activeProvider) {
     return (
@@ -48,7 +49,7 @@ const ProviderTile = ({ isUnlocked, provider }: ProviderTileProps) => {
     return (
       <button
         aria-label={`Continue with ${provider.label}`}
-        className={cn(tileClass, 'cursor-not-allowed opacity-60')}
+        className={cn(tileClass, 'cursor-not-allowed')}
         disabled
         type="button"
       >
@@ -102,12 +103,16 @@ export const OAuthButtons = ({ accepted }: OAuthButtonsProps) => {
 
       {GOOGLE ? (
         isUnlocked && googleUrl ? (
-          <Button asChild className="w-full font-medium" variant="outline">
+          <Button
+            asChild
+            className={cn(AUTH_BUTTON_CLASS, 'px-4')}
+            variant="outline"
+          >
             <a href={googleUrl}>Continue with {GOOGLE.label}</a>
           </Button>
         ) : (
           <Button
-            className="w-full font-medium"
+            className={cn(AUTH_BUTTON_CLASS, 'px-4 disabled:opacity-100')}
             disabled
             type="button"
             variant="outline"
@@ -130,12 +135,12 @@ export const OAuthButtons = ({ accepted }: OAuthButtonsProps) => {
       {isMoreOpen ? (
         <section
           aria-labelledby={`${moreId}-title`}
-          className="flex flex-col gap-2 rounded-[14px] border border-border bg-card p-6"
+          className="flex flex-col gap-2 rounded-[14px] border border-border bg-card p-[23px]"
           id={moreId}
         >
           <div className="flex items-center justify-between gap-3">
             <h2
-              className="text-sm font-semibold text-foreground"
+              className="text-sm leading-[1.2] font-semibold text-foreground"
               id={`${moreId}-title`}
             >
               More sign-in options
@@ -161,14 +166,14 @@ export const OAuthButtons = ({ accepted }: OAuthButtonsProps) => {
               />
             ))}
           </div>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs leading-[1.25] text-muted-foreground">
             Coming soon — {LIVE_LABELS.join(' and ')} are live today.
           </p>
         </section>
       ) : (
         <Button
           aria-expanded={false}
-          className="w-full gap-1.5 font-medium"
+          className={cn(AUTH_BUTTON_CLASS, 'gap-1.5 px-4')}
           onClick={() => setIsMoreOpen(true)}
           type="button"
           variant="ghost"

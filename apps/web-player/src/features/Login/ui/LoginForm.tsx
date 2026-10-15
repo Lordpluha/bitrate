@@ -1,14 +1,9 @@
 'use client'
 
+import { Button, Form, FormField, FormItem, Input } from '@bitrate/ui-react'
 import {
-  Button,
-  Form,
-  FormField,
-  FormItem,
-  Input,
-  PasswordInput,
-} from '@bitrate/ui-react'
-import {
+  AUTH_BUTTON_CLASS,
+  AUTH_INPUT_CLASS,
   AuthAlert,
   AuthField,
   AuthFooterLink,
@@ -33,9 +28,7 @@ export const LoginForm = () => {
       />
 
       {failure ? (
-        <AuthAlert title={failure.title} tone="destructive">
-          {failure.message}
-        </AuthAlert>
+        <AuthAlert title={failure.title}>{failure.message}</AuthAlert>
       ) : null}
 
       <Form {...form}>
@@ -54,6 +47,7 @@ export const LoginForm = () => {
                   <AuthField label="Email Address">
                     <Input
                       autoComplete="email"
+                      className={AUTH_INPUT_CLASS}
                       placeholder="you@example.com"
                       type="email"
                       {...field}
@@ -68,9 +62,11 @@ export const LoginForm = () => {
               render={({ field }) => (
                 <FormItem className="space-y-0">
                   <AuthField label="Password">
-                    <PasswordInput
+                    <Input
                       autoComplete="current-password"
+                      className={AUTH_INPUT_CLASS}
                       placeholder="••••••••"
+                      type="password"
                       {...field}
                     />
                   </AuthField>
@@ -78,7 +74,7 @@ export const LoginForm = () => {
               )}
             />
             <Link
-              className="self-end text-[13px] font-semibold text-primary hover:opacity-80"
+              className="self-end text-[13px] leading-[1.25] font-semibold text-primary hover:opacity-80"
               href={ROUTES.auth.forgotPassword}
             >
               Forgot password?
@@ -86,7 +82,7 @@ export const LoginForm = () => {
           </div>
 
           <Button
-            className="w-full font-medium"
+            className={AUTH_BUTTON_CLASS}
             disabled={isSubmitting}
             type="submit"
             variant="primary"

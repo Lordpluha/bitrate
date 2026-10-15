@@ -1,16 +1,12 @@
 'use client'
 
-import {
-  Button,
-  Form,
-  FormField,
-  FormItem,
-  Input,
-  PasswordInput,
-} from '@bitrate/ui-react'
+import { Button, Form, FormField, FormItem, Input } from '@bitrate/ui-react'
 import type { RegistrationFormData } from '@entities/User'
 import {
+  AUTH_BUTTON_CLASS,
+  AUTH_INPUT_CLASS,
   AuthField,
+  AuthFieldError,
   AuthFooterLink,
   AuthHeading,
   AuthOrDivider,
@@ -19,6 +15,7 @@ import {
   useAuthenticatedRedirect,
 } from '@features/Auth'
 import { ROUTES } from '@shared/routes'
+import { collectRegistrationErrors } from '../model/registrationErrors'
 import { useRegistrationForm } from '../model/useRegistrationForm'
 
 type TextFieldName = Exclude<keyof RegistrationFormData, 'acceptLegal'>
@@ -61,6 +58,7 @@ const FIELDS: {
 export const RegistrationForm = () => {
   useAuthenticatedRedirect()
   const { form, isSubmitting, onSubmit } = useRegistrationForm()
+  const errors = collectRegistrationErrors(form.formState.errors)
 
   return (
     <>
@@ -85,16 +83,19 @@ export const RegistrationForm = () => {
                   name={name}
                   render={({ field }) => (
                     <FormItem className="space-y-0">
-                      <AuthField label={label}>
+                      <AuthField hideError label={label}>
                         {secret ? (
-                          <PasswordInput
+                          <Input
                             autoComplete={autoComplete}
+                            className={AUTH_INPUT_CLASS}
                             placeholder={placeholder}
+                            type="password"
                             {...field}
                           />
                         ) : (
                           <Input
                             autoComplete={autoComplete}
+                            className={AUTH_INPUT_CLASS}
                             placeholder={placeholder}
                             type={name === 'email' ? 'email' : 'text'}
                             {...field}
@@ -108,10 +109,22 @@ export const RegistrationForm = () => {
             )}
           </div>
 
-          <LegalAcceptanceField control={form.control} id="accept-legal" />
+          {errors.length > 0 ? (
+            <div className="flex flex-col gap-1.5">
+              {errors.map((message) => (
+                <AuthFieldError key={message}>{message}</AuthFieldError>
+              ))}
+            </div>
+          ) : null}
+
+          <LegalAcceptanceField
+            control={form.control}
+            hideError
+            id="accept-legal"
+          />
 
           <Button
-            className="w-full font-medium"
+            className={AUTH_BUTTON_CLASS}
             disabled={isSubmitting}
             type="submit"
             variant="primary"

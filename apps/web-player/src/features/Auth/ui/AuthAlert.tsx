@@ -19,7 +19,7 @@ export const AuthAlert = ({
   return (
     <div
       className={cn(
-        'flex gap-3 rounded-lg border bg-card p-4',
+        'flex gap-3 rounded-lg border bg-card p-[15px]',
         isDestructive ? 'border-destructive' : 'border-border',
       )}
       role={isDestructive ? 'alert' : 'status'}
@@ -27,7 +27,7 @@ export const AuthAlert = ({
       <Info
         aria-hidden="true"
         className={cn(
-          'mt-0.5 size-4.5 shrink-0',
+          'mx-px my-[3px] size-4.5 shrink-0',
           isDestructive ? 'text-destructive' : 'text-foreground',
         )}
       />
@@ -42,7 +42,7 @@ export const AuthAlert = ({
         </p>
         <p
           className={cn(
-            'text-sm',
+            'text-sm leading-5',
             isDestructive ? 'text-destructive' : 'text-muted-foreground',
           )}
         >

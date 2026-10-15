@@ -14,7 +14,7 @@ export const LegalConsentLabel = ({ id }: LegalConsentLabelProps) => (
   >
     I am at least 16 years old, I accept the{' '}
     <Link
-      className="text-primary hover:opacity-70"
+      className="underline decoration-border underline-offset-2 hover:decoration-current"
       href={ROUTES.terms}
       rel="noopener noreferrer"
       target="_blank"
@@ -23,7 +23,7 @@ export const LegalConsentLabel = ({ id }: LegalConsentLabelProps) => (
     </Link>{' '}
     and{' '}
     <Link
-      className="text-primary hover:opacity-70"
+      className="underline decoration-border underline-offset-2 hover:decoration-current"
       href={ROUTES.community}
       rel="noopener noreferrer"
       target="_blank"
@@ -32,7 +32,7 @@ export const LegalConsentLabel = ({ id }: LegalConsentLabelProps) => (
     </Link>
     , and I have read the{' '}
     <Link
-      className="text-primary hover:opacity-70"
+      className="underline decoration-border underline-offset-2 hover:decoration-current"
       href={ROUTES.privacy}
       rel="noopener noreferrer"
       target="_blank"
