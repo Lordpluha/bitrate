@@ -3,8 +3,8 @@
 Updated: September 16, 2026.
 
 The canonical product checklist and screen inventory live in
-[`../web-artist-design/web-artist.md`](../web-artist-design/web-artist.md). This file records only
-the light-theme pass. The editable source of truth is `web-artist-white.pen`.
+[`../web-artist.md`](../web-artist.md). This file records only
+the light-theme pass. The editable source of truth is `web-artist-light.pen`.
 
 ## Direction
 

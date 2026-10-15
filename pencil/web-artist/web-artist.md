@@ -7,7 +7,7 @@ means the relevant Pencil frames were prepared and structurally reviewed. It doe
 the behavior exists in the application. Runtime accessibility, integration behavior, and final
 product-owner approval are tracked separately.
 
-The editable source of truth is `web-artist.pen`. All interface copy and all design annotations
+The editable source of truth is [`dim/web-artist-dim.pen`](dim/web-artist-dim.pen). All interface copy and all design annotations
 must be in English.
 
 ## 1. Product goal and boundaries

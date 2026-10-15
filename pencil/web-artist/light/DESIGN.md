@@ -46,9 +46,9 @@ The light system is a bright production workspace with a soft paper-like canvas,
 surfaces, precise violet/cobalt signals, and occasional dark media plates. White is not empty
 space: hierarchy comes from tonal steps, borders, typography, and restrained spectral detail.
 
-`web-artist-white.pen` is the source of truth for light variables, masters, instances, layouts,
+`web-artist-light.pen` is the source of truth for light variables, masters, instances, layouts,
 and annotations. The canonical product inventory lives in
-[`../web-artist-design/web-artist.md`](../web-artist-design/web-artist.md). Dark and dim are separate
+[`../web-artist.md`](../web-artist.md). Dark and dim are separate
 token branches; light values must not be copied into them literally.
 
 ## Color and contrast

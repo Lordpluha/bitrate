@@ -46,7 +46,7 @@ objects add context without turning the application into a decorative scene.
 
 `web-artist-dark.pen` is the source of truth for local variables, masters, instances, layouts, and
 annotations. The canonical product inventory lives in
-[`../web-artist-design/web-artist.md`](../web-artist-design/web-artist.md).
+[`../web-artist.md`](../web-artist.md).
 
 ## Color and contrast
 
