@@ -88,7 +88,7 @@ describe('Release identifiers (HTTP)', () => {
       expect(transactionMock.artistTrackDraft.updateManyAndReturn).toHaveBeenCalledWith({
         where: { id: trackDraftId, releaseId: draft.id, ownerArtistId: ownerId, deletedAt: null },
         data: { isrc: 'USRC17607839' },
-        select: { id: true, isrc: true },
+        select: { id: true, title: true, isrc: true },
       })
     })
 

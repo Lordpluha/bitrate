@@ -162,7 +162,11 @@ describe('AuthController artists (int)', () => {
     })
 
     expect(res.status).toBe(201)
-    expect(authService.loginArtist).toHaveBeenCalledWith('artist@example.com', 'hashed-password')
+    expect(authService.loginArtist).toHaveBeenCalledWith(
+      'artist@example.com',
+      'hashed-password',
+      {},
+    )
   })
 
   it('POST /artists/auth/logout should return 201', async () => {
@@ -188,7 +192,7 @@ describe('AuthController artists (int)', () => {
     const res = await request(app.getHttpServer()).post('/artists/auth/refresh')
 
     expect(res.status).toBe(201)
-    expect(authService.refresh).toHaveBeenCalledWith('rt')
+    expect(authService.refresh).toHaveBeenCalledWith('rt', {})
     expect(tokenService.setAuthCookies).toHaveBeenCalled()
   })
 })

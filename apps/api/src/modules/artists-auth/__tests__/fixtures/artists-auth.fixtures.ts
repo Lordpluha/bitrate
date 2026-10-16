@@ -8,6 +8,8 @@ export const buildArtistSession = (
   artistId: 'artist-1',
   access_token: 'access-token',
   refresh_token: 'refresh-token',
+  userAgent: null,
+  lastUsedAt: null,
   createdAt: new Date(),
   expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
   ...overrides,

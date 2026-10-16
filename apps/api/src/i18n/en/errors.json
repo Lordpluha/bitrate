@@ -22,16 +22,28 @@
   "artist_auth": {
     "email_verification_unavailable": "Email verification is temporarily unavailable",
     "invalid_verification_code": "Invalid or expired verification code",
-    "verification_code_cooldown": "Please wait before requesting another code"
+    "verification_code_cooldown": "Please wait before requesting another code",
+    "session_not_found": "Session not found",
+    "session_is_current": "Use sign out to end the session you are using"
   },
   "release": {
     "not_found": "Release not found",
     "changed_or_not_draft": "Release changed or is no longer a draft",
     "changed_or_not_submitted": "Release changed or is not awaiting review",
+    "changed_or_not_rejected": "Release changed or no changes were requested",
     "credit_not_found": "Release or credit not found",
     "recording_not_found": "Recording not found on this release",
     "blockers_unresolved": "Resolve the blockers before submitting for review",
-    "share_contributor_mismatch": "Every share must belong to a contributor on this release"
+    "share_contributor_mismatch": "Every share must belong to a contributor on this release",
+    "cover_file_required": "Choose an image file for the cover",
+    "cover_type_invalid": "The cover must be a JPEG, PNG or WebP image",
+    "audio_file_required": "Choose an audio file to upload",
+    "audio_type_invalid": "The audio must be a WAV, FLAC, MP3 or OGG file",
+    "audio_not_found": "No uploaded audio for this recording",
+    "task_not_found": "Task not found on this release",
+    "track_order_mismatch": "The track order must list every recording on the release exactly once",
+    "task_changed": "This task changed since it was read; reload it and try again",
+    "task_assignee_invalid": "The assignee must be credited on this release"
   },
   "artist": {
     "not_found": "Artist not found"
@@ -42,5 +54,11 @@
   "user": {
     "not_found": "User not found",
     "follows_hidden": "This user keeps their followers and following private"
+  },
+  "artist_profile": {
+    "not_found": "Artist profile not found",
+    "changed": "Your profile changed since it was loaded; reload it and try again",
+    "username_taken": "This handle is already taken",
+    "image_required": "Choose an image to upload"
   }
 }

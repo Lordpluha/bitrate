@@ -13,21 +13,28 @@ import type { AddReleaseContributorDto } from './dtos/add-release-contributor.dt
 import type { CreateReleaseDto } from './dtos/create-release.dto'
 import type { ListReleasesDto } from './dtos/list-releases.dto'
 import type { ReplaceReleaseSplitsDto } from './dtos/replace-release-splits.dto'
-import type { SubmitReleaseDto, WithdrawReleaseDto } from './dtos/submit-release.dto'
+import type {
+  ReviseReleaseDto,
+  SubmitReleaseDto,
+  WithdrawReleaseDto,
+} from './dtos/submit-release.dto'
 import type { UpdateReleaseDto } from './dtos/update-release.dto'
 import type { UpdateReleaseContributorDto } from './dtos/update-release-contributor.dto'
 import type { UpdateReleaseRightsDto } from './dtos/update-release-rights.dto'
 import type { UpdateReleaseTrackDto } from './dtos/update-release-track.dto'
 import { RELEASE_ERRORS } from './errors'
+import { lockOwnedDraft } from './release-draft-lock'
 import { releaseReadiness } from './release-readiness'
 import {
   RELEASE_CONTRIBUTOR_SELECT,
   RELEASE_SUMMARY_SELECT,
+  readinessFromRecord,
   releaseReadinessSelect,
 } from './releases.select'
 
 interface ReleaseTrackIdentifier {
   id: string
+  title: string
   isrc: string | null
 }
 
@@ -124,10 +131,21 @@ export class ReleasesService {
         accuracyConfirmedAt: true,
         submittedAt: true,
         owner: { select: { username: true } },
+        reviews: {
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+          select: {
+            decision: true,
+            message: true,
+            requiredChanges: true,
+            recommendations: true,
+            createdAt: true,
+          },
+        },
         trackDrafts: {
           where: activeDrafts,
           take: 50,
-          orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+          orderBy: [{ position: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
           select: {
             id: true,
             title: true,
@@ -136,6 +154,9 @@ export class ReleasesService {
             duration: true,
             isDemo: true,
             isrc: true,
+            audioKey: true,
+            audioFileName: true,
+            audioSizeBytes: true,
           },
         },
         tracks: {
@@ -170,7 +191,9 @@ export class ReleasesService {
     const readiness = await this.readiness(this.prisma, ownerArtistId, id)
     const {
       owner,
+      reviews,
       contributors,
+      trackDrafts,
       tracks,
       _count,
       masterOwnerType,
@@ -184,6 +207,12 @@ export class ReleasesService {
       rights: { masterOwnerType, masterOwnerName, writersConfirmedAt, accuracyConfirmedAt },
       readiness: readiness ?? { blockers: [], notices: [] },
       artistName: owner.username,
+      latestReview: reviews[0] ?? null,
+      // The storage key stays server-side; the artist plays audio through the owned route.
+      trackDrafts: trackDrafts.map(({ audioKey, ...draft }) => ({
+        ...draft,
+        hasAudio: !!audioKey,
+      })),
       tracks: tracks.map(({ position, track }) => ({ ...track, position })),
       participants: contributors,
       trackCount: _count.trackDrafts + _count.tracks,
@@ -193,7 +222,7 @@ export class ReleasesService {
 
   addContributor(ownerArtistId: string, id: string, input: AddReleaseContributorDto) {
     return this.prisma.$transaction(async (tx) => {
-      const release = await this.lockDraft(
+      const release = await lockOwnedDraft(
         tx,
         ownerArtistId,
         id,
@@ -237,7 +266,7 @@ export class ReleasesService {
     input: UpdateReleaseContributorDto,
   ) {
     return this.prisma.$transaction(async (tx) => {
-      const release = await this.lockDraft(
+      const release = await lockOwnedDraft(
         tx,
         ownerArtistId,
         id,
@@ -275,7 +304,7 @@ export class ReleasesService {
       ) {
         throw new ConflictException(RELEASE_ERRORS.CHANGED_OR_NOT_DRAFT)
       }
-      const { blockers } = releaseReadiness(readinessInput(record))
+      const { blockers } = releaseReadiness(readinessFromRecord(record))
       if (blockers.length > 0) {
         throw new UnprocessableEntityException({
           message: RELEASE_ERRORS.BLOCKERS_UNRESOLVED,
@@ -317,6 +346,24 @@ export class ReleasesService {
     throw new ConflictException(RELEASE_ERRORS.CHANGED_OR_NOT_SUBMITTED)
   }
 
+  /** Reopens a release Bitrate sent back for changes; saved data and the review are kept. */
+  async revise(ownerArtistId: string, id: string, input: ReviseReleaseDto) {
+    const [revised] = await this.prisma.release.updateManyAndReturn({
+      where: {
+        id,
+        ownerArtistId,
+        deletedAt: null,
+        status: ReleaseStatus.REJECTED,
+        updatedAt: new Date(input.expectedUpdatedAt),
+      },
+      data: { status: ReleaseStatus.DRAFT, submittedAt: null },
+      select: RELEASE_SUMMARY_SELECT,
+    })
+    if (revised) return revised
+    await this.findOne(ownerArtistId, id)
+    throw new ConflictException(RELEASE_ERRORS.CHANGED_OR_NOT_REJECTED)
+  }
+
   private async readiness(
     client: Pick<Prisma.TransactionClient, 'release'>,
     ownerArtistId: string,
@@ -326,13 +373,13 @@ export class ReleasesService {
       where: { id, ownerArtistId, deletedAt: null },
       select: releaseReadinessSelect(ownerArtistId),
     })
-    return record ? releaseReadiness(readinessInput(record)) : null
+    return record ? releaseReadiness(readinessFromRecord(record)) : null
   }
 
   updateRights(ownerArtistId: string, id: string, input: UpdateReleaseRightsDto) {
     const confirmedAt = new Date()
     return this.prisma.$transaction((tx) =>
-      this.lockDraft(tx, ownerArtistId, id, input.expectedUpdatedAt, {
+      lockOwnedDraft(tx, ownerArtistId, id, input.expectedUpdatedAt, {
         masterOwnerType: input.masterOwner?.type ?? null,
         masterOwnerName: input.masterOwner?.type === 'OTHER' ? input.masterOwner.name : null,
         writersConfirmedAt: input.writersConfirmed ? confirmedAt : null,
@@ -344,7 +391,7 @@ export class ReleasesService {
   replaceSplits(ownerArtistId: string, id: string, input: ReplaceReleaseSplitsDto) {
     return this.prisma.$transaction(async (tx) => {
       // New allocations describe different rights, so accuracy must be confirmed again.
-      const release = await this.lockDraft(tx, ownerArtistId, id, input.expectedUpdatedAt, {
+      const release = await lockOwnedDraft(tx, ownerArtistId, id, input.expectedUpdatedAt, {
         accuracyConfirmedAt: null,
       })
       const contributorIds = input.shares.map((share) => share.contributorId)
@@ -370,21 +417,19 @@ export class ReleasesService {
     })
   }
 
-  updateTrackIsrc(
-    ownerArtistId: string,
-    id: string,
-    trackId: string,
-    input: UpdateReleaseTrackDto,
-  ) {
+  updateTrack(ownerArtistId: string, id: string, trackId: string, input: UpdateReleaseTrackDto) {
     return this.prisma.$transaction(async (tx) => {
-      const release = await this.lockDraft(tx, ownerArtistId, id, input.expectedUpdatedAt)
+      const release = await lockOwnedDraft(tx, ownerArtistId, id, input.expectedUpdatedAt)
       const [track] = await this.uniqueIdentifier<ReleaseTrackIdentifier[]>(
         'This ISRC is already used by another recording',
         () =>
           tx.artistTrackDraft.updateManyAndReturn({
             where: { id: trackId, releaseId: id, ownerArtistId, deletedAt: null },
-            data: { isrc: input.isrc },
-            select: { id: true, isrc: true },
+            data: {
+              ...(input.title === undefined ? {} : { title: input.title }),
+              ...(input.isrc === undefined ? {} : { isrc: input.isrc }),
+            },
+            select: { id: true, title: true, isrc: true },
           }),
       )
       if (!track) throw new NotFoundException(RELEASE_ERRORS.RECORDING_NOT_FOUND)
@@ -400,47 +445,5 @@ export class ReleasesService {
       if (isPrismaP2002(error)) throw new ConflictException(message)
       throw error
     }
-  }
-
-  /** Bumps the version of an owned draft together with `data`; rollback covers dependent writes. */
-  private async lockDraft(
-    tx: Prisma.TransactionClient,
-    ownerArtistId: string,
-    id: string,
-    expectedUpdatedAt: string,
-    data: Prisma.ReleaseUpdateManyMutationInput = {},
-  ) {
-    const expected = new Date(expectedUpdatedAt)
-    const [release] = await tx.release.updateManyAndReturn({
-      where: {
-        id,
-        ownerArtistId,
-        deletedAt: null,
-        status: ReleaseStatus.DRAFT,
-        updatedAt: expected,
-      },
-      data: { ...data, updatedAt: new Date(Math.max(Date.now(), expected.getTime() + 1)) },
-      select: RELEASE_SUMMARY_SELECT,
-    })
-    if (!release) {
-      const visible = await tx.release.findFirst({
-        where: { id, ownerArtistId, deletedAt: null },
-        select: { id: true },
-      })
-      if (!visible) throw new NotFoundException(RELEASE_ERRORS.NOT_FOUND)
-      throw new ConflictException(RELEASE_ERRORS.CHANGED_OR_NOT_DRAFT)
-    }
-    return release
-  }
-}
-
-type ReadinessRecord = Prisma.ReleaseGetPayload<{
-  select: ReturnType<typeof releaseReadinessSelect>
-}>
-
-function readinessInput(record: ReadinessRecord) {
-  return {
-    ...record,
-    tracks: [...record.trackDrafts, ...record.tracks.map(({ track }) => track)],
   }
 }

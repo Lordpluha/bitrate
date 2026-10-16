@@ -117,6 +117,63 @@ preserves existing workspaces and skips existing demo rows on repeat execution. 
 does not create accounts, change credentials or insert public tracks. Demo preview
 URLs resolve to the artist portal's identified synthetic sample audio.
 
+## Artwork and master audio
+
+`ReleaseMediaController` handles files for an owned DRAFT; every write carries
+`expectedUpdatedAt` and goes through the same atomic owner/DRAFT/version lock.
+
+| Route | Purpose |
+| --- | --- |
+| `PUT /releases/:id/cover` | Multipart `cover` (JPEG/PNG/WebP, 20 MB, magic-byte checked) |
+| `DELETE /releases/:id/cover` | Removes the artwork |
+| `POST /releases/:id/tracks` | Multipart `audio` + `title`: creates a recording from a master |
+| `PUT /releases/:id/tracks/:trackId/audio` | Replaces the master of a recording |
+| `DELETE /releases/:id/tracks/:trackId` | Removes a recording, its master and its ISRC |
+| `GET /releases/:id/tracks/:trackId/audio` | Owner-only playback with HTTP Range |
+
+Covers are public images under `releases/covers` and are stored on `Release.cover` as
+`/static/...` paths, like avatars. Masters (WAV, FLAC, MP3, OGG up to 512 MB) stream to
+the private upload directory, then into the object store under `release-masters/`; the
+key never leaves the API. Files are written before the transaction and deleted again
+when it fails, and replaced files are deleted after the commit. Audio changes clear the
+accuracy confirmation. Readiness blocks submission without artwork (`COVER_MISSING`) or
+without a master for each draft recording (`TRACK_AUDIO_MISSING`). Uploading publishes
+and delivers nothing.
+
+## Release tasks
+
+`ReleaseTasksController` manages preparation tasks of an owned release:
+`GET|POST /releases/:id/tasks` and `PATCH|DELETE /releases/:id/tasks/:taskId`.
+`ArtistTasksController` serves `GET /release-tasks`, the artist-wide paginated list behind
+the Tasks page, with an `OPEN` filter and counts per status plus overdue.
+
+Tasks are planning notes, not release data: they stay editable in every release status and
+never bump the release version or clear confirmations. Each write carries the task's own
+`expectedUpdatedAt` (409 when it changed, 404 when it is gone). An assignee must be a
+participant credited on the same release; credits still grant no account access, so this is
+the single-owner stand-in for collaboration roles. Setting `DONE` records `completedAt`.
+
+## Delivery plan and distribution
+
+`GET /releases/:id/delivery` returns the plan (stores in `ReleaseDestination`, territories in
+`ReleaseTerritory`, where no rows means worldwide) and a state per store.
+`PUT /releases/:id/delivery-plan` replaces the plan of a DRAFT under the version lock;
+`GET /distribution` lists every release for the Distribution page.
+
+The single partner sits behind `DISTRIBUTION_ADAPTER` (`distribution/distribution-adapter.ts`).
+Until one is confirmed (#248) it is bound to `NotConnectedDistributionAdapter`, so every
+store reads `NOT_CONNECTED` and nothing can be sent. Partner reports go through
+`ReleaseDeliveryService.recordReceipts`, which only applies transitions allowed by
+`distribution/delivery-state.ts` (SUBMITTED → ACCEPTED → LIVE → TAKEN_DOWN, FAILED and
+re-submission). A store reads PENDING, LIVE, FAILED or TAKEN_DOWN only from such a report.
+
+## Artist dashboard
+
+`GET /artist-dashboard` returns the returning-artist summary in one request: the current
+release (most recently updated in-progress release) with its blocker count, attention items
+(drafts with blockers, requested changes, overdue tasks), catalogue counts, the next planned
+dates and the next open tasks. It reads saved data only and implies no listening figures.
+
 `test/migrations/artist-music-catalogue.sql` checks valid-owner links, cross-owner
 rejection and nonnegative duration in a transaction that always rolls back.
 

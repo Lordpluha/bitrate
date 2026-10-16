@@ -29,6 +29,7 @@ import { ArtistEmailCodeService } from './artist-email-code.service'
 import type { ArtistRegistrationDto } from './dtos'
 import type { ArtistSessionEntity } from './entities'
 import { ARTIST_AUTH_ERRORS } from './errors'
+import { type SessionClient, sessionActivity } from './session-client'
 
 /** Represents the artists auth service. */
 @Injectable()
@@ -74,7 +75,11 @@ export class ArtistsAuthService {
   }
 
   /** Runs the login artist operation. */
-  async loginArtist(email: ArtistEntity['email'], password: string): Promise<LoginResult> {
+  async loginArtist(
+    email: ArtistEntity['email'],
+    password: string,
+    client: SessionClient = {},
+  ): Promise<LoginResult> {
     const artist = await this.artistsPrivate.findByEmail(email)
     if (artist?.lockedUntil && artist.lockedUntil > new Date()) {
       throw new HttpException('Account is temporarily locked', HttpStatus.TOO_MANY_REQUESTS)
@@ -113,6 +118,7 @@ export class ArtistsAuthService {
         refresh_token: this.token.hashToken(refresh_token),
         artistId: artist.id,
         expiresAt: this.token.getRefreshTokenExpiresAt(),
+        ...sessionActivity(client),
       },
     })
 
@@ -120,7 +126,7 @@ export class ArtistsAuthService {
   }
 
   /** Runs the complete two factor login operation. */
-  async completeTwoFactorLogin(artistId: string) {
+  async completeTwoFactorLogin(artistId: string, client: SessionClient = {}) {
     const artist = await this.artistsPrivate.findById(artistId)
     if (!artist) throw new UnauthorizedException('Artist not found')
 
@@ -137,6 +143,7 @@ export class ArtistsAuthService {
         refresh_token: this.token.hashToken(refresh_token),
         artistId: artist.id,
         expiresAt: this.token.getRefreshTokenExpiresAt(),
+        ...sessionActivity(client),
       },
     })
 
@@ -144,7 +151,7 @@ export class ArtistsAuthService {
   }
 
   /** Runs the refresh operation. */
-  async refresh(refresh_token: string) {
+  async refresh(refresh_token: string, client: SessionClient = {}) {
     try {
       const payload = await this.jwtService.verifyAsync<JWTPayload>(refresh_token, {
         secret: process.env.JWT_SECRET,
@@ -171,6 +178,7 @@ export class ArtistsAuthService {
           access_token: this.token.hashToken(access_token),
           refresh_token: this.token.hashToken(next_refresh_token),
           expiresAt: this.token.getRefreshTokenExpiresAt(),
+          ...sessionActivity(client),
         },
       })
 

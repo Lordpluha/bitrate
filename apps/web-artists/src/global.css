@@ -1239,3 +1239,19 @@
     }
   }
 }
+
+/* Workspace appearance preferences, set on <html> by the theme bootstrap and provider. */
+:root[data-density="compact"] .artist-release-workspace-panel {
+  padding: 0.75rem;
+}
+:root[data-density="compact"] .artist-release-workspace-panels {
+  gap: 0.75rem;
+}
+:root[data-motion="reduced"] *,
+:root[data-motion="reduced"] *::before,
+:root[data-motion="reduced"] *::after {
+  animation-duration: 0.01ms;
+  animation-iteration-count: 1;
+  scroll-behavior: auto;
+  transition-duration: 0.01ms;
+}
