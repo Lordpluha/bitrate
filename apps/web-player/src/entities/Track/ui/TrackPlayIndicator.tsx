@@ -1,5 +1,4 @@
-import { Pause, Play } from 'lucide-react'
-import { WaveAnimated } from './WaveAnimated'
+import { AudioLines, Pause, Play } from 'lucide-react'
 
 type TrackPlayIndicatorProps = {
   index: number
@@ -18,7 +17,7 @@ export const TrackPlayIndicator = ({
 }: TrackPlayIndicatorProps) => (
   <button
     aria-label={`${isCurrent && isPlaying ? 'Pause' : 'Play'} ${title}`}
-    className="relative flex items-center justify-center text-sm max-[1024px]:hidden"
+    className="relative flex items-center justify-center text-[13px] font-semibold max-[1024px]:hidden"
     onClick={onClick}
     type="button"
   >
@@ -37,7 +36,11 @@ export const TrackPlayIndicator = ({
     )}
     {isCurrent && isPlaying && (
       <>
-        <WaveAnimated className="group-hover:hidden" />
+        <AudioLines
+          aria-hidden="true"
+          className="text-primary group-hover:hidden"
+          size={16}
+        />
         <Pause
           aria-hidden="true"
           className="text-text hidden group-hover:block"
