@@ -3,10 +3,11 @@ import { type ReleaseReadinessInput, releaseReadiness } from './release-readines
 
 const ready: ReleaseReadinessInput = {
   upc: '036000291452',
+  cover: '/static/releases/covers/cover.jpg',
   masterOwnerType: 'ARTIST',
   writersConfirmedAt: new Date('2026-10-05T10:00:00Z'),
   accuracyConfirmedAt: new Date('2026-10-05T10:00:00Z'),
-  tracks: [{ id: 'track-1', isrc: 'USRC17607839' }],
+  tracks: [{ id: 'track-1', isrc: 'USRC17607839', hasAudio: true }],
   contributors: [{ id: 'credit-1', roles: ['PERFORMER'] }],
   splits: [
     { rightType: 'RECORDING', shareBasisPoints: 10_000 },
@@ -61,7 +62,7 @@ describe('release readiness', () => {
     const result = releaseReadiness({
       ...ready,
       upc: null,
-      tracks: [...ready.tracks, { id: 'track-2', isrc: null }],
+      tracks: [...ready.tracks, { id: 'track-2', isrc: null, hasAudio: true }],
     })
     expect(result.blockers).toEqual([])
     expect(result.notices).toEqual([

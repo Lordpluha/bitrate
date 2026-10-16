@@ -5,7 +5,11 @@ import {
   trackStatusLabels,
   trackVersionLabels,
 } from '@entities/music'
-import { releaseStatusLabels, releaseTypeLabels } from '@entities/release'
+import {
+  releaseCoverUrl,
+  releaseStatusLabels,
+  releaseTypeLabels,
+} from '@entities/release'
 import { Circle, Ellipsis, Music2, Pause, Play } from 'lucide-react'
 
 export type CatalogueItem = MusicTrack | MusicRelease
@@ -145,7 +149,7 @@ export function CatalogueTable({
                       className="artist-music-cover"
                       height={44}
                       loading="lazy"
-                      src={item.cover}
+                      src={releaseCoverUrl(item.cover)}
                       width={44}
                     />
                   ) : (

@@ -1,4 +1,6 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
+import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
+import type { StorageService } from '@infra/storage/storage.types'
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from '@jest/globals'
 import { ArtistAuthGuard } from '@modules/artists-auth/artists-auth.guard'
 import type { ArtistAuthRequest } from '@modules/artists-auth/types'
@@ -76,6 +78,9 @@ describe('Release drafts (HTTP)', () => {
     })
       .overrideProvider(PrismaService)
       .useValue(prismaMock)
+      // Uploads never reach S3 in HTTP tests.
+      .overrideProvider(STORAGE_SERVICE)
+      .useValue(mockDeep<StorageService>())
       .overrideGuard(ArtistAuthGuard)
       .useValue({
         canActivate(context: ExecutionContext) {
@@ -390,6 +395,7 @@ describe('Release drafts (HTTP)', () => {
       ],
       contributors: [{ id: ownerId, displayName: 'Producer', roles: ['PRODUCER'] }],
       splits: [],
+      reviews: [],
       _count: { trackDrafts: 1, tracks: 1, contributors: 1 },
     }
     prismaMock.release.findFirst.mockResolvedValue(workspace)
@@ -429,6 +435,7 @@ describe('Release drafts (HTTP)', () => {
       tracks: [],
       contributors: [],
       splits: [],
+      reviews: [],
       _count: { trackDrafts: 51, tracks: 2, contributors: 60 },
     }
     prismaMock.release.findFirst.mockResolvedValue(workspace)
@@ -453,6 +460,7 @@ describe('Release drafts (HTTP)', () => {
       tracks: [],
       contributors: [],
       splits: [],
+      reviews: [],
       _count: { trackDrafts: 0, tracks: 0, contributors: 0 },
     }
     prismaMock.release.findFirst.mockResolvedValue(workspace)

@@ -11,11 +11,18 @@ import {
   UserRound,
 } from 'lucide-react'
 
-const upcomingSections = [
+/** Designed order: live sections link, upcoming ones explain themselves in a dialog. */
+const sections = [
+  { label: 'Dashboard', to: ROUTES.dashboard.home, icon: LayoutDashboard },
+  { label: 'Music', to: ROUTES.dashboard.music, icon: Music2 },
   { label: 'Promotion', action: 'promotion', icon: Megaphone },
-  { label: 'Analytics', action: 'analytics', icon: ChartNoAxesCombined },
-  { label: 'Profile', action: 'profile', icon: UserRound },
-  { label: 'Settings', action: 'settings', icon: Settings2 },
+  {
+    label: 'Analytics',
+    to: ROUTES.dashboard.analytics,
+    icon: ChartNoAxesCombined,
+  },
+  { label: 'Profile', to: ROUTES.dashboard.profile, icon: UserRound },
+  { label: 'Settings', to: ROUTES.dashboard.settings, icon: Settings2 },
 ] as const
 
 export function DashboardDesignNavigation({
@@ -33,46 +40,45 @@ export function DashboardDesignNavigation({
 
   return (
     <nav aria-label="Artist workspace" className="flex w-full flex-col gap-2">
-      {[
-        {
-          label: 'Dashboard',
-          to: ROUTES.dashboard.home,
-          icon: LayoutDashboard,
-        },
-        { label: 'Music', to: ROUTES.dashboard.music, icon: Music2 },
-      ].map(({ label, to, icon: Icon }) => (
-        <Link
-          activeOptions={{ exact: to === ROUTES.dashboard.home }}
-          activeProps={{
-            className: 'artist-workspace-nav-selected',
-            'aria-current': 'page',
-          }}
-          className={itemClass}
-          key={to}
-          onClick={onNavigate}
-          preload={false}
-          title={compact ? label : undefined}
-          to={to}
-        >
-          <Icon aria-hidden="true" className="size-5 shrink-0" />
-          <span className={cn(compact && 'sr-only')}>{label}</span>
-        </Link>
-      ))}
-      {upcomingSections.map(({ label, action, icon: Icon }) => (
-        <button
-          className={itemClass}
-          key={action}
-          onClick={() => {
-            onNavigate?.()
-            openAction(action)
-          }}
-          title={compact ? label : undefined}
-          type="button"
-        >
-          <Icon aria-hidden="true" className="size-5 shrink-0" />
-          <span className={cn(compact && 'sr-only')}>{label}</span>
-        </button>
-      ))}
+      {sections.map((section) => {
+        const Icon = section.icon
+        const content = (
+          <>
+            <Icon aria-hidden="true" className="size-5 shrink-0" />
+            <span className={cn(compact && 'sr-only')}>{section.label}</span>
+          </>
+        )
+        return 'to' in section ? (
+          <Link
+            activeOptions={{ exact: section.to === ROUTES.dashboard.home }}
+            activeProps={{
+              className: 'artist-workspace-nav-selected',
+              'aria-current': 'page',
+            }}
+            className={itemClass}
+            key={section.label}
+            onClick={onNavigate}
+            preload={false}
+            title={compact ? section.label : undefined}
+            to={section.to}
+          >
+            {content}
+          </Link>
+        ) : (
+          <button
+            className={itemClass}
+            key={section.label}
+            onClick={() => {
+              onNavigate?.()
+              openAction(section.action)
+            }}
+            title={compact ? section.label : undefined}
+            type="button"
+          >
+            {content}
+          </button>
+        )
+      })}
     </nav>
   )
 }

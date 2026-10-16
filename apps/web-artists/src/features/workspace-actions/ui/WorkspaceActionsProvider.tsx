@@ -9,17 +9,21 @@ import {
 import { type WorkspaceDestination, WorkspaceSearch } from './WorkspaceSearch'
 
 export function WorkspaceActionsProvider({
+  artistId,
   children,
   destinations,
   accountContent,
   appearanceContent,
   createReleaseDialog,
+  notificationsContent,
 }: {
+  artistId: string
   children: ReactNode
   destinations: readonly WorkspaceDestination[]
   accountContent: ReactNode
   appearanceContent: ReactNode
   createReleaseDialog: (onClose: () => void) => ReactNode
+  notificationsContent: (onNavigate: () => void) => ReactNode
 }) {
   const [action, setAction] = useState<WorkspaceAction | null>(null)
 
@@ -55,9 +59,12 @@ export function WorkspaceActionsProvider({
             <WorkspaceModal key={action} onClose={close} title={title}>
               {action === 'search' ? (
                 <WorkspaceSearch
+                  artistId={artistId}
                   destinations={destinations}
                   onNavigate={close}
                 />
+              ) : action === 'notifications' ? (
+                notificationsContent(close)
               ) : action === 'account' ? (
                 <div className="space-y-6">
                   {accountContent}
@@ -65,11 +72,14 @@ export function WorkspaceActionsProvider({
                 </div>
               ) : (
                 <div className="space-y-6">
-                  <p className="text-sm font-medium text-accent">Coming soon</p>
+                  {action !== 'upload-track' && (
+                    <p className="text-sm font-medium text-accent">
+                      Coming soon
+                    </p>
+                  )}
                   <p className="text-sm leading-relaxed text-text-secondary">
                     {workspaceNotices[action].description}
                   </p>
-                  {action === 'settings' && appearanceContent}
                   <Button
                     className="artist-workspace-primary"
                     onClick={close}

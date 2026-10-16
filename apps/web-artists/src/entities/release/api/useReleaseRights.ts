@@ -1,6 +1,7 @@
 import { artistMusicKeys } from '@shared/api/artistMusicKeys'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
+  reviseRelease,
   saveRights,
   saveSplits,
   saveTrackIsrc,
@@ -9,7 +10,7 @@ import {
 } from './rights'
 
 /** Every confirmed write refreshes the artist's Music and workspace caches. */
-function useReleaseWrite<Request, Result>(
+export function useReleaseWrite<Request, Result>(
   artistId: string,
   write: (request: Request) => Promise<Result>,
 ) {
@@ -34,3 +35,5 @@ export const useSubmitRelease = (artistId: string) =>
   useReleaseWrite(artistId, submitRelease)
 export const useWithdrawRelease = (artistId: string) =>
   useReleaseWrite(artistId, withdrawRelease)
+export const useReviseRelease = (artistId: string) =>
+  useReleaseWrite(artistId, reviseRelease)

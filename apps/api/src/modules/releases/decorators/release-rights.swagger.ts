@@ -1,7 +1,7 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, getSchemaPath } from '@nestjs/swagger'
 import { ReplaceReleaseSplitsDto } from '../dtos/replace-release-splits.dto'
-import { SubmitReleaseDto, WithdrawReleaseDto } from '../dtos/submit-release.dto'
+import { ReviseReleaseDto, SubmitReleaseDto, WithdrawReleaseDto } from '../dtos/submit-release.dto'
 import { UpdateReleaseRightsDto } from '../dtos/update-release-rights.dto'
 import { UpdateReleaseTrackDto } from '../dtos/update-release-track.dto'
 import { ReleaseEntity } from '../entities/release.entity'
@@ -51,14 +51,14 @@ export function ReplaceReleaseSplitsSwagger() {
 export function UpdateReleaseTrackSwagger() {
   return applyDecorators(
     ApiOperation({
-      summary: 'Set the ISRC of a recording on an owned draft',
+      summary: 'Rename a recording or set its ISRC on an owned draft',
       description:
-        'Accepts the code with or without hyphens and stores it compact. Optional for submission; a distributor can assign one later.',
+        'Updates the title, the ISRC, or both. The ISRC is accepted with or without hyphens and stored compact; it is optional for submission because a distributor can assign one later.',
     }),
     ApiParam({ name: 'trackId', format: 'uuid' }),
     ApiBody({ type: UpdateReleaseTrackDto }),
     ApiResponse({ status: HttpStatus.OK, type: ReleaseTrackUpdatedEntity }),
-    ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid ISRC or IDs' }),
+    ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid title, ISRC or IDs' }),
     ApiResponse({
       status: HttpStatus.NOT_FOUND,
       description: 'Release or recording unavailable to this artist',
@@ -115,6 +115,27 @@ export function WithdrawReleaseSwagger() {
     ApiResponse({
       status: HttpStatus.CONFLICT,
       description: 'Release changed since it was read or is not awaiting review',
+    }),
+  )
+}
+
+export function ReviseReleaseSwagger() {
+  return applyDecorators(
+    ApiOperation({
+      summary: 'Reopen a release Bitrate sent back for changes',
+      description:
+        'REJECTED -> DRAFT. Saved data and the review are kept; editing clears confirmations as for any draft.',
+    }),
+    ApiBody({ type: ReviseReleaseDto }),
+    ApiResponse({ status: HttpStatus.OK, type: ReleaseEntity }),
+    ApiParam({ name: 'id', format: 'uuid' }),
+    ApiResponse({
+      status: HttpStatus.NOT_FOUND,
+      description: 'Release unavailable to this artist',
+    }),
+    ApiResponse({
+      status: HttpStatus.CONFLICT,
+      description: 'Release changed since it was read or no changes were requested',
     }),
   )
 }

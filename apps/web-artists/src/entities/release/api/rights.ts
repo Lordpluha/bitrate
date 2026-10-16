@@ -12,20 +12,20 @@ const WRITE_TIMEOUT_MS = 30_000
 const STALE =
   'This release changed or is no longer a draft. Your entries are kept here; close and reopen the form to review the latest version.'
 
-interface WriteResult {
+export interface WriteResult {
   response: Response
   data?: unknown
   error?: unknown
 }
 
-interface WriteMessages {
+export interface WriteMessages {
   invalid: string
   unconfirmed: string
   conflict?: string
 }
 
 /** Maps API failures to recoverable messages; never confirms an unverified write. */
-async function guardedWrite<T>(
+export async function guardedWrite<T>(
   send: () => Promise<WriteResult>,
   confirm: (data: unknown) => T | undefined,
   messages: WriteMessages,
@@ -49,7 +49,7 @@ async function guardedWrite<T>(
 }
 
 /** A confirmed write returns this release with a newer version. */
-function advancedRelease(
+export function advancedRelease(
   data: unknown,
   id: string,
   expectedUpdatedAt: string,
@@ -234,6 +234,38 @@ export function withdrawRelease({ id, input }: WithdrawRequest) {
         'Could not confirm the withdrawal. Check the release before trying again.',
       conflict:
         'This release changed or is no longer awaiting review. Reload it to see its latest status.',
+    },
+  )
+}
+
+export interface ReviseRequest {
+  id: string
+  input: ApiSchemas['ReviseReleaseDto']
+}
+
+/** Reopens a release Bitrate sent back for changes as an editable draft. */
+export function reviseRelease({ id, input }: ReviseRequest) {
+  return guardedWrite(
+    () =>
+      clientFetchClient.POST('/api/v1/releases/{id}/revise', {
+        params: { path: { id } },
+        body: input,
+        signal: signal(),
+      }),
+    (data) => {
+      const release = releaseSummarySchema.safeParse(data)
+      return release.success &&
+        release.data.id === id &&
+        release.data.status === 'DRAFT'
+        ? release.data
+        : undefined
+    },
+    {
+      invalid: 'Could not reopen this release. Please try again.',
+      unconfirmed:
+        'Could not confirm the release was reopened. Check it before trying again.',
+      conflict:
+        'This release changed or no changes were requested. Reload it to see its latest status.',
     },
   )
 }

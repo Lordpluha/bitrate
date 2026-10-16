@@ -120,6 +120,46 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     return this.prisma.artistTrackDraft
   }
 
+  /** Gets the participants credited on releases. */
+  get releaseContributor() {
+    return this.prisma.releaseContributor
+  }
+
+  /** Gets the preparation tasks of releases. */
+  get releaseTask() {
+    return this.prisma.releaseTask
+  }
+
+  /** Gets the stores each release is planned for. */
+  get releaseDestination() {
+    return this.prisma.releaseDestination
+  }
+
+  /** Gets partner-reported delivery state per release and store. */
+  get releaseDelivery() {
+    return this.prisma.releaseDelivery
+  }
+
+  /** Gets Bitrate review decisions on submitted releases. */
+  get releaseReview() {
+    return this.prisma.releaseReview
+  }
+
+  /** Gets the notification categories each artist switched off. */
+  get artistNotificationPreference() {
+    return this.prisma.artistNotificationPreference
+  }
+
+  /** Gets when each artist last opened the notification center. */
+  get artistNotificationState() {
+    return this.prisma.artistNotificationState
+  }
+
+  /** Gets the countries a release is limited to; none means worldwide. */
+  get releaseTerritory() {
+    return this.prisma.releaseTerritory
+  }
+
   /** Gets the playlist. */
   get playlist() {
     return this.prisma.playlist
