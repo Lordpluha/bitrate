@@ -25,7 +25,8 @@
 @layer base {
   * {
     scroll-behavior: smooth;
-    font-family: var(--font-source-sans);
+    /* Inter, the design system's text face (`--font-sans` in the Pencil library). */
+    font-family: var(--font-landing-body), var(--font-sans);
   }
 
   /*

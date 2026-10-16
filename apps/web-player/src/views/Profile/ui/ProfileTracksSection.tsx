@@ -34,7 +34,7 @@ export const ProfileTracksSection = ({
             onClick={() => onPlayTrack(track)}
             type="button"
           >
-            <span className="text-right text-sm text-text-subdued">
+            <span className="text-right text-[13px] font-semibold text-text-subdued">
               {index + 1}
             </span>
             <Image
@@ -54,7 +54,7 @@ export const ProfileTracksSection = ({
             <span className="truncate text-sm text-text-subdued max-[900px]:hidden">
               {track.title}
             </span>
-            <span className="text-right text-sm text-text-subdued">
+            <span className="text-right text-xs tabular-nums text-muted-foreground">
               {formatDuration(track.duration ?? 0)}
             </span>
           </button>

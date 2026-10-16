@@ -18,7 +18,7 @@ export const TrackRowActions = ({
   track,
 }: TrackRowActionsProps) => (
   <>
-    <div className="grid grid-cols-[24px_24px_44px_24px] items-center justify-end gap-2 text-sm text-text-subdued max-[1024px]:hidden">
+    <div className="grid grid-cols-[24px_24px_44px_24px] items-center justify-end gap-2 text-xs text-muted-foreground tabular-nums max-[1024px]:hidden">
       <div className="flex justify-center opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
         <AddToQueueButton track={track} />
       </div>

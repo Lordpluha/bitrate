@@ -90,14 +90,14 @@ export const TrackCard = ({
       />
 
       {viewMode === 'compact' && (
-        <div className="text-sm text-text-subdued truncate max-[1024px]:hidden">
+        <div className="truncate text-xs text-muted-foreground max-[1024px]:hidden">
           <ArtistLink artistId={track.artistId} />
         </div>
       )}
-      <div className="text-sm text-text-subdued truncate max-[1024px]:hidden">
+      <div className="truncate text-[13px] text-muted-foreground max-[1024px]:hidden">
         Unknown Album
       </div>
-      <div className="text-sm text-text-subdued max-[1024px]:hidden">
+      <div className="text-xs text-text-subdued max-[1024px]:hidden">
         {track.createdAt ? DateUtils.formatDate(track.createdAt) : 'Unknown'}
       </div>
       <TrackRowActions
