@@ -1160,7 +1160,9 @@ test('release workspace waits for confirmed data before showing an empty state',
       'Loading release workspace…',
     )
     await expect(
-      page.getByText('No tracks linked yet. Track uploads are coming soon.'),
+      page.getByText(
+        'No tracks yet. Upload a WAV or FLAC master to add the first one.',
+      ),
     ).toHaveCount(0)
   } finally {
     finish()
@@ -1301,7 +1303,9 @@ test('release workspace edits an owned draft, refreshes its summary and persists
   await page.request.post('http://localhost:3103/test/music')
   await gotoHydrated(page, `/dashboard/music/${workspaceDraftId}`)
   await expect(
-    page.getByText('No tracks linked yet. Track uploads are coming soon.'),
+    page.getByText(
+      'No tracks yet. Upload a WAV or FLAC master to add the first one.',
+    ),
   ).toBeVisible()
   await page.getByRole('button', { name: 'Edit draft', exact: true }).click()
   const dialog = page.getByRole('dialog', { name: 'Edit draft', exact: true })
@@ -1804,7 +1808,7 @@ for (const theme of ['light', 'dark', 'dim'] as const) {
       .click()
     await expect(
       page.getByRole('dialog', { name: 'Upload track', exact: true }),
-    ).toContainText('coming soon')
+    ).toContainText('Tracks are uploaded inside a release')
     await page.keyboard.press('Escape')
     await page.getByRole('button', { name: 'Releases 3', exact: true }).click()
     await expect(
@@ -2327,16 +2331,25 @@ for (const theme of ['dark', 'light', 'dim'] as const) {
     await expect(
       page.getByRole('heading', { name: 'Dashboard', exact: true }),
     ).toBeVisible()
-    for (const name of ['Promotion', 'Analytics', 'Profile', 'Settings']) {
+    await openNavigation(page)
+    await page.getByRole('button', { name: 'Promotion', exact: true }).click()
+    const notice = page.getByRole('dialog', { name: 'Promotion', exact: true })
+    await expect(notice.getByText('Coming soon', { exact: true })).toBeVisible()
+    await expect(page.locator('body')).toHaveCSS('overflow', 'hidden')
+    await notice.getByRole('button', { name: 'Close dialog' }).click()
+    for (const [name, path] of [
+      ['Analytics', 'analytics'],
+      ['Profile', 'profile'],
+      ['Settings', 'settings'],
+    ] as const) {
       await openNavigation(page)
-      await page.getByRole('button', { name, exact: true }).click()
-      const notice = page.getByRole('dialog', { name, exact: true })
-      await expect(
-        notice.getByText('Coming soon', { exact: true }),
-      ).toBeVisible()
-      await expect(page.locator('body')).toHaveCSS('overflow', 'hidden')
-      await notice.getByRole('button', { name: 'Close dialog' }).click()
+      await page
+        .getByRole('navigation', { name: 'Artist workspace' })
+        .getByRole('link', { name, exact: true })
+        .click()
+      await expect(page).toHaveURL(new RegExp(`/dashboard/${path}(\\?|$)`))
     }
+    await gotoHydrated(page, '/dashboard')
     const create = page.getByRole('button', {
       name: 'Create release',
       exact: true,
@@ -2358,7 +2371,7 @@ for (const theme of ['dark', 'light', 'dim'] as const) {
       .click()
     await expect(
       page.getByRole('dialog', { name: 'Notifications' }),
-    ).toContainText('No notifications are available')
+    ).toContainText('No notifications.')
     await page.keyboard.press('Escape')
     if (isMobile)
       await page
@@ -2376,11 +2389,11 @@ for (const theme of ['dark', 'light', 'dim'] as const) {
     await expect(query).toBeFocused()
     await query.fill('no-such-section')
     await expect(search.getByRole('status')).toHaveText(
-      'No matching workspace sections.',
+      'Nothing matches your search.',
     )
     await query.fill('Tasks')
     await search.getByRole('link', { name: 'Tasks', exact: true }).click()
-    await expect(page).toHaveURL(/\/dashboard\/tasks$/)
+    await expect(page).toHaveURL(/\/dashboard\/tasks(\?|$)/)
     await expect(search).not.toBeVisible()
     await page
       .getByRole('button', { name: 'Search workspace', exact: true })
@@ -2389,7 +2402,7 @@ for (const theme of ['dark', 'light', 'dim'] as const) {
       .getByRole('searchbox', { name: 'Search workspace', exact: true })
       .fill('Distribution')
     await page.getByRole('link', { name: 'Distribution', exact: true }).click()
-    await expect(page).toHaveURL(/\/dashboard\/distribution$/)
+    await expect(page).toHaveURL(/\/dashboard\/distribution(\?|$)/)
     await openAppearance(page)
     const account = page.getByRole('dialog', {
       name: 'Artist account',
@@ -2459,7 +2472,7 @@ test('unverified artist can confirm email and then sign in', async ({
   await page.getByLabel('Email Address').fill('unverified@example.test')
   await page.getByLabel('Password', { exact: true }).fill('Password123!')
   await page.getByRole('button', { name: 'Continue', exact: true }).click()
-  await expect(page).toHaveURL(/\/dashboard\/tasks$/)
+  await expect(page).toHaveURL(/\/dashboard\/tasks(\?|$)/)
 })
 
 test('registration explains email verification instead of reporting a completed login', async ({
@@ -2633,7 +2646,7 @@ test('login returns to the requested protected page', async ({ page }) => {
   await page.getByLabel('Email Address').fill('artist@example.test')
   await page.getByLabel('Password', { exact: true }).fill('Password123!')
   await page.getByRole('button', { name: 'Continue', exact: true }).click()
-  await expect(page).toHaveURL(/\/dashboard\/tasks$/)
+  await expect(page).toHaveURL(/\/dashboard\/tasks(\?|$)/)
   await expect(
     page.getByRole('heading', { name: 'Tasks', exact: true }),
   ).toBeVisible()
@@ -2667,7 +2680,7 @@ test('two-factor login verifies the code before returning to the protected page'
   await expect(page.getByText('Test artist', { exact: true })).toHaveCount(0)
   await code.fill('123456')
   await page.getByRole('button', { name: 'Verify and sign in' }).click()
-  await expect(page).toHaveURL(/\/dashboard\/tasks$/)
+  await expect(page).toHaveURL(/\/dashboard\/tasks(\?|$)/)
   const cookies = await context.cookies()
   expect(
     cookies.find((cookie) => cookie.name === 'pending_2fa_token'),
