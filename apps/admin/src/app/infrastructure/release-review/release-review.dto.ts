@@ -82,7 +82,7 @@ export const releasePageDto = z.object({
   limit: z.number().int(),
 }) satisfies z.ZodType<ContractReleasePage>
 
-export const releaseReviewDto = z.object({
+const releaseReviewDto = z.object({
   id: z.uuid(),
   decision: decisionDto,
   message: z.string().nullable(),
