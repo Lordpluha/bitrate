@@ -41,7 +41,7 @@ const isNetworkError = (error: unknown) =>
   error instanceof TypeError &&
   error.message.toLowerCase().includes('failed to fetch')
 
-const getApiErrorMessage = (
+export const getApiErrorMessage = (
   error: unknown,
   fallback = DEFAULT_ERROR_MESSAGE,
 ) => {

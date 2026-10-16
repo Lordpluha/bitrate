@@ -4,9 +4,12 @@ export const meSettingsSchema = z.object({
   autoplay: z.boolean(),
   compactLibrary: z.boolean(),
   explicitContent: z.boolean(),
+  followersVisible: z.boolean(),
   language: z.string(),
   normalizeVolume: z.boolean(),
   privateSession: z.boolean(),
+  publicPlaylistsOnProfile: z.boolean(),
+  showListeningActivity: z.boolean(),
   showNowPlaying: z.boolean(),
   streamingQuality: z.enum(['automatic', 'low', 'normal', 'high', 'very-high']),
   updatedAt: z.coerce.date().optional(),
@@ -48,4 +51,6 @@ export const subscriptionSchema = z.object({
   updatedAt: z.coerce.date().optional(),
   userId: z.string(),
 })
+export type NotificationResponse = z.infer<typeof notificationSchema>
+export type MeSettings = z.infer<typeof meSettingsSchema>
 export type UpdateMeSettings = z.infer<typeof updateMeSettingsSchema>

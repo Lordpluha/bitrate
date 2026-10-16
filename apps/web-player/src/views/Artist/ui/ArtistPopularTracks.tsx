@@ -18,7 +18,7 @@ export type ArtistPopularTracksProps = {
 
 const COLLAPSED_COUNT = 5
 
-/** Numbered "Popular" list — the artist's most-played tracks. */
+/** Numbered "Popular" list — the artist's most played tracks (`GET /artists/{id}/top-tracks`). */
 export const ArtistPopularTracks = ({
   isPlaybackContextActive,
   likedTrackIds,

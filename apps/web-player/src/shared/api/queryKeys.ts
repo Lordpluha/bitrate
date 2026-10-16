@@ -3,6 +3,7 @@ export const apiQueryKeys = {
     all: ['albums'] as const,
     artist: (artistId: string) => ['albums', 'artist', artistId] as const,
     detail: (albumId: string) => ['albums', 'detail', albumId] as const,
+    liked: ['albums', 'liked'] as const,
     list: (params: {
       artistId?: string
       page?: number
@@ -29,7 +30,13 @@ export const apiQueryKeys = {
       country: string | undefined,
       page: number,
       limit: number,
-    ) => ['discovery', 'charts', { scope, country, page, limit }] as const,
+      genre?: string,
+    ) =>
+      ['discovery', 'charts', { scope, country, page, limit, genre }] as const,
+    artistPlaylists: (artistId: string, page: number, limit: number) =>
+      ['discovery', 'artist-playlists', { artistId, page, limit }] as const,
+    artistCharts: (scope: string, page: number, limit: number) =>
+      ['discovery', 'artist-charts', { scope, page, limit }] as const,
     feed: ['discovery', 'feed'] as const,
     topArtists: (range: string, page: number, limit: number) =>
       ['discovery', 'top-artists', { range, page, limit }] as const,
@@ -50,12 +57,14 @@ export const apiQueryKeys = {
       ['playlists', 'detail', playlistId] as const,
     list: (params: { page?: number; limit?: number }) =>
       ['playlists', 'list', params] as const,
+    liked: ['playlists', 'liked'] as const,
     mine: ['playlists', 'mine'] as const,
   },
   me: {
     all: ['me'] as const,
     notifications: (page: number, limit: number) =>
       ['me', 'notifications', { page, limit }] as const,
+    playerDevices: ['me', 'player', 'devices'] as const,
     settings: ['me', 'settings'] as const,
     subscription: ['me', 'subscription'] as const,
   },
@@ -79,6 +88,8 @@ export const apiQueryKeys = {
   tracks: {
     all: ['tracks'] as const,
     artist: (artistId: string) => ['tracks', 'artist', artistId] as const,
+    artistTop: (artistId: string, limit: number) =>
+      ['tracks', 'artist', artistId, 'top', { limit }] as const,
     detail: (trackId: string) => ['tracks', 'detail', trackId] as const,
     liked: (params: { page?: number; limit?: number }) =>
       ['tracks', 'liked', params] as const,
@@ -99,5 +110,8 @@ export const apiQueryKeys = {
     search: (params: { username: string; page?: number; limit?: number }) =>
       ['users', 'search', params] as const,
     following: ['users', 'following'] as const,
+    followingActivity: ['users', 'following', 'activity'] as const,
+    follows: (userId: string, kind: 'followers' | 'following') =>
+      ['users', 'follows', userId, kind] as const,
   },
 } as const

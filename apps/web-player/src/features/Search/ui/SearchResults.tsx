@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
+import { useBrowseCategories } from '@/entities/Discovery'
 import type { SafeUser } from '@/entities/User'
 import type {
   SearchAlbumResult,
@@ -14,7 +15,7 @@ import {
   buildSearchRows,
   getAllTabRows,
 } from '@/features/Search/lib/buildSearchRows'
-import { getSearchCategoryMatch } from '@/features/Search/lib/getSearchCategoryMatch'
+import { matchBrowseCategory } from '@/features/Search/lib/getSearchCategoryMatch'
 import { searchFilterTabs } from '@/features/Search/model/search.constants'
 import type { MediaCardItem } from '@/features/Search/model/types'
 import { MediaRow } from '@/features/Search/ui/MediaRow'
@@ -44,7 +45,11 @@ export const SearchResults = ({
   users,
 }: SearchResultsProps) => {
   const [activeTab, setActiveTab] = useState<SearchFilterTab>('All')
-  const categoryMatch = getSearchCategoryMatch(query)
+  const { data: categoryData } = useBrowseCategories()
+  const categoryMatch = matchBrowseCategory({
+    query,
+    categories: categoryData?.data ?? [],
+  })
 
   const groups = useMemo(
     () => buildSearchRows({ albums, artists, playlists, tracks, users }),
@@ -85,19 +90,22 @@ export const SearchResults = ({
       {categoryMatch && activeTab === 'All' ? (
         <Link
           className="grid max-w-full grid-cols-[72px_minmax(0,1fr)] items-center gap-5 rounded-md bg-surface p-4 transition-colors hover:bg-surface-hover"
-          href={ROUTES.searchCategory(categoryMatch.title)}
+          href={ROUTES.searchCategory(categoryMatch.slug)}
         >
           <Image
-            alt={categoryMatch.title}
+            alt={categoryMatch.name}
             className="size-18 rounded-md object-cover shadow-lg shadow-black/25"
             height={72}
-            src={categoryMatch.image}
+            src={getPlaylistCoverUrl(categoryMatch.cover)}
+            style={{
+              backgroundColor: categoryMatch.color ?? 'var(--color-surface)',
+            }}
             unoptimized
             width={72}
           />
           <span className="min-w-0">
             <span className="block truncate text-2xl font-bold text-text sm:text-3xl">
-              {categoryMatch.title}
+              {categoryMatch.name}
             </span>
             <span className="mt-1 block text-sm text-text-subdued">Genre</span>
           </span>
@@ -107,7 +115,7 @@ export const SearchResults = ({
       {showsPlaylistRow ? (
         <MediaRow
           items={playlistItems}
-          title={`Jump in: ${categoryMatch?.title ?? query} playlists`}
+          title={`Jump in: ${categoryMatch?.name ?? query} playlists`}
         />
       ) : null}
 

@@ -44,13 +44,13 @@ export const TrackPrimaryInfo = ({
     <div className="min-w-0">
       <div
         className={cn(
-          'truncate font-medium',
+          'truncate text-sm font-semibold',
           isCurrent ? 'text-primary' : 'text-text group-hover:underline',
         )}
       >
         {track.title}
       </div>
-      <div className="truncate text-sm text-text-subdued max-[1024px]:text-xs">
+      <div className="truncate text-xs text-muted-foreground">
         <ArtistName artistId={track.artistId} />
       </div>
     </div>

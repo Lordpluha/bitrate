@@ -1,12 +1,12 @@
 import {
   CheckCircle2,
   CirclePlus,
-  MonitorSpeaker,
   Pause,
   Play,
   SkipBack,
   SkipForward,
 } from 'lucide-react'
+import { ConnectDevicesPopover } from '@/features/BitrateConnect'
 
 type MiniPlayerControlsProps = {
   isLiked: boolean
@@ -47,13 +47,9 @@ export const MiniPlayerControls = ({
         <CirclePlus aria-hidden="true" size={24} />
       )}
     </button>
-    <button
-      aria-label="Connect to a device"
-      className={`${buttonClass} hidden min-[620px]:flex`}
-      type="button"
-    >
-      <MonitorSpeaker aria-hidden="true" size={22} />
-    </button>
+    <ConnectDevicesPopover
+      triggerClassName={`${buttonClass} hidden min-[620px]:flex`}
+    />
     <button
       aria-label="Previous track"
       className={buttonClass}

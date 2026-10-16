@@ -67,3 +67,16 @@ export const libraryPlaylistsResponseSchema = arrayOrPaginated(
     tracks: z.array(libraryPlaylistTrackResponseSchema).default([]),
   }),
 )
+
+/** One page of `GET /playlists/liked`, newest like first. */
+export const likedPlaylistsPageSchema = z.object({
+  data: z.array(
+    playlistResponseSchema.extend({
+      likedAt: z.string().optional(),
+      user: playlistUserResponseSchema.optional(),
+    }),
+  ),
+  limit: z.number(),
+  page: z.number(),
+  total: z.number(),
+})

@@ -1,12 +1,11 @@
 'use client'
 
-import { MembersIcon } from '@bitrate/ui-react'
 import { ThemeSwitcher } from '@features/SwitchTheme'
 import { useAuth } from '@shared/hooks'
 import { ROUTES } from '@shared/routes'
 import { Logo } from '@shared/ui'
-import Link from 'next/link'
 import { AuthButtons } from './AuthButtons'
+import { FriendActivityPopover } from './FriendActivityPopover'
 import { HeaderSearch } from './HeaderSearch'
 import { HomeBtn } from './HomeBtn'
 import { InstallBtn } from './InstallBtn'
@@ -41,12 +40,7 @@ export const MainHeader = ({ onCreate }: MainHeaderProps) => {
             ) : isAuthenticated && user ? (
               <>
                 <NotificationsPopover />
-                <Link
-                  className="transition-opacity duration-200 hover:opacity-70"
-                  href="#"
-                >
-                  <MembersIcon />
-                </Link>
+                <FriendActivityPopover />
                 <ProfileButton
                   avatar={user.avatar}
                   username={user.username || 'User'}

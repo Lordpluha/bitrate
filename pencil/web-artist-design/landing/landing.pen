@@ -1,0 +1,1064 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "bCz2Hy",
+      "name": "Artist / Landing / Desktop / Dark",
+      "width": 1440,
+      "height": 1100,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "QWVwC6",
+          "ref": "ds:h25UaM",
+          "name": "Public Header"
+        },
+        {
+          "type": "frame",
+          "id": "3K7ym9",
+          "name": "Hero",
+          "width": "fill_container",
+          "layout": "horizontal",
+          "padding": [
+            80,
+            120
+          ],
+          "gap": 48,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "PArG5H",
+              "name": "Column",
+              "layout": "vertical",
+              "gap": 20,
+              "width": 520,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "nqFnih",
+                  "ref": "ds:yjiPHo",
+                  "name": "Text/Eyebrow",
+                  "content": "BITRATE FOR ARTISTS"
+                },
+                {
+                  "type": "ref",
+                  "id": "MTgiKp",
+                  "ref": "ds:NEeFbL",
+                  "name": "Text/Display",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Release, promote and grow on Bitrate."
+                },
+                {
+                  "type": "ref",
+                  "id": "gxfTsV",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Your releases, campaigns and listeners in one workspace."
+                },
+                {
+                  "type": "frame",
+                  "id": "UPVBNf",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "aj9c4e",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Get started",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Get started"
+                        },
+                        "ds:D3xnv": {
+                          "icon": "arrow-right"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "2F7Wa2",
+                      "ref": "ds:qz3aI",
+                      "name": "Button / Explore Campaign Kit",
+                      "descendants": {
+                        "ds:i6a4e": {
+                          "content": "Explore Campaign Kit"
+                        },
+                        "ds:MlIUw": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "DDM8Du",
+              "name": "Video Slides",
+              "gap": 16,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "2sw9hr",
+                  "name": "Slide / Artist Profile",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "rZ2iba",
+                      "ref": "ds:T26AVG",
+                      "name": "Media/Hero Image",
+                      "width": "fill_container",
+                      "height": 420,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/hero/luma-vale.png",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "KjscTH",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Artist Profile"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "53fHi2",
+                  "name": "Slide / Sell and promote merch",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "MF5ie7",
+                      "ref": "ds:T26AVG",
+                      "name": "Media/Hero Image",
+                      "width": "fill_container",
+                      "height": 420,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/hero/stage.png",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "L2S4kk",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Sell and promote merch"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ikSzoW",
+                  "name": "Slide / Explore Campaign Kit",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "oqVMfw",
+                      "ref": "ds:T26AVG",
+                      "name": "Media/Hero Image",
+                      "width": "fill_container",
+                      "height": 420,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/hero/night-signal.png",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Nk399X",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Explore Campaign Kit"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "NgPdAn",
+          "ref": "ds:shs4K4",
+          "name": "Landing/Footer"
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/ — Marketing page for artists: header with Features submenu, video slides, footer."
+    },
+    {
+      "type": "frame",
+      "id": "CCygm5",
+      "name": "Artist / Landing / Desktop / Light",
+      "width": 1440,
+      "height": 1100,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "jtUptm",
+          "ref": "ds:h25UaM",
+          "name": "Public Header"
+        },
+        {
+          "type": "frame",
+          "id": "LVJsQu",
+          "name": "Hero",
+          "width": "fill_container",
+          "layout": "horizontal",
+          "padding": [
+            80,
+            120
+          ],
+          "gap": 48,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "UEyXbP",
+              "name": "Column",
+              "layout": "vertical",
+              "gap": 20,
+              "width": 520,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "QrHQFc",
+                  "ref": "ds:yjiPHo",
+                  "name": "Text/Eyebrow",
+                  "content": "BITRATE FOR ARTISTS"
+                },
+                {
+                  "type": "ref",
+                  "id": "FiYAzK",
+                  "ref": "ds:NEeFbL",
+                  "name": "Text/Display",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Release, promote and grow on Bitrate."
+                },
+                {
+                  "type": "ref",
+                  "id": "HU7FZs",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Your releases, campaigns and listeners in one workspace."
+                },
+                {
+                  "type": "frame",
+                  "id": "PiXSb2",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "4GpbMj",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Get started",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Get started"
+                        },
+                        "ds:D3xnv": {
+                          "icon": "arrow-right"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Pytcci",
+                      "ref": "ds:qz3aI",
+                      "name": "Button / Explore Campaign Kit",
+                      "descendants": {
+                        "ds:i6a4e": {
+                          "content": "Explore Campaign Kit"
+                        },
+                        "ds:MlIUw": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "JgRZB7",
+              "name": "Video Slides",
+              "gap": 16,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "KHftAn",
+                  "name": "Slide / Artist Profile",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "QdHNLG",
+                      "ref": "ds:T26AVG",
+                      "name": "Media/Hero Image",
+                      "width": "fill_container",
+                      "height": 420,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/hero/luma-vale.png",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Jkz6T4",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Artist Profile"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Ry79Su",
+                  "name": "Slide / Sell and promote merch",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "rBxiRH",
+                      "ref": "ds:T26AVG",
+                      "name": "Media/Hero Image",
+                      "width": "fill_container",
+                      "height": 420,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/hero/stage.png",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jdmX8D",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Sell and promote merch"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Jmz7pJ",
+                  "name": "Slide / Explore Campaign Kit",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "vsbXbv",
+                      "ref": "ds:T26AVG",
+                      "name": "Media/Hero Image",
+                      "width": "fill_container",
+                      "height": 420,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/hero/night-signal.png",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Az36GE",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Explore Campaign Kit"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "KXWiXW",
+          "ref": "ds:shs4K4",
+          "name": "Landing/Footer"
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "/ — Marketing page for artists: header with Features submenu, video slides, footer."
+    },
+    {
+      "type": "frame",
+      "id": "jUVpJx",
+      "name": "Artist / Landing / Desktop / Dim",
+      "width": 1440,
+      "height": 1100,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "PmdZET",
+          "ref": "ds:h25UaM",
+          "name": "Public Header"
+        },
+        {
+          "type": "frame",
+          "id": "nUjEgJ",
+          "name": "Hero",
+          "width": "fill_container",
+          "layout": "horizontal",
+          "padding": [
+            80,
+            120
+          ],
+          "gap": 48,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "wWqv49",
+              "name": "Column",
+              "layout": "vertical",
+              "gap": 20,
+              "width": 520,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "tFgsmg",
+                  "ref": "ds:yjiPHo",
+                  "name": "Text/Eyebrow",
+                  "content": "BITRATE FOR ARTISTS"
+                },
+                {
+                  "type": "ref",
+                  "id": "qnF2h3",
+                  "ref": "ds:NEeFbL",
+                  "name": "Text/Display",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Release, promote and grow on Bitrate."
+                },
+                {
+                  "type": "ref",
+                  "id": "X6M9dG",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Your releases, campaigns and listeners in one workspace."
+                },
+                {
+                  "type": "frame",
+                  "id": "M532Tn",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "AJWHEB",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Get started",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Get started"
+                        },
+                        "ds:D3xnv": {
+                          "icon": "arrow-right"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "zQ2hz7",
+                      "ref": "ds:qz3aI",
+                      "name": "Button / Explore Campaign Kit",
+                      "descendants": {
+                        "ds:i6a4e": {
+                          "content": "Explore Campaign Kit"
+                        },
+                        "ds:MlIUw": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "xBMLkq",
+              "name": "Video Slides",
+              "gap": 16,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "DQcFGr",
+                  "name": "Slide / Artist Profile",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "tQ2iQD",
+                      "ref": "ds:T26AVG",
+                      "name": "Media/Hero Image",
+                      "width": "fill_container",
+                      "height": 420,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/hero/luma-vale.png",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "YK5MYi",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Artist Profile"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "FnvSsF",
+                  "name": "Slide / Sell and promote merch",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "K78JdR",
+                      "ref": "ds:T26AVG",
+                      "name": "Media/Hero Image",
+                      "width": "fill_container",
+                      "height": 420,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/hero/stage.png",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pPsXwu",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Sell and promote merch"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "66hfMM",
+                  "name": "Slide / Explore Campaign Kit",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "5netCd",
+                      "ref": "ds:T26AVG",
+                      "name": "Media/Hero Image",
+                      "width": "fill_container",
+                      "height": 420,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/hero/night-signal.png",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "2pLqG7",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Explore Campaign Kit"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "hvp8iU",
+          "ref": "ds:shs4K4",
+          "name": "Landing/Footer"
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "/ — Marketing page for artists: header with Features submenu, video slides, footer."
+    },
+    {
+      "type": "frame",
+      "id": "C8SiVm",
+      "name": "Artist / Landing / Mobile / Dark",
+      "width": 390,
+      "height": 1000,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "7PCRvX",
+          "ref": "ds:h25UaM",
+          "name": "Public Header",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "rSZoUd",
+          "name": "Hero",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            32,
+            16
+          ],
+          "gap": 24,
+          "alignItems": "start",
+          "children": [
+            {
+              "type": "frame",
+              "id": "4UCamu",
+              "name": "Column",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "U5HmUf",
+                  "ref": "ds:yjiPHo",
+                  "name": "Text/Eyebrow",
+                  "content": "BITRATE FOR ARTISTS"
+                },
+                {
+                  "type": "ref",
+                  "id": "SYRpba",
+                  "ref": "ds:MgMQ2L",
+                  "name": "Text/H1",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Release, promote and grow on Bitrate."
+                },
+                {
+                  "type": "ref",
+                  "id": "dXvKvd",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Your releases, campaigns and listeners in one workspace."
+                },
+                {
+                  "type": "frame",
+                  "id": "HBCFWY",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "j3XuaM",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Get started",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Get started"
+                        },
+                        "ds:D3xnv": {
+                          "icon": "arrow-right"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pn3GEs",
+                      "ref": "ds:qz3aI",
+                      "name": "Button / Explore Campaign Kit",
+                      "descendants": {
+                        "ds:i6a4e": {
+                          "content": "Explore Campaign Kit"
+                        },
+                        "ds:MlIUw": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "UCJC9m",
+              "name": "Video Slides",
+              "gap": 16,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "qGL5P2",
+                  "name": "Slide / Artist Profile",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "m3AUGs",
+                      "ref": "ds:T26AVG",
+                      "name": "Media/Hero Image",
+                      "width": "fill_container",
+                      "height": 260,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/hero/luma-vale.png",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "QLS6w6",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Artist Profile"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/ — Marketing page for artists: header with Features submenu, video slides, footer."
+    },
+    {
+      "type": "frame",
+      "id": "sSdTCw",
+      "name": "Artist / Landing / Features menu / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "CSKBTA",
+          "ref": "ds:h25UaM",
+          "name": "Public Header"
+        },
+        {
+          "type": "frame",
+          "id": "7xee9m",
+          "name": "Row",
+          "gap": 40,
+          "alignItems": "start",
+          "width": "fill_container",
+          "padding": [
+            24,
+            120
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "oCQ8ZX",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": 320,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "sgpt4G",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "5HQDEB",
+                      "ref": "ds:yjiPHo",
+                      "name": "Text/Eyebrow",
+                      "content": "AMPLIFY YOUR MUSIC"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "cAtXzo",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Campaign Kit"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5W3VBT",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Algorithmic promotion"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ATELui",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Release campaigns"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "AvTPy7",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Playlisting"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "UJ3KkW",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Sponsored recommendations"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "UurBho",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": 320,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "CGaSF3",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "rZTtgu",
+                      "ref": "ds:yjiPHo",
+                      "name": "Text/Eyebrow",
+                      "content": "CONNECT WITH FANS"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "UTpETJ",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Video & Visuals"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "zQDbqh",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Artist Profile"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "wiK6Jd",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Sell and promote merch"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/ — Marketing page for artists: header with Features submenu, video slides, footer."
+    },
+    {
+      "type": "frame",
+      "id": "n7GkLm",
+      "name": "Artist / Landing / Features menu / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "bWwuz9",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "ru3CmS",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "UPhbhQ",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "ref",
+              "id": "idjTLQ",
+              "ref": "ds:Qjj2NE",
+              "name": "Text/H3",
+              "content": "Get started"
+            },
+            {
+              "type": "ref",
+              "id": "236qyN",
+              "ref": "ds:Qjj2NE",
+              "name": "Text/H3",
+              "content": "Features"
+            },
+            {
+              "type": "ref",
+              "id": "YbnNhW",
+              "ref": "ds:P2oa0L",
+              "name": "Text/Body",
+              "content": "Campaign Kit"
+            },
+            {
+              "type": "ref",
+              "id": "nDHskh",
+              "ref": "ds:P2oa0L",
+              "name": "Text/Body",
+              "content": "Release campaigns"
+            },
+            {
+              "type": "ref",
+              "id": "Rv77Kq",
+              "ref": "ds:P2oa0L",
+              "name": "Text/Body",
+              "content": "Playlisting"
+            },
+            {
+              "type": "ref",
+              "id": "oeTvQb",
+              "ref": "ds:P2oa0L",
+              "name": "Text/Body",
+              "content": "Video & Visuals"
+            }
+          ]
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/ — Marketing page for artists: header with Features submenu, video slides, footer."
+    }
+  ]
+}

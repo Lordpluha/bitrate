@@ -1,0 +1,5509 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "75A4QS",
+      "name": "Friends / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "m6tuyS",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "w7qgg9",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "TqQEen",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "t3i8Ys",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "7MUncp",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Friends"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "woRN8x",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ovwLi4",
+                      "ref": "ds:exjwf",
+                      "name": "Button / Find friends",
+                      "descendants": {
+                        "ds:E23bq6": {
+                          "content": "Find friends"
+                        },
+                        "ds:k0WCtI": {
+                          "icon": "user-plus"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "4FAmhA",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "JhrjgG",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / All · 6",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "All · 6"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "T2deiL",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Online · 4",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Online · 4"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "wZNxbd",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Requests · 2",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Requests · 2"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "gKsupf",
+                  "name": "Online Now",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ibTyHh",
+                      "ref": "ds:zVqAJC",
+                      "name": "Section Header",
+                      "descendants": {
+                        "ds:zBZfky": {
+                          "content": "Online now · 4"
+                        },
+                        "ds:uyhHlD": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "3rFpVN",
+                      "name": "Tiles",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "aiuZey",
+                          "ref": "ds:PwT7em",
+                          "name": "Friend Tile/Listening",
+                          "descendants": {
+                            "ds:pQZfsW": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar1.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:yqP4pj": {
+                              "content": "Maya"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "6JebXD",
+                          "ref": "ds:rDkoB5",
+                          "name": "Friend Tile/Online",
+                          "descendants": {
+                            "ds:z5vJGJ": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar2.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:G5e3D5": {
+                              "content": "Jonah"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "EXfhMq",
+                          "ref": "ds:rDkoB5",
+                          "name": "Friend Tile/Online",
+                          "descendants": {
+                            "ds:z5vJGJ": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar3.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:G5e3D5": {
+                              "content": "Ana"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "xjVCKo",
+                          "ref": "ds:ix6VOo",
+                          "name": "Friend Tile/Away",
+                          "descendants": {
+                            "ds:KAoJLe": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar4.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:xKH2VJ": {
+                              "content": "Theo"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "DsYs2S",
+                  "name": "List",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "7YQNEH",
+                      "ref": "ds:zVqAJC",
+                      "name": "Section Header",
+                      "descendants": {
+                        "ds:zBZfky": {
+                          "content": "Online · 4"
+                        },
+                        "ds:uyhHlD": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "uCxgxY",
+                      "name": "Online",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "KVjEpB",
+                          "ref": "ds:BpzHIL",
+                          "name": "Friend Row/Listening",
+                          "descendants": {
+                            "ds:TmRNol": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar1.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:6w3gGT": {
+                              "content": "Maya Rivers"
+                            },
+                            "ds:QVfv9M": {
+                              "content": "Listening to Afterglow · Nova & the Static"
+                            },
+                            "ds:HPqF4J": {
+                              "type": "frame",
+                              "id": "BRcqow",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "t2hjaz",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Listen along",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Listen along"
+                                    },
+                                    "ds:wFUna": {
+                                      "icon": "headphones"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "cXNw25",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "W6AMjK",
+                          "ref": "ds:pEvz1E",
+                          "name": "Friend Row/Online",
+                          "descendants": {
+                            "ds:Xuh20u": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar2.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:02aOUU": {
+                              "content": "Jonah Pike"
+                            },
+                            "ds:EimJ1W": {
+                              "content": "Online"
+                            },
+                            "ds:9bARuq": {
+                              "type": "frame",
+                              "id": "HmVtHy",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "sXemmw",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "dyU3mr",
+                          "ref": "ds:pEvz1E",
+                          "name": "Friend Row/Online",
+                          "descendants": {
+                            "ds:Xuh20u": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar3.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:02aOUU": {
+                              "content": "Ana Sol"
+                            },
+                            "ds:EimJ1W": {
+                              "content": "Online"
+                            },
+                            "ds:9bARuq": {
+                              "type": "frame",
+                              "id": "HXgVTY",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "shCxLg",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "BhrESR",
+                          "ref": "ds:CRSJoY",
+                          "name": "Friend Row/Away",
+                          "descendants": {
+                            "ds:2mhSCV": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar4.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:NU1T9o": {
+                              "content": "Theo Lark"
+                            },
+                            "ds:xaNn09": {
+                              "content": "Away · 12 min"
+                            },
+                            "ds:WRKm3O": {
+                              "type": "frame",
+                              "id": "EeYkzq",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "R73XP2",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "rgnq9F",
+                      "ref": "ds:zVqAJC",
+                      "name": "Section Header",
+                      "descendants": {
+                        "ds:zBZfky": {
+                          "content": "Offline · 2"
+                        },
+                        "ds:uyhHlD": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "MYK8j9",
+                      "name": "Offline",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Tm6t2K",
+                          "ref": "ds:Ttx0gN",
+                          "name": "Friend Row/Offline",
+                          "descendants": {
+                            "ds:HaofXL": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar1.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:COeu4H": {
+                              "content": "Iris Hale"
+                            },
+                            "ds:sFWOHa": {
+                              "content": "Last seen 2 h ago"
+                            },
+                            "ds:XK5MJg": {
+                              "type": "frame",
+                              "id": "PL74TW",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "WHiDiA",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "4LGDxx",
+                          "ref": "ds:Ttx0gN",
+                          "name": "Friend Row/Offline",
+                          "descendants": {
+                            "ds:HaofXL": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar4.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:COeu4H": {
+                              "content": "Remy Cole"
+                            },
+                            "ds:sFWOHa": {
+                              "content": "Last seen yesterday"
+                            },
+                            "ds:XK5MJg": {
+                              "type": "frame",
+                              "id": "gCYNrM",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "KTVH9e",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends (roadmap \"Friend Profiles\", \"Jam\") — Friends with live presence: online, listening (with track), away, offline with last seen. Presence is shown to friends only and can be hidden in Privacy. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "gjNEhV",
+      "name": "Friends / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "F9hu6F",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "SVmcZt",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "gDqL8B",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "aY6n7z",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "dNqYZn",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Friends"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "CmFFDs",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "iDmCLA",
+                      "ref": "ds:exjwf",
+                      "name": "Button / Find friends",
+                      "descendants": {
+                        "ds:E23bq6": {
+                          "content": "Find friends"
+                        },
+                        "ds:k0WCtI": {
+                          "icon": "user-plus"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "aLwRjv",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "9RdArD",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / All · 6",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "All · 6"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "WvRLpo",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Online · 4",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Online · 4"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "DebWpN",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Requests · 2",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Requests · 2"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "LRqw4j",
+                  "name": "Online Now",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "gTh5JW",
+                      "ref": "ds:zVqAJC",
+                      "name": "Section Header",
+                      "descendants": {
+                        "ds:zBZfky": {
+                          "content": "Online now · 4"
+                        },
+                        "ds:uyhHlD": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Wqwmct",
+                      "name": "Tiles",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Ans2y3",
+                          "ref": "ds:PwT7em",
+                          "name": "Friend Tile/Listening",
+                          "descendants": {
+                            "ds:pQZfsW": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar1.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:yqP4pj": {
+                              "content": "Maya"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "uNEhB8",
+                          "ref": "ds:rDkoB5",
+                          "name": "Friend Tile/Online",
+                          "descendants": {
+                            "ds:z5vJGJ": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar2.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:G5e3D5": {
+                              "content": "Jonah"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "yUd2Ek",
+                          "ref": "ds:rDkoB5",
+                          "name": "Friend Tile/Online",
+                          "descendants": {
+                            "ds:z5vJGJ": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar3.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:G5e3D5": {
+                              "content": "Ana"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "CCBrLe",
+                          "ref": "ds:ix6VOo",
+                          "name": "Friend Tile/Away",
+                          "descendants": {
+                            "ds:KAoJLe": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar4.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:xKH2VJ": {
+                              "content": "Theo"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "j4SRHF",
+                  "name": "List",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "srXFVZ",
+                      "ref": "ds:zVqAJC",
+                      "name": "Section Header",
+                      "descendants": {
+                        "ds:zBZfky": {
+                          "content": "Online · 4"
+                        },
+                        "ds:uyhHlD": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "2gyxVf",
+                      "name": "Online",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "dcFqhM",
+                          "ref": "ds:BpzHIL",
+                          "name": "Friend Row/Listening",
+                          "descendants": {
+                            "ds:TmRNol": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar1.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:6w3gGT": {
+                              "content": "Maya Rivers"
+                            },
+                            "ds:QVfv9M": {
+                              "content": "Listening to Afterglow · Nova & the Static"
+                            },
+                            "ds:HPqF4J": {
+                              "type": "frame",
+                              "id": "Ubhioi",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "iKGuFJ",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Listen along",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Listen along"
+                                    },
+                                    "ds:wFUna": {
+                                      "icon": "headphones"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "DYHfoQ",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "E7AfoU",
+                          "ref": "ds:pEvz1E",
+                          "name": "Friend Row/Online",
+                          "descendants": {
+                            "ds:Xuh20u": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar2.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:02aOUU": {
+                              "content": "Jonah Pike"
+                            },
+                            "ds:EimJ1W": {
+                              "content": "Online"
+                            },
+                            "ds:9bARuq": {
+                              "type": "frame",
+                              "id": "JhzpRH",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "Dq83k4",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "wLMAtM",
+                          "ref": "ds:pEvz1E",
+                          "name": "Friend Row/Online",
+                          "descendants": {
+                            "ds:Xuh20u": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar3.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:02aOUU": {
+                              "content": "Ana Sol"
+                            },
+                            "ds:EimJ1W": {
+                              "content": "Online"
+                            },
+                            "ds:9bARuq": {
+                              "type": "frame",
+                              "id": "bEsmgT",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "xS4YuY",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "g6P9p5",
+                          "ref": "ds:CRSJoY",
+                          "name": "Friend Row/Away",
+                          "descendants": {
+                            "ds:2mhSCV": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar4.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:NU1T9o": {
+                              "content": "Theo Lark"
+                            },
+                            "ds:xaNn09": {
+                              "content": "Away · 12 min"
+                            },
+                            "ds:WRKm3O": {
+                              "type": "frame",
+                              "id": "P8bKU4",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "8cdLiQ",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "mnBfZb",
+                      "ref": "ds:zVqAJC",
+                      "name": "Section Header",
+                      "descendants": {
+                        "ds:zBZfky": {
+                          "content": "Offline · 2"
+                        },
+                        "ds:uyhHlD": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "zB7aRe",
+                      "name": "Offline",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Ji7PZh",
+                          "ref": "ds:Ttx0gN",
+                          "name": "Friend Row/Offline",
+                          "descendants": {
+                            "ds:HaofXL": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar1.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:COeu4H": {
+                              "content": "Iris Hale"
+                            },
+                            "ds:sFWOHa": {
+                              "content": "Last seen 2 h ago"
+                            },
+                            "ds:XK5MJg": {
+                              "type": "frame",
+                              "id": "tAUEg2",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "tQgenN",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "iRfDLf",
+                          "ref": "ds:Ttx0gN",
+                          "name": "Friend Row/Offline",
+                          "descendants": {
+                            "ds:HaofXL": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar4.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:COeu4H": {
+                              "content": "Remy Cole"
+                            },
+                            "ds:sFWOHa": {
+                              "content": "Last seen yesterday"
+                            },
+                            "ds:XK5MJg": {
+                              "type": "frame",
+                              "id": "4BYT5u",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "oEQNJ5",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "concept — /friends (roadmap \"Friend Profiles\", \"Jam\") — Friends with live presence: online, listening (with track), away, offline with last seen. Presence is shown to friends only and can be hidden in Privacy. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "Ph4X4m",
+      "name": "Friends / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "fANcUz",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "UiirAb",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "bUBkyr",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "uWF3tM",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "H5pWtB",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Friends"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "tJL44Y",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5oNPHn",
+                      "ref": "ds:exjwf",
+                      "name": "Button / Find friends",
+                      "descendants": {
+                        "ds:E23bq6": {
+                          "content": "Find friends"
+                        },
+                        "ds:k0WCtI": {
+                          "icon": "user-plus"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "AJBgzJ",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "DvdCmm",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / All · 6",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "All · 6"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "i2D5kZ",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Online · 4",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Online · 4"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ZaRZvP",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Requests · 2",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Requests · 2"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "YXH9iC",
+                  "name": "Online Now",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "LpzkLF",
+                      "ref": "ds:zVqAJC",
+                      "name": "Section Header",
+                      "descendants": {
+                        "ds:zBZfky": {
+                          "content": "Online now · 4"
+                        },
+                        "ds:uyhHlD": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "bFRy2y",
+                      "name": "Tiles",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "VryZwK",
+                          "ref": "ds:PwT7em",
+                          "name": "Friend Tile/Listening",
+                          "descendants": {
+                            "ds:pQZfsW": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar1.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:yqP4pj": {
+                              "content": "Maya"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "s6LegM",
+                          "ref": "ds:rDkoB5",
+                          "name": "Friend Tile/Online",
+                          "descendants": {
+                            "ds:z5vJGJ": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar2.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:G5e3D5": {
+                              "content": "Jonah"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Rieo8i",
+                          "ref": "ds:rDkoB5",
+                          "name": "Friend Tile/Online",
+                          "descendants": {
+                            "ds:z5vJGJ": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar3.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:G5e3D5": {
+                              "content": "Ana"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "WiKvJm",
+                          "ref": "ds:ix6VOo",
+                          "name": "Friend Tile/Away",
+                          "descendants": {
+                            "ds:KAoJLe": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar4.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:xKH2VJ": {
+                              "content": "Theo"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "X35wFQ",
+                  "name": "List",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ESH2YD",
+                      "ref": "ds:zVqAJC",
+                      "name": "Section Header",
+                      "descendants": {
+                        "ds:zBZfky": {
+                          "content": "Online · 4"
+                        },
+                        "ds:uyhHlD": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "UCwD7N",
+                      "name": "Online",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "2rwwBS",
+                          "ref": "ds:BpzHIL",
+                          "name": "Friend Row/Listening",
+                          "descendants": {
+                            "ds:TmRNol": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar1.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:6w3gGT": {
+                              "content": "Maya Rivers"
+                            },
+                            "ds:QVfv9M": {
+                              "content": "Listening to Afterglow · Nova & the Static"
+                            },
+                            "ds:HPqF4J": {
+                              "type": "frame",
+                              "id": "d5vRBP",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "jXZfQH",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Listen along",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Listen along"
+                                    },
+                                    "ds:wFUna": {
+                                      "icon": "headphones"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "oijbaN",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "jGyYc4",
+                          "ref": "ds:pEvz1E",
+                          "name": "Friend Row/Online",
+                          "descendants": {
+                            "ds:Xuh20u": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar2.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:02aOUU": {
+                              "content": "Jonah Pike"
+                            },
+                            "ds:EimJ1W": {
+                              "content": "Online"
+                            },
+                            "ds:9bARuq": {
+                              "type": "frame",
+                              "id": "WH2Lt3",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "seoMC4",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "AnRH3A",
+                          "ref": "ds:pEvz1E",
+                          "name": "Friend Row/Online",
+                          "descendants": {
+                            "ds:Xuh20u": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar3.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:02aOUU": {
+                              "content": "Ana Sol"
+                            },
+                            "ds:EimJ1W": {
+                              "content": "Online"
+                            },
+                            "ds:9bARuq": {
+                              "type": "frame",
+                              "id": "3erDrE",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "cXUCGB",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "M8iwPU",
+                          "ref": "ds:CRSJoY",
+                          "name": "Friend Row/Away",
+                          "descendants": {
+                            "ds:2mhSCV": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar4.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:NU1T9o": {
+                              "content": "Theo Lark"
+                            },
+                            "ds:xaNn09": {
+                              "content": "Away · 12 min"
+                            },
+                            "ds:WRKm3O": {
+                              "type": "frame",
+                              "id": "wqW4GZ",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "RwGQbU",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sZgAx5",
+                      "ref": "ds:zVqAJC",
+                      "name": "Section Header",
+                      "descendants": {
+                        "ds:zBZfky": {
+                          "content": "Offline · 2"
+                        },
+                        "ds:uyhHlD": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "rAM63v",
+                      "name": "Offline",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "RmNc9Y",
+                          "ref": "ds:Ttx0gN",
+                          "name": "Friend Row/Offline",
+                          "descendants": {
+                            "ds:HaofXL": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar1.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:COeu4H": {
+                              "content": "Iris Hale"
+                            },
+                            "ds:sFWOHa": {
+                              "content": "Last seen 2 h ago"
+                            },
+                            "ds:XK5MJg": {
+                              "type": "frame",
+                              "id": "Qx3aMu",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "KjBT9y",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "hBGYoQ",
+                          "ref": "ds:Ttx0gN",
+                          "name": "Friend Row/Offline",
+                          "descendants": {
+                            "ds:HaofXL": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar4.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:COeu4H": {
+                              "content": "Remy Cole"
+                            },
+                            "ds:sFWOHa": {
+                              "content": "Last seen yesterday"
+                            },
+                            "ds:XK5MJg": {
+                              "type": "frame",
+                              "id": "LJ5eER",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "EJe8FM",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "concept — /friends (roadmap \"Friend Profiles\", \"Jam\") — Friends with live presence: online, listening (with track), away, offline with last seen. Presence is shown to friends only and can be hidden in Privacy. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "Z3NNFt",
+      "name": "Friends / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "HYWm95",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "fY4iMY",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Friends"
+            },
+            "ds:B4rkef": {
+              "enabled": false
+            },
+            "ds:zbRXzZ": {
+              "icon": "user-plus"
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "mPjsqe",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "xQbLCj",
+              "name": "Chips",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "7KmQJW",
+                  "ref": "ds:AdNrrb",
+                  "name": "Chip/Active",
+                  "descendants": {
+                    "ds:cUY4Fi": {
+                      "content": "All"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "pmhHwY",
+                  "ref": "ds:LUcTan",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:lXs2ja": {
+                      "content": "Online"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "qfrWEz",
+                  "ref": "ds:LUcTan",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:lXs2ja": {
+                      "content": "Requests · 2"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "3Fi6XQ",
+              "name": "Online Now",
+              "layout": "vertical",
+              "gap": 12,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "FJPTb4",
+                  "ref": "ds:zVqAJC",
+                  "name": "Section Header",
+                  "descendants": {
+                    "ds:zBZfky": {
+                      "content": "Online now · 4"
+                    },
+                    "ds:uyhHlD": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "rAAwH5",
+                  "name": "Tiles",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "46Mebc",
+                      "ref": "ds:PwT7em",
+                      "name": "Friend Tile/Listening",
+                      "descendants": {
+                        "ds:pQZfsW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/avatars/avatar1.jpg",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:yqP4pj": {
+                          "content": "Maya"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "cXyJhz",
+                      "ref": "ds:rDkoB5",
+                      "name": "Friend Tile/Online",
+                      "descendants": {
+                        "ds:z5vJGJ": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/avatars/avatar2.jpg",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:G5e3D5": {
+                          "content": "Jonah"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qDyEmx",
+                      "ref": "ds:rDkoB5",
+                      "name": "Friend Tile/Online",
+                      "descendants": {
+                        "ds:z5vJGJ": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/avatars/avatar3.jpg",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:G5e3D5": {
+                          "content": "Ana"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "L5EFwi",
+                      "ref": "ds:ix6VOo",
+                      "name": "Friend Tile/Away",
+                      "descendants": {
+                        "ds:KAoJLe": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/avatars/avatar4.jpg",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:xKH2VJ": {
+                          "content": "Theo"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "UduM6w",
+              "ref": "ds:zVqAJC",
+              "name": "Section Header",
+              "descendants": {
+                "ds:zBZfky": {
+                  "content": "Online · 4"
+                },
+                "ds:uyhHlD": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "SWFa9k",
+              "name": "Online",
+              "layout": "vertical",
+              "gap": 0,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "2cSTeo",
+                  "ref": "ds:BpzHIL",
+                  "name": "Friend Row/Listening",
+                  "descendants": {
+                    "ds:TmRNol": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/avatars/avatar1.jpg",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:6w3gGT": {
+                      "content": "Maya Rivers"
+                    },
+                    "ds:QVfv9M": {
+                      "content": "Listening to Afterglow · Nova & the Static"
+                    },
+                    "ds:HPqF4J": {
+                      "type": "frame",
+                      "id": "EQ5GCL",
+                      "name": "Actions",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "k4LV99",
+                          "ref": "ds:cS9uPp",
+                          "name": "Button/Icon Ghost",
+                          "descendants": {
+                            "ds:KFmiLY": {
+                              "icon": "headphones"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "h3WsXx",
+                          "ref": "ds:cS9uPp",
+                          "name": "Button/Icon Ghost",
+                          "descendants": {
+                            "ds:KFmiLY": {
+                              "icon": "ellipsis"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "ijhUtn",
+                  "ref": "ds:pEvz1E",
+                  "name": "Friend Row/Online",
+                  "descendants": {
+                    "ds:Xuh20u": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/avatars/avatar2.jpg",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:02aOUU": {
+                      "content": "Jonah Pike"
+                    },
+                    "ds:EimJ1W": {
+                      "content": "Online"
+                    },
+                    "ds:9bARuq": {
+                      "type": "frame",
+                      "id": "4Jmy3k",
+                      "name": "Actions",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ZBMF5v",
+                          "ref": "ds:cS9uPp",
+                          "name": "Button/Icon Ghost",
+                          "descendants": {
+                            "ds:KFmiLY": {
+                              "icon": "ellipsis"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "iNgddb",
+                  "ref": "ds:pEvz1E",
+                  "name": "Friend Row/Online",
+                  "descendants": {
+                    "ds:Xuh20u": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/avatars/avatar3.jpg",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:02aOUU": {
+                      "content": "Ana Sol"
+                    },
+                    "ds:EimJ1W": {
+                      "content": "Online"
+                    },
+                    "ds:9bARuq": {
+                      "type": "frame",
+                      "id": "r5QQtz",
+                      "name": "Actions",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "oztLr3",
+                          "ref": "ds:cS9uPp",
+                          "name": "Button/Icon Ghost",
+                          "descendants": {
+                            "ds:KFmiLY": {
+                              "icon": "ellipsis"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "Dz6kW9",
+                  "ref": "ds:CRSJoY",
+                  "name": "Friend Row/Away",
+                  "descendants": {
+                    "ds:2mhSCV": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/avatars/avatar4.jpg",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:NU1T9o": {
+                      "content": "Theo Lark"
+                    },
+                    "ds:xaNn09": {
+                      "content": "Away · 12 min"
+                    },
+                    "ds:WRKm3O": {
+                      "type": "frame",
+                      "id": "TBexqj",
+                      "name": "Actions",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "2GjitF",
+                          "ref": "ds:cS9uPp",
+                          "name": "Button/Icon Ghost",
+                          "descendants": {
+                            "ds:KFmiLY": {
+                              "icon": "ellipsis"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "zwnQAi",
+              "ref": "ds:zVqAJC",
+              "name": "Section Header",
+              "descendants": {
+                "ds:zBZfky": {
+                  "content": "Offline · 2"
+                },
+                "ds:uyhHlD": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "DXqBVN",
+              "name": "Offline",
+              "layout": "vertical",
+              "gap": 0,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "jC8oac",
+                  "ref": "ds:Ttx0gN",
+                  "name": "Friend Row/Offline",
+                  "descendants": {
+                    "ds:HaofXL": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/avatars/avatar1.jpg",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:COeu4H": {
+                      "content": "Iris Hale"
+                    },
+                    "ds:sFWOHa": {
+                      "content": "Last seen 2 h ago"
+                    },
+                    "ds:XK5MJg": {
+                      "type": "frame",
+                      "id": "q2rk4m",
+                      "name": "Actions",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "VJEujq",
+                          "ref": "ds:cS9uPp",
+                          "name": "Button/Icon Ghost",
+                          "descendants": {
+                            "ds:KFmiLY": {
+                              "icon": "ellipsis"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "szRU7U",
+                  "ref": "ds:Ttx0gN",
+                  "name": "Friend Row/Offline",
+                  "descendants": {
+                    "ds:HaofXL": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/avatars/avatar4.jpg",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:COeu4H": {
+                      "content": "Remy Cole"
+                    },
+                    "ds:sFWOHa": {
+                      "content": "Last seen yesterday"
+                    },
+                    "ds:XK5MJg": {
+                      "type": "frame",
+                      "id": "HFfB7e",
+                      "name": "Actions",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "WUdeUz",
+                          "ref": "ds:cS9uPp",
+                          "name": "Button/Icon Ghost",
+                          "descendants": {
+                            "ds:KFmiLY": {
+                              "icon": "ellipsis"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "6iivai",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "8yvVB7",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends (roadmap \"Friend Profiles\", \"Jam\") — Friends with live presence: online, listening (with track), away, offline with last seen. Presence is shown to friends only and can be hidden in Privacy. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "8EuUzH",
+      "name": "Friends / Online filter / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "JmBkQq",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "cF5Kxx",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "UafUCd",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "YctYrD",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "pNfC5h",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Friends"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Lgumr2",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jstrxq",
+                      "ref": "ds:exjwf",
+                      "name": "Button / Find friends",
+                      "descendants": {
+                        "ds:E23bq6": {
+                          "content": "Find friends"
+                        },
+                        "ds:k0WCtI": {
+                          "icon": "user-plus"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "3g4RpG",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "vEcYK8",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / All · 6",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "All · 6"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pvyfkG",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Online · 4",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Online · 4"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "TZHRjC",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Requests · 2",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Requests · 2"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "nn37os",
+                  "name": "List",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "WaqzzL",
+                      "ref": "ds:zVqAJC",
+                      "name": "Section Header",
+                      "descendants": {
+                        "ds:zBZfky": {
+                          "content": "Online · 4"
+                        },
+                        "ds:uyhHlD": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "P3rbxf",
+                      "name": "Online",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Eid6AE",
+                          "ref": "ds:BpzHIL",
+                          "name": "Friend Row/Listening",
+                          "descendants": {
+                            "ds:TmRNol": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar1.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:6w3gGT": {
+                              "content": "Maya Rivers"
+                            },
+                            "ds:QVfv9M": {
+                              "content": "Listening to Afterglow · Nova & the Static"
+                            },
+                            "ds:HPqF4J": {
+                              "type": "frame",
+                              "id": "gRpJ3Y",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "GxAsKt",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Listen along",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Listen along"
+                                    },
+                                    "ds:wFUna": {
+                                      "icon": "headphones"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "eEawVi",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "hvwhqG",
+                          "ref": "ds:pEvz1E",
+                          "name": "Friend Row/Online",
+                          "descendants": {
+                            "ds:Xuh20u": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar2.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:02aOUU": {
+                              "content": "Jonah Pike"
+                            },
+                            "ds:EimJ1W": {
+                              "content": "Online"
+                            },
+                            "ds:9bARuq": {
+                              "type": "frame",
+                              "id": "zkvn2K",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "xHLptd",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "fkrX4Q",
+                          "ref": "ds:pEvz1E",
+                          "name": "Friend Row/Online",
+                          "descendants": {
+                            "ds:Xuh20u": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar3.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:02aOUU": {
+                              "content": "Ana Sol"
+                            },
+                            "ds:EimJ1W": {
+                              "content": "Online"
+                            },
+                            "ds:9bARuq": {
+                              "type": "frame",
+                              "id": "eoTLNP",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "EabMTY",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "UNKJUf",
+                          "ref": "ds:CRSJoY",
+                          "name": "Friend Row/Away",
+                          "descendants": {
+                            "ds:2mhSCV": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar4.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:NU1T9o": {
+                              "content": "Theo Lark"
+                            },
+                            "ds:xaNn09": {
+                              "content": "Away · 12 min"
+                            },
+                            "ds:WRKm3O": {
+                              "type": "frame",
+                              "id": "DgaN2L",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "2ijY4K",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "JBVD6F",
+                      "ref": "ds:T9XpwH",
+                      "name": "Note",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:jouPnZ": {
+                          "content": "Only friends see your online status and what you are playing. Change it in Privacy."
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends (roadmap \"Friend Profiles\", \"Jam\") — Friends with live presence: online, listening (with track), away, offline with last seen. Presence is shown to friends only and can be hidden in Privacy. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "4dTSq2",
+      "name": "Friends / Online filter / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "MzJBJw",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "U4m6gi",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Friends"
+            },
+            "ds:B4rkef": {
+              "enabled": false
+            },
+            "ds:zbRXzZ": {
+              "icon": "user-plus"
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "tFxrjE",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "Q2AC7p",
+              "name": "Chips",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "tnuUGF",
+                  "ref": "ds:LUcTan",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:lXs2ja": {
+                      "content": "All"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "tUe7aF",
+                  "ref": "ds:AdNrrb",
+                  "name": "Chip/Active",
+                  "descendants": {
+                    "ds:cUY4Fi": {
+                      "content": "Online"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "rHTyqr",
+                  "ref": "ds:LUcTan",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:lXs2ja": {
+                      "content": "Requests · 2"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "dDY5Qn",
+              "ref": "ds:zVqAJC",
+              "name": "Section Header",
+              "descendants": {
+                "ds:zBZfky": {
+                  "content": "Online · 4"
+                },
+                "ds:uyhHlD": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "VMPLoT",
+              "name": "Online",
+              "layout": "vertical",
+              "gap": 0,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "hfobnQ",
+                  "ref": "ds:BpzHIL",
+                  "name": "Friend Row/Listening",
+                  "descendants": {
+                    "ds:TmRNol": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/avatars/avatar1.jpg",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:6w3gGT": {
+                      "content": "Maya Rivers"
+                    },
+                    "ds:QVfv9M": {
+                      "content": "Listening to Afterglow · Nova & the Static"
+                    },
+                    "ds:HPqF4J": {
+                      "type": "frame",
+                      "id": "P8Cn8T",
+                      "name": "Actions",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "FD8mJX",
+                          "ref": "ds:cS9uPp",
+                          "name": "Button/Icon Ghost",
+                          "descendants": {
+                            "ds:KFmiLY": {
+                              "icon": "headphones"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "7Y45kf",
+                          "ref": "ds:cS9uPp",
+                          "name": "Button/Icon Ghost",
+                          "descendants": {
+                            "ds:KFmiLY": {
+                              "icon": "ellipsis"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "4F8Tkr",
+                  "ref": "ds:pEvz1E",
+                  "name": "Friend Row/Online",
+                  "descendants": {
+                    "ds:Xuh20u": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/avatars/avatar2.jpg",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:02aOUU": {
+                      "content": "Jonah Pike"
+                    },
+                    "ds:EimJ1W": {
+                      "content": "Online"
+                    },
+                    "ds:9bARuq": {
+                      "type": "frame",
+                      "id": "Gp5Rqq",
+                      "name": "Actions",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "VVZNaQ",
+                          "ref": "ds:cS9uPp",
+                          "name": "Button/Icon Ghost",
+                          "descendants": {
+                            "ds:KFmiLY": {
+                              "icon": "ellipsis"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "qTMTTf",
+                  "ref": "ds:pEvz1E",
+                  "name": "Friend Row/Online",
+                  "descendants": {
+                    "ds:Xuh20u": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/avatars/avatar3.jpg",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:02aOUU": {
+                      "content": "Ana Sol"
+                    },
+                    "ds:EimJ1W": {
+                      "content": "Online"
+                    },
+                    "ds:9bARuq": {
+                      "type": "frame",
+                      "id": "iXE96P",
+                      "name": "Actions",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "HD7Nxa",
+                          "ref": "ds:cS9uPp",
+                          "name": "Button/Icon Ghost",
+                          "descendants": {
+                            "ds:KFmiLY": {
+                              "icon": "ellipsis"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "WmkoVk",
+                  "ref": "ds:CRSJoY",
+                  "name": "Friend Row/Away",
+                  "descendants": {
+                    "ds:2mhSCV": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/avatars/avatar4.jpg",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:NU1T9o": {
+                      "content": "Theo Lark"
+                    },
+                    "ds:xaNn09": {
+                      "content": "Away · 12 min"
+                    },
+                    "ds:WRKm3O": {
+                      "type": "frame",
+                      "id": "xQAW5H",
+                      "name": "Actions",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "WwEj2r",
+                          "ref": "ds:cS9uPp",
+                          "name": "Button/Icon Ghost",
+                          "descendants": {
+                            "ds:KFmiLY": {
+                              "icon": "ellipsis"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "2VjmWf",
+              "ref": "ds:T9XpwH",
+              "name": "Note",
+              "width": "fill_container",
+              "descendants": {
+                "ds:jouPnZ": {
+                  "content": "Only friends see your online status and what you are playing. Change it in Privacy."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "YWuhaM",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "ZtnFr8",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends (roadmap \"Friend Profiles\", \"Jam\") — Friends with live presence: online, listening (with track), away, offline with last seen. Presence is shown to friends only and can be hidden in Privacy. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "BuGKui",
+      "name": "Friends / Nobody online / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "AEFy35",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "u2X9BU",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "myudvf",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "4oRaCq",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "26X6U5",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Friends"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "EfHgmS",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "3MQiFj",
+                      "ref": "ds:exjwf",
+                      "name": "Button / Find friends",
+                      "descendants": {
+                        "ds:E23bq6": {
+                          "content": "Find friends"
+                        },
+                        "ds:k0WCtI": {
+                          "icon": "user-plus"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "3SAF3y",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "rrJawi",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / All · 6",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "All · 6"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "BoZ8VQ",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Online · 0",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Online · 0"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "36vRpR",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Requests · 2",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Requests · 2"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "HY5JGf",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "v6M7E5",
+                      "ref": "ds:UacIqy",
+                      "name": "State / Nobody is online right now",
+                      "descendants": {
+                        "ds:QTS6fY": {
+                          "icon": "moon"
+                        },
+                        "ds:LaYbWr": {
+                          "content": "Nobody is online right now"
+                        },
+                        "ds:IowS15": {
+                          "content": "When a friend comes online, they appear here first."
+                        },
+                        "ds:PKR600": {
+                          "enabled": false
+                        },
+                        "ds:Sk1EVh": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends (roadmap \"Friend Profiles\", \"Jam\") — Friends with live presence: online, listening (with track), away, offline with last seen. Presence is shown to friends only and can be hidden in Privacy. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "PLSS5U",
+      "name": "Friends / Nobody online / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "MrEeG4",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "4g8eyx",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Friends"
+            },
+            "ds:B4rkef": {
+              "enabled": false
+            },
+            "ds:zbRXzZ": {
+              "icon": "user-plus"
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "4uui8g",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "cQBCUP",
+              "name": "Chips",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "o3ExtM",
+                  "ref": "ds:LUcTan",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:lXs2ja": {
+                      "content": "All"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "oWkJm8",
+                  "ref": "ds:AdNrrb",
+                  "name": "Chip/Active",
+                  "descendants": {
+                    "ds:cUY4Fi": {
+                      "content": "Online"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "2ahMgq",
+                  "ref": "ds:LUcTan",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:lXs2ja": {
+                      "content": "Requests · 2"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "A2HzWP",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "s3jtvf",
+                  "ref": "ds:UacIqy",
+                  "name": "State / Nobody is online right now",
+                  "descendants": {
+                    "ds:QTS6fY": {
+                      "icon": "moon"
+                    },
+                    "ds:LaYbWr": {
+                      "content": "Nobody is online right now"
+                    },
+                    "ds:IowS15": {
+                      "content": "When a friend comes online, they appear here first."
+                    },
+                    "ds:PKR600": {
+                      "enabled": false
+                    },
+                    "ds:Sk1EVh": {
+                      "enabled": false
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "peDtUc",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "H2TSF5",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends (roadmap \"Friend Profiles\", \"Jam\") — Friends with live presence: online, listening (with track), away, offline with last seen. Presence is shown to friends only and can be hidden in Privacy. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "Dobt5s",
+      "name": "Friends / No friends yet / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "hQVcXa",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "crcjNk",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "H3tTCY",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ELauoA",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "zktkHo",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Friends"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "BmQEdv",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jLFj3P",
+                      "ref": "ds:exjwf",
+                      "name": "Button / Find friends",
+                      "descendants": {
+                        "ds:E23bq6": {
+                          "content": "Find friends"
+                        },
+                        "ds:k0WCtI": {
+                          "icon": "user-plus"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "JyUBiH",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "cNRNpD",
+                      "ref": "ds:UacIqy",
+                      "name": "State / No friends yet",
+                      "descendants": {
+                        "ds:QTS6fY": {
+                          "icon": "users"
+                        },
+                        "ds:LaYbWr": {
+                          "content": "No friends yet"
+                        },
+                        "ds:IowS15": {
+                          "content": "Add people you know to see when they are online and what they are playing."
+                        },
+                        "ds:PKR600/ds:NVe7y": {
+                          "content": "Find friends"
+                        },
+                        "ds:Sk1EVh": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 9170,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends (roadmap \"Friend Profiles\", \"Jam\") — Friends with live presence: online, listening (with track), away, offline with last seen. Presence is shown to friends only and can be hidden in Privacy. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "89GcAU",
+      "name": "Friends / No friends yet / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Kb4nRR",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "FCArxW",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Friends"
+            },
+            "ds:B4rkef": {
+              "enabled": false
+            },
+            "ds:zbRXzZ": {
+              "icon": "user-plus"
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "AhjPDZ",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "ywjtnX",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "WhJma3",
+                  "ref": "ds:UacIqy",
+                  "name": "State / No friends yet",
+                  "descendants": {
+                    "ds:QTS6fY": {
+                      "icon": "users"
+                    },
+                    "ds:LaYbWr": {
+                      "content": "No friends yet"
+                    },
+                    "ds:IowS15": {
+                      "content": "Add people you know to see when they are online and what they are playing."
+                    },
+                    "ds:PKR600/ds:NVe7y": {
+                      "content": "Find friends"
+                    },
+                    "ds:Sk1EVh": {
+                      "enabled": false
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "SNwDnt",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "LVt8SE",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 10710,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends (roadmap \"Friend Profiles\", \"Jam\") — Friends with live presence: online, listening (with track), away, offline with last seen. Presence is shown to friends only and can be hidden in Privacy. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "AHSmUn",
+      "name": "Friends / Friend menu / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "We3mZG",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "p3B3NU",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "gvRqxR",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "BCYkkX",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ThwFQs",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Friends"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ZVfHpo",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "W9gZKj",
+                      "ref": "ds:exjwf",
+                      "name": "Button / Find friends",
+                      "descendants": {
+                        "ds:E23bq6": {
+                          "content": "Find friends"
+                        },
+                        "ds:k0WCtI": {
+                          "icon": "user-plus"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ep8V4d",
+                  "name": "Row + Menu",
+                  "gap": 16,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "hx5tGu",
+                      "name": "List",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": 760,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "v7wb7H",
+                          "ref": "ds:BpzHIL",
+                          "name": "Friend Row/Listening",
+                          "descendants": {
+                            "ds:TmRNol": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar1.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:6w3gGT": {
+                              "content": "Maya Rivers"
+                            },
+                            "ds:QVfv9M": {
+                              "content": "Listening to Afterglow · Nova & the Static"
+                            },
+                            "ds:HPqF4J": {
+                              "type": "frame",
+                              "id": "fwLYC6",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "r27wAg",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Listen along",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Listen along"
+                                    },
+                                    "ds:wFUna": {
+                                      "icon": "headphones"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "xfpfRx",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "nJuW7F",
+                          "ref": "ds:pEvz1E",
+                          "name": "Friend Row/Online",
+                          "descendants": {
+                            "ds:Xuh20u": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar2.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:02aOUU": {
+                              "content": "Jonah Pike"
+                            },
+                            "ds:EimJ1W": {
+                              "content": "Online"
+                            },
+                            "ds:9bARuq": {
+                              "type": "frame",
+                              "id": "sGqWyy",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "7mxEAX",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "HKLFTE",
+                          "ref": "ds:pEvz1E",
+                          "name": "Friend Row/Online",
+                          "descendants": {
+                            "ds:Xuh20u": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar3.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:02aOUU": {
+                              "content": "Ana Sol"
+                            },
+                            "ds:EimJ1W": {
+                              "content": "Online"
+                            },
+                            "ds:9bARuq": {
+                              "type": "frame",
+                              "id": "9kUuzV",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "VGM3Ro",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "98UrQk",
+                          "ref": "ds:CRSJoY",
+                          "name": "Friend Row/Away",
+                          "descendants": {
+                            "ds:2mhSCV": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar4.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:NU1T9o": {
+                              "content": "Theo Lark"
+                            },
+                            "ds:xaNn09": {
+                              "content": "Away · 12 min"
+                            },
+                            "ds:WRKm3O": {
+                              "type": "frame",
+                              "id": "H2P9ng",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "xAzeQw",
+                                  "ref": "ds:cS9uPp",
+                                  "name": "Button/Icon Ghost",
+                                  "descendants": {
+                                    "ds:KFmiLY": {
+                                      "icon": "ellipsis"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "dTA7sB",
+                      "ref": "ds:GVEaR8",
+                      "name": "Surface/Menu",
+                      "descendants": {
+                        "ds:W2CUQL": {
+                          "type": "frame",
+                          "id": "A6hPyY",
+                          "name": "Menu Items",
+                          "layout": "vertical",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "aFxEQq",
+                              "ref": "ds:UZOah5",
+                              "name": "Menu/Item",
+                              "descendants": {
+                                "ds:E4qaLC": {
+                                  "content": "View profile"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "xn4wyH",
+                              "ref": "ds:YleZMN",
+                              "name": "Menu/Item Disabled",
+                              "descendants": {
+                                "ds:irLm65": {
+                                  "content": "Listen along"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "2DYKbp",
+                              "ref": "ds:UZOah5",
+                              "name": "Menu/Item",
+                              "descendants": {
+                                "ds:E4qaLC": {
+                                  "content": "Hide my status from Theo"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "d6SnSe",
+                              "ref": "ds:2FfsdQ",
+                              "name": "Menu/Item Destructive",
+                              "descendants": {
+                                "ds:Es84c1": {
+                                  "content": "Remove friend"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 11200,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends (roadmap \"Friend Profiles\", \"Jam\") — Friends with live presence: online, listening (with track), away, offline with last seen. Presence is shown to friends only and can be hidden in Privacy. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "nVUrYW",
+      "name": "Friends / Friend menu / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "nTgEWE",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "CyTuF9",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Friends"
+            },
+            "ds:B4rkef": {
+              "enabled": false
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "8SGPLp",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "2rowcc",
+              "ref": "ds:CRSJoY",
+              "name": "Friend Row/Away",
+              "descendants": {
+                "ds:2mhSCV": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/avatars/avatar4.jpg",
+                    "mode": "cover"
+                  }
+                },
+                "ds:NU1T9o": {
+                  "content": "Theo Lark"
+                },
+                "ds:xaNn09": {
+                  "content": "Away · 12 min"
+                },
+                "ds:WRKm3O": {
+                  "type": "frame",
+                  "id": "zjVMVx",
+                  "name": "Actions",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ZLQtLP",
+                      "ref": "ds:cS9uPp",
+                      "name": "Button/Icon Ghost",
+                      "descendants": {
+                        "ds:KFmiLY": {
+                          "icon": "ellipsis"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "Zeif2o",
+              "ref": "ds:k9PTeF",
+              "name": "Surface/Sheet",
+              "width": "fill_container",
+              "descendants": {
+                "ds:3Hvf8i": {
+                  "type": "frame",
+                  "id": "kiF6XL",
+                  "name": "Sheet Content",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "RgNc55",
+                      "ref": "ds:GVEaR8",
+                      "name": "Surface/Menu",
+                      "descendants": {
+                        "ds:W2CUQL": {
+                          "type": "frame",
+                          "id": "WxoRuu",
+                          "name": "Menu Items",
+                          "layout": "vertical",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "5of64i",
+                              "ref": "ds:UZOah5",
+                              "name": "Menu/Item",
+                              "descendants": {
+                                "ds:E4qaLC": {
+                                  "content": "View profile"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "jcfVbP",
+                              "ref": "ds:UZOah5",
+                              "name": "Menu/Item",
+                              "descendants": {
+                                "ds:E4qaLC": {
+                                  "content": "Hide my status from Theo"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "uBNhfK",
+                              "ref": "ds:2FfsdQ",
+                              "name": "Menu/Item Destructive",
+                              "descendants": {
+                                "ds:Es84c1": {
+                                  "content": "Remove friend"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "7P3XZH",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "yQ2P82",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 12740,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends (roadmap \"Friend Profiles\", \"Jam\") — Friends with live presence: online, listening (with track), away, offline with last seen. Presence is shown to friends only and can be hidden in Privacy. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "tE6XxH",
+      "name": "Friends / Remove friend / Desktop",
+      "width": 1440,
+      "height": 900,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "padding": 16,
+      "fill": "$ds:--scrim",
+      "children": [
+        {
+          "type": "ref",
+          "id": "gBTV44",
+          "ref": "ds:x4Fixv",
+          "name": "Surface/Panel",
+          "width": 420,
+          "descendants": {
+            "ds:xhr0E3": {
+              "type": "frame",
+              "id": "jZqXVu",
+              "name": "Panel Content",
+              "layout": "vertical",
+              "gap": 14,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "NcegQy",
+                  "ref": "ds:Qjj2NE",
+                  "name": "Text/H3",
+                  "content": "Remove Theo Lark?"
+                },
+                {
+                  "type": "ref",
+                  "id": "mEQjmM",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "You will stop seeing each other’s online status and listening. Theo is not notified."
+                },
+                {
+                  "type": "frame",
+                  "id": "fFxVN2",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "N6nG5o",
+                      "ref": "ds:G5tJp",
+                      "name": "Button / Cancel",
+                      "descendants": {
+                        "ds:d2zCI": {
+                          "content": "Cancel"
+                        },
+                        "ds:zDiHG": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sSEpgg",
+                      "ref": "ds:uT1Ux",
+                      "name": "Button / Remove friend",
+                      "descendants": {
+                        "ds:QLznA": {
+                          "content": "Remove friend"
+                        },
+                        "ds:CxlXV": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 13230,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends (roadmap \"Friend Profiles\", \"Jam\") — Friends with live presence: online, listening (with track), away, offline with last seen. Presence is shown to friends only and can be hidden in Privacy. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "x2o4n3",
+      "name": "Friends / Remove friend / Mobile",
+      "width": 390,
+      "height": 844,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "padding": 16,
+      "fill": "$ds:--scrim",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Y5EtRq",
+          "ref": "ds:x4Fixv",
+          "name": "Surface/Panel",
+          "width": "fill_container",
+          "descendants": {
+            "ds:xhr0E3": {
+              "type": "frame",
+              "id": "wdjAmd",
+              "name": "Panel Content",
+              "layout": "vertical",
+              "gap": 14,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "YCQwJw",
+                  "ref": "ds:Qjj2NE",
+                  "name": "Text/H3",
+                  "content": "Remove Theo Lark?"
+                },
+                {
+                  "type": "ref",
+                  "id": "FLunDp",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "You will stop seeing each other’s online status and listening. Theo is not notified."
+                },
+                {
+                  "type": "frame",
+                  "id": "dSCxWk",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "WJ8uLF",
+                      "ref": "ds:G5tJp",
+                      "name": "Button / Cancel",
+                      "descendants": {
+                        "ds:d2zCI": {
+                          "content": "Cancel"
+                        },
+                        "ds:zDiHG": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "QEMQpe",
+                      "ref": "ds:uT1Ux",
+                      "name": "Button / Remove friend",
+                      "descendants": {
+                        "ds:QLznA": {
+                          "content": "Remove friend"
+                        },
+                        "ds:CxlXV": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 14770,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends (roadmap \"Friend Profiles\", \"Jam\") — Friends with live presence: online, listening (with track), away, offline with last seen. Presence is shown to friends only and can be hidden in Privacy. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "6LjE8B",
+      "name": "Friends / Status privacy / Desktop",
+      "width": 1440,
+      "height": 900,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "padding": 16,
+      "fill": "$ds:--scrim",
+      "children": [
+        {
+          "type": "ref",
+          "id": "vFqDuc",
+          "ref": "ds:x4Fixv",
+          "name": "Surface/Panel",
+          "width": 440,
+          "descendants": {
+            "ds:xhr0E3": {
+              "type": "frame",
+              "id": "kn5TSU",
+              "name": "Panel Content",
+              "layout": "vertical",
+              "gap": 14,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "u6YPVW",
+                  "ref": "ds:Qjj2NE",
+                  "name": "Text/H3",
+                  "content": "Online status"
+                },
+                {
+                  "type": "ref",
+                  "id": "GqA6Sk",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Choose what your friends see. People who are not your friends never see your status."
+                },
+                {
+                  "type": "ref",
+                  "id": "dY5xGv",
+                  "ref": "ds:HjQNJ",
+                  "name": "Switch / Show when I am online",
+                  "descendants": {
+                    "ds:mNVZY": {
+                      "content": "Show when I am online"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "7sRLGC",
+                  "ref": "ds:HjQNJ",
+                  "name": "Switch / Show what I am listening to",
+                  "descendants": {
+                    "ds:mNVZY": {
+                      "content": "Show what I am listening to"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "2bJdFL",
+                  "ref": "ds:Kfq8t",
+                  "name": "Select / Who can see it",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:PLkpD": {
+                      "content": "Who can see it"
+                    },
+                    "ds:USlYG": {
+                      "content": "All friends"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "hGWbF2",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "D2Zr2y",
+                      "ref": "ds:exjwf",
+                      "name": "Button / Done",
+                      "descendants": {
+                        "ds:E23bq6": {
+                          "content": "Done"
+                        },
+                        "ds:o7NXW": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 15260,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends (roadmap \"Friend Profiles\", \"Jam\") — Friends with live presence: online, listening (with track), away, offline with last seen. Presence is shown to friends only and can be hidden in Privacy. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "LyHeTc",
+      "name": "Friends / Status privacy / Mobile",
+      "width": 390,
+      "height": 844,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "padding": 16,
+      "fill": "$ds:--scrim",
+      "children": [
+        {
+          "type": "ref",
+          "id": "DCurWq",
+          "ref": "ds:x4Fixv",
+          "name": "Surface/Panel",
+          "width": "fill_container",
+          "descendants": {
+            "ds:xhr0E3": {
+              "type": "frame",
+              "id": "aYJZ8X",
+              "name": "Panel Content",
+              "layout": "vertical",
+              "gap": 14,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "XA5WWQ",
+                  "ref": "ds:Qjj2NE",
+                  "name": "Text/H3",
+                  "content": "Online status"
+                },
+                {
+                  "type": "ref",
+                  "id": "BSn6Pi",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Choose what your friends see. People who are not your friends never see your status."
+                },
+                {
+                  "type": "ref",
+                  "id": "VtUBSq",
+                  "ref": "ds:HjQNJ",
+                  "name": "Switch / Show when I am online",
+                  "descendants": {
+                    "ds:mNVZY": {
+                      "content": "Show when I am online"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "L6vsvb",
+                  "ref": "ds:HjQNJ",
+                  "name": "Switch / Show what I am listening to",
+                  "descendants": {
+                    "ds:mNVZY": {
+                      "content": "Show what I am listening to"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "oyvAV7",
+                  "ref": "ds:Kfq8t",
+                  "name": "Select / Who can see it",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:PLkpD": {
+                      "content": "Who can see it"
+                    },
+                    "ds:USlYG": {
+                      "content": "All friends"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "YYXWrM",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "rCjVkK",
+                      "ref": "ds:exjwf",
+                      "name": "Button / Done",
+                      "descendants": {
+                        "ds:E23bq6": {
+                          "content": "Done"
+                        },
+                        "ds:o7NXW": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 16800,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends (roadmap \"Friend Profiles\", \"Jam\") — Friends with live presence: online, listening (with track), away, offline with last seen. Presence is shown to friends only and can be hidden in Privacy. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "G3ArcZ",
+      "name": "Friends / Loading / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "MVDupj",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "Hz6rWf",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "rCWTRX",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "RUtxmy",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "jDYdUH",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Friends"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "eqHATb",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "YyFWkW",
+                      "ref": "ds:exjwf",
+                      "name": "Button / Find friends",
+                      "descendants": {
+                        "ds:E23bq6": {
+                          "content": "Find friends"
+                        },
+                        "ds:k0WCtI": {
+                          "icon": "user-plus"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "6CsncK",
+                  "name": "Loading",
+                  "layout": "vertical",
+                  "gap": 24,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "5Q2aeo",
+                      "name": "Skeleton Rows",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "vDfUFS",
+                          "ref": "ds:2Hcwnz",
+                          "name": "Skeleton/Person Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "YRb5fL",
+                          "ref": "ds:2Hcwnz",
+                          "name": "Skeleton/Person Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "K98c62",
+                          "ref": "ds:2Hcwnz",
+                          "name": "Skeleton/Person Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Wzqxmt",
+                          "ref": "ds:2Hcwnz",
+                          "name": "Skeleton/Person Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "eow9F6",
+                          "ref": "ds:2Hcwnz",
+                          "name": "Skeleton/Person Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "sMqpoV",
+                          "ref": "ds:2Hcwnz",
+                          "name": "Skeleton/Person Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "zGc4ie",
+                          "ref": "ds:2Hcwnz",
+                          "name": "Skeleton/Person Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "c2PHoU",
+                          "ref": "ds:2Hcwnz",
+                          "name": "Skeleton/Person Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "qFaXub",
+                          "ref": "ds:2Hcwnz",
+                          "name": "Skeleton/Person Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "hzirGE",
+                          "ref": "ds:2Hcwnz",
+                          "name": "Skeleton/Person Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "p2vj7Z",
+                          "ref": "ds:2Hcwnz",
+                          "name": "Skeleton/Person Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "4fYfjv",
+                          "ref": "ds:2Hcwnz",
+                          "name": "Skeleton/Person Row",
+                          "width": "fill_container"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 17290,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends (roadmap \"Friend Profiles\", \"Jam\") — Friends with live presence: online, listening (with track), away, offline with last seen. Presence is shown to friends only and can be hidden in Privacy. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "vyF7DV",
+      "name": "Friends / Loading / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "4g5SX7",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "zmokEH",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Friends"
+            },
+            "ds:B4rkef": {
+              "enabled": false
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "kP28mU",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "YSVRiW",
+              "name": "Loading",
+              "layout": "vertical",
+              "gap": 24,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "aSYt5c",
+                  "name": "Skeleton Rows",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "TYxCEV",
+                      "ref": "ds:2Hcwnz",
+                      "name": "Skeleton/Person Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5Dh7fn",
+                      "ref": "ds:2Hcwnz",
+                      "name": "Skeleton/Person Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "vCup5v",
+                      "ref": "ds:2Hcwnz",
+                      "name": "Skeleton/Person Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "EJCHPr",
+                      "ref": "ds:2Hcwnz",
+                      "name": "Skeleton/Person Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5SWrbe",
+                      "ref": "ds:2Hcwnz",
+                      "name": "Skeleton/Person Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "deUsbT",
+                      "ref": "ds:2Hcwnz",
+                      "name": "Skeleton/Person Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "MPAWkf",
+                      "ref": "ds:2Hcwnz",
+                      "name": "Skeleton/Person Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Loq5im",
+                      "ref": "ds:2Hcwnz",
+                      "name": "Skeleton/Person Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "wPM4AK",
+                      "ref": "ds:2Hcwnz",
+                      "name": "Skeleton/Person Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ijJ38i",
+                      "ref": "ds:2Hcwnz",
+                      "name": "Skeleton/Person Row",
+                      "width": "fill_container"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ZoauqF",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "GLTuD3",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 18830,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends (roadmap \"Friend Profiles\", \"Jam\") — Friends with live presence: online, listening (with track), away, offline with last seen. Presence is shown to friends only and can be hidden in Privacy. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "WXRLCJ",
+      "name": "Friends / Error / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "ZVskfo",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "cRKKJn",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "gTc72r",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "4TzfSV",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "8KHYrm",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Friends"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "i6SpxC",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "CzrJ93",
+                      "ref": "ds:exjwf",
+                      "name": "Button / Find friends",
+                      "descendants": {
+                        "ds:E23bq6": {
+                          "content": "Find friends"
+                        },
+                        "ds:k0WCtI": {
+                          "icon": "user-plus"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "K75ppg",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "peM7FE",
+                      "ref": "ds:LQ8GwL",
+                      "name": "State / Friends are unavailable right now",
+                      "descendants": {
+                        "ds:zG3uZd": {
+                          "icon": "triangle-alert"
+                        },
+                        "ds:ATKZVK": {
+                          "content": "Friends are unavailable right now"
+                        },
+                        "ds:h7OAoY": {
+                          "content": "Try again in a moment."
+                        },
+                        "ds:ydkfG5/ds:NVe7y": {
+                          "content": "Try again"
+                        },
+                        "ds:voqjVU/ds:i6a4e": {
+                          "content": "Back to home"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 19320,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends (roadmap \"Friend Profiles\", \"Jam\") — Friends with live presence: online, listening (with track), away, offline with last seen. Presence is shown to friends only and can be hidden in Privacy. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "2zJ6DY",
+      "name": "Friends / Error / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "n2AFjt",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "8hj2rF",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Friends"
+            },
+            "ds:B4rkef": {
+              "enabled": false
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "KgEff7",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "X4b4RH",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "3d5fdR",
+                  "ref": "ds:LQ8GwL",
+                  "name": "State / Friends are unavailable right now",
+                  "descendants": {
+                    "ds:zG3uZd": {
+                      "icon": "triangle-alert"
+                    },
+                    "ds:ATKZVK": {
+                      "content": "Friends are unavailable right now"
+                    },
+                    "ds:h7OAoY": {
+                      "content": "Try again in a moment."
+                    },
+                    "ds:ydkfG5/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:voqjVU/ds:i6a4e": {
+                      "content": "Back to home"
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "bC3SbZ",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "7YN9yJ",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 20860,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends (roadmap \"Friend Profiles\", \"Jam\") — Friends with live presence: online, listening (with track), away, offline with last seen. Presence is shown to friends only and can be hidden in Privacy. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "XVt294",
+      "name": "Friends / Offline / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "xjJw9L",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "ZHutMm",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "bWHzeT",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "wwjTYu",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "TakhWZ",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Friends"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "V3m4bf",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ZxkfkB",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ZerQPL",
+                      "ref": "ds:4pXc9h",
+                      "name": "State / You are offline",
+                      "descendants": {
+                        "ds:pGzESM": {
+                          "content": "You are offline"
+                        },
+                        "ds:GnYRtP": {
+                          "content": "Online status updates when you reconnect."
+                        },
+                        "ds:9DXNXn/ds:NVe7y": {
+                          "content": "Try again"
+                        },
+                        "ds:iaJVGU": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 21350,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends (roadmap \"Friend Profiles\", \"Jam\") — Friends with live presence: online, listening (with track), away, offline with last seen. Presence is shown to friends only and can be hidden in Privacy. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "W38NZq",
+      "name": "Friends / Offline / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "M5iT4m",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "5ecB7L",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Friends"
+            },
+            "ds:B4rkef": {
+              "enabled": false
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "mHefLV",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "SfUpP5",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "StQ5MA",
+                  "ref": "ds:4pXc9h",
+                  "name": "State / You are offline",
+                  "descendants": {
+                    "ds:pGzESM": {
+                      "content": "You are offline"
+                    },
+                    "ds:GnYRtP": {
+                      "content": "Online status updates when you reconnect."
+                    },
+                    "ds:9DXNXn/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:iaJVGU": {
+                      "enabled": false
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ZJTCJA",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "3JWXD9",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 22890,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends (roadmap \"Friend Profiles\", \"Jam\") — Friends with live presence: online, listening (with track), away, offline with last seen. Presence is shown to friends only and can be hidden in Privacy. Concept."
+    }
+  ]
+}

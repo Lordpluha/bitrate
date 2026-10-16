@@ -47,6 +47,7 @@ const trackWhere = (query: string, filters: SearchFilters) => Prisma.sql`
     ${yearFilter(Prisma.sql`t."releaseDate"`, filters.year)}
     ${artistFilter(filters.artist)}
     ${trackGenre(filters.genre)}
+    ${filters.hideExplicit ? Prisma.sql`AND t.explicit = false` : Prisma.empty}
 `
 
 /** Shared `WHERE` body for the artist bucket. */

@@ -1,54 +1,31 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import {
+  useLikedPlaylists,
   useLikePlaylist,
   useUnlikePlaylist,
 } from '@/entities/Playlist/api/client'
-import {
-  getSavedPlaylistsStorageKey,
-  removeSavedPlaylistFromLibrary,
-  savePlaylistToLibrary,
-} from '@/entities/Playlist/models/savedPlaylistLibrary'
 import { showApiErrorToast, showApiSuccessToast } from '@/shared/api/feedback'
 import { useAuth } from '@/shared/hooks'
 
 export type LikeablePlaylist = {
-  cover?: string
   id: string
-  ownerName?: string
   title?: string
-  tracksCount?: number
 }
 
 type UsePlaylistLikeOptions = {
-  initialLiked?: boolean
   playlist: LikeablePlaylist
 }
 
-export const usePlaylistLike = ({
-  initialLiked = false,
-  playlist,
-}: UsePlaylistLikeOptions) => {
+/** Like state from the server's liked list (`GET /playlists/liked`), so it follows the account. */
+export const usePlaylistLike = ({ playlist }: UsePlaylistLikeOptions) => {
   const { user } = useAuth()
-  const [isLiked, setIsLiked] = useState(initialLiked)
+  const { data: likedPlaylists } = useLikedPlaylists(Boolean(user))
   const likePlaylist = useLikePlaylist()
   const unlikePlaylist = useUnlikePlaylist()
-  const userStorageScope = user?.id ?? 'anonymous'
-  const likedPlaylistStorageKey = `bitrate:web-player:liked-playlist:${userStorageScope}:${playlist.id}`
-  const savedPlaylistsStorageKey = getSavedPlaylistsStorageKey(userStorageScope)
+  const isLiked =
+    likedPlaylists?.some((liked) => liked.id === playlist.id) ?? false
   const isPending = likePlaylist.isPending || unlikePlaylist.isPending
-
-  useEffect(() => {
-    const storedValue = window.localStorage.getItem(likedPlaylistStorageKey)
-
-    if (storedValue === 'true' || storedValue === 'false') {
-      setIsLiked(storedValue === 'true')
-      return
-    }
-
-    setIsLiked(initialLiked)
-  }, [initialLiked, likedPlaylistStorageKey])
 
   const toggleLike = async () => {
     if (isPending) return
@@ -58,24 +35,12 @@ export const usePlaylistLike = ({
         await unlikePlaylist.mutateAsync({
           params: { path: { id: playlist.id } },
         })
-        setIsLiked(false)
-        window.localStorage.setItem(likedPlaylistStorageKey, 'false')
-        removeSavedPlaylistFromLibrary(savedPlaylistsStorageKey, playlist.id)
         showApiSuccessToast('Removed from Your Library')
         return
       }
 
       await likePlaylist.mutateAsync({
         params: { path: { id: playlist.id } },
-      })
-      setIsLiked(true)
-      window.localStorage.setItem(likedPlaylistStorageKey, 'true')
-      savePlaylistToLibrary(savedPlaylistsStorageKey, {
-        cover: playlist.cover,
-        id: playlist.id,
-        title: playlist.title ?? 'playlist',
-        tracksCount: playlist.tracksCount ?? 0,
-        username: playlist.ownerName ?? 'Playlist',
       })
       showApiSuccessToast('Added to Your Library')
     } catch (error) {

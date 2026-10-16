@@ -64,10 +64,8 @@ export const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
       />
       <PlaylistActionBar
         details={{
-          cover,
           id: playlist.id,
           isOwner,
-          ownerName: playlist.user?.username || t('common.unknown'),
           title: playlist.title || 'playlist',
           tracksCount: tracks.length,
         }}

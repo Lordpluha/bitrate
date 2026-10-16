@@ -1,13 +1,23 @@
 'use client'
 
-import { Button, PasswordInput } from '@bitrate/ui-react'
+import { Button } from '@bitrate/ui-react'
 import { useMutation } from '@shared/api/client'
 import { showApiErrorToast, showApiSuccessToast } from '@shared/api/feedback'
 import { ROUTES } from '@shared/routes'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { type FormEvent, useState } from 'react'
-import { AuthRecoveryCard } from './AuthRecoveryCard'
+import { AuthAlert } from './AuthAlert'
+import { AuthHeading } from './AuthHeading'
+import { AuthTextInput } from './AuthTextInput'
+import { AUTH_BUTTON_CLASS } from './authStyles'
+
+const MIN_PASSWORD_LENGTH = 8
+
+type ResetErrors = {
+  confirm?: string
+  password?: string
+}
 
 export const ResetPasswordForm = () => {
   const router = useRouter()
@@ -15,22 +25,23 @@ export const ResetPasswordForm = () => {
   const token = searchParams.get('token')?.trim() ?? ''
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [errors, setErrors] = useState<ResetErrors>({})
   const resetPassword = useMutation('post', '/api/v1/auth/reset-password', {
     meta: { suppressErrorToast: true },
   })
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-
-    if (!token) return showApiErrorToast(new Error('Invalid reset link.'))
-    if (password.length < 8) {
-      return showApiErrorToast(
-        new Error('Password must contain at least 8 characters.'),
-      )
+    const nextErrors: ResetErrors = {
+      confirm:
+        password !== confirmPassword ? "Passwords don't match" : undefined,
+      password:
+        password.length < MIN_PASSWORD_LENGTH
+          ? `Password must be at least ${MIN_PASSWORD_LENGTH} characters`
+          : undefined,
     }
-    if (password !== confirmPassword) {
-      return showApiErrorToast(new Error('Passwords do not match.'))
-    }
+    setErrors(nextErrors)
+    if (nextErrors.confirm || nextErrors.password) return
 
     try {
       await resetPassword.mutateAsync({ body: { password, token } })
@@ -41,68 +52,62 @@ export const ResetPasswordForm = () => {
     }
   }
 
-  return (
-    <AuthRecoveryCard
-      description="Choose a new password for your account."
-      title="Create a new password"
-    >
-      {token ? (
-        <form
-          aria-busy={resetPassword.isPending}
-          className="grid gap-5"
-          onSubmit={handleSubmit}
-        >
-          <label className="text-sm font-semibold" htmlFor="new-password">
-            New password
-          </label>
-          <PasswordInput
-            autoComplete="new-password"
-            id="new-password"
-            minLength={8}
-            onChange={(event) => setPassword(event.target.value)}
-            required
-            value={password}
-            variant="contrast"
-          />
-          <label
-            className="text-sm font-semibold"
-            htmlFor="confirm-new-password"
-          >
-            Confirm new password
-          </label>
-          <PasswordInput
-            autoComplete="new-password"
-            id="confirm-new-password"
-            minLength={8}
-            onChange={(event) => setConfirmPassword(event.target.value)}
-            required
-            value={confirmPassword}
-            variant="contrast"
-          />
-          <Button
-            className="rounded"
-            disabled={resetPassword.isPending}
-            type="submit"
-            variant="primary"
-          >
-            Update password
-          </Button>
-        </form>
-      ) : (
-        <div
-          aria-live="polite"
-          className="rounded bg-surface p-4 text-sm text-text-subdued"
-        >
+  if (!token) {
+    return (
+      <>
+        <AuthHeading title="Create a new password" />
+        <AuthAlert title="Link incomplete">
           This password reset link is missing its token. Request a new link and
           try again.
-        </div>
-      )}
-      <Link
-        className="text-center text-sm font-bold hover:underline"
-        href={ROUTES.auth.forgotPassword}
+        </AuthAlert>
+        <Button asChild className={AUTH_BUTTON_CLASS} variant="outline">
+          <Link href={ROUTES.auth.forgotPassword}>Request another link</Link>
+        </Button>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <AuthHeading
+        description="Choose a new password for your account."
+        title="Create a new password"
+      />
+      <form
+        aria-busy={resetPassword.isPending}
+        className="flex flex-col gap-5"
+        noValidate
+        onSubmit={handleSubmit}
       >
-        Request another link
-      </Link>
-    </AuthRecoveryCard>
+        <AuthTextInput
+          autoComplete="new-password"
+          error={errors.password}
+          id="new-password"
+          label="New password"
+          onChange={(event) => setPassword(event.target.value)}
+          placeholder="••••••••"
+          secret
+          value={password}
+        />
+        <AuthTextInput
+          autoComplete="new-password"
+          error={errors.confirm}
+          id="confirm-new-password"
+          label="Confirm new password"
+          onChange={(event) => setConfirmPassword(event.target.value)}
+          placeholder="••••••••"
+          secret
+          value={confirmPassword}
+        />
+        <Button
+          className={AUTH_BUTTON_CLASS}
+          disabled={resetPassword.isPending}
+          type="submit"
+          variant="primary"
+        >
+          {resetPassword.isPending ? 'Updating...' : 'Update password'}
+        </Button>
+      </form>
+    </>
   )
 }

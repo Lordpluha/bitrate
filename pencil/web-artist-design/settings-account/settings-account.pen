@@ -1,0 +1,2293 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "jyQrAc",
+      "name": "Artist / Settings / Account / Desktop / Dark",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Qfxksg",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:cOc4EM": {
+              "type": "ref",
+              "id": "neaERX",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Settings",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "settings"
+                },
+                "ds:GZQzF3": {
+                  "content": "Settings"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Settings / Account"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "View artist profile"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "FcF9JR",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "zPJJdj",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Account settings"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Login identity and sign-in methods"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "8mvLUB",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "Hx5sMP",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "NcWRGV",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Account",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Account"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "FhNyeJ",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Security",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Security"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "o9WHbe",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Notifications",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Notifications"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5WFeGL",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Appearance",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Appearance"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "wEQmwH",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Connected services",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Connected services"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "oXYWJf",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Team & safety",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Team & safety"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "uSgwyE",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "TeKWmb",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "jLn7sj",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "MPk2uP",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "ZD7QqG",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "4Tr4c8",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Login identity"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "hzbU2C",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Used to sign in and receive account-security messages."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "bCafHP",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Email address"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "demoartist@example.com · Changing this address requires a separate verification step."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "NGzSPJ",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "WiedBs",
+                                          "ref": "ds:xtDM73",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:HSv7ty": {
+                                              "content": "Verified"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "kq7EYL",
+                                          "ref": "ds:G5tJp",
+                                          "name": "Button / Change email",
+                                          "descendants": {
+                                            "ds:d2zCI": {
+                                              "content": "Change email"
+                                            },
+                                            "ds:zDiHG": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "cL4Ap6",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "DrAGeu",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "fQqkUR",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "fTMpRm",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Sign-in methods"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "QM2DLx",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Email and password"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Current sign-in method"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "Cjgvcf",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "JQfPt6",
+                                          "ref": "ds:xtDM73",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:HSv7ty": {
+                                              "content": "Enabled"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Y5Fo2t",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Additional methods"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "No other provider is connected in this prototype."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "8bAvLf",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "SZNLZE",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Unavailable"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "BmCVrk",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "G5TC62",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "CiptGW",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "5b7riU",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "nxeJpE",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Account vs. profile"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "xp5R4b",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Private login identity"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "6TmzcD",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "rrQ9qo",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Never public"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Gzb9ch",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Public artist profile"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "WyiHqP",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "4887aT",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Edited separately"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "82GCxv",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "No unsaved account changes"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "bowZGC",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Save account changes",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Save account changes"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "QvHFaz",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Edit public profile",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Edit public profile"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/settings — Login identity and sign-in methods."
+    },
+    {
+      "type": "frame",
+      "id": "7iXewR",
+      "name": "Artist / Settings / Account / Desktop / Light",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "UdXcNF",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:cOc4EM": {
+              "type": "ref",
+              "id": "y6bsiA",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Settings",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "settings"
+                },
+                "ds:GZQzF3": {
+                  "content": "Settings"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Settings / Account"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "View artist profile"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "4g2i4w",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "4PGMsg",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Account settings"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Login identity and sign-in methods"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "JKux2Z",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "J9kw8N",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "e4AwNf",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Account",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Account"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "bmCWJs",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Security",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Security"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "n8KZNw",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Notifications",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Notifications"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sV2K8a",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Appearance",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Appearance"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "XNZkUf",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Connected services",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Connected services"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "mXincJ",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Team & safety",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Team & safety"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "4Rohum",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "5pueCX",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "KCizSe",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "4gxobx",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "SR2XJZ",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "ajwsFw",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Login identity"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "PXVbu3",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Used to sign in and receive account-security messages."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "JtZCrW",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Email address"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "demoartist@example.com · Changing this address requires a separate verification step."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "yCV9fx",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "kcnMcr",
+                                          "ref": "ds:xtDM73",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:HSv7ty": {
+                                              "content": "Verified"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "6ku3Ja",
+                                          "ref": "ds:G5tJp",
+                                          "name": "Button / Change email",
+                                          "descendants": {
+                                            "ds:d2zCI": {
+                                              "content": "Change email"
+                                            },
+                                            "ds:zDiHG": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "owxTaJ",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "3SPhm8",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "3mYUoX",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "Bw33xG",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Sign-in methods"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "zGwqE9",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Email and password"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Current sign-in method"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "FkAymg",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "CGDBRm",
+                                          "ref": "ds:xtDM73",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:HSv7ty": {
+                                              "content": "Enabled"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "5QupQj",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Additional methods"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "No other provider is connected in this prototype."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "2WakzG",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "ffkLg9",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Unavailable"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "H5xwtR",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ssGEuq",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "SnKaxR",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "wK8RL8",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "TLzkCz",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Account vs. profile"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "KKLFUC",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Private login identity"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "Cg8CwU",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "ds88fM",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Never public"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ZJM4sW",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Public artist profile"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "xxbV6h",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "ddZCmj",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Edited separately"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Yht3SB",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "No unsaved account changes"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Z5QxmM",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Save account changes",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Save account changes"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "FeWRwX",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Edit public profile",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Edit public profile"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "designed — /dashboard/settings — Login identity and sign-in methods."
+    },
+    {
+      "type": "frame",
+      "id": "3iihfM",
+      "name": "Artist / Settings / Account / Desktop / Dim",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "4zPMTe",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:cOc4EM": {
+              "type": "ref",
+              "id": "hj3ZkF",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Settings",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "settings"
+                },
+                "ds:GZQzF3": {
+                  "content": "Settings"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Settings / Account"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "View artist profile"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "ZWYfCw",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "PPHoyb",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Account settings"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Login identity and sign-in methods"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "gbQz6B",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "ttsQSM",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Qoc4w2",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Account",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Account"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "kXSiTi",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Security",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Security"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Z2HwnJ",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Notifications",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Notifications"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "EEXGJe",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Appearance",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Appearance"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "cGRfya",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Connected services",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Connected services"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "nAS7JY",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Team & safety",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Team & safety"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Mjw4o4",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "9QbVxT",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "t3zD54",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "gAEguj",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "CXh4be",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "eG8uE3",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Login identity"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Fo6UXX",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Used to sign in and receive account-security messages."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "MtKhgC",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Email address"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "demoartist@example.com · Changing this address requires a separate verification step."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "Lz3Gu8",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "ruJ49x",
+                                          "ref": "ds:xtDM73",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:HSv7ty": {
+                                              "content": "Verified"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "cQ2KqZ",
+                                          "ref": "ds:G5tJp",
+                                          "name": "Button / Change email",
+                                          "descendants": {
+                                            "ds:d2zCI": {
+                                              "content": "Change email"
+                                            },
+                                            "ds:zDiHG": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "MRXcjE",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "B6ZnD3",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "xuXdvQ",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "k5kYqS",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Sign-in methods"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "TM9Lws",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Email and password"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Current sign-in method"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "ZieEyP",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "amSjwm",
+                                          "ref": "ds:xtDM73",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:HSv7ty": {
+                                              "content": "Enabled"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "KamHXb",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Additional methods"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "No other provider is connected in this prototype."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "cUd2JX",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "tauEXF",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Unavailable"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Cne3Yi",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "7EbAXi",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "CwjVmd",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "mHKJ5V",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "E57HBf",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Account vs. profile"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "WHhgLV",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Private login identity"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "SWFLUK",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "XYqnjY",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Never public"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "pcNd5w",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Public artist profile"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "kckBJZ",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "jYmZ6c",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Edited separately"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ZVvdsQ",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "No unsaved account changes"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ur7Ud3",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Save account changes",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Save account changes"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "X4o42W",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Edit public profile",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Edit public profile"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "designed — /dashboard/settings — Login identity and sign-in methods."
+    },
+    {
+      "type": "frame",
+      "id": "LytzHv",
+      "name": "Artist / Settings / Account / Mobile / Dark",
+      "width": 390,
+      "height": 1700,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "NEnKXg",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1700,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "TEefFT",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "jW4oZe",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Account settings"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Login identity and sign-in methods"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "QAybsY",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "wZZi2p",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "DT6q4A",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Account",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Account"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "kzRfVZ",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Security",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Security"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "BjvDGV",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Notifications",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Notifications"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qzPDbm",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Appearance",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Appearance"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Yw2BfD",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Connected services",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Connected services"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "TeJeD6",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Team & safety",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Team & safety"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "H3Ahkr",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "j3rxqq",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Mvgk9R",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "FvMptD",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Login identity"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "LASqL8",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "Used to sign in and receive account-security messages."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "rd9MAx",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Email address"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "demoartist@example.com · Changing this address requires a separate verification step."
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "P23SJ2",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "czWEff",
+                                  "ref": "ds:xtDM73",
+                                  "name": "Status/Success",
+                                  "descendants": {
+                                    "ds:HSv7ty": {
+                                      "content": "Verified"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ixjLzo",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Change email",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Change email"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "FrCBcn",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "yMfXqt",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "WUDqg8",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "hgRQi9",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Sign-in methods"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "po8Rpy",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Email and password"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "Current sign-in method"
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "bg7vny",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "ceMZ5o",
+                                  "ref": "ds:xtDM73",
+                                  "name": "Status/Success",
+                                  "descendants": {
+                                    "ds:HSv7ty": {
+                                      "content": "Enabled"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "NQazHa",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Additional methods"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "No other provider is connected in this prototype."
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "4g92uq",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "aSRTiX",
+                                  "ref": "ds:LUaCU2",
+                                  "name": "Status/Neutral",
+                                  "descendants": {
+                                    "ds:jPj56V": {
+                                      "content": "Unavailable"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "PDvN69",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "TU76At",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "kY8VFj",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "FLANcG",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Account vs. profile"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "XNfawS",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Private login identity"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "N3R4qP",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "JzPTap",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Never public"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "enazee",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Public artist profile"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "UDkpTn",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "v4ambx",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Edited separately"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "wACYUY",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "No unsaved account changes"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "8JwL6r",
+                          "ref": "ds:exjwf",
+                          "name": "Button / Save account changes",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:E23bq6": {
+                              "content": "Save account changes"
+                            },
+                            "ds:o7NXW": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "vRMfqN",
+                          "ref": "ds:G5tJp",
+                          "name": "Button / Edit public profile",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:d2zCI": {
+                              "content": "Edit public profile"
+                            },
+                            "ds:zDiHG": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/settings — Login identity and sign-in methods."
+    },
+    {
+      "type": "frame",
+      "id": "qvtLnY",
+      "name": "Artist / Settings / Account / Coming soon (current app) / Desktop",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "CWstjQ",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:cOc4EM": {
+              "type": "ref",
+              "id": "QCd5ch",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Settings",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "settings"
+                },
+                "ds:GZQzF3": {
+                  "content": "Settings"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Settings / Account"
+            },
+            "ds:YLdi4o": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "MKZJLu",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "c69LLq",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ih6NMp",
+                      "ref": "ds:UacIqy",
+                      "name": "State / Workspace settings are coming soon.",
+                      "descendants": {
+                        "ds:QTS6fY": {
+                          "icon": "settings"
+                        },
+                        "ds:LaYbWr": {
+                          "content": "Workspace settings are coming soon."
+                        },
+                        "ds:IowS15": {
+                          "content": "You can already change your appearance below."
+                        },
+                        "ds:PKR600/ds:NVe7y": {
+                          "content": "Got it"
+                        },
+                        "ds:Sk1EVh": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "29JNiL",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "F7B92r",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Light",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Light"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "usnABV",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Dark",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Dark"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "MJcDPV",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Dim",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Dim"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/settings — Login identity and sign-in methods."
+    },
+    {
+      "type": "frame",
+      "id": "NbcaLq",
+      "name": "Artist / Settings / Account / Coming soon (current app) / Mobile",
+      "width": 390,
+      "height": 1200,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "82R9ag",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1200,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "fexnTs",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "5zr5yC",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "B7YTnq",
+                      "ref": "ds:UacIqy",
+                      "name": "State / Workspace settings are coming soon.",
+                      "descendants": {
+                        "ds:QTS6fY": {
+                          "icon": "settings"
+                        },
+                        "ds:LaYbWr": {
+                          "content": "Workspace settings are coming soon."
+                        },
+                        "ds:IowS15": {
+                          "content": "You can already change your appearance below."
+                        },
+                        "ds:PKR600/ds:NVe7y": {
+                          "content": "Got it"
+                        },
+                        "ds:Sk1EVh": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "xpTJ6P",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ak3SAF",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Light",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Light"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "RdhTA3",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Dark",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Dark"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "oUEQAj",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Dim",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Dim"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/settings — Login identity and sign-in methods."
+    }
+  ]
+}

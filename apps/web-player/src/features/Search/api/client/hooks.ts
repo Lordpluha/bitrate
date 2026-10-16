@@ -25,6 +25,8 @@ export type SearchTrackResult = {
   title: string
   cover: string | null
   artistId: string
+  /** The primary artist's name, as the search returns it. */
+  artistName: string | null
   rank: number
 }
 
@@ -104,6 +106,7 @@ export const normalizeSearchResponse = (
   totals: input.totals,
   tracks: input.data.tracks.map((track) => ({
     artistId: track.artistId ?? '',
+    artistName: track.subtitle,
     cover: track.image,
     id: track.id,
     rank: track.rank,

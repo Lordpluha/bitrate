@@ -2,8 +2,9 @@
 
 import { FollowArtistButton } from '@entities/Artist'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import { MoreHorizontal, Shuffle } from 'lucide-react'
+import { Shuffle } from 'lucide-react'
 import Image from 'next/image'
+import { ArtistMoreMenu } from '@/views/Artist/ui/ArtistMoreMenu'
 import { ArtistPlayButton } from '@/views/Artist/ui/ArtistPlayButton'
 
 export type ArtistActionBarProps = {
@@ -70,12 +71,6 @@ export const ArtistActionBar = ({
       size="sm"
     />
 
-    <button
-      aria-label={`More options for ${artistName}`}
-      className="rounded-full p-2 text-text-subdued transition hover:scale-105 hover:text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-      type="button"
-    >
-      <MoreHorizontal aria-hidden="true" size={25} />
-    </button>
+    <ArtistMoreMenu artistId={artistId} artistName={artistName} />
   </div>
 )

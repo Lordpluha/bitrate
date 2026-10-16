@@ -24,7 +24,9 @@ import {
   FollowArtistSwagger,
   GetArtistByIdSwagger,
   GetArtistByUsernameSwagger,
+  GetArtistPlaylistsSwagger,
   GetArtistsSwagger,
+  GetArtistTopTracksSwagger,
   GetFollowingSwagger,
   UnfollowArtistSwagger,
   UpdateArtistSwagger,
@@ -53,6 +55,27 @@ export class ArtistsController {
       page,
       username,
     })
+  }
+
+  /** The artist's most played tracks. */
+  @GetArtistTopTracksSwagger()
+  @Get(':id/top-tracks')
+  getTopTracks(
+    @Param('id', ParseUUIDPipe) id: ArtistEntity['id'],
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+  ) {
+    return this.artistsService.findTopTracks(id, limit)
+  }
+
+  /** Public playlists featuring the artist. */
+  @GetArtistPlaylistsSwagger()
+  @Get(':id/playlists')
+  getPlaylists(
+    @Param('id', ParseUUIDPipe) id: ArtistEntity['id'],
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+  ) {
+    return this.artistsService.findPlaylists(id, page, limit)
   }
 
   /** Runs the get by id operation. */

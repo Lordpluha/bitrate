@@ -2,20 +2,15 @@ import { cn } from '@bitrate/ui-react'
 import {
   Check,
   Flag,
-  FolderInput,
   List,
-  Lock,
-  MonitorUp,
+  ListPlus,
   Pencil,
   Share2,
-  SlidersHorizontal,
   Trash2,
-  UserPlus,
-  UserRoundPlus,
 } from 'lucide-react'
 import { Z_INDEX_CLASS } from '@/shared/constants'
+import { MenuItem } from '@/shared/ui'
 import type { TrackViewMode } from '@/views/Playlist/model/playlist.types'
-import { PlaylistMenuItem } from './PlaylistMenuItem'
 
 type TrackViewMenuProps = {
   onChange: (viewMode: TrackViewMode) => void
@@ -56,6 +51,8 @@ export const TrackViewMenu = ({ onChange, value }: TrackViewMenuProps) => (
 
 type PlaylistMoreMenuProps = {
   canEdit: boolean
+  hasTracks: boolean
+  onAddToQueue: () => void
   onCopyLink: () => void
   onDelete: () => void
   onEdit: () => void
@@ -64,6 +61,8 @@ type PlaylistMoreMenuProps = {
 
 export const PlaylistMoreMenu = ({
   canEdit,
+  hasTracks,
+  onAddToQueue,
   onCopyLink,
   onDelete,
   onEdit,
@@ -77,58 +76,28 @@ export const PlaylistMoreMenu = ({
     )}
     role="menu"
   >
-    <PlaylistMenuItem disabled icon={<List size={17} />} label="Add to queue" />
-    <PlaylistMenuItem
-      disabled={!canEdit}
-      icon={<UserRoundPlus size={17} />}
-      label="Add to profile"
+    <MenuItem
+      disabled={!hasTracks}
+      icon={<ListPlus size={17} />}
+      label="Add to queue"
+      onClick={onAddToQueue}
     />
-    <PlaylistMenuItem
+    <MenuItem
       disabled={!canEdit}
       icon={<Pencil size={17} />}
       label="Edit details"
       onClick={onEdit}
     />
-    <PlaylistMenuItem
+    <MenuItem
       disabled={!canEdit}
       icon={<Trash2 size={17} />}
       label="Delete"
       onClick={onDelete}
     />
     <div className="mx-2 my-1 border-t border-white/10" />
-    <PlaylistMenuItem disabled icon={<Lock size={17} />} label="Make private" />
-    <PlaylistMenuItem
-      disabled={!canEdit}
-      icon={<UserPlus size={17} />}
-      label="Invite collaborators"
-    />
-    <PlaylistMenuItem
-      disabled
-      icon={<SlidersHorizontal size={17} />}
-      label="Exclude from your taste profile"
-    />
-    <PlaylistMenuItem
-      disabled
-      icon={<FolderInput size={17} />}
-      label="Move to folder"
-    />
-    <PlaylistMenuItem
-      icon={<Share2 size={17} />}
-      label="Share"
-      onClick={onCopyLink}
-    />
+    <MenuItem icon={<Share2 size={17} />} label="Share" onClick={onCopyLink} />
     {!canEdit && (
-      <PlaylistMenuItem
-        icon={<Flag size={17} />}
-        label="Report"
-        onClick={onReport}
-      />
+      <MenuItem icon={<Flag size={17} />} label="Report" onClick={onReport} />
     )}
-    <div className="mx-2 my-1 border-t border-white/10" />
-    <PlaylistMenuItem
-      disabled
-      icon={<MonitorUp size={17} />}
-      label="Open in Desktop app"
-    />
   </div>
 )

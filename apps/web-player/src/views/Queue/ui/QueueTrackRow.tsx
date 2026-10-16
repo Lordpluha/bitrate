@@ -27,7 +27,7 @@ export const QueueTrackRow = ({
   <li className="group grid grid-cols-[32px_minmax(0,1fr)_auto] items-center gap-3 rounded-md px-2 py-2 transition-colors hover:bg-surface-hover sm:gap-4 sm:px-3">
     <button
       aria-label={`Play ${track.title}`}
-      className="flex justify-center text-sm text-text-subdued"
+      className="flex justify-center text-[13px] font-semibold text-text-subdued"
       disabled={!onPlay}
       onClick={onPlay}
       type="button"
@@ -65,7 +65,7 @@ export const QueueTrackRow = ({
     </span>
 
     <span className="flex items-center gap-3">
-      <span className="text-sm text-text-subdued">
+      <span className="text-xs tabular-nums text-muted-foreground">
         {formatDuration(track.duration ?? 0)}
       </span>
       {onRemove ? (

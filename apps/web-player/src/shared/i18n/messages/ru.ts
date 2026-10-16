@@ -10,6 +10,7 @@ export const ru = {
   'common.loggingOut': 'Выходим…',
   'profile.updates': 'Обновления',
   'profile.caughtUp': 'Вы всё просмотрели',
+  'profile.updatesUnavailable': 'Обновления сейчас недоступны.',
   'profile.updatesDescription':
     'Здесь появятся новости о подписчиках, плейлистах, событиях и не только.',
   'common.all': 'Все',
@@ -38,7 +39,6 @@ export const ru = {
   'settings.account': 'Аккаунт',
   'settings.account.edit': 'Изменить способы входа',
   'settings.audio': 'Качество звука',
-  'settings.audio.normalize': 'Нормализовать громкость всех песен и подкастов',
   'settings.audio.quality': 'Качество стриминга',
   'settings.audio.quality.automatic': 'Автоматически',
   'settings.audio.quality.high': 'Высокое',
@@ -53,12 +53,10 @@ export const ru = {
   'settings.library.compact': 'Компактный вид медиатеки',
   'settings.library.compact.description':
     'В списках треков появится отдельная колонка исполнителя и более плотные строки.',
-  'settings.playback': 'Воспроизведение',
   'settings.privacy.activity': 'История прослушивания',
   'settings.privacy.activity.description':
-    'Другие могут видеть, что вы слушаете, и сравнивать активность.',
-  'settings.privacy.activity.label':
-    'История прослушивания на компьютере и телефоне',
+    'Ваши подписчики видят, что вы слушали на этой неделе.',
+  'settings.privacy.activity.label': 'Показывать мою активность прослушивания',
   'settings.privacy.followers': 'Подписчики и подписки',
   'settings.privacy.followers.description':
     'Люди могут видеть ваших подписчиков и ваши подписки.',
@@ -90,17 +88,6 @@ export const ru = {
   'settings.twoFactor.setup': 'Настроить 2FA',
   'settings.twoFactor.setupDescription':
     'Защитите аккаунт с помощью приложения-аутентификатора.',
-  'settings.video': 'Видео и визуализации',
-  'settings.video.canvas': 'Зацикленные визуализации',
-  'settings.video.canvas.description':
-    'Короткие зацикленные визуальные эффекты во время воспроизведения.',
-  'settings.video.info': 'Обновление настроек может занять некоторое время.',
-  'settings.video.music': 'Музыкальные видео',
-  'settings.video.music.description':
-    'Если выключено, музыкальные видео воспроизводятся только как аудио.',
-  'settings.video.other': 'Другие видео',
-  'settings.video.other.description':
-    'Вертикальные видео, видеоподкасты и видео авторов.',
   'queue.clear': 'Очистить очередь',
   'queue.empty': 'Очередь пуста',
   'queue.empty.description':
@@ -128,6 +115,9 @@ export const ru = {
   'library.albums': 'Альбомы',
   'library.history': 'История',
   'library.playlists': 'Плейлисты',
+  'library.sortBy': 'Сортировка',
+  'library.sortCreator': 'По автору',
+  'library.sortTitle': 'По алфавиту',
   'library.recents': 'Недавние',
   'library.search': 'Поиск в медиатеке',
   'library.sort': 'Сортировать медиатеку',
@@ -137,7 +127,6 @@ export const ru = {
   'main.madeFor': 'Создано для',
   'main.newAlbums': 'Новые альбомы',
   'main.noAlbums': 'Альбомы не найдены',
-  'main.noArtists': 'Исполнители не найдены',
   'main.noPlaylists': 'Плейлисты не найдены',
   'main.popularArtists': 'Популярные исполнители',
   'main.popularPlaylists': 'Популярные плейлисты',

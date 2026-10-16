@@ -1026,6 +1026,12 @@ model UserSettings {
   autoplay         Boolean  @default(true)
   explicitContent  Boolean  @default(true)
   privateSession   Boolean  @default(false)
+  /// Followers see what the user is playing (friend activity).
+  showListeningActivity    Boolean @default(true)
+  /// Other people can list who follows the user and whom the user follows.
+  followersVisible         Boolean @default(true)
+  /// The user's public playlists are listed on their profile.
+  publicPlaylistsOnProfile Boolean @default(true)
   updatedAt        DateTime @default(now()) @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)

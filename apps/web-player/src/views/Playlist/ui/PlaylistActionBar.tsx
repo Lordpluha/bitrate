@@ -2,6 +2,7 @@
 
 import { List, MoreHorizontal } from 'lucide-react'
 import { useState } from 'react'
+import { ReportDialog } from '@/features/Report'
 import type {
   PlaylistPlayback,
   TrackViewMode,
@@ -15,7 +16,6 @@ import {
   type PlaylistActionDetails,
   PlaylistPrimaryActions,
 } from '@/views/Playlist/ui/PlaylistPrimaryActions'
-import { ReportPlaylistDialog } from '@/views/Playlist/ui/ReportPlaylistDialog'
 
 type PlaylistViewControl = {
   onChange: (viewMode: TrackViewMode) => void
@@ -58,6 +58,11 @@ export const PlaylistActionBar = ({
             {menus.isMoreOpen && (
               <PlaylistMoreMenu
                 canEdit={details.isOwner}
+                hasTracks={details.tracksCount > 0}
+                onAddToQueue={() => {
+                  playback.handleAddToQueue()
+                  menus.closeMoreMenu()
+                }}
                 onCopyLink={() => void menus.copyLink()}
                 onDelete={onDelete}
                 onEdit={() => {
@@ -94,11 +99,12 @@ export const PlaylistActionBar = ({
           )}
         </div>
       </div>
-      <ReportPlaylistDialog
+      <ReportDialog
+        entityId={details.id}
+        entityName={details.title}
+        entityType="playlist"
         isOpen={isReportOpen}
         onClose={() => setIsReportOpen(false)}
-        playlistId={details.id}
-        playlistTitle={details.title}
       />
     </>
   )

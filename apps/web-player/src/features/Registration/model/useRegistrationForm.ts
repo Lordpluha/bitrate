@@ -23,6 +23,7 @@ export const useRegistrationForm = () => {
       fullName: '',
       password: '',
     },
+    criteriaMode: 'all',
     mode: 'onChange',
     resolver: zodResolver(registrationSchema),
     shouldFocusError: true,

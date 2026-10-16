@@ -7,11 +7,10 @@ import {
 } from '@entities/User'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@shared/api/client'
-import { showApiErrorToast } from '@shared/api/feedback'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
 import type { SubmitHandler } from 'react-hook-form'
 import { useForm } from 'react-hook-form'
+import { getSignInFailure } from './signInFailure'
 
 export const useLoginForm = () => {
   const router = useRouter()
@@ -20,8 +19,6 @@ export const useLoginForm = () => {
     onSuccess: (data) => {
       router.push(getLoginDestination(data))
     },
-    onError: (error) =>
-      showApiErrorToast(error, 'Unable to log in. Please try again.'),
     meta: { suppressErrorToast: true },
   })
   const form = useForm<LoginFormData>({
@@ -31,18 +28,21 @@ export const useLoginForm = () => {
     shouldFocusError: true,
   })
 
-  useEffect(() => {
-    const error = searchParams.get('error')
-    if (!error) return
-    const message =
-      error === 'oauth_state_mismatch'
-        ? 'OAuth session expired. Please try again.'
-        : 'OAuth login failed. Please try again.'
-    showApiErrorToast(new Error(message))
-  }, [searchParams])
+  const onSubmit: SubmitHandler<LoginFormData> = async (body) => {
+    try {
+      await mutation.mutateAsync({ body })
+    } catch {
+      /** The failure is shown in the form's alert; keep React Hook Form from seeing a rejection. */
+    }
+  }
 
-  const onSubmit: SubmitHandler<LoginFormData> = (body) =>
-    mutation.mutateAsync({ body })
-
-  return { form, isSubmitting: mutation.isPending, onSubmit }
+  return {
+    failure: getSignInFailure({
+      oauthError: searchParams.get('error'),
+      submitError: mutation.error,
+    }),
+    form,
+    isSubmitting: mutation.isPending,
+    onSubmit,
+  }
 }

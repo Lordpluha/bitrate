@@ -88,7 +88,7 @@ export const MusicCardSm = ({
         <p className="text-text-subdued text-xs truncate group-hover:text-text-secondary transition-colors duration-150 mt-0.5">
           {item.type.slice(0, 1).toUpperCase() + item.type.slice(1)} •{' '}
           {item.username}
-          {item.tracksCount && ` • ${item.tracksCount} songs`}
+          {item.tracksCount ? ` • ${item.tracksCount} songs` : null}
         </p>
       </div>
       {isPlaying && (

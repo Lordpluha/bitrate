@@ -16,6 +16,7 @@ import {
 } from '@tanstack/react-query'
 import {
   followedUsersResponseSchema,
+  followingActivityResponseSchema,
   type PublicUser,
   publicUserResponseSchema,
   publicUsersResponseSchema,
@@ -78,6 +79,21 @@ export const useFollowedUsers = (enabled = true) =>
     queryFn: getAllFollowedUsers,
     enabled,
     staleTime: 5 * 60_000,
+  })
+
+/** What followed people last played; refreshed every minute while a panel shows it. */
+export const useFollowingActivity = (enabled = true) =>
+  useTanStackQuery({
+    queryKey: apiQueryKeys.users.followingActivity,
+    queryFn: async () => {
+      const { data, response } = await clientFetchClient.GET(
+        '/api/v1/users/me/following/activity',
+      )
+      ensureOkResponse(response, 'Failed to load friend activity')
+      return followingActivityResponseSchema.parse(data)
+    },
+    enabled,
+    refetchInterval: 60_000,
   })
 
 const FOLLOWED_USERS_PAGE_SIZE = 100
@@ -179,3 +195,43 @@ export const useUploadUserAvatar = () => {
     },
   })
 }
+
+export type UserFollowKind = 'followers' | 'following'
+
+type UseUserFollowsInput = {
+  kind: UserFollowKind
+  limit?: number
+  userId: string
+}
+
+const getUserFollowsPage = async ({
+  kind,
+  limit = 20,
+  userId,
+}: UseUserFollowsInput) => {
+  const params = { path: { id: userId }, query: { limit, page: 1 } }
+  const { data, response } =
+    kind === 'followers'
+      ? await clientFetchClient.GET('/api/v1/users/{id}/followers', { params })
+      : await clientFetchClient.GET('/api/v1/users/{id}/following', { params })
+  /** The person keeps these lists private (`followersVisible`); not an error to show. */
+  if (response.status === 403) return { isHidden: true as const }
+  ensureOkResponse(response, `Failed to load ${kind}`)
+  return {
+    isHidden: false as const,
+    ...followedUsersResponseSchema.parse(data),
+  }
+}
+
+/** First page of who follows a person, or whom they follow (`GET /users/{id}/followers|following`). */
+export const useUserFollows = ({
+  kind,
+  limit = 20,
+  userId,
+}: UseUserFollowsInput) =>
+  useTanStackQuery({
+    enabled: Boolean(userId),
+    queryFn: () => getUserFollowsPage({ kind, limit, userId }),
+    queryKey: apiQueryKeys.users.follows(userId, kind),
+    retry: false,
+  })

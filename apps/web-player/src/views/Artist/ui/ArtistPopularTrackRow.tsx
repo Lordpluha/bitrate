@@ -1,14 +1,10 @@
 'use client'
 
 import { cn } from '@bitrate/ui-react'
-import {
-  LikeTrackButton,
-  type TrackEntity,
-  WaveAnimated,
-} from '@entities/Track'
+import { LikeTrackButton, type TrackEntity } from '@entities/Track'
 import { formatDuration } from '@shared/utils/apiHelpers'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import { Play } from 'lucide-react'
+import { AudioLines, Play } from 'lucide-react'
 import Image from 'next/image'
 
 type ArtistPopularTrackRowProps = {
@@ -42,9 +38,9 @@ export const ArtistPopularTrackRow = ({
       onClick={onPlay}
       type="button"
     />
-    <span className="pointer-events-none relative z-10 flex justify-center text-sm text-text-subdued">
+    <span className="pointer-events-none relative z-10 flex justify-center text-[13px] font-semibold text-text-subdued">
       {isActive && isPlaying ? (
-        <WaveAnimated className="size-4" />
+        <AudioLines aria-hidden="true" className="text-primary" size={16} />
       ) : (
         <>
           <span className="group-hover:hidden group-focus-within:hidden">
@@ -92,7 +88,7 @@ export const ArtistPopularTrackRow = ({
         trackTitle={track.title}
       />
     </span>
-    <span className="pointer-events-none relative z-10 text-right text-sm tabular-nums text-text-subdued">
+    <span className="pointer-events-none relative z-10 text-right text-xs tabular-nums text-muted-foreground">
       {formatDuration(track.duration ?? 0)}
     </span>
   </li>

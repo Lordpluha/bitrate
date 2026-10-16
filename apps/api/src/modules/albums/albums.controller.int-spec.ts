@@ -15,6 +15,7 @@ const makeServiceMock = () =>
     create: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
+    findLiked: jest.fn(),
   }) as unknown as jest.Mocked<AlbumsService>
 
 describe('AlbumsController (int)', () => {
@@ -61,6 +62,7 @@ describe('AlbumsController (int)', () => {
     service.create.mockReset()
     service.update.mockReset()
     service.delete.mockReset()
+    service.findLiked.mockReset()
   })
 
   it('GET /albums should return 200 with albums list', async () => {
@@ -131,5 +133,17 @@ describe('AlbumsController (int)', () => {
 
     expect(res.status).toBe(200)
     expect(service.delete).toHaveBeenCalledWith(artist.id, 'f47ac10b-58cc-4372-a567-0e02b2c3d479')
+  })
+
+  it('GET /albums/liked should list the signed-in user saved albums, not parse liked as an id', async () => {
+    service.findLiked.mockResolvedValue({ data: [], total: 0, page: 1, limit: 20 } as never)
+
+    const res = await request(app.getHttpServer())
+      .get('/albums/liked')
+      .query({ page: 1, limit: 20 })
+
+    expect(res.status).toBe(200)
+    expect(service.findLiked).toHaveBeenCalledWith('user-1', { page: 1, limit: 20 })
+    expect(service.getById).not.toHaveBeenCalled()
   })
 })

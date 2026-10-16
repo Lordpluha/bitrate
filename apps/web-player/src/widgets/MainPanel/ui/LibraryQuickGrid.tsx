@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePlaylistLibraryItems } from '@/entities/Playlist'
+import { LIKED_SONGS_ID, usePlaylistLibraryItems } from '@/entities/Playlist'
 import { ROUTES } from '@/shared/routes'
 
 const loadingCardIds = [
@@ -29,7 +29,7 @@ export const LibraryQuickGrid = () => {
     <div className="mt-4 grid grid-cols-2 gap-2 lg:grid-cols-3 xl:grid-cols-4">
       {items.map((item) => {
         const href =
-          item.id === 'liked-songs'
+          item.id === LIKED_SONGS_ID
             ? ROUTES.likedSongs
             : ROUTES.playlist(item.id)
 

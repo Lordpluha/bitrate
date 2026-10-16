@@ -1,12 +1,14 @@
 'use client'
 
-import { Button, Input, LogoIcon, Typography, toast } from '@bitrate/ui-react'
+import { Button } from '@bitrate/ui-react'
 import { clientFetchClient } from '@shared/api/client'
 import { ensureOkResponse } from '@shared/api/errors'
-import { showApiErrorToast, showApiSuccessToast } from '@shared/api/feedback'
 import { ROUTES } from '@shared/routes'
 import { useRouter } from 'next/navigation'
 import { type FormEvent, useState } from 'react'
+import { AuthHeading } from './AuthHeading'
+import { AUTH_BUTTON_CLASS } from './authStyles'
+import { OTP_LENGTH, OtpCodeField } from './OtpCodeField'
 
 /**
  * The API contract still requires a body token, while the real pending token is
@@ -15,83 +17,82 @@ import { type FormEvent, useState } from 'react'
 const HTTP_ONLY_PENDING_TOKEN_PLACEHOLDER =
   'pending-token-from-http-only-cookie'
 
+type VerifyStatus = 'idle' | 'verifying' | 'error' | 'success'
+
+const HINTS = {
+  error: 'Invalid or expired 2FA code',
+  success: 'Code verified — signing you in…',
+} as const
+
 export const TwoFactorLoginForm = () => {
   const router = useRouter()
   const [code, setCode] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [status, setStatus] = useState<VerifyStatus>('idle')
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    const nextCode = code.trim()
-
-    if (!/^\d{6}$/.test(nextCode)) {
-      showApiErrorToast(new Error('Enter the 6-digit 2FA code.'))
+    if (code.length !== OTP_LENGTH) {
+      setStatus('error')
       return
     }
 
-    setIsSubmitting(true)
+    setStatus('verifying')
     try {
       const { response } = await clientFetchClient.POST(
         '/api/v1/auth/2fa/verify-login',
         {
           body: {
-            code: nextCode,
+            code,
             pendingToken: HTTP_ONLY_PENDING_TOKEN_PLACEHOLDER,
           },
         },
       )
-
-      ensureOkResponse(response, 'Invalid or expired 2FA code')
-      showApiSuccessToast('Logged in')
+      ensureOkResponse(response, HINTS.error)
+      setStatus('success')
       router.push(ROUTES.main)
     } catch {
-      toast.error('Invalid or expired 2FA code')
-    } finally {
-      setIsSubmitting(false)
+      setStatus('error')
     }
   }
 
-  return (
-    <div className="flex flex-col items-stretch justify-center basis-[50%] gap-4 px-14 py-32 bg-contrast text-text-contrast overflow-hidden rounded-[10px_0_0_10px] max-xl:basis-full max-xl:rounded-[10px] max-lg:p-6 box-border">
-      <div className="flex flex-col items-center">
-        <LogoIcon height={64} width={64} />
-        <Typography as="h5" className="mt-2 text-center" size="heading5">
-          Enter your 2FA code
-        </Typography>
-        <Typography as="p" className="text-center text-grey-500" size="body">
-          Use the 6-digit code from your authenticator app.
-        </Typography>
-      </div>
+  const isBusy = status === 'verifying' || status === 'success'
 
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        <label
-          className="grid gap-2 text-sm font-semibold"
-          htmlFor="two-factor-code"
-        >
-          Authentication code
-        </label>
-        <Input
-          autoComplete="one-time-code"
+  return (
+    <>
+      <AuthHeading
+        description="Use the 6-digit code from your authenticator app."
+        title="Enter your 2FA code"
+      />
+      <form
+        aria-busy={isBusy}
+        className="flex flex-col gap-5.5"
+        noValidate
+        onSubmit={handleSubmit}
+      >
+        <OtpCodeField
+          hint={
+            status === 'error' || status === 'success'
+              ? HINTS[status]
+              : undefined
+          }
           id="two-factor-code"
-          inputMode="numeric"
-          maxLength={6}
-          name="two-factor-code"
-          onChange={(event) => setCode(event.target.value.replace(/\D/g, ''))}
-          pattern="[0-9]{6}"
-          placeholder="123456"
-          required
+          label="Authentication code"
+          onChange={(next) => {
+            setCode(next)
+            if (status === 'error') setStatus('idle')
+          }}
+          status={status === 'error' || status === 'success' ? status : 'idle'}
           value={code}
-          variant="contrast"
         />
         <Button
-          className="rounded"
-          disabled={isSubmitting}
+          className={AUTH_BUTTON_CLASS}
+          disabled={isBusy}
           type="submit"
           variant="primary"
         >
-          Verify
+          {isBusy ? 'Verifying...' : 'Verify'}
         </Button>
       </form>
-    </div>
+    </>
   )
 }

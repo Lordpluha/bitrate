@@ -1,7 +1,10 @@
 'use client'
 
 import { useEffect } from 'react'
-import type { SettingsSnapshot } from '@/entities/Settings/model/settings.types'
+import {
+  type SettingsSnapshot,
+  STREAMING_QUALITIES,
+} from '@/entities/Settings/model/settings.types'
 import {
   initialSettings,
   useSettingsStore,
@@ -25,9 +28,13 @@ const readStoredSettings = (): Partial<SettingsSnapshot> => {
         .map((key) => [key, stored[key]]),
     ) as Partial<SettingsSnapshot>
 
+    const streamingQuality = STREAMING_QUALITIES.find(
+      (quality) => quality === stored.streamingQuality,
+    )
     return {
       ...snapshot,
       language: normalizeLocale(stored.language),
+      streamingQuality: streamingQuality ?? initialSettings.streamingQuality,
     }
   } catch {
     return {}

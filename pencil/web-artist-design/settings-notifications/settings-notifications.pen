@@ -1,0 +1,2499 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "R4WMbU",
+      "name": "Artist / Settings / Notifications / Desktop / Dark",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "cGjTv7",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:cOc4EM": {
+              "type": "ref",
+              "id": "55K88E",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Settings",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "settings"
+                },
+                "ds:GZQzF3": {
+                  "content": "Settings"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Settings / Notifications"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Reset preferences"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "2NGTTL",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "gd8qvs",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Notifications"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Choose product events and delivery channels"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "JHwCQK",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "raik4K",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "MyWZGE",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Account",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Account"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "VwRzwn",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Security",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Security"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "XRbM2U",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Notifications",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Notifications"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "uxDQSc",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Appearance",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Appearance"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "fUDZ2h",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Connected services",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Connected services"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "KCps62",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Team & safety",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Team & safety"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "uGdT2M",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "yha48R",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "6vNvp4",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "X4UbPg",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "DLeMTE",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "x7fyDd",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Notify me about"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "kMjPPT",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Preferences are grouped by the product event that caused them."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Nm6Z24",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Release and delivery updates"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Review, delivery status and publication changes"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "q85Nmi",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "H9XbQc",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / In-app",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "In-app"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "36vfr8",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / Email",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "Email"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "FjHCiN",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Review feedback"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Questions, required changes and approval"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "eV2eKz",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "6rfNuj",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / In-app",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "In-app"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "xbaLCw",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / Email",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "Email"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "kpwvAP",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Tasks and deadlines"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Assignments, reminders and overdue tasks"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "uQ3ZEb",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "iC3Jrb",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / In-app",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "In-app"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "Wwoevt",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / Email",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "Email"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "7oZyu3",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Analytics reports"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Available Bitrate reports and data delays"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "iv5vUX",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "8LXLHn",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / In-app",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "In-app"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "ioYKdW",
+                                          "ref": "ds:S0zkA",
+                                          "name": "Switch / Email",
+                                          "descendants": {
+                                            "ds:T8vyQf": {
+                                              "content": "Email"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "2ztQTw",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Promotion and publishing"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Draft, approval and campaign-status updates"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "Jkrm2s",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "F4j8uU",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / In-app",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "In-app"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "9aDzSc",
+                                          "ref": "ds:S0zkA",
+                                          "name": "Switch / Email",
+                                          "descendants": {
+                                            "ds:T8vyQf": {
+                                              "content": "Email"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "84Qqf9",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Turning off a channel does not remove the event from the product activity history."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "acnym3",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "MBEXfU",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "UeDpuw",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "arw4en",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "w3B7Jw",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Delivery channels"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "pCnAN9",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "In-app"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Available in this concept"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "75KYBM",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "jksb6B",
+                                          "ref": "ds:xtDM73",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:HSv7ty": {
+                                              "content": "Active"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "7M77UW",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Email"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "demoartist@example.com"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "fafyfQ",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "vDMtRT",
+                                          "ref": "ds:xtDM73",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:HSv7ty": {
+                                              "content": "Verified"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "TvgTFj",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Push"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Not connected in this prototype"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "gFVYmi",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "Rx4eFW",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Unavailable"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "pL3yzt",
+                                  "ref": "ds:S0zkA",
+                                  "name": "Switch / Pause all notifications",
+                                  "descendants": {
+                                    "ds:T8vyQf": {
+                                      "content": "Pause all notifications"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "hUqWuB",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Save preferences",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Save preferences"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/settings/notifications — Events grouped by source; In-app, Email and Push channels."
+    },
+    {
+      "type": "frame",
+      "id": "PacYk6",
+      "name": "Artist / Settings / Notifications / Desktop / Light",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "r5WWVu",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:cOc4EM": {
+              "type": "ref",
+              "id": "xstd9J",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Settings",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "settings"
+                },
+                "ds:GZQzF3": {
+                  "content": "Settings"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Settings / Notifications"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Reset preferences"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "F4Ykg2",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "qmRi47",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Notifications"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Choose product events and delivery channels"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "duAjoz",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "vY2hEK",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "icUq5Y",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Account",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Account"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Vs6WxB",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Security",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Security"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ryxc3P",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Notifications",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Notifications"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "BZicrx",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Appearance",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Appearance"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "A75xU5",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Connected services",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Connected services"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "2EGV5P",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Team & safety",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Team & safety"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "JWjZNg",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "EbGHAg",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "jBZ8LJ",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "gShmj6",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "Bb4p7V",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "GPW6LA",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Notify me about"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ALFgir",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Preferences are grouped by the product event that caused them."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "naiche",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Release and delivery updates"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Review, delivery status and publication changes"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "oFG4bf",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "srWXZH",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / In-app",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "In-app"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "CW3Rc5",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / Email",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "Email"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "RFspeJ",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Review feedback"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Questions, required changes and approval"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "GN7CCA",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "msfiBR",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / In-app",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "In-app"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "EruitS",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / Email",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "Email"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "7CjyMj",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Tasks and deadlines"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Assignments, reminders and overdue tasks"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "pjXkrD",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "shKuAZ",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / In-app",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "In-app"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "c2cCeT",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / Email",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "Email"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "mqa77u",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Analytics reports"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Available Bitrate reports and data delays"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "h2Mcmi",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "NiPwQm",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / In-app",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "In-app"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "oxRNhb",
+                                          "ref": "ds:S0zkA",
+                                          "name": "Switch / Email",
+                                          "descendants": {
+                                            "ds:T8vyQf": {
+                                              "content": "Email"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "CY5bCX",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Promotion and publishing"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Draft, approval and campaign-status updates"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "7hu9Mx",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "EiGfG4",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / In-app",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "In-app"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "zrnpk2",
+                                          "ref": "ds:S0zkA",
+                                          "name": "Switch / Email",
+                                          "descendants": {
+                                            "ds:T8vyQf": {
+                                              "content": "Email"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "MXmK37",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Turning off a channel does not remove the event from the product activity history."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "XntXi9",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "vNuCH7",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "fQaLJ7",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "B5H66H",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "TvZNuY",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Delivery channels"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "nALxov",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "In-app"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Available in this concept"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "sXCC5w",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "tN6fUW",
+                                          "ref": "ds:xtDM73",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:HSv7ty": {
+                                              "content": "Active"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "3yAzKR",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Email"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "demoartist@example.com"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "PRhG8t",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "wsPjK3",
+                                          "ref": "ds:xtDM73",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:HSv7ty": {
+                                              "content": "Verified"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "iZcnZh",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Push"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Not connected in this prototype"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "nzNmkn",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "Y8aqXk",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Unavailable"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "zEdEU9",
+                                  "ref": "ds:S0zkA",
+                                  "name": "Switch / Pause all notifications",
+                                  "descendants": {
+                                    "ds:T8vyQf": {
+                                      "content": "Pause all notifications"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "anHLFx",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Save preferences",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Save preferences"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "designed — /dashboard/settings/notifications — Events grouped by source; In-app, Email and Push channels."
+    },
+    {
+      "type": "frame",
+      "id": "dnV9WA",
+      "name": "Artist / Settings / Notifications / Desktop / Dim",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "wMWmTx",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:cOc4EM": {
+              "type": "ref",
+              "id": "8qXh5r",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Settings",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "settings"
+                },
+                "ds:GZQzF3": {
+                  "content": "Settings"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Settings / Notifications"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Reset preferences"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "2KSW7x",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "6KRsNC",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Notifications"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Choose product events and delivery channels"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "neXZyM",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "SKNc3x",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "C7pmhk",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Account",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Account"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "RgeTho",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Security",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Security"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "QXjQZU",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Notifications",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Notifications"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "iHax86",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Appearance",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Appearance"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "nRnhqA",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Connected services",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Connected services"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "9boig6",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Team & safety",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Team & safety"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "D8dgmg",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "kLy5zb",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "NP754M",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "fJQggp",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "BybeLd",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "ri4gCW",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Notify me about"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Pnx6Dk",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Preferences are grouped by the product event that caused them."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "u8HsxW",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Release and delivery updates"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Review, delivery status and publication changes"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "N6VWZQ",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "gUJ8RQ",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / In-app",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "In-app"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "WqciGw",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / Email",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "Email"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "J3Fkj7",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Review feedback"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Questions, required changes and approval"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "oVQT2J",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "7gHNam",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / In-app",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "In-app"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "SzWa32",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / Email",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "Email"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ESmtGh",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Tasks and deadlines"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Assignments, reminders and overdue tasks"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "8UmA92",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "aRy5at",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / In-app",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "In-app"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "5fPPHf",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / Email",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "Email"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "N6aciv",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Analytics reports"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Available Bitrate reports and data delays"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "XaYF6K",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "PNrowh",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / In-app",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "In-app"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "cDqic5",
+                                          "ref": "ds:S0zkA",
+                                          "name": "Switch / Email",
+                                          "descendants": {
+                                            "ds:T8vyQf": {
+                                              "content": "Email"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "YbscBf",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Promotion and publishing"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Draft, approval and campaign-status updates"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "9vL7ET",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "iFLdTo",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / In-app",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": "In-app"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "4qqF8k",
+                                          "ref": "ds:S0zkA",
+                                          "name": "Switch / Email",
+                                          "descendants": {
+                                            "ds:T8vyQf": {
+                                              "content": "Email"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "RCPU2W",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Turning off a channel does not remove the event from the product activity history."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "CkcVzs",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "4tqmhV",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "effQYr",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "FJtNQi",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "ZfBFdY",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Delivery channels"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "HHMXQR",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "In-app"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Available in this concept"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "epkzZH",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "kyjVAH",
+                                          "ref": "ds:xtDM73",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:HSv7ty": {
+                                              "content": "Active"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "RoScwk",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Email"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "demoartist@example.com"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "34a9LJ",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "SySUti",
+                                          "ref": "ds:xtDM73",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:HSv7ty": {
+                                              "content": "Verified"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "8Kf2N7",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Push"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Not connected in this prototype"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "cqbGP3",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "pBLqfv",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Unavailable"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "vUgEyc",
+                                  "ref": "ds:S0zkA",
+                                  "name": "Switch / Pause all notifications",
+                                  "descendants": {
+                                    "ds:T8vyQf": {
+                                      "content": "Pause all notifications"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "KRMS9w",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Save preferences",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Save preferences"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "designed — /dashboard/settings/notifications — Events grouped by source; In-app, Email and Push channels."
+    },
+    {
+      "type": "frame",
+      "id": "cM57WJ",
+      "name": "Artist / Settings / Notifications / Mobile / Dark",
+      "width": 390,
+      "height": 1700,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Wpmt2w",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1700,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "NFmSBP",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "hqDhVo",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Notifications"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Choose product events and delivery channels"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "Kxh3qq",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "MsDpF3",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "GDBqTN",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Account",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Account"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "z4YHD8",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Security",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Security"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ESF8Kd",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Notifications",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Notifications"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "99w8ZP",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Appearance",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Appearance"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Gr2FMs",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Connected services",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Connected services"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "tGub64",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Team & safety",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Team & safety"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "in279k",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "ZbXMER",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "KWiPKK",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "HvGthg",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Notify me about"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "L8xRCg",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "Preferences are grouped by the product event that caused them."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "yterB7",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Release and delivery updates"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "Review, delivery status and publication changes"
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "RrqSLZ",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "mfxJvE",
+                                  "ref": "ds:HjQNJ",
+                                  "name": "Switch / In-app",
+                                  "descendants": {
+                                    "ds:mNVZY": {
+                                      "content": "In-app"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "zUvvjv",
+                                  "ref": "ds:HjQNJ",
+                                  "name": "Switch / Email",
+                                  "descendants": {
+                                    "ds:mNVZY": {
+                                      "content": "Email"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "7emgHo",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Review feedback"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "Questions, required changes and approval"
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "r6yqkU",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "3hL2os",
+                                  "ref": "ds:HjQNJ",
+                                  "name": "Switch / In-app",
+                                  "descendants": {
+                                    "ds:mNVZY": {
+                                      "content": "In-app"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "3g2qT5",
+                                  "ref": "ds:HjQNJ",
+                                  "name": "Switch / Email",
+                                  "descendants": {
+                                    "ds:mNVZY": {
+                                      "content": "Email"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "KZ5vZp",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Tasks and deadlines"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "Assignments, reminders and overdue tasks"
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "PZrWgN",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "9trsE7",
+                                  "ref": "ds:HjQNJ",
+                                  "name": "Switch / In-app",
+                                  "descendants": {
+                                    "ds:mNVZY": {
+                                      "content": "In-app"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "tV2PPe",
+                                  "ref": "ds:HjQNJ",
+                                  "name": "Switch / Email",
+                                  "descendants": {
+                                    "ds:mNVZY": {
+                                      "content": "Email"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "U34n7y",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Analytics reports"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "Available Bitrate reports and data delays"
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "ogt5G9",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "AnENCB",
+                                  "ref": "ds:HjQNJ",
+                                  "name": "Switch / In-app",
+                                  "descendants": {
+                                    "ds:mNVZY": {
+                                      "content": "In-app"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "4XYfBS",
+                                  "ref": "ds:S0zkA",
+                                  "name": "Switch / Email",
+                                  "descendants": {
+                                    "ds:T8vyQf": {
+                                      "content": "Email"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "9yzPt8",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Promotion and publishing"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "Draft, approval and campaign-status updates"
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "9adcHg",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "CZ2QBN",
+                                  "ref": "ds:HjQNJ",
+                                  "name": "Switch / In-app",
+                                  "descendants": {
+                                    "ds:mNVZY": {
+                                      "content": "In-app"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "n22qnL",
+                                  "ref": "ds:S0zkA",
+                                  "name": "Switch / Email",
+                                  "descendants": {
+                                    "ds:T8vyQf": {
+                                      "content": "Email"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "8sxYv3",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "Turning off a channel does not remove the event from the product activity history."
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "iriovY",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "asp4FL",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "6WJyNm",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "h5SyFd",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Delivery channels"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "msFXYJ",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "In-app"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "Available in this concept"
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "QfSLrd",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "T4rwU5",
+                                  "ref": "ds:xtDM73",
+                                  "name": "Status/Success",
+                                  "descendants": {
+                                    "ds:HSv7ty": {
+                                      "content": "Active"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "wGjvJJ",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Email"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "demoartist@example.com"
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "LkDnr3",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "68zFWt",
+                                  "ref": "ds:xtDM73",
+                                  "name": "Status/Success",
+                                  "descendants": {
+                                    "ds:HSv7ty": {
+                                      "content": "Verified"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "NDUyCg",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Push"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "Not connected in this prototype"
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "FRT2sk",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "P4SaNv",
+                                  "ref": "ds:LUaCU2",
+                                  "name": "Status/Neutral",
+                                  "descendants": {
+                                    "ds:jPj56V": {
+                                      "content": "Unavailable"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "gGyqud",
+                          "ref": "ds:S0zkA",
+                          "name": "Switch / Pause all notifications",
+                          "descendants": {
+                            "ds:T8vyQf": {
+                              "content": "Pause all notifications"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "BuEh3T",
+                          "ref": "ds:exjwf",
+                          "name": "Button / Save preferences",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:E23bq6": {
+                              "content": "Save preferences"
+                            },
+                            "ds:o7NXW": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/settings/notifications — Events grouped by source; In-app, Email and Push channels."
+    }
+  ]
+}

@@ -3,6 +3,7 @@ import {
   AUDIO_PROCESSING_QUEUE,
 } from '@infra/queues/audio-processing.queue'
 import { StorageCoreModule } from '@infra/storage/storage-core.module'
+import { NotificationsQueueModule } from '@modules/notifications'
 import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
 import { AudioProcessingConsumer } from './audio-processing.consumer'
@@ -21,6 +22,7 @@ import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
 @Module({
   imports: [
     StorageCoreModule,
+    NotificationsQueueModule,
     BullModule.registerQueue(
       { name: AUDIO_PROCESSING_QUEUE },
       {

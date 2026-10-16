@@ -1,0 +1,2419 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "P8FHvg",
+      "name": "Artist / Paid promotion setup / Desktop / Dark",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "dRDv4a",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:9lTrVo": {
+              "type": "ref",
+              "id": "kaLZRx",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Promotion",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "megaphone"
+                },
+                "ds:GZQzF3": {
+                  "content": "Promotion"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Promotion / Paid setup"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Save setup"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "FdKV9z",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "ozCdf5",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Paid promotion setup"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Set a capped budget and review every condition"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "vVsvwX",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "PUNEXF",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "CYEemJ",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Afterglow launch"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "QM9X7z",
+                      "ref": "ds:WcSzPr",
+                      "name": "Status/Warning",
+                      "descendants": {
+                        "ds:8sj0Ew": {
+                          "content": "Setup incomplete"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ReNKeN",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "oz2GTa",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Ccduwr",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "T8SoYP",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "ybfPeY",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "7sD93s",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Budget and limits"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "85Nohm",
+                                      "ref": "ds:FJUa1",
+                                      "name": "Badge / Demo values",
+                                      "descendants": {
+                                        "ds:BI0Pd": {
+                                          "content": "Demo values"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "bJvByY",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Amounts illustrate the review flow; they are not a plan or recommendation."
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "7BoZa5",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "fEZv94",
+                                      "ref": "ds:j04F4",
+                                      "name": "Input / Total campaign budget",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:l4agQ": {
+                                          "content": "Total campaign budget"
+                                        },
+                                        "ds:iI0CE": {
+                                          "content": "$150.00"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "XxuXiK",
+                                      "ref": "ds:j04F4",
+                                      "name": "Input / Daily spend cap",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:l4agQ": {
+                                          "content": "Daily spend cap"
+                                        },
+                                        "ds:iI0CE": {
+                                          "content": "$15.00"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "Dm77BV",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "s7d3iM",
+                                      "ref": "ds:j04F4",
+                                      "name": "Input / Start",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:l4agQ": {
+                                          "content": "Start"
+                                        },
+                                        "ds:iI0CE": {
+                                          "content": "Sep 12, 2026 · 18:00"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "yaYANr",
+                                      "ref": "ds:j04F4",
+                                      "name": "Input / End",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:l4agQ": {
+                                          "content": "End"
+                                        },
+                                        "ds:iI0CE": {
+                                          "content": "Sep 22, 2026"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "T9NBZy",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "4WXSWJ",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "gyT9ME",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Paid channel"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "No verified advertising provider is connected."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "dsrpLT",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "jGvztu",
+                                          "ref": "ds:WcSzPr",
+                                          "name": "Status/Warning",
+                                          "descendants": {
+                                            "ds:8sj0Ew": {
+                                              "content": "Blocker"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "6giRXf",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Billing source"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "No payment method is connected in this concept."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "X7Z4qN",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "gocpry",
+                                          "ref": "ds:WcSzPr",
+                                          "name": "Status/Warning",
+                                          "descendants": {
+                                            "ds:8sj0Ew": {
+                                              "content": "Blocker"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Fua8QL",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Estimated results"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "No reach, conversion or revenue estimate appears without a verified model and source."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "Ev3txN",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "qJQjSK",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Unavailable"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Kt9uc4",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "AL6Cwa",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "mX8LAB",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "6UXw7N",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "9zx7KY",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Launch review"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "nQoEpX",
+                                      "ref": "ds:WcSzPr",
+                                      "name": "Status/Warning",
+                                      "descendants": {
+                                        "ds:8sj0Ew": {
+                                          "content": "2 blockers"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "SKfYti",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Maximum spend"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "N9v3jH",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "urQFLw",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "$150.00 · Demo"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "xsoSWN",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Daily cap"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "4D3Z4X",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "TPMZyn",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "$15.00 · Demo"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "eBnRHg",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Auto-renew"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "o64dSy",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "Zh4gYd",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Off"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "XabX2n",
+                                  "ref": "ds:EZJTw3",
+                                  "name": "Checklist Row/Error",
+                                  "descendants": {
+                                    "ds:xwLzJQ": {
+                                      "content": "Connect a paid channel"
+                                    },
+                                    "ds:CEcbRT": {
+                                      "content": "Missing"
+                                    },
+                                    "ds:oEPH7v": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "nMrvxA",
+                                  "ref": "ds:EZJTw3",
+                                  "name": "Checklist Row/Error",
+                                  "descendants": {
+                                    "ds:xwLzJQ": {
+                                      "content": "Add a billing source"
+                                    },
+                                    "ds:CEcbRT": {
+                                      "content": "Missing"
+                                    },
+                                    "ds:oEPH7v": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "GGrye8",
+                                  "ref": "ds:BNKrLn",
+                                  "name": "Checklist Row/Pending",
+                                  "descendants": {
+                                    "ds:kHGXMJ": {
+                                      "content": "Confirm exact maximum spend"
+                                    },
+                                    "ds:9U0qv6": {
+                                      "content": "Pending"
+                                    },
+                                    "ds:9lRveR": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "riC5B4",
+                                  "ref": "ds:LWaLJ5",
+                                  "name": "Form/Checkbox Row",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:eMN4Sq": {
+                                      "content": "I understand the exact cap and that launch is a separate confirmed action."
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Xnncgz",
+                                  "ref": "ds:Wveyx",
+                                  "name": "Button / Launch unavailable",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:f8YTr": {
+                                      "content": "Launch unavailable"
+                                    },
+                                    "ds:q1x1J": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "LSRSZ6",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Nothing is charged or launched from this static screen."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/promotion/paid — Capped budget; launch stays unavailable without a channel and billing."
+    },
+    {
+      "type": "frame",
+      "id": "FuxYBm",
+      "name": "Artist / Paid promotion setup / Desktop / Light",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "ocXvCf",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:9lTrVo": {
+              "type": "ref",
+              "id": "VtQ4Vb",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Promotion",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "megaphone"
+                },
+                "ds:GZQzF3": {
+                  "content": "Promotion"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Promotion / Paid setup"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Save setup"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "DrY7ek",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "wX4jPh",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Paid promotion setup"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Set a capped budget and review every condition"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "HPq5n8",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "Z3KXpZ",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "sQht2T",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Afterglow launch"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "HLgcWa",
+                      "ref": "ds:WcSzPr",
+                      "name": "Status/Warning",
+                      "descendants": {
+                        "ds:8sj0Ew": {
+                          "content": "Setup incomplete"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "w9WFaN",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "hY2kSR",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Atsi9u",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "vmppY9",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "ikWBgZ",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "XCfBcT",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Budget and limits"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "YsnSBs",
+                                      "ref": "ds:FJUa1",
+                                      "name": "Badge / Demo values",
+                                      "descendants": {
+                                        "ds:BI0Pd": {
+                                          "content": "Demo values"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ZebMnT",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Amounts illustrate the review flow; they are not a plan or recommendation."
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "HvASSM",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "XCqizc",
+                                      "ref": "ds:j04F4",
+                                      "name": "Input / Total campaign budget",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:l4agQ": {
+                                          "content": "Total campaign budget"
+                                        },
+                                        "ds:iI0CE": {
+                                          "content": "$150.00"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "wFNs2E",
+                                      "ref": "ds:j04F4",
+                                      "name": "Input / Daily spend cap",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:l4agQ": {
+                                          "content": "Daily spend cap"
+                                        },
+                                        "ds:iI0CE": {
+                                          "content": "$15.00"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "pC4zya",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "K6mEuh",
+                                      "ref": "ds:j04F4",
+                                      "name": "Input / Start",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:l4agQ": {
+                                          "content": "Start"
+                                        },
+                                        "ds:iI0CE": {
+                                          "content": "Sep 12, 2026 · 18:00"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "uT9vFC",
+                                      "ref": "ds:j04F4",
+                                      "name": "Input / End",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:l4agQ": {
+                                          "content": "End"
+                                        },
+                                        "ds:iI0CE": {
+                                          "content": "Sep 22, 2026"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "LVtuGP",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "xtn3JR",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "VGRDBr",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Paid channel"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "No verified advertising provider is connected."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "fNueS5",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "xdpkQt",
+                                          "ref": "ds:WcSzPr",
+                                          "name": "Status/Warning",
+                                          "descendants": {
+                                            "ds:8sj0Ew": {
+                                              "content": "Blocker"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "EeKNnp",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Billing source"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "No payment method is connected in this concept."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "uKDX6v",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "eyVymx",
+                                          "ref": "ds:WcSzPr",
+                                          "name": "Status/Warning",
+                                          "descendants": {
+                                            "ds:8sj0Ew": {
+                                              "content": "Blocker"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "cbTLie",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Estimated results"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "No reach, conversion or revenue estimate appears without a verified model and source."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "iiWwwD",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "EnypZp",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Unavailable"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "hydhcj",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "YJSRE4",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "mAy2Ur",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "YMUB37",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "uj9pQW",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Launch review"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "ePaVAx",
+                                      "ref": "ds:WcSzPr",
+                                      "name": "Status/Warning",
+                                      "descendants": {
+                                        "ds:8sj0Ew": {
+                                          "content": "2 blockers"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "pGbKo6",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Maximum spend"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "jPi4dn",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "Zfjbgi",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "$150.00 · Demo"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "L4oLpQ",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Daily cap"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "jSzm98",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "GCuAiM",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "$15.00 · Demo"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Ec86QP",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Auto-renew"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "6ADunh",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "aseG2w",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Off"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ZZoLQQ",
+                                  "ref": "ds:EZJTw3",
+                                  "name": "Checklist Row/Error",
+                                  "descendants": {
+                                    "ds:xwLzJQ": {
+                                      "content": "Connect a paid channel"
+                                    },
+                                    "ds:CEcbRT": {
+                                      "content": "Missing"
+                                    },
+                                    "ds:oEPH7v": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "dKWjmJ",
+                                  "ref": "ds:EZJTw3",
+                                  "name": "Checklist Row/Error",
+                                  "descendants": {
+                                    "ds:xwLzJQ": {
+                                      "content": "Add a billing source"
+                                    },
+                                    "ds:CEcbRT": {
+                                      "content": "Missing"
+                                    },
+                                    "ds:oEPH7v": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "swq8sc",
+                                  "ref": "ds:BNKrLn",
+                                  "name": "Checklist Row/Pending",
+                                  "descendants": {
+                                    "ds:kHGXMJ": {
+                                      "content": "Confirm exact maximum spend"
+                                    },
+                                    "ds:9U0qv6": {
+                                      "content": "Pending"
+                                    },
+                                    "ds:9lRveR": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "FgkkxA",
+                                  "ref": "ds:LWaLJ5",
+                                  "name": "Form/Checkbox Row",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:eMN4Sq": {
+                                      "content": "I understand the exact cap and that launch is a separate confirmed action."
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "WbAHqe",
+                                  "ref": "ds:Wveyx",
+                                  "name": "Button / Launch unavailable",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:f8YTr": {
+                                      "content": "Launch unavailable"
+                                    },
+                                    "ds:q1x1J": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "YpsD3a",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Nothing is charged or launched from this static screen."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "designed — /dashboard/promotion/paid — Capped budget; launch stays unavailable without a channel and billing."
+    },
+    {
+      "type": "frame",
+      "id": "gsEKNp",
+      "name": "Artist / Paid promotion setup / Desktop / Dim",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "xBES2U",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:9lTrVo": {
+              "type": "ref",
+              "id": "zd5zCy",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Promotion",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "megaphone"
+                },
+                "ds:GZQzF3": {
+                  "content": "Promotion"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Promotion / Paid setup"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Save setup"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "ikfq9R",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "ods3dF",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Paid promotion setup"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Set a capped budget and review every condition"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "xBAkM8",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "iycMZL",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "o5LMus",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Afterglow launch"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "S37BKG",
+                      "ref": "ds:WcSzPr",
+                      "name": "Status/Warning",
+                      "descendants": {
+                        "ds:8sj0Ew": {
+                          "content": "Setup incomplete"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "VkureL",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "6s2TZt",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "snpQdM",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "6N9dzJ",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "U82n28",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "J8SPfo",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Budget and limits"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "stpCDQ",
+                                      "ref": "ds:FJUa1",
+                                      "name": "Badge / Demo values",
+                                      "descendants": {
+                                        "ds:BI0Pd": {
+                                          "content": "Demo values"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "MPY26C",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Amounts illustrate the review flow; they are not a plan or recommendation."
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "3KrURb",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "G6nbGt",
+                                      "ref": "ds:j04F4",
+                                      "name": "Input / Total campaign budget",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:l4agQ": {
+                                          "content": "Total campaign budget"
+                                        },
+                                        "ds:iI0CE": {
+                                          "content": "$150.00"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "uHkyjW",
+                                      "ref": "ds:j04F4",
+                                      "name": "Input / Daily spend cap",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:l4agQ": {
+                                          "content": "Daily spend cap"
+                                        },
+                                        "ds:iI0CE": {
+                                          "content": "$15.00"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "qgtMie",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "aaMv39",
+                                      "ref": "ds:j04F4",
+                                      "name": "Input / Start",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:l4agQ": {
+                                          "content": "Start"
+                                        },
+                                        "ds:iI0CE": {
+                                          "content": "Sep 12, 2026 · 18:00"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "PCwgkH",
+                                      "ref": "ds:j04F4",
+                                      "name": "Input / End",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:l4agQ": {
+                                          "content": "End"
+                                        },
+                                        "ds:iI0CE": {
+                                          "content": "Sep 22, 2026"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "XVUwAR",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "ask7US",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "umx7R5",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Paid channel"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "No verified advertising provider is connected."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "gZQJgu",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "Cp244Y",
+                                          "ref": "ds:WcSzPr",
+                                          "name": "Status/Warning",
+                                          "descendants": {
+                                            "ds:8sj0Ew": {
+                                              "content": "Blocker"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "bdZHGQ",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Billing source"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "No payment method is connected in this concept."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "cxRRf8",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "rUxeJN",
+                                          "ref": "ds:WcSzPr",
+                                          "name": "Status/Warning",
+                                          "descendants": {
+                                            "ds:8sj0Ew": {
+                                              "content": "Blocker"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "YB3UG2",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Estimated results"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "No reach, conversion or revenue estimate appears without a verified model and source."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "AJpGJ3",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "4DUKzP",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Unavailable"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "6UQ9k9",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Ef7TPy",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "CSXinx",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "ynsmRq",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "kWpiNM",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Launch review"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "RyefT3",
+                                      "ref": "ds:WcSzPr",
+                                      "name": "Status/Warning",
+                                      "descendants": {
+                                        "ds:8sj0Ew": {
+                                          "content": "2 blockers"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "DFesJV",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Maximum spend"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "BcDmwB",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "tDf8Wc",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "$150.00 · Demo"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "W8t7wJ",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Daily cap"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "pnRv9X",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "PbdYZa",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "$15.00 · Demo"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "jnKFjt",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Auto-renew"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "zeibgN",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "4knJJb",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Off"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "tB3874",
+                                  "ref": "ds:EZJTw3",
+                                  "name": "Checklist Row/Error",
+                                  "descendants": {
+                                    "ds:xwLzJQ": {
+                                      "content": "Connect a paid channel"
+                                    },
+                                    "ds:CEcbRT": {
+                                      "content": "Missing"
+                                    },
+                                    "ds:oEPH7v": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "2yHFYt",
+                                  "ref": "ds:EZJTw3",
+                                  "name": "Checklist Row/Error",
+                                  "descendants": {
+                                    "ds:xwLzJQ": {
+                                      "content": "Add a billing source"
+                                    },
+                                    "ds:CEcbRT": {
+                                      "content": "Missing"
+                                    },
+                                    "ds:oEPH7v": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "yNoAU9",
+                                  "ref": "ds:BNKrLn",
+                                  "name": "Checklist Row/Pending",
+                                  "descendants": {
+                                    "ds:kHGXMJ": {
+                                      "content": "Confirm exact maximum spend"
+                                    },
+                                    "ds:9U0qv6": {
+                                      "content": "Pending"
+                                    },
+                                    "ds:9lRveR": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "YCdQyF",
+                                  "ref": "ds:LWaLJ5",
+                                  "name": "Form/Checkbox Row",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:eMN4Sq": {
+                                      "content": "I understand the exact cap and that launch is a separate confirmed action."
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "bxgspd",
+                                  "ref": "ds:Wveyx",
+                                  "name": "Button / Launch unavailable",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:f8YTr": {
+                                      "content": "Launch unavailable"
+                                    },
+                                    "ds:q1x1J": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "CAghtU",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Nothing is charged or launched from this static screen."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "designed — /dashboard/promotion/paid — Capped budget; launch stays unavailable without a channel and billing."
+    },
+    {
+      "type": "frame",
+      "id": "eotjw2",
+      "name": "Artist / Paid promotion setup / Mobile / Dark",
+      "width": 390,
+      "height": 1700,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "cEJU2e",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1700,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "pdQYTD",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "JRHBsH",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Paid promotion setup"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Set a capped budget and review every condition"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "7k9UTK",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "G5Ppnd",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "SiHuYE",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Afterglow launch"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "7p96JP",
+                      "ref": "ds:WcSzPr",
+                      "name": "Status/Warning",
+                      "descendants": {
+                        "ds:8sj0Ew": {
+                          "content": "Setup incomplete"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "KdETxj",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "LvFE5v",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "rDMsby",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "3tW5oN",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Budget and limits"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "h6GgGm",
+                              "ref": "ds:FJUa1",
+                              "name": "Badge / Demo values",
+                              "descendants": {
+                                "ds:BI0Pd": {
+                                  "content": "Demo values"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "mcqPRs",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "Amounts illustrate the review flow; they are not a plan or recommendation."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "TQTeRz",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "gaHBu2",
+                              "ref": "ds:j04F4",
+                              "name": "Input / Total campaign budget",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:l4agQ": {
+                                  "content": "Total campaign budget"
+                                },
+                                "ds:iI0CE": {
+                                  "content": "$150.00"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "yAkYRt",
+                              "ref": "ds:j04F4",
+                              "name": "Input / Daily spend cap",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:l4agQ": {
+                                  "content": "Daily spend cap"
+                                },
+                                "ds:iI0CE": {
+                                  "content": "$15.00"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "iteBwi",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "BJZ3f4",
+                              "ref": "ds:j04F4",
+                              "name": "Input / Start",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:l4agQ": {
+                                  "content": "Start"
+                                },
+                                "ds:iI0CE": {
+                                  "content": "Sep 12, 2026 · 18:00"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "69qRYJ",
+                              "ref": "ds:j04F4",
+                              "name": "Input / End",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:l4agQ": {
+                                  "content": "End"
+                                },
+                                "ds:iI0CE": {
+                                  "content": "Sep 22, 2026"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "ekmV4i",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "oR5gaw",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "okxm9k",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Paid channel"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "No verified advertising provider is connected."
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "f5zNzu",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "vvMPmq",
+                                  "ref": "ds:WcSzPr",
+                                  "name": "Status/Warning",
+                                  "descendants": {
+                                    "ds:8sj0Ew": {
+                                      "content": "Blocker"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "7TMKgj",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Billing source"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "No payment method is connected in this concept."
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "aEhH6Q",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "g9uYBf",
+                                  "ref": "ds:WcSzPr",
+                                  "name": "Status/Warning",
+                                  "descendants": {
+                                    "ds:8sj0Ew": {
+                                      "content": "Blocker"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "4QSvsB",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Estimated results"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "No reach, conversion or revenue estimate appears without a verified model and source."
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "YLrrzu",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "3Br5aa",
+                                  "ref": "ds:LUaCU2",
+                                  "name": "Status/Neutral",
+                                  "descendants": {
+                                    "ds:jPj56V": {
+                                      "content": "Unavailable"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "qaHjF3",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "tSXJNQ",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "CMMnGf",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "ckRsg7",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Launch review"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "9Zwq8Z",
+                              "ref": "ds:WcSzPr",
+                              "name": "Status/Warning",
+                              "descendants": {
+                                "ds:8sj0Ew": {
+                                  "content": "2 blockers"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "k2gKA4",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Maximum spend"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "cmdtzh",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "jDq3Pe",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "$150.00 · Demo"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "5hjpna",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Daily cap"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "jQTHQn",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "kh4m3n",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "$15.00 · Demo"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "md4YMD",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Auto-renew"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "2Vt3De",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "AVjov6",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Off"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "7aKius",
+                          "ref": "ds:EZJTw3",
+                          "name": "Checklist Row/Error",
+                          "descendants": {
+                            "ds:xwLzJQ": {
+                              "content": "Connect a paid channel"
+                            },
+                            "ds:CEcbRT": {
+                              "content": "Missing"
+                            },
+                            "ds:oEPH7v": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "We2cPp",
+                          "ref": "ds:EZJTw3",
+                          "name": "Checklist Row/Error",
+                          "descendants": {
+                            "ds:xwLzJQ": {
+                              "content": "Add a billing source"
+                            },
+                            "ds:CEcbRT": {
+                              "content": "Missing"
+                            },
+                            "ds:oEPH7v": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "bZXFTW",
+                          "ref": "ds:BNKrLn",
+                          "name": "Checklist Row/Pending",
+                          "descendants": {
+                            "ds:kHGXMJ": {
+                              "content": "Confirm exact maximum spend"
+                            },
+                            "ds:9U0qv6": {
+                              "content": "Pending"
+                            },
+                            "ds:9lRveR": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "CR2EBz",
+                          "ref": "ds:LWaLJ5",
+                          "name": "Form/Checkbox Row",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:eMN4Sq": {
+                              "content": "I understand the exact cap and that launch is a separate confirmed action."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "cCQbGi",
+                          "ref": "ds:Wveyx",
+                          "name": "Button / Launch unavailable",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:f8YTr": {
+                              "content": "Launch unavailable"
+                            },
+                            "ds:q1x1J": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "TfYYbh",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "Nothing is charged or launched from this static screen."
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/promotion/paid — Capped budget; launch stays unavailable without a channel and billing."
+    }
+  ]
+}

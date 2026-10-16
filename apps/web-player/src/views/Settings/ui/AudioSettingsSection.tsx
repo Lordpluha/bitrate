@@ -1,22 +1,25 @@
 'use client'
 
 import type { InterfaceLanguage, StreamingQuality } from '@entities/Settings'
-import { useSettingsStore } from '@entities/Settings'
+import { toServerStreamingQuality, useSettingsStore } from '@entities/Settings'
 import { localeLabels, useI18n } from '@shared/i18n'
+import { type UpdateMeSettings, useUpdateMeSettings } from '@/entities/Me'
+import { showApiErrorToast } from '@/shared/api/feedback'
+import { useAuth } from '@/shared/hooks'
 import {
   SettingsRow,
   SettingsSection,
 } from '@/views/Settings/ui/controls/SettingsSection'
 import { SettingsSelect } from '@/views/Settings/ui/controls/SettingsSelect'
-import { SettingsSwitch } from '@/views/Settings/ui/controls/SettingsSwitch'
 
+/** Language and streaming quality: applied here at once and saved to the account when signed in. */
 export const AudioSettingsSection = () => {
   const { t } = useI18n()
+  const { isAuthenticated } = useAuth()
   const language = useSettingsStore((state) => state.language)
   const streamingQuality = useSettingsStore((state) => state.streamingQuality)
-  const normalizeVolume = useSettingsStore((state) => state.normalizeVolume)
   const setSetting = useSettingsStore((state) => state.setSetting)
-  const toggleSetting = useSettingsStore((state) => state.toggleSetting)
+  const updateSettings = useUpdateMeSettings()
   const qualityOptions: ReadonlyArray<{
     label: string
     value: StreamingQuality
@@ -27,15 +30,24 @@ export const AudioSettingsSection = () => {
     { label: t('settings.audio.quality.high'), value: 'High' },
   ]
 
+  const saveToAccount = (settings: UpdateMeSettings) => {
+    if (!isAuthenticated) return
+    updateSettings.mutate(settings, {
+      onError: (error) =>
+        showApiErrorToast(error, 'Unable to save this preference.'),
+    })
+  }
+
   return (
     <>
       <SettingsSection title={t('settings.language')}>
         <SettingsRow label={t('settings.language.description')}>
           <SettingsSelect
             ariaLabel={t('settings.language.description')}
-            onChange={(value: InterfaceLanguage) =>
+            onChange={(value: InterfaceLanguage) => {
               setSetting('language', value)
-            }
+              saveToAccount({ language: value })
+            }}
             options={localeLabels}
             value={language}
             widthClassName="min-w-68"
@@ -47,19 +59,15 @@ export const AudioSettingsSection = () => {
         <SettingsRow label={t('settings.audio.quality')}>
           <SettingsSelect
             ariaLabel={t('settings.audio.quality')}
-            onChange={(value: StreamingQuality) =>
+            onChange={(value: StreamingQuality) => {
               setSetting('streamingQuality', value)
-            }
+              saveToAccount({
+                streamingQuality: toServerStreamingQuality(value),
+              })
+            }}
             options={qualityOptions}
             value={streamingQuality}
             widthClassName="min-w-40"
-          />
-        </SettingsRow>
-        <SettingsRow label={t('settings.audio.normalize')}>
-          <SettingsSwitch
-            ariaLabel={t('settings.audio.normalize')}
-            checked={normalizeVolume}
-            onChange={() => toggleSetting('normalizeVolume')}
           />
         </SettingsRow>
       </SettingsSection>

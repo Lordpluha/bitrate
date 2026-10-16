@@ -10,6 +10,7 @@ export const pl = {
   'common.loggingOut': 'Wylogowywanie…',
   'profile.updates': 'Twoje aktualności',
   'profile.caughtUp': 'Wszystko przejrzane',
+  'profile.updatesUnavailable': 'Aktualności są teraz niedostępne.',
   'profile.updatesDescription':
     'Tutaj pojawią się nowości o obserwujących, playlistach, wydarzeniach i nie tylko.',
   'common.all': 'Wszystko',
@@ -38,7 +39,6 @@ export const pl = {
   'settings.account': 'Konto',
   'settings.account.edit': 'Edytuj metody logowania',
   'settings.audio': 'Jakość dźwięku',
-  'settings.audio.normalize': 'Normalizuj głośność utworów i podcastów',
   'settings.audio.quality': 'Jakość transmisji',
   'settings.audio.quality.automatic': 'Automatyczna',
   'settings.audio.quality.high': 'Wysoka',
@@ -52,12 +52,10 @@ export const pl = {
   'settings.library.compact': 'Użyj kompaktowego widoku biblioteki',
   'settings.library.compact.description':
     'Listy utworów otrzymają osobną kolumnę wykonawcy i ciaśniejsze wiersze.',
-  'settings.playback': 'Odtwarzanie',
   'settings.privacy.activity': 'Aktywność słuchania',
   'settings.privacy.activity.description':
-    'Inni mogą zobaczyć, czego słuchasz.',
-  'settings.privacy.activity.label':
-    'Aktywność słuchania na komputerze i telefonie',
+    'Osoby, które cię obserwują, widzą, czego słuchasz w tym tygodniu.',
+  'settings.privacy.activity.label': 'Udostępniaj moją aktywność słuchania',
   'settings.privacy.followers': 'Obserwujący i obserwowani',
   'settings.privacy.followers.description':
     'Inni mogą zobaczyć, kogo obserwujesz.',
@@ -89,17 +87,6 @@ export const pl = {
   'settings.twoFactor.setup': 'Skonfiguruj 2FA',
   'settings.twoFactor.setupDescription':
     'Chroń konto aplikacją uwierzytelniającą.',
-  'settings.video': 'Filmy i wizualizacje',
-  'settings.video.canvas': 'Zapętlone wizualizacje',
-  'settings.video.canvas.description':
-    'Krótkie zapętlone animacje podczas odtwarzania.',
-  'settings.video.info': 'Aktualizacja ustawień może chwilę potrwać.',
-  'settings.video.music': 'Teledyski',
-  'settings.video.music.description':
-    'Po wyłączeniu filmy są odtwarzane tylko jako dźwięk.',
-  'settings.video.other': 'Inne filmy',
-  'settings.video.other.description':
-    'Filmy pionowe, wideopodcasty i filmy twórców.',
   'queue.clear': 'Wyczyść kolejkę',
   'queue.empty': 'Kolejka jest pusta',
   'queue.empty.description': 'Włącz coś, a kolejne utwory pojawią się tutaj.',
@@ -126,6 +113,9 @@ export const pl = {
   'library.albums': 'Albumy',
   'library.history': 'Historia',
   'library.playlists': 'Playlisty',
+  'library.sortBy': 'Sortuj według',
+  'library.sortCreator': 'Twórca',
+  'library.sortTitle': 'Alfabetycznie',
   'library.recents': 'Ostatnie',
   'library.search': 'Szukaj w bibliotece',
   'library.sort': 'Sortuj bibliotekę',
@@ -135,7 +125,6 @@ export const pl = {
   'main.madeFor': 'Dla',
   'main.newAlbums': 'Nowe albumy',
   'main.noAlbums': 'Nie znaleziono albumów',
-  'main.noArtists': 'Nie znaleziono wykonawców',
   'main.noPlaylists': 'Nie znaleziono playlist',
   'main.popularArtists': 'Popularni wykonawcy',
   'main.popularPlaylists': 'Popularne playlisty',

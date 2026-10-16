@@ -13,10 +13,10 @@ import { RelatedArtistsSection } from './RelatedArtistsSection'
 type ArtistCatalogueProps = {
   artist: ArtistEntity
   content: ArtistContent
-  heroImageUrl: string
   isContextActive: boolean
   isPlaying: boolean
   likedTrackIds: Set<string>
+  onPlayPopular: (track: TrackEntity) => void
   onPlayTrack: (track: TrackEntity, index: number) => void
   onShuffle: () => void
   onTogglePlay: () => void
@@ -26,16 +26,16 @@ type ArtistCatalogueProps = {
 export const ArtistCatalogue = ({
   artist,
   content,
-  heroImageUrl,
   isContextActive,
   isPlaying,
   likedTrackIds,
+  onPlayPopular,
   onPlayTrack,
   onShuffle,
   onTogglePlay,
   statsLabel,
 }: ArtistCatalogueProps) => {
-  const firstTrack = content.tracks[0]
+  const firstTrack = content.popularTracks[0] ?? content.tracks[0]
 
   return (
     <>
@@ -65,22 +65,15 @@ export const ArtistCatalogue = ({
           <ArtistPopularTracks
             isPlaybackContextActive={isContextActive}
             likedTrackIds={likedTrackIds}
-            onPlayTrack={onPlayTrack}
-            tracks={content.tracks}
+            onPlayTrack={onPlayPopular}
+            tracks={content.popularTracks}
           />
           <ArtistDiscography
             albums={content.albums}
             onPlayTrack={onPlayTrack}
             tracks={content.tracks}
           />
-          <ArtistFeaturing
-            artistImageUrl={heroImageUrl}
-            artistName={artist.username}
-            onPlayAll={onTogglePlay}
-            onPlayTrack={onPlayTrack}
-            onShuffle={onShuffle}
-            tracks={content.tracks}
-          />
+          <ArtistFeaturing artistId={artist.id} artistName={artist.username} />
         </>
       )}
 

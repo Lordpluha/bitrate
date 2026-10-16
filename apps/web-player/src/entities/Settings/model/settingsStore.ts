@@ -23,21 +23,14 @@ export type SettingsState = SettingsSnapshot & {
 }
 
 export const initialSettings: SettingsSnapshot = {
-  canvas: true,
   compactLibrary: false,
-  followersVisible: true,
   language: 'en',
-  listeningActivity: false,
-  musicVideos: true,
-  normalizeVolume: false,
   nowPlayingPanel: true,
-  otherVideos: true,
-  profilePlaylistsVisible: false,
   streamingQuality: 'Automatic',
 }
 
 /**
- * Device-level preferences.
+ * Device-level preferences; the account's copy (`/me/settings`) replaces them after sign-in.
  * Persistence is applied after mount by `useSettingsPersistence` so the server
  * and the first client render always agree on `initialSettings`.
  */
