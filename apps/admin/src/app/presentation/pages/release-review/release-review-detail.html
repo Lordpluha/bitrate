@@ -1,0 +1,388 @@
+<section class="w-full space-y-8 p-8">
+  <header class="space-y-1">
+    <a routerLink="/releases" class="text-sm text-muted-foreground hover:underline"
+      >&larr; Release review</a
+    >
+    @if (loading() && !release()) {
+      <h1 class="text-xl font-semibold text-foreground">Release</h1>
+    } @else if (release(); as r) {
+      <div class="flex flex-wrap items-center gap-4 pt-2">
+        @if (r.coverUrl) {
+          <img
+            [src]="r.coverUrl"
+            [alt]="r.title + ' artwork'"
+            class="size-24 shrink-0 rounded-md border border-border object-cover"
+          />
+        } @else {
+          <div
+            class="flex size-24 shrink-0 items-center justify-center rounded-md border border-dashed border-border text-xs text-muted-foreground"
+          >
+            No artwork
+          </div>
+        }
+        <div class="space-y-1">
+          <h1 class="text-xl font-semibold text-foreground">
+            {{ r.title }}
+            <span hlmBadge variant="outline" class="ml-2 align-middle">{{
+              kindLabels[r.kind]
+            }}</span>
+            <span hlmBadge [variant]="statusBadges[r.status]" class="ml-2 align-middle">{{
+              statusLabels[r.status]
+            }}</span>
+          </h1>
+          <p class="text-sm text-muted-foreground">
+            by
+            <a [routerLink]="['/artists', r.artistId]" class="hover:underline">{{
+              r.artistUsername
+            }}</a>
+            @if (r.submittedAt) {
+              · submitted {{ r.submittedAt | localizedDate: 'dd.MM.yyyy HH:mm' }}
+            }
+          </p>
+        </div>
+      </div>
+    }
+  </header>
+
+  @if (loading() && !release()) {
+    <p class="text-sm text-muted-foreground" role="status">Loading…</p>
+  } @else if (notFound()) {
+    <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+      This release could not be found, or it is still a draft.
+    </p>
+  } @else if (release(); as r) {
+    @if (status(); as text) {
+      <p class="rounded-md bg-muted px-3 py-2 text-sm text-foreground" role="status">
+        {{ text }}
+      </p>
+    }
+    @if (failure(); as text) {
+      <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+        {{ text }}
+      </p>
+    }
+
+    <section class="space-y-3" aria-labelledby="release-plan-heading">
+      <h2 id="release-plan-heading" class="text-lg font-semibold text-foreground">Release plan</h2>
+      <dl class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">Recordings</dt>
+          <dd class="text-lg font-semibold tabular-nums text-foreground">{{ r.trackCount }}</dd>
+        </div>
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">Planned date</dt>
+          <dd class="text-sm tabular-nums text-foreground">
+            {{ r.scheduledAt ? (r.scheduledAt | localizedDate: 'dd.MM.yyyy HH:mm') : 'Not set' }}
+          </dd>
+        </div>
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">UPC</dt>
+          <dd class="font-mono text-sm text-foreground">{{ r.upc ?? '—' }}</dd>
+        </div>
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">Territories</dt>
+          <dd class="text-sm text-foreground">
+            {{ r.territories.length === 0 ? 'Worldwide' : r.territories.join(', ') }}
+          </dd>
+        </div>
+      </dl>
+      <p class="text-sm text-muted-foreground">
+        Stores:
+        @if (r.destinations.length === 0) {
+          none chosen yet
+        } @else {
+          @for (destination of r.destinations; track destination; let last = $last) {
+            {{ destinationLabels[destination] ?? destination }}{{ last ? '' : ', ' }}
+          }
+        }
+      </p>
+      @if (r.blockerCodes.length > 0 || r.noticeCodes.length > 0) {
+        <ul class="space-y-1 text-sm">
+          @for (code of r.blockerCodes; track $index) {
+            <li class="text-destructive">Blocker: {{ blockerLabels[code] ?? code }}</li>
+          }
+          @for (code of r.noticeCodes; track $index) {
+            <li class="text-muted-foreground">Note: {{ noticeLabels[code] ?? code }}</li>
+          }
+        </ul>
+      }
+      <a
+        [routerLink]="['/audit']"
+        [queryParams]="{ entityType: 'release', entityId: r.id }"
+        class="block text-sm text-muted-foreground hover:underline"
+      >
+        View audit history &rarr;
+      </a>
+    </section>
+
+    <section class="space-y-3" aria-labelledby="release-tracks-heading">
+      <h2 id="release-tracks-heading" class="text-lg font-semibold text-foreground">Recordings</h2>
+      @if (r.tracks.length === 0) {
+        <p class="text-sm text-muted-foreground">This release lists no recordings.</p>
+      } @else {
+        <div hlmTableContainer>
+          <table hlmTable>
+            <caption hlmCaption class="sr-only">
+              Recordings in release order
+            </caption>
+            <thead hlmTHead>
+              <tr hlmTr>
+                <th hlmTh scope="col">#</th>
+                <th hlmTh scope="col">Recording</th>
+                <th hlmTh scope="col">Length</th>
+                <th hlmTh scope="col">ISRC</th>
+                <th hlmTh scope="col">Master</th>
+              </tr>
+            </thead>
+            <tbody hlmTBody>
+              @for (track of r.tracks; track track.id; let index = $index) {
+                <tr hlmTr>
+                  <td hlmTd class="tabular-nums text-muted-foreground">{{ index + 1 }}</td>
+                  <td hlmTd>
+                    <span class="block">{{ track.title }}</span>
+                    @if (track.audioFileName) {
+                      <span class="block text-xs text-muted-foreground">{{
+                        track.audioFileName
+                      }}</span>
+                    }
+                  </td>
+                  <td hlmTd class="tabular-nums text-muted-foreground">
+                    {{ formatDuration(track.durationSeconds) }}
+                  </td>
+                  <td hlmTd class="font-mono text-xs text-muted-foreground">
+                    {{ track.isrc ?? '—' }}
+                  </td>
+                  <td hlmTd>
+                    @if (track.hasAudio) {
+                      <audio
+                        controls
+                        preload="none"
+                        crossorigin="use-credentials"
+                        class="h-8 w-56"
+                        [attr.aria-label]="'Play ' + track.title"
+                        [src]="audioUrl(track.id)"
+                      ></audio>
+                    } @else {
+                      <span hlmBadge variant="destructive">no audio</span>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+
+    <section class="space-y-3" aria-labelledby="release-rights-heading">
+      <h2 id="release-rights-heading" class="text-lg font-semibold text-foreground">
+        Rights and credits
+      </h2>
+      <dl class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">Master owner</dt>
+          <dd class="text-sm text-foreground">
+            {{
+              r.masterOwnerType === 'ARTIST'
+                ? 'The artist'
+                : r.masterOwnerType === 'OTHER'
+                  ? (r.masterOwnerName ?? 'Another owner')
+                  : 'Not set'
+            }}
+          </dd>
+        </div>
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">Writers confirmed</dt>
+          <dd class="text-sm tabular-nums text-foreground">
+            {{ r.writersConfirmedAt ? (r.writersConfirmedAt | localizedDate: 'dd.MM.yyyy') : 'No' }}
+          </dd>
+        </div>
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">Accuracy confirmed</dt>
+          <dd class="text-sm tabular-nums text-foreground">
+            {{
+              r.accuracyConfirmedAt ? (r.accuracyConfirmedAt | localizedDate: 'dd.MM.yyyy') : 'No'
+            }}
+          </dd>
+        </div>
+      </dl>
+
+      @if (r.contributors.length > 0) {
+        <div hlmTableContainer>
+          <table hlmTable>
+            <caption hlmCaption class="sr-only">
+              Contributors and their shares
+            </caption>
+            <thead hlmTHead>
+              <tr hlmTr>
+                <th hlmTh scope="col">Contributor</th>
+                <th hlmTh scope="col">Roles</th>
+                <th hlmTh scope="col">Shares</th>
+              </tr>
+            </thead>
+            <tbody hlmTBody>
+              @for (person of r.contributors; track person.id) {
+                <tr hlmTr>
+                  <td hlmTd>{{ person.displayName }}</td>
+                  <td hlmTd class="text-muted-foreground">
+                    {{ person.roles.length === 0 ? '—' : person.roles.join(', ') }}
+                  </td>
+                  <td hlmTd class="text-muted-foreground">
+                    @for (split of r.splits; track split.rightType + split.contributorId) {
+                      @if (split.contributorId === person.id) {
+                        <span class="block tabular-nums"
+                          >{{ rightLabels[split.rightType] ?? split.rightType }}:
+                          {{ percent(split.shareBasisPoints) }}</span
+                        >
+                      }
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <p class="text-sm text-muted-foreground">No contributors listed.</p>
+      }
+    </section>
+
+    <section class="space-y-3" aria-labelledby="release-history-heading">
+      <h2 id="release-history-heading" class="text-lg font-semibold text-foreground">
+        Review history
+      </h2>
+      @if (r.reviews.length === 0) {
+        <p class="text-sm text-muted-foreground">First submission — no earlier decisions.</p>
+      } @else {
+        <ol class="space-y-3">
+          @for (review of r.reviews; track review.id) {
+            <li class="space-y-2 rounded-md border border-border p-3">
+              <p class="flex flex-wrap items-center gap-2 text-sm">
+                <span
+                  hlmBadge
+                  [variant]="review.decision === 'APPROVED' ? 'default' : 'destructive'"
+                  >{{ review.decision === 'APPROVED' ? 'Approved' : 'Changes requested' }}</span
+                >
+                <span class="text-muted-foreground">
+                  {{ review.createdAt | localizedDate: 'dd.MM.yyyy HH:mm' }} ·
+                  {{ review.reviewerUsername ?? 'former operator' }}
+                </span>
+              </p>
+              @if (review.message) {
+                <p class="whitespace-pre-line text-sm text-foreground">{{ review.message }}</p>
+              }
+              @if (review.requiredChanges.length > 0) {
+                <ol class="list-decimal space-y-1 pl-5 text-sm text-foreground">
+                  @for (item of review.requiredChanges; track item) {
+                    <li>{{ item }}</li>
+                  }
+                </ol>
+              }
+              @if (review.recommendations.length > 0) {
+                <ul class="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+                  @for (item of review.recommendations; track item) {
+                    <li>{{ item }}</li>
+                  }
+                </ul>
+              }
+            </li>
+          }
+        </ol>
+      }
+    </section>
+
+    <section class="space-y-3" aria-labelledby="release-decision-heading">
+      <h2 id="release-decision-heading" class="text-lg font-semibold text-foreground">Decision</h2>
+
+      @if (!canReview()) {
+        <p class="text-sm text-muted-foreground">
+          Deciding on releases needs the releases:review permission.
+        </p>
+      } @else if (!decidable(r)) {
+        <p class="text-sm text-muted-foreground">
+          This release is not awaiting review. A decision is possible once the artist submits it.
+        </p>
+      } @else if (mode() === null) {
+        <div class="flex flex-wrap gap-2">
+          <button hlmBtn size="sm" type="button" (click)="open('approve')">Approve</button>
+          <button hlmBtn size="sm" variant="outline" type="button" (click)="open('changes')">
+            Request changes
+          </button>
+        </div>
+        <p class="text-sm text-muted-foreground">
+          The artist sees the decision in their release workspace. Approval does not deliver the
+          release; it lets the delivery plan go ahead.
+        </p>
+      } @else {
+        <form
+          class="max-w-2xl space-y-4 rounded-md border border-border p-4"
+          [attr.aria-busy]="working()"
+          (submit)="$event.preventDefault(); submit()"
+        >
+          @if (mode() === 'changes') {
+            <div class="space-y-1">
+              <label hlmLabel for="review-required">Required changes, one per line</label>
+              <textarea
+                id="review-required"
+                class="dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 w-full min-w-0 rounded-md border bg-transparent px-2.5 py-1.5 text-sm shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:ring-3 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                rows="4"
+                aria-describedby="review-required-hint"
+                placeholder="Replace the artwork: it contains a third-party logo"
+                [disabled]="working()"
+                [value]="requiredText()"
+                (input)="requiredText.set($any($event.target).value)"
+              ></textarea>
+              <p id="review-required-hint" class="text-xs text-muted-foreground">
+                {{ requiredCount() }} of up to {{ limits.maxItems }} · each line up to
+                {{ limits.itemMaxLength }} characters. The artist must address every line before
+                resubmitting.
+              </p>
+            </div>
+            <div class="space-y-1">
+              <label hlmLabel for="review-recommendations"
+                >Recommendations (optional), one per line</label
+              >
+              <textarea
+                id="review-recommendations"
+                class="dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 w-full min-w-0 rounded-md border bg-transparent px-2.5 py-1.5 text-sm shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:ring-3 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                rows="3"
+                [disabled]="working()"
+                [value]="recommendationText()"
+                (input)="recommendationText.set($any($event.target).value)"
+              ></textarea>
+            </div>
+          }
+          <div class="space-y-1">
+            <label hlmLabel for="review-message">Note to the artist (optional)</label>
+            <textarea
+              id="review-message"
+              class="dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 w-full min-w-0 rounded-md border bg-transparent px-2.5 py-1.5 text-sm shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:ring-3 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+              rows="3"
+              [attr.maxlength]="limits.messageMaxLength"
+              [disabled]="working()"
+              [value]="message()"
+              (input)="message.set($any($event.target).value)"
+            ></textarea>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button hlmBtn variant="outline" type="button" (click)="cancel()">Cancel</button>
+            <button
+              hlmBtn
+              type="submit"
+              [variant]="mode() === 'approve' ? 'default' : 'destructive'"
+              [disabled]="working() || (mode() === 'changes' && requiredCount() === 0)"
+            >
+              {{
+                working()
+                  ? 'Saving…'
+                  : mode() === 'approve'
+                    ? 'Approve release'
+                    : 'Send change request'
+              }}
+            </button>
+          </div>
+        </form>
+      }
+    </section>
+  }
+</section>

@@ -71,6 +71,22 @@ export const routes: Routes = [
       import('@presentation/pages/albums/album-detail').then((m) => m.AlbumDetailPage),
   },
   {
+    path: 'releases',
+    title: 'Release review · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('releases:read')],
+    loadComponent: () =>
+      import('@presentation/pages/release-review/release-queue').then((m) => m.ReleaseQueuePage),
+  },
+  {
+    path: 'releases/:id',
+    title: 'Release · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('releases:read')],
+    loadComponent: () =>
+      import('@presentation/pages/release-review/release-review-detail').then(
+        (m) => m.ReleaseReviewDetailPage,
+      ),
+  },
+  {
     path: 'playlists',
     title: 'Playlists · Bitrate operators',
     canActivate: [requireStaffSession, requirePermission('playlists:read')],

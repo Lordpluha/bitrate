@@ -25,6 +25,9 @@ export class ReleaseTrackIdentifierEntity {
   @ApiProperty({ format: 'uuid' })
   id: string
 
+  @ApiProperty()
+  title: string
+
   @ApiProperty({ type: String, nullable: true, example: 'USRC17607839' })
   isrc: string | null
 }

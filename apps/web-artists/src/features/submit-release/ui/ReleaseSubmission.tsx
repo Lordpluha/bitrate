@@ -1,6 +1,7 @@
 import { Button } from '@bitrate/ui-react'
 import {
   type ReleaseWorkspace,
+  useReviseRelease,
   useSubmitRelease,
   useWithdrawRelease,
 } from '@entities/release'
@@ -11,7 +12,7 @@ interface ReleaseSubmissionProps {
   release: ReleaseWorkspace
 }
 
-/** Creates or withdraws a Bitrate review request; never starts external delivery. */
+/** Creates, withdraws or reopens a Bitrate review request; never starts external delivery. */
 export function ReleaseSubmission({
   artistId,
   release,
@@ -19,6 +20,7 @@ export function ReleaseSubmission({
   const id = useId()
   const submit = useSubmitRelease(artistId)
   const withdraw = useWithdrawRelease(artistId)
+  const revise = useReviseRelease(artistId)
   const [reviewed, setReviewed] = useState(false)
   const blockers = release.readiness.blockers.length
   const expectedUpdatedAt = release.updatedAt
@@ -47,6 +49,38 @@ export function ReleaseSubmission({
           </p>
         )}
       </div>
+    )
+
+  if (release.status === 'REJECTED')
+    return (
+      <div className="space-y-3">
+        <p className="font-medium" role="status">
+          Bitrate requested changes. Reopen the draft to address them, then
+          submit again.
+        </p>
+        <Button
+          className="artist-workspace-primary rounded-full"
+          disabled={revise.isPending}
+          onClick={() => {
+            revise.mutate({ id: release.id, input: { expectedUpdatedAt } })
+          }}
+          variant="primary"
+        >
+          {revise.isPending ? 'Reopening…' : 'Start revising'}
+        </Button>
+        {revise.error && (
+          <p className="text-sm text-destructive" role="alert">
+            {revise.error.message}
+          </p>
+        )}
+      </div>
+    )
+
+  if (release.status === 'READY')
+    return (
+      <p className="font-medium" role="status">
+        Approved by Bitrate review. Delivery follows the plan below.
+      </p>
     )
 
   if (release.status !== 'DRAFT') return null

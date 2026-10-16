@@ -1,5 +1,6 @@
 export * from './artist-email-delivery.entity'
 export * from './artist-registration.entity'
+export * from './artist-session-device.entity'
 export * from './session.entity'
 export * from './two-factor-required.entity'
 export * from './two-factor-setup.entity'

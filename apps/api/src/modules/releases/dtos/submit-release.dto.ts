@@ -13,5 +13,9 @@ export const SubmitReleaseSchema = z.strictObject({
 
 export const WithdrawReleaseSchema = z.strictObject({ expectedUpdatedAt })
 
+/** Reopens a release Bitrate sent back with requested changes. */
+export const ReviseReleaseSchema = z.strictObject({ expectedUpdatedAt })
+
 export class SubmitReleaseDto extends createZodDto(SubmitReleaseSchema) {}
 export class WithdrawReleaseDto extends createZodDto(WithdrawReleaseSchema) {}
+export class ReviseReleaseDto extends createZodDto(ReviseReleaseSchema) {}

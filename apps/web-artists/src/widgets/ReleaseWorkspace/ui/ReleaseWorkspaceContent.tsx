@@ -1,16 +1,20 @@
 import { Button } from '@bitrate/ui-react'
 import {
   type ReleaseWorkspace,
+  releaseCoverUrl,
   releaseStatusLabels,
   releaseTypeLabels,
 } from '@entities/release'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
 import { Info, Music2 } from 'lucide-react'
+import type { ReactNode } from 'react'
 import { WorkspaceParticipants } from './WorkspaceParticipants'
 import { WorkspaceReadiness } from './WorkspaceReadiness'
+import { WorkspaceReview } from './WorkspaceReview'
 import { type RightsAction, WorkspaceRights } from './WorkspaceRights'
-import { WorkspaceTracks } from './WorkspaceTracks'
+import { WorkspaceRoadmap } from './WorkspaceRoadmap'
+import { type TrackActions, WorkspaceTracks } from './WorkspaceTracks'
 
 const formatter = new Intl.DateTimeFormat('en-US', {
   dateStyle: 'medium',
@@ -19,35 +23,46 @@ const formatter = new Intl.DateTimeFormat('en-US', {
 })
 const date = (value: string) => formatter.format(new Date(value))
 
-function stageLabel(index: number, draft: boolean, inReview: boolean) {
-  if (index === 0) return draft ? 'Current' : 'Saved'
-  if (index === 1) return inReview ? 'Current' : 'Next'
+type Status = ReleaseWorkspace['status']
+
+/** Macro stages; the roadmap panel breaks Draft down into its preparation steps. */
+function stageLabel(index: number, status: Status) {
+  if (index === 0) return status === 'DRAFT' ? 'Current' : 'Done'
+  if (index === 1) {
+    if (status === 'SUBMITTED' || status === 'REJECTED') return 'Current'
+    return status === 'READY' || status === 'RELEASED' ? 'Done' : 'Next'
+  }
+  if (status === 'RELEASED') return 'Done'
   return 'Coming soon'
 }
 
 interface ReleaseWorkspaceContentProps {
   artistId: string
   release: ReleaseWorkspace
-  onEditIsrc: (trackId: string) => void
+  trackActions: TrackActions
+  onCover: () => void
   onRightsAction: (action: RightsAction) => void
   onEdit: () => void
   onSchedule: () => void
   onAddContributor: () => void
   onEditContributor: (id: string) => void
+  /** Further panels composed by the page, such as release tasks. */
+  children?: ReactNode
 }
 
 export function ReleaseWorkspaceContent({
   artistId,
   release,
-  onEditIsrc,
+  trackActions,
+  onCover,
   onRightsAction,
   onEdit,
   onSchedule,
   onAddContributor,
   onEditContributor,
+  children,
 }: ReleaseWorkspaceContentProps) {
   const draft = release.status === 'DRAFT'
-  const inReview = release.status === 'SUBMITTED'
   return (
     <>
       <header className="artist-release-page-heading">
@@ -80,7 +95,7 @@ export function ReleaseWorkspaceContent({
               <img
                 alt={`${release.title} artwork`}
                 className="artist-release-cover"
-                src={release.cover}
+                src={releaseCoverUrl(release.cover)}
               />
             ) : (
               <div className="artist-release-cover artist-release-cover-placeholder">
@@ -112,7 +127,7 @@ export function ReleaseWorkspaceContent({
               </h3>
               <p className="artist-release-next-description">
                 {draft
-                  ? 'Update the details, confirm rights and submit for review.'
+                  ? 'Upload artwork and audio, confirm rights and submit for review.'
                   : 'This release is available to view.'}
               </p>
             </div>
@@ -146,7 +161,7 @@ export function ReleaseWorkspaceContent({
               (stage, index) => (
                 <li
                   aria-current={
-                    (index === 0 && draft) || (index === 1 && inReview)
+                    stageLabel(index, release.status) === 'Current'
                       ? 'step'
                       : undefined
                   }
@@ -156,7 +171,7 @@ export function ReleaseWorkspaceContent({
                     {index + 1}
                   </span>
                   <span>{stage}</span>
-                  <small>{stageLabel(index, draft, inReview)}</small>
+                  <small>{stageLabel(index, release.status)}</small>
                 </li>
               ),
             )}
@@ -174,8 +189,9 @@ export function ReleaseWorkspaceContent({
                 {draft ? 'Prepare the release details' : 'Release details'}
               </h3>
               <p>
-                Audio uploads, artwork editing and review feedback are coming
-                soon.
+                {draft
+                  ? 'Add the artwork and a master for every track, then confirm rights. Review feedback is coming soon.'
+                  : 'Review feedback is coming soon.'}
               </p>
               <p>
                 {release.isDemo
@@ -191,14 +207,14 @@ export function ReleaseWorkspaceContent({
         >
           <h2 id="release-preparation-heading">Preparation summary</h2>
           {draft && (
-            <Button
-              className="mt-3"
-              onClick={onSchedule}
-              size="sm"
-              variant="outline"
-            >
-              Edit schedule
-            </Button>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Button onClick={onCover} size="sm" variant="outline">
+                {release.cover ? 'Change artwork' : 'Upload artwork'}
+              </Button>
+              <Button onClick={onSchedule} size="sm" variant="outline">
+                Edit schedule
+              </Button>
+            </div>
           )}
           <dl>
             <div>
@@ -219,7 +235,13 @@ export function ReleaseWorkspaceContent({
             </div>
           </dl>
         </section>
-        <WorkspaceTracks onEditIsrc={onEditIsrc} release={release} />
+        <WorkspaceReview release={release} />
+        <WorkspaceRoadmap release={release} />
+        <WorkspaceTracks
+          actions={trackActions}
+          artistId={artistId}
+          release={release}
+        />
         <WorkspaceRights onAction={onRightsAction} release={release} />
         <WorkspaceReadiness artistId={artistId} release={release} />
         <WorkspaceParticipants
@@ -227,6 +249,7 @@ export function ReleaseWorkspaceContent({
           onEditContributor={onEditContributor}
           release={release}
         />
+        {children}
       </div>
       <p className="artist-release-disclaimer">
         <Info aria-hidden="true" className="size-4 shrink-0" />

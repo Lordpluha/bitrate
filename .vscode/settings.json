@@ -1,3 +1,33 @@
 {
-  "git.detectWorktrees": true
+  "git.detectWorktrees": true,
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/**": true,
+    "**/dist/**": true,
+    "**/.turbo/**": true,
+    "**/.next/**": true,
+    "**/.output/**": true,
+    "**/.angular/**": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.turbo": true,
+    "**/.next": true,
+    "**/.output": true,
+    "**/.angular": true,
+    "graphify-out": true
+  },
+  "tailwindCSS.files.exclude": [
+    "**/.git/**",
+    "**/node_modules/**",
+    "**/.hg/**",
+    "**/.svn/**",
+    "**/dist/**",
+    "**/.turbo/**",
+    "**/.next/**",
+    "**/.output/**",
+    "**/.angular/**"
+  ]
 }
