@@ -34,7 +34,7 @@ export type ReleaseSubmission = {
   trackCount: number
 }
 
-export type SubmissionTrack = {
+type SubmissionTrack = {
   id: string
   title: string
   durationSeconds: number | null
@@ -43,13 +43,13 @@ export type SubmissionTrack = {
   hasAudio: boolean
 }
 
-export type SubmissionContributor = {
+type SubmissionContributor = {
   id: string
   displayName: string
   roles: string[]
 }
 
-export type SubmissionSplit = {
+type SubmissionSplit = {
   contributorId: string
   rightType: string
   /** 10 000 basis points make the whole of one right. */
