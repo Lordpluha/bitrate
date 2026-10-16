@@ -1,7 +1,16 @@
+import { Button } from '@bitrate/ui-react'
+import { useArtistDashboard } from '@entities/dashboard'
 import { CreateReleaseButton } from '@features/workspace-actions'
+import { DashboardOverview } from '@widgets/DashboardOverview'
 import { Upload } from 'lucide-react'
 
-export function DashboardView() {
+interface DashboardViewProps {
+  artistId: string
+}
+
+/** First run until a release exists, then the returning-artist overview. */
+export function DashboardView({ artistId }: DashboardViewProps) {
+  const dashboard = useArtistDashboard(artistId)
   return (
     <div className="artist-workspace-dashboard flex flex-col">
       <div>
@@ -12,6 +21,34 @@ export function DashboardView() {
           Everything you need for your next release.
         </p>
       </div>
+      {dashboard.isPending ? (
+        <p className="mt-8" role="status">
+          Loading your workspace…
+        </p>
+      ) : dashboard.isError ? (
+        <div className="mt-8 space-y-3">
+          <p role="alert">{dashboard.error.message}</p>
+          <Button
+            onClick={() => {
+              void dashboard.refetch()
+            }}
+            variant="outline"
+          >
+            Try again
+          </Button>
+        </div>
+      ) : dashboard.data.counts.releases === 0 ? (
+        <FirstReleasePrompt />
+      ) : (
+        <DashboardOverview dashboard={dashboard.data} />
+      )}
+    </div>
+  )
+}
+
+function FirstReleasePrompt() {
+  return (
+    <>
       <CreateReleaseButton className="mt-7 w-full lg:hidden" />
       <section
         aria-label="Release workspace"
@@ -42,9 +79,6 @@ export function DashboardView() {
           You can finish your draft later.
         </p>
       </section>
-      <p className="artist-workspace-design-note mt-auto pt-12 text-[0.625rem] text-text-secondary">
-        Demo workspace
-      </p>
-    </div>
+    </>
   )
 }

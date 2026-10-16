@@ -22,16 +22,28 @@
   "artist_auth": {
     "email_verification_unavailable": "Weryfikacja adresu e-mail jest tymczasowo niedostępna",
     "invalid_verification_code": "Nieprawidłowy lub wygasły kod weryfikacyjny",
-    "verification_code_cooldown": "Odczekaj chwilę przed poproszeniem o kolejny kod"
+    "verification_code_cooldown": "Odczekaj chwilę przed poproszeniem o kolejny kod",
+    "session_not_found": "Nie znaleziono sesji",
+    "session_is_current": "Aby zakończyć bieżącą sesję, użyj wylogowania"
   },
   "release": {
     "not_found": "Nie znaleziono wydania",
     "changed_or_not_draft": "Wydanie zostało zmienione lub nie jest już szkicem",
     "changed_or_not_submitted": "Wydanie zostało zmienione lub nie oczekuje na weryfikację",
+    "changed_or_not_rejected": "Wydanie zostało zmienione lub nie poproszono o zmiany",
     "credit_not_found": "Nie znaleziono wydania lub uczestnika",
     "recording_not_found": "Nie znaleziono nagrania w tym wydaniu",
     "blockers_unresolved": "Usuń blokady przed wysłaniem do weryfikacji",
-    "share_contributor_mismatch": "Każdy udział musi należeć do uczestnika tego wydania"
+    "share_contributor_mismatch": "Każdy udział musi należeć do uczestnika tego wydania",
+    "cover_file_required": "Wybierz obraz okładki",
+    "cover_type_invalid": "Okładka musi być obrazem JPEG, PNG lub WebP",
+    "audio_file_required": "Wybierz plik audio do przesłania",
+    "audio_type_invalid": "Plik audio musi mieć format WAV, FLAC, MP3 lub OGG",
+    "audio_not_found": "Dla tego nagrania nie przesłano audio",
+    "task_not_found": "Nie znaleziono zadania w tym wydaniu",
+    "track_order_mismatch": "Kolejność utworów musi zawierać każde nagranie wydania dokładnie raz",
+    "task_changed": "Zadanie zmieniło się od odczytu; odśwież je i spróbuj ponownie",
+    "task_assignee_invalid": "Osoba przypisana musi być uwzględniona w wydaniu"
   },
   "artist": {
     "not_found": "Nie znaleziono artysty"
@@ -42,5 +54,11 @@
   "user": {
     "not_found": "Nie znaleziono użytkownika",
     "follows_hidden": "Ten użytkownik ukrywa obserwujących i obserwowanych"
+  },
+  "artist_profile": {
+    "not_found": "Nie znaleziono profilu artysty",
+    "changed": "Profil zmienił się od wczytania; odśwież go i spróbuj ponownie",
+    "username_taken": "Ta nazwa jest już zajęta",
+    "image_required": "Wybierz obraz do przesłania"
   }
 }

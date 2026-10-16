@@ -48,6 +48,8 @@ const wirePermissionDto = contractEnum<WirePermission>()([
   'podcasts:read',
   'podcasts:delete',
   'podcasts:restore',
+  'releases:read',
+  'releases:review',
 ])
 
 type ContractStaff = Pick<

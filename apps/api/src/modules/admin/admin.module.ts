@@ -8,6 +8,7 @@ import { AdminModerationModule } from './moderation'
 import { AdminOverviewModule } from './overview'
 import { AdminPlaylistsModule } from './playlists'
 import { AdminPodcastsModule } from './podcasts'
+import { AdminReleasesModule } from './releases'
 import { AdminRolesModule } from './roles'
 import { AdminStaffModule } from './staff'
 import { AdminTracksModule } from './tracks'
@@ -29,6 +30,7 @@ import { AdminUsersModule } from './users'
     AdminAlbumsModule,
     AdminPlaylistsModule,
     AdminPodcastsModule,
+    AdminReleasesModule,
   ],
 })
 export class AdminModule {}

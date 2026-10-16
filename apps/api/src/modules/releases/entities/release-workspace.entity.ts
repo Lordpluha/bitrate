@@ -4,6 +4,7 @@ import {
   ArtistTrackVersion,
   ReleaseCreditRole,
   ReleaseMasterOwner,
+  ReleaseReviewDecision,
   ReleaseRightType,
 } from '@prisma/client'
 import { MusicReleaseEntity } from './music-catalogue.entity'
@@ -29,6 +30,15 @@ export class WorkspaceTrackDraftEntity {
 
   @ApiProperty({ type: String, nullable: true, example: 'USRC17607839' })
   isrc: string | null
+
+  @ApiProperty({ description: 'Whether a master audio file was uploaded for this draft' })
+  hasAudio: boolean
+
+  @ApiProperty({ type: String, nullable: true, description: 'Original name of the uploaded file' })
+  audioFileName: string | null
+
+  @ApiProperty({ type: Number, nullable: true, minimum: 0 })
+  audioSizeBytes: number | null
 }
 
 export class WorkspaceTrackEntity {
@@ -88,6 +98,8 @@ export class ReleaseBlockerEntity {
   @ApiProperty({
     enum: [
       'NO_TRACKS',
+      'COVER_MISSING',
+      'TRACK_AUDIO_MISSING',
       'MASTER_OWNER_MISSING',
       'WRITERS_NOT_CONFIRMED',
       'ACCURACY_NOT_CONFIRMED',
@@ -100,6 +112,9 @@ export class ReleaseBlockerEntity {
 
   @ApiProperty({ format: 'uuid', required: false })
   contributorId?: string
+
+  @ApiProperty({ format: 'uuid', required: false })
+  trackId?: string
 
   @ApiProperty({ enum: ReleaseRightType, enumName: 'ReleaseRightType', required: false })
   rightType?: ReleaseRightType
@@ -125,6 +140,24 @@ export class ReleaseReadinessEntity {
 }
 
 /** Bounded metadata only: no audio URLs, login credentials or implied delivery results. */
+/** The most recent Bitrate review decision the artist sees in the workspace. */
+export class WorkspaceReviewEntity {
+  @ApiProperty({ enum: ReleaseReviewDecision, enumName: 'ReleaseReviewDecision' })
+  decision: ReleaseReviewDecision
+
+  @ApiProperty({ type: String, nullable: true })
+  message: string | null
+
+  @ApiProperty({ type: [String] })
+  requiredChanges: string[]
+
+  @ApiProperty({ type: [String] })
+  recommendations: string[]
+
+  @ApiProperty({ type: String, format: 'date-time' })
+  createdAt: Date
+}
+
 export class ReleaseWorkspaceEntity extends MusicReleaseEntity {
   @ApiProperty({ type: [WorkspaceTrackDraftEntity], maxItems: 50 })
   trackDrafts: WorkspaceTrackDraftEntity[]
@@ -149,4 +182,7 @@ export class ReleaseWorkspaceEntity extends MusicReleaseEntity {
 
   @ApiProperty({ type: ReleaseReadinessEntity })
   readiness: ReleaseReadinessEntity
+
+  @ApiProperty({ type: WorkspaceReviewEntity, nullable: true })
+  latestReview: WorkspaceReviewEntity | null
 }

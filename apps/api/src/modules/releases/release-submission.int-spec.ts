@@ -21,7 +21,8 @@ const readyRelease = {
   masterOwnerType: 'ARTIST' as const,
   writersConfirmedAt: confirmedAt,
   accuracyConfirmedAt: confirmedAt,
-  trackDrafts: [{ id: trackDraftId, isrc: null }],
+  cover: '/static/releases/covers/ready.jpg',
+  trackDrafts: [{ id: trackDraftId, isrc: null, audioKey: 'releases/masters/ready.wav' }],
   tracks: [],
   contributors: [{ id: creditId, roles: ['PERFORMER' as const] }],
   splits: [
@@ -189,6 +190,7 @@ describe('Release submission (HTTP)', () => {
           { contributorId: creditId, rightType: 'RECORDING', shareBasisPoints: 10_000 },
           { contributorId: creditId, rightType: 'COMPOSITION', shareBasisPoints: 10_000 },
         ],
+        reviews: [],
         _count: { trackDrafts: 1, tracks: 0, contributors: 1 },
       }
       prismaMock.release.findFirst

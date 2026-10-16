@@ -10,6 +10,7 @@ import { bullRootAsyncOptions } from '@infra/queues/bull-root.options'
 import { StorageModule } from '@infra/storage/storage.module'
 import { AdminModule } from '@modules/admin'
 import { AlbumsModule } from '@modules/albums/albums.module'
+import { ArtistProfileModule } from '@modules/artist-profile'
 import { ArtistsModule } from '@modules/artists/artists.module'
 import { ArtistsAuthModule } from '@modules/artists-auth/artists-auth.module'
 import { DiscoveryModule } from '@modules/discovery/discovery.module'
@@ -73,6 +74,7 @@ import { i18nOptions } from './i18n/i18n.config'
     MeModule,
     PodcastsModule,
     ReleasesModule,
+    ArtistProfileModule,
     ModerationModule,
     AdminModule,
   ],

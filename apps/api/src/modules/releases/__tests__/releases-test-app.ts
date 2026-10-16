@@ -1,4 +1,6 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
+import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
+import type { StorageService } from '@infra/storage/storage.types'
 import { ArtistAuthGuard } from '@modules/artists-auth/artists-auth.guard'
 import type { ArtistAuthRequest } from '@modules/artists-auth/types'
 import {
@@ -64,6 +66,9 @@ export async function createReleasesTestApp(): Promise<INestApplication> {
   })
     .overrideProvider(PrismaService)
     .useValue(prismaMock)
+    // Uploads never reach S3 in HTTP tests.
+    .overrideProvider(STORAGE_SERVICE)
+    .useValue(mockDeep<StorageService>())
     .overrideGuard(ArtistAuthGuard)
     .useValue({
       canActivate(context: ExecutionContext) {

@@ -45,6 +45,9 @@ export const releaseWorkspaceSchema = releaseSummarySchema
           duration,
           isDemo: z.boolean(),
           isrc,
+          hasAudio: z.boolean(),
+          audioFileName: z.string().nullable(),
+          audioSizeBytes: z.number().int().nonnegative().nullable(),
           version: z.enum(['ORIGINAL', 'REMASTER', 'LIVE', 'DEMO']),
           status: z.enum([
             'DRAFT',
@@ -103,6 +106,15 @@ export const releaseWorkspaceSchema = releaseSummarySchema
       blockers: z.array(releaseBlockerSchema),
       notices: z.array(releaseNoticeSchema),
     }),
+    latestReview: z
+      .object({
+        decision: z.enum(['APPROVED', 'CHANGES_REQUESTED']),
+        message: z.string().nullable(),
+        requiredChanges: z.array(z.string()),
+        recommendations: z.array(z.string()),
+        createdAt: z.iso.datetime({ offset: true }),
+      })
+      .nullable(),
   })
   .refine(
     (value) =>

@@ -1,3 +1,4 @@
+export * from './ArtistSessions.decorator'
 export * from './AuthForgotPassword.decorator'
 export * from './AuthLogin.decorator'
 export * from './AuthLogout.decorator'

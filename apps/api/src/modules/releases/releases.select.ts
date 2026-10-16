@@ -23,12 +23,13 @@ export const releaseReadinessSelect = (ownerArtistId: string) =>
     status: true,
     updatedAt: true,
     upc: true,
+    cover: true,
     masterOwnerType: true,
     writersConfirmedAt: true,
     accuracyConfirmedAt: true,
     trackDrafts: {
       where: { ownerArtistId, deletedAt: null },
-      select: { id: true, isrc: true },
+      select: { id: true, isrc: true, audioKey: true },
     },
     tracks: {
       where: { track: { deletedAt: null } },
@@ -37,3 +38,18 @@ export const releaseReadinessSelect = (ownerArtistId: string) =>
     contributors: { select: { id: true, roles: true } },
     splits: { select: { rightType: true, shareBasisPoints: true } },
   }) as const satisfies Prisma.ReleaseSelect
+
+type ReadinessRecord = Prisma.ReleaseGetPayload<{
+  select: ReturnType<typeof releaseReadinessSelect>
+}>
+
+/** Published catalogue tracks already have processed audio; drafts need an uploaded master. */
+export function readinessFromRecord(record: ReadinessRecord) {
+  return {
+    ...record,
+    tracks: [
+      ...record.trackDrafts.map(({ id, isrc, audioKey }) => ({ id, isrc, hasAudio: !!audioKey })),
+      ...record.tracks.map(({ track }) => ({ ...track, hasAudio: true })),
+    ],
+  }
+}

@@ -20,6 +20,14 @@ export class ArtistSessionEntity implements ArtistSession {
   @ApiProperty()
   refresh_token: string
 
+  /** The browser the session signed in from. */
+  @ApiProperty({ type: String, nullable: true })
+  userAgent: string | null
+
+  /** The last sign-in or refresh of the session. */
+  @ApiProperty({ type: String, format: 'date-time', nullable: true })
+  lastUsedAt: Date | null
+
   /** The created at value. */
   @ApiProperty()
   createdAt: Date

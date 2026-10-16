@@ -240,6 +240,9 @@ const server = createServer(async (request, response) => {
             duration,
             isDemo,
             isrc: null,
+            hasAudio: false,
+            audioFileName: null,
+            audioSizeBytes: null,
           }),
         ),
         tracks: [],
@@ -247,8 +250,23 @@ const server = createServer(async (request, response) => {
         trackCount: recordings.length,
         participantCount: release.participants?.length ?? 0,
         readiness,
+        latestReview: null,
       })
     }
+    if (parts[5] === 'tasks' && request.method === 'GET')
+      return json(200, { data: [], total: 0 })
+    if (parts[5] === 'delivery' && request.method === 'GET')
+      return json(200, {
+        releaseId: release.id,
+        title: release.title,
+        status: release.status,
+        cover: null,
+        updatedAt: release.updatedAt,
+        partner: { connected: false, name: null },
+        territories: { mode: 'WORLDWIDE', countries: [] },
+        destinations: [],
+        sent: false,
+      })
     const existingCredit = contributorId
       ? release.participants?.find((person) => person.id === contributorId)
       : undefined
@@ -419,6 +437,36 @@ const server = createServer(async (request, response) => {
       })
       return json(200, release)
     }
+  }
+  if (request.url === '/api/v1/artist-dashboard')
+    return json(200, {
+      counts: { releases: 0, drafts: 0, inReview: 0, released: 0, tracks: 0 },
+      currentRelease: null,
+      attention: [],
+      upcoming: [],
+      tasks: { open: 0, overdue: 0, next: [] },
+    })
+  if (request.url === '/api/v1/artist-notifications')
+    return json(200, { data: [], unread: 0, seenAt: null })
+  if (request.url?.startsWith('/api/v1/artist-search'))
+    return json(200, { releases: [], tracks: [], tasks: [] })
+  if (request.url?.startsWith('/api/v1/release-tasks')) {
+    const page = Number(
+      new URL(request.url, 'http://fixture').searchParams.get('page') ?? 1,
+    )
+    return json(200, {
+      data: [],
+      total: 0,
+      page,
+      limit: 20,
+      counts: { TODO: 0, IN_PROGRESS: 0, DONE: 0, overdue: 0 },
+    })
+  }
+  if (request.url?.startsWith('/api/v1/distribution')) {
+    const page = Number(
+      new URL(request.url, 'http://fixture').searchParams.get('page') ?? 1,
+    )
+    return json(200, { data: [], total: 0, page, limit: 20 })
   }
   if (request.url?.split('?')[0] === '/api/v1/releases') {
     if (
