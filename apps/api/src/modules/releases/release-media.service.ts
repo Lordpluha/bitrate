@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto'
 import { createReadStream } from 'node:fs'
 import { rm } from 'node:fs/promises'
 import { promisify } from 'node:util'
+import { resolveSafeMulterPath } from '@common/utils/multer-file'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import {
   type PublicImageFolder,
@@ -11,6 +12,7 @@ import {
 } from '@infra/storage/public-images'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
+import { getUploadTempDir } from '@modules/tracks/audio-scratch'
 import {
   BadRequestException,
   Inject,
@@ -299,11 +301,12 @@ export class ReleaseMediaService {
   ): Promise<StoredMaster> {
     if (!file) throw new BadRequestException(RELEASE_ERRORS.AUDIO_FILE_REQUIRED)
     const extension = RELEASE_AUDIO_EXTENSION_BY_MIME[file.mimetype]
+    const path = resolveSafeMulterPath(file, getUploadTempDir())
     try {
       if (!extension) throw new BadRequestException(RELEASE_ERRORS.AUDIO_TYPE_INVALID)
       const key = `release-masters/${ownerArtistId}/${randomUUID()}${extension}`
-      const duration = await probeDurationSeconds(file.path)
-      await this.storage.upload(key, createReadStream(file.path), file.mimetype)
+      const duration = await probeDurationSeconds(path)
+      await this.storage.upload(key, createReadStream(path), file.mimetype)
       return {
         key,
         fileName: displayFileName(file.originalname),
@@ -312,7 +315,7 @@ export class ReleaseMediaService {
         duration,
       }
     } finally {
-      await rm(file.path, { force: true })
+      await rm(path, { force: true })
     }
   }
 
