@@ -29,14 +29,14 @@ export const HistoryLibrarySection = ({
     <LibraryListEmptyAware isEmpty={history.length === 0}>
       {history.map((entry) => (
         <button
-          className="grid w-full grid-cols-[48px_minmax(0,1fr)_auto] items-center gap-3 rounded-md p-2 text-left transition-colors hover:bg-surface"
+          className="grid h-16 w-full grid-cols-[48px_minmax(0,1fr)_auto] items-center gap-3 rounded-lg px-2 text-left transition-colors hover:bg-surface"
           key={entry.id}
           onClick={() => void playHistoryTrack(entry.track.id)}
           type="button"
         >
           <MediaImage
             alt={entry.track.title}
-            className="rounded object-cover"
+            className="rounded-md object-cover"
             fallback="track"
             height={48}
             src={getTrackCoverUrl(entry.track.cover)}
@@ -44,10 +44,10 @@ export const HistoryLibrarySection = ({
             width={48}
           />
           <div className="min-w-0">
-            <div className="truncate font-medium text-text">
+            <div className="truncate text-sm font-semibold text-foreground">
               {entry.track.title}
             </div>
-            <div className="truncate text-sm text-text-subdued">
+            <div className="truncate text-[13px] text-muted-foreground">
               {entry.track.artist?.username ?? entry.track.artistId}
             </div>
           </div>

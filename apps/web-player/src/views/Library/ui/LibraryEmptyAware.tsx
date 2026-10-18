@@ -1,42 +1,29 @@
-import { cn } from '@bitrate/ui-react'
+import { StateMessage } from '@shared/ui'
+import { Library } from 'lucide-react'
 import type { ReactNode } from 'react'
+import { ROUTES } from '@/shared/routes'
 
-type LibraryEmptyAwareProps = {
-  children: ReactNode
-  className?: string
-  isEmpty: boolean
-}
-
-const LibraryEmptyState = () => (
-  <div className="rounded-lg bg-surface p-6 text-text-subdued">
-    Nothing here yet.
-  </div>
+/** The design's empty library: nothing saved yet, with a way to go and find music. */
+export const LibraryEmptyState = () => (
+  <StateMessage
+    className="min-h-80"
+    description="Save playlists, albums and tracks and they will appear here."
+    icon={Library}
+    primary={{ href: ROUTES.search(), label: 'Find something to play' }}
+    title="Nothing here yet"
+  />
 )
 
-export const LibraryGridEmptyAware = ({
-  children,
-  className,
-  isEmpty,
-}: LibraryEmptyAwareProps) => {
-  if (isEmpty) return <LibraryEmptyState />
-
-  return (
-    <div
-      className={cn(
-        'grid grid-cols-1 gap-1 xl:grid-cols-[repeat(auto-fill,minmax(min(100%,150px),1fr))] xl:gap-4',
-        className,
-      )}
-    >
-      {children}
-    </div>
-  )
+type LibraryListEmptyAwareProps = {
+  children: ReactNode
+  isEmpty: boolean
 }
 
 export const LibraryListEmptyAware = ({
   children,
   isEmpty,
-}: LibraryEmptyAwareProps) => {
+}: LibraryListEmptyAwareProps) => {
   if (isEmpty) return <LibraryEmptyState />
 
-  return <div className="space-y-1">{children}</div>
+  return <div className="flex flex-col">{children}</div>
 }
