@@ -1,3 +1,4 @@
+export * from './CollectionHeader'
 export * from './LegalFooter'
 export * from './Logo'
 export * from './MenuItem'

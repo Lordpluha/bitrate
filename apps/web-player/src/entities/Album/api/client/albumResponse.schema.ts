@@ -43,6 +43,8 @@ export const albumResponseSchema = z.object({
   releaseDate: z.string().nullable(),
   title: z.string(),
   tracks: z.array(albumTrackResponseSchema).optional(),
+  /** Present on the API's album rows; not yet declared in `AlbumEntity`. */
+  type: z.enum(['ALBUM', 'SINGLE', 'EP', 'COMPILATION']).optional(),
   updatedAt: z.string(),
 })
 

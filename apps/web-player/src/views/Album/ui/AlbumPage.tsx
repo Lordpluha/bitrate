@@ -2,7 +2,6 @@
 
 import { useAlbum } from '@entities/Album'
 import { type TrackEntity, useLikedTracks } from '@entities/Track'
-import { useImageColor } from '@shared/hooks/useImageColor'
 import { getAlbumCoverUrl } from '@shared/utils/mediaUrl'
 import { useMemo } from 'react'
 import { AlbumHero } from './AlbumHero'
@@ -23,15 +22,6 @@ export const AlbumPage = ({ albumId }: { albumId: string }) => {
     [likedTracks],
   )
   const coverUrl = getAlbumCoverUrl(album?.cover)
-  const [r, g, b] = useImageColor(coverUrl)
-
-  const brighten = (value: number, amount: number, cap = 255) =>
-    Math.min(Math.round(value * amount), cap)
-  const dim = (value: number, amount: number) => Math.round(value * amount)
-
-  const topColor = `rgb(${brighten(r, 2.1)}, ${brighten(g, 2.1)}, ${brighten(b, 2.1)})`
-  const midColor = `rgb(${brighten(r, 1.25, 210)}, ${brighten(g, 1.25, 210)}, ${brighten(b, 1.25, 210)})`
-  const deepColor = `rgb(${dim(r, 0.45)}, ${dim(g, 0.45)}, ${dim(b, 0.45)})`
 
   if (isPending) {
     return (
@@ -55,7 +45,6 @@ export const AlbumPage = ({ albumId }: { albumId: string }) => {
     <div className="h-full overflow-y-auto custom-scrollbar">
       <AlbumHero
         album={album}
-        background={`linear-gradient(180deg, ${topColor} 0%, ${midColor} 42%, ${deepColor} 100%)`}
         coverUrl={coverUrl}
         duration={getAlbumDuration(tracks)}
         trackCount={tracks.length}
