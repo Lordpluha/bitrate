@@ -150,7 +150,7 @@ export const PlaybackProgress = ({
     >
       <div
         className={cn(
-          'relative w-full rounded-full bg-foreground/10',
+          'relative w-full rounded-full bg-progress-track',
           isStacked ? 'h-1' : 'h-0.75',
         )}
       >

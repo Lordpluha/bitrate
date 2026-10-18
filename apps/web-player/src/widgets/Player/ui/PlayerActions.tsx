@@ -84,7 +84,7 @@ export const PlayerActions = ({
         )}
       </button>
       <div className="group relative flex h-3.5 w-21.5 shrink-0 items-center">
-        <div className="relative h-0.75 w-full rounded-full bg-foreground/10">
+        <div className="relative h-0.75 w-full rounded-full bg-progress-track">
           <div
             className="absolute inset-y-0 left-0 rounded-full bg-primary"
             style={{ width: `${volume * 100}%` }}

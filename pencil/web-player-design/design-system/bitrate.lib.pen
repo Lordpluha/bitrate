@@ -65646,6 +65646,29 @@
         }
       ]
     },
+    "--progress-track": {
+      "type": "color",
+      "value": [
+        {
+          "value": "$--neutral-700",
+          "theme": {
+            "Mode": "Dark"
+          }
+        },
+        {
+          "value": "$--neutral-300",
+          "theme": {
+            "Mode": "Light"
+          }
+        },
+        {
+          "value": "$--neutral-700",
+          "theme": {
+            "Mode": "Dim"
+          }
+        }
+      ]
+    },
     "--input": {
       "type": "color",
       "value": [
@@ -65676,29 +65699,6 @@
     "--sidebar": {
       "type": "color",
       "value": "$--background-secondary"
-    },
-    "--background-secondary": {
-      "type": "color",
-      "value": [
-        {
-          "value": "#121212",
-          "theme": {
-            "Mode": "Dark"
-          }
-        },
-        {
-          "value": "#FFFFFF",
-          "theme": {
-            "Mode": "Light"
-          }
-        },
-        {
-          "value": "#121212",
-          "theme": {
-            "Mode": "Dim"
-          }
-        }
-      ]
     },
     "--sidebar-foreground": {
       "type": "color",
@@ -65768,6 +65768,29 @@
         },
         {
           "value": "#1A1A1A",
+          "theme": {
+            "Mode": "Dim"
+          }
+        }
+      ]
+    },
+    "--background-secondary": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#121212",
+          "theme": {
+            "Mode": "Dark"
+          }
+        },
+        {
+          "value": "#FFFFFF",
+          "theme": {
+            "Mode": "Light"
+          }
+        },
+        {
+          "value": "#121212",
           "theme": {
             "Mode": "Dim"
           }
