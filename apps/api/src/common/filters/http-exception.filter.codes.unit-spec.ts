@@ -56,17 +56,17 @@ describe('HttpExceptionFilter error codes (AC1)', () => {
     })
   })
 
-  it('falls back to en for an unsupported locale', () => {
+  it.each(['fr-FR', 'ru-RU', 'de'])('falls back to en for an unsupported locale (%s)', (lang) => {
     const body = run(
       new TranslatableException('errors.track.not_found', HttpStatus.NOT_FOUND, { id: 'x' }),
-      'fr-FR',
+      lang,
     )
 
     expect(body.message).toBe('en|errors.track.not_found|{"id":"x"}')
   })
 
   it('resolves every supported locale', () => {
-    for (const lang of ['ru', 'pl', 'de']) {
+    for (const lang of ['uk', 'pl']) {
       const body = run(
         new TranslatableException('errors.track.not_found', HttpStatus.NOT_FOUND, {}),
         `${lang}-XX,en;q=0.5`,
@@ -106,29 +106,29 @@ describe('HttpExceptionFilter zod translation (AC2)', () => {
   const input = { name: 'a', age: 99, mail: 'x', kind: 'z', tags: [], custom: 'a', keyed: 'a' }
 
   it('translates each issue in the request locale with a per-field code', () => {
-    const body = run(zodFailure(schema, input), 'ru')
+    const body = run(zodFailure(schema, input), 'uk')
     const byPath = Object.fromEntries(
       (body.errors as { path: string; code?: string; message: string }[]).map((e) => [e.path, e]),
     )
 
     expect(body).toMatchObject({ statusCode: 400, code: 'errors.validation.failed' })
-    expect(body.message).toBe('ru|errors.validation.failed|{}')
+    expect(body.message).toBe('uk|errors.validation.failed|{}')
     expect(byPath.name).toEqual({
       path: 'name',
       code: 'validation.too_small.string',
-      message: 'ru|validation.too_small.string|{"minimum":3}',
+      message: 'uk|validation.too_small.string|{"minimum":3}',
     })
     expect(byPath.age?.code).toBe('validation.too_big.number')
     expect(byPath.mail?.code).toBe('validation.invalid_format.email')
     expect(byPath.kind).toMatchObject({
       code: 'validation.invalid_value',
-      message: 'ru|validation.invalid_value|{"values":"a, b"}',
+      message: 'uk|validation.invalid_value|{"values":"a, b"}',
     })
     expect(byPath.tags?.code).toBe('validation.too_small.array')
   })
 
   it('maps a missing field to validation.required and a wrong type to validation.invalid_type', () => {
-    const body = run(zodFailure(z.object({ a: z.string(), n: z.number() }), { n: 's' }), 'de')
+    const body = run(zodFailure(z.object({ a: z.string(), n: z.number() }), { n: 's' }), 'pl')
     const errors = body.errors as { path: string; code: string }[]
 
     expect(errors.find((e) => e.path === 'a')?.code).toBe('validation.required')

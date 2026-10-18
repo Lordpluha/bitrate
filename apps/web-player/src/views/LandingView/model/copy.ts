@@ -10,7 +10,7 @@ export type LandingCopy = (
   values?: LandingCopyValues,
 ) => string
 
-/* The landing ships en, uk and pl; every other app locale (de, ru) reads the English copy. */
+/* The landing ships every app locale; English also fills keys a catalog leaves out. */
 const catalogs: Partial<Record<Locale, LandingCatalog>> = { uk, pl }
 
 const interpolate = (message: string, values?: LandingCopyValues) =>
