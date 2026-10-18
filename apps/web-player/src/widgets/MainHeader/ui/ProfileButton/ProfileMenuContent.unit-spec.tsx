@@ -11,6 +11,10 @@ vi.mock('@/entities/Me', async (importOriginal) => ({
   useNotifications: notifications.useNotifications,
   useReadNotification: () => ({ mutate: vi.fn() }),
 }))
+vi.mock('@/entities/Me/api/client/hooks', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/entities/Me/api/client/hooks')>()),
+  useReadNotification: () => ({ mutate: vi.fn() }),
+}))
 
 const page = (data: unknown[]) => ({
   data: { data, limit: 20, page: 1, total: data.length, unread: data.length },
