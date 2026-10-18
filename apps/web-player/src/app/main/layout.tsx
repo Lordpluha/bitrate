@@ -51,7 +51,7 @@ export default function MainLayout({ children }: PropsWithChildren) {
           'pb-28',
           /* The design's workspace: one rounded card holding the library, the page and Now
              Playing; the floating player bar (88px + the 12px gap) sits below it. */
-          'xl:grid xl:h-auto xl:min-h-0 xl:w-full xl:flex-1 xl:overflow-hidden xl:rounded-2xl xl:border xl:border-border xl:bg-background-secondary xl:pb-0 xl:shadow-2xl',
+          'xl:grid xl:h-auto xl:min-h-0 xl:grid-rows-[minmax(0,1fr)] xl:w-full xl:flex-1 xl:overflow-hidden xl:rounded-2xl xl:border xl:border-border xl:bg-background-secondary xl:pb-0 xl:shadow-2xl',
           /* Animate only the collapse/expand buttons. During a drag the same
              transition makes the sidebar chase the cursor 300ms behind it. */
           !isResizing && 'transition-all duration-300 ease-in-out',

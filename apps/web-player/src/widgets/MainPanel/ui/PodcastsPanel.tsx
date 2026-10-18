@@ -1,7 +1,7 @@
 'use client'
 
+import { MediaImage } from '@shared/ui/MediaImage'
 import { BookmarkCheck, BookmarkPlus } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { useMemo } from 'react'
 import {
@@ -70,9 +70,10 @@ export const PodcastsPanel = () => {
                 className="flex min-w-0 items-center gap-3 rounded-md p-2 transition-colors hover:bg-surface"
                 key={episode.id}
               >
-                <Image
+                <MediaImage
                   alt=""
                   className="size-14 shrink-0 rounded object-cover"
+                  fallback="playlist"
                   height={56}
                   src={getEpisodeCoverUrl(
                     episode.cover ?? episode.podcast.cover,

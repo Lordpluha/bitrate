@@ -1,7 +1,6 @@
 import { cn } from '@bitrate/ui-react'
-import { fallbackTrackCover } from '@shared/constants'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { Heart } from 'lucide-react'
-import Image from 'next/image'
 
 interface TrackInfoProps {
   title: string
@@ -20,11 +19,12 @@ export const TrackInfo = ({
   onLikeToggle,
 }: TrackInfoProps) => (
   <div className="flex min-w-0 items-center gap-3.5">
-    <Image
+    <MediaImage
       alt={title}
       className="size-15 shrink-0 rounded-md object-cover"
+      fallback="track"
       height={60}
-      src={coverUrl || fallbackTrackCover}
+      src={coverUrl}
       unoptimized
       width={60}
     />

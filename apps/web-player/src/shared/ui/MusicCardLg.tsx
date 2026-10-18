@@ -2,8 +2,8 @@
 import { cn } from '@bitrate/ui-react'
 import { fallbackArtistImage, fallbackPlaylistCover } from '@shared/constants'
 import { ROUTES } from '@shared/routes'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { Play } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 
 interface MusicCardLgProps {
@@ -43,9 +43,10 @@ export const MusicCardLg = ({
           isArtist ? 'rounded-full' : 'rounded-[9px]',
         )}
       >
-        <Image
+        <MediaImage
           alt={name}
           className="object-cover transition duration-300 group-hover/card:scale-[1.03]"
+          fallback={isArtist ? 'artist' : 'playlist'}
           fill
           sizes="180px"
           src={imageSrc}

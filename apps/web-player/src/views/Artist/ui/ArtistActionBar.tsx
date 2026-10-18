@@ -1,9 +1,9 @@
 'use client'
 
 import { FollowArtistButton } from '@entities/Artist'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import { Shuffle } from 'lucide-react'
-import Image from 'next/image'
 import { ArtistMoreMenu } from '@/views/Artist/ui/ArtistMoreMenu'
 import { ArtistPlayButton } from '@/views/Artist/ui/ArtistPlayButton'
 
@@ -43,9 +43,10 @@ export const ArtistActionBar = ({
         onClick={onTogglePlay}
         type="button"
       >
-        <Image
+        <MediaImage
           alt=""
           className="object-cover"
+          fallback="track"
           fill
           sizes="40px"
           src={getTrackCoverUrl(featuredCover)}

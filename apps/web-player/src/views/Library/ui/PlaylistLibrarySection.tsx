@@ -1,5 +1,5 @@
 import { cn } from '@bitrate/ui-react'
-import Image from 'next/image'
+import { MediaImage } from '@shared/ui/MediaImage'
 import Link from 'next/link'
 import { LIKED_SONGS_ID } from '@/entities/Playlist'
 import { ROUTES } from '@/shared/routes'
@@ -43,13 +43,14 @@ export const PlaylistLibrarySection = ({
           href={href}
           key={playlist.id}
         >
-          <Image
+          <MediaImage
             alt={playlist.title}
             className={cn(
               'shrink-0 rounded-sm object-cover',
               viewMode === 'list' ? 'size-16' : 'aspect-square w-full',
               'xl:aspect-square xl:h-auto xl:w-full',
             )}
+            fallback="playlist"
             height={180}
             src={playlist.cover}
             unoptimized

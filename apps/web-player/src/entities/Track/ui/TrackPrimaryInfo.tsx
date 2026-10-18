@@ -1,7 +1,7 @@
 import { cn } from '@bitrate/ui-react'
 import { ArtistName } from '@entities/Artist'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import Image from 'next/image'
 import type { KeyboardEventHandler } from 'react'
 import type { TrackEntity } from '../models/schema/Track.entity'
 
@@ -32,9 +32,10 @@ export const TrackPrimaryInfo = ({
         viewMode === 'list' ? 'block' : 'hidden max-[1024px]:block',
       )}
     >
-      <Image
+      <MediaImage
         alt=""
         className="h-full w-full object-cover"
+        fallback="track"
         height={48}
         src={getTrackCoverUrl(track.cover)}
         unoptimized

@@ -1,7 +1,7 @@
 import { cn, PlayIcon } from '@bitrate/ui-react'
 import { ROUTES } from '@shared/routes'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { getAlbumCoverUrl, getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import Image from 'next/image'
 import Link from 'next/link'
 import type { AlbumRelease, SingleRelease } from '../model/artistDiscography'
 import { getReleaseMetadata } from '../model/artistDiscography'
@@ -12,9 +12,10 @@ const cardClassName =
 
 const Cover = ({ alt, src }: { alt: string; src: string }) => (
   <div className="relative mb-3 aspect-square overflow-hidden rounded-md shadow-lg shadow-black/20">
-    <Image
+    <MediaImage
       alt={alt}
       className="object-cover transition duration-300 group-hover:scale-[1.03] group-hover:brightness-75"
+      fallback="album"
       fill
       sizes="(max-width: 649px) 45vw, (max-width: 1279px) 30vw, 200px"
       src={src}

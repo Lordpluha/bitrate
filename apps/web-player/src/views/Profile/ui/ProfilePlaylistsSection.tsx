@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { MediaImage } from '@shared/ui/MediaImage'
 import Link from 'next/link'
 import { ROUTES } from '@/shared/routes'
 import { getPlaylistCoverUrl } from '@/shared/utils/mediaUrl'
@@ -27,9 +27,10 @@ export const ProfilePlaylistsSection = ({
             href={ROUTES.playlist(playlist.id)}
             key={playlist.id}
           >
-            <Image
+            <MediaImage
               alt={playlist.title}
               className="aspect-square w-full rounded object-cover shadow-xl"
+              fallback="playlist"
               height={180}
               src={getPlaylistCoverUrl(playlist.cover)}
               unoptimized

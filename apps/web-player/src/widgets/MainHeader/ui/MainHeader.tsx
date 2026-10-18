@@ -1,13 +1,11 @@
 'use client'
 
-import { ThemeSwitcher } from '@features/SwitchTheme'
 import { useAuth } from '@shared/hooks'
 import { ROUTES } from '@shared/routes'
 import { Logo } from '@shared/ui'
 import { AuthButtons } from './AuthButtons'
 import { FriendActivityPopover } from './FriendActivityPopover'
 import { HeaderSearch } from './HeaderSearch'
-import { InstallBtn } from './InstallBtn'
 import { MobileMainHeader } from './MobileMainHeader'
 import { NavLinks } from './NavLinks'
 import { NotificationsPopover } from './NotificationsPopover'
@@ -29,8 +27,6 @@ export const MainHeader = ({ onCreate }: MainHeaderProps) => {
           <HeaderSearch />
 
           <div className="flex items-center justify-end gap-4">
-            <InstallBtn />
-
             {isLoading ? (
               <div className="h-8 w-8" />
             ) : isAuthenticated && user ? (
@@ -41,7 +37,6 @@ export const MainHeader = ({ onCreate }: MainHeaderProps) => {
                   avatar={user.avatar}
                   username={user.username || 'User'}
                 />
-                <ThemeSwitcher />
               </>
             ) : (
               <>

@@ -5,8 +5,8 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from '@bitrate/ui-react'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { SkipBack, SkipForward } from 'lucide-react'
-import Image from 'next/image'
 import type { TrackEntity } from '@/entities/Track/models/schema/Track.entity'
 import { getTrackCoverUrl } from '@/shared/utils/mediaUrl'
 
@@ -41,9 +41,10 @@ export const TrackNavigationButton = ({
       </HoverCardTrigger>
       {track && (
         <HoverCardContent className="hidden w-60 items-center gap-3 p-2.5 [@media(hover:hover)]:flex">
-          <Image
+          <MediaImage
             alt=""
             className="size-12 shrink-0 rounded object-cover"
+            fallback="track"
             height={48}
             src={getTrackCoverUrl(track.cover)}
             unoptimized

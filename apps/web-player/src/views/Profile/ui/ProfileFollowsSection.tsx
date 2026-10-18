@@ -2,8 +2,8 @@
 
 import { type UserFollowKind, useUserFollows } from '@entities/User'
 import { ROUTES } from '@shared/routes'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { getUserAvatarUrl } from '@shared/utils/mediaUrl'
-import Image from 'next/image'
 import Link from 'next/link'
 
 type ProfileFollowsSectionProps = {
@@ -49,9 +49,10 @@ export const ProfileFollowsSection = ({
                 href={ROUTES.user(person.id)}
               >
                 <span className="relative mx-auto mb-3 block aspect-square w-full overflow-hidden rounded-full bg-surface">
-                  <Image
+                  <MediaImage
                     alt=""
                     className="object-cover"
+                    fallback="user"
                     fill
                     sizes="140px"
                     src={getUserAvatarUrl(person.avatar)}

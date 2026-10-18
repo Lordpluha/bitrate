@@ -1,8 +1,8 @@
 'use client'
 
+import { MediaImage } from '@shared/ui/MediaImage'
 import { getArtistBackgroundUrl } from '@shared/utils/mediaUrl'
 import { BadgeCheck } from 'lucide-react'
-import Image from 'next/image'
 import type { ArtistHeroProps } from '@/views/Artist/model/artist.types'
 
 /** Full-bleed artist header: cover art, name, and the primary listen action. */
@@ -17,9 +17,10 @@ export const ArtistHero = ({ artist, statsLabel }: ArtistHeroProps) => {
       aria-labelledby="artist-page-title"
       className="relative isolate flex h-[clamp(19rem,46vh,25rem)] min-h-76 flex-col justify-end overflow-hidden"
     >
-      <Image
+      <MediaImage
         alt=""
         className="-z-20 object-cover object-center"
+        fallback="artist"
         fill
         priority
         sizes="100vw"

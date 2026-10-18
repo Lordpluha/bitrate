@@ -3,9 +3,9 @@
 import { useUserPlaylists } from '@entities/Playlist'
 import { FollowUserButton, useUserById } from '@entities/User'
 import { ROUTES } from '@shared/routes'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { getPlaylistCoverUrl, getUserAvatarUrl } from '@shared/utils/mediaUrl'
 import { UserRound } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { ProfileFollowsSection } from '@/views/Profile/ui/ProfileFollowsSection'
 
@@ -45,9 +45,10 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
         <div className="flex items-end gap-6 max-[700px]:flex-col max-[700px]:items-start max-[700px]:gap-4">
           <div className="flex size-52 shrink-0 items-center justify-center overflow-hidden rounded-full bg-surface shadow-2xl max-[700px]:size-32">
             {user.avatar ? (
-              <Image
+              <MediaImage
                 alt={user.username}
                 className="size-full object-cover"
+                fallback="user"
                 height={208}
                 src={getUserAvatarUrl(user.avatar)}
                 unoptimized
@@ -90,9 +91,10 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
                 href={ROUTES.playlist(playlist.id)}
                 key={playlist.id}
               >
-                <Image
+                <MediaImage
                   alt={playlist.title}
                   className="aspect-square w-full rounded object-cover shadow-lg"
+                  fallback="playlist"
                   height={180}
                   src={getPlaylistCoverUrl(playlist.cover)}
                   unoptimized

@@ -2,8 +2,8 @@
 
 import { useImageColor } from '@shared/hooks/useImageColor'
 import { BackButton } from '@shared/ui/BackButton'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { ArrowLeft } from 'lucide-react'
-import Image from 'next/image'
 import type { CSSProperties, ReactNode } from 'react'
 
 type CollectionHeaderProps = {
@@ -51,9 +51,10 @@ export const CollectionHeader = ({
       </BackButton>
 
       <div className="flex justify-center">
-        <Image
+        <MediaImage
           alt=""
           className="size-55 shrink-0 rounded-xl object-cover shadow-2xl md:size-50"
+          fallback="playlist"
           height={220}
           priority
           src={coverUrl}

@@ -1,7 +1,7 @@
 'use client'
 
 import { cn, SearchIcon } from '@bitrate/ui-react'
-import Image from 'next/image'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { useI18n } from '@/shared/i18n'
 import type {
   HeaderSuggestion,
@@ -66,9 +66,10 @@ export const HeaderSearchDropdown = ({
               type="button"
             >
               {item.image ? (
-                <Image
+                <MediaImage
                   alt={item.title}
                   className="size-11 rounded object-cover"
+                  fallback="track"
                   height={44}
                   src={item.image}
                   unoptimized

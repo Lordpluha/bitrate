@@ -7,9 +7,9 @@ import {
   usePlayerStore,
 } from '@entities/Player'
 import { ROUTES } from '@shared/routes'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { formatDuration } from '@shared/utils/apiHelpers'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import Image from 'next/image'
 import Link from 'next/link'
 
 /** How many upcoming tracks the panel lists, as in the design's Up Next. */
@@ -72,9 +72,10 @@ export const NextInQueue = () => {
               className="group flex h-16.5 items-center gap-3"
               href={ROUTES.queue}
             >
-              <Image
+              <MediaImage
                 alt=""
                 className="size-12 shrink-0 rounded-md object-cover"
+                fallback="track"
                 height={48}
                 src={getTrackCoverUrl(track.cover)}
                 unoptimized

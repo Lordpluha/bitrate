@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { MediaImage } from '@shared/ui/MediaImage'
 import Link from 'next/link'
 import type { FollowedUser } from '@/entities/User'
 import { ROUTES } from '@/shared/routes'
@@ -27,9 +27,10 @@ export const ProfileFollowingUsersSection = ({
             href={ROUTES.user(user.id)}
             key={user.id}
           >
-            <Image
+            <MediaImage
               alt={user.username}
               className="aspect-square w-full rounded-full object-cover shadow-xl"
+              fallback="user"
               height={180}
               src={getUserAvatarUrl(user.avatar)}
               unoptimized

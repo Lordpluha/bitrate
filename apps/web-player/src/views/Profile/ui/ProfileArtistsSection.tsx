@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { MediaImage } from '@shared/ui/MediaImage'
 import Link from 'next/link'
 import { ROUTES } from '@/shared/routes'
 import { getArtistAvatarUrl } from '@/shared/utils/mediaUrl'
@@ -33,9 +33,10 @@ export const ProfileArtistsSection = ({
             href={ROUTES.artist(artist.id)}
             key={artist.id}
           >
-            <Image
+            <MediaImage
               alt={artist.username}
               className="aspect-square w-full rounded-full object-cover shadow-xl"
+              fallback="artist"
               height={180}
               src={getArtistAvatarUrl(artist.avatar)}
               unoptimized

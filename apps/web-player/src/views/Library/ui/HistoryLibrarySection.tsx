@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+import { MediaImage } from '@shared/ui/MediaImage'
 import type { ListeningHistoryEntry } from '@/entities/History'
 import { usePlayerStore } from '@/entities/Player'
 import { getTrackById } from '@/entities/Track'
@@ -34,9 +34,10 @@ export const HistoryLibrarySection = ({
           onClick={() => void playHistoryTrack(entry.track.id)}
           type="button"
         >
-          <Image
+          <MediaImage
             alt={entry.track.title}
             className="rounded object-cover"
+            fallback="track"
             height={48}
             src={getTrackCoverUrl(entry.track.cover)}
             unoptimized

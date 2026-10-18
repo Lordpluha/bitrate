@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { formatDuration } from '@/shared/utils/apiHelpers'
 import { getTrackCoverUrl } from '@/shared/utils/mediaUrl'
 import type { ProfileTrack } from '@/views/Profile/model/profile.types'
@@ -37,9 +37,10 @@ export const ProfileTracksSection = ({
             <span className="text-right text-[13px] font-semibold text-text-subdued">
               {index + 1}
             </span>
-            <Image
+            <MediaImage
               alt={track.title}
               className="h-11 w-11 rounded object-cover"
+              fallback="track"
               height={44}
               src={getTrackCoverUrl(track.cover)}
               unoptimized

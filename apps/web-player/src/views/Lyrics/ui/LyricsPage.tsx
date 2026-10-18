@@ -3,9 +3,9 @@
 import { ArtistLink } from '@entities/Artist'
 import { selectCurrentTrack, usePlayerStore } from '@entities/Player'
 import { ROUTES } from '@shared/routes'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import { Mic2 } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 
 export const LyricsPage = () => {
@@ -35,9 +35,10 @@ export const LyricsPage = () => {
     <div className="h-full overflow-y-auto rounded-lg bg-background-secondary custom-scrollbar">
       <div className="mx-auto w-full max-w-200 px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
         <header className="mb-8 flex items-center gap-4">
-          <Image
+          <MediaImage
             alt={currentTrack.title}
             className="size-16 rounded object-cover shadow-lg sm:size-20"
+            fallback="track"
             height={80}
             src={getTrackCoverUrl(currentTrack.cover)}
             unoptimized

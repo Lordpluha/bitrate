@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+import { MediaImage } from '@shared/ui/MediaImage'
 import Link from 'next/link'
 import { ArtistLink } from '@/entities/Artist'
 import type { SearchResultRow } from '@/features/Search/model/types'
@@ -18,13 +18,14 @@ export const SearchResultList = ({ items }: SearchResultListProps) => (
       {items.map((item) => {
         const content = (
           <>
-            <Image
+            <MediaImage
               alt={item.title}
               className={
                 item.circularImage
                   ? 'size-16 rounded-full object-cover'
                   : 'size-16 rounded object-cover'
               }
+              fallback="track"
               height={64}
               src={item.image}
               unoptimized

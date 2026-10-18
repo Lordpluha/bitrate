@@ -7,7 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@bitrate/ui-react'
-import Image from 'next/image'
+import { MediaImage } from '@shared/ui/MediaImage'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useFollowingActivity } from '@/entities/User'
@@ -25,9 +25,9 @@ export const FriendActivityPopover = () => {
     <Popover onOpenChange={setIsOpen} open={isOpen}>
       <PopoverTrigger
         aria-label="Friend activity"
-        className="rounded-full p-2 transition-opacity duration-200 hover:opacity-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+        className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-surface hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
-        <MembersIcon />
+        <MembersIcon className="size-5 xl:size-4.5" />
       </PopoverTrigger>
       <PopoverContent
         align="end"
@@ -76,9 +76,10 @@ export const FriendActivityPopover = () => {
                     className="relative size-10 shrink-0 overflow-hidden rounded-full bg-surface"
                     href={ROUTES.user(user.id)}
                   >
-                    <Image
+                    <MediaImage
                       alt=""
                       className="object-cover"
+                      fallback="user"
                       fill
                       sizes="40px"
                       src={getUserAvatarUrl(user.avatar)}
@@ -105,9 +106,10 @@ export const FriendActivityPopover = () => {
                       href={ROUTES.artist(track.artistId)}
                     >
                       <span className="relative size-4 shrink-0 overflow-hidden rounded-sm bg-surface">
-                        <Image
+                        <MediaImage
                           alt=""
                           className="object-cover"
+                          fallback="track"
                           fill
                           sizes="16px"
                           src={getTrackCoverUrl(track.cover)}
