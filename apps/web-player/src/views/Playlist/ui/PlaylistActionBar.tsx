@@ -42,8 +42,8 @@ export const PlaylistActionBar = ({
 
   return (
     <>
-      <div className="flex items-center justify-between gap-4 bg-gradient-to-b from-surface to-background px-4 py-4 sm:px-6 sm:py-5">
-        <div className="flex min-w-0 flex-wrap items-center gap-3 text-text-subdued sm:gap-4">
+      <div className="flex items-center justify-between gap-4.5">
+        <div className="flex min-w-0 flex-1 items-center gap-4.5 text-muted-foreground">
           <PlaylistPrimaryActions details={details} playback={playback} />
           <div className="relative" ref={menus.moreMenuRef}>
             <button
@@ -53,7 +53,10 @@ export const PlaylistActionBar = ({
               onClick={menus.toggleMoreMenu}
               type="button"
             >
-              <MoreHorizontal className="h-7 w-7 sm:h-7.5 sm:w-7.5" />
+              <MoreHorizontal
+                aria-hidden="true"
+                className="size-5 md:size-6.5"
+              />
             </button>
             {menus.isMoreOpen && (
               <PlaylistMoreMenu
@@ -77,15 +80,15 @@ export const PlaylistActionBar = ({
             )}
           </div>
         </div>
-        <div className="relative" ref={menus.viewMenuRef}>
+        <div className="relative max-[1024px]:hidden" ref={menus.viewMenuRef}>
           <button
             aria-expanded={menus.isViewMenuOpen}
             aria-label="Change track list view"
-            className="flex items-center gap-1.5 text-sm capitalize text-text-subdued transition-colors hover:text-text"
+            className="flex items-center gap-1.5 text-sm capitalize text-muted-foreground transition-colors hover:text-text"
             onClick={menus.toggleViewMenu}
             type="button"
           >
-            <span className="max-[480px]:sr-only">{view.value}</span>
+            <span>{view.value}</span>
             <List size={18} />
           </button>
           {menus.isViewMenuOpen && (

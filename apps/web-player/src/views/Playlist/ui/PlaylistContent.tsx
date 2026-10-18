@@ -100,9 +100,7 @@ export const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
         />
       )}
       {!isOwner && tracks.length === 0 && (
-        <div className="px-6 py-10 text-text-subdued">
-          {t('playlist.noTracks')}
-        </div>
+        <div className="py-10 text-text-subdued">{t('playlist.noTracks')}</div>
       )}
     </>
   )

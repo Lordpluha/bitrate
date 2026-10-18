@@ -2,6 +2,7 @@
 
 import { useAlbum } from '@entities/Album'
 import { type TrackEntity, useLikedTracks } from '@entities/Track'
+import { CollectionPanel } from '@shared/ui/CollectionHeader'
 import { getAlbumCoverUrl } from '@shared/utils/mediaUrl'
 import { useMemo } from 'react'
 import { AlbumHero } from './AlbumHero'
@@ -42,7 +43,7 @@ export const AlbumPage = ({ albumId }: { albumId: string }) => {
   }
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar">
+    <CollectionPanel>
       <AlbumHero
         album={album}
         coverUrl={coverUrl}
@@ -55,6 +56,6 @@ export const AlbumPage = ({ albumId }: { albumId: string }) => {
         likedTrackIds={likedTrackIds}
         tracks={tracks}
       />
-    </div>
+    </CollectionPanel>
   )
 }

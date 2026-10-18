@@ -1,4 +1,5 @@
 'use client'
+import { cn } from '@bitrate/ui-react'
 import { selectCompactLibrary, useSettingsStore } from '@entities/Settings'
 import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { Clock } from 'lucide-react'
@@ -6,6 +7,7 @@ import { useMemo } from 'react'
 import { useI18n } from '@/shared/i18n'
 import { useTrackAlbums } from '../api/client/trackAlbums'
 import { TrackCard } from './TrackCard'
+import { TRACK_TABLE_COLUMNS } from './trackTableColumns'
 
 interface TracksListProps {
   activeTrackId?: string
@@ -42,25 +44,24 @@ export const TracksList = ({
   )
 
   return (
-    <div className="px-4 py-3 sm:px-6 sm:py-4 max-[1024px]:px-2">
+    <div className="flex flex-col">
       <div
-        className={
-          viewMode === 'compact'
-            ? 'grid grid-cols-[32px_minmax(0,2fr)_minmax(140px,1.3fr)_minmax(160px,1.5fr)_minmax(140px,1.4fr)_140px] gap-4 px-4 py-2 border-b border-border text-sm text-text-subdued mb-2 max-[1024px]:hidden'
-            : 'grid grid-cols-[32px_minmax(0,4fr)_minmax(160px,2fr)_minmax(140px,2fr)_140px] gap-4 px-4 py-2 border-b border-border text-sm text-text-subdued mb-2 max-[1024px]:hidden'
-        }
+        className={cn(
+          'grid h-9 items-center border-b border-border text-xs text-muted-foreground max-[1024px]:hidden',
+          TRACK_TABLE_COLUMNS[viewMode],
+        )}
       >
-        <div>#</div>
+        <div className="text-center">#</div>
         <div>{t('tracks.title')}</div>
         {viewMode === 'compact' && <div>{t('tracks.artist')}</div>}
         <div>{t('tracks.album')}</div>
         <div>{t('tracks.dateAdded')}</div>
         <div className="flex justify-end">
-          <Clock size={16} />
+          <Clock aria-hidden="true" size={16} />
         </div>
       </div>
 
-      <div className="space-y-1">
+      <div className="flex flex-col">
         {tracks.map((track, index) => (
           <TrackCard
             album={albums?.get(track.id) ?? null}

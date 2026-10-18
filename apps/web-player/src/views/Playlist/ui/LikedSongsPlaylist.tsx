@@ -54,7 +54,9 @@ export const LikedSongsPlaylist = ({ tracks }: LikedSongsPlaylistProps) => {
           tracks={currentTracks}
         />
       ) : (
-        <div className="p-8 text-text-subdued">{t('playlist.likedEmpty')}</div>
+        <div className="py-10 text-text-subdued">
+          {t('playlist.likedEmpty')}
+        </div>
       )}
     </>
   )

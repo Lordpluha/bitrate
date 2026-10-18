@@ -4,7 +4,7 @@ import { useImageColor } from '@shared/hooks/useImageColor'
 import { BackButton } from '@shared/ui/BackButton'
 import { ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
-import { Fragment, type ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 
 type CollectionHeaderProps = {
   coverUrl: string
@@ -15,18 +15,18 @@ type CollectionHeaderProps = {
   type: string
   /** The owner or artist, already linked where it should be. */
   owner: ReactNode
-  /** Distinct facts after the owner, each preceded by "·": "24 songs", "1 h 32 min". */
+  /** Facts after the owner, joined as "· 24 songs, 1 h 32 min". */
   meta: string[]
 }
 
-const brighten = (value: number, amount: number, cap = 255) =>
-  Math.min(Math.round(value * amount), cap)
-const dim = (value: number, amount: number) => Math.round(value * amount)
+/** How much of the cover colour the wash starts from; the design's #4C1D95 over a violet cover. */
+const WASH_STRENGTH = 0.75
+const dim = (value: number) => Math.round(value * WASH_STRENGTH)
 
 /**
  * The design system's Collection Header (playlist, album, Liked Songs): a 200px cover beside the
- * type, an Unbounded title and the owner line, on a wash taken from the cover. Phones stack a
- * 220px cover over the title.
+ * type, an Unbounded title and the owner line, on a rounded wash running from the cover's colour
+ * into the card surface. Phones stack a 220px cover over the title, without the wash.
  */
 export const CollectionHeader = ({
   coverUrl,
@@ -37,19 +37,20 @@ export const CollectionHeader = ({
   type,
 }: CollectionHeaderProps) => {
   const [r, g, b] = useImageColor(coverUrl)
-  const top = `rgb(${brighten(r, 1.6)}, ${brighten(g, 1.6)}, ${brighten(b, 1.6)})`
-  const deep = `rgb(${dim(r, 0.45)}, ${dim(g, 0.45)}, ${dim(b, 0.45)})`
+  const wash = {
+    '--collection-wash': `linear-gradient(180deg, rgb(${dim(r)}, ${dim(g)}, ${dim(b)}) 0%, var(--color-card) 100%)`,
+  } as CSSProperties
 
   return (
     <section
-      className="relative flex flex-col gap-4 px-4 pt-4 pb-6 text-white md:h-65 md:flex-row md:items-end md:gap-6 md:p-7"
-      style={{ background: `linear-gradient(180deg, ${top} 0%, ${deep} 100%)` }}
+      className="relative flex flex-col gap-5 md:h-65 md:flex-row md:items-end md:gap-6 md:rounded-2xl md:bg-(image:--collection-wash) md:p-7 md:text-white"
+      style={wash}
     >
-      <BackButton className="absolute top-4 left-4 flex size-8 items-center justify-center rounded-full bg-black/40 transition-colors hover:bg-black/60 md:top-7 md:left-7">
+      <BackButton className="absolute top-0 left-0 flex size-8 items-center justify-center rounded-full bg-black/40 transition-colors hover:bg-black/60 md:top-7 md:left-7">
         <ArrowLeft aria-hidden="true" className="text-white" size={20} />
       </BackButton>
 
-      <div className="flex justify-center pt-8 md:pt-0">
+      <div className="flex justify-center">
         <Image
           alt=""
           className="size-55 shrink-0 rounded-xl object-cover shadow-2xl md:size-50"
@@ -65,22 +66,19 @@ export const CollectionHeader = ({
         <span className="hidden text-[13px] font-semibold md:block">
           {type}
         </span>
-        <h1 className="break-words font-[family-name:var(--font-landing-display)] text-2xl leading-tight font-semibold tracking-[-0.4px] md:line-clamp-2 md:text-[64px] md:leading-[1.05] md:font-bold md:tracking-[-0.6px]">
+        <h1 className="break-words font-[family-name:var(--font-landing-display)] text-2xl leading-[1.25] font-semibold md:line-clamp-2 md:text-[64px] md:leading-[1.05] md:font-bold md:tracking-[-0.6px]">
           {title}
         </h1>
         {description ? (
-          <p className="line-clamp-2 max-w-180 text-[13px] text-white/70">
+          <p className="line-clamp-2 max-w-180 text-[13px] text-muted-foreground md:text-white/70">
             {description}
           </p>
         ) : null}
-        <p className="flex flex-wrap items-center gap-1.5 text-[13px] text-muted-foreground">
-          <span className="text-sm font-semibold text-white">{owner}</span>
-          {meta.map((item) => (
-            <Fragment key={item}>
-              <span aria-hidden="true">·</span>
-              <span>{item}</span>
-            </Fragment>
-          ))}
+        <p className="flex flex-wrap items-center gap-1 text-[13px] text-muted-foreground md:gap-2">
+          <span className="md:text-sm md:font-semibold md:text-white">
+            {owner}
+          </span>
+          {meta.length > 0 ? <span>· {meta.join(', ')}</span> : null}
         </p>
       </div>
     </section>
