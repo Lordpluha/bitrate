@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { useRouter } from 'next/navigation'
 import { useBrowseCategories } from '@/entities/Discovery'
 import { useI18n } from '@/shared/i18n'
@@ -76,9 +76,10 @@ export const BrowseCategoryGrid = () => {
             <span className="absolute left-4 top-4 z-10 block max-w-[72%] leading-tight">
               {category.name}
             </span>
-            <Image
+            <MediaImage
               alt=""
               className="absolute -right-4 bottom-0 size-28 rotate-[25deg] overflow-hidden rounded-lg object-cover shadow-xl transition-transform group-hover:scale-105 sm:-right-6 sm:size-30"
+              fallback="playlist"
               height={96}
               src={getPlaylistCoverUrl(category.cover)}
               unoptimized

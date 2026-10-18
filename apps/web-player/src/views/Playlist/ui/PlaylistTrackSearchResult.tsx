@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+import { MediaImage } from '@shared/ui/MediaImage'
 import type { TrackEntity } from '@/entities/Track'
 import { useI18n } from '@/shared/i18n'
 import { getTrackCoverUrl } from '@/shared/utils/mediaUrl'
@@ -20,9 +20,10 @@ export const PlaylistTrackSearchResult = ({
 
   return (
     <li className="grid grid-cols-[40px_minmax(0,1fr)_auto] items-center gap-2 rounded px-2 py-2 transition-colors hover:bg-white/10 sm:grid-cols-[44px_minmax(0,1fr)_auto] sm:gap-3 sm:px-3 min-[861px]:grid-cols-[44px_minmax(0,1.8fr)_minmax(160px,1fr)_auto]">
-      <Image
+      <MediaImage
         alt=""
         className="h-10 w-10 rounded object-cover"
+        fallback="track"
         height={40}
         src={getTrackCoverUrl(track.cover)}
         unoptimized

@@ -3,8 +3,8 @@
 import { cn } from '@bitrate/ui-react'
 import { useOverlayFocus } from '@shared/hooks'
 import { ROUTES } from '@shared/routes'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { ChevronDown, Heart, ListMusic, Mic2 } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { ConnectDevicesPopover } from '@/features/BitrateConnect'
 import { NowPlayingDetails } from './NowPlayingDetails'
@@ -71,9 +71,10 @@ export const NowPlayingView = ({
 
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 pt-2 pb-[max(1.5rem,env(safe-area-inset-bottom))] xl:grid xl:grid-cols-[420px_minmax(0,1fr)] xl:px-8 xl:pt-6">
         <section className="flex flex-col gap-5">
-          <Image
+          <MediaImage
             alt={`Cover for ${title}`}
             className="aspect-square w-full rounded-xl object-cover shadow-2xl"
+            fallback="track"
             height={420}
             priority
             src={coverUrl}

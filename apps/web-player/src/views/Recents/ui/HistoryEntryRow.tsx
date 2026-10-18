@@ -1,7 +1,7 @@
 import type { ListeningHistoryEntry } from '@entities/History'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import { Trash2 } from 'lucide-react'
-import Image from 'next/image'
 import { useI18n } from '@/shared/i18n'
 
 type HistoryEntryRowProps = {
@@ -27,9 +27,10 @@ export const HistoryEntryRow = ({
         onClick={() => onPlay(entry.track.id)}
         type="button"
       >
-        <Image
+        <MediaImage
           alt=""
           className="h-13 w-13 rounded object-cover sm:h-16 sm:w-16"
+          fallback="track"
           height={64}
           src={getTrackCoverUrl(entry.track.cover)}
           unoptimized

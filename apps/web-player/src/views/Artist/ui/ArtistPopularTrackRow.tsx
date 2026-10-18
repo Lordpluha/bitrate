@@ -2,10 +2,10 @@
 
 import { cn } from '@bitrate/ui-react'
 import { LikeTrackButton, type TrackEntity } from '@entities/Track'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { formatDuration } from '@shared/utils/apiHelpers'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import { AudioLines, Play } from 'lucide-react'
-import Image from 'next/image'
 
 type ArtistPopularTrackRowProps = {
   index: number
@@ -55,9 +55,10 @@ export const ArtistPopularTrackRow = ({
       )}
     </span>
     <span className="pointer-events-none relative z-10 size-10 overflow-hidden rounded-sm">
-      <Image
+      <MediaImage
         alt=""
         className="size-full object-cover"
+        fallback="track"
         height={40}
         src={getTrackCoverUrl(track.cover)}
         unoptimized

@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { usePlayerStore } from '@/entities/Player'
 import type { TrackEntity } from '@/entities/Track'
 import { getTrackCoverUrl } from '@/shared/utils/mediaUrl'
@@ -24,9 +24,10 @@ export const LikedTracksLibrarySection = ({
           onClick={() => play(track)}
           type="button"
         >
-          <Image
+          <MediaImage
             alt={track.title}
             className="rounded object-cover"
+            fallback="track"
             height={48}
             src={getTrackCoverUrl(track.cover)}
             unoptimized

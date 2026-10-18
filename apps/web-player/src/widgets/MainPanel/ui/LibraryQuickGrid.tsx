@@ -1,7 +1,7 @@
 'use client'
 
 import { Skeleton } from '@shared/ui'
-import Image from 'next/image'
+import { MediaImage } from '@shared/ui/MediaImage'
 import Link from 'next/link'
 import { LIKED_SONGS_ID, usePlaylistLibraryItems } from '@/entities/Playlist'
 import { ROUTES } from '@/shared/routes'
@@ -40,9 +40,10 @@ export const LibraryQuickGrid = () => {
             href={href}
             key={item.id}
           >
-            <Image
+            <MediaImage
               alt={item.title}
               className="size-14 shrink-0 object-cover"
+              fallback="playlist"
               height={56}
               src={item.cover}
               unoptimized

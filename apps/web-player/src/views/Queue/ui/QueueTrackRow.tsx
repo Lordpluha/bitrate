@@ -3,10 +3,10 @@
 import { cn } from '@bitrate/ui-react'
 import { ArtistName } from '@entities/Artist'
 import type { TrackEntity } from '@entities/Track'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { formatDuration } from '@shared/utils/apiHelpers'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import { Play, X } from 'lucide-react'
-import Image from 'next/image'
 
 export type QueueTrackRowProps = {
   index?: number
@@ -41,9 +41,10 @@ export const QueueTrackRow = ({
     </button>
 
     <span className="flex min-w-0 items-center gap-3">
-      <Image
+      <MediaImage
         alt={track.title}
         className="size-10 shrink-0 rounded object-cover"
+        fallback="track"
         height={40}
         src={getTrackCoverUrl(track.cover)}
         unoptimized

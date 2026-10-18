@@ -1,8 +1,8 @@
 'use client'
 
 import { cn } from '@bitrate/ui-react'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { Menu } from 'lucide-react'
-import Image from 'next/image'
 import { useId, useState } from 'react'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { useI18n } from '@/shared/i18n'
@@ -42,9 +42,10 @@ export const BurgerMenu = ({ trigger = 'menu' }: BurgerMenuProps) => {
       >
         {trigger === 'avatar' ? (
           avatarUrl ? (
-            <Image
+            <MediaImage
               alt={username}
               className="size-full rounded-full object-cover"
+              fallback="user"
               height={36}
               src={avatarUrl}
               unoptimized

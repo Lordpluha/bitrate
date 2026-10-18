@@ -14,15 +14,20 @@ export const ThemeSwitcher = () => {
   if (!mounted) return null
 
   return (
-    <div className="flex items-center gap-2 p-2 rounded-full bg-background shadow-inner shadow-text">
+    <div className="flex items-center gap-1 rounded-full border border-border bg-background p-1">
       {Themes.map((th) => (
         <button
+          aria-label={`${th} theme`}
+          aria-pressed={themeContext?.theme === th}
           className={cn(
-            'w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300',
-            themeContext?.theme === th ? 'bg-primary' : 'bg-background',
+            'flex size-8 items-center justify-center rounded-full transition-colors duration-300',
+            themeContext?.theme === th
+              ? 'bg-primary text-primary-foreground'
+              : 'text-muted-foreground hover:bg-surface hover:text-foreground',
           )}
           key={th}
           onClick={() => themeContext?.setTheme(th)}
+          title={`${th} theme`}
           type="button"
         >
           {THEME_ICONS[th]}

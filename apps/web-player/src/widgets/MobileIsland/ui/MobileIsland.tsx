@@ -7,9 +7,9 @@ import {
   usePlayerStore,
 } from '@entities/Player'
 import { ROUTES } from '@shared/routes'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import { House, Library, Pause, Play, Search } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Z_INDEX_CLASS } from '@/shared/constants'
@@ -75,9 +75,10 @@ export function MobileIsland({ className, onExpand }: MobileIslandProps) {
           type="button"
         >
           <span className="flex size-full items-center justify-center rounded-full bg-card">
-            <Image
+            <MediaImage
               alt=""
               className="size-10 rounded-full object-cover"
+              fallback="track"
               height={40}
               src={getTrackCoverUrl(currentTrack.cover)}
               unoptimized

@@ -1,8 +1,8 @@
 'use client'
 
 import { cn } from '@bitrate/ui-react'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { BookmarkCheck, BookmarkPlus } from 'lucide-react'
-import Image from 'next/image'
 import { useMemo } from 'react'
 import {
   type Episode,
@@ -36,9 +36,10 @@ const EpisodeRow = ({
   onToggleSaved?: () => void
 }) => (
   <article className="flex gap-4 border-b border-white/10 py-5 last:border-0">
-    <Image
+    <MediaImage
       alt=""
       className="size-24 shrink-0 rounded-md object-cover sm:size-28"
+      fallback="playlist"
       height={112}
       src={getEpisodeCoverUrl(episode.cover)}
       unoptimized
@@ -114,9 +115,10 @@ export const PodcastPage = ({ podcastId }: PodcastPageProps) => {
   return (
     <div className="h-full overflow-y-auto bg-background-secondary custom-scrollbar">
       <header className="flex flex-col gap-6 bg-linear-to-b from-surface to-background-secondary px-5 pb-8 pt-12 sm:flex-row sm:items-end sm:px-8">
-        <Image
+        <MediaImage
           alt={`${podcast.title} cover`}
           className="aspect-square w-full max-w-55 rounded-md object-cover shadow-2xl"
+          fallback="playlist"
           height={220}
           src={getPodcastCoverUrl(podcast.cover)}
           unoptimized

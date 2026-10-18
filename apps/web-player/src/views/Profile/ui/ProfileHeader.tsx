@@ -1,5 +1,5 @@
+import { MediaImage } from '@shared/ui/MediaImage'
 import { UserRound } from 'lucide-react'
-import Image from 'next/image'
 
 type ProfileHeaderProps = {
   avatarUrl: string | null
@@ -16,9 +16,10 @@ export const ProfileHeader = ({
     <div className="flex min-w-0 items-end gap-6 max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-4">
       <div className="flex h-58 w-58 shrink-0 items-center justify-center overflow-hidden rounded-full bg-surface shadow-2xl max-[900px]:h-36 max-[900px]:w-36 max-[640px]:h-28 max-[640px]:w-28">
         {avatarUrl ? (
-          <Image
+          <MediaImage
             alt={username}
             className="h-full w-full object-cover"
+            fallback="user"
             height={232}
             src={avatarUrl}
             unoptimized

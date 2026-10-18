@@ -10,9 +10,9 @@ import {
 import { useTrackLike } from '@entities/Track'
 import { showApiErrorToast } from '@shared/api/feedback'
 import { ROUTES } from '@shared/routes'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import { Heart } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 
 type CurrentPlaylistProps = {
@@ -56,9 +56,10 @@ export const CurrentPlaylist = ({ onCollapse }: CurrentPlaylistProps) => {
         )}
       </div>
       <div className="relative aspect-square w-full">
-        <Image
+        <MediaImage
           alt={currentTrack.title}
           className="rounded-md object-cover"
+          fallback="track"
           fill
           priority
           sizes="320px"

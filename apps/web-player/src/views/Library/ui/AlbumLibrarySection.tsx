@@ -1,5 +1,5 @@
 import { cn } from '@bitrate/ui-react'
-import Image from 'next/image'
+import { MediaImage } from '@shared/ui/MediaImage'
 import Link from 'next/link'
 import { ROUTES } from '@/shared/routes'
 import { getAlbumCoverUrl } from '@/shared/utils/mediaUrl'
@@ -37,13 +37,14 @@ export const AlbumLibrarySection = ({
         href={ROUTES.album(album.id)}
         key={album.id}
       >
-        <Image
+        <MediaImage
           alt={album.title}
           className={cn(
             'shrink-0 rounded-sm object-cover',
             viewMode === 'list' ? 'size-16' : 'aspect-square w-full',
             'xl:aspect-square xl:h-auto xl:w-full',
           )}
+          fallback="album"
           height={180}
           src={getAlbumCoverUrl(album.cover)}
           unoptimized

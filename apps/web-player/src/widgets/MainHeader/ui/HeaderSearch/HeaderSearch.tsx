@@ -1,6 +1,6 @@
 'use client'
 
-import { cn, Input, ReviewIcon, SearchIcon } from '@bitrate/ui-react'
+import { cn, Input, SearchIcon } from '@bitrate/ui-react'
 import {
   type FocusEvent,
   type KeyboardEvent,
@@ -138,13 +138,6 @@ const HeaderSearchField = ({ className }: HeaderSearchProps) => {
         value={search.query}
         variant="search"
       />
-      <button
-        aria-label={t('nav.search')}
-        className="absolute right-4 top-1/2 -translate-y-1/2 transform border-l-2 border-border pl-2 hover:opacity-80"
-        type="submit"
-      >
-        <ReviewIcon className="text-text-subdued" height={20} width={20} />
-      </button>
       {isDropdownOpen && (
         <HeaderSearchDropdown
           activeIndex={activeIndex}

@@ -10,7 +10,7 @@ export const InstallBtn = () => {
 
   return (
     <button
-      className="flex items-center space-x-2 hover:opacity-70 transition-[.3s]"
+      className="flex w-full items-center gap-2 rounded-sm px-3 py-2.5 text-left transition-colors hover:bg-white/10"
       onClick={() => void install()}
       type="button"
     >

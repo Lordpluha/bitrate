@@ -5,8 +5,8 @@ import { usePlayerStore } from '@entities/Player'
 import { getTrackById } from '@entities/Track'
 import { showApiErrorToast } from '@shared/api/feedback'
 import { SectionHeader } from '@shared/ui'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import Image from 'next/image'
 import { useI18n } from '@/shared/i18n'
 
 export const RecentlyPlayed = () => {
@@ -39,9 +39,10 @@ export const RecentlyPlayed = () => {
             onClick={() => void playHistoryTrack(entry.track.id)}
             type="button"
           >
-            <Image
+            <MediaImage
               alt={entry.track.title}
               className="rounded-md object-cover"
+              fallback="track"
               height={48}
               src={getTrackCoverUrl(entry.track.cover)}
               unoptimized

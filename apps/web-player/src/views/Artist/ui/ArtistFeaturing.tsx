@@ -2,8 +2,8 @@
 
 import { useArtistPlaylists } from '@entities/Discovery'
 import { ROUTES } from '@shared/routes'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { getPlaylistCoverUrl } from '@shared/utils/mediaUrl'
-import Image from 'next/image'
 import Link from 'next/link'
 
 type ArtistFeaturingProps = {
@@ -34,9 +34,10 @@ export const ArtistFeaturing = ({
               href={ROUTES.playlist(playlist.id)}
             >
               <span className="relative mb-3 block aspect-square overflow-hidden rounded-md bg-surface shadow-lg shadow-black/20">
-                <Image
+                <MediaImage
                   alt=""
                   className="object-cover transition duration-300 group-hover/card:scale-[1.03]"
+                  fallback="playlist"
                   fill
                   sizes="(max-width: 767px) 45vw, (max-width: 1279px) 30vw, 220px"
                   src={getPlaylistCoverUrl(playlist.cover)}

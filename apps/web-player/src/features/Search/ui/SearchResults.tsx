@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+import { MediaImage } from '@shared/ui/MediaImage'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { useBrowseCategories } from '@/entities/Discovery'
@@ -92,9 +92,10 @@ export const SearchResults = ({
           className="grid max-w-full grid-cols-[72px_minmax(0,1fr)] items-center gap-5 rounded-md bg-surface p-4 transition-colors hover:bg-surface-hover"
           href={ROUTES.searchCategory(categoryMatch.slug)}
         >
-          <Image
+          <MediaImage
             alt={categoryMatch.name}
             className="size-18 rounded-md object-cover shadow-lg shadow-black/25"
+            fallback="playlist"
             height={72}
             src={getPlaylistCoverUrl(categoryMatch.cover)}
             style={{
