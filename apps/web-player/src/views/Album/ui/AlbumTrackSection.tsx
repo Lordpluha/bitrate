@@ -23,12 +23,12 @@ export const AlbumTrackSection = ({
 
   return (
     <>
-      <section className="border-b border-white/10 px-4 py-4 sm:px-6">
+      <section className="flex items-center gap-4.5">
         <LikeAlbumButton albumId={albumId} albumTitle={albumTitle} />
       </section>
 
       {tracks.length === 0 ? (
-        <p className="p-4 text-text-subdued sm:p-8" role="status">
+        <p className="py-10 text-text-subdued" role="status">
           No tracks in this album
         </p>
       ) : (

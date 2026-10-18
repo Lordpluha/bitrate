@@ -38,8 +38,8 @@ export const PlaylistTrackFinder = ({
   if (!isVisible) return null
 
   return (
-    <section className="px-4 pb-10 pt-5 sm:px-6 sm:pt-6">
-      <div className="border-t border-white/10 pt-6">
+    <section className="pb-4">
+      <div className="border-t border-border pt-6">
         <div className="mb-4 flex items-start justify-between gap-4">
           <h2 className="text-xl font-bold text-text sm:text-2xl">
             {t('playlist.find')}

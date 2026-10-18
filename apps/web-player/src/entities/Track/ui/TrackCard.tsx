@@ -17,6 +17,7 @@ import { TrackContextMenu } from './TrackContextMenu'
 import { TrackPlayIndicator } from './TrackPlayIndicator'
 import { TrackPrimaryInfo } from './TrackPrimaryInfo'
 import { TrackRowActions } from './TrackRowActions'
+import { TRACK_TABLE_COLUMNS } from './trackTableColumns'
 
 interface TrackCardProps {
   /** The album the row links to; null for a single or while albums load. */
@@ -72,10 +73,9 @@ export const TrackCard = ({
     <fieldset
       aria-label={track.title}
       className={cn(
-        'group m-0 grid w-full min-w-0 border-0 items-center gap-4 rounded px-4 py-2 text-left hover:bg-surface focus-within:outline-2 focus-within:outline-offset-[-2px] focus-within:outline-white max-[1024px]:grid-cols-[minmax(0,1fr)_auto] max-[1024px]:gap-2 max-[1024px]:px-2',
-        viewMode === 'compact'
-          ? 'grid-cols-[32px_minmax(0,2fr)_minmax(140px,1.3fr)_minmax(160px,1.5fr)_minmax(140px,1.4fr)_140px]'
-          : 'grid-cols-[32px_minmax(0,4fr)_minmax(160px,2fr)_minmax(140px,2fr)_140px]',
+        'group m-0 grid min-h-17 w-full min-w-0 items-center rounded-lg border-0 p-0 py-1.5 text-left focus-within:outline-2 focus-within:outline-offset-[-2px] focus-within:outline-ring max-[1024px]:min-h-16 max-[1024px]:grid-cols-[minmax(0,1fr)_auto] max-[1024px]:gap-3 max-[1024px]:py-2',
+        TRACK_TABLE_COLUMNS[viewMode],
+        isCurrentTrack ? 'bg-secondary' : 'hover:bg-surface',
       )}
       onContextMenu={contextMenu.openFromPointer}
     >
@@ -96,11 +96,11 @@ export const TrackCard = ({
       />
 
       {viewMode === 'compact' && (
-        <div className="truncate text-xs text-muted-foreground max-[1024px]:hidden">
+        <div className="truncate pr-4 text-[13px] text-muted-foreground max-[1024px]:hidden">
           <ArtistLink artistId={track.artistId} />
         </div>
       )}
-      <div className="truncate text-[13px] text-muted-foreground max-[1024px]:hidden">
+      <div className="truncate pr-4 text-[13px] text-muted-foreground max-[1024px]:hidden">
         {album ? (
           <Link
             className="hover:text-text hover:underline"
@@ -110,7 +110,7 @@ export const TrackCard = ({
           </Link>
         ) : null}
       </div>
-      <div className="text-xs text-text-subdued max-[1024px]:hidden">
+      <div className="truncate text-xs text-text-subdued max-[1024px]:hidden">
         {track.createdAt ? DateUtils.formatDate(track.createdAt) : 'Unknown'}
       </div>
       <TrackRowActions

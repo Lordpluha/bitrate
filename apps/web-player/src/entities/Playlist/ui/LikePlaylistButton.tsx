@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@bitrate/ui-react'
-import { Check, CirclePlus } from 'lucide-react'
+import { CircleCheck, CirclePlus } from 'lucide-react'
 import {
   type LikeablePlaylist,
   usePlaylistLike,
@@ -19,8 +19,10 @@ export const LikePlaylistButton = ({ playlist }: LikePlaylistButtonProps) => {
     <button
       aria-label={`${isLiked ? 'Remove' : 'Save'} ${playlistTitle}`}
       className={cn(
-        'rounded-full p-1 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-60',
-        isLiked ? 'text-primary' : 'text-text-subdued hover:text-text',
+        'rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-60',
+        isLiked
+          ? 'text-primary hover:text-primary-hover'
+          : 'text-muted-foreground hover:text-foreground',
       )}
       disabled={isPending}
       onClick={(event) => {
@@ -31,11 +33,9 @@ export const LikePlaylistButton = ({ playlist }: LikePlaylistButtonProps) => {
       type="button"
     >
       {isLiked ? (
-        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-black">
-          <Check size={20} strokeWidth={3} />
-        </span>
+        <CircleCheck aria-hidden="true" className="size-5 md:size-6.5" />
       ) : (
-        <CirclePlus size={34} />
+        <CirclePlus aria-hidden="true" className="size-5 md:size-6.5" />
       )}
     </button>
   )

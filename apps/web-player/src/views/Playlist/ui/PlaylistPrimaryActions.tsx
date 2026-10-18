@@ -23,14 +23,22 @@ export const PlaylistPrimaryActions = ({
       <>
         <button
           aria-label={`${playback.isPlaying ? 'Pause' : 'Play'} ${details.title}`}
-          className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-black transition-transform hover:scale-105 sm:h-14 sm:w-14"
+          className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform hover:scale-105 max-md:order-last max-md:ml-auto md:size-14"
           onClick={playback.handlePlayPlaylist}
           type="button"
         >
           {playback.isPlaying ? (
-            <Pause aria-hidden="true" fill="currentColor" size={26} />
+            <Pause
+              aria-hidden="true"
+              className="size-4.5 md:size-6"
+              fill="currentColor"
+            />
           ) : (
-            <Play aria-hidden="true" fill="currentColor" size={26} />
+            <Play
+              aria-hidden="true"
+              className="size-4.5 md:size-6"
+              fill="currentColor"
+            />
           )}
         </button>
         <button
@@ -41,12 +49,12 @@ export const PlaylistPrimaryActions = ({
           className={
             playback.isShuffled
               ? 'text-primary transition-colors hover:text-primary-hover'
-              : 'transition-colors hover:text-text'
+              : 'transition-colors hover:text-foreground'
           }
           onClick={playback.handleShufflePlaylist}
           type="button"
         >
-          <Shuffle aria-hidden="true" className="h-7 w-7 sm:h-7.5 sm:w-7.5" />
+          <Shuffle aria-hidden="true" className="size-5 md:size-6.5" />
         </button>
         <LikePlaylistButton
           playlist={{ id: details.id, title: details.title }}

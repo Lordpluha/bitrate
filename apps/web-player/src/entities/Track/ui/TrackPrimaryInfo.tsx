@@ -21,27 +21,27 @@ export const TrackPrimaryInfo = ({
   viewMode,
 }: TrackPrimaryInfoProps) => (
   <button
-    className="flex min-w-0 items-center gap-3 text-left"
+    className="flex min-w-0 items-center gap-3 pr-4 text-left max-[1024px]:pr-0"
     onClick={onClick}
     onKeyDown={onKeyDown}
     type="button"
   >
     <div
       className={cn(
-        'relative h-10 w-10 shrink-0 overflow-hidden rounded',
+        'relative size-11.5 shrink-0 overflow-hidden rounded-md max-[1024px]:size-12',
         viewMode === 'list' ? 'block' : 'hidden max-[1024px]:block',
       )}
     >
       <Image
         alt=""
         className="h-full w-full object-cover"
-        height={40}
+        height={48}
         src={getTrackCoverUrl(track.cover)}
         unoptimized
-        width={40}
+        width={48}
       />
     </div>
-    <div className="min-w-0">
+    <div className="flex min-w-0 flex-col gap-0.5">
       <div
         className={cn(
           'truncate text-sm font-semibold',
@@ -50,7 +50,7 @@ export const TrackPrimaryInfo = ({
       >
         {track.title}
       </div>
-      <div className="truncate text-xs text-muted-foreground">
+      <div className="truncate text-[13px] text-muted-foreground">
         <ArtistName artistId={track.artistId} />
       </div>
     </div>
