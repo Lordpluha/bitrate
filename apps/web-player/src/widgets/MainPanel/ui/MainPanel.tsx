@@ -1,10 +1,10 @@
 'use client'
 
-import { Typography } from '@bitrate/ui-react'
 import { useAuth } from '@shared/hooks'
 import { LegalFooter } from '@shared/ui'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useI18n } from '@/shared/i18n'
+import { greetingKey } from '@/widgets/MainPanel/model/greeting'
 import {
   type HomeTabId,
   homeTabs,
@@ -31,35 +31,37 @@ export const MainPanel = () => {
           : t('common.podcasts'),
   }))
 
+  const hour = useMemo(() => new Date().getHours(), [])
+  const name = user?.username || 'User'
+
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar relative">
-      <div className="absolute top-0 left-0 right-0 h-80 bg-linear-to-b from-hero-wash to-transparent pointer-events-none z-0" />
-      <div className="relative z-10 px-4 py-4 sm:px-6">
+    <div className="h-full overflow-y-auto custom-scrollbar">
+      <div className="flex flex-col gap-7 px-4 pt-2 pb-3 md:px-8 md:py-6">
         <Tabs
           onTabChange={(id) => setActiveTab(id as HomeTabId)}
           tabs={localizedTabs}
         />
+        {isAuthenticated && user && showsMusic ? (
+          <div className="flex min-w-0 flex-col gap-1">
+            <p className="text-xs font-semibold tracking-[1.2px] text-muted-foreground uppercase">
+              {t('main.madeFor')} {name}
+            </p>
+            <h1 className="truncate text-2xl leading-[1.1] font-bold text-foreground md:text-[32px]">
+              {t(greetingKey({ hour }), { name })}
+            </h1>
+          </div>
+        ) : null}
         {activeTab === 'all' && <LibraryQuickGrid />}
-        <div className="mt-6">
-          {isAuthenticated && user && showsMusic ? (
-            <div className="mb-8 min-w-0">
-              <p className="text-text-subdued text-xs">{t('main.madeFor')}</p>
-              <Typography as="h5" className="text-text" size="heading5">
-                {user.username || 'User'}
-              </Typography>
-            </div>
-          ) : null}
-          {showsMusic ? (
-            <>
-              <RecommendationsFeed />
-              <PopularArtists />
-              {activeTab === 'all' && <RecentlyPlayed />}
-            </>
-          ) : (
-            <PodcastsPanel />
-          )}
-          <LegalFooter className="mt-12 sm:mt-16" />
-        </div>
+        {showsMusic ? (
+          <>
+            <RecommendationsFeed />
+            <PopularArtists />
+            {activeTab === 'all' && <RecentlyPlayed />}
+          </>
+        ) : (
+          <PodcastsPanel />
+        )}
+        <LegalFooter className="mt-5" />
       </div>
     </div>
   )

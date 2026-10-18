@@ -1,7 +1,8 @@
 'use client'
-import { cn, PlayIcon } from '@bitrate/ui-react'
+import { cn } from '@bitrate/ui-react'
 import { fallbackArtistImage, fallbackPlaylistCover } from '@shared/constants'
 import { ROUTES } from '@shared/routes'
+import { Play } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -33,32 +34,44 @@ export const MusicCardLg = ({
 
   return (
     <Link
-      className="group/card block min-w-45 cursor-pointer rounded-lg p-3 transition-colors duration-300 hover:bg-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+      className="group/card flex min-w-45 cursor-pointer flex-col gap-3 rounded-[14px] border border-border bg-card p-3.5 transition-colors duration-300 hover:bg-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       href={href}
     >
-      <div className="relative mb-3 aspect-square overflow-hidden rounded-md shadow-lg shadow-black/20">
+      <div
+        className={cn(
+          'relative aspect-square overflow-hidden',
+          isArtist ? 'rounded-full' : 'rounded-[9px]',
+        )}
+      >
         <Image
           alt={name}
-          className={cn(
-            'object-cover transition duration-300 group-hover/card:scale-[1.03] group-hover/card:brightness-75',
-            isArtist ? 'rounded-full' : 'rounded-md',
-          )}
+          className="object-cover transition duration-300 group-hover/card:scale-[1.03]"
           fill
           sizes="180px"
           src={imageSrc}
           unoptimized
         />
-        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/45 to-transparent opacity-0 transition-opacity duration-300 group-hover/card:opacity-100" />
-        <div className="absolute bottom-2 right-2 flex translate-y-2 scale-95 items-center justify-center opacity-0 transition duration-300 group-hover/card:translate-y-0 group-hover/card:scale-100 group-hover/card:opacity-100">
-          <PlayIcon height={48} width={48} />
-        </div>
+        {isArtist ? null : (
+          <span className="absolute right-2 bottom-2 flex size-10 translate-y-2 items-center justify-center rounded-full bg-primary text-primary-foreground opacity-0 shadow-lg transition duration-300 group-hover/card:translate-y-0 group-hover/card:opacity-100">
+            <Play
+              aria-hidden="true"
+              className="ml-0.5"
+              fill="currentColor"
+              size={18}
+            />
+          </span>
+        )}
       </div>
-      <h3 className="mb-1 line-clamp-1 text-sm font-semibold text-text">
-        {name}
-      </h3>
-      <p className="line-clamp-2 text-xs leading-5 text-text-subdued">
-        {description}
-      </p>
+      <div className="flex min-w-0 flex-col gap-0.75">
+        <h3 className="line-clamp-1 font-[family-name:var(--font-landing-body)] text-[13px] font-semibold text-foreground">
+          {name}
+        </h3>
+        {description ? (
+          <p className="line-clamp-1 text-[10px] text-muted-foreground">
+            {description}
+          </p>
+        ) : null}
+      </div>
     </Link>
   )
 }

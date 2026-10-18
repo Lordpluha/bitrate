@@ -4,6 +4,7 @@ import { useListeningHistory } from '@entities/History'
 import { usePlayerStore } from '@entities/Player'
 import { getTrackById } from '@entities/Track'
 import { showApiErrorToast } from '@shared/api/feedback'
+import { SectionHeader } from '@shared/ui'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import Image from 'next/image'
 import { useI18n } from '@/shared/i18n'
@@ -28,33 +29,29 @@ export const RecentlyPlayed = () => {
   if (isPending || recentTracks.length === 0) return null
 
   return (
-    <section className="relative mt-8">
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-text">
-          {t('main.recentlyPlayed')}
-        </h2>
-      </div>
-      <div className="space-y-1">
+    <section className="relative">
+      <SectionHeader title={t('main.recentlyPlayed')} />
+      <div className="flex flex-col">
         {recentTracks.map((entry) => (
           <button
-            className="grid w-full grid-cols-[48px_minmax(0,1fr)_auto] items-center gap-3 rounded-md p-2 text-left transition-colors hover:bg-surface"
+            className="grid h-16 w-full grid-cols-[48px_minmax(0,1fr)_auto] items-center gap-3 rounded-lg px-2 text-left transition-colors hover:bg-surface"
             key={entry.id}
             onClick={() => void playHistoryTrack(entry.track.id)}
             type="button"
           >
             <Image
               alt={entry.track.title}
-              className="rounded object-cover"
+              className="rounded-md object-cover"
               height={48}
               src={getTrackCoverUrl(entry.track.cover)}
               unoptimized
               width={48}
             />
             <div className="min-w-0">
-              <div className="truncate font-medium text-text">
+              <div className="truncate text-sm font-semibold text-foreground">
                 {entry.track.title}
               </div>
-              <div className="truncate text-sm text-text-subdued">
+              <div className="truncate text-[13px] text-muted-foreground">
                 {entry.track.artist?.username ?? entry.track.artistId}
               </div>
             </div>
