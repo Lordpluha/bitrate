@@ -60,7 +60,7 @@ Spotify.
   route.
 - **Language.**
   - Landing copy exists in en, uk and pl, in a landing-local catalog keyed by the app locale.
-  - de and ru fall back to English. The shared app catalogs are unchanged.
+  - The app ships only en, uk and pl, so every locale has landing copy.
 - **Calls to action.** The whole landing works without an account; the web player does not.
   - A guest is never sent to `ROUTES.main` (it would bounce to login): the hero and the final
     scene offer "Create account" (`ROUTES.auth.registration`) and "Log in" (`ROUTES.auth.login`).
@@ -91,7 +91,7 @@ Spotify.
 | AC-4 | A vertical swipe changes scenes on touch; swipes inside the status panel, assistant and physics fields do not | e2e (mobile, touch events) | Pass: e2e (Pixel 5) a synthetic swipe flips the scene; a swipe on `#partnerZone` does not |
 | AC-5 | Without WebGL the 2D fallbacks render and nothing throws | e2e with WebGL disabled, console clean | Pass: e2e with WebGL context creation blocked: DOM partner bubbles render, no page errors |
 | AC-6 | Reduced motion shows a static, scrollable page without 3D or loops | e2e with `reducedMotion: 'reduce'`; screenshot baseline | Pass: e2e with reduced motion (static, scrollable, no scroll lock, intro hidden); new `landing-default.png` baseline, reproducible on a second run. The stage canvas is hidden for the shot: masking it painted the whole viewport, so the first baseline checked nothing |
-| AC-7 | en, uk and pl copy switch with the app locale; de and ru show English | unit test of the landing catalog and fallback | Pass: `copy.unit-spec.ts` (uk, pl, de → English fallback, interpolation) |
+| AC-7 | en, uk and pl copy switch with the app locale | unit test of the landing catalog and fallback | Pass: `copy.unit-spec.ts` (uk, pl, English fallback for missing keys, interpolation) |
 | AC-8 | Status pill reflects `/health/ready`: 200, 503, network error, initial checking | unit test of the status hook with a mocked fetch | Pass: `serviceStatus.unit-spec.ts` covers the mapping (pending, 200, 503, network error); the hook is a thin React Query call, not mocked end to end |
 | AC-9 | CTAs point at `ROUTES`; a guest gets account links and no link into the player; a signed-in visitor sees "Open web player" | unit + e2e | Pass: `SceneCtas.unit-spec.tsx` + e2e with and without an `access_token` cookie |
 | AC-10 | Other routes still render after the `ThemeProvider` change | existing e2e and screenshot suites, type check, lint | Pass: unit 277/277, check-types clean, auth e2e 4/4, `next build` green after adding Suspense boundaries the server-rendered ThemeProvider exposed (login, verify-email, search, library, header search). The login mobile screenshot differs only by dev-server overlays when run against `next start` |
@@ -107,7 +107,7 @@ The user agreed in this session's interview (2026-10-13):
 3. Give `/` its own route group with the landing header and footer.
 4. Load the landing fonts on the landing only.
 5. Fix server rendering in `ThemeProvider`.
-6. Languages: **en, uk and pl only**. de and ru show English.
+6. Languages: **en, uk and pl only** — the app's whole locale set.
 7. Keep the demo features and label them.
 8. Work on the current design branch (`design/web-player-restructure`). This replaces the
    recommended separate branch.

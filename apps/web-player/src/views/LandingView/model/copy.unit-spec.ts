@@ -22,15 +22,6 @@ describe('pickLandingCopy', () => {
     expect(pickLandingCopy('pl')('library.luma_vale')).toBe('Luma Vale')
   })
 
-  it('shows the landing in English for app locales it does not cover (de, ru)', () => {
-    expect(pickLandingCopy('de')('hero.open_web_player')).toBe(
-      'Open web player',
-    )
-    expect(pickLandingCopy('ru')('cta.ready_when_you_are')).toBe(
-      'READY WHEN YOU ARE',
-    )
-  })
-
   it('interpolates values', () => {
     expect(pickLandingCopy('en')('chrome.go_to', { scene: 'Library' })).toBe(
       'Go to Library',

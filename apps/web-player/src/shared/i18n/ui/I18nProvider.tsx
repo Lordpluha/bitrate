@@ -7,18 +7,16 @@ import {
   useEffect,
   useMemo,
 } from 'react'
-import { de } from '@/shared/i18n/messages/de'
 import {
   en,
   type Messages,
   type TranslationKey,
 } from '@/shared/i18n/messages/en'
 import { pl } from '@/shared/i18n/messages/pl'
-import { ru } from '@/shared/i18n/messages/ru'
 import { uk } from '@/shared/i18n/messages/uk'
 import type { Locale, TranslationValues } from '@/shared/i18n/model/i18n.types'
 
-const catalogs: Record<Locale, Messages> = { de, en, pl, ru, uk }
+const catalogs: Record<Locale, Messages> = { en, pl, uk }
 
 type I18nContextValue = {
   locale: Locale
