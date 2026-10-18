@@ -33,7 +33,7 @@ export const NotificationsPopover = () => {
         }
         className="relative rounded-full p-2 text-text-subdued transition-colors hover:bg-surface hover:text-text focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
       >
-        <NotificationIcon className="h-5 w-5" />
+        <NotificationIcon className="size-5 xl:size-4.5" />
         {Boolean(data?.unread) && (
           <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-primary ring-2 ring-background" />
         )}

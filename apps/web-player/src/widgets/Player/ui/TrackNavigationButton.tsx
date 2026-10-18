@@ -30,11 +30,11 @@ export const TrackNavigationButton = ({
       <HoverCardTrigger asChild closeDelay={100} delay={250}>
         <button
           aria-label={label}
-          className="p-1 text-text-subdued transition-all hover:scale-110 hover:text-text focus-visible:text-text"
+          className="p-1 text-foreground transition-all hover:scale-110 focus-visible:text-foreground"
           onClick={onClick}
           type="button"
         >
-          <Icon size={20} />
+          <Icon size={22} />
         </button>
       </HoverCardTrigger>
       {track && (

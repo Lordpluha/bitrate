@@ -1,23 +1,39 @@
 'use client'
 
 import { ROUTES } from '@shared/routes'
-import { ListMusic, Maximize2, Mic2, Volume2, VolumeX } from 'lucide-react'
+import {
+  ListMusic,
+  Maximize2,
+  Mic2,
+  PictureInPicture2,
+  Volume2,
+  VolumeX,
+} from 'lucide-react'
 import Link from 'next/link'
 import type { ChangeEvent } from 'react'
+import { ConnectDevicesPopover } from '@/features/BitrateConnect'
 
+/** The player bar's 17px icons in 32px targets. */
 const iconButtonClassName =
-  'p-2 text-text-subdued hover:text-text hover:scale-110 transition-all'
+  'flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-surface hover:text-foreground'
+const ICON_SIZE = 17
 
 interface PlayerActionsProps {
   volume: number
   onVolumeChange: (volume: number) => void
   onExpand?: () => void
+  onPictureInPicture?: () => void
 }
 
+/**
+ * The player bar's Player Actions: lyrics, queue, Bitrate Connect, the floating mini player,
+ * volume on an 86px rail and the full player.
+ */
 export const PlayerActions = ({
   volume,
   onVolumeChange,
   onExpand,
+  onPictureInPicture,
 }: PlayerActionsProps) => {
   const handleVolumeChange = (e: ChangeEvent<HTMLInputElement>) => {
     onVolumeChange(Number(e.target.value))
@@ -28,38 +44,55 @@ export const PlayerActions = ({
   }
 
   return (
-    <div className="flex items-center gap-2 min-w-45 justify-end">
+    <div className="flex items-center justify-end gap-2">
       <Link
         aria-label="Open lyrics"
         className={iconButtonClassName}
         href={ROUTES.lyrics}
       >
-        <Mic2 size={16} />
+        <Mic2 size={ICON_SIZE} />
       </Link>
       <Link
         aria-label="Open queue"
         className={iconButtonClassName}
         href={ROUTES.queue}
       >
-        <ListMusic size={16} />
+        <ListMusic size={ICON_SIZE} />
       </Link>
+      <ConnectDevicesPopover
+        iconSize={ICON_SIZE}
+        triggerClassName={iconButtonClassName}
+      />
+      <button
+        aria-label="Open floating player"
+        className={iconButtonClassName}
+        onClick={onPictureInPicture}
+        type="button"
+      >
+        <PictureInPicture2 size={ICON_SIZE} />
+      </button>
       <button
         aria-label={volume === 0 ? 'Unmute' : 'Mute'}
         className={iconButtonClassName}
         onClick={toggleMute}
         type="button"
       >
-        {volume === 0 ? <VolumeX size={16} /> : <Volume2 size={16} />}
+        {volume === 0 ? (
+          <VolumeX size={ICON_SIZE} />
+        ) : (
+          <Volume2 size={ICON_SIZE} />
+        )}
       </button>
-      <div className="w-24 relative h-1 bg-surface rounded-full group">
-        <div
-          className="absolute top-0 left-0 h-full bg-green-500 rounded-full transition-all"
-          style={{
-            width: `${volume * 100}%`,
-          }}
-        />
+      <div className="group relative flex h-3.5 w-21.5 shrink-0 items-center">
+        <div className="relative h-0.75 w-full rounded-full bg-foreground/10">
+          <div
+            className="absolute inset-y-0 left-0 rounded-full bg-primary"
+            style={{ width: `${volume * 100}%` }}
+          />
+        </div>
         <input
-          className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
+          aria-label="Volume"
+          className="absolute inset-0 size-full cursor-pointer opacity-0"
           max="1"
           min="0"
           onChange={handleVolumeChange}
@@ -70,11 +103,11 @@ export const PlayerActions = ({
       </div>
       <button
         aria-label="Open full player"
-        className="p-2 text-text-subdued hover:text-text hover:scale-110 transition-all"
+        className={iconButtonClassName}
         onClick={onExpand}
         type="button"
       >
-        <Maximize2 size={16} />
+        <Maximize2 size={ICON_SIZE} />
       </button>
     </div>
   )

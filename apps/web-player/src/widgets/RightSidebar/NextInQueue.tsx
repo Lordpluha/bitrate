@@ -1,6 +1,5 @@
 'use client'
 
-import { PlayIcon, Typography } from '@bitrate/ui-react'
 import { ArtistName } from '@entities/Artist'
 import {
   selectMusicPlayer,
@@ -8,79 +7,94 @@ import {
   usePlayerStore,
 } from '@entities/Player'
 import { ROUTES } from '@shared/routes'
+import { formatDuration } from '@shared/utils/apiHelpers'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import Image from 'next/image'
 import Link from 'next/link'
 
+/** How many upcoming tracks the panel lists, as in the design's Up Next. */
+const UP_NEXT_LIMIT = 3
+
+/**
+ * The Now Playing panel's Up Next: the user queue first, then the rest of the playing context
+ * (matching `changeTrack`). Each row opens the full queue; Clear empties the user queue.
+ */
 export const NextInQueue = () => {
   const { currentTrack, currentTrackIndex, playlist } =
     usePlayerStore(selectMusicPlayer)
   const queue = usePlayerStore(selectQueue)
-  const changeTrack = usePlayerStore((state) => state.changeTrack)
+  const clearQueue = usePlayerStore((state) => state.clearQueue)
 
-  /** The user queue wins over the playing context, matching `changeTrack`. */
-  const nextTrack =
-    queue[0]?.track ??
-    (currentTrackIndex >= 0 && currentTrackIndex < playlist.length - 1
-      ? playlist[currentTrackIndex + 1]
-      : null)
+  const contextTracks =
+    currentTrackIndex >= 0 ? playlist.slice(currentTrackIndex + 1) : []
+  const upNext = [
+    ...queue.map((item) => ({
+      key: `queue-${item.queueId}`,
+      track: item.track,
+    })),
+    ...contextTracks.map((track) => ({ key: `context-${track.id}`, track })),
+  ].slice(0, UP_NEXT_LIMIT)
 
-  if (!currentTrack || !nextTrack) {
+  if (!currentTrack || upNext.length === 0) {
     return null
   }
 
   return (
-    <div className="mt-4 overflow-hidden rounded-lg bg-surface p-0">
-      <div className="flex items-center justify-between px-4 pb-1 pt-3">
-        <Typography
-          as="p"
-          className="text-sm font-semibold text-text"
-          size="body"
+    <section aria-labelledby="up-next-title" className="flex flex-col">
+      <div className="flex h-7.5 items-center justify-between">
+        <h2
+          className="text-xs font-semibold text-foreground uppercase"
+          id="up-next-title"
         >
-          Next in queue
-        </Typography>
-        <Link
-          className="p-0 text-xs font-medium text-text-subdued hover:underline"
-          href={ROUTES.queue}
-        >
-          Open queue
-        </Link>
+          Up next
+        </h2>
+        {queue.length > 0 ? (
+          <button
+            className="text-xs text-accent hover:underline"
+            onClick={clearQueue}
+            type="button"
+          >
+            Clear
+          </button>
+        ) : (
+          <Link
+            className="text-xs text-accent hover:underline"
+            href={ROUTES.queue}
+          >
+            Open queue
+          </Link>
+        )}
       </div>
-      <button
-        className="group flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-surface-hover"
-        onClick={() => changeTrack('next')}
-        type="button"
-      >
-        <div className="relative size-12 shrink-0">
-          <Image
-            alt={nextTrack.title}
-            className="rounded-md object-cover"
-            fill
-            sizes="48px"
-            src={getTrackCoverUrl(nextTrack.cover)}
-            unoptimized
-          />
-          <div className="absolute inset-0 flex items-center justify-center rounded-md bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
-            <PlayIcon className="size-5 text-white" />
-          </div>
-        </div>
-        <div className="min-w-0 flex-1">
-          <Typography
-            as="p"
-            className="truncate text-sm text-text transition-colors group-hover:text-primary"
-            size="body"
-          >
-            {nextTrack.title}
-          </Typography>
-          <Typography
-            as="p"
-            className="truncate text-xs text-text-subdued"
-            size="body"
-          >
-            <ArtistName artistId={nextTrack.artistId} />
-          </Typography>
-        </div>
-      </button>
-    </div>
+      <ul>
+        {upNext.map(({ key, track }) => (
+          <li className="border-b border-border" key={key}>
+            <Link
+              className="group flex h-16.5 items-center gap-3"
+              href={ROUTES.queue}
+            >
+              <Image
+                alt=""
+                className="size-12 shrink-0 rounded-md object-cover"
+                height={48}
+                src={getTrackCoverUrl(track.cover)}
+                unoptimized
+                width={48}
+              />
+              <span className="flex min-w-0 flex-1 flex-col gap-1.25">
+                <span className="truncate text-[13px] font-semibold text-foreground group-hover:text-primary">
+                  {track.title}
+                </span>
+                <span className="truncate text-[11px] text-muted-foreground">
+                  <ArtistName artistId={track.artistId} />
+                </span>
+              </span>
+              <span className="shrink-0 text-[11px] tabular-nums text-muted-foreground">
+                {formatDuration(track.duration ?? 0)}
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
   )
 }

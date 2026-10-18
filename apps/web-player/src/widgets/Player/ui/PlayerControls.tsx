@@ -42,19 +42,19 @@ export const PlayerControls = ({
   const { nextTrack, previousTrack } = usePlayerNavigationTracks()
 
   return (
-    <div className="flex-1 flex flex-col items-center gap-2 max-w-180.5">
+    <div className="flex max-w-180.5 flex-1 flex-col items-center gap-2">
       <div className="flex items-center gap-4">
         <button
           aria-label={isShuffled ? 'Disable shuffle' : 'Enable shuffle'}
           className={cn(
             'p-1 hover:scale-110 transition-transform',
-            isShuffled ? 'text-green-500' : 'text-text-subdued',
+            isShuffled ? 'text-primary' : 'text-muted-foreground',
           )}
           disabled={!onShuffleToggle}
           onClick={onShuffleToggle}
           type="button"
         >
-          <Shuffle size={16} />
+          <Shuffle size={17} />
         </button>
 
         <TrackNavigationButton
@@ -65,18 +65,14 @@ export const PlayerControls = ({
 
         <button
           aria-label={isPlaying ? 'Pause' : 'Play'}
-          className="w-8 h-8 rounded-full bg-text hover:scale-105 transition-transform flex items-center justify-center"
+          className="flex size-11.5 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform hover:scale-105"
           onClick={onPlayPause}
           type="button"
         >
           {isPlaying ? (
-            <Pause className="text-background" fill="currentColor" size={20} />
+            <Pause fill="currentColor" size={22} />
           ) : (
-            <Play
-              className="text-background ml-0.5"
-              fill="currentColor"
-              size={20}
-            />
+            <Play className="ml-0.5" fill="currentColor" size={22} />
           )}
         </button>
 
@@ -90,13 +86,13 @@ export const PlayerControls = ({
           aria-label={repeatLabels[repeatMode]}
           className={cn(
             'p-1 hover:scale-110 transition-transform',
-            repeatMode !== 'off' ? 'text-green-500' : 'text-text-subdued',
+            repeatMode !== 'off' ? 'text-primary' : 'text-muted-foreground',
           )}
           disabled={!onRepeatToggle}
           onClick={onRepeatToggle}
           type="button"
         >
-          {repeatMode === 'one' ? <Repeat1 size={16} /> : <Repeat size={16} />}
+          {repeatMode === 'one' ? <Repeat1 size={17} /> : <Repeat size={17} />}
         </button>
       </div>
 

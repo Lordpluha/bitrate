@@ -38,7 +38,7 @@ export default function MainLayout({ children }: PropsWithChildren) {
   } = useMainShellResize({ hasPlayer })
 
   return (
-    <div className="h-dvh overflow-hidden bg-background text-text xl:h-screen xl:overflow-visible">
+    <div className="h-dvh overflow-hidden bg-background text-text xl:flex xl:h-screen xl:flex-col xl:gap-3 xl:p-4">
       <MainHeader onCreate={() => setIsMobileCreateOpen(true)} />
       <LegalReacceptanceDialog />
       <BitrateConnectSync />
@@ -48,19 +48,19 @@ export default function MainLayout({ children }: PropsWithChildren) {
         className={cn(
           'h-[calc(100dvh-64px)] overflow-y-auto custom-scrollbar',
           hasPlayer ? 'pb-40' : 'pb-20',
-          'xl:overflow-hidden xl:pb-0 xl:grid xl:w-full',
+          /* The design's workspace: one rounded card holding the library, the page and Now
+             Playing; the floating player bar (88px + the 12px gap) sits below it. */
+          'xl:grid xl:h-auto xl:min-h-0 xl:w-full xl:flex-1 xl:overflow-hidden xl:rounded-2xl xl:border xl:border-border xl:bg-background-secondary xl:pb-0 xl:shadow-2xl',
           /* Animate only the collapse/expand buttons. During a drag the same
              transition makes the sidebar chase the cursor 300ms behind it. */
           !isResizing && 'transition-all duration-300 ease-in-out',
-          hasPlayer
-            ? 'xl:h-[calc(100vh-64px-90px)]'
-            : 'xl:h-[calc(100vh-64px)]',
+          hasPlayer && 'xl:mb-25',
           isResizing && 'xl:cursor-col-resize xl:select-none',
         )}
         ref={shellRef}
         style={{ gridTemplateColumns }}
       >
-        <aside className="hidden min-w-0 overflow-hidden rounded-lg bg-background-secondary m-1.5 xl:block">
+        <aside className="hidden min-w-0 overflow-hidden border-r border-border xl:block">
           <div className="h-full overflow-hidden">
             <LeftSidebar
               isCollapsed={isLibraryCollapsed}
@@ -101,14 +101,14 @@ export default function MainLayout({ children }: PropsWithChildren) {
         )}
 
         {hasRightSidebar && (
-          <aside className="relative min-w-0 overflow-hidden rounded-lg bg-background-secondary m-1.5">
+          <aside className="relative min-w-0 overflow-hidden border-l border-border">
             <div className="h-full overflow-hidden">
               <RightSidebar onCollapse={handleCollapseRightSidebar} />
             </div>
             {isRightSidebarCollapsed && (
               <button
                 aria-label="Expand sidebar"
-                className="absolute inset-0 z-10 flex items-center justify-center rounded-lg cursor-pointer bg-background-secondary opacity-100 hover:opacity-80 transition-opacity duration-300 ease-in-out"
+                className="absolute inset-0 z-10 flex items-center justify-center cursor-pointer bg-background-secondary opacity-100 hover:opacity-80 transition-opacity duration-300 ease-in-out"
                 onClick={handleExpandRightSidebar}
                 type="button"
               >
