@@ -89,6 +89,34 @@ export class AlbumsService {
   }
 
   /**
+   * The album each track belongs to, for track lists that show an album column. A track on several
+   * albums (a deluxe edition, a compilation) is shown on its earliest one, by release date and then
+   * creation. Every requested id gets an entry; a single or deleted album answers null.
+   */
+  async findForTracks(trackIds: string[]) {
+    const rows = await this.prisma.albumTrack.findMany({
+      where: { trackId: { in: trackIds }, album: { deletedAt: null } },
+      select: {
+        trackId: true,
+        album: { select: { id: true, title: true, releaseDate: true, createdAt: true } },
+      },
+    })
+    const sortKey = ({ releaseDate, createdAt }: (typeof rows)[number]['album']) =>
+      (releaseDate ?? createdAt).getTime()
+    const earliest = new Map<string, (typeof rows)[number]['album']>()
+    for (const { trackId, album } of rows) {
+      const current = earliest.get(trackId)
+      if (!current || sortKey(album) < sortKey(current)) earliest.set(trackId, album)
+    }
+    return {
+      data: trackIds.map((trackId) => {
+        const album = earliest.get(trackId)
+        return { trackId, album: album ? { id: album.id, title: album.title } : null }
+      }),
+    }
+  }
+
+  /**
    * The user's saved albums, newest like first. Not cached: a like or unlike must show at once.
    * Deleted albums drop out; their tracks keep the same shape as the album list.
    */
