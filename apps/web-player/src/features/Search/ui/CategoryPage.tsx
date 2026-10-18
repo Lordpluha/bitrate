@@ -9,11 +9,13 @@ import {
   mapDiscoveryPlaylist,
   mapDiscoveryTrack,
 } from '@/features/Search/lib/mapDiscoveryFeed'
+import type { MediaCardItem } from '@/features/Search/model/types'
 import { MediaRow } from '@/features/Search/ui/MediaRow'
 import { ErrorState } from '@/shared/ui/ErrorState'
 
 type CategoryPageProps = {
   category: BrowseCategoryResponse
+  onPlayItem?: (item: MediaCardItem) => void
 }
 
 const CATEGORY_SECTION_SKELETON_IDS = [
@@ -22,7 +24,7 @@ const CATEGORY_SECTION_SKELETON_IDS = [
   'category-section-skeleton-3',
 ] as const
 
-export const CategoryPage = ({ category }: CategoryPageProps) => {
+export const CategoryPage = ({ category, onPlayItem }: CategoryPageProps) => {
   const playlistsQuery = useCategoryPlaylists(category.slug, 1, 20)
   /* this genre's own chart; the category shows nothing that is not about it */
   const chartsQuery = useCharts({ genre: category.slug, limit: 20 })
@@ -81,8 +83,16 @@ export const CategoryPage = ({ category }: CategoryPageProps) => {
       </section>
 
       <div className="mx-auto w-full max-w-290 space-y-8 px-4 py-6 sm:space-y-10 sm:px-6 sm:py-8">
-        <MediaRow items={playlistItems} title={`Popular ${category.name}`} />
-        <MediaRow items={chartItems} title={`Top ${category.name} tracks`} />
+        <MediaRow
+          items={playlistItems}
+          onPlayItem={onPlayItem}
+          title={`Popular ${category.name}`}
+        />
+        <MediaRow
+          items={chartItems}
+          onPlayItem={onPlayItem}
+          title={`Top ${category.name} tracks`}
+        />
         {playlistItems.length === 0 && chartItems.length === 0 ? (
           <p className="py-10 text-center text-text-subdued">
             Nothing in {category.name} yet. Playlists and tracks appear here as

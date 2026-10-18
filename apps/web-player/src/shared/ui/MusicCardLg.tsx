@@ -13,6 +13,8 @@ interface MusicCardLgProps {
   href?: string
   imageUrl?: string
   isArtist?: boolean
+  /** Starts the album, playlist or track at once; the rest of the card still opens it. */
+  onPlay?: () => void
 }
 
 export const resolveMusicCardImage = (
@@ -28,15 +30,13 @@ export const MusicCardLg = ({
   href: hrefProp,
   imageUrl,
   isArtist,
+  onPlay,
 }: MusicCardLgProps) => {
   const href = hrefProp ?? (isArtist ? ROUTES.artist(id) : ROUTES.playlist(id))
   const imageSrc = resolveMusicCardImage(imageUrl, isArtist)
 
   return (
-    <Link
-      className="group/card flex min-w-45 cursor-pointer flex-col gap-3 rounded-[14px] border border-border bg-card p-3.5 transition-colors duration-300 hover:bg-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      href={href}
-    >
+    <div className="group/card relative flex min-w-45 flex-col gap-3 rounded-[14px] border border-border bg-card p-3.5 transition-colors duration-300 focus-within:ring-2 focus-within:ring-ring hover:bg-secondary">
       <div
         className={cn(
           'relative aspect-square overflow-hidden',
@@ -44,7 +44,7 @@ export const MusicCardLg = ({
         )}
       >
         <MediaImage
-          alt={name}
+          alt=""
           className="object-cover transition duration-300 group-hover/card:scale-[1.03]"
           fallback={isArtist ? 'artist' : 'playlist'}
           fill
@@ -52,27 +52,35 @@ export const MusicCardLg = ({
           src={imageSrc}
           unoptimized
         />
-        {isArtist ? null : (
-          <span className="absolute right-2 bottom-2 flex size-10 translate-y-2 items-center justify-center rounded-full bg-primary text-primary-foreground opacity-0 shadow-lg transition duration-300 group-hover/card:translate-y-0 group-hover/card:opacity-100">
+        {onPlay ? (
+          <button
+            aria-label={`Play ${name}`}
+            className="absolute right-2 bottom-2 z-10 flex size-10 translate-y-2 items-center justify-center rounded-full bg-primary text-primary-foreground opacity-0 shadow-lg transition duration-300 group-hover/card:translate-y-0 group-hover/card:opacity-100 hover:scale-105 focus-visible:translate-y-0 focus-visible:opacity-100"
+            onClick={onPlay}
+            type="button"
+          >
             <Play
               aria-hidden="true"
               className="ml-0.5"
               fill="currentColor"
               size={18}
             />
-          </span>
-        )}
+          </button>
+        ) : null}
       </div>
       <div className="flex min-w-0 flex-col gap-0.75">
-        <h3 className="line-clamp-1 font-[family-name:var(--font-landing-body)] text-[13px] font-semibold text-foreground">
+        <Link
+          className="line-clamp-1 text-[13px] font-semibold text-foreground outline-none after:absolute after:inset-0 after:rounded-[14px]"
+          href={href}
+        >
           {name}
-        </h3>
+        </Link>
         {description ? (
           <p className="line-clamp-1 text-[10px] text-muted-foreground">
             {description}
           </p>
         ) : null}
       </div>
-    </Link>
+    </div>
   )
 }

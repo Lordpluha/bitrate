@@ -1,5 +1,6 @@
 export type { PlaylistWithTracks } from './api/client'
 export {
+  playlistDetailQuery,
   useAddTracksToPlaylist,
   useCreatePlaylist,
   useDeletePlaylist,

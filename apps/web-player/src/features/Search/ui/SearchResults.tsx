@@ -32,6 +32,7 @@ type SearchResultsProps = {
   artists: SearchArtistResult[]
   playlists: SearchPlaylistResult[]
   query: string
+  onPlayItem?: (item: MediaCardItem) => void
   tracks: SearchTrackResult[]
   users: SafeUser[]
 }
@@ -39,6 +40,7 @@ type SearchResultsProps = {
 export const SearchResults = ({
   albums,
   artists,
+  onPlayItem,
   playlists,
   query,
   tracks,
@@ -74,6 +76,7 @@ export const SearchResults = ({
       href: ROUTES.playlist(playlist.id),
       id: playlist.id,
       image: getPlaylistCoverUrl(playlist.cover),
+      playKind: 'playlist' as const,
       title: playlist.title,
     }))
 
@@ -116,6 +119,7 @@ export const SearchResults = ({
       {showsPlaylistRow ? (
         <MediaRow
           items={playlistItems}
+          onPlayItem={onPlayItem}
           title={`Jump in: ${categoryMatch?.name ?? query} playlists`}
         />
       ) : null}

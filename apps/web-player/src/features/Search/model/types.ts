@@ -8,6 +8,8 @@ export type MediaCardItem = {
   description: string
   href?: string
   image: string
+  /** What the card's play button starts; cards without it only open their page. */
+  playKind?: 'album' | 'playlist' | 'track'
   title: string
 }
 

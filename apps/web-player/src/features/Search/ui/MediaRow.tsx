@@ -14,10 +14,12 @@ import { MusicCardLg, SectionHeader } from '@/shared/ui'
 
 type MediaRowProps = {
   items: MediaCardItem[]
+  /** Starts an item that can play (`playKind`) from its card's play button. */
+  onPlayItem?: (item: MediaCardItem) => void
   title: string
 }
 
-export const MediaRow = ({ items, title }: MediaRowProps) => {
+export const MediaRow = ({ items, onPlayItem, title }: MediaRowProps) => {
   const [carouselApi, setCarouselApi] = useState<CarouselApi>()
   const [canScrollPrev, setCanScrollPrev] = useState(false)
   const [canScrollNext, setCanScrollNext] = useState(false)
@@ -87,6 +89,11 @@ export const MediaRow = ({ items, title }: MediaRowProps) => {
                   id={item.id}
                   imageUrl={item.image}
                   name={item.title}
+                  onPlay={
+                    item.playKind && onPlayItem
+                      ? () => onPlayItem(item)
+                      : undefined
+                  }
                 />
               </CarouselItem>
             ))}

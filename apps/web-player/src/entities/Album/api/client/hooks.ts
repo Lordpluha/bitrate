@@ -7,7 +7,7 @@ import {
 import { clientFetchClient, useMutation } from '@shared/api/client'
 import { ensureOkResponse } from '@shared/api/errors'
 import { apiQueryKeys } from '@shared/api/queryKeys'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { queryOptions, useQuery, useQueryClient } from '@tanstack/react-query'
 
 const ARTIST_ALBUMS_PAGE_SIZE = 100
 
@@ -74,15 +74,16 @@ export const useLikedAlbums = (enabled = true) =>
     queryKey: apiQueryKeys.albums.liked,
   })
 
-export const useAlbum = (albumId?: string) =>
-  useQuery({
-    queryKey: apiQueryKeys.albums.detail(albumId ?? ''),
+/** The album with its tracks; shared by the album page and "play this album" actions. */
+export const albumDetailQuery = (albumId: string) =>
+  queryOptions({
+    queryKey: apiQueryKeys.albums.detail(albumId),
     queryFn: async () => {
       const { data, response } = await clientFetchClient.GET(
         '/api/v1/albums/{id}',
         {
           params: {
-            path: { id: albumId ?? '' },
+            path: { id: albumId },
           },
         } as never,
       )
@@ -91,8 +92,10 @@ export const useAlbum = (albumId?: string) =>
 
       return albumResponseSchema.parse(data)
     },
-    enabled: !!albumId,
   })
+
+export const useAlbum = (albumId?: string) =>
+  useQuery({ ...albumDetailQuery(albumId ?? ''), enabled: !!albumId })
 
 export const useLikeAlbum = () => {
   const queryClient = useQueryClient()

@@ -1,5 +1,6 @@
 import type { SafeUser } from '@/entities/User'
 import type { WebPlayerSearchResults } from '@/features/Search/api/client'
+import type { MediaCardItem } from '@/features/Search/model/types'
 import { SearchResults } from '@/features/Search/ui/SearchResults'
 import { ErrorState } from '@/shared/ui/ErrorState'
 
@@ -10,6 +11,7 @@ type SearchQueryStateProps = {
   >
   hasError: boolean
   isFetching: boolean
+  onPlayItem?: (item: MediaCardItem) => void
   onRetry: () => void
   query: string
   users: SafeUser[]
@@ -19,6 +21,7 @@ export const SearchQueryState = ({
   data,
   hasError,
   isFetching,
+  onPlayItem,
   onRetry,
   query,
   users,
@@ -82,6 +85,7 @@ export const SearchQueryState = ({
       <SearchResults
         albums={albums}
         artists={artists}
+        onPlayItem={onPlayItem}
         playlists={playlists}
         query={query}
         tracks={tracks}

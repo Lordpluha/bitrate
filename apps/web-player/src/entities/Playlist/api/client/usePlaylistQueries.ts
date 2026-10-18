@@ -3,7 +3,10 @@
 import { clientFetchClient, useQuery } from '@shared/api/client'
 import { ApiRequestError, ensureOkResponse } from '@shared/api/errors'
 import { apiQueryKeys } from '@shared/api/queryKeys'
-import { useQuery as useTanStackQuery } from '@tanstack/react-query'
+import {
+  queryOptions,
+  useQuery as useTanStackQuery,
+} from '@tanstack/react-query'
 import { useEffect } from 'react'
 import type { PlaylistWithTracks } from './playlist.types'
 import { playlistQueryKeys, withPlayableTrackUrls } from './playlistQuery'
@@ -41,12 +44,9 @@ export const useMyPlaylists = () =>
     },
   )
 
-export const usePlaylist = (
-  playlistId: string,
-  onSuccess?: (playlist: PlaylistWithTracks) => void,
-) => {
-  const query = useTanStackQuery({
-    enabled: Boolean(playlistId),
+/** The playlist with playable tracks; shared by the playlist page and "play this playlist" actions. */
+export const playlistDetailQuery = (playlistId: string) =>
+  queryOptions({
     gcTime: 10 * 60_000,
     meta: { suppressErrorToast: true },
     queryFn: async () => {
@@ -62,6 +62,15 @@ export const usePlaylist = (
     },
     queryKey: playlistQueryKeys.detail(playlistId),
     staleTime: 60_000,
+  })
+
+export const usePlaylist = (
+  playlistId: string,
+  onSuccess?: (playlist: PlaylistWithTracks) => void,
+) => {
+  const query = useTanStackQuery({
+    ...playlistDetailQuery(playlistId),
+    enabled: Boolean(playlistId),
   })
 
   useEffect(() => {
