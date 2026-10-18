@@ -29,6 +29,7 @@ export const en = {
   'common.song': 'Song',
   'common.title': 'Title',
   'common.unknown': 'Unknown',
+  'nav.charts': 'Charts',
   'nav.create': 'Create',
   'nav.home': 'Home',
   'nav.library': 'Library',

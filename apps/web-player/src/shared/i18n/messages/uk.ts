@@ -31,6 +31,7 @@ export const uk = {
   'common.song': 'Пісня',
   'common.title': 'Назва',
   'common.unknown': 'Невідомо',
+  'nav.charts': 'Чарти',
   'nav.create': 'Створити',
   'nav.home': 'Головна',
   'nav.library': 'Моя медіатека',
