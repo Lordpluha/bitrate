@@ -10,6 +10,7 @@ type ProfileSectionProps = {
   title: string
 }
 
+/** One profile tile (the design's bento Panel): an H4 title, an optional subtitle and Show all. */
 export const ProfileSection = ({
   children,
   className,
@@ -17,22 +18,27 @@ export const ProfileSection = ({
   subtitle,
   title,
 }: ProfileSectionProps) => (
-  <section className={cn(className)}>
-    <div className="mb-5 flex items-end justify-between gap-4">
-      <div>
-        <h2 className="text-2xl font-bold text-text">{title}</h2>
-        {subtitle && (
-          <p className="mt-1 text-sm text-text-subdued">{subtitle}</p>
-        )}
+  <section
+    className={cn(
+      'flex min-w-0 flex-col gap-3.5 rounded-[14px] border border-border bg-card p-5 md:p-6',
+      className,
+    )}
+  >
+    <div className="flex items-start justify-between gap-4">
+      <div className="flex min-w-0 flex-col gap-0.5">
+        <h2 className="text-base font-semibold text-foreground">{title}</h2>
+        {subtitle ? (
+          <p className="text-[13px] text-muted-foreground">{subtitle}</p>
+        ) : null}
       </div>
-      {showAllHref && (
+      {showAllHref ? (
         <Link
-          className="text-sm font-bold text-text-subdued hover:text-text"
+          className="shrink-0 text-[13px] font-semibold text-accent hover:underline"
           href={showAllHref}
         >
           Show all
         </Link>
-      )}
+      ) : null}
     </div>
     {children}
   </section>

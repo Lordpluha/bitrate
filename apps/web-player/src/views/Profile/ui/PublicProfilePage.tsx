@@ -3,11 +3,11 @@
 import { useUserPlaylists } from '@entities/Playlist'
 import { FollowUserButton, useUserById } from '@entities/User'
 import { ROUTES } from '@shared/routes'
-import { MediaImage } from '@shared/ui/MediaImage'
+import { MusicCardLg, SectionHeader, Skeleton, StateMessage } from '@shared/ui'
 import { getPlaylistCoverUrl, getUserAvatarUrl } from '@shared/utils/mediaUrl'
-import { UserRound } from 'lucide-react'
-import Link from 'next/link'
+import { ListMusic, UserRound } from 'lucide-react'
 import { ProfileFollowsSection } from '@/views/Profile/ui/ProfileFollowsSection'
+import { ProfileHeader } from '@/views/Profile/ui/ProfileHeader'
 
 type PublicProfilePageProps = {
   userId: string
@@ -20,19 +20,32 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
 
   if (userQuery.isPending) {
     return (
-      <div className="flex h-full items-center justify-center rounded-lg bg-background-secondary text-text-subdued">
-        Loading profile...
+      <div
+        aria-label="Loading profile"
+        className="flex h-full flex-col gap-7 px-4 pt-2 md:px-8 md:py-6"
+        role="status"
+      >
+        <div className="flex items-end gap-7 md:py-7">
+          <Skeleton className="size-22 rounded-full md:size-45" />
+          <div className="flex flex-1 flex-col gap-3">
+            <Skeleton className="h-3 w-16" />
+            <Skeleton className="h-10 w-1/2 md:h-16" />
+          </div>
+        </div>
+        <Skeleton className="h-64 rounded-[14px]" />
       </div>
     )
   }
 
   if (userQuery.isError || !userQuery.data) {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-2 rounded-lg bg-background-secondary px-6 text-center">
-        <h1 className="text-3xl font-bold text-text">User not found</h1>
-        <p className="text-sm text-text-subdued">
-          This profile is unavailable or no longer exists.
-        </p>
+      <div className="flex h-full flex-col px-4 md:px-8">
+        <StateMessage
+          description="This profile is unavailable or no longer exists."
+          icon={UserRound}
+          primary={{ href: ROUTES.main, label: 'Back to home' }}
+          title="User not found"
+        />
       </div>
     )
   }
@@ -40,88 +53,61 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
   const user = userQuery.data
 
   return (
-    <div className="h-full overflow-y-auto rounded-lg bg-background-secondary custom-scrollbar">
-      <section className="bg-gradient-to-b from-surface-hover via-surface to-background-tinted px-4 pb-7 pt-8 sm:px-8 sm:pb-8 sm:pt-12">
-        <div className="flex items-end gap-6 max-[700px]:flex-col max-[700px]:items-start max-[700px]:gap-4">
-          <div className="flex size-52 shrink-0 items-center justify-center overflow-hidden rounded-full bg-surface shadow-2xl max-[700px]:size-32">
-            {user.avatar ? (
-              <MediaImage
-                alt={user.username}
-                className="size-full object-cover"
-                fallback="user"
-                height={208}
-                src={getUserAvatarUrl(user.avatar)}
-                unoptimized
-                width={208}
-              />
-            ) : (
-              <UserRound className="text-text-subdued" size={76} />
-            )}
-          </div>
-          <div className="min-w-0 w-full pb-3">
-            <p className="text-sm text-text-subdued">Profile</p>
-            <h1 className="break-words text-6xl font-black text-text max-[900px]:text-4xl">
-              {user.username}
-            </h1>
-            {user.description && (
-              <p className="mt-4 max-w-150 text-sm text-text-subdued">
-                {user.description}
-              </p>
-            )}
+    <div className="h-full overflow-y-auto custom-scrollbar">
+      <div className="flex flex-col gap-5 px-4 pt-2 pb-3 md:gap-7 md:px-8 md:py-6">
+        <ProfileHeader
+          action={
             <FollowUserButton userId={user.id} username={user.username} />
-          </div>
-        </div>
-      </section>
+          }
+          avatarUrl={user.avatar ? getUserAvatarUrl(user.avatar) : null}
+          description={user.description}
+          username={user.username}
+        />
 
-      <section className="px-4 py-8 sm:px-8 sm:py-10">
-        <h2 className="mb-5 text-2xl font-bold text-text">Public playlists</h2>
-        {playlistsQuery.isPending ? (
-          <p className="text-text-subdued">Loading playlists...</p>
-        ) : playlistsQuery.isError ? (
-          <p className="text-negative">
-            Playlists could not be loaded. Try again later.
-          </p>
-        ) : playlists.length === 0 ? (
-          <p className="text-text-subdued">No public playlists yet.</p>
-        ) : (
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,150px),1fr))] gap-5">
-            {playlists.map((playlist) => (
-              <Link
-                className="min-w-0 rounded-md p-3 transition-colors hover:bg-surface"
-                href={ROUTES.playlist(playlist.id)}
-                key={playlist.id}
-              >
-                <MediaImage
-                  alt={playlist.title}
-                  className="aspect-square w-full rounded object-cover shadow-lg"
-                  fallback="playlist"
-                  height={180}
-                  src={getPlaylistCoverUrl(playlist.cover)}
-                  unoptimized
-                  width={180}
-                />
-                <h3 className="mt-3 truncate font-semibold text-text">
-                  {playlist.title}
-                </h3>
-                <p className="truncate text-sm text-text-subdued">
-                  {playlist.description || 'Playlist'}
-                </p>
-              </Link>
-            ))}
-          </div>
-        )}
-      </section>
+        <section className="flex flex-col gap-4">
+          <SectionHeader title="Public playlists" />
+          {playlistsQuery.isPending ? (
+            <p className="text-sm text-muted-foreground">
+              Loading playlists...
+            </p>
+          ) : playlistsQuery.isError ? (
+            <p className="text-sm text-muted-foreground">
+              Playlists could not be loaded. Try again later.
+            </p>
+          ) : playlists.length === 0 ? (
+            <StateMessage
+              className="min-h-60"
+              icon={ListMusic}
+              title="No public playlists yet."
+            />
+          ) : (
+            <ul className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5 xl:gap-5.5">
+              {playlists.map((playlist) => (
+                <li className="min-w-0" key={playlist.id}>
+                  <MusicCardLg
+                    description={playlist.description || 'Public playlist'}
+                    href={ROUTES.playlist(playlist.id)}
+                    id={playlist.id}
+                    imageUrl={getPlaylistCoverUrl(playlist.cover)}
+                    name={playlist.title}
+                  />
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
 
-      <ProfileFollowsSection
-        kind="followers"
-        title="Followers"
-        userId={user.id}
-      />
-      <ProfileFollowsSection
-        kind="following"
-        title="Following"
-        userId={user.id}
-      />
+        <ProfileFollowsSection
+          kind="followers"
+          title="Followers"
+          userId={user.id}
+        />
+        <ProfileFollowsSection
+          kind="following"
+          title="Following"
+          userId={user.id}
+        />
+      </div>
     </div>
   )
 }

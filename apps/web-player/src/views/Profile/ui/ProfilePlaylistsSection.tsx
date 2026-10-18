@@ -1,5 +1,4 @@
-import { MediaImage } from '@shared/ui/MediaImage'
-import Link from 'next/link'
+import { MusicCardLg } from '@shared/ui'
 import { ROUTES } from '@/shared/routes'
 import { getPlaylistCoverUrl } from '@/shared/utils/mediaUrl'
 import type { ProfilePlaylist } from '@/views/Profile/model/profile.types'
@@ -8,43 +7,35 @@ import { ProfileSection } from '@/views/Profile/ui/ProfileSection'
 type ProfilePlaylistsSectionProps = {
   isPending: boolean
   playlists: ProfilePlaylist[]
+  title?: string
 }
 
 export const ProfilePlaylistsSection = ({
   isPending,
   playlists,
+  title = 'Your playlists',
 }: ProfilePlaylistsSectionProps) => (
-  <ProfileSection className="mt-14" title="Your playlists">
+  <ProfileSection title={title}>
     {isPending ? (
-      <p className="text-text-subdued">Loading playlists...</p>
+      <p className="text-sm text-muted-foreground">Loading playlists...</p>
     ) : playlists.length === 0 ? (
-      <p className="text-text-subdued">No playlists created yet.</p>
+      <p className="text-sm text-muted-foreground">No playlists created yet.</p>
     ) : (
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,150px),1fr))] gap-4 sm:gap-5">
+      <ul className="grid grid-cols-2 gap-2.5 md:grid-cols-4 md:gap-4">
         {playlists.map((playlist) => (
-          <Link
-            className="min-w-0 rounded-md p-2 transition-colors hover:bg-white/10"
-            href={ROUTES.playlist(playlist.id)}
-            key={playlist.id}
-          >
-            <MediaImage
-              alt={playlist.title}
-              className="aspect-square w-full rounded object-cover shadow-xl"
-              fallback="playlist"
-              height={180}
-              src={getPlaylistCoverUrl(playlist.cover)}
-              unoptimized
-              width={180}
+          <li className="min-w-0" key={playlist.id}>
+            <MusicCardLg
+              description={
+                playlist.isPublic ? 'Public playlist' : 'Private playlist'
+              }
+              href={ROUTES.playlist(playlist.id)}
+              id={playlist.id}
+              imageUrl={getPlaylistCoverUrl(playlist.cover)}
+              name={playlist.title}
             />
-            <h3 className="mt-4 truncate text-base text-text">
-              {playlist.title}
-            </h3>
-            <p className="truncate text-sm text-text-subdued">
-              {playlist.isPublic ? 'Public playlist' : 'Private playlist'}
-            </p>
-          </Link>
+          </li>
         ))}
-      </div>
+      </ul>
     )}
   </ProfileSection>
 )
