@@ -17,9 +17,11 @@ export const RelatedArtistsSection = ({
   if (relatedArtistsQuery.isPending || artists.length === 0) return null
 
   return (
-    <section className="px-4 py-8 sm:px-6 lg:px-8">
-      <h2 className="mb-4 text-2xl font-bold text-text">Fans also like</h2>
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,160px),1fr))] gap-2">
+    <section className="flex flex-col gap-3">
+      <h2 className="text-[19px] leading-[1.25] font-semibold">
+        Fans also like
+      </h2>
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5 xl:gap-5.5">
         {artists.map((artist) => (
           <MusicCardLg
             description="Artist"

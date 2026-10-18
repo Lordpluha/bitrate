@@ -52,9 +52,9 @@ export const FollowArtistButton = ({
     <button
       aria-pressed={isFollowing}
       className={cn(
-        'rounded-full border border-white/30 font-bold text-text transition-colors hover:border-white hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60',
-        size === 'sm' ? 'px-4 py-1.5 text-xs' : 'px-6 py-2 text-sm',
-        isFollowing && 'border-white/20 text-text-subdued hover:text-text',
+        'shrink-0 rounded-md border border-border bg-background font-medium text-foreground transition-colors hover:bg-surface disabled:cursor-not-allowed disabled:opacity-60',
+        size === 'sm' ? 'h-8 px-3 text-xs' : 'h-9 px-4 text-sm',
+        isFollowing && 'text-muted-foreground hover:text-foreground',
         className,
       )}
       disabled={isPending}
