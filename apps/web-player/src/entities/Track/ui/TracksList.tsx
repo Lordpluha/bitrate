@@ -4,6 +4,7 @@ import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { Clock } from 'lucide-react'
 import { useMemo } from 'react'
 import { useI18n } from '@/shared/i18n'
+import { useTrackAlbums } from '../api/client/trackAlbums'
 import { TrackCard } from './TrackCard'
 
 interface TracksListProps {
@@ -30,6 +31,8 @@ export const TracksList = ({
   const { t } = useI18n()
   const compactLibrary = useSettingsStore(selectCompactLibrary)
   const viewMode = viewModeProp ?? (compactLibrary ? 'compact' : 'list')
+  const trackIds = useMemo(() => tracks.map((track) => track.id), [tracks])
+  const { data: albums } = useTrackAlbums(trackIds)
   const likedTrackIds = useMemo(
     () =>
       providedLikedTrackIds
@@ -60,6 +63,7 @@ export const TracksList = ({
       <div className="space-y-1">
         {tracks.map((track, index) => (
           <TrackCard
+            album={albums?.get(track.id) ?? null}
             index={index}
             isLiked={likedTrackIds.has(track.id)}
             isPlaybackContextActive={isPlaybackContextActive}

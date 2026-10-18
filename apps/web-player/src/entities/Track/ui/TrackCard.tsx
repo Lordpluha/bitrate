@@ -9,13 +9,18 @@ import {
 } from '@entities/Player'
 import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { useTrackContextMenuPosition } from '@entities/Track/models/useTrackContextMenuPosition'
+import { ROUTES } from '@shared/routes'
 import { DateUtils } from '@shared/utils/DateUtils'
+import Link from 'next/link'
+import type { TrackAlbum } from '../api/client/trackAlbums'
 import { TrackContextMenu } from './TrackContextMenu'
 import { TrackPlayIndicator } from './TrackPlayIndicator'
 import { TrackPrimaryInfo } from './TrackPrimaryInfo'
 import { TrackRowActions } from './TrackRowActions'
 
 interface TrackCardProps {
+  /** The album the row links to; null for a single or while albums load. */
+  album?: TrackAlbum | null
   track: TrackEntity
   index: number
   onPlayTrack?: (track: TrackEntity, index: number) => void
@@ -28,6 +33,7 @@ interface TrackCardProps {
 }
 
 export const TrackCard = ({
+  album = null,
   index,
   isLiked = false,
   isPlaybackContextActive = true,
@@ -95,7 +101,14 @@ export const TrackCard = ({
         </div>
       )}
       <div className="truncate text-[13px] text-muted-foreground max-[1024px]:hidden">
-        Unknown Album
+        {album ? (
+          <Link
+            className="hover:text-text hover:underline"
+            href={ROUTES.album(album.id)}
+          >
+            {album.title}
+          </Link>
+        ) : null}
       </div>
       <div className="text-xs text-text-subdued max-[1024px]:hidden">
         {track.createdAt ? DateUtils.formatDate(track.createdAt) : 'Unknown'}

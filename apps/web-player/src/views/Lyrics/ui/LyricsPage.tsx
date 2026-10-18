@@ -54,7 +54,7 @@ export const LyricsPage = () => {
         </header>
 
         {currentTrack.lyrics ? (
-          <p className="whitespace-pre-line text-lg font-semibold leading-9 text-text sm:text-2xl sm:leading-10">
+          <p className="whitespace-pre-line font-[family-name:var(--font-landing-display)] text-lg font-semibold leading-9 text-text sm:text-2xl sm:leading-10">
             {currentTrack.lyrics}
           </p>
         ) : (
