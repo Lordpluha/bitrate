@@ -78,7 +78,7 @@ export const TrackCard = ({
     <fieldset
       aria-label={track.title}
       className={cn(
-        'group m-0 w-full min-w-0 rounded-lg border-0 p-0 focus-within:outline-2 focus-within:outline-offset-[-2px] focus-within:outline-ring',
+        'group m-0 w-full min-w-0 rounded-lg border-0 p-0 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-[-2px] has-[:focus-visible]:outline-ring',
         isCurrentTrack ? 'bg-secondary' : 'hover:bg-surface',
       )}
       onContextMenu={contextMenu.openFromPointer}
