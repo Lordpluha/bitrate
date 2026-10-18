@@ -3,11 +3,10 @@
 import { ROUTES } from '@shared/routes'
 import { Check } from 'lucide-react'
 import Link from 'next/link'
-import { useNotifications } from '@/entities/Me'
+import { NotificationItem, useNotifications } from '@/entities/Me'
 import { ThemeSwitcher } from '@/features/SwitchTheme'
 import { useI18n } from '@/shared/i18n'
 import { InstallBtn } from '../InstallBtn'
-import { NotificationItem } from '../NotificationItem'
 
 /** How many unread notifications the profile menu previews; the bell holds the full list. */
 const UPDATES_PREVIEW_LIMIT = 3

@@ -18,6 +18,7 @@ export const ROUTES = {
   },
   main: '/main',
   charts: '/main/charts',
+  notifications: '/main/notifications',
   likedSongs: '/main/liked-songs',
   library: '/main/library',
   createPlaylist: '/main/library?create=playlist',
