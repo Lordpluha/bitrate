@@ -605,15 +605,22 @@ add(
         name: 'Track Row',
         width: 'fill_container',
         height: 68,
-        padding: [0, 12],
-        gap: 16,
+        /* same columns as Track Row/Default so the playing row lines up with the rest */
+        padding: [6, 0],
         cornerRadius: 8,
         fill: C.muted,
       },
       [
-        F({ name: 'Number Cell', width: 30 }, [
-          I('audio-lines', { width: 16, height: 16, fill: C.primary }),
-        ]),
+        F(
+          {
+            name: 'Number Cell',
+            width: 42,
+            height: 'fill_container',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          [I('audio-lines', { width: 16, height: 16, fill: C.primary })],
+        ),
         Row({ name: 'Title Cell', gap: 12, width: 'fill_container' }, [
           part('cover', cover({ width: 46, height: 46, cornerRadius: 6 })),
           Col({ gap: 2 }, [
@@ -624,9 +631,9 @@ add(
         part('album', muted('Afterglow', { width: 260, textGrowth: 'fixed-width' })),
         part(
           'added',
-          T('Today', { fontSize: 13, fill: C.textSubdued, width: 130, textGrowth: 'fixed-width' }),
+          T('Today', { fontSize: 12, fill: C.textSubdued, width: 130, textGrowth: 'fixed-width' }),
         ),
-        Row({ name: 'Actions', width: 90, gap: 12, justifyContent: 'end' }, [
+        Row({ name: 'Actions', width: 90, gap: 14, justifyContent: 'end' }, [
           I('heart', { width: 16, height: 16, fill: C.primary }),
           part('duration', muted('3:42')),
         ]),
