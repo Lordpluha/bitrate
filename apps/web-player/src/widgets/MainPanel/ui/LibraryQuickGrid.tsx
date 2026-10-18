@@ -1,5 +1,6 @@
 'use client'
 
+import { Skeleton } from '@shared/ui'
 import Image from 'next/image'
 import Link from 'next/link'
 import { LIKED_SONGS_ID, usePlaylistLibraryItems } from '@/entities/Playlist'
@@ -17,16 +18,16 @@ export const LibraryQuickGrid = () => {
 
   if (isLoading) {
     return (
-      <div className="mt-4 grid grid-cols-2 gap-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-4">
         {loadingCardIds.map((id) => (
-          <div className="h-16 animate-pulse rounded-md bg-surface" key={id} />
+          <Skeleton className="h-14 rounded-lg" key={id} />
         ))}
       </div>
     )
   }
 
   return (
-    <div className="mt-4 grid grid-cols-2 gap-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-4">
       {items.map((item) => {
         const href =
           item.id === LIKED_SONGS_ID
@@ -35,22 +36,20 @@ export const LibraryQuickGrid = () => {
 
         return (
           <Link
-            className="group flex min-h-16 min-w-0 overflow-hidden rounded-md bg-surface transition-colors hover:bg-surface-hover"
+            className="group flex h-14 min-w-0 items-center gap-3 overflow-hidden rounded-lg bg-card transition-colors hover:bg-secondary"
             href={href}
             key={item.id}
           >
             <Image
               alt={item.title}
-              className="size-16 shrink-0 object-cover"
-              height={64}
+              className="size-14 shrink-0 object-cover"
+              height={56}
               src={item.cover}
               unoptimized
-              width={64}
+              width={56}
             />
-            <span className="flex min-w-0 items-center px-3 py-2">
-              <span className="line-clamp-2 text-sm font-bold leading-5 text-text sm:text-base">
-                {item.title}
-              </span>
+            <span className="line-clamp-2 min-w-0 pr-3 text-[13px] font-semibold text-foreground">
+              {item.title}
             </span>
           </Link>
         )

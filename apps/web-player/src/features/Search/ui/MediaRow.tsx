@@ -10,7 +10,7 @@ import {
 } from '@bitrate/ui-react'
 import { useCallback, useEffect, useState } from 'react'
 import type { MediaCardItem } from '@/features/Search/model/types'
-import { MusicCardLg } from '@/shared/ui'
+import { MusicCardLg, SectionHeader } from '@/shared/ui'
 
 type MediaRowProps = {
   items: MediaCardItem[]
@@ -44,14 +44,7 @@ export const MediaRow = ({ items, title }: MediaRowProps) => {
 
   return (
     <section>
-      <div className="mb-4 flex items-center justify-between gap-4">
-        <h2 className="text-xl font-bold text-text">{title}</h2>
-        {items.length > 5 ? (
-          <span className="text-xs font-bold uppercase text-text-subdued">
-            Show all
-          </span>
-        ) : null}
-      </div>
+      <SectionHeader title={title} />
       <div className="group relative">
         <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[164px] md:h-[178px]">
           {canScrollPrev ? (

@@ -11,7 +11,7 @@ export const RecommendationsFeed = () => {
     return (
       <div
         aria-label="Loading recommendations"
-        className="space-y-8"
+        className="flex flex-col gap-7"
         role="status"
       >
         <div className="h-56 animate-pulse rounded-md bg-surface" />
@@ -31,7 +31,7 @@ export const RecommendationsFeed = () => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="flex flex-col gap-7">
       {recommendations.data.sections.map((section) => (
         <MediaRow
           items={section.items.map((item) =>
