@@ -21,7 +21,7 @@ export default defineConfig({
         '**/*.stories.*',
         '**/stories/**',
       ],
-      outDir: 'dist/types',
+      outDirs: 'dist/types',
       tsconfigPath: './tsconfig.build.json',
       insertTypesEntry: true,
     }),
