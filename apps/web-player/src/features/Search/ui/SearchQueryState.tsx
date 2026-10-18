@@ -1,13 +1,21 @@
+import { StateMessage, TrackRowSkeleton } from '@shared/ui'
+import { SearchX, TriangleAlert } from 'lucide-react'
 import type { SafeUser } from '@/entities/User'
 import type { WebPlayerSearchResults } from '@/features/Search/api/client'
 import type { MediaCardItem } from '@/features/Search/model/types'
 import { SearchResults } from '@/features/Search/ui/SearchResults'
 import { ErrorState } from '@/shared/ui/ErrorState'
 
+/** Rows standing in for results while the first search runs. */
+const SKELETON_KEYS = Array.from(
+  { length: 8 },
+  (_, row) => `search-skeleton-${row}`,
+)
+
 type SearchQueryStateProps = {
   data: Pick<
     WebPlayerSearchResults,
-    'albums' | 'artists' | 'playlists' | 'tracks'
+    'albums' | 'artists' | 'playlists' | 'topResult' | 'tracks'
   >
   hasError: boolean
   isFetching: boolean
@@ -38,13 +46,20 @@ export const SearchQueryState = ({
     users.length > 0
 
   if (isFetching && !hasResults) {
-    return <div className="text-text-subdued">Searching...</div>
+    return (
+      <div aria-label="Searching" className="flex flex-col gap-1" role="status">
+        <span className="sr-only">Searching...</span>
+        {SKELETON_KEYS.map((key) => (
+          <TrackRowSkeleton key={key} />
+        ))}
+      </div>
+    )
   }
 
   if (hasError && !hasResults) {
     return (
       <ErrorState
-        description="Some search results could not be loaded. Check your connection and try again."
+        description="Something went wrong while searching. Try again in a moment."
         onRetry={onRetry}
         title="Search is unavailable"
       />
@@ -53,28 +68,28 @@ export const SearchQueryState = ({
 
   if (!hasResults) {
     return (
-      <div>
-        <h1 className="text-2xl font-bold text-text">
-          No results found for "{query}"
-        </h1>
-        <p className="mt-2 text-text-subdued">
-          Please make sure your words are spelled correctly, or use fewer or
-          different keywords.
-        </p>
-      </div>
+      <StateMessage
+        description="Please make sure your words are spelled correctly, or use fewer or different keywords."
+        icon={SearchX}
+        title={`No results found for "${query}"`}
+      />
     )
   }
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       {hasError ? (
         <div
-          className="flex flex-wrap items-center justify-between gap-3 rounded-md bg-surface px-4 py-3 text-sm text-text"
+          className="flex flex-wrap items-center gap-2.5 rounded-[10px] border border-warning-border bg-warning-surface px-4 py-3 text-[13px] text-warning-text"
           role="alert"
         >
-          <span>Some result types could not be loaded.</span>
+          <TriangleAlert aria-hidden="true" className="shrink-0" size={16} />
+          <span className="min-w-0 flex-1">
+            Some result types could not be loaded. The rest will appear when the
+            service recovers.
+          </span>
           <button
-            className="font-bold underline hover:no-underline"
+            className="font-semibold underline hover:no-underline"
             onClick={onRetry}
             type="button"
           >
@@ -88,6 +103,7 @@ export const SearchQueryState = ({
         onPlayItem={onPlayItem}
         playlists={playlists}
         query={query}
+        topResult={data.topResult}
         tracks={tracks}
         users={users}
       />

@@ -1,5 +1,6 @@
 'use client'
 
+import { cn } from '@bitrate/ui-react'
 import { useImageColor } from '@shared/hooks/useImageColor'
 import { BackButton } from '@shared/ui/BackButton'
 import { MediaImage } from '@shared/ui/MediaImage'
@@ -7,14 +8,17 @@ import { ArrowLeft } from 'lucide-react'
 import type { CSSProperties, ReactNode } from 'react'
 
 type CollectionHeaderProps = {
-  coverUrl: string
+  /** Leave out for a header without artwork (a genre page). */
+  coverUrl?: string
   description?: string | null
   /** "Liked Songs", an album title, a playlist title. */
   title: string
   /** The kind shown above the title: "Playlist", "Album", "Single". */
   type: string
   /** The owner or artist, already linked where it should be. */
-  owner: ReactNode
+  owner?: ReactNode
+  /** The wash's starting colour when there is no cover to take it from (a genre's colour). */
+  washColor?: string
   /** Facts after the owner, joined as "· 24 songs, 1 h 32 min". */
   meta: string[]
 }
@@ -35,33 +39,40 @@ export const CollectionHeader = ({
   owner,
   title,
   type,
+  washColor,
 }: CollectionHeaderProps) => {
   const [r, g, b] = useImageColor(coverUrl)
+  const washStart = washColor ?? `rgb(${dim(r)}, ${dim(g)}, ${dim(b)})`
   const wash = {
-    '--collection-wash': `linear-gradient(180deg, rgb(${dim(r)}, ${dim(g)}, ${dim(b)}) 0%, var(--color-card) 100%)`,
+    '--collection-wash': `linear-gradient(180deg, ${washStart} 0%, var(--color-card) 100%)`,
   } as CSSProperties
 
   return (
     <section
-      className="relative flex flex-col gap-5 md:h-65 md:flex-row md:items-end md:gap-6 md:rounded-2xl md:bg-(image:--collection-wash) md:p-7 md:text-white"
+      className={cn(
+        'relative flex flex-col gap-5 md:h-65 md:flex-row md:items-end md:gap-6 md:rounded-2xl md:bg-(image:--collection-wash) md:p-7 md:text-white',
+        !coverUrl && 'max-md:pt-12',
+      )}
       style={wash}
     >
       <BackButton className="absolute top-0 left-0 flex size-8 items-center justify-center rounded-full bg-black/40 transition-colors hover:bg-black/60 md:top-7 md:left-7">
         <ArrowLeft aria-hidden="true" className="text-white" size={20} />
       </BackButton>
 
-      <div className="flex justify-center">
-        <MediaImage
-          alt=""
-          className="size-55 shrink-0 rounded-xl object-cover shadow-2xl md:size-50"
-          fallback="playlist"
-          height={220}
-          priority
-          src={coverUrl}
-          unoptimized
-          width={220}
-        />
-      </div>
+      {coverUrl ? (
+        <div className="flex justify-center">
+          <MediaImage
+            alt=""
+            className="size-55 shrink-0 rounded-xl object-cover shadow-2xl md:size-50"
+            fallback="playlist"
+            height={220}
+            priority
+            src={coverUrl}
+            unoptimized
+            width={220}
+          />
+        </div>
+      ) : null}
 
       <div className="flex min-w-0 flex-col gap-1 md:gap-2.5">
         <span className="hidden text-[13px] font-semibold md:block">
@@ -76,10 +87,17 @@ export const CollectionHeader = ({
           </p>
         ) : null}
         <p className="flex flex-wrap items-center gap-1 text-[13px] text-muted-foreground md:gap-2">
-          <span className="md:text-sm md:font-semibold md:text-white">
-            {owner}
-          </span>
-          {meta.length > 0 ? <span>· {meta.join(', ')}</span> : null}
+          {owner ? (
+            <span className="md:text-sm md:font-semibold md:text-white">
+              {owner}
+            </span>
+          ) : null}
+          {meta.length > 0 ? (
+            <span>
+              {owner ? '· ' : null}
+              {meta.join(', ')}
+            </span>
+          ) : null}
         </p>
       </div>
     </section>
