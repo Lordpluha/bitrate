@@ -18,9 +18,9 @@ export const SettingsSection = ({
   if (query && !searchableText.includes(query)) return null
 
   return (
-    <section>
-      <h2 className="mb-4 text-base font-bold text-text">{title}</h2>
-      <div className="grid gap-4">{children}</div>
+    <section className="mb-5 flex break-inside-avoid flex-col gap-1 rounded-[14px] border border-border bg-card p-5 md:p-6">
+      <h2 className="pb-2 text-base font-semibold text-foreground">{title}</h2>
+      <div className="flex flex-col">{children}</div>
     </section>
   )
 }
@@ -36,11 +36,11 @@ export const SettingsRow = ({
   description,
   label,
 }: SettingsRowProps) => (
-  <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-5 max-[700px]:grid-cols-1 max-[700px]:gap-3">
-    <div className="min-w-0">
-      <p className="text-sm text-text-subdued">{label}</p>
+  <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-6 border-b border-border py-3.5 last:border-b-0 max-[700px]:grid-cols-1 max-[700px]:gap-3">
+    <div className="flex min-w-0 flex-col gap-1">
+      <p className="text-sm font-semibold text-foreground">{label}</p>
       {description && (
-        <p className="mt-1 max-w-150 text-xs text-text-subdued">
+        <p className="max-w-150 text-[13px] text-muted-foreground">
           {description}
         </p>
       )}

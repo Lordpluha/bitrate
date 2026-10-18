@@ -11,14 +11,14 @@ export const TwoFactorSettingsSection = () => {
   return (
     <SettingsSection title={t('settings.twoFactor')}>
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <p className="text-sm text-text-subdued">
+        <p className="text-sm text-muted-foreground">
           {twoFactor.isEnabled
             ? t('settings.twoFactor.enabled')
             : t('settings.twoFactor.setupDescription')}
         </p>
         {!twoFactor.isEnabled && !twoFactor.setup && (
           <button
-            className="rounded-full bg-white/10 px-5 py-2 text-sm font-bold text-text hover:bg-white/15 disabled:opacity-60"
+            className="inline-flex h-9 w-fit items-center rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover disabled:opacity-60"
             disabled={twoFactor.isPending}
             onClick={twoFactor.startSetup}
             type="button"
@@ -45,7 +45,7 @@ export const TwoFactorSettingsSection = () => {
           </label>
           <input
             autoComplete="one-time-code"
-            className="h-10 rounded bg-surface px-3 text-sm text-text outline-none focus:ring-2 focus:ring-white/25"
+            className="h-10 rounded-md border border-border bg-background px-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
             id="enable-two-factor-code"
             inputMode="numeric"
             maxLength={6}
@@ -58,7 +58,7 @@ export const TwoFactorSettingsSection = () => {
             value={twoFactor.enableCode}
           />
           <button
-            className="w-fit rounded-full bg-primary px-5 py-2 text-sm font-bold text-black hover:bg-primary-hover disabled:opacity-60"
+            className="inline-flex h-9 w-fit items-center rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover disabled:opacity-60"
             disabled={twoFactor.isPending}
             type="submit"
           >
@@ -77,7 +77,7 @@ export const TwoFactorSettingsSection = () => {
           </label>
           <input
             autoComplete="one-time-code"
-            className="h-10 rounded bg-surface px-3 text-sm text-text outline-none focus:ring-2 focus:ring-white/25"
+            className="h-10 rounded-md border border-border bg-background px-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
             id="disable-two-factor-code"
             inputMode="numeric"
             maxLength={6}
@@ -90,7 +90,7 @@ export const TwoFactorSettingsSection = () => {
             value={twoFactor.disableCode}
           />
           <button
-            className="rounded-full bg-destructive/15 px-5 py-2 text-sm font-bold text-destructive hover:bg-destructive/25 disabled:opacity-60"
+            className="inline-flex h-9 w-fit items-center rounded-md bg-destructive px-6 text-sm font-medium text-destructive-foreground transition-colors hover:bg-destructive/90 disabled:opacity-60"
             disabled={twoFactor.isPending}
             type="submit"
           >
