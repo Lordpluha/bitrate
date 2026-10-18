@@ -24,18 +24,18 @@ export const SettingsPage = () => {
   }
 
   return (
-    <div className="h-full overflow-y-auto rounded-lg bg-background-secondary custom-scrollbar">
-      <div className="mx-auto max-w-220 px-4 py-6 sm:px-5 sm:py-8 lg:px-10 lg:py-10">
-        <div className="mb-8 flex min-h-10 items-center justify-between gap-4 sm:mb-12">
-          <h1 className="text-3xl font-black text-text sm:text-4xl">
+    <div className="h-full overflow-y-auto custom-scrollbar">
+      <div className="px-4 pt-2 pb-3 md:px-8 md:py-6">
+        <div className="mb-5 flex min-h-10 items-center justify-between gap-4 md:mb-7">
+          <h1 className="text-2xl leading-[1.1] font-bold text-foreground md:text-[32px]">
             {t('settings.title')}
           </h1>
           {isSearchOpen ? (
-            <div className="flex w-full max-w-80 items-center rounded bg-surface px-3 focus-within:ring-2 focus-within:ring-white/25">
-              <Search className="shrink-0 text-text-subdued" size={18} />
+            <div className="flex w-full max-w-80 items-center rounded-md border border-border bg-background px-3 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring">
+              <Search className="shrink-0 text-muted-foreground" size={16} />
               <input
                 aria-label={t('settings.search')}
-                className="h-10 min-w-0 flex-1 bg-transparent px-2 text-sm text-text outline-none"
+                className="h-9 min-w-0 flex-1 bg-transparent px-2 text-sm text-foreground outline-none placeholder:text-muted-foreground"
                 onChange={(event) => setQuery(event.target.value)}
                 onKeyDown={(event) => {
                   if (event.key === 'Escape') closeSearch()
@@ -45,7 +45,7 @@ export const SettingsPage = () => {
               />
               <button
                 aria-label={t('common.close')}
-                className="rounded-full p-1 text-text-subdued hover:text-text"
+                className="rounded-full p-1 text-muted-foreground hover:text-foreground"
                 onClick={closeSearch}
                 type="button"
               >
@@ -55,17 +55,17 @@ export const SettingsPage = () => {
           ) : (
             <button
               aria-label={t('settings.search')}
-              className="rounded-full p-2 text-text-subdued transition-colors hover:bg-white/10 hover:text-text"
+              className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-surface hover:text-foreground"
               onClick={() => setIsSearchOpen(true)}
               type="button"
             >
-              <Search size={22} />
+              <Search size={18} />
             </button>
           )}
         </div>
 
         <SettingsSearchProvider query={query}>
-          <div className="grid gap-8">
+          <div className="columns-1 gap-5 xl:columns-2">
             <AccountSettingsSection />
             <ActiveSessionsSection />
             <SubscriptionSettingsSection />
