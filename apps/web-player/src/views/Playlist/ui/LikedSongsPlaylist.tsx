@@ -2,6 +2,9 @@
 
 import { selectMusicPlayer, usePlayerStore } from '@entities/Player'
 import { type TrackEntity, TracksList, useLikedTracks } from '@entities/Track'
+import { ROUTES } from '@shared/routes'
+import { StateMessage } from '@shared/ui'
+import { Heart, Pause, Play } from 'lucide-react'
 import { useMemo } from 'react'
 import { useI18n } from '@/shared/i18n'
 import { getPlaylistDuration } from '../utils/getPlaylistDuration'
@@ -24,6 +27,25 @@ export const LikedSongsPlaylist = ({ tracks }: LikedSongsPlaylistProps) => {
     () => currentTracks.map((track) => track.id),
     [currentTracks],
   )
+  const togglePlay = usePlayerStore((state) => state.togglePlay)
+  const isLikedContext = musicPlayer.currentPlaylistId === likedSongsPlaybackId
+  const isLikedPlaying = isLikedContext && musicPlayer.isPlaying
+  const playFrom = (track: TrackEntity, index: number) =>
+    playPlaylist({
+      currentPlaylistId: likedSongsPlaybackId,
+      currentPlaylistName: t('library.likedSongs'),
+      startTrack: track,
+      startTrackIndex: index,
+      tracks: currentTracks,
+    })
+  const handlePlay = () => {
+    if (isLikedContext) {
+      togglePlay()
+      return
+    }
+    const [firstTrack] = currentTracks
+    if (firstTrack) playFrom(firstTrack, 0)
+  }
 
   return (
     <>
@@ -35,28 +57,44 @@ export const LikedSongsPlaylist = ({ tracks }: LikedSongsPlaylistProps) => {
         tracksCount={currentTracks?.length || 0}
         type={t('common.playlist')}
       />
-      {currentTracks && currentTracks.length > 0 ? (
+      {currentTracks.length > 0 ? (
+        <button
+          aria-label={`${isLikedPlaying ? 'Pause' : 'Play'} ${t('library.likedSongs')}`}
+          className="flex size-10 shrink-0 items-center justify-center self-end rounded-full bg-primary text-primary-foreground transition-transform hover:scale-105 md:size-14 md:self-start"
+          onClick={handlePlay}
+          type="button"
+        >
+          {isLikedPlaying ? (
+            <Pause
+              aria-hidden="true"
+              className="size-4.5 md:size-6"
+              fill="currentColor"
+            />
+          ) : (
+            <Play
+              aria-hidden="true"
+              className="size-4.5 md:size-6"
+              fill="currentColor"
+            />
+          )}
+        </button>
+      ) : null}
+      {currentTracks.length > 0 ? (
         <TracksList
           activeTrackId={musicPlayer.currentTrack?.id}
-          isPlaybackContextActive={
-            musicPlayer.currentPlaylistId === likedSongsPlaybackId
-          }
+          isPlaybackContextActive={isLikedContext}
           likedTrackIds={likedTrackIds}
-          onPlayTrack={(track, index) =>
-            playPlaylist({
-              currentPlaylistId: likedSongsPlaybackId,
-              currentPlaylistName: t('library.likedSongs'),
-              startTrack: track,
-              startTrackIndex: index,
-              tracks: currentTracks,
-            })
-          }
+          onPlayTrack={playFrom}
           tracks={currentTracks}
         />
       ) : (
-        <div className="py-10 text-text-subdued">
-          {t('playlist.likedEmpty')}
-        </div>
+        <StateMessage
+          className="min-h-80"
+          description="You haven't liked any songs yet. Start exploring and like your favorite tracks!"
+          icon={Heart}
+          primary={{ href: ROUTES.search(), label: 'Find something to play' }}
+          title={t('playlist.likedEmpty')}
+        />
       )}
     </>
   )

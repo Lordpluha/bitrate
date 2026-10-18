@@ -17,7 +17,10 @@ import { TrackContextMenu } from './TrackContextMenu'
 import { TrackPlayIndicator } from './TrackPlayIndicator'
 import { TrackPrimaryInfo } from './TrackPrimaryInfo'
 import { TrackRowActions } from './TrackRowActions'
-import { TRACK_TABLE_COLUMNS } from './trackTableColumns'
+import {
+  TRACK_TABLE_COLUMNS,
+  TRACK_TABLE_COLUMNS_WITHOUT_DATE,
+} from './trackTableColumns'
 
 interface TrackCardProps {
   /** The album the row links to; null for a single or while albums load. */
@@ -30,6 +33,7 @@ interface TrackCardProps {
   isPlaybackContextActive?: boolean
   isPlaybackTrackActive?: boolean
   removable?: boolean
+  showDateAdded?: boolean
   viewMode?: 'compact' | 'list'
 }
 
@@ -42,6 +46,7 @@ export const TrackCard = ({
   onPlayTrack,
   onRemoveTrack,
   removable = false,
+  showDateAdded = true,
   track,
   viewMode = 'list',
 }: TrackCardProps) => {
@@ -74,7 +79,9 @@ export const TrackCard = ({
       aria-label={track.title}
       className={cn(
         'group m-0 grid min-h-17 w-full min-w-0 items-center rounded-lg border-0 p-0 py-1.5 text-left focus-within:outline-2 focus-within:outline-offset-[-2px] focus-within:outline-ring max-[1024px]:min-h-16 max-[1024px]:grid-cols-[minmax(0,1fr)_auto] max-[1024px]:gap-3 max-[1024px]:py-2',
-        TRACK_TABLE_COLUMNS[viewMode],
+        (showDateAdded
+          ? TRACK_TABLE_COLUMNS
+          : TRACK_TABLE_COLUMNS_WITHOUT_DATE)[viewMode],
         isCurrentTrack ? 'bg-secondary' : 'hover:bg-surface',
       )}
       onContextMenu={contextMenu.openFromPointer}
@@ -110,9 +117,11 @@ export const TrackCard = ({
           </Link>
         ) : null}
       </div>
-      <div className="truncate text-xs text-text-subdued max-[1024px]:hidden">
-        {track.createdAt ? DateUtils.formatDate(track.createdAt) : 'Unknown'}
-      </div>
+      {showDateAdded ? (
+        <div className="truncate text-xs text-text-subdued max-[1024px]:hidden">
+          {track.createdAt ? DateUtils.formatDate(track.createdAt) : 'Unknown'}
+        </div>
+      ) : null}
       <TrackRowActions
         isLiked={isLiked}
         onRemove={() => onRemoveTrack?.(track.id)}

@@ -1,7 +1,6 @@
 import type { AlbumResponse } from '@entities/Album'
 import { ArtistLink } from '@entities/Artist'
 import { CollectionHeader } from '@shared/ui/CollectionHeader'
-import { DateUtils } from '@shared/utils/DateUtils'
 import { TimeUtils } from '@shared/utils/TimeUtils'
 
 const ALBUM_TYPE_LABEL = {
@@ -28,8 +27,12 @@ export const AlbumHero = ({
     coverUrl={coverUrl}
     description={album.description}
     meta={[
-      ...(album.releaseDate ? [DateUtils.formatDate(album.releaseDate)] : []),
-      `${trackCount} ${trackCount === 1 ? 'song' : 'songs'}`,
+      [
+        ...(album.releaseDate
+          ? [String(new Date(album.releaseDate).getFullYear())]
+          : []),
+        `${trackCount} ${trackCount === 1 ? 'song' : 'songs'}`,
+      ].join(' · '),
       ...(duration > 0 ? [TimeUtils.formatDuration(duration)] : []),
     ]}
     owner={<ArtistLink artistId={album.artistId} className="hover:underline" />}

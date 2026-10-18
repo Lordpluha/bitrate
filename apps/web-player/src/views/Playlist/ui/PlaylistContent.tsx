@@ -1,5 +1,7 @@
 'use client'
 
+import { StateMessage } from '@shared/ui'
+import { Music } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import type { PlaylistWithTracks } from '@/entities/Playlist'
 import { selectCompactLibrary, useSettingsStore } from '@/entities/Settings'
@@ -100,7 +102,11 @@ export const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
         />
       )}
       {!isOwner && tracks.length === 0 && (
-        <div className="py-10 text-text-subdued">{t('playlist.noTracks')}</div>
+        <StateMessage
+          className="min-h-80"
+          icon={Music}
+          title={t('playlist.noTracks')}
+        />
       )}
     </>
   )
