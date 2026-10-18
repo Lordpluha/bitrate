@@ -1,7 +1,7 @@
 'use client'
 
+import type { RepeatMode } from '@entities/Player'
 import { FloatingPlayerWindow } from './FloatingPlayerWindow'
-import { MiniPlayer } from './MiniPlayer'
 import { NowPlayingView } from './NowPlayingView'
 
 type PlayerResponsiveViewsProps = {
@@ -13,16 +13,19 @@ type PlayerResponsiveViewsProps = {
   isExpanded: boolean
   isLiked: boolean
   isPlaying: boolean
+  isShuffled: boolean
   onCloseExpanded: () => void
   onCloseFloating: () => void
-  onExpand: () => void
   onLikeToggle: () => void
   onNext: () => void
   onPlayPause: () => void
   onPrevious: () => void
+  onRepeatToggle: () => void
   onSeek: (time: number) => void
+  onShuffleToggle: () => void
   onVolumeChange: (volume: number) => void
   playlistTitle: string
+  repeatMode: RepeatMode
   title: string
   volume: number
 }
@@ -36,16 +39,19 @@ export const PlayerResponsiveViews = ({
   isExpanded,
   isLiked,
   isPlaying,
+  isShuffled,
   onCloseExpanded,
   onCloseFloating,
-  onExpand,
   onLikeToggle,
   onNext,
   onPlayPause,
   onPrevious,
+  onRepeatToggle,
   onSeek,
+  onShuffleToggle,
   onVolumeChange,
   playlistTitle,
+  repeatMode,
   title,
   volume,
 }: PlayerResponsiveViewsProps) => (
@@ -73,32 +79,20 @@ export const PlayerResponsiveViews = ({
       isLiked={isLiked}
       isOpen={isExpanded}
       isPlaying={isPlaying}
+      isShuffled={isShuffled}
       onClose={onCloseExpanded}
       onLikeToggle={onLikeToggle}
       onNext={onNext}
       onPlayPause={onPlayPause}
       onPrevious={onPrevious}
+      onRepeatToggle={onRepeatToggle}
       onSeek={onSeek}
+      onShuffleToggle={onShuffleToggle}
       onVolumeChange={onVolumeChange}
       playlistTitle={playlistTitle}
+      repeatMode={repeatMode}
       title={title}
       volume={volume}
-    />
-
-    <MiniPlayer
-      artist={artist}
-      coverUrl={coverUrl}
-      currentTime={currentTime}
-      duration={duration}
-      isLiked={isLiked}
-      isPlaying={isPlaying}
-      isVisible={!isExpanded}
-      onExpand={onExpand}
-      onLikeToggle={onLikeToggle}
-      onNext={onNext}
-      onPlayPause={onPlayPause}
-      onPrevious={onPrevious}
-      title={title}
     />
   </>
 )

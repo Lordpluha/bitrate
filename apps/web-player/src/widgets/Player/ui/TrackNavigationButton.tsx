@@ -12,12 +12,14 @@ import { getTrackCoverUrl } from '@/shared/utils/mediaUrl'
 
 interface TrackNavigationButtonProps {
   direction: 'next' | 'previous'
+  iconSize?: number
   onClick: () => void
   track: TrackEntity | null
 }
 
 export const TrackNavigationButton = ({
   direction,
+  iconSize = 22,
   onClick,
   track,
 }: TrackNavigationButtonProps) => {
@@ -34,7 +36,7 @@ export const TrackNavigationButton = ({
           onClick={onClick}
           type="button"
         >
-          <Icon size={22} />
+          <Icon size={iconSize} />
         </button>
       </HoverCardTrigger>
       {track && (
