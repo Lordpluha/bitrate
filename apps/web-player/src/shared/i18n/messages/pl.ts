@@ -31,6 +31,7 @@ export const pl = {
   'common.song': 'Utwór',
   'common.title': 'Tytuł',
   'common.unknown': 'Nieznane',
+  'nav.charts': 'Listy przebojów',
   'nav.create': 'Utwórz',
   'nav.home': 'Strona główna',
   'nav.library': 'Biblioteka',

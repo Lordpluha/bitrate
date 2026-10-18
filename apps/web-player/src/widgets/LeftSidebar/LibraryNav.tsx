@@ -2,7 +2,7 @@
 
 import { cn } from '@bitrate/ui-react'
 import { ROUTES } from '@shared/routes'
-import { Clock3, Heart, House, Search } from 'lucide-react'
+import { Clock3, Heart, House, Search, TrendingUp } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useI18n } from '@/shared/i18n'
@@ -21,6 +21,7 @@ export const LibraryNav = ({ isCollapsed }: LibraryNavProps) => {
   const items = [
     { href: ROUTES.main, icon: House, label: t('nav.home') },
     { href: ROUTES.search(), icon: Search, label: t('nav.search') },
+    { href: ROUTES.charts, icon: TrendingUp, label: t('nav.charts') },
     { href: ROUTES.likedSongs, icon: Heart, label: t('library.likedSongs') },
     { href: ROUTES.recents, icon: Clock3, label: t('library.recents') },
   ]
