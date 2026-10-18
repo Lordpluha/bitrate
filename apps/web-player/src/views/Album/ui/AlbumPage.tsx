@@ -2,8 +2,14 @@
 
 import { useAlbum } from '@entities/Album'
 import { type TrackEntity, useLikedTracks } from '@entities/Track'
-import { CollectionPanel } from '@shared/ui/CollectionHeader'
+import { ROUTES } from '@shared/routes'
+import { StateMessage } from '@shared/ui'
+import {
+  CollectionPanel,
+  CollectionSkeleton,
+} from '@shared/ui/CollectionHeader'
 import { getAlbumCoverUrl } from '@shared/utils/mediaUrl'
+import { Disc3 } from 'lucide-react'
 import { useMemo } from 'react'
 import { AlbumHero } from './AlbumHero'
 import { AlbumTrackSection } from './AlbumTrackSection'
@@ -26,19 +32,22 @@ export const AlbumPage = ({ albumId }: { albumId: string }) => {
 
   if (isPending) {
     return (
-      <div className="h-full overflow-y-auto custom-scrollbar p-6 text-text-subdued">
-        Loading album...
-      </div>
+      <CollectionPanel>
+        <CollectionSkeleton label="Loading album" />
+      </CollectionPanel>
     )
   }
 
   if (isError || !album) {
     return (
-      <div className="h-full overflow-y-auto custom-scrollbar p-6">
-        <div className="rounded-lg bg-surface p-6 text-text-subdued">
-          Album not found.
-        </div>
-      </div>
+      <CollectionPanel>
+        <StateMessage
+          description="This album may have been removed, or the link is incorrect."
+          icon={Disc3}
+          primary={{ href: ROUTES.main, label: 'Back to home' }}
+          title="Album not found"
+        />
+      </CollectionPanel>
     )
   }
 

@@ -8,7 +8,7 @@ import {
 } from '@entities/Album/api/client'
 import { showApiErrorToast, showApiSuccessToast } from '@shared/api/feedback'
 import { useAuth } from '@shared/hooks'
-import { CheckCircle, Heart } from 'lucide-react'
+import { Heart } from 'lucide-react'
 
 export type LikeAlbumButtonProps = {
   albumId: string
@@ -16,7 +16,7 @@ export type LikeAlbumButtonProps = {
   className?: string
 }
 
-/** Saves or removes an album; the state comes from the server's saved list (`GET /albums/liked`). */
+/** The album action bar's heart: saves or removes an album; the state comes from the server's saved list (`GET /albums/liked`). */
 export const LikeAlbumButton = ({
   albumId,
   albumTitle = 'album',
@@ -51,7 +51,10 @@ export const LikeAlbumButton = ({
       aria-label={`${isLiked ? 'Remove' : 'Save'} ${albumTitle} ${isLiked ? 'from' : 'to'} your library`}
       aria-pressed={isLiked}
       className={cn(
-        'flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-text transition-colors hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-60',
+        'rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-60',
+        isLiked
+          ? 'text-primary hover:text-primary-hover'
+          : 'text-muted-foreground hover:text-foreground',
         className,
       )}
       disabled={isPending}
@@ -61,12 +64,11 @@ export const LikeAlbumButton = ({
       }}
       type="button"
     >
-      {isLiked ? (
-        <CheckCircle className="fill-primary text-primary" size={18} />
-      ) : (
-        <Heart size={18} />
-      )}
-      {isLiked ? 'Saved' : 'Save'}
+      <Heart
+        aria-hidden="true"
+        className="size-5 md:size-6.5"
+        fill={isLiked ? 'currentColor' : 'none'}
+      />
     </button>
   )
 }

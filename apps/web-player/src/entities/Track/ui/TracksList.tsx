@@ -7,7 +7,10 @@ import { useMemo } from 'react'
 import { useI18n } from '@/shared/i18n'
 import { useTrackAlbums } from '../api/client/trackAlbums'
 import { TrackCard } from './TrackCard'
-import { TRACK_TABLE_COLUMNS } from './trackTableColumns'
+import {
+  TRACK_TABLE_COLUMNS,
+  TRACK_TABLE_COLUMNS_WITHOUT_DATE,
+} from './trackTableColumns'
 
 interface TracksListProps {
   activeTrackId?: string
@@ -17,6 +20,8 @@ interface TracksListProps {
   onPlayTrack?: (track: TrackEntity, index: number) => void
   onRemoveTrack?: (trackId: string) => void
   removable?: boolean
+  /** Albums leave out the Date added column. */
+  showDateAdded?: boolean
   viewMode?: 'compact' | 'list'
 }
 
@@ -27,6 +32,7 @@ export const TracksList = ({
   onPlayTrack,
   onRemoveTrack,
   removable = false,
+  showDateAdded = true,
   tracks,
   viewMode: viewModeProp,
 }: TracksListProps) => {
@@ -35,6 +41,9 @@ export const TracksList = ({
   const viewMode = viewModeProp ?? (compactLibrary ? 'compact' : 'list')
   const trackIds = useMemo(() => tracks.map((track) => track.id), [tracks])
   const { data: albums } = useTrackAlbums(trackIds)
+  const columns = (
+    showDateAdded ? TRACK_TABLE_COLUMNS : TRACK_TABLE_COLUMNS_WITHOUT_DATE
+  )[viewMode]
   const likedTrackIds = useMemo(
     () =>
       providedLikedTrackIds
@@ -48,14 +57,14 @@ export const TracksList = ({
       <div
         className={cn(
           'grid h-9 items-center border-b border-border text-xs text-muted-foreground max-[1024px]:hidden',
-          TRACK_TABLE_COLUMNS[viewMode],
+          columns,
         )}
       >
         <div className="text-center">#</div>
         <div>{t('tracks.title')}</div>
         {viewMode === 'compact' && <div>{t('tracks.artist')}</div>}
         <div>{t('tracks.album')}</div>
-        <div>{t('tracks.dateAdded')}</div>
+        {showDateAdded ? <div>{t('tracks.dateAdded')}</div> : null}
         <div className="flex justify-end">
           <Clock aria-hidden="true" size={16} />
         </div>
@@ -75,6 +84,7 @@ export const TracksList = ({
             onPlayTrack={onPlayTrack}
             onRemoveTrack={onRemoveTrack}
             removable={removable}
+            showDateAdded={showDateAdded}
             track={track}
             viewMode={viewMode}
           />
