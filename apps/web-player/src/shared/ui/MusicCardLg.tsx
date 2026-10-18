@@ -36,7 +36,7 @@ export const MusicCardLg = ({
   const imageSrc = resolveMusicCardImage(imageUrl, isArtist)
 
   return (
-    <div className="group/card relative flex min-w-45 flex-col gap-3 rounded-[14px] border border-border bg-card p-3.5 transition-colors duration-300 focus-within:ring-2 focus-within:ring-ring hover:bg-secondary">
+    <div className="group/card relative flex min-w-45 flex-col gap-3 rounded-[14px] border border-border bg-card p-3.5 transition-colors duration-300 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring hover:bg-secondary">
       <div
         className={cn(
           'relative aspect-square overflow-hidden',
