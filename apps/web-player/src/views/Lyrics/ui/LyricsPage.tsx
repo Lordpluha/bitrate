@@ -3,71 +3,78 @@
 import { ArtistLink } from '@entities/Artist'
 import { selectCurrentTrack, usePlayerStore } from '@entities/Player'
 import { ROUTES } from '@shared/routes'
+import { StateMessage } from '@shared/ui'
 import { MediaImage } from '@shared/ui/MediaImage'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import { Mic2 } from 'lucide-react'
-import Link from 'next/link'
+import { MicVocal } from 'lucide-react'
 
+/**
+ * The playing track's lyrics in the design's lyric style: the track beside a 56px cover, then
+ * the lines in 34px Unbounded. Lyrics carry no timings yet, so no line is marked current.
+ */
 export const LyricsPage = () => {
   const currentTrack = usePlayerStore(selectCurrentTrack)
 
   if (!currentTrack) {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-3 rounded-lg bg-background-secondary px-6 text-center">
-        <Mic2 className="text-text-subdued" size={40} />
-        <h1 className="text-2xl font-bold text-text sm:text-3xl">
-          Nothing is playing
-        </h1>
-        <p className="max-w-100 text-text-subdued">
-          Start a track and its lyrics will appear here.
-        </p>
-        <Link
-          className="mt-2 rounded-full bg-text px-6 py-3 text-sm font-bold text-background transition-transform hover:scale-105"
-          href={ROUTES.main}
-        >
-          Find something to play
-        </Link>
+      <div className="flex h-full flex-col px-4 md:px-8">
+        <StateMessage
+          description="Start a track and its lyrics will appear here."
+          icon={MicVocal}
+          primary={{ href: ROUTES.search(), label: 'Find something to play' }}
+          title="Nothing is playing"
+        />
       </div>
     )
   }
 
+  /* repeated choruses repeat their text, so each line is keyed by where it sits in the song */
+  const lines = currentTrack.lyrics
+    ?.split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((text, position) => ({ key: `line-${position}`, text }))
+
   return (
-    <div className="h-full overflow-y-auto rounded-lg bg-background-secondary custom-scrollbar">
-      <div className="mx-auto w-full max-w-200 px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
-        <header className="mb-8 flex items-center gap-4">
+    <div className="h-full overflow-y-auto custom-scrollbar">
+      <div className="flex flex-col gap-7 px-4 pt-2 pb-3 md:px-8 md:py-6">
+        <header className="flex items-center gap-3.5">
           <MediaImage
-            alt={currentTrack.title}
-            className="size-16 rounded object-cover shadow-lg sm:size-20"
+            alt=""
+            className="size-12 rounded-md object-cover md:size-14"
             fallback="track"
-            height={80}
+            height={56}
             src={getTrackCoverUrl(currentTrack.cover)}
             unoptimized
-            width={80}
+            width={56}
           />
-          <div className="min-w-0">
-            <h1 className="truncate text-2xl font-black text-text sm:text-3xl">
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <h1 className="truncate font-[family-name:var(--font-landing-body)] text-sm font-semibold text-foreground">
               {currentTrack.title}
             </h1>
-            <p className="truncate text-sm text-text-subdued">
+            <p className="truncate text-[13px] text-accent">
               <ArtistLink artistId={currentTrack.artistId} />
             </p>
           </div>
         </header>
 
-        {currentTrack.lyrics ? (
-          <p className="whitespace-pre-line font-[family-name:var(--font-landing-display)] text-lg font-semibold leading-9 text-text sm:text-2xl sm:leading-10">
-            {currentTrack.lyrics}
-          </p>
-        ) : (
-          <div className="rounded-xl bg-surface px-6 py-14 text-center">
-            <Mic2 className="mx-auto mb-3 text-text-subdued" size={36} />
-            <h2 className="text-xl font-bold text-text">
-              No lyrics for this track
-            </h2>
-            <p className="mx-auto mt-2 max-w-100 text-sm text-text-subdued">
-              Lyrics haven&apos;t been added to this track yet.
-            </p>
+        {lines && lines.length > 0 ? (
+          <div className="flex max-w-180 flex-col gap-3.5">
+            {lines.map(({ key, text }) => (
+              <p
+                className="font-[family-name:var(--font-landing-display)] text-2xl leading-[1.25] font-bold text-foreground md:text-[34px]"
+                key={key}
+              >
+                {text}
+              </p>
+            ))}
           </div>
+        ) : (
+          <StateMessage
+            description="Lyrics haven't been added to this track yet."
+            icon={MicVocal}
+            title="No lyrics for this track"
+          />
         )}
       </div>
     </div>
