@@ -78,66 +78,74 @@ export const TrackCard = ({
     <fieldset
       aria-label={track.title}
       className={cn(
-        'group m-0 grid min-h-17 w-full min-w-0 items-center rounded-lg border-0 p-0 py-1.5 text-left focus-within:outline-2 focus-within:outline-offset-[-2px] focus-within:outline-ring max-[1024px]:min-h-16 max-[1024px]:grid-cols-[minmax(0,1fr)_auto] max-[1024px]:gap-3 max-[1024px]:py-2',
-        (showDateAdded
-          ? TRACK_TABLE_COLUMNS
-          : TRACK_TABLE_COLUMNS_WITHOUT_DATE)[viewMode],
+        'group m-0 w-full min-w-0 rounded-lg border-0 p-0 focus-within:outline-2 focus-within:outline-offset-[-2px] focus-within:outline-ring',
         isCurrentTrack ? 'bg-secondary' : 'hover:bg-surface',
       )}
       onContextMenu={contextMenu.openFromPointer}
     >
-      <TrackPlayIndicator
-        index={index}
-        isCurrent={isCurrentTrack}
-        isPlaying={isPlaying}
-        onClick={() => handlePlayTrack(track)}
-        title={track.title}
-      />
+      <div
+        className={cn(
+          'grid min-h-17 items-center px-2 py-1.5 text-left max-[1024px]:min-h-16 max-[1024px]:grid-cols-[minmax(0,1fr)_auto] max-[1024px]:gap-3 max-[1024px]:px-0 max-[1024px]:py-2',
+          (showDateAdded
+            ? TRACK_TABLE_COLUMNS
+            : TRACK_TABLE_COLUMNS_WITHOUT_DATE)[viewMode],
+        )}
+      >
+        <TrackPlayIndicator
+          index={index}
+          isCurrent={isCurrentTrack}
+          isPlaying={isPlaying}
+          onClick={() => handlePlayTrack(track)}
+          title={track.title}
+        />
 
-      <TrackPrimaryInfo
-        isCurrent={isCurrentTrack}
-        onClick={() => handlePlayTrack(track)}
-        onKeyDown={contextMenu.openFromKeyboard}
-        track={track}
-        viewMode={viewMode}
-      />
+        <TrackPrimaryInfo
+          isCurrent={isCurrentTrack}
+          onClick={() => handlePlayTrack(track)}
+          onKeyDown={contextMenu.openFromKeyboard}
+          track={track}
+          viewMode={viewMode}
+        />
 
-      {viewMode === 'compact' && (
+        {viewMode === 'compact' && (
+          <div className="truncate pr-4 text-[13px] text-muted-foreground max-[1024px]:hidden">
+            <ArtistLink artistId={track.artistId} />
+          </div>
+        )}
         <div className="truncate pr-4 text-[13px] text-muted-foreground max-[1024px]:hidden">
-          <ArtistLink artistId={track.artistId} />
+          {album ? (
+            <Link
+              className="hover:text-text hover:underline"
+              href={ROUTES.album(album.id)}
+            >
+              {album.title}
+            </Link>
+          ) : null}
         </div>
-      )}
-      <div className="truncate pr-4 text-[13px] text-muted-foreground max-[1024px]:hidden">
-        {album ? (
-          <Link
-            className="hover:text-text hover:underline"
-            href={ROUTES.album(album.id)}
-          >
-            {album.title}
-          </Link>
+        {showDateAdded ? (
+          <div className="truncate text-xs text-text-subdued max-[1024px]:hidden">
+            {track.createdAt
+              ? DateUtils.formatDate(track.createdAt)
+              : 'Unknown'}
+          </div>
+        ) : null}
+        <TrackRowActions
+          isLiked={isLiked}
+          onRemove={() => onRemoveTrack?.(track.id)}
+          removable={removable}
+          track={track}
+        />
+        {contextMenu.position ? (
+          <TrackContextMenu
+            isPlaying={isCurrentTrack && isPlaying}
+            onAddToQueue={() => addToQueue(track)}
+            onClose={contextMenu.close}
+            onPlay={() => handlePlayTrack(track)}
+            onRemove={removable ? () => onRemoveTrack?.(track.id) : undefined}
+            position={contextMenu.position}
+          />
         ) : null}
       </div>
-      {showDateAdded ? (
-        <div className="truncate text-xs text-text-subdued max-[1024px]:hidden">
-          {track.createdAt ? DateUtils.formatDate(track.createdAt) : 'Unknown'}
-        </div>
-      ) : null}
-      <TrackRowActions
-        isLiked={isLiked}
-        onRemove={() => onRemoveTrack?.(track.id)}
-        removable={removable}
-        track={track}
-      />
-      {contextMenu.position ? (
-        <TrackContextMenu
-          isPlaying={isCurrentTrack && isPlaying}
-          onAddToQueue={() => addToQueue(track)}
-          onClose={contextMenu.close}
-          onPlay={() => handlePlayTrack(track)}
-          onRemove={removable ? () => onRemoveTrack?.(track.id) : undefined}
-          position={contextMenu.position}
-        />
-      ) : null}
     </fieldset>
   )
 }

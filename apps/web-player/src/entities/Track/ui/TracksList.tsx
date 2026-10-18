@@ -56,7 +56,7 @@ export const TracksList = ({
     <div className="flex flex-col">
       <div
         className={cn(
-          'grid h-9 items-center border-b border-border text-xs text-muted-foreground max-[1024px]:hidden',
+          'grid h-9 items-center border-b border-border px-2 text-xs text-muted-foreground max-[1024px]:hidden',
           columns,
         )}
       >
