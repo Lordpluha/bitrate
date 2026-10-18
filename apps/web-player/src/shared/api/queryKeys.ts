@@ -87,6 +87,7 @@ export const apiQueryKeys = {
   },
   tracks: {
     all: ['tracks'] as const,
+    albums: (trackIds: string[]) => ['tracks', 'albums', trackIds] as const,
     artist: (artistId: string) => ['tracks', 'artist', artistId] as const,
     artistTop: (artistId: string, limit: number) =>
       ['tracks', 'artist', artistId, 'top', { limit }] as const,

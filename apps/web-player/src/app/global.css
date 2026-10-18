@@ -106,6 +106,12 @@
     scrollbar-color: var(--color-scrollbar-thumb) transparent;
     scrollbar-width: thin;
   }
+
+  /* Unbounded, the design system's heading face (`--font-heading`): Display, H1–H4 and lyrics. */
+  :is(h1, h2, h3, h4, h5, h6),
+  :is(h1, h2, h3, h4, h5, h6) * {
+    font-family: var(--font-landing-display), var(--font-sans);
+  }
 }
 
 @layer utilities {
