@@ -78,6 +78,22 @@ describe('buildSearchRows', () => {
     expect(songRow?.artistId).toBe('a1')
   })
 
+  it('lets song rows play the track they show', () => {
+    const [songRow] = buildSearchRows(input).Songs ?? []
+
+    expect(songRow).toMatchObject({
+      id: input.tracks[0]?.id,
+      playKind: 'track',
+    })
+  })
+
+  it('gives every row its entity id so equal titles stay distinct', () => {
+    const groups = buildSearchRows(input)
+
+    expect(groups.Albums?.[0]?.id).toBe(input.albums[0]?.id)
+    expect(groups.Profiles?.[0]?.id).toBe(input.users[0]?.id)
+  })
+
   it('puts artists first on the All tab', () => {
     const rows = getAllTabRows(buildSearchRows(input))
 

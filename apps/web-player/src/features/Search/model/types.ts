@@ -18,6 +18,10 @@ type SearchResultKind = 'Album' | 'Artist' | 'Playlist' | 'Profile' | 'Song'
 export type SearchResultRow = {
   /** When set, the subtitle renders as a link to that artist's page. */
   artistId?: string
+  /** The entity id: React key and what a song row plays. */
+  id: string
+  /** Song rows play their track when chosen. */
+  playKind?: 'track'
   circularImage?: boolean
   href?: string
   image: string

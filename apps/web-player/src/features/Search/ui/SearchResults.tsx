@@ -11,11 +11,13 @@ import type {
   SearchPlaylistResult,
   SearchTrackResult,
 } from '@/features/Search/api/client'
+import type { SearchResult } from '@/features/Search/api/client/search.schemas'
 import {
   buildSearchRows,
   getAllTabRows,
 } from '@/features/Search/lib/buildSearchRows'
 import { matchBrowseCategory } from '@/features/Search/lib/getSearchCategoryMatch'
+import { toTopResultCard } from '@/features/Search/lib/topResultCard'
 import { searchFilterTabs } from '@/features/Search/model/search.constants'
 import type { MediaCardItem } from '@/features/Search/model/types'
 import { MediaRow } from '@/features/Search/ui/MediaRow'
@@ -24,6 +26,8 @@ import {
   SearchFilterTabs,
 } from '@/features/Search/ui/SearchFilterTabs'
 import { SearchResultList } from '@/features/Search/ui/SearchResultList'
+import { SearchSongs } from '@/features/Search/ui/SearchSongs'
+import { SearchTopResult } from '@/features/Search/ui/SearchTopResult'
 import { ROUTES } from '@/shared/routes'
 import { getPlaylistCoverUrl } from '@/shared/utils/mediaUrl'
 
@@ -33,6 +37,8 @@ type SearchResultsProps = {
   playlists: SearchPlaylistResult[]
   query: string
   onPlayItem?: (item: MediaCardItem) => void
+  /** The API's highest-ranked result across every type. */
+  topResult?: SearchResult | null
   tracks: SearchTrackResult[]
   users: SafeUser[]
 }
@@ -43,6 +49,7 @@ export const SearchResults = ({
   onPlayItem,
   playlists,
   query,
+  topResult = null,
   tracks,
   users,
 }: SearchResultsProps) => {
@@ -66,8 +73,18 @@ export const SearchResults = ({
     [groups],
   )
 
-  const rows =
-    activeTab === 'All' ? getAllTabRows(groups) : (groups[activeTab] ?? [])
+  const isAllTab = activeTab === 'All'
+  const topCard = topResult ? toTopResultCard(topResult) : null
+  /* the All tab shows songs beside the top result, so its list leaves them out */
+  const rows = isAllTab
+    ? getAllTabRows(groups).filter(
+        (row) =>
+          row.kind !== 'Song' &&
+          !(row.kind === 'Playlist' && playlists.length > 0),
+      )
+    : (groups[activeTab] ?? [])
+  const play = (item: Pick<MediaCardItem, 'id' | 'playKind' | 'title'>) =>
+    onPlayItem?.({ description: '', image: '', ...item })
 
   const playlistItems: MediaCardItem[] = playlists
     .slice(0, 12)
@@ -83,7 +100,7 @@ export const SearchResults = ({
   const showsPlaylistRow = activeTab === 'All' && playlistItems.length > 0
 
   return (
-    <div className="space-y-8">
+    <div className="flex flex-col gap-7">
       <SearchFilterTabs
         activeTab={activeTab}
         availableTabs={[...availableTabs]}
@@ -92,7 +109,7 @@ export const SearchResults = ({
 
       {categoryMatch && activeTab === 'All' ? (
         <Link
-          className="grid max-w-full grid-cols-[72px_minmax(0,1fr)] items-center gap-5 rounded-md bg-surface p-4 transition-colors hover:bg-surface-hover"
+          className="grid max-w-full grid-cols-[72px_minmax(0,1fr)] items-center gap-5 rounded-[14px] border border-border bg-card p-4 transition-colors hover:bg-secondary"
           href={ROUTES.searchCategory(categoryMatch.slug)}
         >
           <MediaImage
@@ -108,12 +125,42 @@ export const SearchResults = ({
             width={72}
           />
           <span className="min-w-0">
-            <span className="block truncate text-2xl font-bold text-text sm:text-3xl">
+            <span className="block truncate font-[family-name:var(--font-landing-display)] text-2xl font-semibold text-foreground">
               {categoryMatch.name}
             </span>
-            <span className="mt-1 block text-sm text-text-subdued">Genre</span>
+            <span className="mt-1 block text-[13px] text-muted-foreground">
+              Genre
+            </span>
           </span>
         </Link>
+      ) : null}
+
+      {isAllTab && (topCard || tracks.length > 0) ? (
+        <div className="grid gap-6 lg:grid-cols-[420px_minmax(0,1fr)]">
+          {topCard ? (
+            <SearchTopResult
+              card={topCard}
+              onPlay={
+                topCard.playKind && onPlayItem ? () => play(topCard) : undefined
+              }
+            />
+          ) : null}
+          {tracks.length > 0 ? (
+            <SearchSongs
+              onPlay={
+                onPlayItem
+                  ? (track) =>
+                      play({
+                        id: track.id,
+                        playKind: 'track',
+                        title: track.title,
+                      })
+                  : undefined
+              }
+              tracks={tracks}
+            />
+          ) : null}
+        </div>
       ) : null}
 
       {showsPlaylistRow ? (
@@ -125,9 +172,17 @@ export const SearchResults = ({
       ) : null}
 
       {rows.length > 0 ? (
-        <SearchResultList items={rows} />
-      ) : (
-        <p className="text-text-subdued">
+        <SearchResultList
+          items={rows}
+          onPlayRow={
+            onPlayItem
+              ? (row) =>
+                  play({ id: row.id, playKind: 'track', title: row.title })
+              : undefined
+          }
+        />
+      ) : isAllTab ? null : (
+        <p className="text-muted-foreground">
           No {activeTab.toLowerCase()} found for &quot;{query}&quot;.
         </p>
       )}

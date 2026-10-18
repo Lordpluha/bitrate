@@ -1,12 +1,11 @@
 'use client'
 
-import { MediaImage } from '@shared/ui/MediaImage'
+import { Skeleton } from '@shared/ui'
 import { useRouter } from 'next/navigation'
 import { useBrowseCategories } from '@/entities/Discovery'
 import { useI18n } from '@/shared/i18n'
 import { ROUTES } from '@/shared/routes'
 import { ErrorState } from '@/shared/ui/ErrorState'
-import { getPlaylistCoverUrl } from '@/shared/utils/mediaUrl'
 
 const BROWSE_CATEGORY_SKELETON_IDS = [
   'browse-category-skeleton-1',
@@ -28,16 +27,13 @@ export const BrowseCategoryGrid = () => {
     return (
       <div
         aria-label="Loading browse categories"
-        className="space-y-5"
+        className="flex flex-col gap-7"
         role="status"
       >
-        <div className="h-8 w-40 animate-pulse rounded bg-surface" />
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] sm:gap-5">
+        <Skeleton className="h-8 w-40 md:h-10" />
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5">
           {BROWSE_CATEGORY_SKELETON_IDS.map((skeletonId) => (
-            <div
-              className="h-36 animate-pulse rounded-lg bg-surface sm:h-40"
-              key={skeletonId}
-            />
+            <Skeleton className="h-24 rounded-xl sm:h-30" key={skeletonId} />
           ))}
         </div>
       </div>
@@ -58,14 +54,14 @@ export const BrowseCategoryGrid = () => {
 
   return (
     <>
-      <h1 className="mb-5 text-2xl font-bold text-text">
+      <h1 className="mb-7 text-2xl font-bold text-foreground md:text-[32px] md:leading-[1.1]">
         {t('search.browseAll')}
       </h1>
 
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,160px),1fr))] gap-4 sm:grid-cols-[repeat(auto-fill,minmax(min(100%,240px),1fr))] sm:gap-5">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5">
         {categories.map((category) => (
           <button
-            className="group relative h-36 overflow-hidden rounded-lg p-4 text-left text-xl font-bold text-white transition-transform hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-white sm:h-40 sm:text-2xl"
+            className="group relative flex h-24 items-start overflow-hidden rounded-xl p-4 text-left font-[family-name:var(--font-landing-display)] text-lg font-bold text-white transition-transform hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-30 sm:text-xl"
             key={category.id}
             onClick={() => router.push(ROUTES.searchCategory(category.slug))}
             style={{
@@ -73,18 +69,9 @@ export const BrowseCategoryGrid = () => {
             }}
             type="button"
           >
-            <span className="absolute left-4 top-4 z-10 block max-w-[72%] leading-tight">
+            <span className="relative z-10 block max-w-[72%] leading-tight">
               {category.name}
             </span>
-            <MediaImage
-              alt=""
-              className="absolute -right-4 bottom-0 size-28 rotate-[25deg] overflow-hidden rounded-lg object-cover shadow-xl transition-transform group-hover:scale-105 sm:-right-6 sm:size-30"
-              fallback="playlist"
-              height={96}
-              src={getPlaylistCoverUrl(category.cover)}
-              unoptimized
-              width={96}
-            />
           </button>
         ))}
       </div>

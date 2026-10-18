@@ -35,6 +35,7 @@ export const buildSearchRows = ({
 }: BuildSearchRowsInput): SearchRowGroups => ({
   Albums: albums.map((album) => ({
     href: ROUTES.album(album.id),
+    id: album.id,
     image: getAlbumCoverUrl(album.cover),
     kind: 'Album' as const,
     subtitle: 'Album',
@@ -43,6 +44,7 @@ export const buildSearchRows = ({
   Artists: artists.map((artist) => ({
     circularImage: true,
     href: ROUTES.artist(artist.id),
+    id: artist.id,
     image: getArtistAvatarUrl(artist.avatar),
     kind: 'Artist' as const,
     subtitle: 'Artist',
@@ -50,6 +52,7 @@ export const buildSearchRows = ({
   })),
   Playlists: playlists.map((playlist) => ({
     href: ROUTES.playlist(playlist.id),
+    id: playlist.id,
     image: getPlaylistCoverUrl(playlist.cover),
     kind: 'Playlist' as const,
     subtitle: 'Playlist',
@@ -57,6 +60,7 @@ export const buildSearchRows = ({
   })),
   Profiles: users.map((user) => ({
     href: ROUTES.user(user.id),
+    id: user.id,
     image: getUserAvatarUrl(user.avatar),
     kind: 'Profile' as const,
     subtitle: 'Profile',
@@ -64,9 +68,11 @@ export const buildSearchRows = ({
   })),
   Songs: tracks.map((track) => ({
     artistId: track.artistId,
+    id: track.id,
     image: getTrackCoverUrl(track.cover),
     kind: 'Song' as const,
-    subtitle: 'Song',
+    playKind: 'track' as const,
+    subtitle: track.artistName ?? 'Song',
     title: track.title,
   })),
 })
