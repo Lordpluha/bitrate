@@ -5,13 +5,13 @@ import { selectCurrentTrack, usePlayerStore } from '@entities/Player'
 import { LegalReacceptanceDialog } from '@features/Auth/ui/LegalReacceptanceDialog'
 import { BitrateConnectSync } from '@features/BitrateConnect'
 import { AccountSettingsSync } from '@features/SyncSettings'
-import { LeftSidebar } from '@widgets/LeftSidebar'
+import { LeftSidebar, MobileCreatePlaylistSheet } from '@widgets/LeftSidebar'
 import { MainHeader } from '@widgets/MainHeader'
+import { MobileIsland } from '@widgets/MobileIsland'
 import { Player } from '@widgets/Player'
 import { RightSidebar } from '@widgets/RightSidebar'
 import { ChevronLeft } from 'lucide-react'
 import { type PropsWithChildren, useState } from 'react'
-import { MobileBottomNavigation } from './MobileBottomNavigation'
 import { useMainShellResize } from './useMainShellResize'
 
 export default function MainLayout({ children }: PropsWithChildren) {
@@ -47,7 +47,8 @@ export default function MainLayout({ children }: PropsWithChildren) {
       <div
         className={cn(
           'h-[calc(100dvh-64px)] overflow-y-auto custom-scrollbar',
-          hasPlayer ? 'pb-40' : 'pb-20',
+          /* Room for the floating island: 66px + its 18px offset + a breath. */
+          'pb-28',
           /* The design's workspace: one rounded card holding the library, the page and Now
              Playing; the floating player bar (88px + the 12px gap) sits below it. */
           'xl:grid xl:h-auto xl:min-h-0 xl:w-full xl:flex-1 xl:overflow-hidden xl:rounded-2xl xl:border xl:border-border xl:bg-background-secondary xl:pb-0 xl:shadow-2xl',
@@ -119,13 +120,15 @@ export default function MainLayout({ children }: PropsWithChildren) {
         )}
       </div>
 
+      <MobileCreatePlaylistSheet
+        isOpen={isMobileCreateOpen}
+        onOpenChange={setIsMobileCreateOpen}
+      />
       {!isPlayerExpanded && (
-        <div className="xl:hidden">
-          <MobileBottomNavigation
-            isCreateOpen={isMobileCreateOpen}
-            onCreateOpenChange={setIsMobileCreateOpen}
-          />
-        </div>
+        <MobileIsland
+          className="xl:hidden"
+          onExpand={() => setIsPlayerExpanded(true)}
+        />
       )}
 
       <Player
