@@ -23,14 +23,6 @@ export const TrackRowActions = ({
         className="opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
         track={track}
       />
-      <LikeTrackButton
-        initialLiked={isLiked}
-        trackId={track.id}
-        trackTitle={track.title}
-      />
-      <span className="min-w-8 text-right">
-        {formatDuration(track.duration ?? 0)}
-      </span>
       {removable && (
         <button
           aria-label={`Remove ${track.title} from playlist`}
@@ -41,6 +33,14 @@ export const TrackRowActions = ({
           <X aria-hidden="true" size={16} />
         </button>
       )}
+      <LikeTrackButton
+        initialLiked={isLiked}
+        trackId={track.id}
+        trackTitle={track.title}
+      />
+      <span className="min-w-8 text-right">
+        {formatDuration(track.duration ?? 0)}
+      </span>
     </div>
 
     <div className="hidden shrink-0 grid-cols-[24px_auto] items-center justify-end gap-2 text-[13px] text-muted-foreground tabular-nums max-[1024px]:grid">

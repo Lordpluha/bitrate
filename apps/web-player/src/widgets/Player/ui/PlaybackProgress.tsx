@@ -163,7 +163,7 @@ export const PlaybackProgress = ({
               'absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2 rounded-full',
               isStacked
                 ? 'size-3 bg-foreground'
-                : 'size-1.75 border border-primary bg-background transition-transform group-hover:scale-150 group-focus-visible:scale-150',
+                : 'size-2.5 bg-foreground opacity-0 shadow transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100',
             )}
           />
         </div>

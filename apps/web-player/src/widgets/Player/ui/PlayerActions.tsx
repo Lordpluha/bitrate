@@ -88,7 +88,9 @@ export const PlayerActions = ({
           <div
             className="absolute inset-y-0 left-0 rounded-full bg-primary"
             style={{ width: `${volume * 100}%` }}
-          />
+          >
+            <span className="absolute top-1/2 right-0 size-2.5 translate-x-1/2 -translate-y-1/2 rounded-full bg-foreground opacity-0 shadow transition-opacity group-hover:opacity-100 group-has-focus-visible:opacity-100" />
+          </div>
         </div>
         <input
           aria-label="Volume"
