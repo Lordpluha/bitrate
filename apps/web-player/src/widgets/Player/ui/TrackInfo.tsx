@@ -1,6 +1,6 @@
 import { cn } from '@bitrate/ui-react'
 import { fallbackTrackCover } from '@shared/constants'
-import { Heart, PictureInPicture2 } from 'lucide-react'
+import { Heart } from 'lucide-react'
 import Image from 'next/image'
 
 interface TrackInfoProps {
@@ -9,62 +9,46 @@ interface TrackInfoProps {
   coverUrl?: string
   isLiked: boolean
   onLikeToggle?: () => void
-  onPictureInPicture?: () => void
 }
 
+/** The player bar's Player Track: a 60px cover, the title and artist, and the like heart. */
 export const TrackInfo = ({
   title,
   artist,
   coverUrl,
   isLiked,
   onLikeToggle,
-  onPictureInPicture,
-}: TrackInfoProps) => {
-  return (
-    <div className="flex items-center gap-3 min-w-45 w-[50%]">
-      <Image
-        alt={title}
-        className="w-14 h-14 rounded object-cover"
-        height={56}
-        src={coverUrl || fallbackTrackCover}
-        unoptimized
-        width={56}
-      />
-      <div className="min-w-8">
-        <div className="text-sm font-medium text-text truncate hover:underline cursor-pointer">
-          {title}
-        </div>
-        <div className="text-xs text-text-subdued truncate hover:underline hover:text-text cursor-pointer">
-          {artist}
-        </div>
+}: TrackInfoProps) => (
+  <div className="flex min-w-0 items-center gap-3.5">
+    <Image
+      alt={title}
+      className="size-15 shrink-0 rounded-md object-cover"
+      height={60}
+      src={coverUrl || fallbackTrackCover}
+      unoptimized
+      width={60}
+    />
+    <div className="flex min-w-0 flex-col gap-1">
+      <div className="truncate text-sm font-semibold text-foreground">
+        {title}
       </div>
-      <div className="flex items-center gap-2">
-        <button
-          className="p-2 hover:scale-110 transition-transform"
-          onClick={onLikeToggle}
-          type="button"
-        >
-          <Heart
-            className={cn(
-              isLiked
-                ? 'fill-green-500 text-green-500'
-                : 'text-text-subdued hover:text-text',
-            )}
-            size={16}
-          />
-        </button>
-        <button
-          aria-label="Open floating player"
-          className="p-2 hover:scale-110 transition-transform"
-          onClick={onPictureInPicture}
-          type="button"
-        >
-          <PictureInPicture2
-            className="text-text-subdued hover:text-text"
-            size={16}
-          />
-        </button>
-      </div>
+      <div className="truncate text-xs text-muted-foreground">{artist}</div>
     </div>
-  )
-}
+    <button
+      aria-label={isLiked ? `Unlike ${title}` : `Like ${title}`}
+      aria-pressed={isLiked}
+      className="shrink-0 p-1 transition-transform hover:scale-110"
+      onClick={onLikeToggle}
+      type="button"
+    >
+      <Heart
+        className={cn(
+          isLiked
+            ? 'fill-accent text-accent'
+            : 'text-muted-foreground hover:text-foreground',
+        )}
+        size={18}
+      />
+    </button>
+  </div>
+)

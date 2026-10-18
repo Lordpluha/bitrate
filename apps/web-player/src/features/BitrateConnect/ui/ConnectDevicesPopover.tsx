@@ -18,6 +18,8 @@ const DEVICE_ICONS = {
 } as const satisfies Record<PlayerDevice['type'], typeof MonitorSpeaker>
 
 type ConnectDevicesPopoverProps = {
+  /** The trigger icon's size; the desktop player bar uses its 17px icon set. */
+  iconSize?: number
   triggerClassName?: string
 }
 
@@ -26,6 +28,7 @@ type ConnectDevicesPopoverProps = {
  * left; playback itself stays on the device that plays it.
  */
 export const ConnectDevicesPopover = ({
+  iconSize = 22,
   triggerClassName,
 }: ConnectDevicesPopoverProps) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -38,7 +41,7 @@ export const ConnectDevicesPopover = ({
         aria-label="Open Bitrate Connect"
         className={triggerClassName}
       >
-        <MonitorSpeaker aria-hidden="true" size={22} />
+        <MonitorSpeaker aria-hidden="true" size={iconSize} />
       </PopoverTrigger>
       <PopoverContent
         align="end"

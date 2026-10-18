@@ -7,7 +7,6 @@ import { Logo } from '@shared/ui'
 import { AuthButtons } from './AuthButtons'
 import { FriendActivityPopover } from './FriendActivityPopover'
 import { HeaderSearch } from './HeaderSearch'
-import { HomeBtn } from './HomeBtn'
 import { InstallBtn } from './InstallBtn'
 import { MobileMainHeader } from './MobileMainHeader'
 import { NavLinks } from './NavLinks'
@@ -22,17 +21,14 @@ export const MainHeader = ({ onCreate }: MainHeaderProps) => {
   const { user, isAuthenticated, isLoading } = useAuth()
 
   return (
-    <header className="sticky left-0 right-0 top-0 z-50 h-16 bg-background transition-colors duration-300">
-      <div className="relative flex h-full w-full items-center justify-between px-4 sm:px-5">
-        <div className="hidden w-full items-center justify-between xl:flex">
-          <Logo href={ROUTES.main} />
+    <header className="sticky left-0 right-0 top-0 z-50 h-16 shrink-0 bg-background transition-colors duration-300 xl:static xl:h-10 xl:bg-transparent">
+      <div className="relative flex h-full w-full items-center justify-between px-4 sm:px-5 xl:px-1.5">
+        <div className="hidden w-full items-center justify-between gap-6 xl:grid xl:grid-cols-[1fr_auto_1fr]">
+          <Logo href={ROUTES.main} wordmark />
 
-          <div className="flex items-center space-x-4">
-            <HomeBtn />
-            <HeaderSearch />
-          </div>
+          <HeaderSearch />
 
-          <div className="flex items-center gap-8">
+          <div className="flex items-center justify-end gap-4">
             <InstallBtn />
 
             {isLoading ? (

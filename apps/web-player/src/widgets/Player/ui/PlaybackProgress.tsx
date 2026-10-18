@@ -127,8 +127,8 @@ export const PlaybackProgress = ({
       : 0
 
   return (
-    <div className="flex w-full items-center gap-2">
-      <span className="min-w-10 text-right text-xs tabular-nums text-text-subdued">
+    <div className="flex w-full items-center gap-2.5">
+      <span className="min-w-7 text-right text-[11px] tabular-nums text-muted-foreground">
         {formatTime(displayedTime)}
       </span>
       <div
@@ -137,21 +137,23 @@ export const PlaybackProgress = ({
         aria-valuemin={0}
         aria-valuenow={displayedTime}
         aria-valuetext={`${formatTime(displayedTime)} of ${formatTime(safeDuration)}`}
-        className="group relative h-1 flex-1 cursor-pointer touch-none rounded-full bg-border"
+        className="group relative flex h-3.5 flex-1 cursor-pointer touch-none items-center"
         onKeyDown={handleKeyDown}
         onPointerDown={handlePointerDown}
         ref={progressBarRef}
         role="slider"
         tabIndex={0}
       >
-        <div
-          className="pointer-events-none absolute inset-y-0 left-0 rounded-full bg-text transition-colors group-hover:bg-primary"
-          style={{ width: `${progress}%` }}
-        >
-          <span className="absolute right-0 top-1/2 size-3 -translate-y-1/2 rounded-full bg-text opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100" />
+        <div className="relative h-0.75 w-full rounded-full bg-foreground/10">
+          <div
+            className="pointer-events-none absolute inset-y-0 left-0 rounded-full bg-primary"
+            style={{ width: `${progress}%` }}
+          >
+            <span className="absolute top-1/2 right-0 size-1.75 translate-x-1/2 -translate-y-1/2 rounded-full border border-primary bg-background transition-transform group-hover:scale-150 group-focus-visible:scale-150" />
+          </div>
         </div>
       </div>
-      <span className="min-w-10 text-xs tabular-nums text-text-subdued">
+      <span className="min-w-7 text-[11px] tabular-nums text-muted-foreground">
         {formatTime(safeDuration)}
       </span>
     </div>

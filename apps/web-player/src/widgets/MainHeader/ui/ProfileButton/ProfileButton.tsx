@@ -43,7 +43,7 @@ export const ProfileButton = ({
             <TooltipTrigger asChild>
               <PopoverTrigger
                 aria-label={`Open profile menu for ${username}`}
-                className="h-12 w-12 rounded-full bg-background-highlight p-2 transition-transform duration-200 hover:scale-105"
+                className="size-12 rounded-full bg-background-highlight p-2 transition-transform duration-200 hover:scale-105 xl:size-7.5 xl:bg-transparent xl:p-0"
               >
                 {avatarUrl ? (
                   <Image
@@ -56,7 +56,7 @@ export const ProfileButton = ({
                   />
                 ) : (
                   <div
-                    className="flex h-full w-full items-center justify-center rounded-full text-xl font-semibold text-black"
+                    className="flex h-full w-full items-center justify-center rounded-full text-xl font-semibold text-black xl:text-sm"
                     style={{ backgroundColor }}
                   >
                     {firstLetter}

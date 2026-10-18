@@ -9,11 +9,11 @@ interface RightSidebarProps {
 
 export const RightSidebar = ({ onCollapse }: RightSidebarProps) => {
   return (
-    <div className="group/sidebar relative h-full min-w-65 overflow-x-hidden overflow-y-auto px-4 py-4 custom-scrollbar">
+    <div className="group/sidebar relative flex h-full min-w-65 flex-col gap-3.5 overflow-x-hidden overflow-y-auto p-5 custom-scrollbar">
       <CurrentPlaylist onCollapse={onCollapse} />
+      <NextInQueue />
       <AboutArtist />
       <Credits />
-      <NextInQueue />
     </div>
   )
 }

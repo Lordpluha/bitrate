@@ -32,7 +32,7 @@ export const AboutArtist = () => {
   const ncsBioPrefix = getNcsArtistBioPrefix()
 
   return (
-    <div className="mt-4 overflow-hidden rounded-lg bg-surface">
+    <div className="overflow-hidden rounded-lg bg-surface">
       <Link
         aria-label={`Open ${artist.username} artist page`}
         className="group block rounded-t-lg outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-text"
