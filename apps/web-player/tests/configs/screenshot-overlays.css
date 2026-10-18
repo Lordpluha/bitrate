@@ -1,0 +1,11 @@
+/*
+ * Applied only while Playwright takes a screenshot. CI runs the specs against `next dev`, which
+ * draws two development overlays a production build never has: the Next.js dev indicator
+ * (bottom left) and the TanStack Query devtools button (bottom right). Hiding them keeps one
+ * baseline valid for `next dev` and `next start` alike.
+ */
+nextjs-portal,
+.tsqd-open-btn-container,
+.tsqd-parent-container {
+  display: none !important;
+}
