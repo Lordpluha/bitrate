@@ -15,7 +15,7 @@ export const ArtistHero = ({ artist, statsLabel }: ArtistHeroProps) => {
   return (
     <section
       aria-labelledby="artist-page-title"
-      className="relative isolate flex h-[clamp(19rem,46vh,25rem)] min-h-76 flex-col justify-end overflow-hidden"
+      className="relative isolate flex h-65 flex-col justify-end gap-1 overflow-hidden rounded-[14px] p-4 md:h-80 md:gap-2 md:rounded-2xl md:p-8"
     >
       <MediaImage
         alt=""
@@ -27,28 +27,24 @@ export const ArtistHero = ({ artist, statsLabel }: ArtistHeroProps) => {
         src={backgroundUrl}
         unoptimized
       />
-      <div className="absolute inset-0 -z-10 bg-linear-to-b from-black/5 via-black/10 to-black/80" />
-      <div className="absolute inset-0 -z-10 bg-linear-to-r from-black/30 via-transparent to-transparent" />
+      <div className="absolute inset-0 -z-10 bg-linear-to-b from-black/0 via-black/15 to-black/75" />
 
-      <div className="flex flex-col px-5 pb-7 sm:px-6">
-        <h1
-          className="max-w-full break-words text-[clamp(3.25rem,6vw,6rem)] font-black leading-[0.95] tracking-[-0.045em] text-white drop-shadow-sm"
-          id="artist-page-title"
-        >
-          {artist.username}
-        </h1>
-        {artist.verified ? (
-          <div className="mt-5 flex items-center gap-2 text-sm font-semibold text-white">
-            <BadgeCheck
-              aria-hidden="true"
-              className="fill-green-100 text-green-900"
-              size={22}
-            />
-            <span>Verified artist</span>
-          </div>
-        ) : null}
-        <p className="mt-2 text-sm text-white/90">{statsLabel}</p>
-      </div>
+      {artist.verified ? (
+        <div className="flex items-center gap-1.5 text-xs font-semibold text-white md:text-[13px]">
+          <BadgeCheck
+            aria-hidden="true"
+            className="size-4 text-info md:size-5"
+          />
+          <span>Verified artist</span>
+        </div>
+      ) : null}
+      <h1
+        className="max-w-full break-words text-[40px] leading-[1.05] font-bold text-white drop-shadow-sm md:text-[80px] md:leading-none"
+        id="artist-page-title"
+      >
+        {artist.username}
+      </h1>
+      <p className="text-[13px] text-white md:text-sm">{statsLabel}</p>
     </section>
   )
 }

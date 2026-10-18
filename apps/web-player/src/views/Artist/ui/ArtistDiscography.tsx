@@ -38,12 +38,14 @@ export const ArtistDiscography = ({
   }
 
   return (
-    <section className="px-4 py-8 sm:px-6">
-      <div className="mb-4 flex items-center justify-between gap-4">
-        <h2 className="text-2xl font-bold text-text">Discography</h2>
+    <section className="flex min-w-0 flex-col gap-3">
+      <div className="flex items-center justify-between gap-4">
+        <h2 className="text-[19px] leading-[1.25] font-semibold">
+          Discography
+        </h2>
         {hasOverflow && (
           <button
-            className="shrink-0 rounded-sm text-sm font-bold text-text-subdued transition-colors hover:text-text"
+            className="shrink-0 text-[13px] font-semibold text-muted-foreground transition-colors hover:text-foreground"
             onClick={() => setIsExpanded((value) => !value)}
             type="button"
           >
@@ -51,16 +53,16 @@ export const ArtistDiscography = ({
           </button>
         )}
       </div>
-      <fieldset className="mb-6 flex min-w-0 flex-wrap gap-2 border-0 p-0">
+      <fieldset className="m-0 flex min-w-0 flex-wrap gap-2 border-0 p-0">
         <legend className="sr-only">Discography filters</legend>
         {DISCOGRAPHY_FILTERS.map((filter) => (
           <button
             aria-pressed={activeFilter === filter.id}
             className={cn(
-              'rounded-full px-4 py-2 text-sm font-medium transition-colors',
+              'flex h-8 items-center rounded-full border px-3.5 text-[13px] text-foreground transition-colors',
               activeFilter === filter.id
-                ? 'bg-text text-background'
-                : 'bg-surface text-text hover:bg-surface-hover',
+                ? 'border-primary bg-primary font-semibold text-primary-foreground'
+                : 'border-border hover:bg-surface',
             )}
             key={filter.id}
             onClick={() => changeFilter(filter.id)}
@@ -71,11 +73,11 @@ export const ArtistDiscography = ({
         ))}
       </fieldset>
       {visibleReleases.length === 0 ? (
-        <p className="py-10 text-sm text-text-subdued">
+        <p className="py-10 text-sm text-muted-foreground">
           {EMPTY_FILTER_LABELS[activeFilter]}
         </p>
       ) : (
-        <ul className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-3">
           {visibleReleases.map((release) => (
             <li className="min-w-0" key={release.id}>
               {release.kind === 'album' ? (

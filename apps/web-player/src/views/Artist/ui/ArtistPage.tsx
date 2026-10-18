@@ -20,7 +20,13 @@ const pluralize = (count: number, noun: string) =>
   `${count} ${noun}${count === 1 ? '' : 's'}`
 
 export const ArtistPage = ({ artistId }: ArtistPageProps) => {
-  const { data: artist, isError, isPending } = useArtist(artistId)
+  const {
+    data: artist,
+    error,
+    isError,
+    isPending,
+    refetch,
+  } = useArtist(artistId)
   const content = useArtistContent({ artistId })
   const heroRef = useRef<HTMLDivElement>(null)
   const [isCompactHeaderVisible, setIsCompactHeaderVisible] = useState(false)
@@ -46,7 +52,15 @@ export const ArtistPage = ({ artistId }: ArtistPageProps) => {
   })
 
   if (isPending) return <ArtistPageState variant="loading" />
-  if (isError || !artist) return <ArtistPageState variant="error" />
+  if (isError || !artist) {
+    return (
+      <ArtistPageState
+        error={error}
+        onRetry={() => void refetch()}
+        variant="error"
+      />
+    )
+  }
 
   /**
    * Bitrate leads with monthly listeners; the catalogue counts are the
@@ -72,7 +86,7 @@ export const ArtistPage = ({ artistId }: ArtistPageProps) => {
 
   return (
     <div
-      className="h-full overflow-y-auto rounded-lg bg-background-secondary custom-scrollbar"
+      className="h-full overflow-y-auto custom-scrollbar"
       onScroll={handleScroll}
     >
       <ArtistCompactHeader
@@ -84,16 +98,11 @@ export const ArtistPage = ({ artistId }: ArtistPageProps) => {
         onTogglePlay={playback.handleTogglePlay}
       />
 
-      <div ref={heroRef}>
-        <ArtistHero artist={artist} statsLabel={statsLabel} />
-      </div>
+      <div className="flex flex-col gap-5 px-4 pt-2 pb-3 md:gap-7 md:px-8 md:py-6">
+        <div ref={heroRef}>
+          <ArtistHero artist={artist} statsLabel={statsLabel} />
+        </div>
 
-      <div
-        className="relative min-h-[calc(100%-25rem)] bg-background-secondary pb-6"
-        style={{
-          backgroundImage: `linear-gradient(180deg, rgb(${artistRed} ${artistGreen} ${artistBlue} / 0.78) 0, rgb(18 18 18 / 0.96) 16rem, rgb(18 18 18) 22rem)`,
-        }}
-      >
         <ArtistCatalogue
           artist={artist}
           content={content}

@@ -1,49 +1,70 @@
 'use client'
 
 import { ROUTES } from '@shared/routes'
-import Link from 'next/link'
+import { Skeleton, StateMessage, TrackRowSkeleton } from '@shared/ui'
+import { MicVocal, TriangleAlert } from 'lucide-react'
+import { ApiRequestError } from '@/shared/api/errors'
 
-export type ArtistPageStateProps = {
-  variant: 'error' | 'loading'
-}
+export type ArtistPageStateProps =
+  | { variant: 'loading' }
+  | { variant: 'not-found' }
+  | { error: unknown; onRetry: () => void; variant: 'error' }
 
-/** Skeleton and not-found states for the artist screen. */
-export const ArtistPageState = ({ variant }: ArtistPageStateProps) => {
-  if (variant === 'loading') {
+const ROW_KEYS = Array.from({ length: 5 }, (_, row) => `artist-row-${row}`)
+
+/** The design's artist loading, error and not-found frames. */
+export const ArtistPageState = (props: ArtistPageStateProps) => {
+  if (props.variant === 'loading') {
     return (
-      <div className="h-full overflow-hidden rounded-lg bg-background-secondary">
-        <div className="h-70 w-full animate-pulse bg-surface sm:h-90" />
-        <div className="flex items-center gap-4 px-4 py-6 sm:px-6 lg:px-8">
-          <div className="size-14 animate-pulse rounded-full bg-surface" />
-          <div className="h-8 w-28 animate-pulse rounded-full bg-surface" />
+      <div
+        aria-label="Loading artist"
+        className="flex h-full flex-col gap-7 overflow-hidden px-4 pt-2 md:px-8 md:py-6"
+        role="status"
+      >
+        <span className="sr-only">Loading artist...</span>
+        <Skeleton className="h-65 rounded-[14px] md:h-80 md:rounded-2xl" />
+        <div className="flex items-center gap-4.5">
+          <Skeleton className="size-14 rounded-full" />
+          <Skeleton className="h-8 w-24 rounded-md" />
         </div>
-        <div className="flex flex-col gap-3 px-4 sm:px-6 lg:px-8">
-          {[0, 1, 2, 3, 4].map((row) => (
-            <div
-              className="h-12 animate-pulse rounded-md bg-surface"
-              key={row}
-            />
+        <div className="flex flex-col gap-1">
+          {ROW_KEYS.map((key) => (
+            <TrackRowSkeleton key={key} />
           ))}
         </div>
       </div>
     )
   }
 
+  const isNotFound =
+    props.variant === 'not-found' ||
+    (props.variant === 'error' &&
+      props.error instanceof ApiRequestError &&
+      props.error.status === 404)
+
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-4 rounded-lg bg-background-secondary px-6 text-center">
-      <h1 className="text-3xl font-bold text-text sm:text-4xl">
-        Artist not found
-      </h1>
-      <p className="max-w-100 text-text-subdued">
-        We couldn&apos;t find this artist. They may have been removed, or the
-        link is incorrect.
-      </p>
-      <Link
-        className="rounded-full bg-text px-6 py-3 text-sm font-bold text-background transition-transform hover:scale-105"
-        href={ROUTES.main}
-      >
-        Back to home
-      </Link>
+    <div className="flex h-full flex-col px-4 md:px-8">
+      {isNotFound ? (
+        <StateMessage
+          description="We couldn't find this artist. They may have been removed, or the link is incorrect."
+          icon={MicVocal}
+          primary={{ href: ROUTES.main, label: 'Back to home' }}
+          title="Artist not found"
+        />
+      ) : (
+        <StateMessage
+          description="Something went wrong on our side. Try again."
+          icon={TriangleAlert}
+          primary={
+            props.variant === 'error'
+              ? { label: 'Try again', onClick: props.onRetry }
+              : undefined
+          }
+          secondary={{ href: ROUTES.main, label: 'Back to home' }}
+          title="Unable to load artist"
+          tone="error"
+        />
+      )}
     </div>
   )
 }

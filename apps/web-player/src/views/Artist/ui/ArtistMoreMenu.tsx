@@ -63,11 +63,11 @@ export const ArtistMoreMenu = ({
         aria-expanded={isOpen}
         aria-haspopup="menu"
         aria-label={`More options for ${artistName}`}
-        className="rounded-full p-2 text-text-subdued transition hover:scale-105 hover:text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        className="flex text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
         onClick={() => setIsOpen((open) => !open)}
         type="button"
       >
-        <MoreHorizontal aria-hidden="true" size={25} />
+        <MoreHorizontal aria-hidden="true" className="size-5 md:size-6.5" />
       </button>
       {isOpen ? (
         <div
