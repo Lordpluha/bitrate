@@ -1,5 +1,25 @@
 # @bitrate/admin
 
+## 0.3.0
+
+### Minor Changes
+
+- ad7fb4c: Bitrate operators can now review artist release submissions. A new release review queue in the
+  operator panel lists submissions oldest first. Each submission opens on its recordings with
+  playable masters, its rights, credits and shares, its delivery plan and its earlier decisions.
+  Operators holding `releases:review` approve a release or request changes, giving required changes
+  and optional recommendations; a decision only applies to the version the operator read and is
+  written to the audit log. Artists see the latest decision in their release workspace and can
+  reopen a release sent back for changes, then submit it again.
+
+### Patch Changes
+
+- 45b94a0: Recordings on a release now have a running order. Existing recordings keep their upload order,
+  new uploads go last, and artists move recordings up or down in the release workspace. The new
+  order must name every recording on the draft once, so a recording added or removed meanwhile
+  fails the write instead of being placed silently. The operator review page lists recordings in
+  the same order.
+
 ## 0.2.0
 
 ### Minor Changes
