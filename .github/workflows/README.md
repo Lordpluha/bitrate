@@ -17,7 +17,7 @@ Current workflow map for .github/workflows.
   it needs. No job in this repository holds `actions: write`.
 - **No `${{ }}` inside a `run:` block** in the release or deploy chain. Values arrive through
   `env:` and are read as `"$VAR"`, so nothing can be spliced into a shell word. (Some older
-  monitoring, mobile and desktop reusables still interpolate workflow-authored inputs directly;
+  mobile and desktop reusables still interpolate workflow-authored inputs directly;
   none of them read attacker-controlled context, but new code should not copy the pattern.)
 - **Third-party actions in the release and deploy chain are pinned by full commit SHA** with a
   `# vX.Y.Z` comment. Elsewhere in the repository a major tag is still used.
@@ -349,7 +349,7 @@ SmartScreen warn on first launch.
   image at most once.
 
 ### Monitoring
-- monitoring.yml — release monitoring for develop/master (schedule, push, workflow_dispatch).
+- monitoring.yml — production health, TLS and dependency checks every six hours (also on push and workflow_dispatch); a failed scheduled run opens or updates an `infra` issue.
 - monitoring_reusable.yml — monitoring orchestration reusable workflow.
 - monitoring_health_reusable.yml / monitoring_dependency_reusable.yml / monitoring_ssl_reusable.yml — smaller reusable monitoring blocks.
 

@@ -2,15 +2,6 @@ name: "[monitoring] Reusable"
 
 on:
   workflow_call:
-    inputs:
-      branch-name:
-        description: Branch label for reports/artifacts
-        required: true
-        type: string
-    secrets:
-      monitor-host:
-        description: Host for health and SSL checks
-        required: true
 
 permissions:
   contents: read
@@ -19,15 +10,40 @@ permissions:
 jobs:
   health:
     uses: ./.github/workflows/monitoring_health_reusable.yml
-    secrets:
-      monitor-host: ${{ secrets.monitor-host }}
+
+  ssl:
+    uses: ./.github/workflows/monitoring_ssl_reusable.yml
 
   dependencies:
     uses: ./.github/workflows/monitoring_dependency_reusable.yml
     with:
-      branch-name: ${{ inputs.branch-name }}
+      branch-name: develop
 
-  ssl:
-    uses: ./.github/workflows/monitoring_ssl_reusable.yml
-    secrets:
-      monitor-host: ${{ secrets.monitor-host }}
+  # A red scheduled run nobody looks at is not monitoring. Open one issue per outage and comment
+  # on it while it lasts; it is closed by hand once the cause is fixed.
+  alert:
+    name: Open or update the outage issue
+    needs: [health, ssl]
+    if: ${{ failure() && github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/github-script@v9
+        with:
+          script: |
+            const title = '🚨 Production monitoring is failing'
+            const run = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
+            const body = `The scheduled health/SSL check failed: ${run}`
+            const open = await github.paginate(github.rest.issues.listForRepo, {
+              ...context.repo,
+              state: 'open',
+              labels: 'infra',
+            })
+            const existing = open.find((issue) => issue.title === title)
+            if (existing) {
+              await github.rest.issues.createComment({ ...context.repo, issue_number: existing.number, body })
+            } else {
+              await github.rest.issues.create({ ...context.repo, title, body, labels: ['infra'] })
+            }
