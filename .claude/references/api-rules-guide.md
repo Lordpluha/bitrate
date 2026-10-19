@@ -173,7 +173,7 @@ async findAll({ page, limit }: PaginationInput) {
 
 ## Prisma migrations — check every generated one for stray DROPs
 
-`prisma migrate dev` compares the database to `schema.prisma` and writes SQL to close the gap.
+`prisma migrate dev` compares the database to the Prisma schema (`apps/api/prisma/schema/*.prisma`) and writes SQL to close the gap.
 Anything in the database that the schema **cannot express** therefore reads as drift, and Prisma
 drops it.
 

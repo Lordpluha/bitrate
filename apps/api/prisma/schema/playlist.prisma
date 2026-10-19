@@ -1,0 +1,55 @@
+model Playlist {
+  id             String    @id @default(uuid(7)) @db.Uuid
+  title          String
+  cover          String?
+  description    String?   @db.Text
+  isPublic       Boolean   @default(false)
+  collaborative  Boolean   @default(false)
+  followersCount Int       @default(0)
+  deletedAt      DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  userId    String   @db.Uuid
+
+  tracks PlaylistTrack[]
+
+  likedBy UserLikedPlaylist[]
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isPublic])
+  @@index([deletedAt])
+}
+
+model PlaylistTrack {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  playlistId String   @db.Uuid
+  trackId    String   @db.Uuid
+  position   Int
+  addedAt    DateTime @default(now())
+  addedById  String?  @db.Uuid
+
+  playlist Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  track    Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  addedBy  User?    @relation(fields: [addedById], references: [id], onDelete: SetNull)
+
+  @@unique([playlistId, position])
+  @@index([playlistId, addedAt(sort: Desc)])
+  @@index([trackId])
+  @@index([addedById])
+}
+
+model UserLikedPlaylist {
+  userId     String   @db.Uuid
+  playlistId String   @db.Uuid
+  createdAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  playlist Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+
+  @@id([userId, playlistId])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([playlistId])
+}
