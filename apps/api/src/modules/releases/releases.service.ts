@@ -32,7 +32,7 @@ import {
   releaseReadinessSelect,
 } from './releases.select'
 
-interface ReleaseTrackIdentifier {
+export interface ReleaseTrackIdentifier {
   id: string
   title: string
   isrc: string | null
