@@ -78,8 +78,8 @@ FRONTEND_BACKLOG.md
 # cannot see sandbox /tmp, but it can see the repo.
 .br-scratch/
 
-# Database dumps written by `task db:backup`. Never commit a dump — it can
-# contain real user data.
+# Database dumps. Nothing in the repo writes one any more, but a hand-made dump left in
+# backups/ can contain real user data, so it stays out of git.
 /backups/
 
 
@@ -91,7 +91,7 @@ FRONTEND_BACKLOG.md
 # consumers' tsconfig.check-types.json via `paths` so check-types never needs a full build.
 .types-refs/
 
-# Database dumps from `task db:backup`
+# Database dumps anywhere in the tree
 backups/
 
 # ACME challenge webroot for certbot
