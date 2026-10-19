@@ -1,5 +1,6 @@
 'use client'
 
+import { Button } from '@bitrate/ui-react'
 import { useRouter } from 'next/navigation'
 import { type FormEvent, useState } from 'react'
 import { useCreatePlaylist } from '@/entities/Playlist'
@@ -44,11 +45,14 @@ export const CreatePlaylistForm = ({
 
   return (
     <form
-      className="grid gap-3 rounded-lg bg-surface p-4"
+      aria-label="New playlist"
+      className="flex w-full max-w-140 flex-col gap-4 rounded-[14px] border border-border bg-card p-6"
       onSubmit={handleSubmit}
     >
+      <h2 className="text-base font-semibold">New playlist</h2>
       <input
-        className="h-10 rounded-md bg-background px-3 text-sm text-text outline-none focus:ring-2 focus:ring-white/30"
+        aria-label="Playlist title"
+        className="h-10 rounded-md border border-border bg-background px-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
         maxLength={80}
         onChange={(event) => setTitle(event.target.value)}
         placeholder="Playlist title"
@@ -56,35 +60,39 @@ export const CreatePlaylistForm = ({
         value={title}
       />
       <textarea
-        className="min-h-20 rounded-md bg-background px-3 py-2 text-sm text-text outline-none focus:ring-2 focus:ring-white/30"
+        aria-label="Description"
+        className="min-h-20 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
         maxLength={240}
         onChange={(event) => setDescription(event.target.value)}
-        placeholder="Description"
+        placeholder="Add an optional description"
         value={description}
       />
-      <label className="flex items-center gap-2 text-sm text-text">
+      <label className="flex items-center gap-2 text-sm text-foreground">
         <input
           checked={isPublic}
+          className="size-4 accent-primary"
           onChange={(event) => setIsPublic(event.target.checked)}
           type="checkbox"
         />
         Public playlist
       </label>
-      <div className="flex gap-2">
-        <button
-          className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-black hover:bg-primary-hover disabled:opacity-60"
+      <div className="flex gap-2.5">
+        <Button
+          className="h-9 px-6 text-sm font-medium"
           disabled={createPlaylist.isPending}
           type="submit"
+          variant="primary"
         >
           Create
-        </button>
-        <button
-          className="rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-text hover:bg-white/15"
+        </Button>
+        <Button
+          className="h-9 px-6 text-sm font-medium"
           onClick={onClose}
           type="button"
+          variant="ghost"
         >
           Cancel
-        </button>
+        </Button>
       </div>
     </form>
   )

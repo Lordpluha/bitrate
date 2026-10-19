@@ -15,15 +15,15 @@ export const SettingsSwitch = ({
     aria-label={ariaLabel}
     aria-pressed={checked}
     className={cn(
-      'relative inline-flex h-6 w-11 shrink-0 items-center rounded-full p-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-white/25',
-      checked ? 'bg-primary' : 'bg-surface-hover',
+      'relative inline-flex h-6 w-11 shrink-0 items-center rounded-full p-0.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+      checked ? 'bg-primary' : 'bg-border',
     )}
     onClick={onChange}
     type="button"
   >
     <span
       className={cn(
-        'h-5 w-5 rounded-full bg-text shadow transition-transform',
+        'size-5 rounded-full bg-white shadow transition-transform',
         checked ? 'translate-x-5' : 'translate-x-0',
       )}
     />

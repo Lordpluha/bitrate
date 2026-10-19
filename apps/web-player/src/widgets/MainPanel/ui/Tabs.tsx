@@ -20,11 +20,12 @@ export const Tabs = ({ tabs, onTabChange }: TabsProps) => {
     <div className="flex items-center justify-start gap-2">
       {tabs.map((tab) => (
         <button
+          aria-pressed={activeTab === tab.id}
           className={cn(
-            'px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap',
+            'flex h-8 items-center whitespace-nowrap rounded-full border px-3.5 text-[13px] text-foreground transition-colors duration-200',
             activeTab === tab.id
-              ? 'bg-text text-background'
-              : 'bg-surface text-text hover:bg-surface-hover',
+              ? 'border-primary bg-primary font-semibold text-primary-foreground'
+              : 'border-border hover:bg-surface',
           )}
           key={tab.id}
           onClick={() => {

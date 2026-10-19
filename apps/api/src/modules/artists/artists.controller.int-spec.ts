@@ -12,6 +12,8 @@ const makeServiceMock = () =>
   ({
     findAll: jest.fn(),
     findById: jest.fn(),
+    findTopTracks: jest.fn(),
+    findPlaylists: jest.fn(),
     findByUsername: jest.fn(),
     update: jest.fn(),
     requestDelete: jest.fn(),
@@ -58,6 +60,8 @@ describe('ArtistsController (int)', () => {
   beforeEach(() => {
     service.findAll.mockReset()
     service.findById.mockReset()
+    service.findTopTracks.mockReset()
+    service.findPlaylists.mockReset()
     service.findByUsername.mockReset()
     service.update.mockReset()
     service.requestDelete.mockReset()
@@ -125,5 +129,35 @@ describe('ArtistsController (int)', () => {
       'f47ac10b-58cc-4372-a567-0e02b2c3d479',
       artist.id,
     )
+  })
+
+  it('GET /artists/:id/top-tracks should pass the limit', async () => {
+    service.findTopTracks.mockResolvedValue([] as never)
+    const id = '0199d0c1-6c2a-7b3e-9a4f-1c2d3e4f5a6b'
+
+    const res = await request(app.getHttpServer())
+      .get(`/artists/${id}/top-tracks`)
+      .query({ limit: 5 })
+
+    expect(res.status).toBe(200)
+    expect(service.findTopTracks).toHaveBeenCalledWith(id, 5)
+  })
+
+  it('GET /artists/:id/top-tracks should reject an id that is not a UUID', async () => {
+    const res = await request(app.getHttpServer()).get('/artists/nope/top-tracks')
+
+    expect(res.status).toBe(400)
+  })
+
+  it('GET /artists/:id/playlists should paginate', async () => {
+    service.findPlaylists.mockResolvedValue({ data: [], total: 0, page: 1, limit: 20 } as never)
+    const id = '0199d0c1-6c2a-7b3e-9a4f-1c2d3e4f5a6b'
+
+    const res = await request(app.getHttpServer())
+      .get(`/artists/${id}/playlists`)
+      .query({ page: 1, limit: 20 })
+
+    expect(res.status).toBe(200)
+    expect(service.findPlaylists).toHaveBeenCalledWith(id, 1, 20)
   })
 })

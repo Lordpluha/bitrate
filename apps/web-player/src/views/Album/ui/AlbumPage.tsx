@@ -2,8 +2,14 @@
 
 import { useAlbum } from '@entities/Album'
 import { type TrackEntity, useLikedTracks } from '@entities/Track'
-import { useImageColor } from '@shared/hooks/useImageColor'
+import { ROUTES } from '@shared/routes'
+import { StateMessage } from '@shared/ui'
+import {
+  CollectionPanel,
+  CollectionSkeleton,
+} from '@shared/ui/CollectionHeader'
 import { getAlbumCoverUrl } from '@shared/utils/mediaUrl'
+import { Disc3 } from 'lucide-react'
 import { useMemo } from 'react'
 import { AlbumHero } from './AlbumHero'
 import { AlbumTrackSection } from './AlbumTrackSection'
@@ -23,39 +29,32 @@ export const AlbumPage = ({ albumId }: { albumId: string }) => {
     [likedTracks],
   )
   const coverUrl = getAlbumCoverUrl(album?.cover)
-  const [r, g, b] = useImageColor(coverUrl)
-
-  const brighten = (value: number, amount: number, cap = 255) =>
-    Math.min(Math.round(value * amount), cap)
-  const dim = (value: number, amount: number) => Math.round(value * amount)
-
-  const topColor = `rgb(${brighten(r, 2.1)}, ${brighten(g, 2.1)}, ${brighten(b, 2.1)})`
-  const midColor = `rgb(${brighten(r, 1.25, 210)}, ${brighten(g, 1.25, 210)}, ${brighten(b, 1.25, 210)})`
-  const deepColor = `rgb(${dim(r, 0.45)}, ${dim(g, 0.45)}, ${dim(b, 0.45)})`
 
   if (isPending) {
     return (
-      <div className="h-full overflow-y-auto custom-scrollbar p-6 text-text-subdued">
-        Loading album...
-      </div>
+      <CollectionPanel>
+        <CollectionSkeleton label="Loading album" />
+      </CollectionPanel>
     )
   }
 
   if (isError || !album) {
     return (
-      <div className="h-full overflow-y-auto custom-scrollbar p-6">
-        <div className="rounded-lg bg-surface p-6 text-text-subdued">
-          Album not found.
-        </div>
-      </div>
+      <CollectionPanel>
+        <StateMessage
+          description="This album may have been removed, or the link is incorrect."
+          icon={Disc3}
+          primary={{ href: ROUTES.main, label: 'Back to home' }}
+          title="Album not found"
+        />
+      </CollectionPanel>
     )
   }
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar">
+    <CollectionPanel>
       <AlbumHero
         album={album}
-        background={`linear-gradient(180deg, ${topColor} 0%, ${midColor} 42%, ${deepColor} 100%)`}
         coverUrl={coverUrl}
         duration={getAlbumDuration(tracks)}
         trackCount={tracks.length}
@@ -66,6 +65,6 @@ export const AlbumPage = ({ albumId }: { albumId: string }) => {
         likedTrackIds={likedTrackIds}
         tracks={tracks}
       />
-    </div>
+    </CollectionPanel>
   )
 }

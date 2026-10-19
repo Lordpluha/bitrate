@@ -1,0 +1,2712 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "n4bEwH",
+      "name": "Artist / Release analytics / Desktop / Dark",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "GnwV9t",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6pmZuX": {
+              "type": "ref",
+              "id": "NTNGiU",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Analytics",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "chart-column"
+                },
+                "ds:GZQzF3": {
+                  "content": "Analytics"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Analytics / Afterglow"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Export release"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "kyWGGw",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "BgAG2L",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Release analytics"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "See how a release and its tracks perform on Bitrate"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "Xop8pP",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "m6uJWe",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "sEwnvW",
+                      "ref": "ds:Kfq8t",
+                      "name": "Select / null",
+                      "width": 220,
+                      "descendants": {
+                        "ds:PLkpD": {
+                          "enabled": false
+                        },
+                        "ds:USlYG": {
+                          "content": "Afterglow · Single"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Sok2Xf",
+                      "ref": "ds:Kfq8t",
+                      "name": "Select / null",
+                      "width": 160,
+                      "descendants": {
+                        "ds:PLkpD": {
+                          "enabled": false
+                        },
+                        "ds:USlYG": {
+                          "content": "All tracks"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "LLvLWs",
+                      "ref": "ds:FJUa1",
+                      "name": "Badge / Last 28 days",
+                      "descendants": {
+                        "ds:BI0Pd": {
+                          "content": "Last 28 days"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "bUYJdh",
+                  "name": "Stats",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "LyhNFp",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "PLAYS"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "12,840"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "+18.4% vs previous period"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "uuuG8X",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "LISTENERS"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "4,216"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "32.8% unique reach"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "TW2JAW",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "SAVES"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "1,168"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "9.1% save rate"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "3kjrje",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "AVG. COMPLETION"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "71%"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "+4.2 pts vs previous period"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "MoP63z",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "cvMBhK",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "WRGLrY",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "hoSLy3",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "K89WWk",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "aF7yi7",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Track performance"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "S7hjid",
+                                  "ref": "ds:LYSQXR",
+                                  "name": "Table/Header Row",
+                                  "descendants": {
+                                    "ds:pFdzls": {
+                                      "type": "frame",
+                                      "id": "LzGHZm",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "FpVsjz",
+                                          "ref": "ds:PiqhAO",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Track"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "wV4YCT",
+                                          "ref": "ds:PiqhAO",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 90,
+                                          "content": "Plays"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "gLLz8N",
+                                          "ref": "ds:PiqhAO",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "Listeners"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "gKcrYu",
+                                          "ref": "ds:PiqhAO",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 80,
+                                          "content": "Saves"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "bBPzkF",
+                                          "ref": "ds:PiqhAO",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 70,
+                                          "content": "Comp."
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "7KM7wX",
+                                  "ref": "ds:0nFJkJ",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:idqVqd": {
+                                      "type": "frame",
+                                      "id": "JxyjTZ",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "DB3hVE",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Night Signal"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "WJKtyn",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 90,
+                                          "content": "6,280"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "JNArmS",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "2,084"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "vtnjUm",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 80,
+                                          "content": "612"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "xnWLnT",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 70,
+                                          "content": "74%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "CsTNzs",
+                                  "ref": "ds:0nFJkJ",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:idqVqd": {
+                                      "type": "frame",
+                                      "id": "DRTzNu",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "8fNYvr",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Static Lines"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "TdExKs",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 90,
+                                          "content": "3,442"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "aVDYro",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "1,360"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "gBteTB",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 80,
+                                          "content": "284"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "4r4oWo",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 70,
+                                          "content": "68%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "BhcqkV",
+                                  "ref": "ds:0nFJkJ",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:idqVqd": {
+                                      "type": "frame",
+                                      "id": "iHUetK",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "f2iKyE",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Drift Control"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "ZPH3zC",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 90,
+                                          "content": "2,118"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "WsDf4L",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "772"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "mf4Jho",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 80,
+                                          "content": "188"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "Dv4QTG",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 70,
+                                          "content": "70%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "zTPWvF",
+                                  "ref": "ds:0nFJkJ",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:idqVqd": {
+                                      "type": "frame",
+                                      "id": "2NfVSw",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "MLRSBd",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Afterglow"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "maAxYj",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 90,
+                                          "content": "1,000"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "spoNqX",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "438"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "BMzPhr",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 80,
+                                          "content": "84"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "uHs9LP",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 70,
+                                          "content": "65%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "dkDgCG",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Completion = plays reaching at least 90% of track length."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Q8anqv",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "oK3BZD",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "gGzp2D",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "K2Gju8",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "BCP7kk",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Discovery sources"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "nwdFAc",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "For Afterglow · Last 28 days"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "SBRLxN",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Artist profile"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "mMcLHM",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "mXsHtp",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "6.2k · 41%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "eS68jk",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Library"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "QJTnN6",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "tepgpq",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "3.1k · 24%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Gvz8No",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Search"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "Gg8xug",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "2aKJUN",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "2.0k · 16%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/analytics/$releaseId — Selecting a release or track updates every card in one context."
+    },
+    {
+      "type": "frame",
+      "id": "5tDo7r",
+      "name": "Artist / Release analytics / Desktop / Light",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "YLRd79",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6pmZuX": {
+              "type": "ref",
+              "id": "bxtqGQ",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Analytics",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "chart-column"
+                },
+                "ds:GZQzF3": {
+                  "content": "Analytics"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Analytics / Afterglow"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Export release"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "kmNk75",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "CjgMUT",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Release analytics"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "See how a release and its tracks perform on Bitrate"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "yyC2fv",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "TTMpsD",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "zYtpFG",
+                      "ref": "ds:Kfq8t",
+                      "name": "Select / null",
+                      "width": 220,
+                      "descendants": {
+                        "ds:PLkpD": {
+                          "enabled": false
+                        },
+                        "ds:USlYG": {
+                          "content": "Afterglow · Single"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "SjePnV",
+                      "ref": "ds:Kfq8t",
+                      "name": "Select / null",
+                      "width": 160,
+                      "descendants": {
+                        "ds:PLkpD": {
+                          "enabled": false
+                        },
+                        "ds:USlYG": {
+                          "content": "All tracks"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "6iGCyR",
+                      "ref": "ds:FJUa1",
+                      "name": "Badge / Last 28 days",
+                      "descendants": {
+                        "ds:BI0Pd": {
+                          "content": "Last 28 days"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "bRukeP",
+                  "name": "Stats",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "SknoyK",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "PLAYS"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "12,840"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "+18.4% vs previous period"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "xub7DE",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "LISTENERS"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "4,216"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "32.8% unique reach"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "c673te",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "SAVES"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "1,168"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "9.1% save rate"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "7gMwrY",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "AVG. COMPLETION"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "71%"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "+4.2 pts vs previous period"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "R9E28w",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "poeoqx",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "72Zusw",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "pLThsN",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "4ukhn5",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "rdwtfp",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Track performance"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "RojiHG",
+                                  "ref": "ds:LYSQXR",
+                                  "name": "Table/Header Row",
+                                  "descendants": {
+                                    "ds:pFdzls": {
+                                      "type": "frame",
+                                      "id": "S5rzYV",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "P7iMrG",
+                                          "ref": "ds:PiqhAO",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Track"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "eKfvtL",
+                                          "ref": "ds:PiqhAO",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 90,
+                                          "content": "Plays"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "xMXWgF",
+                                          "ref": "ds:PiqhAO",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "Listeners"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "sjx9Qf",
+                                          "ref": "ds:PiqhAO",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 80,
+                                          "content": "Saves"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "4QQ3Ju",
+                                          "ref": "ds:PiqhAO",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 70,
+                                          "content": "Comp."
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "gtwZKF",
+                                  "ref": "ds:0nFJkJ",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:idqVqd": {
+                                      "type": "frame",
+                                      "id": "r8ZndT",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "ZzJ57a",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Night Signal"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "LCvf93",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 90,
+                                          "content": "6,280"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "QszUaz",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "2,084"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "CTW5E9",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 80,
+                                          "content": "612"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "VqB7S6",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 70,
+                                          "content": "74%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "hA4guT",
+                                  "ref": "ds:0nFJkJ",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:idqVqd": {
+                                      "type": "frame",
+                                      "id": "FAQt9h",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "BJc2jq",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Static Lines"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "aGMatj",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 90,
+                                          "content": "3,442"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "F5C2VZ",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "1,360"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "EETHGG",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 80,
+                                          "content": "284"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "6GX697",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 70,
+                                          "content": "68%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "iGMHsw",
+                                  "ref": "ds:0nFJkJ",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:idqVqd": {
+                                      "type": "frame",
+                                      "id": "toixFt",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "84ehxy",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Drift Control"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "BaTLKC",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 90,
+                                          "content": "2,118"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "U25jTW",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "772"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "mc8xMM",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 80,
+                                          "content": "188"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "hAc2R5",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 70,
+                                          "content": "70%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "WZAqkf",
+                                  "ref": "ds:0nFJkJ",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:idqVqd": {
+                                      "type": "frame",
+                                      "id": "vpjJFw",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "ieBAPo",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Afterglow"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "mDmwBE",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 90,
+                                          "content": "1,000"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "u32gz7",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "438"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "tKbjDp",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 80,
+                                          "content": "84"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "XjuyEV",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 70,
+                                          "content": "65%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "vCtYbi",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Completion = plays reaching at least 90% of track length."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "p3bYFp",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "4i5LX3",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "6Fg6dV",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "c6UAhX",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "k9jhHP",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Discovery sources"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "2FTp5C",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "For Afterglow · Last 28 days"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "rhmTfa",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Artist profile"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "9xKZRw",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "EC5C2R",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "6.2k · 41%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "HDNekA",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Library"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "zfrjs8",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "BhFTu2",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "3.1k · 24%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "muGSAk",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Search"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "8qVj2m",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "9v7E7W",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "2.0k · 16%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "designed — /dashboard/analytics/$releaseId — Selecting a release or track updates every card in one context."
+    },
+    {
+      "type": "frame",
+      "id": "3wkpwt",
+      "name": "Artist / Release analytics / Desktop / Dim",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "35Gu39",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6pmZuX": {
+              "type": "ref",
+              "id": "mTEDmA",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Analytics",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "chart-column"
+                },
+                "ds:GZQzF3": {
+                  "content": "Analytics"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Analytics / Afterglow"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Export release"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "QfEStU",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "YgZvWr",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Release analytics"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "See how a release and its tracks perform on Bitrate"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "AYm9GU",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "G5GMSg",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "EiGKck",
+                      "ref": "ds:Kfq8t",
+                      "name": "Select / null",
+                      "width": 220,
+                      "descendants": {
+                        "ds:PLkpD": {
+                          "enabled": false
+                        },
+                        "ds:USlYG": {
+                          "content": "Afterglow · Single"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Ni4Bbo",
+                      "ref": "ds:Kfq8t",
+                      "name": "Select / null",
+                      "width": 160,
+                      "descendants": {
+                        "ds:PLkpD": {
+                          "enabled": false
+                        },
+                        "ds:USlYG": {
+                          "content": "All tracks"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "C3xNUc",
+                      "ref": "ds:FJUa1",
+                      "name": "Badge / Last 28 days",
+                      "descendants": {
+                        "ds:BI0Pd": {
+                          "content": "Last 28 days"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "5pVG6b",
+                  "name": "Stats",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "8GmUh7",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "PLAYS"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "12,840"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "+18.4% vs previous period"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "yg9AKi",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "LISTENERS"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "4,216"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "32.8% unique reach"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "nuJHnr",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "SAVES"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "1,168"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "9.1% save rate"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "PHnMLA",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "AVG. COMPLETION"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "71%"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "+4.2 pts vs previous period"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "cQD8cn",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "f8WJ8p",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "HL6k8L",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "6BW4i8",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "xZwwBU",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "qassTx",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Track performance"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "vzyaUT",
+                                  "ref": "ds:LYSQXR",
+                                  "name": "Table/Header Row",
+                                  "descendants": {
+                                    "ds:pFdzls": {
+                                      "type": "frame",
+                                      "id": "cfYzQE",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "j4HQqT",
+                                          "ref": "ds:PiqhAO",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Track"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "VS8bud",
+                                          "ref": "ds:PiqhAO",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 90,
+                                          "content": "Plays"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "BDwRtN",
+                                          "ref": "ds:PiqhAO",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "Listeners"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "CEeZzK",
+                                          "ref": "ds:PiqhAO",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 80,
+                                          "content": "Saves"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "sMpSNR",
+                                          "ref": "ds:PiqhAO",
+                                          "name": "Text/Caption",
+                                          "textGrowth": "fixed-width",
+                                          "width": 70,
+                                          "content": "Comp."
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Q3bBMk",
+                                  "ref": "ds:0nFJkJ",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:idqVqd": {
+                                      "type": "frame",
+                                      "id": "WYjmcb",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "9mh2jF",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Night Signal"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "CRPrYB",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 90,
+                                          "content": "6,280"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "asA4F9",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "2,084"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "rPEcVJ",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 80,
+                                          "content": "612"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "jjTujd",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 70,
+                                          "content": "74%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "AvgCdn",
+                                  "ref": "ds:0nFJkJ",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:idqVqd": {
+                                      "type": "frame",
+                                      "id": "ZEiKAo",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "cEoUPp",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Static Lines"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "qnxV2H",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 90,
+                                          "content": "3,442"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "6rRFcB",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "1,360"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "HJBY3s",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 80,
+                                          "content": "284"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "qaWvSN",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 70,
+                                          "content": "68%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "PQSBrk",
+                                  "ref": "ds:0nFJkJ",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:idqVqd": {
+                                      "type": "frame",
+                                      "id": "DtcuaL",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "Q8sWUf",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Drift Control"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "LwwPco",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 90,
+                                          "content": "2,118"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "yEsy8T",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "772"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "hT5W7z",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 80,
+                                          "content": "188"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "wCggdQ",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 70,
+                                          "content": "70%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "igRphv",
+                                  "ref": "ds:0nFJkJ",
+                                  "name": "Table/Row",
+                                  "descendants": {
+                                    "ds:idqVqd": {
+                                      "type": "frame",
+                                      "id": "3pTzkn",
+                                      "name": "Cells",
+                                      "gap": 16,
+                                      "alignItems": "center",
+                                      "width": "fill_container",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "8FetVA",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "textGrowth": "fixed-width",
+                                          "width": "fill_container",
+                                          "content": "Afterglow"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "U2zBMt",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 90,
+                                          "content": "1,000"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "fUVEw9",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 100,
+                                          "content": "438"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "KNnneq",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 80,
+                                          "content": "84"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "ckPxqU",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "textGrowth": "fixed-width",
+                                          "width": 70,
+                                          "content": "65%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "8FiBb3",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Completion = plays reaching at least 90% of track length."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "LNuh9K",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "QkSzXN",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "XFwDHf",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "spdfeU",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "ybqkSG",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Discovery sources"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "U7hPax",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "For Afterglow · Last 28 days"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "cLzsSg",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Artist profile"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "w5nSnE",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "TVuMS7",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "6.2k · 41%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "q9ofxk",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Library"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "wKzXFn",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "GQGENv",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "3.1k · 24%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "V9urcc",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Search"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "FsuFGE",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "8qTbjh",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "2.0k · 16%"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "designed — /dashboard/analytics/$releaseId — Selecting a release or track updates every card in one context."
+    },
+    {
+      "type": "frame",
+      "id": "R28G9a",
+      "name": "Artist / Release analytics / Mobile / Dark",
+      "width": 390,
+      "height": 1700,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "kZ2YtV",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1700,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "csNzK3",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "3fUdEQ",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Release analytics"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "See how a release and its tracks perform on Bitrate"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "vRke3W",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "AEzH9J",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Mz8Awc",
+                      "ref": "ds:Kfq8t",
+                      "name": "Select / null",
+                      "width": 220,
+                      "descendants": {
+                        "ds:PLkpD": {
+                          "enabled": false
+                        },
+                        "ds:USlYG": {
+                          "content": "Afterglow · Single"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "DG3rVb",
+                      "ref": "ds:Kfq8t",
+                      "name": "Select / null",
+                      "width": 160,
+                      "descendants": {
+                        "ds:PLkpD": {
+                          "enabled": false
+                        },
+                        "ds:USlYG": {
+                          "content": "All tracks"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "zcRTik",
+                      "ref": "ds:FJUa1",
+                      "name": "Badge / Last 28 days",
+                      "descendants": {
+                        "ds:BI0Pd": {
+                          "content": "Last 28 days"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "wD8Lv6",
+                  "name": "Stats",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "JEAmwJ",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "PLAYS"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "12,840"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "+18.4% vs previous period"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5vm58T",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "LISTENERS"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "4,216"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "32.8% unique reach"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "teShsd",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "SAVES"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "1,168"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "9.1% save rate"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "KBvrBi",
+                      "ref": "ds:JwxAx4",
+                      "name": "Stat Tile",
+                      "descendants": {
+                        "ds:PzSH2C": {
+                          "content": "AVG. COMPLETION"
+                        },
+                        "ds:Ysnx6S": {
+                          "content": "71%"
+                        },
+                        "ds:1Km9Qf": {
+                          "content": "+4.2 pts vs previous period"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "spmAaQ",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "zugnXN",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Wy7Pc5",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "U8HGyv",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Track performance"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "4M3HLD",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "Smwe5X",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "ryKJ7Y",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Night Signal"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "tKb5Fe",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 80,
+                                  "content": "6,280"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "xhBByD",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "UJ9HFd",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "bknju2",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Static Lines"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "3yXF5A",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 80,
+                                  "content": "3,442"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "uTXJE6",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "FsGvxw",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "JcXZ4B",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Drift Control"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "YEhuXk",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 80,
+                                  "content": "2,118"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "q7tVJ7",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "TKscVN",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "kEZtrF",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Afterglow"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "YHWnGS",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 80,
+                                  "content": "1,000"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "NkCk5z",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "Completion = plays reaching at least 90% of track length."
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "PdriED",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "c84x3U",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "iS6UU3",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "M4vRgi",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Discovery sources"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "XhGWVV",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "For Afterglow · Last 28 days"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "D6stPE",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Artist profile"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "Ba8jd7",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "PUAPLf",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "6.2k · 41%"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "AS76ip",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Library"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "N7yfUE",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "i3apzJ",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "3.1k · 24%"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "dLkMVQ",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Search"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "zpKLaR",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "sWUfT6",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "2.0k · 16%"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/analytics/$releaseId — Selecting a release or track updates every card in one context."
+    }
+  ]
+}

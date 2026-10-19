@@ -1,0 +1,1296 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "CE9Pbf",
+      "name": "Cursor / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "frame",
+          "id": "FBk7pi",
+          "name": "Boards",
+          "gap": 32,
+          "alignItems": "start",
+          "children": [
+            {
+              "type": "ref",
+              "id": "swtdVH",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": 560,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "qdn47e",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Zb62TA",
+                      "ref": "ds:fLuqjC",
+                      "name": "Text/H4",
+                      "content": "Signal cursor"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jaf9YX",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "Pointer devices only. Reduced motion removes the trailing spring."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "nB3N4t",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Default"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Dot follows the pointer exactly; the ring trails it on a spring."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "4n4z93",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "5UCTRc",
+                              "ref": "ds:x6l7CO",
+                              "name": "Cursor/Default"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "3h7tp6",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Interactive"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Links and buttons: the ring opens over the target and leans toward its centre."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "RSqRao",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "PWwYvT",
+                              "ref": "ds:AbeNGo",
+                              "name": "Cursor/Hover"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Qk6DuM",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Play"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Covers, video thumbnails, play buttons: the ring becomes a Play pill."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "kpb75V",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "dGFdPz",
+                              "ref": "ds:aBQaoi",
+                              "name": "Cursor/Play"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "VrXxMX",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Drag"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Partner spheres, the team pit, reorderable rows."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "H7UZYN",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "uaxRqD",
+                              "ref": "ds:wKfcAm",
+                              "name": "Cursor/Drag"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "E8Wp98",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Text"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Inputs and the search: a thin accent beam; the native caret still types."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "CeCijw",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "ULtfUB",
+                              "ref": "ds:XCsrxP",
+                              "name": "Cursor/Text"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "RAdmLZ",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": 560,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "n3WK3o",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ScLhpr",
+                      "ref": "ds:fLuqjC",
+                      "name": "Text/H4",
+                      "content": "Signal cursor"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "WFmZZw",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "Pointer devices only. Reduced motion removes the trailing spring."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ZJEFfX",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Scrub"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Seek bars and timelines: a line with the time under the pointer."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "i4dVyR",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "NULGpx",
+                              "ref": "ds:9hsQ3g",
+                              "name": "Cursor/Scrub"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jj2Rnm",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Loading"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "While a navigation or action is pending."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "CdU4JT",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "WLKH4T",
+                              "ref": "ds:AYMyeM",
+                              "name": "Cursor/Loading"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "mVx38F",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Pressed"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Pointer down: the ring tightens."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "hBLoBC",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "TSa6f2",
+                              "ref": "ds:k8u6q3",
+                              "name": "Cursor/Pressed"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5Lr4mU",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Disabled"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Disabled controls: muted ring with a stop sign."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "b8DA3f",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "v5nJU3",
+                              "ref": "ds:atHqb5",
+                              "name": "Cursor/Disabled"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sYAC9o",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Listening"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "While music plays: five bars inside the ring pulse with the real audio level."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "gF7swB",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "JSC6FU",
+                              "ref": "ds:FDipS7",
+                              "name": "Cursor/Listening"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — custom cursor for the landing and the app — One Signal cursor everywhere on fine pointers: default, interactive, play, drag, text, scrub, loading, pressed, disabled and listening states. Touch devices keep the system behaviour and get the press ripple."
+    },
+    {
+      "type": "frame",
+      "id": "PFSPLA",
+      "name": "Cursor / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "frame",
+          "id": "PGfXNe",
+          "name": "Boards",
+          "gap": 32,
+          "alignItems": "start",
+          "children": [
+            {
+              "type": "ref",
+              "id": "d9BRck",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": 560,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "XKGvTh",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "djjq5Z",
+                      "ref": "ds:fLuqjC",
+                      "name": "Text/H4",
+                      "content": "Signal cursor"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "xoekRW",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "Pointer devices only. Reduced motion removes the trailing spring."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "e96nVm",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Default"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Dot follows the pointer exactly; the ring trails it on a spring."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "a4T5q8",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "buA9iu",
+                              "ref": "ds:x6l7CO",
+                              "name": "Cursor/Default"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "8ENBd2",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Interactive"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Links and buttons: the ring opens over the target and leans toward its centre."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "LU4K4D",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "KzBPUu",
+                              "ref": "ds:AbeNGo",
+                              "name": "Cursor/Hover"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "UxqPG7",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Play"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Covers, video thumbnails, play buttons: the ring becomes a Play pill."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "xLAaL8",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "CG8X4m",
+                              "ref": "ds:aBQaoi",
+                              "name": "Cursor/Play"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "x2eVo2",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Drag"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Partner spheres, the team pit, reorderable rows."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "awu82X",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "D8AhRM",
+                              "ref": "ds:wKfcAm",
+                              "name": "Cursor/Drag"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "KKTD3w",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Text"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Inputs and the search: a thin accent beam; the native caret still types."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "pjSciZ",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "SFdhTU",
+                              "ref": "ds:XCsrxP",
+                              "name": "Cursor/Text"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "eqMuE5",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": 560,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "2LVYDG",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "DuzqR3",
+                      "ref": "ds:fLuqjC",
+                      "name": "Text/H4",
+                      "content": "Signal cursor"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "xfS8De",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "Pointer devices only. Reduced motion removes the trailing spring."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "mTQn9d",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Scrub"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Seek bars and timelines: a line with the time under the pointer."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "Zkihgv",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "chT4NX",
+                              "ref": "ds:9hsQ3g",
+                              "name": "Cursor/Scrub"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5kCP8A",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Loading"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "While a navigation or action is pending."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "fNMn9S",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "cB94Kv",
+                              "ref": "ds:AYMyeM",
+                              "name": "Cursor/Loading"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "xN6oSt",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Pressed"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Pointer down: the ring tightens."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "8GZY4x",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "N8LvWF",
+                              "ref": "ds:k8u6q3",
+                              "name": "Cursor/Pressed"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "SwZ9nR",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Disabled"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Disabled controls: muted ring with a stop sign."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "Tzqx6a",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "9hZN7y",
+                              "ref": "ds:atHqb5",
+                              "name": "Cursor/Disabled"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "BUGujN",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Listening"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "While music plays: five bars inside the ring pulse with the real audio level."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "rqvEDi",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "F2vL6y",
+                              "ref": "ds:FDipS7",
+                              "name": "Cursor/Listening"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "system — custom cursor for the landing and the app — One Signal cursor everywhere on fine pointers: default, interactive, play, drag, text, scrub, loading, pressed, disabled and listening states. Touch devices keep the system behaviour and get the press ripple."
+    },
+    {
+      "type": "frame",
+      "id": "8hoTda",
+      "name": "Cursor / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "frame",
+          "id": "XuTEFW",
+          "name": "Boards",
+          "gap": 32,
+          "alignItems": "start",
+          "children": [
+            {
+              "type": "ref",
+              "id": "ydhvJr",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": 560,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "xxRAMd",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "kUP4zw",
+                      "ref": "ds:fLuqjC",
+                      "name": "Text/H4",
+                      "content": "Signal cursor"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ajFHvv",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "Pointer devices only. Reduced motion removes the trailing spring."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "xFs8Jg",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Default"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Dot follows the pointer exactly; the ring trails it on a spring."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "9v9Vx3",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "T5Gkf7",
+                              "ref": "ds:x6l7CO",
+                              "name": "Cursor/Default"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "HmKV4c",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Interactive"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Links and buttons: the ring opens over the target and leans toward its centre."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "XU4h6w",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "8iERYh",
+                              "ref": "ds:AbeNGo",
+                              "name": "Cursor/Hover"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "EQQZ4P",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Play"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Covers, video thumbnails, play buttons: the ring becomes a Play pill."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "7SkSKa",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "ebNxBL",
+                              "ref": "ds:aBQaoi",
+                              "name": "Cursor/Play"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "vBRZTn",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Drag"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Partner spheres, the team pit, reorderable rows."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "tSHyTo",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "JT2xMV",
+                              "ref": "ds:wKfcAm",
+                              "name": "Cursor/Drag"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "EbjC7V",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Text"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Inputs and the search: a thin accent beam; the native caret still types."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "379KhP",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "jtsSzR",
+                              "ref": "ds:XCsrxP",
+                              "name": "Cursor/Text"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "kDTY5t",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": 560,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "SC4zRE",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "2sjp33",
+                      "ref": "ds:fLuqjC",
+                      "name": "Text/H4",
+                      "content": "Signal cursor"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jFniZa",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "Pointer devices only. Reduced motion removes the trailing spring."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "K6VsFk",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Scrub"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Seek bars and timelines: a line with the time under the pointer."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "sLsC8R",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "umqGxT",
+                              "ref": "ds:9hsQ3g",
+                              "name": "Cursor/Scrub"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "BH8aLM",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Loading"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "While a navigation or action is pending."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "H728rm",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "JAiCf3",
+                              "ref": "ds:AYMyeM",
+                              "name": "Cursor/Loading"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "TZtKRt",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Pressed"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Pointer down: the ring tightens."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "FwrRpJ",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "KcAiZd",
+                              "ref": "ds:k8u6q3",
+                              "name": "Cursor/Pressed"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "62WWcK",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Disabled"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Disabled controls: muted ring with a stop sign."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "TV3ekP",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "wAWmYg",
+                              "ref": "ds:atHqb5",
+                              "name": "Cursor/Disabled"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "a8vvy5",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Listening"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "While music plays: five bars inside the ring pulse with the real audio level."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "x6d6Jz",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "GwW4Qp",
+                              "ref": "ds:FDipS7",
+                              "name": "Cursor/Listening"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "system — custom cursor for the landing and the app — One Signal cursor everywhere on fine pointers: default, interactive, play, drag, text, scrub, loading, pressed, disabled and listening states. Touch devices keep the system behaviour and get the press ripple."
+    },
+    {
+      "type": "frame",
+      "id": "beg63c",
+      "name": "Cursor / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "frame",
+          "id": "LKN5jP",
+          "name": "Touch",
+          "layout": "vertical",
+          "gap": 16,
+          "alignItems": "center",
+          "width": "fill_container",
+          "children": [
+            {
+              "type": "ref",
+              "id": "tJi8Zq",
+              "ref": "ds:f7dCsl",
+              "name": "Cursor/Touch Ripple"
+            },
+            {
+              "type": "ref",
+              "id": "dheUCS",
+              "ref": "ds:fLuqjC",
+              "name": "Text/H4",
+              "content": "Touch: press ripple"
+            },
+            {
+              "type": "ref",
+              "id": "BghDVV",
+              "ref": "ds:XDvNAD",
+              "name": "Text/Paragraph",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "textAlign": "center",
+              "content": "No custom cursor on touch screens. A press shows a short ripple; long-press opens tooltips."
+            },
+            {
+              "type": "ref",
+              "id": "nEhtaf",
+              "ref": "ds:FJUa1",
+              "name": "Badge / pointer: coarse",
+              "descendants": {
+                "ds:BI0Pd": {
+                  "content": "pointer: coarse"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — custom cursor for the landing and the app — One Signal cursor everywhere on fine pointers: default, interactive, play, drag, text, scrub, loading, pressed, disabled and listening states. Touch devices keep the system behaviour and get the press ripple."
+    },
+    {
+      "type": "frame",
+      "id": "KAfdew",
+      "name": "Cursor / Listening / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "HKDXvZ",
+          "ref": "ds:x4Fixv",
+          "name": "Surface/Panel",
+          "width": 560,
+          "descendants": {
+            "ds:xhr0E3": {
+              "type": "frame",
+              "id": "C7BUyi",
+              "name": "Panel Content",
+              "layout": "vertical",
+              "gap": 14,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "djsWpN",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Signal cursor"
+                },
+                {
+                  "type": "ref",
+                  "id": "PhHjBq",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Pointer devices only. Reduced motion removes the trailing spring."
+                },
+                {
+                  "type": "ref",
+                  "id": "5ZaADk",
+                  "ref": "ds:N5g4u6",
+                  "name": "Setting Row",
+                  "descendants": {
+                    "ds:FznZ4S": {
+                      "content": "Listening"
+                    },
+                    "ds:CVvAJE": {
+                      "content": "While music plays: five bars inside the ring pulse with the real audio level."
+                    },
+                    "ds:ahEMZM": {
+                      "type": "frame",
+                      "id": "b87nc2",
+                      "name": "Control",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "8UGWY2",
+                          "ref": "ds:FDipS7",
+                          "name": "Cursor/Listening"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "ref",
+          "id": "BpjESR",
+          "ref": "ds:PiqhAO",
+          "name": "Text/Caption",
+          "content": "Bars follow the analyser level of the playing track."
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — custom cursor for the landing and the app — One Signal cursor everywhere on fine pointers: default, interactive, play, drag, text, scrub, loading, pressed, disabled and listening states. Touch devices keep the system behaviour and get the press ripple. · no mobile frame: touch devices show no cursor"
+    }
+  ]
+}

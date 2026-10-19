@@ -4,6 +4,7 @@ export type TrackViewMode = 'compact' | 'list'
 
 export type PlaylistPlayback = {
   currentTrackId?: string
+  handleAddToQueue: () => void
   handlePlayPlaylist: () => void
   handleShufflePlaylist: () => void
   isActive: boolean

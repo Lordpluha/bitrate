@@ -21,19 +21,19 @@ export const SubscriptionSettingsSection = () => {
     <SettingsSection searchTerms={['plan', 'premium']} title="Your plan">
       <div className="flex flex-wrap items-center justify-between gap-4 rounded-md bg-surface px-4 py-3">
         <div>
-          <p className="font-bold text-text">
+          <p className="text-sm font-semibold text-foreground">
             {isPending
               ? 'Loading plan...'
               : formatPlan(subscription?.plan ?? 'FREE')}
           </p>
-          <p className="mt-1 text-xs text-text-subdued">
+          <p className="mt-1 text-xs text-muted-foreground">
             {subscription?.status === 'ACTIVE'
               ? 'Your subscription is active.'
               : 'Review your subscription status.'}
           </p>
         </div>
         {subscription && (
-          <span className="rounded-full border border-white/30 px-3 py-1 text-xs font-bold text-text">
+          <span className="rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold text-foreground">
             {subscription.status}
           </span>
         )}

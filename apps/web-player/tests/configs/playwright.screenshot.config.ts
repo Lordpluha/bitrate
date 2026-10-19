@@ -23,6 +23,8 @@ export default defineConfig({
        * change on CI shows up as a real diff to regenerate, not as a silent pass.
        */
       maxDiffPixelRatio: 0.0004,
+      /** Hides the dev-server overlays so a baseline from `next start` matches `next dev`. */
+      stylePath: './screenshot-overlays.css',
     },
   },
   use: {

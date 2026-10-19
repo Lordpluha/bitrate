@@ -1,0 +1,3004 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "VLaheH",
+      "name": "Playlist builder / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "cPbMuZ",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "GKxVoe",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "5aWi68",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "7a7FEc",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "EaLfcf",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Build a playlist"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "VpyBim",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "oTDeDF",
+                  "name": "Stepper",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Ao82UF",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "content": "Purpose"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "FQFit6",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "6KPetA",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "content": "Questions"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "8tHUSe",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "3V74xn",
+                      "ref": "ds:CQEGOU",
+                      "name": "Stepper/Step Current",
+                      "descendants": {
+                        "ds:FZP3Tq": {
+                          "content": "Candidates"
+                        },
+                        "ds:CV0khF": {
+                          "content": "3"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "3dChtg",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "rgrbok",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "content": "Review"
+                        },
+                        "ds:1dymUo": {
+                          "content": "4"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "jFEf44",
+                  "name": "Row",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "pBLVBu",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 10,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Mgc2ij",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "cvcSct",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Batch 2 of 4 — rank, keep or reject"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "xHnnir",
+                              "ref": "ds:G5tJp",
+                              "name": "Button / Regenerate batch",
+                              "descendants": {
+                                "ds:d2zCI": {
+                                  "content": "Regenerate batch"
+                                },
+                                "ds:wFUna": {
+                                  "icon": "refresh-cw"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "TjR6ha",
+                          "ref": "ds:ivASpm",
+                          "name": "Candidate Row",
+                          "descendants": {
+                            "ds:r5xclH": {
+                              "content": "#1"
+                            },
+                            "ds:KXtnI3": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-afterglow.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:Zfc2aH": {
+                              "content": "Afterglow"
+                            },
+                            "ds:amLyCO": {
+                              "content": "Nova & the Static · 3:42"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "DUvGLp",
+                          "ref": "ds:ivASpm",
+                          "name": "Candidate Row",
+                          "descendants": {
+                            "ds:r5xclH": {
+                              "content": "#2"
+                            },
+                            "ds:KXtnI3": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-night-signal.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:Zfc2aH": {
+                              "content": "Night Signal"
+                            },
+                            "ds:amLyCO": {
+                              "content": "Mira Sol · 3:56"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "feLvjW",
+                          "ref": "ds:ivASpm",
+                          "name": "Candidate Row",
+                          "descendants": {
+                            "ds:r5xclH": {
+                              "content": "#3"
+                            },
+                            "ds:KXtnI3": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-static-lines.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:Zfc2aH": {
+                              "content": "Static Lines"
+                            },
+                            "ds:amLyCO": {
+                              "content": "Kite Harbor · 3:47"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "44iBx5",
+                          "ref": "ds:ivASpm",
+                          "name": "Candidate Row",
+                          "descendants": {
+                            "ds:r5xclH": {
+                              "content": "#4"
+                            },
+                            "ds:KXtnI3": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:Zfc2aH": {
+                              "content": "Echoes in Motion"
+                            },
+                            "ds:amLyCO": {
+                              "content": "Lumen Choir · 4:21"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "wnTivj",
+                          "ref": "ds:ivASpm",
+                          "name": "Candidate Row",
+                          "descendants": {
+                            "ds:r5xclH": {
+                              "content": "#5"
+                            },
+                            "ds:KXtnI3": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-drift-control.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:Zfc2aH": {
+                              "content": "Drift Control"
+                            },
+                            "ds:amLyCO": {
+                              "content": "Mira Sol · 3:19"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ubGaMS",
+                      "ref": "ds:x4Fixv",
+                      "name": "Surface/Panel",
+                      "width": 320,
+                      "descendants": {
+                        "ds:xhr0E3": {
+                          "type": "frame",
+                          "id": "ssTRsY",
+                          "name": "Panel Content",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "rbE5du",
+                              "ref": "ds:SOt7Oe",
+                              "name": "Text/Body Strong",
+                              "content": "Your brief"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "qrib54",
+                              "ref": "ds:XDvNAD",
+                              "name": "Text/Paragraph",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Late-night drive home, calm but not sleepy, about 45 minutes. Start from liked songs."
+                            },
+                            {
+                              "type": "ref",
+                              "id": "znSeJq",
+                              "ref": "ds:RlxQk",
+                              "name": "Divider",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "ArMyRK",
+                              "ref": "ds:C5Ih8u",
+                              "name": "Text/Muted",
+                              "content": "Kept so far · 7 tracks · 28 min"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "Q7EX5i",
+                              "ref": "ds:AQPfV",
+                              "name": "Progress",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "feYa2e",
+                              "ref": "ds:exjwf",
+                              "name": "Button / Review playlist",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:E23bq6": {
+                                  "content": "Review playlist"
+                                },
+                                "ds:o7NXW": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"AI Playlist Builder\", PRODUCT.md explorations — Goal-driven builder: 3–5 step questionnaire, then ranked candidate batches. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "YKjNKf",
+      "name": "Playlist builder / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "TVy3gj",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "WFriWt",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "oLDeCt",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Hdr2Tx",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "rT2kNf",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Build a playlist"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Q94U8o",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "rPH5Aa",
+                  "name": "Stepper",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Rwr4BT",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "content": "Purpose"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5pjocB",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "iYJBsL",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "content": "Questions"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "JEUSCK",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "hGr83S",
+                      "ref": "ds:CQEGOU",
+                      "name": "Stepper/Step Current",
+                      "descendants": {
+                        "ds:FZP3Tq": {
+                          "content": "Candidates"
+                        },
+                        "ds:CV0khF": {
+                          "content": "3"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "PKCZKt",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "UK3PyA",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "content": "Review"
+                        },
+                        "ds:1dymUo": {
+                          "content": "4"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "yDbMHv",
+                  "name": "Row",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "uEQSNs",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 10,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "972cwM",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "zLgg4L",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Batch 2 of 4 — rank, keep or reject"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "AHWYR8",
+                              "ref": "ds:G5tJp",
+                              "name": "Button / Regenerate batch",
+                              "descendants": {
+                                "ds:d2zCI": {
+                                  "content": "Regenerate batch"
+                                },
+                                "ds:wFUna": {
+                                  "icon": "refresh-cw"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "SXNaA5",
+                          "ref": "ds:ivASpm",
+                          "name": "Candidate Row",
+                          "descendants": {
+                            "ds:r5xclH": {
+                              "content": "#1"
+                            },
+                            "ds:KXtnI3": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-afterglow.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:Zfc2aH": {
+                              "content": "Afterglow"
+                            },
+                            "ds:amLyCO": {
+                              "content": "Nova & the Static · 3:42"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "FUhYyw",
+                          "ref": "ds:ivASpm",
+                          "name": "Candidate Row",
+                          "descendants": {
+                            "ds:r5xclH": {
+                              "content": "#2"
+                            },
+                            "ds:KXtnI3": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-night-signal.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:Zfc2aH": {
+                              "content": "Night Signal"
+                            },
+                            "ds:amLyCO": {
+                              "content": "Mira Sol · 3:56"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "WdPw4V",
+                          "ref": "ds:ivASpm",
+                          "name": "Candidate Row",
+                          "descendants": {
+                            "ds:r5xclH": {
+                              "content": "#3"
+                            },
+                            "ds:KXtnI3": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-static-lines.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:Zfc2aH": {
+                              "content": "Static Lines"
+                            },
+                            "ds:amLyCO": {
+                              "content": "Kite Harbor · 3:47"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "tF9Gym",
+                          "ref": "ds:ivASpm",
+                          "name": "Candidate Row",
+                          "descendants": {
+                            "ds:r5xclH": {
+                              "content": "#4"
+                            },
+                            "ds:KXtnI3": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:Zfc2aH": {
+                              "content": "Echoes in Motion"
+                            },
+                            "ds:amLyCO": {
+                              "content": "Lumen Choir · 4:21"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "c2A5S2",
+                          "ref": "ds:ivASpm",
+                          "name": "Candidate Row",
+                          "descendants": {
+                            "ds:r5xclH": {
+                              "content": "#5"
+                            },
+                            "ds:KXtnI3": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-drift-control.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:Zfc2aH": {
+                              "content": "Drift Control"
+                            },
+                            "ds:amLyCO": {
+                              "content": "Mira Sol · 3:19"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "a4HLqL",
+                      "ref": "ds:x4Fixv",
+                      "name": "Surface/Panel",
+                      "width": 320,
+                      "descendants": {
+                        "ds:xhr0E3": {
+                          "type": "frame",
+                          "id": "bbXKfQ",
+                          "name": "Panel Content",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "LzXYih",
+                              "ref": "ds:SOt7Oe",
+                              "name": "Text/Body Strong",
+                              "content": "Your brief"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "LD8GMm",
+                              "ref": "ds:XDvNAD",
+                              "name": "Text/Paragraph",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Late-night drive home, calm but not sleepy, about 45 minutes. Start from liked songs."
+                            },
+                            {
+                              "type": "ref",
+                              "id": "RcpAip",
+                              "ref": "ds:RlxQk",
+                              "name": "Divider",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "5kf7WG",
+                              "ref": "ds:C5Ih8u",
+                              "name": "Text/Muted",
+                              "content": "Kept so far · 7 tracks · 28 min"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "yW7Azw",
+                              "ref": "ds:AQPfV",
+                              "name": "Progress",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "RcLxGk",
+                              "ref": "ds:exjwf",
+                              "name": "Button / Review playlist",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:E23bq6": {
+                                  "content": "Review playlist"
+                                },
+                                "ds:o7NXW": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "concept — backlog \"AI Playlist Builder\", PRODUCT.md explorations — Goal-driven builder: 3–5 step questionnaire, then ranked candidate batches. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "78oieM",
+      "name": "Playlist builder / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "N5KjEH",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "LgHoo4",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "vkrhRU",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "5J95yz",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "oMaDcu",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Build a playlist"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "jstxxw",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "32Xdjr",
+                  "name": "Stepper",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "yGYLT8",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "content": "Purpose"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jvN2CT",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "dAwCrT",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "content": "Questions"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "j8x29n",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "NqCVxC",
+                      "ref": "ds:CQEGOU",
+                      "name": "Stepper/Step Current",
+                      "descendants": {
+                        "ds:FZP3Tq": {
+                          "content": "Candidates"
+                        },
+                        "ds:CV0khF": {
+                          "content": "3"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "B2JoSG",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Gi8Qvb",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "content": "Review"
+                        },
+                        "ds:1dymUo": {
+                          "content": "4"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "F2ku3t",
+                  "name": "Row",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "dUJjAP",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 10,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "BuiSxt",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "c7kB3J",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Batch 2 of 4 — rank, keep or reject"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "nLX9zL",
+                              "ref": "ds:G5tJp",
+                              "name": "Button / Regenerate batch",
+                              "descendants": {
+                                "ds:d2zCI": {
+                                  "content": "Regenerate batch"
+                                },
+                                "ds:wFUna": {
+                                  "icon": "refresh-cw"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "i2hCYH",
+                          "ref": "ds:ivASpm",
+                          "name": "Candidate Row",
+                          "descendants": {
+                            "ds:r5xclH": {
+                              "content": "#1"
+                            },
+                            "ds:KXtnI3": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-afterglow.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:Zfc2aH": {
+                              "content": "Afterglow"
+                            },
+                            "ds:amLyCO": {
+                              "content": "Nova & the Static · 3:42"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "XLkXet",
+                          "ref": "ds:ivASpm",
+                          "name": "Candidate Row",
+                          "descendants": {
+                            "ds:r5xclH": {
+                              "content": "#2"
+                            },
+                            "ds:KXtnI3": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-night-signal.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:Zfc2aH": {
+                              "content": "Night Signal"
+                            },
+                            "ds:amLyCO": {
+                              "content": "Mira Sol · 3:56"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "CMvbmE",
+                          "ref": "ds:ivASpm",
+                          "name": "Candidate Row",
+                          "descendants": {
+                            "ds:r5xclH": {
+                              "content": "#3"
+                            },
+                            "ds:KXtnI3": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-static-lines.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:Zfc2aH": {
+                              "content": "Static Lines"
+                            },
+                            "ds:amLyCO": {
+                              "content": "Kite Harbor · 3:47"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "nconE4",
+                          "ref": "ds:ivASpm",
+                          "name": "Candidate Row",
+                          "descendants": {
+                            "ds:r5xclH": {
+                              "content": "#4"
+                            },
+                            "ds:KXtnI3": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:Zfc2aH": {
+                              "content": "Echoes in Motion"
+                            },
+                            "ds:amLyCO": {
+                              "content": "Lumen Choir · 4:21"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "RpCrsa",
+                          "ref": "ds:ivASpm",
+                          "name": "Candidate Row",
+                          "descendants": {
+                            "ds:r5xclH": {
+                              "content": "#5"
+                            },
+                            "ds:KXtnI3": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-drift-control.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:Zfc2aH": {
+                              "content": "Drift Control"
+                            },
+                            "ds:amLyCO": {
+                              "content": "Mira Sol · 3:19"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "htpRuL",
+                      "ref": "ds:x4Fixv",
+                      "name": "Surface/Panel",
+                      "width": 320,
+                      "descendants": {
+                        "ds:xhr0E3": {
+                          "type": "frame",
+                          "id": "9At66H",
+                          "name": "Panel Content",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "NEWdxs",
+                              "ref": "ds:SOt7Oe",
+                              "name": "Text/Body Strong",
+                              "content": "Your brief"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "7v5CFN",
+                              "ref": "ds:XDvNAD",
+                              "name": "Text/Paragraph",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Late-night drive home, calm but not sleepy, about 45 minutes. Start from liked songs."
+                            },
+                            {
+                              "type": "ref",
+                              "id": "PHUC39",
+                              "ref": "ds:RlxQk",
+                              "name": "Divider",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "y4tpoX",
+                              "ref": "ds:C5Ih8u",
+                              "name": "Text/Muted",
+                              "content": "Kept so far · 7 tracks · 28 min"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "grDqwf",
+                              "ref": "ds:AQPfV",
+                              "name": "Progress",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "LoyH6X",
+                              "ref": "ds:exjwf",
+                              "name": "Button / Review playlist",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:E23bq6": {
+                                  "content": "Review playlist"
+                                },
+                                "ds:o7NXW": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "concept — backlog \"AI Playlist Builder\", PRODUCT.md explorations — Goal-driven builder: 3–5 step questionnaire, then ranked candidate batches. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "mnmBzJ",
+      "name": "Playlist builder / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "X3JQyU",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "efS4F2",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Build a playlist"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "xHXBoh",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "ioVXeq",
+              "name": "Stepper",
+              "gap": 10,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "srgSmf",
+                  "ref": "ds:DAB6H9",
+                  "name": "Stepper/Step Done",
+                  "descendants": {
+                    "ds:88pxXk": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "qMU57H",
+                  "ref": "ds:I3Wq63",
+                  "name": "Stepper/Connector Done"
+                },
+                {
+                  "type": "ref",
+                  "id": "EyyFz7",
+                  "ref": "ds:DAB6H9",
+                  "name": "Stepper/Step Done",
+                  "descendants": {
+                    "ds:88pxXk": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "67nTAu",
+                  "ref": "ds:I3Wq63",
+                  "name": "Stepper/Connector Done"
+                },
+                {
+                  "type": "ref",
+                  "id": "Ltbr3m",
+                  "ref": "ds:CQEGOU",
+                  "name": "Stepper/Step Current",
+                  "descendants": {
+                    "ds:FZP3Tq": {
+                      "enabled": false
+                    },
+                    "ds:CV0khF": {
+                      "content": "3"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "kxZyW5",
+                  "ref": "ds:ArPPaT",
+                  "name": "Stepper/Connector"
+                },
+                {
+                  "type": "ref",
+                  "id": "wwxmqU",
+                  "ref": "ds:L55NCX",
+                  "name": "Stepper/Step Upcoming",
+                  "descendants": {
+                    "ds:0aqWjw": {
+                      "enabled": false
+                    },
+                    "ds:1dymUo": {
+                      "content": "4"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "VNZLLU",
+              "ref": "ds:Qjj2NE",
+              "name": "Text/H3",
+              "content": "Rank, keep or reject"
+            },
+            {
+              "type": "ref",
+              "id": "NsMFiN",
+              "ref": "ds:GCfAPl",
+              "name": "Candidate Row/Compact",
+              "descendants": {
+                "ds:yjmza3": {
+                  "content": "#1"
+                },
+                "ds:xhbEJA": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-afterglow.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:CEnWsr": {
+                  "content": "Afterglow"
+                },
+                "ds:vSnAAF": {
+                  "content": "Nova & the Static"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "Uho4kj",
+              "ref": "ds:GCfAPl",
+              "name": "Candidate Row/Compact",
+              "descendants": {
+                "ds:yjmza3": {
+                  "content": "#2"
+                },
+                "ds:xhbEJA": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-night-signal.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:CEnWsr": {
+                  "content": "Night Signal"
+                },
+                "ds:vSnAAF": {
+                  "content": "Mira Sol"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "KMxKGo",
+              "ref": "ds:GCfAPl",
+              "name": "Candidate Row/Compact",
+              "descendants": {
+                "ds:yjmza3": {
+                  "content": "#3"
+                },
+                "ds:xhbEJA": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-static-lines.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:CEnWsr": {
+                  "content": "Static Lines"
+                },
+                "ds:vSnAAF": {
+                  "content": "Kite Harbor"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "GKLzUm",
+              "ref": "ds:GCfAPl",
+              "name": "Candidate Row/Compact",
+              "descendants": {
+                "ds:yjmza3": {
+                  "content": "#4"
+                },
+                "ds:xhbEJA": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:CEnWsr": {
+                  "content": "Echoes in Motion"
+                },
+                "ds:vSnAAF": {
+                  "content": "Lumen Choir"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "SXVMes",
+              "ref": "ds:G5tJp",
+              "name": "Button / Regenerate batch",
+              "width": "fill_container",
+              "descendants": {
+                "ds:d2zCI": {
+                  "content": "Regenerate batch"
+                },
+                "ds:wFUna": {
+                  "icon": "refresh-cw"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "n97999",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "Ykp9FN",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:67K2eN": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:ApEsiS": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"AI Playlist Builder\", PRODUCT.md explorations — Goal-driven builder: 3–5 step questionnaire, then ranked candidate batches. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "NdXbrp",
+      "name": "Playlist builder / Questionnaire / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "thT2aT",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "Ury9Je",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "fqbHnC",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "4fPbAt",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "PYMqkK",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Build a playlist"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "i39SZx",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Quvc7N",
+                  "name": "Stepper",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "8FZNCH",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "content": "Purpose"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "4p8FBx",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "NePB6M",
+                      "ref": "ds:CQEGOU",
+                      "name": "Stepper/Step Current",
+                      "descendants": {
+                        "ds:FZP3Tq": {
+                          "content": "Questions"
+                        },
+                        "ds:CV0khF": {
+                          "content": "2"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "VhEM5v",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "uJf6BY",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "content": "Candidates"
+                        },
+                        "ds:1dymUo": {
+                          "content": "3"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "BpKoB8",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "QLhubH",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "content": "Review"
+                        },
+                        "ds:1dymUo": {
+                          "content": "4"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "pZtFrj",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "width": 720,
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "vr7ocY",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "MxPhDG",
+                          "ref": "ds:yjiPHo",
+                          "name": "Text/Eyebrow",
+                          "content": "QUESTION 2 OF 4"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "NiXXVD",
+                          "ref": "ds:RoXXJv",
+                          "name": "Text/H2",
+                          "content": "What should it feel like?"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "rax3LM",
+                          "name": "Chips",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "WQak2a",
+                              "ref": "ds:AdNrrb",
+                              "name": "Chip/Active",
+                              "descendants": {
+                                "ds:cUY4Fi": {
+                                  "content": "Calm"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "T3U5xZ",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Focused"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "WxRoV4",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Euphoric"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "Q5AqwW",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Melancholic"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "F7xx7T",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Energetic"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "TPgrSY",
+                          "ref": "ds:RlxQk",
+                          "name": "Divider",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "qEuZ4L",
+                          "ref": "ds:SOt7Oe",
+                          "name": "Text/Body Strong",
+                          "content": "Start from"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "qBsc2E",
+                          "name": "Chips",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "gPgcSQ",
+                              "ref": "ds:AdNrrb",
+                              "name": "Chip/Active",
+                              "descendants": {
+                                "ds:cUY4Fi": {
+                                  "content": "Liked songs"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "Z93nzt",
+                              "ref": "ds:LUcTan",
+                              "name": "Chip/Default",
+                              "descendants": {
+                                "ds:lXs2ja": {
+                                  "content": "Everything"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "nfh8oe",
+                          "name": "Row",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "5NqkKX",
+                              "ref": "ds:DTwJb",
+                              "name": "Button / Back",
+                              "descendants": {
+                                "ds:GyGLK": {
+                                  "content": "Back"
+                                },
+                                "ds:uRXDu": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "FAVwdG",
+                              "ref": "ds:exjwf",
+                              "name": "Button / Next",
+                              "descendants": {
+                                "ds:E23bq6": {
+                                  "content": "Next"
+                                },
+                                "ds:o7NXW": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"AI Playlist Builder\", PRODUCT.md explorations — Goal-driven builder: 3–5 step questionnaire, then ranked candidate batches. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "DaUDXN",
+      "name": "Playlist builder / Questionnaire / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "4EQ8oM",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "L9cgJr",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Build a playlist"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "oGSZiv",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "hjFCQX",
+              "name": "Stepper",
+              "gap": 10,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "wc5MC3",
+                  "ref": "ds:DAB6H9",
+                  "name": "Stepper/Step Done",
+                  "descendants": {
+                    "ds:88pxXk": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "yHqaKV",
+                  "ref": "ds:I3Wq63",
+                  "name": "Stepper/Connector Done"
+                },
+                {
+                  "type": "ref",
+                  "id": "YSr6NL",
+                  "ref": "ds:CQEGOU",
+                  "name": "Stepper/Step Current",
+                  "descendants": {
+                    "ds:FZP3Tq": {
+                      "enabled": false
+                    },
+                    "ds:CV0khF": {
+                      "content": "2"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "MHVP2S",
+                  "ref": "ds:ArPPaT",
+                  "name": "Stepper/Connector"
+                },
+                {
+                  "type": "ref",
+                  "id": "3Ri7Hw",
+                  "ref": "ds:L55NCX",
+                  "name": "Stepper/Step Upcoming",
+                  "descendants": {
+                    "ds:0aqWjw": {
+                      "enabled": false
+                    },
+                    "ds:1dymUo": {
+                      "content": "3"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "pvPmxu",
+                  "ref": "ds:ArPPaT",
+                  "name": "Stepper/Connector"
+                },
+                {
+                  "type": "ref",
+                  "id": "jVg6hx",
+                  "ref": "ds:L55NCX",
+                  "name": "Stepper/Step Upcoming",
+                  "descendants": {
+                    "ds:0aqWjw": {
+                      "enabled": false
+                    },
+                    "ds:1dymUo": {
+                      "content": "4"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "4V7GpP",
+              "ref": "ds:yjiPHo",
+              "name": "Text/Eyebrow",
+              "content": "QUESTION 2 OF 4"
+            },
+            {
+              "type": "ref",
+              "id": "usprkH",
+              "ref": "ds:RoXXJv",
+              "name": "Text/H2",
+              "content": "What should it feel like?"
+            },
+            {
+              "type": "frame",
+              "id": "vdKVAB",
+              "name": "Chips",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "utmh4M",
+                  "ref": "ds:AdNrrb",
+                  "name": "Chip/Active",
+                  "descendants": {
+                    "ds:cUY4Fi": {
+                      "content": "Calm"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "WpqRE2",
+                  "ref": "ds:LUcTan",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:lXs2ja": {
+                      "content": "Focused"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "BBsqXD",
+                  "ref": "ds:LUcTan",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:lXs2ja": {
+                      "content": "Euphoric"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "KPDU4o",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Next",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Next"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "QuTxuP",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "cujVqL",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:67K2eN": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:ApEsiS": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"AI Playlist Builder\", PRODUCT.md explorations — Goal-driven builder: 3–5 step questionnaire, then ranked candidate batches. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "NVozSK",
+      "name": "Playlist builder / Generating / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "djLTW6",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "RRk4JV",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "EroXrV",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "B999bU",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "XCbJGM",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Build a playlist"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "UZawxi",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "sVGHxL",
+                  "name": "Stepper",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "EhrG98",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "content": "Purpose"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "nT55T6",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "oqTjGZ",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "content": "Questions"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "fXqGWx",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ydE4LS",
+                      "ref": "ds:CQEGOU",
+                      "name": "Stepper/Step Current",
+                      "descendants": {
+                        "ds:FZP3Tq": {
+                          "content": "Candidates"
+                        },
+                        "ds:CV0khF": {
+                          "content": "3"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "MDVPtK",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "uZhoRP",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "content": "Review"
+                        },
+                        "ds:1dymUo": {
+                          "content": "4"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "oexWPV",
+                  "name": "Loading",
+                  "layout": "vertical",
+                  "gap": 24,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "necGvu",
+                      "ref": "ds:Jjegi",
+                      "name": "Skeleton",
+                      "width": 220,
+                      "height": 28
+                    },
+                    {
+                      "type": "frame",
+                      "id": "vjM59t",
+                      "name": "Skeleton Rows",
+                      "layout": "vertical",
+                      "gap": 16,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "jfgH8N",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "SkCtHN",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "tPeJKp",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "hmzp2S",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ADrxeU",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "YfuWf9",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "TmEZ5w",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "rR4GJw",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "SNiN6Q",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "r9JSxq",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "3mEtjG",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "psh6dM",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"AI Playlist Builder\", PRODUCT.md explorations — Goal-driven builder: 3–5 step questionnaire, then ranked candidate batches. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "KPvQu7",
+      "name": "Playlist builder / Generating / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "SzeSLu",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "GDCHta",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Build a playlist"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "RCNTRb",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "Ypfh4D",
+              "name": "Stepper",
+              "gap": 10,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "YLzxAX",
+                  "ref": "ds:DAB6H9",
+                  "name": "Stepper/Step Done",
+                  "descendants": {
+                    "ds:88pxXk": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "WqZyR6",
+                  "ref": "ds:I3Wq63",
+                  "name": "Stepper/Connector Done"
+                },
+                {
+                  "type": "ref",
+                  "id": "gFYJWA",
+                  "ref": "ds:DAB6H9",
+                  "name": "Stepper/Step Done",
+                  "descendants": {
+                    "ds:88pxXk": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "HnuGih",
+                  "ref": "ds:I3Wq63",
+                  "name": "Stepper/Connector Done"
+                },
+                {
+                  "type": "ref",
+                  "id": "QCb82H",
+                  "ref": "ds:CQEGOU",
+                  "name": "Stepper/Step Current",
+                  "descendants": {
+                    "ds:FZP3Tq": {
+                      "enabled": false
+                    },
+                    "ds:CV0khF": {
+                      "content": "3"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "xksxVK",
+                  "ref": "ds:ArPPaT",
+                  "name": "Stepper/Connector"
+                },
+                {
+                  "type": "ref",
+                  "id": "Pd6Gw3",
+                  "ref": "ds:L55NCX",
+                  "name": "Stepper/Step Upcoming",
+                  "descendants": {
+                    "ds:0aqWjw": {
+                      "enabled": false
+                    },
+                    "ds:1dymUo": {
+                      "content": "4"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "yZMrKX",
+              "name": "Loading",
+              "layout": "vertical",
+              "gap": 24,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "c6Lxf7",
+                  "ref": "ds:Jjegi",
+                  "name": "Skeleton",
+                  "width": 140,
+                  "height": 28
+                },
+                {
+                  "type": "frame",
+                  "id": "GxGqST",
+                  "name": "Skeleton Rows",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "SFCbPA",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "6ioDZs",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "RutAWZ",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "MCuqMr",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "82Tn68",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "NLsrkJ",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "f4crkL",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "3xm9CP",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "nT4gey",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "eMyobF",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "MBUA7M",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "pCPuLq",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:67K2eN": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:ApEsiS": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"AI Playlist Builder\", PRODUCT.md explorations — Goal-driven builder: 3–5 step questionnaire, then ranked candidate batches. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "EdEbUn",
+      "name": "Playlist builder / Error / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Xoah25",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "ASWEhN",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "EnXDuv",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "rSPff9",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "9k5UuJ",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Build a playlist"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "DgKued",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "hrE9ko",
+                  "name": "Stepper",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "iQ2S9p",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "content": "Purpose"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "QB9xsm",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "przrbt",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "content": "Questions"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "aDQhDh",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "DffaDX",
+                      "ref": "ds:CQEGOU",
+                      "name": "Stepper/Step Current",
+                      "descendants": {
+                        "ds:FZP3Tq": {
+                          "content": "Candidates"
+                        },
+                        "ds:CV0khF": {
+                          "content": "3"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "fpy6sY",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "4W9nwJ",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "content": "Review"
+                        },
+                        "ds:1dymUo": {
+                          "content": "4"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "5xJyFZ",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "HVBL3i",
+                      "ref": "ds:LQ8GwL",
+                      "name": "State / Candidates could not be generated",
+                      "descendants": {
+                        "ds:zG3uZd": {
+                          "icon": "triangle-alert"
+                        },
+                        "ds:ATKZVK": {
+                          "content": "Candidates could not be generated"
+                        },
+                        "ds:h7OAoY": {
+                          "content": "Your answers are saved. Try again."
+                        },
+                        "ds:ydkfG5/ds:NVe7y": {
+                          "content": "Try again"
+                        },
+                        "ds:voqjVU/ds:i6a4e": {
+                          "content": "Back to home"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 9170,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"AI Playlist Builder\", PRODUCT.md explorations — Goal-driven builder: 3–5 step questionnaire, then ranked candidate batches. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "mxKhYY",
+      "name": "Playlist builder / Error / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "XzSHgs",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "EjYXUJ",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Build a playlist"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "TN8XFu",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "jfbpzs",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "fvEarz",
+                  "ref": "ds:LQ8GwL",
+                  "name": "State / Candidates could not be generated",
+                  "descendants": {
+                    "ds:zG3uZd": {
+                      "icon": "triangle-alert"
+                    },
+                    "ds:ATKZVK": {
+                      "content": "Candidates could not be generated"
+                    },
+                    "ds:h7OAoY": {
+                      "content": "Your answers are saved. Try again."
+                    },
+                    "ds:ydkfG5/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:voqjVU/ds:i6a4e": {
+                      "content": "Back to home"
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "CBPAwR",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "qLvPsJ",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:67K2eN": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:ApEsiS": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 10710,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — backlog \"AI Playlist Builder\", PRODUCT.md explorations — Goal-driven builder: 3–5 step questionnaire, then ranked candidate batches. Concept."
+    }
+  ]
+}

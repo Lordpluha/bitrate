@@ -22,11 +22,9 @@ export const QueueTrackSection = ({
   if (entries.length === 0) return null
 
   return (
-    <section className="mb-8 last:mb-0">
-      <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-text-subdued">
-        {title}
-      </h2>
-      <ul>
+    <section className="flex flex-col gap-2">
+      <h2 className="text-base font-semibold text-foreground">{title}</h2>
+      <ul className="flex flex-col">
         {entries.map(({ key, ...rowProps }) => (
           <QueueTrackRow key={key} {...rowProps} />
         ))}

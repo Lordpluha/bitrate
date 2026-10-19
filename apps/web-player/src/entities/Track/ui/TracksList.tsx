@@ -1,10 +1,16 @@
 'use client'
+import { cn } from '@bitrate/ui-react'
 import { selectCompactLibrary, useSettingsStore } from '@entities/Settings'
 import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { Clock } from 'lucide-react'
 import { useMemo } from 'react'
 import { useI18n } from '@/shared/i18n'
+import { useTrackAlbums } from '../api/client/trackAlbums'
 import { TrackCard } from './TrackCard'
+import {
+  TRACK_TABLE_COLUMNS,
+  TRACK_TABLE_COLUMNS_WITHOUT_DATE,
+} from './trackTableColumns'
 
 interface TracksListProps {
   activeTrackId?: string
@@ -14,6 +20,8 @@ interface TracksListProps {
   onPlayTrack?: (track: TrackEntity, index: number) => void
   onRemoveTrack?: (trackId: string) => void
   removable?: boolean
+  /** Albums leave out the Date added column. */
+  showDateAdded?: boolean
   viewMode?: 'compact' | 'list'
 }
 
@@ -24,12 +32,18 @@ export const TracksList = ({
   onPlayTrack,
   onRemoveTrack,
   removable = false,
+  showDateAdded = true,
   tracks,
   viewMode: viewModeProp,
 }: TracksListProps) => {
   const { t } = useI18n()
   const compactLibrary = useSettingsStore(selectCompactLibrary)
   const viewMode = viewModeProp ?? (compactLibrary ? 'compact' : 'list')
+  const trackIds = useMemo(() => tracks.map((track) => track.id), [tracks])
+  const { data: albums } = useTrackAlbums(trackIds)
+  const columns = (
+    showDateAdded ? TRACK_TABLE_COLUMNS : TRACK_TABLE_COLUMNS_WITHOUT_DATE
+  )[viewMode]
   const likedTrackIds = useMemo(
     () =>
       providedLikedTrackIds
@@ -39,27 +53,27 @@ export const TracksList = ({
   )
 
   return (
-    <div className="px-4 py-3 sm:px-6 sm:py-4 max-[1024px]:px-2">
+    <div className="flex flex-col">
       <div
-        className={
-          viewMode === 'compact'
-            ? 'grid grid-cols-[32px_minmax(0,2fr)_minmax(140px,1.3fr)_minmax(160px,1.5fr)_minmax(140px,1.4fr)_140px] gap-4 px-4 py-2 border-b border-border text-sm text-text-subdued mb-2 max-[1024px]:hidden'
-            : 'grid grid-cols-[32px_minmax(0,4fr)_minmax(160px,2fr)_minmax(140px,2fr)_140px] gap-4 px-4 py-2 border-b border-border text-sm text-text-subdued mb-2 max-[1024px]:hidden'
-        }
+        className={cn(
+          'grid h-9 items-center border-b border-border px-2 text-xs text-muted-foreground max-[1024px]:hidden',
+          columns,
+        )}
       >
-        <div>#</div>
+        <div className="text-center">#</div>
         <div>{t('tracks.title')}</div>
         {viewMode === 'compact' && <div>{t('tracks.artist')}</div>}
         <div>{t('tracks.album')}</div>
-        <div>{t('tracks.dateAdded')}</div>
+        {showDateAdded ? <div>{t('tracks.dateAdded')}</div> : null}
         <div className="flex justify-end">
-          <Clock size={16} />
+          <Clock aria-hidden="true" size={16} />
         </div>
       </div>
 
-      <div className="space-y-1">
+      <div className="flex flex-col">
         {tracks.map((track, index) => (
           <TrackCard
+            album={albums?.get(track.id) ?? null}
             index={index}
             isLiked={likedTrackIds.has(track.id)}
             isPlaybackContextActive={isPlaybackContextActive}
@@ -70,6 +84,7 @@ export const TracksList = ({
             onPlayTrack={onPlayTrack}
             onRemoveTrack={onRemoveTrack}
             removable={removable}
+            showDateAdded={showDateAdded}
             track={track}
             viewMode={viewMode}
           />

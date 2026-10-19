@@ -33,7 +33,8 @@ export const useAuth = () => {
         throw new Error('Failed to fetch user')
       }
 
-      return data
+      /* a 401 carries no body; null means "signed out" (a query may not resolve to undefined) */
+      return data ?? null
     },
     enabled: !isAuthPage,
     retry: false,

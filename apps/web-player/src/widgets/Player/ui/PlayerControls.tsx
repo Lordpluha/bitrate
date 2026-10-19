@@ -24,6 +24,8 @@ interface PlayerControlsProps {
   repeatMode?: 'off' | 'all' | 'one'
   onShuffleToggle?: () => void
   onRepeatToggle?: () => void
+  /** `bar`: the desktop player bar. `large`: the design's Transport over a stacked Seek Bar. */
+  size?: 'bar' | 'large'
 }
 
 export const PlayerControls = ({
@@ -38,50 +40,74 @@ export const PlayerControls = ({
   repeatMode = 'off',
   onShuffleToggle,
   onRepeatToggle,
+  size = 'bar',
 }: PlayerControlsProps) => {
   const { nextTrack, previousTrack } = usePlayerNavigationTracks()
+  const isLarge = size === 'large'
+  const modeIconSize = isLarge ? 22 : 17
+  const skipIconSize = isLarge ? 30 : 22
+  const progress = (
+    <PlaybackProgress
+      currentTime={currentTime}
+      duration={duration}
+      layout={isLarge ? 'stacked' : 'inline'}
+      onSeek={onSeek}
+    />
+  )
 
   return (
-    <div className="flex-1 flex flex-col items-center gap-2 max-w-180.5">
-      <div className="flex items-center gap-4">
+    <div
+      className={cn(
+        'flex flex-col items-center',
+        isLarge ? 'w-full gap-5' : 'max-w-180.5 flex-1 gap-2',
+      )}
+    >
+      {isLarge ? progress : null}
+      <div
+        className={cn(
+          'flex items-center',
+          isLarge ? 'w-full justify-between gap-3' : 'gap-4',
+        )}
+      >
         <button
           aria-label={isShuffled ? 'Disable shuffle' : 'Enable shuffle'}
           className={cn(
             'p-1 hover:scale-110 transition-transform',
-            isShuffled ? 'text-green-500' : 'text-text-subdued',
+            isShuffled ? 'text-primary' : 'text-muted-foreground',
           )}
           disabled={!onShuffleToggle}
           onClick={onShuffleToggle}
           type="button"
         >
-          <Shuffle size={16} />
+          <Shuffle size={modeIconSize} />
         </button>
 
         <TrackNavigationButton
           direction="previous"
+          iconSize={skipIconSize}
           onClick={onPrevious}
           track={previousTrack}
         />
 
         <button
           aria-label={isPlaying ? 'Pause' : 'Play'}
-          className="w-8 h-8 rounded-full bg-text hover:scale-105 transition-transform flex items-center justify-center"
+          className={cn(
+            'flex shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform hover:scale-105',
+            isLarge ? 'size-17' : 'size-11.5',
+          )}
           onClick={onPlayPause}
           type="button"
         >
           {isPlaying ? (
-            <Pause className="text-background" fill="currentColor" size={20} />
+            <Pause fill="currentColor" size={skipIconSize} />
           ) : (
-            <Play
-              className="text-background ml-0.5"
-              fill="currentColor"
-              size={20}
-            />
+            <Play className="ml-0.5" fill="currentColor" size={skipIconSize} />
           )}
         </button>
 
         <TrackNavigationButton
           direction="next"
+          iconSize={skipIconSize}
           onClick={onNext}
           track={nextTrack}
         />
@@ -90,21 +116,21 @@ export const PlayerControls = ({
           aria-label={repeatLabels[repeatMode]}
           className={cn(
             'p-1 hover:scale-110 transition-transform',
-            repeatMode !== 'off' ? 'text-green-500' : 'text-text-subdued',
+            repeatMode !== 'off' ? 'text-primary' : 'text-muted-foreground',
           )}
           disabled={!onRepeatToggle}
           onClick={onRepeatToggle}
           type="button"
         >
-          {repeatMode === 'one' ? <Repeat1 size={16} /> : <Repeat size={16} />}
+          {repeatMode === 'one' ? (
+            <Repeat1 size={modeIconSize} />
+          ) : (
+            <Repeat size={modeIconSize} />
+          )}
         </button>
       </div>
 
-      <PlaybackProgress
-        currentTime={currentTime}
-        duration={duration}
-        onSeek={onSeek}
-      />
+      {isLarge ? null : progress}
     </div>
   )
 }

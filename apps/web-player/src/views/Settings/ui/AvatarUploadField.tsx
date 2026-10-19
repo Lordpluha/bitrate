@@ -52,14 +52,14 @@ export const AvatarUploadField = ({
     : (fileName ?? t('settings.profile.avatar.none'))
 
   return (
-    <div className="relative grid max-w-160 gap-2 text-sm text-text">
+    <div className="relative mt-5 grid max-w-160 gap-2 text-sm text-foreground">
       <span id="avatar-upload-label">{t('settings.profile.avatar')}</span>
 
       <button
         aria-labelledby="avatar-upload-label"
         className={cn(
           'grid w-full gap-2 rounded-lg border border-dashed border-border bg-surface px-4 py-6 text-center transition-colors',
-          'hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:outline-none',
+          'hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none',
           isDraggingOver && 'border-primary bg-surface-hover',
           isPending && 'opacity-60',
         )}
@@ -70,17 +70,17 @@ export const AvatarUploadField = ({
         onDrop={handleDrop}
         type="button"
       >
-        <span className="text-text-subdued">
+        <span className="text-muted-foreground">
           {isDraggingOver
             ? t('settings.profile.avatar.drop')
             : t('settings.profile.avatar.hint')}
         </span>
 
-        <span className="mx-auto w-fit rounded-full bg-surface-hover px-4 py-1.5 text-sm font-bold text-text">
+        <span className="mx-auto inline-flex h-9 w-fit items-center rounded-md border border-border bg-background px-4 text-sm font-medium text-foreground">
           {t('settings.profile.avatar.browse')}
         </span>
 
-        <span className="truncate text-xs text-text-subdued">{status}</span>
+        <span className="truncate text-xs text-muted-foreground">{status}</span>
       </button>
 
       <input

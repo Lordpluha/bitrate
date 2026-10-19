@@ -1,2 +1,5 @@
 export * from './api/client/hooks'
 export * from './api/client/me.schemas'
+export * from './lib/notificationFilter'
+export * from './lib/notificationHref'
+export * from './ui/NotificationItem'

@@ -1,7 +1,13 @@
 'use client'
 
-import { cn, Input, ReviewIcon, SearchIcon } from '@bitrate/ui-react'
-import { type FocusEvent, type KeyboardEvent, useId, useState } from 'react'
+import { cn, Input, SearchIcon } from '@bitrate/ui-react'
+import {
+  type FocusEvent,
+  type KeyboardEvent,
+  Suspense,
+  useId,
+  useState,
+} from 'react'
 import { useI18n } from '@/shared/i18n'
 import { HeaderSearchDropdown } from '@/widgets/MainHeader/ui/HeaderSearch/HeaderSearchDropdown'
 import { useHeaderSearch } from '@/widgets/MainHeader/ui/HeaderSearch/model/useHeaderSearch'
@@ -10,7 +16,14 @@ type HeaderSearchProps = {
   className?: string
 }
 
-export const HeaderSearch = ({ className }: HeaderSearchProps) => {
+/** The search reads `?q=` with useSearchParams; its boundary keeps every main route prerenderable. */
+export const HeaderSearch = (props: HeaderSearchProps) => (
+  <Suspense fallback={null}>
+    <HeaderSearchField {...props} />
+  </Suspense>
+)
+
+const HeaderSearchField = ({ className }: HeaderSearchProps) => {
   const { t } = useI18n()
   const search = useHeaderSearch()
   const listboxId = useId()
@@ -96,12 +109,12 @@ export const HeaderSearch = ({ className }: HeaderSearchProps) => {
 
   return (
     <form
-      className={cn('relative w-full xl:w-100', className)}
+      className={cn('relative w-full xl:w-105', className)}
       onBlur={handleBlur}
       onSubmit={search.submit}
     >
       <SearchIcon
-        className="absolute left-4 top-1/2 z-10 -translate-y-1/2 transform text-text-subdued"
+        className="absolute left-4 top-1/2 z-10 -translate-y-1/2 transform text-muted-foreground xl:left-3.5"
         height={20}
         width={20}
       />
@@ -111,7 +124,7 @@ export const HeaderSearch = ({ className }: HeaderSearchProps) => {
         aria-controls={listboxId}
         aria-expanded={isDropdownOpen}
         aria-label={t('search.placeholder')}
-        className="bg-background-highlight pl-12"
+        className="bg-background-highlight pl-12 xl:h-9 xl:rounded-xl xl:border-border xl:bg-background xl:pl-10 xl:text-xs"
         onChange={(event) => {
           search.setQuery(event.target.value)
           search.setIsFocused(true)
@@ -125,13 +138,6 @@ export const HeaderSearch = ({ className }: HeaderSearchProps) => {
         value={search.query}
         variant="search"
       />
-      <button
-        aria-label={t('nav.search')}
-        className="absolute right-4 top-1/2 -translate-y-1/2 transform border-l-2 border-border pl-2 hover:opacity-80"
-        type="submit"
-      >
-        <ReviewIcon className="text-text-subdued" height={20} width={20} />
-      </button>
       {isDropdownOpen && (
         <HeaderSearchDropdown
           activeIndex={activeIndex}

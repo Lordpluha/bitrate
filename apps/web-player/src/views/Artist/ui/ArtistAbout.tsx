@@ -1,8 +1,8 @@
 'use client'
 
 import { cn } from '@bitrate/ui-react'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { getArtistBackgroundUrl } from '@shared/utils/mediaUrl'
-import Image from 'next/image'
 import { useState } from 'react'
 
 export type ArtistAboutProps = {
@@ -25,13 +25,14 @@ export const ArtistAbout = ({ artist, statsLabel }: ArtistAboutProps) => {
   if (!artist.bio) return null
 
   return (
-    <section className="px-4 pb-10 sm:px-6">
-      <h2 className="mb-4 text-2xl font-bold text-text">About</h2>
+    <section className="flex flex-col gap-3">
+      <h2 className="text-[19px] leading-[1.25] font-semibold">About</h2>
 
-      <div className="relative overflow-hidden rounded-xl bg-surface">
-        <Image
+      <div className="relative max-w-180 overflow-hidden rounded-[14px] border border-border bg-card">
+        <MediaImage
           alt={artist.username}
           className="object-cover"
+          fallback="artist"
           fill
           sizes="(max-width: 1024px) 100vw, 900px"
           src={getArtistBackgroundUrl(artist.backgroundImage, artist.avatar)}

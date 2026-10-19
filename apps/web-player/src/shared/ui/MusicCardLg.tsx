@@ -1,8 +1,9 @@
 'use client'
-import { cn, PlayIcon } from '@bitrate/ui-react'
+import { cn } from '@bitrate/ui-react'
 import { fallbackArtistImage, fallbackPlaylistCover } from '@shared/constants'
 import { ROUTES } from '@shared/routes'
-import Image from 'next/image'
+import { MediaImage } from '@shared/ui/MediaImage'
+import { Play } from 'lucide-react'
 import Link from 'next/link'
 
 interface MusicCardLgProps {
@@ -12,6 +13,8 @@ interface MusicCardLgProps {
   href?: string
   imageUrl?: string
   isArtist?: boolean
+  /** Starts the album, playlist or track at once; the rest of the card still opens it. */
+  onPlay?: () => void
 }
 
 export const resolveMusicCardImage = (
@@ -27,38 +30,57 @@ export const MusicCardLg = ({
   href: hrefProp,
   imageUrl,
   isArtist,
+  onPlay,
 }: MusicCardLgProps) => {
   const href = hrefProp ?? (isArtist ? ROUTES.artist(id) : ROUTES.playlist(id))
   const imageSrc = resolveMusicCardImage(imageUrl, isArtist)
 
   return (
-    <Link
-      className="group/card block min-w-45 cursor-pointer rounded-lg p-3 transition-colors duration-300 hover:bg-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
-      href={href}
-    >
-      <div className="relative mb-3 aspect-square overflow-hidden rounded-md shadow-lg shadow-black/20">
-        <Image
-          alt={name}
-          className={cn(
-            'object-cover transition duration-300 group-hover/card:scale-[1.03] group-hover/card:brightness-75',
-            isArtist ? 'rounded-full' : 'rounded-md',
-          )}
+    <div className="group/card relative flex min-w-45 flex-col gap-3 rounded-[14px] border border-border bg-card p-3.5 transition-colors duration-300 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring hover:bg-secondary">
+      <div
+        className={cn(
+          'relative aspect-square overflow-hidden',
+          isArtist ? 'rounded-full' : 'rounded-[9px]',
+        )}
+      >
+        <MediaImage
+          alt=""
+          className="object-cover transition duration-300 group-hover/card:scale-[1.03]"
+          fallback={isArtist ? 'artist' : 'playlist'}
           fill
           sizes="180px"
           src={imageSrc}
           unoptimized
         />
-        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/45 to-transparent opacity-0 transition-opacity duration-300 group-hover/card:opacity-100" />
-        <div className="absolute bottom-2 right-2 flex translate-y-2 scale-95 items-center justify-center opacity-0 transition duration-300 group-hover/card:translate-y-0 group-hover/card:scale-100 group-hover/card:opacity-100">
-          <PlayIcon height={48} width={48} />
-        </div>
+        {onPlay ? (
+          <button
+            aria-label={`Play ${name}`}
+            className="absolute right-2 bottom-2 z-10 flex size-10 translate-y-2 items-center justify-center rounded-full bg-primary text-primary-foreground opacity-0 shadow-lg transition duration-300 group-hover/card:translate-y-0 group-hover/card:opacity-100 hover:scale-105 focus-visible:translate-y-0 focus-visible:opacity-100"
+            onClick={onPlay}
+            type="button"
+          >
+            <Play
+              aria-hidden="true"
+              className="ml-0.5"
+              fill="currentColor"
+              size={18}
+            />
+          </button>
+        ) : null}
       </div>
-      <h3 className="mb-1 line-clamp-1 text-sm font-semibold text-text">
-        {name}
-      </h3>
-      <p className="line-clamp-2 text-xs leading-5 text-text-subdued">
-        {description}
-      </p>
-    </Link>
+      <div className="flex min-w-0 flex-col gap-0.75">
+        <Link
+          className="line-clamp-1 text-[13px] font-semibold text-foreground outline-none after:absolute after:inset-0 after:rounded-[14px]"
+          href={href}
+        >
+          {name}
+        </Link>
+        {description ? (
+          <p className="line-clamp-1 text-[10px] text-muted-foreground">
+            {description}
+          </p>
+        ) : null}
+      </div>
+    </div>
   )
 }

@@ -1,17 +1,12 @@
 import { getSiteUrl, SITE_DESCRIPTION, SITE_NAME } from '@shared/constants/site'
+import { brandFontVariables } from '@shared/fonts'
 import { ThemeScript } from '@shared/utils'
 import type { Metadata, Viewport } from 'next'
-import { Kanit, Poppins } from 'next/font/google'
+import { Kanit } from 'next/font/google'
 import type { PropsWithChildren } from 'react'
 import { Provider } from './_provider'
 
 import './global.css'
-
-const poppins = Poppins({
-  variable: '--font-source-sans',
-  subsets: ['latin', 'latin-ext'],
-  weight: ['300', '400', '500', '600', '700', '800', '900'],
-})
 
 const kanit = Kanit({
   variable: '--font-kanit',
@@ -81,7 +76,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
       <head>
         <ThemeScript />
       </head>
-      <body className={`${poppins.variable} ${kanit.variable}`}>
+      <body className={`${brandFontVariables} ${kanit.variable}`}>
         <Provider>{children}</Provider>
       </body>
     </html>

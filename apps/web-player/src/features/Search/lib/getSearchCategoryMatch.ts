@@ -1,14 +1,24 @@
-import { browseCategories } from '@/features/Search/model/search.constants'
+/** The fields of a browse category (`GET /browse/categories`) a match needs. */
+type MatchableCategory = { name: string; slug: string }
 
-export const getSearchCategoryMatch = (query: string) => {
-  const normalizedQuery = query.toLowerCase()
-
-  return browseCategories.find((category) => {
-    const normalizedTitle = category.title.toLowerCase()
-
+/**
+ * The browse category a search query is about: the query contains the category name or slug,
+ * or the name contains the query. Matches only real categories from the API.
+ */
+export const matchBrowseCategory = <C extends MatchableCategory>({
+  query,
+  categories,
+}: {
+  query: string
+  categories: readonly C[]
+}) => {
+  const q = query.trim().toLowerCase()
+  if (!q) return undefined
+  return categories.find((category) => {
+    const name = category.name.toLowerCase()
+    const slug = category.slug.toLowerCase()
     return (
-      normalizedTitle.includes(normalizedQuery) ||
-      normalizedQuery.includes(normalizedTitle.replace(' music', ''))
+      name.includes(q) || q.includes(name) || q.includes(slug) || slug === q
     )
   })
 }

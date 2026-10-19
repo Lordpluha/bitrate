@@ -4,6 +4,7 @@ import { clientFetchClient } from '@shared/api/client'
 import { ensureOkResponse } from '@shared/api/errors'
 import { apiQueryKeys } from '@shared/api/queryKeys'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { z } from 'zod'
 import { listeningHistoryResponseSchema } from './historyResponse.schema'
 
 export type { ListeningHistoryEntry } from './historyResponse.schema'
@@ -35,12 +36,15 @@ export const useListeningHistory = ({
     },
   })
 
+/** `POST /history/tracks/{id}`: `recorded` is false during a private session. */
+const recordListeningResponseSchema = z.object({ recorded: z.boolean() })
+
 export const useRecordListeningHistory = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (trackId: string) => {
-      const { response } = await clientFetchClient.POST(
+      const { data, response } = await clientFetchClient.POST(
         '/api/v1/history/tracks/{trackId}',
         {
           params: {
@@ -50,8 +54,11 @@ export const useRecordListeningHistory = () => {
       )
 
       ensureOkResponse(response, 'Failed to record listening history')
+      return recordListeningResponseSchema.parse(data)
     },
-    onSuccess: async () => {
+    onSuccess: async ({ recorded }) => {
+      /** A private session saves nothing, so the history has not changed. */
+      if (!recorded) return
       await queryClient.invalidateQueries({
         queryKey: apiQueryKeys.history.all,
       })

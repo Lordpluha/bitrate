@@ -3,9 +3,9 @@
 import { FollowArtistButton, useArtist } from '@entities/Artist'
 import { selectCurrentTrack, usePlayerStore } from '@entities/Player'
 import { ROUTES } from '@shared/routes'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { getArtistBackgroundUrl } from '@shared/utils/mediaUrl'
 import { BadgeCheck } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 import {
   getNcsArtistBioPrefix,
@@ -32,16 +32,17 @@ export const AboutArtist = () => {
   const ncsBioPrefix = getNcsArtistBioPrefix()
 
   return (
-    <div className="mt-4 overflow-hidden rounded-lg bg-surface">
+    <div className="overflow-hidden rounded-lg bg-surface">
       <Link
         aria-label={`Open ${artist.username} artist page`}
         className="group block rounded-t-lg outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-text"
         href={ROUTES.artist(artist.id)}
       >
         <div className="relative aspect-[3/2] w-full overflow-hidden">
-          <Image
+          <MediaImage
             alt=""
             className="object-cover transition duration-300 group-hover:scale-[1.02] group-hover:brightness-90"
+            fallback="artist"
             fill
             priority
             sizes="(max-width: 1279px) 100vw, 320px"
