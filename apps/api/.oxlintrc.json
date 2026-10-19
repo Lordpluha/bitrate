@@ -1,0 +1,23 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "categories": {
+    "correctness": "off",
+    "suspicious": "off",
+    "pedantic": "off",
+    "perf": "off",
+    "style": "off",
+    "restriction": "off",
+    "nursery": "off"
+  },
+  "plugins": [],
+  "jsPlugins": ["./oxlint/prisma-write-ownership.mjs"],
+  "ignorePatterns": [
+    "**/*.unit-spec.ts",
+    "**/*.int-spec.ts",
+    "**/__tests__/**",
+    "src/infra/seeds/**"
+  ],
+  "rules": {
+    "bitrate-api/prisma-write-ownership": "error"
+  }
+}
