@@ -35,7 +35,45 @@ describe('DiscoveryController', () => {
 
       await controller.charts('country', 'us')
 
-      expect(discovery.getCharts).toHaveBeenCalledWith('country', 'us', undefined, undefined)
+      expect(discovery.getCharts).toHaveBeenCalledWith(
+        'country',
+        'us',
+        undefined,
+        undefined,
+        undefined,
+      )
+    })
+
+    it('passes a genre filter through to the track chart', async () => {
+      discovery.getCharts.mockResolvedValue({ data: [], total: 0, page: 1, limit: 20 } as never)
+
+      await controller.charts('global', undefined, 1, 20, 'house')
+
+      expect(discovery.getCharts).toHaveBeenCalledWith('global', undefined, 1, 20, 'house')
+    })
+  })
+
+  describe('artist charts', () => {
+    it('rejects a scope outside the known allowlist', () => {
+      expect(() => controller.artistCharts('nope')).toThrow(BadRequestException)
+      expect(discovery.getArtistCharts).not.toHaveBeenCalled()
+    })
+
+    it('rejects the country scope when no country is given', () => {
+      expect(() => controller.artistCharts('country')).toThrow(BadRequestException)
+    })
+
+    it('ranks artists for a valid scope', async () => {
+      discovery.getArtistCharts.mockResolvedValue({
+        data: [],
+        total: 0,
+        page: 1,
+        limit: 20,
+      } as never)
+
+      await controller.artistCharts('viral', undefined, 2, 10)
+
+      expect(discovery.getArtistCharts).toHaveBeenCalledWith('viral', undefined, 2, 10)
     })
   })
 

@@ -11,9 +11,9 @@ import {
   TooltipTrigger,
 } from '@bitrate/ui-react'
 import { useAuth } from '@shared/hooks'
+import { MediaImage } from '@shared/ui/MediaImage'
 import { generateColor } from '@shared/utils'
 import { getUserAvatarUrl } from '@shared/utils/mediaUrl'
-import Image from 'next/image'
 import type { HTMLAttributes } from 'react'
 import { Z_INDEX_CLASS } from '@/shared/constants'
 import { ProfileMenuContent } from './ProfileMenuContent'
@@ -43,12 +43,13 @@ export const ProfileButton = ({
             <TooltipTrigger asChild>
               <PopoverTrigger
                 aria-label={`Open profile menu for ${username}`}
-                className="h-12 w-12 rounded-full bg-background-highlight p-2 transition-transform duration-200 hover:scale-105"
+                className="size-12 rounded-full bg-background-highlight p-2 transition-transform duration-200 hover:scale-105 xl:size-7.5 xl:bg-transparent xl:p-0"
               >
                 {avatarUrl ? (
-                  <Image
+                  <MediaImage
                     alt={username}
                     className="h-full w-full rounded-full object-cover"
+                    fallback="user"
                     height={32}
                     src={avatarUrl}
                     unoptimized
@@ -56,7 +57,7 @@ export const ProfileButton = ({
                   />
                 ) : (
                   <div
-                    className="flex h-full w-full items-center justify-center rounded-full text-xl font-semibold text-black"
+                    className="flex h-full w-full items-center justify-center rounded-full text-xl font-semibold text-black xl:text-sm"
                     style={{ backgroundColor }}
                   >
                     {firstLetter}

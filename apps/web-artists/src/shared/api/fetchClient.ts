@@ -11,7 +11,8 @@ export const apiBaseUrl = (
   import.meta.env.VITE_API_URL || 'http://localhost:3000'
 ).replace(/\/$/, '')
 
-async function refreshToken(): Promise<boolean> {
+/** Rotates the artist session once; concurrent callers share the same attempt. */
+export async function refreshToken(): Promise<boolean> {
   if (refreshPromise !== null) return refreshPromise
 
   refreshPromise = (async () => {
@@ -68,7 +69,8 @@ const authRefreshMiddleware: Middleware = {
         const isOnAuthPage =
           currentPath.startsWith('/auth/') ||
           currentPath === '/login' ||
-          currentPath === '/registration'
+          currentPath === '/registration' ||
+          currentPath === ROUTES.auth.verifyEmail
 
         if (!isOnAuthPage) {
           window.location.href = ROUTES.auth.login

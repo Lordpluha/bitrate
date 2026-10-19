@@ -1,6 +1,6 @@
-import banner1 from '@assets/images/banner-1.jpg'
-import banner2 from '@assets/images/banner-2.jpg'
-import banner3 from '@assets/images/banner-3.jpg'
+import cover1 from '@assets/images/cover-1.webp'
+import cover2 from '@assets/images/cover-2.webp'
+import cover3 from '@assets/images/cover-3.webp'
 import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 import { Bell, Cloud, Music2, PlusIcon, RefreshCcwIcon, SearchIcon } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -118,7 +118,7 @@ export const WithAvatar: Story = {
       <EmptyHeader>
         <EmptyMedia variant="default">
           <Avatar className="size-12">
-            <AvatarImage src={banner1} className="grayscale" />
+            <AvatarImage src={cover1} className="grayscale" />
             <AvatarFallback>LR</AvatarFallback>
           </Avatar>
         </EmptyMedia>
@@ -144,15 +144,15 @@ export const AvatarGroup: Story = {
         <EmptyMedia>
           <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:size-12 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
             <Avatar>
-              <AvatarImage src={banner1} alt="@member-1" />
+              <AvatarImage src={cover1} alt="@member-1" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <Avatar>
-              <AvatarImage src={banner2} alt="@member-2" />
+              <AvatarImage src={cover2} alt="@member-2" />
               <AvatarFallback>LR</AvatarFallback>
             </Avatar>
             <Avatar>
-              <AvatarImage src={banner3} alt="@member-3" />
+              <AvatarImage src={cover3} alt="@member-3" />
               <AvatarFallback>ER</AvatarFallback>
             </Avatar>
           </div>

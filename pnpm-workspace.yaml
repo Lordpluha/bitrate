@@ -14,8 +14,8 @@ publicHoistPattern:
   - "*expo-router*"
 
 overrides:
-  "react": "19.3.0"
-  "react-dom": "19.3.0"
+  "react": "19.3.1"
+  "react-dom": "19.3.1"
   "@types/react": "~19.3.0"
   "@types/react-dom": "~19.3.0"
   "esbuild": "0.27.3"
@@ -48,11 +48,27 @@ overrides:
   "picomatch@4": "^4.0.7"
   "postcss@8": "^8.5.28"
   "sharp": "^0.35.1"
+  "uuid@7": "^11.1.1"
+  "uuid@8": "^11.1.1"
   "uuid@11": "^11.1.1"
+  # Docusaurus core still asks for tinypool ^1; 2.x keeps the Tinypool/run/destroy API it uses.
+  "tinypool@1": "^2.2.0"
+  "deepmerge-ts@7": "^8.0.2"
+  "serialize-javascript@6": "^7.1.2"
+  "postcss-selector-parser@6": "^7.1.6"
+  "katex@<0.18.2": "^0.18.2"
   "ws@8": "^8.21.3"
   "zod": "4.4.3"
-  "@tanstack/react-query": "5.103.1"
-  "@tanstack/react-query-devtools": "5.103.1"
+  "@tanstack/react-query": "5.104.1"
+  "@tanstack/react-query-devtools": "5.104.1"
+
+# Advisories with no patched release anywhere. Both packages run only inside Expo's build
+# tooling (@expo/cli code signing, Metro's file map) for apps/mobile, never in a served runtime.
+# Re-check on every Expo upgrade and drop an entry as soon as a fixed version exists.
+auditConfig:
+  ignoreGhsas:
+    - GHSA-86w9-cpqp-85rv # node-forge <=1.4.0
+    - GHSA-vfj7-8cjw-p6xm # braces <=3.0.3
 
 allowBuilds:
   "@compodoc/compodoc": true

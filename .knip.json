@@ -21,7 +21,7 @@
       ],
       "ignoreFiles": ["prisma.config.ts"],
       "prisma": false,
-      "ignore": ["src/**/index.ts"]
+      "ignore": ["src/**/index.ts", "oxlint/fixtures/**"]
     },
     "apps/web-artists": {
       "entry": [
@@ -34,7 +34,8 @@
         "src/**/*.int-spec.tsx",
         "src/**/*.screenshot-spec.ts",
         "tests/configs/*.ts",
-        "tests/e2e/**/*.e2e-spec.ts"
+        "tests/e2e/**/*.e2e-spec.ts",
+        "tests/support/artist-api.mjs"
       ],
       "ignore": ["env.schema.ts", "src/routeTree.gen.ts"]
     },
@@ -49,6 +50,7 @@
         "src/**/*.int-spec.tsx",
         "src/**/*.screenshot-spec.ts",
         "tests/configs/*.ts",
+        "tests/configs/screenshot-overlays.css",
         "tests/e2e/**/*.e2e-spec.ts",
         "scripts/select-playwright-tests.mjs",
         "public/sw.js"

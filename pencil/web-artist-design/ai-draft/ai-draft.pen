@@ -1,0 +1,3001 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "pUxhVY",
+      "name": "Artist / AI-assisted draft / Desktop / Dark",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "gNTwJE",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:9lTrVo": {
+              "type": "ref",
+              "id": "nmWrYh",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Promotion",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "megaphone"
+                },
+                "ds:GZQzF3": {
+                  "content": "Promotion"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Promotion / AI-assisted draft"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Draft history"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "3JynM3",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "r5YM3o",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "AI-assisted draft"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Generate a starting point, then edit and approve it"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "gLcHWN",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "rZ7G6T",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "FZjNtJ",
+                      "name": "Stepper",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "uzGQpw",
+                          "ref": "ds:DAB6H9",
+                          "name": "Stepper/Step Done",
+                          "descendants": {
+                            "ds:88pxXk": {
+                              "content": "Brief"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "YXAVbt",
+                          "ref": "ds:I3Wq63",
+                          "name": "Stepper/Connector Done"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "zXeAfc",
+                          "ref": "ds:DAB6H9",
+                          "name": "Stepper/Step Done",
+                          "descendants": {
+                            "ds:88pxXk": {
+                              "content": "Generate"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "XdHRFe",
+                          "ref": "ds:I3Wq63",
+                          "name": "Stepper/Connector Done"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "cCJ7BF",
+                          "ref": "ds:CQEGOU",
+                          "name": "Stepper/Step Current",
+                          "descendants": {
+                            "ds:FZP3Tq": {
+                              "content": "Edit"
+                            },
+                            "ds:CV0khF": {
+                              "content": "3"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "aNXGfX",
+                          "ref": "ds:ArPPaT",
+                          "name": "Stepper/Connector"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "KxfDsS",
+                          "ref": "ds:L55NCX",
+                          "name": "Stepper/Step Upcoming",
+                          "descendants": {
+                            "ds:0aqWjw": {
+                              "content": "Approve"
+                            },
+                            "ds:1dymUo": {
+                              "content": "4"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "DgATXS",
+                      "ref": "ds:FJUa1",
+                      "name": "Badge / AI-assisted · Demo",
+                      "descendants": {
+                        "ds:BI0Pd": {
+                          "content": "AI-assisted · Demo"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "QpP2eS",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "3kAWRj",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "2Gnsa3",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "fhvK6c",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "8tkXdm",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "yZCavd",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Campaign brief"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "3LMdNF",
+                                      "ref": "ds:xtDM73",
+                                      "name": "Status/Success",
+                                      "descendants": {
+                                        "ds:HSv7ty": {
+                                          "content": "Saved"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "xfseAP",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "GOAL"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "KnoLCi",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "PeFtMj",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Release awareness"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "rR3zXF",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "AUDIENCE"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "9R3exE",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "G2Vork",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Existing listeners"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "HUcn8M",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "TONE"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "iq2fXD",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "4H2BdJ",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Calm, direct"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "hxYag5",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Source: Afterglow metadata + artist-entered brief. No external audience data."
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "kG82dj",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "55DtJg",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "tTWDhx",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "itqXQw",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Editable draft"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "T2tY3H",
+                                      "ref": "ds:FJUa1",
+                                      "name": "Badge / Version 2",
+                                      "descendants": {
+                                        "ds:BI0Pd": {
+                                          "content": "Version 2"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "GHSzuc",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Post copy",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Post copy"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Afterglow is out now on Bitrate."
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "StM6y7",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "224 / 500 characters · Edited by artist"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "xZ7doh",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Alternative opening"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "JgNi8d",
+                                  "ref": "ds:XDvNAD",
+                                  "name": "Text/Paragraph",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "A quieter signal for the hours after midnight."
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "uhaWGE",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "PwduHs",
+                                      "ref": "ds:G5tJp",
+                                      "name": "Button / Use opening",
+                                      "descendants": {
+                                        "ds:d2zCI": {
+                                          "content": "Use opening"
+                                        },
+                                        "ds:zDiHG": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "EAFc32",
+                                      "ref": "ds:DTwJb",
+                                      "name": "Button / Generate variant",
+                                      "descendants": {
+                                        "ds:GyGLK": {
+                                          "content": "Generate variant"
+                                        },
+                                        "ds:DsOu2": {
+                                          "icon": "refresh-cw"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ZSGsiV",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Regenerate creates a new version and keeps this edited draft."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "oCpgAb",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "6v6cgH",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "jVkfSU",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "C56snc",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "hSmnUR",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Review before approval"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "zEKiCu",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "AI is a writing assistant. The artist owns the final copy and channel."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "pLtnxh",
+                                  "ref": "ds:ye2ZlZ",
+                                  "name": "Checklist Row/Done",
+                                  "descendants": {
+                                    "ds:BWmC54": {
+                                      "content": "No guaranteed performance claim"
+                                    },
+                                    "ds:ui1TFi": {
+                                      "enabled": false
+                                    },
+                                    "ds:4QtRy2": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "N4cJG5",
+                                  "ref": "ds:KdKXRG",
+                                  "name": "Checklist Row/Blocked",
+                                  "descendants": {
+                                    "ds:Vmx3Ga": {
+                                      "content": "Release facts match brief"
+                                    },
+                                    "ds:SolG4j": {
+                                      "content": "Review"
+                                    },
+                                    "ds:IkujNN": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "i9kB57",
+                                  "ref": "ds:KdKXRG",
+                                  "name": "Checklist Row/Blocked",
+                                  "descendants": {
+                                    "ds:Vmx3Ga": {
+                                      "content": "External links added"
+                                    },
+                                    "ds:SolG4j": {
+                                      "content": "Needed"
+                                    },
+                                    "ds:IkujNN": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "bEdFDD",
+                                  "ref": "ds:BNKrLn",
+                                  "name": "Checklist Row/Pending",
+                                  "descendants": {
+                                    "ds:kHGXMJ": {
+                                      "content": "Channel selected"
+                                    },
+                                    "ds:9U0qv6": {
+                                      "enabled": false
+                                    },
+                                    "ds:9lRveR": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "YVagiB",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Save edited draft",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Save edited draft"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "jHpyPb",
+                                  "ref": "ds:DTwJb",
+                                  "name": "Button / Discard suggestion",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:GyGLK": {
+                                      "content": "Discard suggestion"
+                                    },
+                                    "ds:uRXDu": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/promotion/draft — AI writes a starting point from the brief; the artist edits and approves."
+    },
+    {
+      "type": "frame",
+      "id": "mQU3YL",
+      "name": "Artist / AI-assisted draft / Desktop / Light",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "LRYGMP",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:9lTrVo": {
+              "type": "ref",
+              "id": "NUhabY",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Promotion",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "megaphone"
+                },
+                "ds:GZQzF3": {
+                  "content": "Promotion"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Promotion / AI-assisted draft"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Draft history"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "6JqULc",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "fGdqNy",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "AI-assisted draft"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Generate a starting point, then edit and approve it"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "v2e5PN",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "CGE9Ce",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "aXsMYi",
+                      "name": "Stepper",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "M7ai99",
+                          "ref": "ds:DAB6H9",
+                          "name": "Stepper/Step Done",
+                          "descendants": {
+                            "ds:88pxXk": {
+                              "content": "Brief"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "uBNRX7",
+                          "ref": "ds:I3Wq63",
+                          "name": "Stepper/Connector Done"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "YrPcWb",
+                          "ref": "ds:DAB6H9",
+                          "name": "Stepper/Step Done",
+                          "descendants": {
+                            "ds:88pxXk": {
+                              "content": "Generate"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ZecTKJ",
+                          "ref": "ds:I3Wq63",
+                          "name": "Stepper/Connector Done"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "AQC26K",
+                          "ref": "ds:CQEGOU",
+                          "name": "Stepper/Step Current",
+                          "descendants": {
+                            "ds:FZP3Tq": {
+                              "content": "Edit"
+                            },
+                            "ds:CV0khF": {
+                              "content": "3"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "G9Jk5z",
+                          "ref": "ds:ArPPaT",
+                          "name": "Stepper/Connector"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Zixf8B",
+                          "ref": "ds:L55NCX",
+                          "name": "Stepper/Step Upcoming",
+                          "descendants": {
+                            "ds:0aqWjw": {
+                              "content": "Approve"
+                            },
+                            "ds:1dymUo": {
+                              "content": "4"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "EL7mBi",
+                      "ref": "ds:FJUa1",
+                      "name": "Badge / AI-assisted · Demo",
+                      "descendants": {
+                        "ds:BI0Pd": {
+                          "content": "AI-assisted · Demo"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "tkhZpX",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "2hAu3J",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "kqydpx",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "KSzN3c",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "rEvB5V",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "N6545Z",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Campaign brief"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "RFHLn8",
+                                      "ref": "ds:xtDM73",
+                                      "name": "Status/Success",
+                                      "descendants": {
+                                        "ds:HSv7ty": {
+                                          "content": "Saved"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ka7tN5",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "GOAL"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "Suv84A",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "2MTiph",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Release awareness"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Mp4yEp",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "AUDIENCE"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "EGxyKG",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "HX2SQ3",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Existing listeners"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "dRTobz",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "TONE"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "r4qwhF",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "77uRiH",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Calm, direct"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "JjB9Kw",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Source: Afterglow metadata + artist-entered brief. No external audience data."
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "7xhXFT",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "W9YBc8",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "6ZUxEZ",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "sMjw9V",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Editable draft"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "sT8Uhw",
+                                      "ref": "ds:FJUa1",
+                                      "name": "Badge / Version 2",
+                                      "descendants": {
+                                        "ds:BI0Pd": {
+                                          "content": "Version 2"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "9biQvs",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Post copy",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Post copy"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Afterglow is out now on Bitrate."
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "jiwvd4",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "224 / 500 characters · Edited by artist"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "cDUuk9",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Alternative opening"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Wy3Wws",
+                                  "ref": "ds:XDvNAD",
+                                  "name": "Text/Paragraph",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "A quieter signal for the hours after midnight."
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "7qxzQs",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "smfgTF",
+                                      "ref": "ds:G5tJp",
+                                      "name": "Button / Use opening",
+                                      "descendants": {
+                                        "ds:d2zCI": {
+                                          "content": "Use opening"
+                                        },
+                                        "ds:zDiHG": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "fywTRF",
+                                      "ref": "ds:DTwJb",
+                                      "name": "Button / Generate variant",
+                                      "descendants": {
+                                        "ds:GyGLK": {
+                                          "content": "Generate variant"
+                                        },
+                                        "ds:DsOu2": {
+                                          "icon": "refresh-cw"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "HPjppS",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Regenerate creates a new version and keeps this edited draft."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Kkykm6",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "fod4LD",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "mwqcQz",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "QDpRi6",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "BMSUJz",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Review before approval"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "xnAC3L",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "AI is a writing assistant. The artist owns the final copy and channel."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "i3GrGZ",
+                                  "ref": "ds:ye2ZlZ",
+                                  "name": "Checklist Row/Done",
+                                  "descendants": {
+                                    "ds:BWmC54": {
+                                      "content": "No guaranteed performance claim"
+                                    },
+                                    "ds:ui1TFi": {
+                                      "enabled": false
+                                    },
+                                    "ds:4QtRy2": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "uQCR6q",
+                                  "ref": "ds:KdKXRG",
+                                  "name": "Checklist Row/Blocked",
+                                  "descendants": {
+                                    "ds:Vmx3Ga": {
+                                      "content": "Release facts match brief"
+                                    },
+                                    "ds:SolG4j": {
+                                      "content": "Review"
+                                    },
+                                    "ds:IkujNN": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Aat59W",
+                                  "ref": "ds:KdKXRG",
+                                  "name": "Checklist Row/Blocked",
+                                  "descendants": {
+                                    "ds:Vmx3Ga": {
+                                      "content": "External links added"
+                                    },
+                                    "ds:SolG4j": {
+                                      "content": "Needed"
+                                    },
+                                    "ds:IkujNN": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Y43vCW",
+                                  "ref": "ds:BNKrLn",
+                                  "name": "Checklist Row/Pending",
+                                  "descendants": {
+                                    "ds:kHGXMJ": {
+                                      "content": "Channel selected"
+                                    },
+                                    "ds:9U0qv6": {
+                                      "enabled": false
+                                    },
+                                    "ds:9lRveR": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "UZzzRV",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Save edited draft",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Save edited draft"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "uvM7zH",
+                                  "ref": "ds:DTwJb",
+                                  "name": "Button / Discard suggestion",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:GyGLK": {
+                                      "content": "Discard suggestion"
+                                    },
+                                    "ds:uRXDu": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "designed — /dashboard/promotion/draft — AI writes a starting point from the brief; the artist edits and approves."
+    },
+    {
+      "type": "frame",
+      "id": "7V4QAk",
+      "name": "Artist / AI-assisted draft / Desktop / Dim",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "vSigVC",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:9lTrVo": {
+              "type": "ref",
+              "id": "h3z2k8",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Promotion",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "megaphone"
+                },
+                "ds:GZQzF3": {
+                  "content": "Promotion"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Promotion / AI-assisted draft"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Draft history"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "AKs9AY",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "2MgvRc",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "AI-assisted draft"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Generate a starting point, then edit and approve it"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "xCU8YH",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "6p42LR",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "MeswCZ",
+                      "name": "Stepper",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "whDEKo",
+                          "ref": "ds:DAB6H9",
+                          "name": "Stepper/Step Done",
+                          "descendants": {
+                            "ds:88pxXk": {
+                              "content": "Brief"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "V9E9c4",
+                          "ref": "ds:I3Wq63",
+                          "name": "Stepper/Connector Done"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "YfqGLD",
+                          "ref": "ds:DAB6H9",
+                          "name": "Stepper/Step Done",
+                          "descendants": {
+                            "ds:88pxXk": {
+                              "content": "Generate"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "j2Ucbh",
+                          "ref": "ds:I3Wq63",
+                          "name": "Stepper/Connector Done"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "brwZRx",
+                          "ref": "ds:CQEGOU",
+                          "name": "Stepper/Step Current",
+                          "descendants": {
+                            "ds:FZP3Tq": {
+                              "content": "Edit"
+                            },
+                            "ds:CV0khF": {
+                              "content": "3"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "USyZ6D",
+                          "ref": "ds:ArPPaT",
+                          "name": "Stepper/Connector"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ZFR7HN",
+                          "ref": "ds:L55NCX",
+                          "name": "Stepper/Step Upcoming",
+                          "descendants": {
+                            "ds:0aqWjw": {
+                              "content": "Approve"
+                            },
+                            "ds:1dymUo": {
+                              "content": "4"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "LfvRoX",
+                      "ref": "ds:FJUa1",
+                      "name": "Badge / AI-assisted · Demo",
+                      "descendants": {
+                        "ds:BI0Pd": {
+                          "content": "AI-assisted · Demo"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "vJJqCX",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "AqpHHF",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "A2t5yn",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "vJWzuV",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "mGzxt8",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "K8sdSQ",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Campaign brief"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "8e79aR",
+                                      "ref": "ds:xtDM73",
+                                      "name": "Status/Success",
+                                      "descendants": {
+                                        "ds:HSv7ty": {
+                                          "content": "Saved"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "44tfAd",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "GOAL"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "CzizLt",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "e2UdFf",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Release awareness"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "djc5Gw",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "AUDIENCE"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "oDe7kQ",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "wVQrrT",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Existing listeners"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Kaqv8Q",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "TONE"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "KWDLCN",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "42gnPc",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Calm, direct"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "cs3urZ",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Source: Afterglow metadata + artist-entered brief. No external audience data."
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "MWkqAU",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "HpMRoa",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "mG4LrP",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "PaoMiU",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Editable draft"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "w5vGy6",
+                                      "ref": "ds:FJUa1",
+                                      "name": "Badge / Version 2",
+                                      "descendants": {
+                                        "ds:BI0Pd": {
+                                          "content": "Version 2"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "B6srDY",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Post copy",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Post copy"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Afterglow is out now on Bitrate."
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "DauNB9",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "224 / 500 characters · Edited by artist"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "PQefpp",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Alternative opening"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "NLE8jq",
+                                  "ref": "ds:XDvNAD",
+                                  "name": "Text/Paragraph",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "A quieter signal for the hours after midnight."
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "3eFxZx",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "zWQvBL",
+                                      "ref": "ds:G5tJp",
+                                      "name": "Button / Use opening",
+                                      "descendants": {
+                                        "ds:d2zCI": {
+                                          "content": "Use opening"
+                                        },
+                                        "ds:zDiHG": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "33C8LZ",
+                                      "ref": "ds:DTwJb",
+                                      "name": "Button / Generate variant",
+                                      "descendants": {
+                                        "ds:GyGLK": {
+                                          "content": "Generate variant"
+                                        },
+                                        "ds:DsOu2": {
+                                          "icon": "refresh-cw"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "v3naVp",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Regenerate creates a new version and keeps this edited draft."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "HcmFmT",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "FyD2Fa",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "NnrgUN",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "WYgWX7",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "eTpsr8",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Review before approval"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "MbqmoK",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "AI is a writing assistant. The artist owns the final copy and channel."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "pkJr7A",
+                                  "ref": "ds:ye2ZlZ",
+                                  "name": "Checklist Row/Done",
+                                  "descendants": {
+                                    "ds:BWmC54": {
+                                      "content": "No guaranteed performance claim"
+                                    },
+                                    "ds:ui1TFi": {
+                                      "enabled": false
+                                    },
+                                    "ds:4QtRy2": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Mj7UvN",
+                                  "ref": "ds:KdKXRG",
+                                  "name": "Checklist Row/Blocked",
+                                  "descendants": {
+                                    "ds:Vmx3Ga": {
+                                      "content": "Release facts match brief"
+                                    },
+                                    "ds:SolG4j": {
+                                      "content": "Review"
+                                    },
+                                    "ds:IkujNN": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "C42kQQ",
+                                  "ref": "ds:KdKXRG",
+                                  "name": "Checklist Row/Blocked",
+                                  "descendants": {
+                                    "ds:Vmx3Ga": {
+                                      "content": "External links added"
+                                    },
+                                    "ds:SolG4j": {
+                                      "content": "Needed"
+                                    },
+                                    "ds:IkujNN": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "sckrx4",
+                                  "ref": "ds:BNKrLn",
+                                  "name": "Checklist Row/Pending",
+                                  "descendants": {
+                                    "ds:kHGXMJ": {
+                                      "content": "Channel selected"
+                                    },
+                                    "ds:9U0qv6": {
+                                      "enabled": false
+                                    },
+                                    "ds:9lRveR": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "VZJ6JG",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Save edited draft",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Save edited draft"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "eXmtt8",
+                                  "ref": "ds:DTwJb",
+                                  "name": "Button / Discard suggestion",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:GyGLK": {
+                                      "content": "Discard suggestion"
+                                    },
+                                    "ds:uRXDu": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "designed — /dashboard/promotion/draft — AI writes a starting point from the brief; the artist edits and approves."
+    },
+    {
+      "type": "frame",
+      "id": "VSXGAS",
+      "name": "Artist / AI-assisted draft / Mobile / Dark",
+      "width": 390,
+      "height": 1700,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "CnTtmz",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1700,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "exoP5S",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "3dc6mC",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "AI-assisted draft"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Generate a starting point, then edit and approve it"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "a2fBzS",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "YNrv4g",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "CJHkQv",
+                      "name": "Stepper",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "4rH4DU",
+                          "ref": "ds:DAB6H9",
+                          "name": "Stepper/Step Done",
+                          "descendants": {
+                            "ds:88pxXk": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "sLtGpR",
+                          "ref": "ds:I3Wq63",
+                          "name": "Stepper/Connector Done"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "fxqWyt",
+                          "ref": "ds:DAB6H9",
+                          "name": "Stepper/Step Done",
+                          "descendants": {
+                            "ds:88pxXk": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "DsDDmu",
+                          "ref": "ds:I3Wq63",
+                          "name": "Stepper/Connector Done"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Yog9WX",
+                          "ref": "ds:CQEGOU",
+                          "name": "Stepper/Step Current",
+                          "descendants": {
+                            "ds:FZP3Tq": {
+                              "content": "Edit"
+                            },
+                            "ds:CV0khF": {
+                              "content": "3"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "hZYNDg",
+                          "ref": "ds:ArPPaT",
+                          "name": "Stepper/Connector"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "yYr7cu",
+                          "ref": "ds:L55NCX",
+                          "name": "Stepper/Step Upcoming",
+                          "descendants": {
+                            "ds:0aqWjw": {
+                              "enabled": false
+                            },
+                            "ds:1dymUo": {
+                              "content": "4"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "xN45QM",
+                      "ref": "ds:FJUa1",
+                      "name": "Badge / AI-assisted · Demo",
+                      "descendants": {
+                        "ds:BI0Pd": {
+                          "content": "AI-assisted · Demo"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "Sbi4YX",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "Bo5mb6",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "JC4AUz",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "aqAjhT",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Campaign brief"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "49u29b",
+                              "ref": "ds:xtDM73",
+                              "name": "Status/Success",
+                              "descendants": {
+                                "ds:HSv7ty": {
+                                  "content": "Saved"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "TXvZo3",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "GOAL"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "YBDsmy",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "n9VEFQ",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Release awareness"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "UXuBCb",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "AUDIENCE"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "fEG74k",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "3vYatA",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Existing listeners"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "evTZQu",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "TONE"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "dSSKvo",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "2h7drC",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Calm, direct"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "rA94b6",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "Source: Afterglow metadata + artist-entered brief. No external audience data."
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "FvxDUY",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "n4SaHc",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "QtRyqH",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "WUL4ok",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Editable draft"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "m5WPcg",
+                              "ref": "ds:FJUa1",
+                              "name": "Badge / Version 2",
+                              "descendants": {
+                                "ds:BI0Pd": {
+                                  "content": "Version 2"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "VD9AYx",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Post copy",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Post copy"
+                            },
+                            "ds:iI0CE": {
+                              "content": "Afterglow is out now on Bitrate."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "CLjEQ2",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "224 / 500 characters · Edited by artist"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ytXNQi",
+                          "ref": "ds:SOt7Oe",
+                          "name": "Text/Body Strong",
+                          "content": "Alternative opening"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "tFxe6u",
+                          "ref": "ds:XDvNAD",
+                          "name": "Text/Paragraph",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "A quieter signal for the hours after midnight."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Sah3rp",
+                          "name": "Row",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "iy799c",
+                              "ref": "ds:G5tJp",
+                              "name": "Button / Use opening",
+                              "descendants": {
+                                "ds:d2zCI": {
+                                  "content": "Use opening"
+                                },
+                                "ds:zDiHG": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "iAVkKk",
+                              "ref": "ds:DTwJb",
+                              "name": "Button / Generate variant",
+                              "descendants": {
+                                "ds:GyGLK": {
+                                  "content": "Generate variant"
+                                },
+                                "ds:DsOu2": {
+                                  "icon": "refresh-cw"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "NrzFVc",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "Regenerate creates a new version and keeps this edited draft."
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "DKyUTE",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "TvQimZ",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "2yAgUZ",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "9MXQqS",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Review before approval"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "e5K5KA",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "AI is a writing assistant. The artist owns the final copy and channel."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "jXEZeg",
+                          "ref": "ds:ye2ZlZ",
+                          "name": "Checklist Row/Done",
+                          "descendants": {
+                            "ds:BWmC54": {
+                              "content": "No guaranteed performance claim"
+                            },
+                            "ds:ui1TFi": {
+                              "enabled": false
+                            },
+                            "ds:4QtRy2": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ZuTYnV",
+                          "ref": "ds:KdKXRG",
+                          "name": "Checklist Row/Blocked",
+                          "descendants": {
+                            "ds:Vmx3Ga": {
+                              "content": "Release facts match brief"
+                            },
+                            "ds:SolG4j": {
+                              "content": "Review"
+                            },
+                            "ds:IkujNN": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ZaABc8",
+                          "ref": "ds:KdKXRG",
+                          "name": "Checklist Row/Blocked",
+                          "descendants": {
+                            "ds:Vmx3Ga": {
+                              "content": "External links added"
+                            },
+                            "ds:SolG4j": {
+                              "content": "Needed"
+                            },
+                            "ds:IkujNN": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ZbvDDi",
+                          "ref": "ds:BNKrLn",
+                          "name": "Checklist Row/Pending",
+                          "descendants": {
+                            "ds:kHGXMJ": {
+                              "content": "Channel selected"
+                            },
+                            "ds:9U0qv6": {
+                              "enabled": false
+                            },
+                            "ds:9lRveR": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "wxRsSp",
+                          "ref": "ds:exjwf",
+                          "name": "Button / Save edited draft",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:E23bq6": {
+                              "content": "Save edited draft"
+                            },
+                            "ds:o7NXW": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Xb6PN4",
+                          "ref": "ds:DTwJb",
+                          "name": "Button / Discard suggestion",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:GyGLK": {
+                              "content": "Discard suggestion"
+                            },
+                            "ds:uRXDu": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/promotion/draft — AI writes a starting point from the brief; the artist edits and approves."
+    },
+    {
+      "type": "frame",
+      "id": "Rf7oqd",
+      "name": "Artist / AI-assisted draft / Generating / Desktop",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "cuYWGH",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:9lTrVo": {
+              "type": "ref",
+              "id": "RmSt6a",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Promotion",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "megaphone"
+                },
+                "ds:GZQzF3": {
+                  "content": "Promotion"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Promotion / AI-assisted draft"
+            },
+            "ds:YLdi4o": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "JCgs2Y",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "CrK5hA",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "AI-assisted draft"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Generating a starting point from your brief…"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "vGUqAb",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "QgvuhX",
+                  "name": "Loading",
+                  "layout": "vertical",
+                  "gap": 24,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "4XmCJZ",
+                      "ref": "ds:Jjegi",
+                      "name": "Skeleton",
+                      "width": 220,
+                      "height": 28
+                    },
+                    {
+                      "type": "frame",
+                      "id": "RniGZJ",
+                      "name": "Skeleton Rows",
+                      "layout": "vertical",
+                      "gap": 16,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "qwL24x",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Ew54A2",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "JQASam",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "d2g9UM",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "q8Xybc",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "FPpbGj",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "JmmzbD",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "umdCHP",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "F5Gdk4",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Lu6t3N",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "PdhwcJ",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "tjSLTK",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/promotion/draft — AI writes a starting point from the brief; the artist edits and approves."
+    },
+    {
+      "type": "frame",
+      "id": "yfYuQq",
+      "name": "Artist / AI-assisted draft / Generating / Mobile",
+      "width": 390,
+      "height": 1200,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "f44hoU",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1200,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "oWZmeJ",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "XxWGwU",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "AI-assisted draft"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Generating a starting point from your brief…"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "PN8mmm",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "j4xShh",
+                  "name": "Loading",
+                  "layout": "vertical",
+                  "gap": 24,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "GmBRCD",
+                      "ref": "ds:Jjegi",
+                      "name": "Skeleton",
+                      "width": 140,
+                      "height": 28
+                    },
+                    {
+                      "type": "frame",
+                      "id": "NW9DUn",
+                      "name": "Skeleton Rows",
+                      "layout": "vertical",
+                      "gap": 16,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "MdUBbS",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Qdc4up",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "fBczbu",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "NjKJZs",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "7BeQnn",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "xUVNFD",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "KeNVP9",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "FrXo6w",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ExsNCh",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "5oSba7",
+                          "ref": "ds:Gq2CrB",
+                          "name": "Skeleton/Track Row Mobile",
+                          "width": "fill_container"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/promotion/draft — AI writes a starting point from the brief; the artist edits and approves."
+    },
+    {
+      "type": "frame",
+      "id": "oXAzsP",
+      "name": "Artist / AI-assisted draft / Generation failed / Desktop",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "CP8T5p",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:9lTrVo": {
+              "type": "ref",
+              "id": "p4fHFf",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Promotion",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "megaphone"
+                },
+                "ds:GZQzF3": {
+                  "content": "Promotion"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Promotion / AI-assisted draft"
+            },
+            "ds:YLdi4o": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "jjYxzr",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "EYyC7z",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "SJ3sDy",
+                      "ref": "ds:LQ8GwL",
+                      "name": "State / The draft could not be generated",
+                      "descendants": {
+                        "ds:zG3uZd": {
+                          "icon": "triangle-alert"
+                        },
+                        "ds:ATKZVK": {
+                          "content": "The draft could not be generated"
+                        },
+                        "ds:h7OAoY": {
+                          "content": "Your brief and earlier versions are kept. Try again."
+                        },
+                        "ds:ydkfG5/ds:NVe7y": {
+                          "content": "Try again"
+                        },
+                        "ds:voqjVU": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/promotion/draft — AI writes a starting point from the brief; the artist edits and approves."
+    },
+    {
+      "type": "frame",
+      "id": "cmCxQx",
+      "name": "Artist / AI-assisted draft / Generation failed / Mobile",
+      "width": 390,
+      "height": 1200,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "NgkRn9",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1200,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "6haTNh",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "YqTzQ8",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "r33Fkw",
+                      "ref": "ds:LQ8GwL",
+                      "name": "State / The draft could not be generated",
+                      "descendants": {
+                        "ds:zG3uZd": {
+                          "icon": "triangle-alert"
+                        },
+                        "ds:ATKZVK": {
+                          "content": "The draft could not be generated"
+                        },
+                        "ds:h7OAoY": {
+                          "content": "Your brief and earlier versions are kept. Try again."
+                        },
+                        "ds:ydkfG5/ds:NVe7y": {
+                          "content": "Try again"
+                        },
+                        "ds:voqjVU": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/promotion/draft — AI writes a starting point from the brief; the artist edits and approves."
+    }
+  ]
+}

@@ -1,13 +1,17 @@
 import { normalizePagination } from '@common/pagination'
+import { readUserSettings } from '@common/user-settings'
 import { NS, TTL } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { PUBLIC_ARTIST_SELECT } from '@modules/artists/artists.select'
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
+import { DISCOVERY_ERRORS } from './errors/discovery.errors'
 import { PersonalTopService } from './personal-top.service'
 
-type ChartScope = 'global' | 'viral' | 'country'
+export type ChartScope = 'global' | 'viral' | 'country'
+/** Chart scopes a request may ask for. */
+export const CHART_SCOPES: readonly ChartScope[] = ['global', 'viral', 'country']
 
 @Injectable()
 export class DiscoveryService {
@@ -39,7 +43,7 @@ export class DiscoveryService {
     const pagination = normalizePagination(page, limit)
     return this.cache.wrap(NS.BROWSE, `category:${slug}:${page}:${limit}`, TTL.MEDIUM, async () => {
       const genre = await this.prisma.genre.findUnique({ where: { slug }, select: { id: true } })
-      if (!genre) throw new NotFoundException('Browse category not found')
+      if (!genre) throw new NotFoundException(DISCOVERY_ERRORS.CATEGORY_NOT_FOUND)
       const where = {
         isPublic: true,
         deletedAt: null,
@@ -62,13 +66,18 @@ export class DiscoveryService {
     })
   }
 
-  getFeed(userId?: string) {
-    const key = userId ?? 'anonymous'
+  async getFeed(userId?: string) {
+    /* a user who turned explicit content off gets no explicit tracks; part of the cache key */
+    const hideExplicit = userId
+      ? !(await readUserSettings(this.prisma, userId)).explicitContent
+      : false
+    const key = `${userId ?? 'anonymous'}:${hideExplicit ? 'clean' : 'all'}`
     return this.cache.wrap(NS.RECOMMENDATIONS, `feed:${key}`, TTL.SHORT, async () => {
       const preferredGenreIds = userId ? await this.getPreferredGenreIds(userId) : []
       const trackWhere = {
         processingStatus: 'READY' as const,
         deletedAt: null,
+        ...(hideExplicit ? { explicit: false } : {}),
         ...(preferredGenreIds.length > 0
           ? { genres: { some: { genreId: { in: preferredGenreIds } } } }
           : {}),
@@ -137,15 +146,23 @@ export class DiscoveryService {
     })
   }
 
-  getCharts(scope: ChartScope, country: string | undefined, page = 1, limit = 50) {
+  async getCharts(
+    scope: ChartScope,
+    country: string | undefined,
+    page = 1,
+    limit = 50,
+    genre?: string,
+  ) {
     const pagination = normalizePagination(page, limit)
-    const key = `history-v1:${scope}:${country ?? 'global'}:${page}:${limit}`
+    /* resolve the genre first so an unknown slug is a 404, not an empty chart */
+    const genreId = genre ? await this.requireGenreId(genre) : undefined
+    const key = `history-v2:${scope}:${country ?? 'global'}:${genre ?? 'all'}:${page}:${limit}`
     return this.cache.wrap(NS.CHARTS, key, TTL.MEDIUM, async () => {
       const since = this.chartRangeStart(scope)
-      const countryFilter =
-        scope === 'country' && country
-          ? Prisma.sql`AND LOWER(a."country") = LOWER(${country})`
-          : Prisma.empty
+      const countryFilter = this.countryFilter(scope, country)
+      const genreFilter = genreId
+        ? Prisma.sql`AND EXISTS (SELECT 1 FROM "TrackGenre" tg WHERE tg."trackId" = t.id AND tg."genreId" = ${genreId}::uuid)`
+        : Prisma.empty
       const [rows, countRows] = await Promise.all([
         this.prisma.queryRaw<Array<{ trackId: string; plays: bigint }>>(Prisma.sql`
           SELECT h."trackId",
@@ -158,6 +175,7 @@ export class DiscoveryService {
             AND t."processingStatus" = 'READY'
             AND a."deletedAt" IS NULL
             ${countryFilter}
+            ${genreFilter}
           GROUP BY h."trackId"
           ORDER BY plays DESC, MAX(h."listenedAt") DESC, h."trackId" ASC
           LIMIT ${pagination.limit} OFFSET ${pagination.skip}
@@ -174,6 +192,7 @@ export class DiscoveryService {
               AND t."processingStatus" = 'READY'
               AND a."deletedAt" IS NULL
               ${countryFilter}
+            ${genreFilter}
             GROUP BY h."trackId"
           ) ranked_tracks
         `),
@@ -199,6 +218,70 @@ export class DiscoveryService {
         limit: pagination.limit,
       }
     })
+  }
+
+  /** Artists ranked by distinct listeners in the chart window (one listener counts once). */
+  getArtistCharts(scope: ChartScope, country: string | undefined, page = 1, limit = 50) {
+    const pagination = normalizePagination(page, limit)
+    const key = `artists-v1:${scope}:${country ?? 'global'}:${page}:${limit}`
+    return this.cache.wrap(NS.CHARTS, key, TTL.MEDIUM, async () => {
+      const since = this.chartRangeStart(scope)
+      const countryFilter = this.countryFilter(scope, country)
+      const [rows, countRows] = await Promise.all([
+        this.prisma.queryRaw<Array<{ artistId: string; listeners: bigint }>>(Prisma.sql`
+          SELECT t."artistId", COUNT(DISTINCT h."userId")::bigint AS listeners
+          FROM "ListeningHistory" h
+          JOIN "Track" t ON t.id = h."trackId"
+          JOIN "Artist" a ON a.id = t."artistId"
+          WHERE h."listenedAt" >= ${since}
+            AND t."deletedAt" IS NULL
+            AND t."processingStatus" = 'READY'
+            AND a."deletedAt" IS NULL
+            ${countryFilter}
+          GROUP BY t."artistId"
+          ORDER BY listeners DESC, MAX(h."listenedAt") DESC, t."artistId" ASC
+          LIMIT ${pagination.limit} OFFSET ${pagination.skip}
+        `),
+        this.prisma.queryRaw<Array<{ total: bigint }>>(Prisma.sql`
+          SELECT COUNT(DISTINCT t."artistId")::bigint AS total
+          FROM "ListeningHistory" h
+          JOIN "Track" t ON t.id = h."trackId"
+          JOIN "Artist" a ON a.id = t."artistId"
+          WHERE h."listenedAt" >= ${since}
+            AND t."deletedAt" IS NULL
+            AND t."processingStatus" = 'READY'
+            AND a."deletedAt" IS NULL
+            ${countryFilter}
+        `),
+      ])
+      const ids = rows.map(({ artistId }) => artistId)
+      const artists = await this.prisma.artist.findMany({
+        where: { id: { in: ids }, deletedAt: null },
+        select: PUBLIC_ARTIST_SELECT,
+      })
+      const byId = new Map(artists.map((artist) => [artist.id, artist]))
+      return {
+        data: rows.flatMap(({ artistId, listeners }) => {
+          const artist = byId.get(artistId)
+          return artist ? [{ ...artist, listeners: Number(listeners) }] : []
+        }),
+        total: Number(countRows[0]?.total ?? 0n),
+        page: pagination.page,
+        limit: pagination.limit,
+      }
+    })
+  }
+
+  private countryFilter(scope: ChartScope, country: string | undefined) {
+    return scope === 'country' && country
+      ? Prisma.sql`AND LOWER(a."country") = LOWER(${country})`
+      : Prisma.empty
+  }
+
+  private async requireGenreId(slug: string) {
+    const genre = await this.prisma.genre.findUnique({ where: { slug }, select: { id: true } })
+    if (!genre) throw new NotFoundException(DISCOVERY_ERRORS.CATEGORY_NOT_FOUND)
+    return genre.id
   }
 
   private async getPreferredGenreIds(userId: string) {

@@ -76,9 +76,13 @@ describe('AuthController (artists)', () => {
     } as never)
     const res = makeResponse()
 
-    await controller.login({ email: 'a@example.com', password: 'pass' }, res)
+    const req = { headers: { 'user-agent': 'Firefox' } } as never
 
-    expect(authService.loginArtist).toHaveBeenCalledWith('a@example.com', 'pass')
+    await controller.login({ email: 'a@example.com', password: 'pass' }, req, res)
+
+    expect(authService.loginArtist).toHaveBeenCalledWith('a@example.com', 'pass', {
+      userAgent: 'Firefox',
+    })
     expect(tokenService.setAuthCookies).toHaveBeenCalledWith(res, 'at', 'rt')
   })
 
@@ -128,7 +132,7 @@ describe('AuthController (artists)', () => {
 
     await controller.refresh(req, res)
 
-    expect(authService.refresh).toHaveBeenCalledWith('rt')
+    expect(authService.refresh).toHaveBeenCalledWith('rt', {})
     expect(tokenService.setAuthCookies).toHaveBeenCalledWith(res, 'new-at', 'new-rt')
   })
 

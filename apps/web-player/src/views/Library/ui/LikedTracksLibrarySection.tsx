@@ -1,45 +1,44 @@
 'use client'
 
-import Image from 'next/image'
-import { usePlayerStore } from '@/entities/Player'
-import type { TrackEntity } from '@/entities/Track'
-import { getTrackCoverUrl } from '@/shared/utils/mediaUrl'
-import { LibraryListEmptyAware } from '@/views/Library/ui/LibraryEmptyAware'
+import { selectMusicPlayer, usePlayerStore } from '@/entities/Player'
+import { type TrackEntity, TracksList } from '@/entities/Track'
+import { useI18n } from '@/shared/i18n'
+import { LibraryEmptyState } from '@/views/Library/ui/LibraryEmptyAware'
+
+/** The playback context the Liked Songs page uses, so both light up the same rows. */
+const LIKED_SONGS_PLAYBACK_ID = 'liked-songs'
 
 type LikedTracksLibrarySectionProps = {
   tracks: TrackEntity[]
 }
 
+/** Liked tracks in the design's track table, played as the Liked Songs context. */
 export const LikedTracksLibrarySection = ({
   tracks,
 }: LikedTracksLibrarySectionProps) => {
-  const play = usePlayerStore((state) => state.play)
+  const { t } = useI18n()
+  const musicPlayer = usePlayerStore(selectMusicPlayer)
+  const playPlaylist = usePlayerStore((state) => state.playPlaylist)
+
+  if (tracks.length === 0) return <LibraryEmptyState />
 
   return (
-    <LibraryListEmptyAware isEmpty={tracks.length === 0}>
-      {tracks.map((track) => (
-        <button
-          className="grid w-full grid-cols-[48px_minmax(0,1fr)_auto] items-center gap-3 rounded-md p-2 text-left transition-colors hover:bg-surface"
-          key={track.id}
-          onClick={() => play(track)}
-          type="button"
-        >
-          <Image
-            alt={track.title}
-            className="rounded object-cover"
-            height={48}
-            src={getTrackCoverUrl(track.cover)}
-            unoptimized
-            width={48}
-          />
-          <div className="min-w-0">
-            <div className="truncate font-medium text-text">{track.title}</div>
-            <div className="truncate text-sm text-text-subdued">
-              {track.artistId}
-            </div>
-          </div>
-        </button>
-      ))}
-    </LibraryListEmptyAware>
+    <TracksList
+      activeTrackId={musicPlayer.currentTrack?.id}
+      isPlaybackContextActive={
+        musicPlayer.currentPlaylistId === LIKED_SONGS_PLAYBACK_ID
+      }
+      likedTrackIds={tracks.map((track) => track.id)}
+      onPlayTrack={(track, index) =>
+        playPlaylist({
+          currentPlaylistId: LIKED_SONGS_PLAYBACK_ID,
+          currentPlaylistName: t('library.likedSongs'),
+          startTrack: track,
+          startTrackIndex: index,
+          tracks,
+        })
+      }
+      tracks={tracks}
+    />
   )
 }

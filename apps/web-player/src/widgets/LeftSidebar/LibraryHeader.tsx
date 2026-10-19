@@ -1,7 +1,7 @@
 'use client'
 
 import { PlusIcon, Typography } from '@bitrate/ui-react'
-import { Maximize2, PanelLeftClose, PanelLeftOpen } from 'lucide-react'
+import { Library, Maximize2, PanelLeftClose, PanelLeftOpen } from 'lucide-react'
 import { useI18n } from '@/shared/i18n'
 import { CreatePlaylistMenu } from '@/widgets/LeftSidebar/CreatePlaylistMenu'
 import { useCreateLibraryPlaylist } from '@/widgets/LeftSidebar/model/useCreateLibraryPlaylist'
@@ -15,6 +15,7 @@ type LibraryHeaderProps = {
 
 export const LibraryHeader = ({
   isCollapsed = false,
+  isExpanded = false,
   onToggleCollapsed,
   onToggleExpanded,
 }: LibraryHeaderProps) => {
@@ -62,23 +63,33 @@ export const LibraryHeader = ({
             <PanelLeftClose size={18} />
           </button>
         </div>
-        <Typography as="h6" className="truncate" size="heading6">
+        <Library
+          aria-hidden="true"
+          className="mr-2.5 size-5 shrink-0 text-accent"
+        />
+        <Typography
+          as="h2"
+          className="truncate font-[family-name:var(--font-landing-body)] text-[17px] leading-[1.3] font-semibold"
+          size="heading6"
+        >
           {t('library.title')}
         </Typography>
       </div>
-      <div className="flex items-center gap-2">
-        <CreatePlaylistMenu
-          isPending={playlist.isPending}
-          onCreate={playlist.create}
-        />
+      <div className="flex shrink-0 items-center gap-1.5">
+        {isExpanded ? (
+          <CreatePlaylistMenu
+            isPending={playlist.isPending}
+            onCreate={playlist.create}
+          />
+        ) : null}
         <button
           aria-label={t('library.title')}
-          className="duration-200 hover:opacity-70"
+          className="flex size-7 items-center justify-center rounded-[7px] border border-primary bg-secondary text-accent transition-colors hover:bg-surface"
           onClick={onToggleExpanded}
           title={t('library.title')}
           type="button"
         >
-          <Maximize2 size={16} />
+          <Maximize2 aria-hidden="true" size={14} />
         </button>
       </div>
     </div>

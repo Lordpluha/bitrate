@@ -15,6 +15,7 @@ import { PlaylistsService } from './playlists.service'
 const makeServiceMock = () =>
   ({
     getAll: jest.fn(),
+    findLiked: jest.fn(),
     getByIdPopulated: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
@@ -60,6 +61,7 @@ describe('PlaylistsController (int)', () => {
 
   beforeEach(() => {
     service.getAll.mockReset()
+    service.findLiked.mockReset()
     service.getByIdPopulated.mockReset()
     service.create.mockReset()
     service.update.mockReset()
@@ -72,6 +74,36 @@ describe('PlaylistsController (int)', () => {
 
     expect(res.status).toBe(200)
     expect(service.getAll).toHaveBeenCalled()
+  })
+
+  it('GET /playlists?userId= should pass a valid owner id through', async () => {
+    service.getAll.mockResolvedValue({ data: [], total: 0, page: 1, limit: 10 } as never)
+    const userId = '0199d0c1-6c2a-7b3e-9a4f-1c2d3e4f5a6b'
+
+    const res = await request(app.getHttpServer()).get('/playlists').query({ userId })
+
+    expect(res.status).toBe(200)
+    expect(service.getAll).toHaveBeenCalledWith({ limit: undefined, page: undefined, userId })
+  })
+
+  it('GET /playlists?userId= should reject an id that is not a UUID', async () => {
+    const res = await request(app.getHttpServer()).get('/playlists').query({ userId: 'nope' })
+
+    expect(res.status).toBe(400)
+    expect(service.getAll).not.toHaveBeenCalled()
+  })
+
+  it('GET /playlists/liked should list the signed-in user liked playlists', async () => {
+    service.findLiked.mockResolvedValue({ data: [], total: 0, page: 1, limit: 10 } as never)
+
+    const res = await request(app.getHttpServer()).get('/playlists/liked')
+
+    expect(res.status).toBe(200)
+    expect(service.findLiked).toHaveBeenCalledWith(expect.any(String), {
+      page: undefined,
+      limit: undefined,
+    })
+    expect(service.getByIdPopulated).not.toHaveBeenCalled()
   })
 
   it('GET /playlists/:id with valid UUID should return 200', async () => {

@@ -76,6 +76,22 @@ export const getAllTracksByArtist = async (artistId: string) => {
     .map(withPlayableUrl)
 }
 
+/** The artist's most played tracks (featured credits included), ranked by real listening. */
+export const useArtistTopTracks = (artistId: string, limit = 10) =>
+  useTanStackQuery({
+    enabled: Boolean(artistId),
+    queryFn: async () => {
+      const { data, response } = await clientFetchClient.GET(
+        '/api/v1/artists/{id}/top-tracks',
+        { params: { path: { id: artistId }, query: { limit } } },
+      )
+      ensureOkResponse(response, 'Failed to fetch the artist top tracks')
+      return normalizeTracksResponse(data).map(withPlayableUrl)
+    },
+    queryKey: apiQueryKeys.tracks.artistTop(artistId, limit),
+    staleTime: 5 * 60_000,
+  })
+
 export const useArtistTracks = (artistId: string) =>
   useTanStackQuery({
     enabled: Boolean(artistId),
@@ -135,3 +151,15 @@ export const useLikedTracks = (
 
   return query
 }
+
+/** How many songs the user liked; shares the liked-tracks cache with `useLikedTracks`. */
+export const useLikedTracksCount = (enabled = true) =>
+  useTanStackQuery({
+    enabled,
+    queryFn: getAllLikedTracks,
+    queryKey: apiQueryKeys.tracks.likedAll,
+    refetchOnWindowFocus: false,
+    retry: false,
+    select: (tracks) => tracks.length,
+    staleTime: 30_000,
+  })

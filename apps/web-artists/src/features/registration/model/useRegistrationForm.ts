@@ -56,9 +56,9 @@ export const useRegistrationForm = () => {
   const [step, setStep] = useState<RegistrationStep>('email')
 
   const { mutate: registerUser, isPending } = useRegistration({
-    onSuccess: () => {
-      toast.success('Registration completed successfully')
-      void navigate({ to: ROUTES.landing })
+    onSuccess: (_data, { email }) => {
+      toast.success('Account created. Verify your email before signing in.')
+      void navigate({ to: ROUTES.auth.verifyEmail, search: { email } })
     },
     onError: (error) => {
       if (error.message.toLowerCase().includes('already exists')) {

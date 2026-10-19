@@ -14,8 +14,10 @@ import type { Request, Response } from 'express'
 // argument Function at index [0]".
 // biome-ignore lint/style/useImportType: constructor-injected — NestJS DI needs the real class reference at runtime, not a type-only import.
 import { I18nService } from 'nestjs-i18n'
+import { ZodValidationException } from 'nestjs-zod'
 import { resolveRequestLocale } from '../../i18n/resolve-request-locale'
 import { getRequestId } from '../http/request-context'
+import { type ZodIssueLike, zodIssueKey } from './zod-issue-key'
 
 /**
  * A message/array-of-messages is only translated when it matches a known key namespace
@@ -23,6 +25,22 @@ import { getRequestId } from '../http/request-context'
  * upstream library's own English text) passes through untouched rather than being mangled.
  */
 const TRANSLATABLE_KEY_PATTERN = /^(errors|validation)\./
+
+/** One per-field entry of a validation failure's `errors` array. */
+type FieldError = {
+  /** Dot-joined path to the offending field (`a.0.b`). */
+  path: string
+  /** The dictionary key behind `message`; absent for a hand-written literal message. */
+  code?: string
+  message: string
+}
+
+/** True for a zod issue-shaped value. */
+const isZodIssue = (value: unknown): value is ZodIssueLike =>
+  typeof value === 'object' &&
+  value !== null &&
+  typeof (value as ZodIssueLike).code === 'string' &&
+  typeof (value as ZodIssueLike).message === 'string'
 
 /** Represents the http exception filter. Translation is the one place this happens — see api-rules. */
 @Injectable()
@@ -35,6 +53,25 @@ export class HttpExceptionFilter implements ExceptionFilter {
   private translate(message: string, lang: string, args?: Record<string, unknown>): string {
     if (!TRANSLATABLE_KEY_PATTERN.test(message)) return message
     return this.i18n.translate(message, { lang, args, defaultValue: message })
+  }
+
+  /** Translates every issue of a zod failure in the request locale. */
+  private translateIssues(exception: ZodValidationException, lang: string): FieldError[] {
+    const zodError: unknown = exception.getZodError()
+    const issues =
+      typeof zodError === 'object' && zodError !== null && 'issues' in zodError
+        ? (zodError as { issues: unknown[] }).issues.filter(isZodIssue)
+        : []
+
+    return issues.map((issue) => {
+      const path = (issue.path ?? []).map(String).join('.')
+      if (TRANSLATABLE_KEY_PATTERN.test(issue.message)) {
+        return { path, code: issue.message, message: this.translate(issue.message, lang) }
+      }
+      const mapped = zodIssueKey(issue)
+      if (!mapped) return { path, message: issue.message }
+      return { path, code: mapped.key, message: this.translate(mapped.key, lang, mapped.args) }
+    })
   }
 
   /** Runs the catch operation. */
@@ -54,13 +91,21 @@ export class HttpExceptionFilter implements ExceptionFilter {
      * validation exception among them — answer `400 Internal Server Error`.
      */
     let error: string | undefined
+    /** The dictionary key behind `message`; unset for a literal, so the body omits `code`. */
+    let code: string | undefined
+    let fieldErrors: FieldError[] | undefined
 
     if (exception instanceof HttpException) {
       status = exception.getStatus()
       const exceptionResponse = exception.getResponse()
 
-      if (typeof exceptionResponse === 'string') {
+      if (exception instanceof ZodValidationException) {
+        code = 'errors.validation.failed'
+        message = this.translate(code, lang)
+        fieldErrors = this.translateIssues(exception, lang)
+      } else if (typeof exceptionResponse === 'string') {
         message = this.translate(exceptionResponse, lang)
+        if (TRANSLATABLE_KEY_PATTERN.test(exceptionResponse)) code = exceptionResponse
       } else if (typeof exceptionResponse === 'object') {
         const responseObj = exceptionResponse as Record<string, unknown>
         const args =
@@ -70,6 +115,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
         if (typeof responseObj.message === 'string') {
           message = this.translate(responseObj.message, lang, args)
+          if (TRANSLATABLE_KEY_PATTERN.test(responseObj.message)) code = responseObj.message
         } else if (Array.isArray(responseObj.message)) {
           const translated = responseObj.message
             .filter((item): item is string => typeof item === 'string')
@@ -131,7 +177,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
     response.status(status).json({
       statusCode: status,
       error: error ?? STATUS_CODES[status] ?? 'Internal Server Error',
+      ...(code ? { code } : {}),
       message,
+      ...(fieldErrors ? { errors: fieldErrors } : {}),
       timestamp: new Date().toISOString(),
       path: request.url,
       ...(requestId ? { requestId } : {}),

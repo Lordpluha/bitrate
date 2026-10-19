@@ -1,5 +1,6 @@
 'use client'
 
+import { Button } from '@bitrate/ui-react'
 import {
   selectCurrentPlaylistName,
   selectCurrentTrack,
@@ -9,8 +10,8 @@ import {
   usePlayerStore,
 } from '@entities/Player'
 import { ROUTES } from '@shared/routes'
+import { PageTitle, StateMessage } from '@shared/ui'
 import { ListMusic } from 'lucide-react'
-import Link from 'next/link'
 import { useI18n } from '@/shared/i18n'
 import { QueueTrackSection } from '@/views/Queue/ui/QueueTrackSection'
 
@@ -38,41 +39,35 @@ export const QueuePage = () => {
 
   if (!currentTrack) {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-3 rounded-lg bg-background-secondary px-6 text-center">
-        <ListMusic className="text-text-subdued" size={40} />
-        <h1 className="text-2xl font-bold text-text sm:text-3xl">
-          {t('queue.empty')}
-        </h1>
-        <p className="max-w-100 text-text-subdued">
-          {t('queue.empty.description')}
-        </p>
-        <Link
-          className="mt-2 rounded-full bg-text px-6 py-3 text-sm font-bold text-background transition-transform hover:scale-105"
-          href={ROUTES.main}
-        >
-          {t('queue.find')}
-        </Link>
+      <div className="flex h-full flex-col gap-7 px-4 pt-2 md:px-8 md:py-6">
+        <PageTitle title={t('queue.title')} />
+        <StateMessage
+          description={t('queue.empty.description')}
+          icon={ListMusic}
+          primary={{ href: ROUTES.search(), label: t('queue.find') }}
+          title={t('queue.empty')}
+        />
       </div>
     )
   }
 
   return (
-    <div className="h-full overflow-y-auto rounded-lg bg-background-secondary custom-scrollbar">
-      <div className="mx-auto w-full max-w-250 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
-        <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
-          <h1 className="text-3xl font-black text-text sm:text-4xl">
-            {t('queue.title')}
-          </h1>
-          {queue.length > 0 && (
-            <button
-              className="rounded-full border border-white/30 px-4 py-2 text-sm font-bold text-text transition-colors hover:border-white"
-              onClick={clearQueue}
-              type="button"
-            >
-              {t('queue.clear')}
-            </button>
-          )}
-        </div>
+    <div className="h-full overflow-y-auto custom-scrollbar">
+      <div className="flex flex-col gap-7 px-4 pt-2 pb-3 md:px-8 md:py-6">
+        <PageTitle
+          action={
+            queue.length > 0 ? (
+              <Button
+                className="h-9 px-4 text-sm font-medium"
+                onClick={clearQueue}
+                variant="ghost"
+              >
+                {t('queue.clear')}
+              </Button>
+            ) : null
+          }
+          title={t('queue.title')}
+        />
 
         <QueueTrackSection
           entries={[

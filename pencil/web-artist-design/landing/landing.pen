@@ -1,0 +1,879 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "w4u74X",
+      "name": "Artist / Landing / Desktop / Dark",
+      "width": 1440,
+      "height": 1100,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "xe2pT6",
+          "ref": "ds:h25UaM",
+          "name": "Public Header"
+        },
+        {
+          "type": "frame",
+          "id": "tbQMM4",
+          "name": "Hero",
+          "width": "fill_container",
+          "layout": "horizontal",
+          "padding": [
+            80,
+            120
+          ],
+          "gap": 48,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "fEFUw7",
+              "name": "Column",
+              "layout": "vertical",
+              "gap": 20,
+              "width": 560,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "dQfAwJ",
+                  "ref": "ds:yjiPHo",
+                  "name": "Text/Eyebrow",
+                  "content": "BITRATE FOR ARTISTS"
+                },
+                {
+                  "type": "ref",
+                  "id": "Sgh3MV",
+                  "ref": "ds:NEeFbL",
+                  "name": "Text/Display",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Plan, prepare and track your releases."
+                },
+                {
+                  "type": "ref",
+                  "id": "8ABgNg",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "One workspace for the releases you put out on Bitrate: drafts, credits and rights, tasks and listening analytics."
+                },
+                {
+                  "type": "frame",
+                  "id": "JtaLMx",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "dwMPZS",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Create an account",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Create an account"
+                        },
+                        "ds:D3xnv": {
+                          "icon": "arrow-right"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "kQAxCx",
+                      "ref": "ds:qz3aI",
+                      "name": "Button / Log in",
+                      "descendants": {
+                        "ds:i6a4e": {
+                          "content": "Log in"
+                        },
+                        "ds:MlIUw": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "pyNv4k",
+              "ref": "ds:T26AVG",
+              "name": "Media/Hero Image",
+              "width": "fill_container",
+              "height": 420,
+              "fill": {
+                "type": "image",
+                "url": "../../web-player-design/design-system/assets/hero/night-signal.png",
+                "mode": "cover"
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "4fNDoR",
+          "name": "Features",
+          "width": "fill_container",
+          "layout": "horizontal",
+          "padding": [
+            0,
+            120,
+            80,
+            120
+          ],
+          "gap": 32,
+          "alignItems": "start",
+          "children": [
+            {
+              "type": "ref",
+              "id": "cYAXDr",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "disc-3"
+                },
+                "ds:s1h8AF": {
+                  "content": "Release workspace"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Draft a release, credit everyone who worked on it, confirm rights and splits, and submit it for review."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "zUV8Xa",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "list-checks"
+                },
+                "ds:s1h8AF": {
+                  "content": "Release tasks"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Keep the work each release needs in one list, with due dates and status."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "K7ZqjM",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "send"
+                },
+                "ds:s1h8AF": {
+                  "content": "Distribution plan"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Choose the stores a release is planned for. Delivery to external stores is not connected yet."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "5MKtcN",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "chart-line"
+                },
+                "ds:s1h8AF": {
+                  "content": "Analytics"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Plays and listeners on Bitrate over 7, 28 or 90 days, track by track."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "AP93ng",
+          "ref": "ds:shs4K4",
+          "name": "Landing/Footer"
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/ — Public page for artists: what the workspace does today, with sign-up and log-in. Static content, so it has no loading, empty or error state."
+    },
+    {
+      "type": "frame",
+      "id": "5y35Jt",
+      "name": "Artist / Landing / Desktop / Light",
+      "width": 1440,
+      "height": 1100,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "dBV5UH",
+          "ref": "ds:h25UaM",
+          "name": "Public Header"
+        },
+        {
+          "type": "frame",
+          "id": "BDQiHX",
+          "name": "Hero",
+          "width": "fill_container",
+          "layout": "horizontal",
+          "padding": [
+            80,
+            120
+          ],
+          "gap": 48,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "2zKEzy",
+              "name": "Column",
+              "layout": "vertical",
+              "gap": 20,
+              "width": 560,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "myzMQm",
+                  "ref": "ds:yjiPHo",
+                  "name": "Text/Eyebrow",
+                  "content": "BITRATE FOR ARTISTS"
+                },
+                {
+                  "type": "ref",
+                  "id": "sguQTz",
+                  "ref": "ds:NEeFbL",
+                  "name": "Text/Display",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Plan, prepare and track your releases."
+                },
+                {
+                  "type": "ref",
+                  "id": "4p7Nvy",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "One workspace for the releases you put out on Bitrate: drafts, credits and rights, tasks and listening analytics."
+                },
+                {
+                  "type": "frame",
+                  "id": "d2TdJX",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "wcckXR",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Create an account",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Create an account"
+                        },
+                        "ds:D3xnv": {
+                          "icon": "arrow-right"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5MJhDW",
+                      "ref": "ds:qz3aI",
+                      "name": "Button / Log in",
+                      "descendants": {
+                        "ds:i6a4e": {
+                          "content": "Log in"
+                        },
+                        "ds:MlIUw": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "tsQXD2",
+              "ref": "ds:T26AVG",
+              "name": "Media/Hero Image",
+              "width": "fill_container",
+              "height": 420,
+              "fill": {
+                "type": "image",
+                "url": "../../web-player-design/design-system/assets/hero/night-signal.png",
+                "mode": "cover"
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ZPNhps",
+          "name": "Features",
+          "width": "fill_container",
+          "layout": "horizontal",
+          "padding": [
+            0,
+            120,
+            80,
+            120
+          ],
+          "gap": 32,
+          "alignItems": "start",
+          "children": [
+            {
+              "type": "ref",
+              "id": "p2XiUz",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "disc-3"
+                },
+                "ds:s1h8AF": {
+                  "content": "Release workspace"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Draft a release, credit everyone who worked on it, confirm rights and splits, and submit it for review."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "oYMJ7P",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "list-checks"
+                },
+                "ds:s1h8AF": {
+                  "content": "Release tasks"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Keep the work each release needs in one list, with due dates and status."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "FpfQgQ",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "send"
+                },
+                "ds:s1h8AF": {
+                  "content": "Distribution plan"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Choose the stores a release is planned for. Delivery to external stores is not connected yet."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "WU4NmJ",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "chart-line"
+                },
+                "ds:s1h8AF": {
+                  "content": "Analytics"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Plays and listeners on Bitrate over 7, 28 or 90 days, track by track."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "HDEXHj",
+          "ref": "ds:shs4K4",
+          "name": "Landing/Footer"
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "/ — Public page for artists: what the workspace does today, with sign-up and log-in. Static content, so it has no loading, empty or error state."
+    },
+    {
+      "type": "frame",
+      "id": "fTcQcU",
+      "name": "Artist / Landing / Desktop / Dim",
+      "width": 1440,
+      "height": 1100,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "5FpNCZ",
+          "ref": "ds:h25UaM",
+          "name": "Public Header"
+        },
+        {
+          "type": "frame",
+          "id": "hDNvpo",
+          "name": "Hero",
+          "width": "fill_container",
+          "layout": "horizontal",
+          "padding": [
+            80,
+            120
+          ],
+          "gap": 48,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "bLjTXj",
+              "name": "Column",
+              "layout": "vertical",
+              "gap": 20,
+              "width": 560,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "v3mjqE",
+                  "ref": "ds:yjiPHo",
+                  "name": "Text/Eyebrow",
+                  "content": "BITRATE FOR ARTISTS"
+                },
+                {
+                  "type": "ref",
+                  "id": "ym4BYo",
+                  "ref": "ds:NEeFbL",
+                  "name": "Text/Display",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Plan, prepare and track your releases."
+                },
+                {
+                  "type": "ref",
+                  "id": "nQS5SM",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "One workspace for the releases you put out on Bitrate: drafts, credits and rights, tasks and listening analytics."
+                },
+                {
+                  "type": "frame",
+                  "id": "Gyr66J",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "CqTzfr",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Create an account",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Create an account"
+                        },
+                        "ds:D3xnv": {
+                          "icon": "arrow-right"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "3aPaaj",
+                      "ref": "ds:qz3aI",
+                      "name": "Button / Log in",
+                      "descendants": {
+                        "ds:i6a4e": {
+                          "content": "Log in"
+                        },
+                        "ds:MlIUw": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "5HSX4E",
+              "ref": "ds:T26AVG",
+              "name": "Media/Hero Image",
+              "width": "fill_container",
+              "height": 420,
+              "fill": {
+                "type": "image",
+                "url": "../../web-player-design/design-system/assets/hero/night-signal.png",
+                "mode": "cover"
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Vq4b24",
+          "name": "Features",
+          "width": "fill_container",
+          "layout": "horizontal",
+          "padding": [
+            0,
+            120,
+            80,
+            120
+          ],
+          "gap": 32,
+          "alignItems": "start",
+          "children": [
+            {
+              "type": "ref",
+              "id": "Uc6DCV",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "disc-3"
+                },
+                "ds:s1h8AF": {
+                  "content": "Release workspace"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Draft a release, credit everyone who worked on it, confirm rights and splits, and submit it for review."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "LRCRvw",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "list-checks"
+                },
+                "ds:s1h8AF": {
+                  "content": "Release tasks"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Keep the work each release needs in one list, with due dates and status."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "syCmZf",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "send"
+                },
+                "ds:s1h8AF": {
+                  "content": "Distribution plan"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Choose the stores a release is planned for. Delivery to external stores is not connected yet."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "YiCmzB",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "chart-line"
+                },
+                "ds:s1h8AF": {
+                  "content": "Analytics"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Plays and listeners on Bitrate over 7, 28 or 90 days, track by track."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "5Cnr63",
+          "ref": "ds:shs4K4",
+          "name": "Landing/Footer"
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "/ — Public page for artists: what the workspace does today, with sign-up and log-in. Static content, so it has no loading, empty or error state."
+    },
+    {
+      "type": "frame",
+      "id": "AKFh5j",
+      "name": "Artist / Landing / Mobile / Dark",
+      "width": 390,
+      "height": 1400,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "2aM6S3",
+          "ref": "ds:h25UaM",
+          "name": "Public Header",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "a5WYft",
+          "name": "Hero",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            32,
+            16
+          ],
+          "gap": 24,
+          "alignItems": "start",
+          "children": [
+            {
+              "type": "frame",
+              "id": "nnSWfG",
+              "name": "Column",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Py2NzN",
+                  "ref": "ds:yjiPHo",
+                  "name": "Text/Eyebrow",
+                  "content": "BITRATE FOR ARTISTS"
+                },
+                {
+                  "type": "ref",
+                  "id": "pbszG7",
+                  "ref": "ds:MgMQ2L",
+                  "name": "Text/H1",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Plan, prepare and track your releases."
+                },
+                {
+                  "type": "ref",
+                  "id": "PCFAmY",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "One workspace for the releases you put out on Bitrate: drafts, credits and rights, tasks and listening analytics."
+                },
+                {
+                  "type": "frame",
+                  "id": "7wGhpU",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "HyHFo2",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Create an account",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Create an account"
+                        },
+                        "ds:D3xnv": {
+                          "icon": "arrow-right"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "RTWPbE",
+                      "ref": "ds:qz3aI",
+                      "name": "Button / Log in",
+                      "descendants": {
+                        "ds:i6a4e": {
+                          "content": "Log in"
+                        },
+                        "ds:MlIUw": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "9canJP",
+              "ref": "ds:T26AVG",
+              "name": "Media/Hero Image",
+              "width": "fill_container",
+              "height": 260,
+              "fill": {
+                "type": "image",
+                "url": "../../web-player-design/design-system/assets/hero/night-signal.png",
+                "mode": "cover"
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "VNVitH",
+          "name": "Features",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            8,
+            16,
+            32,
+            16
+          ],
+          "gap": 20,
+          "alignItems": "start",
+          "children": [
+            {
+              "type": "ref",
+              "id": "4ufbPu",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "disc-3"
+                },
+                "ds:s1h8AF": {
+                  "content": "Release workspace"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Draft a release, credit everyone who worked on it, confirm rights and splits, and submit it for review."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "CGP4FX",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "list-checks"
+                },
+                "ds:s1h8AF": {
+                  "content": "Release tasks"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Keep the work each release needs in one list, with due dates and status."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "NCjNcu",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "send"
+                },
+                "ds:s1h8AF": {
+                  "content": "Distribution plan"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Choose the stores a release is planned for. Delivery to external stores is not connected yet."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "znYywA",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "chart-line"
+                },
+                "ds:s1h8AF": {
+                  "content": "Analytics"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Plays and listeners on Bitrate over 7, 28 or 90 days, track by track."
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/ — Public page for artists: what the workspace does today, with sign-up and log-in. Static content, so it has no loading, empty or error state."
+    }
+  ]
+}

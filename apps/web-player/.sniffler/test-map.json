@@ -8,8 +8,9 @@
       "src/app/error.tsx",
       "src/app/global-error.tsx",
       "src/app/not-found.tsx",
-      "src/app/(landing)/layout.tsx",
-      "src/app/(landing)/page.tsx"
+      "src/app/(home)/layout.tsx",
+      "src/app/(home)/page.tsx",
+      "src/views/LandingView/index.ts"
     ]
   },
   {
@@ -21,12 +22,13 @@
       "src/app/error.tsx",
       "src/app/global-error.tsx",
       "src/app/not-found.tsx",
-      "src/app/(landing)/layout.tsx",
-      "src/app/(landing)/auth/layout.tsx",
-      "src/app/(landing)/auth/(banner)/layout.tsx",
-      "src/app/(landing)/auth/(banner)/login/page.tsx",
-      "src/app/(landing)/auth/(banner)/registration/page.tsx",
-      "src/app/(landing)/auth/forgot-password/page.tsx"
+      "src/app/(auth)/layout.tsx",
+      "src/app/(auth)/auth/login/page.tsx",
+      "src/app/(auth)/auth/login/2fa/page.tsx",
+      "src/app/(auth)/auth/registration/page.tsx",
+      "src/app/(auth)/auth/forgot-password/page.tsx",
+      "src/app/(auth)/auth/reset-password/page.tsx",
+      "src/app/(auth)/verify-email/page.tsx"
     ]
   },
   {
@@ -35,8 +37,9 @@
       "src/views/LandingView/ui/LandingView.screenshot-spec.ts",
       "src/app/layout.tsx",
       "src/app/_provider.tsx",
-      "src/app/(landing)/layout.tsx",
-      "src/app/(landing)/page.tsx"
+      "src/app/(home)/layout.tsx",
+      "src/app/(home)/page.tsx",
+      "src/views/LandingView/ui/landing.css"
     ]
   },
   {
@@ -45,10 +48,28 @@
       "src/views/LoginView/ui/LoginView.screenshot-spec.ts",
       "src/app/layout.tsx",
       "src/app/_provider.tsx",
-      "src/app/(landing)/layout.tsx",
-      "src/app/(landing)/auth/layout.tsx",
-      "src/app/(landing)/auth/(banner)/layout.tsx",
-      "src/app/(landing)/auth/(banner)/login/page.tsx"
+      "src/app/(auth)/layout.tsx",
+      "src/app/(auth)/auth/login/page.tsx",
+      "src/app/(auth)/auth/login/2fa/page.tsx",
+      "src/app/(auth)/auth/registration/page.tsx",
+      "src/app/(auth)/auth/forgot-password/page.tsx",
+      "src/app/(auth)/auth/reset-password/page.tsx",
+      "src/app/(auth)/verify-email/page.tsx"
+    ]
+  },
+  {
+    "test": "src/views/AuthRecovery/ui/AuthRecovery.screenshot-spec.ts",
+    "dependsOn": [
+      "src/views/AuthRecovery/ui/AuthRecovery.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/(auth)/layout.tsx",
+      "src/app/(auth)/auth/login/page.tsx",
+      "src/app/(auth)/auth/login/2fa/page.tsx",
+      "src/app/(auth)/auth/registration/page.tsx",
+      "src/app/(auth)/auth/forgot-password/page.tsx",
+      "src/app/(auth)/auth/reset-password/page.tsx",
+      "src/app/(auth)/verify-email/page.tsx"
     ]
   }
 ]

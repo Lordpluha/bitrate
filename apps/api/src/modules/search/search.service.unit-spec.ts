@@ -1,5 +1,6 @@
 import type { CacheService } from '@infra/cache/cache.service'
 import { beforeEach, describe, expect, it } from '@jest/globals'
+import type { Prisma } from '@prisma/client'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { mockDeep } from 'jest-mock-extended'
 import { SearchService } from './search.service'
@@ -64,5 +65,31 @@ describe('SearchService', () => {
     const result = await service.search('bitrate', { types: ['tracks', 'artists'] })
 
     expect(result.topResult).toEqual(artistResult)
+  })
+
+  it('hides explicit tracks for a signed-in user who turned explicit content off', async () => {
+    prisma.queryRaw.mockResolvedValue([])
+    prisma.userSettings.findUnique.mockResolvedValue({ explicitContent: false } as never)
+    prisma.searchHistory.findFirst.mockResolvedValue(null)
+
+    await service.search('night', { types: ['tracks'], userId: 'user-1' })
+
+    expect(prisma.queryRaw.mock.calls.length).toBeGreaterThan(0)
+    for (const [query] of prisma.queryRaw.mock.calls) {
+      expect((query as Prisma.Sql).strings.join(' ')).toContain('t.explicit = false')
+    }
+  })
+
+  it('keeps explicit tracks for guests and for users who allow them', async () => {
+    prisma.queryRaw.mockResolvedValue([])
+    prisma.userSettings.findUnique.mockResolvedValue({ explicitContent: true } as never)
+    prisma.searchHistory.findFirst.mockResolvedValue(null)
+
+    await service.search('night', { types: ['tracks'] })
+    await service.search('night', { types: ['tracks'], userId: 'user-1' })
+
+    for (const [query] of prisma.queryRaw.mock.calls) {
+      expect((query as Prisma.Sql).strings.join(' ')).not.toContain('t.explicit = false')
+    }
   })
 })

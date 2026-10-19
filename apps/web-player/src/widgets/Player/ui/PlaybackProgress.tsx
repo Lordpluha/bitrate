@@ -1,5 +1,6 @@
 'use client'
 
+import { cn } from '@bitrate/ui-react'
 import {
   type KeyboardEvent,
   type PointerEvent as ReactPointerEvent,
@@ -12,6 +13,8 @@ import {
 type PlaybackProgressProps = {
   currentTime: number
   duration: number
+  /** `inline`: the player bar's 3px rail between the times. `stacked`: the design's Seek Bar, a 4px rail over the times. */
+  layout?: 'inline' | 'stacked'
   onSeek: (time: number) => void
 }
 
@@ -26,6 +29,7 @@ const formatTime = (seconds: number) => {
 export const PlaybackProgress = ({
   currentTime,
   duration,
+  layout = 'inline',
   onSeek,
 }: PlaybackProgressProps) => {
   const progressBarRef = useRef<HTMLDivElement>(null)
@@ -126,32 +130,66 @@ export const PlaybackProgress = ({
       ? Math.min(100, Math.max(0, (displayedTime / safeDuration) * 100))
       : 0
 
-  return (
-    <div className="flex w-full items-center gap-2">
-      <span className="min-w-10 text-right text-xs tabular-nums text-text-subdued">
-        {formatTime(displayedTime)}
-      </span>
+  const isStacked = layout === 'stacked'
+  const slider = (
+    <div
+      aria-label="Seek playback"
+      aria-valuemax={safeDuration}
+      aria-valuemin={0}
+      aria-valuenow={displayedTime}
+      aria-valuetext={`${formatTime(displayedTime)} of ${formatTime(safeDuration)}`}
+      className={cn(
+        'group relative flex flex-1 cursor-pointer touch-none items-center',
+        isStacked ? 'h-3 w-full' : 'h-3.5',
+      )}
+      onKeyDown={handleKeyDown}
+      onPointerDown={handlePointerDown}
+      ref={progressBarRef}
+      role="slider"
+      tabIndex={0}
+    >
       <div
-        aria-label="Seek playback"
-        aria-valuemax={safeDuration}
-        aria-valuemin={0}
-        aria-valuenow={displayedTime}
-        aria-valuetext={`${formatTime(displayedTime)} of ${formatTime(safeDuration)}`}
-        className="group relative h-1 flex-1 cursor-pointer touch-none rounded-full bg-border"
-        onKeyDown={handleKeyDown}
-        onPointerDown={handlePointerDown}
-        ref={progressBarRef}
-        role="slider"
-        tabIndex={0}
+        className={cn(
+          'relative w-full rounded-full bg-progress-track',
+          isStacked ? 'h-1' : 'h-0.75',
+        )}
       >
         <div
-          className="pointer-events-none absolute inset-y-0 left-0 rounded-full bg-text transition-colors group-hover:bg-primary"
+          className="pointer-events-none absolute inset-y-0 left-0 rounded-full bg-primary"
           style={{ width: `${progress}%` }}
         >
-          <span className="absolute right-0 top-1/2 size-3 -translate-y-1/2 rounded-full bg-text opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100" />
+          <span
+            className={cn(
+              'absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2 rounded-full',
+              isStacked
+                ? 'size-3 bg-foreground'
+                : 'size-2.5 bg-foreground opacity-0 shadow transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100',
+            )}
+          />
         </div>
       </div>
-      <span className="min-w-10 text-xs tabular-nums text-text-subdued">
+    </div>
+  )
+
+  if (isStacked) {
+    return (
+      <div className="flex w-full flex-col gap-2">
+        {slider}
+        <div className="flex items-center justify-between gap-3 text-xs tabular-nums text-muted-foreground">
+          <span>{formatTime(displayedTime)}</span>
+          <span>{formatTime(safeDuration)}</span>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex w-full items-center gap-2.5">
+      <span className="min-w-7 text-right text-[11px] tabular-nums text-muted-foreground">
+        {formatTime(displayedTime)}
+      </span>
+      {slider}
+      <span className="min-w-7 text-[11px] tabular-nums text-muted-foreground">
         {formatTime(safeDuration)}
       </span>
     </div>

@@ -1,3 +1,4 @@
+import { LIKED_SONGS_ID } from '@/entities/Playlist'
 import { ROUTES } from '@/shared/routes'
 
 /** The kinds a library row can be, across both card variants. */
@@ -13,7 +14,7 @@ type LibraryHrefTarget = {
  * a playlist route that does not exist.
  */
 export const resolveLibraryHref = ({ id, type }: LibraryHrefTarget) => {
-  if (id === 'liked-songs') return ROUTES.likedSongs
+  if (id === LIKED_SONGS_ID) return ROUTES.likedSongs
   if (type === 'artist') return ROUTES.artist(id)
   if (type === 'podcast') return ROUTES.podcast(id)
   return ROUTES.playlist(id)

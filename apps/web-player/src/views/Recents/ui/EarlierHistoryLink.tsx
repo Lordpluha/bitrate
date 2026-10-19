@@ -9,33 +9,33 @@ export const EarlierHistoryLink = () => {
   const { t } = useI18n()
 
   return (
-    <section>
-      <h2 className="mb-4 text-2xl font-bold text-text">
+    <section className="flex flex-col gap-2">
+      <h2 className="text-base font-semibold text-foreground">
         {t('recents.earlier')}
       </h2>
       <Link
-        className="grid grid-cols-[52px_minmax(0,1fr)_auto] items-center gap-3 rounded-md px-1 py-1 transition-colors hover:bg-white/10 sm:grid-cols-[64px_minmax(0,1fr)_auto]"
+        className="grid min-h-16 grid-cols-[46px_minmax(0,1fr)_auto] items-center gap-3 rounded-lg px-2 py-1.5 transition-colors hover:bg-surface"
         href={ROUTES.likedSongs}
       >
         <Image
           alt=""
-          className="h-13 w-13 rounded object-cover sm:h-16 sm:w-16"
-          height={64}
+          className="size-11.5 rounded-md object-cover"
+          height={46}
           src={getPlaylistCoverUrl(null)}
           unoptimized
-          width={64}
+          width={46}
         />
-        <span className="min-w-0">
-          <span className="block truncate text-base text-text">
+        <span className="flex min-w-0 flex-col gap-0.5">
+          <span className="truncate text-sm font-semibold text-foreground">
             {t('library.likedSongs')}
           </span>
-          <span className="block truncate text-sm text-text-subdued">
+          <span className="truncate text-[13px] text-muted-foreground">
             {t('common.playlist')}
           </span>
         </span>
         <MoreHorizontal
           aria-hidden="true"
-          className="text-text-subdued"
+          className="text-muted-foreground"
           size={20}
         />
       </Link>

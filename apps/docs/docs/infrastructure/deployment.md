@@ -365,25 +365,19 @@ certificate, or a missing certificate at `/etc/letsencrypt/live/<DOMAIN>/`.
 
 ## 6. Backups
 
-Production backups are automated and off-host. `.github/workflows/backup.yml` runs daily: the
-server dumps the database with `infra/backup.sh`, the runner streams the result off over SSH and
-uploads it to S3-compatible object storage, and the monitoring workflow restores the newest
-object into a throwaway Postgres and asserts on the data that comes back. The object-storage
-credentials live only in GitHub, never on the server. Setup — bucket, secret names, and the
-one-time rescue of the existing uploads — is in
-[ADR-0033](../architecture/0033-off-host-backups-and-object-storage.md); the secret table is in
-[`.github/workflows/README.md` § Backups](https://github.com/Lordpluha/bitrate/blob/develop/.github/workflows/README.md).
+Production dumps its own database on the host
+([ADR-0062](../architecture/0062-on-host-database-dumps.md)):
 
-By hand, on the server, from `$HOME/bitrate`:
+- `task prod:deploy` runs `task prod:backup` before every migration, and installs a crontab line
+  that runs it nightly at 03:17 UTC.
+- Dumps are `pg_dump -Fc` files in `~/bitrate/backups/prod/`; the newest 14 are kept. The nightly
+  run logs to `backups/prod/cron.log`.
+- Restore one with `task prod:restore FILE=backups/prod/<name>.dump` (destructive; it asks first).
 
-```bash
-task prod:backup                          # database dump into backups/, prune old ones
-task prod:restore FILE=backups/db-20260908T031711Z.dump
-```
-
-`prod:restore` is destructive and asks for confirmation. It uses `pg_restore`, because
-`prod:backup` writes `pg_dump --format=custom`; piping a custom-format dump into `psql` fails at
-the first byte.
+These copies live on the same disk, so they do not survive losing the host. The off-host design
+of [ADR-0033](../architecture/0033-off-host-backups-and-object-storage.md) was removed on
+2026-10-08 because its bucket and credentials were never provisioned; it is still the way to get
+copies off the host. SeaweedFS audio is not backed up (ADR-0050).
 
 For the preprod stack, `task db:backup` / `task db:restore FILE=…` write and read plain SQL.
 
@@ -1037,8 +1031,9 @@ Two things a rollback does not undo:
 - **Migrations.** `migrate deploy` only moves forward. An older image against a newer schema works
   only if the migration was additive. Before rolling back across one, check what it did — a dropped
   column is not recoverable by redeploying the previous image.
-- **The database's contents.** Restore from `task db:backup` output if the bad release wrote data
-  the old code cannot read.
+- **The database's contents.** Restore the dump `prod:deploy` took right before the bad release's
+  migration (`task prod:restore FILE=backups/prod/<name>.dump`) if it wrote data the old code
+  cannot read.
 
 The durable fix is the next release, not the rollback: merge the revert into `develop` with a
 changeset, cut a release from it, and let the normal path run, so the registry, the tags and the
@@ -1072,6 +1067,12 @@ require a bearer token; without it the endpoint is unauthenticated.
 
 Container logs are capped at 10 MB × 3 files per service in the production compose. Without that
 cap Docker's json-file driver grows until the disk is full.
+
+`[platform] Release Monitoring` (`monitoring.yml`) runs every six hours. It requests the public
+endpoints from the README's "Live sites" — the API's `/api/v1/health/ready` and the web player,
+artists portal, docs and component workshop front pages — and checks each TLS certificate has at
+least 14 days left. It needs no secret. A failed scheduled run opens, or comments on, one
+"Production monitoring is failing" issue labelled `infra`; close it once the cause is fixed.
 
 ## Security checklist
 

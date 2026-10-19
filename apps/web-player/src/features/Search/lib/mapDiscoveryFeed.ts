@@ -21,6 +21,7 @@ export const mapDiscoveryFeedItem = (
       href: ROUTES.album(item.id),
       id: item.id,
       image: getAlbumCoverUrl(item.cover),
+      playKind: 'album',
       title: item.title,
     }
   }
@@ -31,6 +32,7 @@ export const mapDiscoveryFeedItem = (
       href: ROUTES.playlist(item.id),
       id: item.id,
       image: getPlaylistCoverUrl(item.cover),
+      playKind: 'playlist',
       title: item.title,
     }
   }
@@ -41,6 +43,7 @@ export const mapDiscoveryFeedItem = (
     href: item.artistId ? ROUTES.artist(item.artistId) : undefined,
     id: item.id,
     image: getTrackCoverUrl(item.cover),
+    playKind: 'track',
     title: item.title,
   }
 }
@@ -52,6 +55,7 @@ export const mapDiscoveryPlaylist = (
   href: ROUTES.playlist(playlist.id),
   id: playlist.id,
   image: getPlaylistCoverUrl(playlist.cover),
+  playKind: 'playlist',
   title: playlist.title,
 })
 
@@ -60,5 +64,6 @@ export const mapDiscoveryTrack = (track: DiscoveryTrack): MediaCardItem => ({
   href: track.artistId ? ROUTES.artist(track.artistId) : undefined,
   id: track.id,
   image: getTrackCoverUrl(track.cover),
+  playKind: 'track',
   title: track.title,
 })

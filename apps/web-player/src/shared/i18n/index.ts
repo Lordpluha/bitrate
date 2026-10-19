@@ -1,3 +1,4 @@
+export type { TranslationKey } from './messages/en'
 export type { Locale } from './model/i18n.types'
 export {
   localeLabels,

@@ -24,6 +24,7 @@ import {
   OAuthGoogleCallbackSwagger,
   OAuthGoogleSwagger,
 } from './decorators'
+import { sessionClient } from './session-client'
 
 /** Handles the artist-facing social sign-in round trips. */
 @ApiTags('Artists Auth')
@@ -64,7 +65,7 @@ export class ArtistsOAuthController {
     @Res() res: Response,
   ) {
     return await this.completeOAuth(req, res, state, (acceptance) =>
-      this.oauthService.handleGoogleCallback(code, acceptance),
+      this.oauthService.handleGoogleCallback(code, acceptance, sessionClient(req)),
     )
   }
 
@@ -96,7 +97,7 @@ export class ArtistsOAuthController {
     @Res() res: Response,
   ) {
     return await this.completeOAuth(req, res, state, (acceptance) =>
-      this.oauthService.handleFacebookCallback(code, acceptance),
+      this.oauthService.handleFacebookCallback(code, acceptance, sessionClient(req)),
     )
   }
 

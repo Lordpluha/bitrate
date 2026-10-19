@@ -31,6 +31,10 @@ const mediaFallbacks: Record<MediaFallbackKind, string> = {
   user: fallbackUserAvatar,
 }
 
+/** The local placeholder shown when a piece of media is missing or fails to load. */
+export const getMediaFallbackUrl = (kind: MediaFallbackKind) =>
+  mediaFallbacks[kind]
+
 const getApiBaseUrl = () =>
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') ?? ''
 

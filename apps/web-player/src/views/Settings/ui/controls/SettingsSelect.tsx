@@ -54,7 +54,7 @@ export const SettingsSelect = <TValue extends string>({
         aria-expanded={select.isOpen}
         aria-haspopup="listbox"
         aria-label={ariaLabel}
-        className="flex h-10 w-full items-center justify-between gap-4 rounded bg-surface px-4 text-left text-sm text-text outline-none transition-colors hover:bg-surface-hover focus:ring-2 focus:ring-white/25"
+        className="flex h-9 w-full items-center justify-between gap-4 rounded-md border border-border bg-background px-3 text-left text-sm text-foreground outline-none transition-colors hover:bg-surface focus-visible:ring-2 focus-visible:ring-ring"
         onClick={() => {
           if (select.isOpen) select.close()
           else select.openAt(selectedIndex)
@@ -66,7 +66,7 @@ export const SettingsSelect = <TValue extends string>({
         <span className="truncate">{selectedLabel}</span>
         <ChevronDown
           className={cn(
-            'shrink-0 text-text-subdued transition-transform',
+            'shrink-0 text-muted-foreground transition-transform',
             select.isOpen && 'rotate-180',
           )}
           size={16}
@@ -77,7 +77,7 @@ export const SettingsSelect = <TValue extends string>({
         <div
           className={cn(
             Z_INDEX_CLASS.select,
-            'absolute left-0 top-full mt-1 max-h-56 w-full overflow-hidden rounded bg-background-tinted py-1 shadow-2xl ring-1 ring-border',
+            'absolute left-0 top-full mt-1 max-h-56 w-full overflow-hidden rounded-[10px] border border-border bg-popover p-1 shadow-2xl',
           )}
           id={select.listboxId}
           onKeyDown={select.handleListboxKeyDown}
@@ -87,10 +87,10 @@ export const SettingsSelect = <TValue extends string>({
             <button
               aria-selected={option.value === value}
               className={cn(
-                'w-full px-4 py-2 text-left text-sm transition-colors hover:bg-surface-hover',
+                'w-full rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-surface',
                 option.value === value
-                  ? 'bg-surface text-text'
-                  : 'text-text-subdued',
+                  ? 'bg-secondary text-foreground'
+                  : 'text-muted-foreground',
               )}
               key={option.value}
               onClick={() => {

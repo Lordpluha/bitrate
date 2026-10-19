@@ -6,6 +6,8 @@ export type SearchFilters = {
   year?: number
   genre?: string
   artist?: string
+  /** The signed-in user turned explicit content off. */
+  hideExplicit?: boolean
 }
 
 /** Everything one search request carries. */

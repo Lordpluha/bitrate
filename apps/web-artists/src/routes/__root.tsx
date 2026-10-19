@@ -1,6 +1,8 @@
 import { QueryClientProvider } from '@shared/api/reactQueryClient'
 import { SITE_DESCRIPTION, SITE_NAME } from '@shared/constants'
 import { AuthProvider } from '@shared/hooks'
+import { WorkspaceThemeProvider } from '@shared/theme/WorkspaceThemeProvider'
+import { WorkspaceThemeScript } from '@shared/theme/WorkspaceThemeScript'
 import {
   createRootRoute,
   HeadContent,
@@ -44,7 +46,7 @@ export const Route = createRootRoute({
       },
       {
         rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=League+Spartan:wght@400&display=swap',
+        href: 'https://fonts.googleapis.com/css2?family=League+Spartan:wght@400&family=Poppins:wght@400;500;600&display=swap',
       },
     ],
   }),
@@ -61,13 +63,21 @@ function RootComponent() {
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html data-scroll-behavior="smooth" lang="en">
+    <html
+      className="dark"
+      data-scroll-behavior="smooth"
+      lang="en"
+      suppressHydrationWarning
+    >
       <head>
+        <WorkspaceThemeScript />
         <HeadContent />
       </head>
       <body className="antialiased">
         <QueryClientProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <WorkspaceThemeProvider>{children}</WorkspaceThemeProvider>
+          </AuthProvider>
         </QueryClientProvider>
         <Scripts />
       </body>

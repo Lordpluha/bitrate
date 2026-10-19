@@ -12,7 +12,7 @@ import {
 import { PlaylistsService } from './playlists.service'
 
 const mockInteractiveTransaction = (prisma: PrismaMock) =>
-  prisma.$transaction.mockImplementation((callback: unknown) =>
+  prisma.$transaction.mockImplementation(async (callback: unknown) =>
     (callback as (tx: PrismaMock) => unknown)(prisma),
   )
 
@@ -90,6 +90,53 @@ describe('PlaylistsService', () => {
       },
     })
     expect(result).toEqual({ data: playlists, total: 1, page: 2, limit: 5 })
+  })
+
+  it('getAll should list nothing for an owner who keeps playlists off their profile', async () => {
+    prisma.userSettings.findUnique.mockResolvedValue({ publicPlaylistsOnProfile: false } as never)
+
+    const result = await service.getAll({ userId: 'owner-1', page: 1, limit: 10 })
+
+    expect(prisma.playlist.findMany).not.toHaveBeenCalled()
+    expect(result).toEqual({ data: [], total: 0, page: 1, limit: 10 })
+  })
+
+  it('getAll should list one owner public playlists when userId is given', async () => {
+    prisma.userSettings.findUnique.mockResolvedValue(null)
+    prisma.$transaction.mockResolvedValue([[], 0] as never)
+
+    await service.getAll({ userId: 'owner-1' })
+
+    expect(prisma.playlist.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { isPublic: true, deletedAt: null, userId: 'owner-1' },
+      }),
+    )
+    expect(prisma.playlist.count).toHaveBeenCalledWith({
+      where: { isPublic: true, deletedAt: null, userId: 'owner-1' },
+    })
+  })
+
+  it('findLiked should list liked playlists that are public or the user own, newest first', async () => {
+    const playlist = buildPlaylistWithUser()
+    const likedAt = new Date('2026-10-01T00:00:00.000Z')
+    prisma.$transaction.mockResolvedValue([[{ playlist, createdAt: likedAt }], 1] as never)
+
+    const result = await service.findLiked('user-1', { page: 2, limit: 5 })
+
+    const where = {
+      userId: 'user-1',
+      playlist: { deletedAt: null, OR: [{ isPublic: true }, { userId: 'user-1' }] },
+    }
+    expect(prisma.userLikedPlaylist.findMany).toHaveBeenCalledWith({
+      where,
+      include: { playlist: { include: { user: { select: { id: true, username: true } } } } },
+      orderBy: [{ createdAt: 'desc' }, { playlistId: 'desc' }],
+      skip: 5,
+      take: 5,
+    })
+    expect(prisma.userLikedPlaylist.count).toHaveBeenCalledWith({ where })
+    expect(result).toEqual({ data: [{ ...playlist, likedAt }], total: 1, page: 2, limit: 5 })
   })
 
   it('getById should call prisma', async () => {

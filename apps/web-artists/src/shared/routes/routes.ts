@@ -3,7 +3,17 @@ export const ROUTES = {
   auth: {
     login: '/login',
     registration: '/registration',
+    verifyEmail: '/verify-email',
     forgotPassword: '/forgot-password',
+  },
+  dashboard: {
+    home: '/dashboard',
+    music: '/dashboard/music',
+    tasks: '/dashboard/tasks',
+    distribution: '/dashboard/distribution',
+    analytics: '/dashboard/analytics',
+    profile: '/dashboard/profile',
+    settings: '/dashboard/settings',
   },
   main: '/',
   legal: (slug: string) => `/legal/${slug}`,
@@ -13,7 +23,4 @@ export const ROUTES = {
   community: '/legal/community',
   complaints: '/legal/complaints',
   copyright: '/legal/copyright',
-  download: '#download',
-  plans: '#plans',
-  forStudents: '#for-students',
 } as const

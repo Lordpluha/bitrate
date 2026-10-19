@@ -6,6 +6,7 @@ const emptyData = {
   albums: [],
   artists: [],
   playlists: [],
+  topResult: null,
   tracks: [],
 }
 

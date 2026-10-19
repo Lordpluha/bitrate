@@ -1,4 +1,4 @@
-import { normalizePagination } from '@common/pagination'
+import { normalizePagination, type PaginationInput } from '@common/pagination'
 import { rightsConfirmationRecord } from '@common/rights-confirmation'
 import { isPrismaP2025 } from '@common/utils/prisma'
 import { NS, TTL } from '@infra/cache/cache.constants'
@@ -86,6 +86,63 @@ export class AlbumsService {
         return { data, total, page: pagination.page, limit: pagination.limit }
       },
     )
+  }
+
+  /**
+   * The album each track belongs to, for track lists that show an album column. A track on several
+   * albums (a deluxe edition, a compilation) is shown on its earliest one, by release date and then
+   * creation. Every requested id gets an entry; a single or deleted album answers null.
+   */
+  async findForTracks(trackIds: string[]) {
+    const rows = await this.prisma.albumTrack.findMany({
+      where: { trackId: { in: trackIds }, album: { deletedAt: null } },
+      select: {
+        trackId: true,
+        album: { select: { id: true, title: true, releaseDate: true, createdAt: true } },
+      },
+    })
+    const sortKey = ({ releaseDate, createdAt }: (typeof rows)[number]['album']) =>
+      (releaseDate ?? createdAt).getTime()
+    const earliest = new Map<string, (typeof rows)[number]['album']>()
+    for (const { trackId, album } of rows) {
+      const current = earliest.get(trackId)
+      if (!current || sortKey(album) < sortKey(current)) earliest.set(trackId, album)
+    }
+    return {
+      data: trackIds.map((trackId) => {
+        const album = earliest.get(trackId)
+        return { trackId, album: album ? { id: album.id, title: album.title } : null }
+      }),
+    }
+  }
+
+  /**
+   * The user's saved albums, newest like first. Not cached: a like or unlike must show at once.
+   * Deleted albums drop out; their tracks keep the same shape as the album list.
+   */
+  async findLiked(userId: UserEntity['id'], { page = 1, limit = 10 }: PaginationInput) {
+    const pagination = normalizePagination(page, limit)
+    const where = { userId, album: { deletedAt: null } }
+    const [likes, total] = await this.prisma.$transaction([
+      this.prisma.userLikedAlbum.findMany({
+        where,
+        include: { album: { include: ALBUM_TRACKS_INCLUDE } },
+        orderBy: [{ createdAt: 'desc' }, { albumId: 'desc' }],
+        skip: pagination.skip,
+        take: pagination.limit,
+      }),
+      this.prisma.userLikedAlbum.count({ where }),
+    ])
+    return {
+      data: likes.map(({ album, createdAt }) => ({
+        ...album,
+        tracks: album.tracks.map(flattenAlbumTrack),
+        likedAt: createdAt,
+      })),
+      total,
+      page: pagination.page,
+      limit: pagination.limit,
+    }
   }
 
   /** Runs the get by id operation. */

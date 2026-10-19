@@ -1,5 +1,5 @@
 import { clearPendingTwoFactorCookie, setPendingTwoFactorCookie } from '@common/auth-cookies'
-import { AUTH_ROUTE_THROTTLE } from '@common/config'
+import { AUTH_ROUTE_THROTTLE, SESSION_ROUTE_THROTTLE } from '@common/config'
 import { ArtistsService } from '@modules/artists/artists.service'
 import { TokenService } from '@modules/tokens/token.service'
 import {
@@ -29,6 +29,7 @@ import {
   AuthRefreshSwagger,
   AuthRegistrationSwagger,
   AuthResetPasswordSwagger,
+  AuthVerifyEmailCodeSwagger,
   AuthVerifyEmailResendSwagger,
   AuthVerifyEmailSwagger,
   EmailAvailabilitySwagger,
@@ -52,10 +53,13 @@ import {
   TwoFactorCodeSchema,
   TwoFactorVerifyLoginDto,
   TwoFactorVerifyLoginSchema,
+  VerifyArtistEmailCodeDto,
+  VerifyArtistEmailCodeSchema,
   VerifyArtistEmailDto,
   VerifyArtistEmailSchema,
 } from './dtos'
 import { ArtistSessionEntity } from './entities'
+import { sessionClient } from './session-client'
 import type { ArtistAuthRequest } from './types'
 
 /** Represents the auth controller. */
@@ -76,9 +80,14 @@ export class AuthController {
   @Post('login')
   async login(
     @Body(new ZodValidationPipe(LoginSchema)) loginDto: ArtistLoginDto,
+    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const result = await this.artistAuthService.loginArtist(loginDto.email, loginDto.password)
+    const result = await this.artistAuthService.loginArtist(
+      loginDto.email,
+      loginDto.password,
+      sessionClient(req),
+    )
     if ('requires2fa' in result) {
       setPendingTwoFactorCookie(res, result.pendingToken)
       return { requires2fa: true }
@@ -93,7 +102,7 @@ export class AuthController {
     @Body(new ZodValidationPipe(RegistrationSchema))
     registrationDto: ArtistRegistrationDto,
   ) {
-    await this.artistAuthService.registerArtist(registrationDto)
+    return await this.artistAuthService.registerArtist(registrationDto)
   }
 
   /** Checks whether an artist email is already registered. */
@@ -124,16 +133,18 @@ export class AuthController {
   /** Runs the refresh operation. */
   @AuthRefreshSwagger()
   @ArtistAuth('refresh')
+  @Throttle(SESSION_ROUTE_THROTTLE)
   @Post('refresh')
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const refresh_token = req[process.env.REFRESH_TOKEN_NAME!] as string
-    const tokens = await this.artistAuthService.refresh(refresh_token)
+    const tokens = await this.artistAuthService.refresh(refresh_token, sessionClient(req))
     this.tokenService.setAuthCookies(res, tokens.access_token, tokens.refresh_token)
   }
 
   /** Runs the get me operation. */
   @AuthMeSwagger()
   @ArtistAuth()
+  @Throttle(SESSION_ROUTE_THROTTLE)
   @Get('me')
   async getMe(@Req() req: ArtistAuthRequest) {
     return await this.artistService.findById(req.artist.id)
@@ -172,7 +183,16 @@ export class AuthController {
   async resendEmail(
     @Body(new ZodValidationPipe(ResendArtistEmailSchema)) dto: ResendArtistEmailDto,
   ) {
-    await this.artistAuthService.resendEmailVerification(dto.email)
+    return await this.artistAuthService.resendEmailVerification(dto.email)
+  }
+
+  @AuthVerifyEmailCodeSwagger()
+  @HttpCode(200)
+  @Post('verify-email/code')
+  async verifyEmailCode(
+    @Body(new ZodValidationPipe(VerifyArtistEmailCodeSchema)) dto: VerifyArtistEmailCodeDto,
+  ) {
+    await this.artistAuthService.verifyEmailCode(dto.email, dto.code)
   }
 
   /** Runs the two factor setup operation. */
@@ -220,6 +240,7 @@ export class AuthController {
     const artist = await this.twoFactorService.verifyLoginCode(pendingToken, dto.code)
     const { access_token, refresh_token } = await this.artistAuthService.completeTwoFactorLogin(
       artist.id,
+      sessionClient(req),
     )
     clearPendingTwoFactorCookie(res)
     this.tokenService.setAuthCookies(res, access_token, refresh_token)

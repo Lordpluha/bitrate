@@ -3,6 +3,7 @@ import { convertAudio, convertAudioToCmaf, convertAudioToHls } from '@bitrate/co
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
+import { NotificationsProducer } from '@modules/notifications'
 import * as Sentry from '@sentry/nestjs'
 import {
   makeProcessingAttemptRecorderMock,
@@ -88,6 +89,7 @@ describe('AudioProcessingConsumer', () => {
       Object,
       Function,
       ProcessingAttemptRecorder,
+      NotificationsProducer,
     ])
     expect(Reflect.getMetadata('self:paramtypes', AudioProcessingConsumer)).toEqual(
       expect.arrayContaining([expect.objectContaining({ index: 1, param: STORAGE_SERVICE })]),
@@ -104,6 +106,7 @@ describe('AudioProcessingConsumer', () => {
     add: jest.fn().mockResolvedValue(undefined as never),
   }
   const recorder = makeProcessingAttemptRecorderMock()
+  const notifications = { trackPublished: jest.fn().mockResolvedValue(undefined as never) }
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -114,6 +117,7 @@ describe('AudioProcessingConsumer', () => {
       storage as never,
       deadLetterQueue as never,
       recorder,
+      notifications as never,
     )
     prisma.track.findUnique.mockResolvedValue({ id: 'track-1', audioUrl: 'track.mp3' } as never)
     prisma.track.update.mockResolvedValue({ id: 'track-1' } as never)
@@ -194,6 +198,26 @@ describe('AudioProcessingConsumer', () => {
       jobId: 'job-1',
       attempt: 1,
     })
+  })
+
+  it('announces a first upload to the artist followers once it is ready', async () => {
+    await consumer.process(buildJob('convert-audio', jobData))
+
+    expect(notifications.trackPublished).toHaveBeenCalledWith({ trackId: 'track-1' })
+  })
+
+  it('does not announce a reprocessed or replaced track again', async () => {
+    await consumer.process(buildJob('convert-audio', { ...jobData, trigger: 'REPROCESS' }))
+    await consumer.process(buildJob('convert-audio', { ...jobData, trigger: 'REPLACE' }))
+
+    expect(notifications.trackPublished).not.toHaveBeenCalled()
+  })
+
+  it('keeps a finished conversion when the release notification cannot be queued', async () => {
+    notifications.trackPublished.mockRejectedValueOnce(new Error('redis down') as never)
+
+    await expect(consumer.process(buildJob('convert-audio', jobData))).resolves.toBeUndefined()
+    expect(recorder.succeed).toHaveBeenCalled()
   })
 
   it('encodes CMAF renditions once and stores their byte index', async () => {

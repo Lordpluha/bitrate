@@ -1,33 +1,45 @@
 'use client'
 
 import { cn } from '@bitrate/ui-react'
-import { useImageColor, useOverlayFocus } from '@shared/hooks'
-import { ChevronDown, Minimize2 } from 'lucide-react'
+import { useOverlayFocus } from '@shared/hooks'
+import { ROUTES } from '@shared/routes'
+import { MediaImage } from '@shared/ui/MediaImage'
+import { ChevronDown, Heart, ListMusic, Mic2 } from 'lucide-react'
+import Link from 'next/link'
+import { ConnectDevicesPopover } from '@/features/BitrateConnect'
 import { NowPlayingDetails } from './NowPlayingDetails'
-import { NowPlayingFooter } from './NowPlayingFooter'
-import { NowPlayingHero } from './NowPlayingHero'
 import type { NowPlayingViewProps } from './nowPlaying.types'
+import { PlayerControls } from './PlayerControls'
 
+const iconLinkClassName =
+  'flex size-10 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-surface hover:text-foreground'
+
+/**
+ * The full Now Playing view (the design's "Now playing expanded"): a header with the playing
+ * context, the cover, the title and like, the Seek Bar and Transport, then Bitrate Connect,
+ * lyrics and the queue. Wide screens put the details (artist, Up Next, credits) beside it.
+ */
 export const NowPlayingView = ({
-  isOpen,
-  onClose,
-  title,
   artist,
   coverUrl,
-  isLiked = false,
-  isPlaying,
   currentTime,
   duration,
-  onPlayPause,
-  onSeek,
-  onNext,
-  onPrevious,
+  isLiked = false,
+  isOpen,
+  isPlaying,
+  isShuffled,
+  onClose,
   onLikeToggle,
-  volume,
-  onVolumeChange,
+  onNext,
+  onPlayPause,
+  onPrevious,
+  onRepeatToggle,
+  onSeek,
+  onShuffleToggle,
   playlistTitle = 'Playlist',
+  repeatMode,
+  title,
 }: NowPlayingViewProps) => {
-  const [r, g, b] = useImageColor(coverUrl)
   const dialogRef = useOverlayFocus<HTMLDivElement>({ isOpen, onClose })
 
   return (
@@ -35,72 +47,106 @@ export const NowPlayingView = ({
       aria-label={`Now playing ${title}`}
       aria-modal="true"
       className={cn(
-        'fixed inset-0 z-[80] overflow-y-auto overscroll-contain transition-opacity duration-400 ease-out',
+        'fixed inset-0 z-[80] overflow-y-auto overscroll-contain bg-background text-foreground transition-opacity duration-400 ease-out',
         isOpen
-          ? 'opacity-100 visible'
-          : 'opacity-0 invisible pointer-events-none',
+          ? 'visible opacity-100'
+          : 'pointer-events-none invisible opacity-0',
       )}
       ref={dialogRef}
       role="dialog"
-      style={{
-        background: `linear-gradient(180deg,
-          rgb(${Math.min(r * 1.8, 255)}, ${Math.min(g * 1.8, 255)}, ${Math.min(b * 1.8, 255)}) 0%,
-          rgb(${Math.min(r * 1.4, 220)}, ${Math.min(g * 1.4, 220)}, ${Math.min(b * 1.4, 220)}) 20%,
-          rgb(${r}, ${g}, ${b}) 45%,
-          rgb(${Math.round(r * 0.5)}, ${Math.round(g * 0.5)}, ${Math.round(b * 0.5)}) 65%,
-          var(--color-background) 85%,
-          var(--color-background) 100%)`,
-      }}
     >
-      <div className="sticky top-0 z-20 flex min-h-14 items-center justify-between bg-linear-to-b from-black/35 to-transparent px-4 pb-2 pt-[max(0.75rem,env(safe-area-inset-top))]">
-        <p className="text-white/90 text-sm font-semibold truncate">
+      <header className="sticky top-0 z-20 flex h-13 items-center gap-1 bg-background px-2 pt-[env(safe-area-inset-top)] xl:px-6">
+        <button
+          aria-label="Minimize now playing"
+          className="flex size-9 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-surface"
+          onClick={onClose}
+          type="button"
+        >
+          <ChevronDown aria-hidden="true" size={22} />
+        </button>
+        <p className="min-w-0 flex-1 truncate font-[family-name:var(--font-landing-display)] text-lg font-semibold">
           {playlistTitle}
         </p>
+      </header>
 
-        <div className="flex items-center gap-1">
-          <button
-            aria-label="Minimize now playing"
-            className="p-2 text-white/60 hover:text-white transition-colors rounded-full hover:bg-white/10"
-            onClick={onClose}
-            type="button"
-          >
-            <ChevronDown size={22} />
-          </button>
-          <button
-            aria-label="Return to normal view"
-            className="p-2 text-white/60 hover:text-white transition-colors rounded-full hover:bg-white/10"
-            onClick={onClose}
-            type="button"
-          >
-            <Minimize2 size={18} />
-          </button>
-        </div>
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 pt-2 pb-[max(1.5rem,env(safe-area-inset-bottom))] xl:grid xl:grid-cols-[420px_minmax(0,1fr)] xl:px-8 xl:pt-6">
+        <section className="flex flex-col gap-5">
+          <MediaImage
+            alt={`Cover for ${title}`}
+            className="aspect-square w-full rounded-xl object-cover shadow-2xl"
+            fallback="track"
+            height={420}
+            priority
+            src={coverUrl}
+            unoptimized
+            width={420}
+          />
+
+          <div className="flex items-center gap-4">
+            <div className="flex min-w-0 flex-1 flex-col gap-1">
+              <h2 className="truncate text-[32px] leading-[1.1] font-bold">
+                {title}
+              </h2>
+              <p className="truncate text-sm text-muted-foreground">{artist}</p>
+            </div>
+            <button
+              aria-label={isLiked ? `Unlike ${title}` : `Like ${title}`}
+              aria-pressed={isLiked}
+              className="shrink-0 rounded-full p-1 text-primary transition-transform hover:scale-110"
+              onClick={onLikeToggle}
+              type="button"
+            >
+              <Heart
+                aria-hidden="true"
+                fill={isLiked ? 'currentColor' : 'none'}
+                size={24}
+              />
+            </button>
+          </div>
+
+          <PlayerControls
+            currentTime={currentTime}
+            duration={duration}
+            isPlaying={isPlaying}
+            isShuffled={isShuffled}
+            onNext={onNext}
+            onPlayPause={onPlayPause}
+            onPrevious={onPrevious}
+            onRepeatToggle={onRepeatToggle}
+            onSeek={onSeek}
+            onShuffleToggle={onShuffleToggle}
+            repeatMode={repeatMode}
+            size="large"
+          />
+
+          <div className="flex items-center justify-between">
+            <ConnectDevicesPopover
+              iconSize={20}
+              triggerClassName="flex size-10 items-center justify-center rounded-full text-primary transition-colors hover:bg-surface"
+            />
+            <div className="flex items-center gap-1">
+              <Link
+                aria-label="Open lyrics"
+                className={iconLinkClassName}
+                href={ROUTES.lyrics}
+                onClick={onClose}
+              >
+                <Mic2 aria-hidden="true" size={20} />
+              </Link>
+              <Link
+                aria-label="Open queue"
+                className={iconLinkClassName}
+                href={ROUTES.queue}
+                onClick={onClose}
+              >
+                <ListMusic aria-hidden="true" size={20} />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <NowPlayingDetails />
       </div>
-
-      <NowPlayingHero
-        artist={artist}
-        coverUrl={coverUrl}
-        isLiked={isLiked}
-        onLikeToggle={onLikeToggle}
-        title={title}
-      />
-      <NowPlayingDetails />
-      <NowPlayingFooter
-        artist={artist}
-        coverUrl={coverUrl}
-        currentTime={currentTime}
-        duration={duration}
-        isLiked={isLiked}
-        isPlaying={isPlaying}
-        onLikeToggle={onLikeToggle}
-        onNext={onNext}
-        onPlayPause={onPlayPause}
-        onPrevious={onPrevious}
-        onSeek={onSeek}
-        onVolumeChange={onVolumeChange}
-        title={title}
-        volume={volume}
-      />
     </div>
   )
 }

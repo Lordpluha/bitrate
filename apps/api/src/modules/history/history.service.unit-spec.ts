@@ -55,4 +55,27 @@ describe('HistoryService', () => {
     })
     expect(prisma.listeningHistory.findMany).not.toHaveBeenCalled()
   })
+
+  it('records a listen outside a private session', async () => {
+    const listenedAt = new Date('2026-10-14T10:00:00.000Z')
+    prisma.userSettings.findUnique.mockResolvedValue({ privateSession: false } as never)
+    prisma.listeningHistory.create.mockResolvedValue({ id: 'h1', listenedAt } as never)
+
+    const result = await service.record('user-1', 'track-1')
+
+    expect(prisma.listeningHistory.create).toHaveBeenCalledWith({
+      data: { userId: 'user-1', trackId: 'track-1' },
+      select: { id: true, listenedAt: true },
+    })
+    expect(result).toEqual({ recorded: true, id: 'h1', listenedAt })
+  })
+
+  it('records nothing during a private session', async () => {
+    prisma.userSettings.findUnique.mockResolvedValue({ privateSession: true } as never)
+
+    const result = await service.record('user-1', 'track-1')
+
+    expect(prisma.listeningHistory.create).not.toHaveBeenCalled()
+    expect(result).toEqual({ recorded: false, id: null, listenedAt: null })
+  })
 })

@@ -65,6 +65,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      security-events: write
     uses: ./.github/workflows/api_reusable.yml
     with:
       push-image: ${{ inputs.push-image }}
@@ -75,12 +76,15 @@ jobs:
       timeout-build: 25
       run-biome: false
       run-tests: false
+    secrets:
+      turbo-token: ${{ secrets.TURBO_TOKEN }}
 
   web-player:
     name: web-player
     permissions:
       contents: read
       packages: write
+      security-events: write
     uses: ./.github/workflows/web_player_reusable.yml
     secrets: inherit
     with:
@@ -98,7 +102,9 @@ jobs:
     permissions:
       contents: read
       packages: write
+      security-events: write
     uses: ./.github/workflows/web_artists_reusable.yml
+    secrets: inherit
     with:
       push-image: ${{ inputs.push-image }}
       tags: |
@@ -113,7 +119,9 @@ jobs:
     permissions:
       contents: read
       packages: write
+      security-events: write
     uses: ./.github/workflows/admin_reusable.yml
+    secrets: inherit
     with:
       push-image: ${{ inputs.push-image }}
       tags: |
@@ -129,7 +137,9 @@ jobs:
     permissions:
       contents: read
       packages: write
+      security-events: write
     uses: ./.github/workflows/docs_reusable.yml
+    secrets: inherit
     with:
       push-image: ${{ inputs.push-image }}
       tags: |
@@ -144,7 +154,8 @@ jobs:
     permissions:
       contents: read
       packages: write
-    uses: ./.github/workflows/storybook_reusable.yml
+      security-events: write
+    uses: ./.github/workflows/ui_react_storybook_reusable.yml
     with:
       push-image: ${{ inputs.push-image }}
       tags: |
@@ -152,3 +163,5 @@ jobs:
         ghcr.io/lordpluha/${{ github.event.repository.name }}/storybook:${{ github.sha }}
         ${{ inputs.moving-tag != '' && format('ghcr.io/lordpluha/{0}/storybook:{1}', github.event.repository.name, inputs.moving-tag) || '' }}
       timeout-minutes: 60
+    secrets:
+      turbo-token: ${{ secrets.TURBO_TOKEN }}

@@ -3,45 +3,11 @@
 import {
   albumResponseSchema,
   albumsPaginatedResponseSchema,
-  albumsResponseSchema,
 } from '@entities/Album/api/client/albumResponse.schema'
 import { clientFetchClient, useMutation } from '@shared/api/client'
 import { ensureOkResponse } from '@shared/api/errors'
 import { apiQueryKeys } from '@shared/api/queryKeys'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-
-type UseAlbumsParams = {
-  artistId?: string
-  page?: number
-  limit?: number
-  title?: string
-}
-
-export const useAlbums = ({
-  artistId,
-  page = 1,
-  limit = 20,
-  title,
-}: UseAlbumsParams = {}) =>
-  useQuery({
-    queryKey: apiQueryKeys.albums.list({ artistId, page, limit, title }),
-    queryFn: async () => {
-      const { data, response } = await clientFetchClient.GET('/api/v1/albums', {
-        params: {
-          query: {
-            ...(artistId ? { artistId } : {}),
-            page,
-            limit,
-            ...(title ? { title } : {}),
-          },
-        },
-      })
-
-      ensureOkResponse(response, 'Failed to fetch albums')
-
-      return albumsResponseSchema.parse(data)
-    },
-  })
+import { queryOptions, useQuery, useQueryClient } from '@tanstack/react-query'
 
 const ARTIST_ALBUMS_PAGE_SIZE = 100
 
@@ -75,15 +41,49 @@ export const useArtistAlbums = (artistId: string) =>
     staleTime: 5 * 60_000,
   })
 
-export const useAlbum = (albumId?: string) =>
+const LIKED_ALBUMS_PAGE_SIZE = 100
+
+const getLikedAlbumsPage = async (page: number) => {
+  const { data, response } = await clientFetchClient.GET(
+    '/api/v1/albums/liked',
+    { params: { query: { limit: LIKED_ALBUMS_PAGE_SIZE, page } } },
+  )
+  ensureOkResponse(response, 'Failed to load saved albums')
+  return albumsPaginatedResponseSchema.parse(data)
+}
+
+const getAllLikedAlbums = async () => {
+  const firstPage = await getLikedAlbumsPage(1)
+  const pageCount = Math.ceil(firstPage.total / firstPage.limit)
+  const remainingPages = await Promise.all(
+    Array.from({ length: Math.max(pageCount - 1, 0) }, (_, index) =>
+      getLikedAlbumsPage(index + 2),
+    ),
+  )
+  return [firstPage, ...remainingPages].flatMap(({ data }) => data)
+}
+
+/**
+ * Every album the signed-in user saved, newest first (`GET /albums/liked`). Lives under
+ * `albums.all`, so a like or unlike refreshes it.
+ */
+export const useLikedAlbums = (enabled = true) =>
   useQuery({
-    queryKey: apiQueryKeys.albums.detail(albumId ?? ''),
+    enabled,
+    queryFn: getAllLikedAlbums,
+    queryKey: apiQueryKeys.albums.liked,
+  })
+
+/** The album with its tracks; shared by the album page and "play this album" actions. */
+export const albumDetailQuery = (albumId: string) =>
+  queryOptions({
+    queryKey: apiQueryKeys.albums.detail(albumId),
     queryFn: async () => {
       const { data, response } = await clientFetchClient.GET(
         '/api/v1/albums/{id}',
         {
           params: {
-            path: { id: albumId ?? '' },
+            path: { id: albumId },
           },
         } as never,
       )
@@ -92,8 +92,10 @@ export const useAlbum = (albumId?: string) =>
 
       return albumResponseSchema.parse(data)
     },
-    enabled: !!albumId,
   })
+
+export const useAlbum = (albumId?: string) =>
+  useQuery({ ...albumDetailQuery(albumId ?? ''), enabled: !!albumId })
 
 export const useLikeAlbum = () => {
   const queryClient = useQueryClient()

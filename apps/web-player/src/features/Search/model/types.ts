@@ -1,9 +1,3 @@
-export type BrowseCategory = {
-  color: string
-  image: string
-  title: string
-}
-
 export type MediaCardItem = {
   /**
    * Stable entity id. Required because titles are not unique — a user can own
@@ -14,6 +8,8 @@ export type MediaCardItem = {
   description: string
   href?: string
   image: string
+  /** What the card's play button starts; cards without it only open their page. */
+  playKind?: 'album' | 'playlist' | 'track'
   title: string
 }
 
@@ -22,6 +18,10 @@ type SearchResultKind = 'Album' | 'Artist' | 'Playlist' | 'Profile' | 'Song'
 export type SearchResultRow = {
   /** When set, the subtitle renders as a link to that artist's page. */
   artistId?: string
+  /** The entity id: React key and what a song row plays. */
+  id: string
+  /** Song rows play their track when chosen. */
+  playKind?: 'track'
   circularImage?: boolean
   href?: string
   image: string

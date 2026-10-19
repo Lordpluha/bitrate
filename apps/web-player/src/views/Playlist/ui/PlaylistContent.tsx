@@ -1,5 +1,7 @@
 'use client'
 
+import { StateMessage } from '@shared/ui'
+import { Music } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import type { PlaylistWithTracks } from '@/entities/Playlist'
 import { selectCompactLibrary, useSettingsStore } from '@/entities/Settings'
@@ -64,10 +66,8 @@ export const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
       />
       <PlaylistActionBar
         details={{
-          cover,
           id: playlist.id,
           isOwner,
-          ownerName: playlist.user?.username || t('common.unknown'),
           title: playlist.title || 'playlist',
           tracksCount: tracks.length,
         }}
@@ -102,9 +102,11 @@ export const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
         />
       )}
       {!isOwner && tracks.length === 0 && (
-        <div className="px-6 py-10 text-text-subdued">
-          {t('playlist.noTracks')}
-        </div>
+        <StateMessage
+          className="min-h-80"
+          icon={Music}
+          title={t('playlist.noTracks')}
+        />
       )}
     </>
   )

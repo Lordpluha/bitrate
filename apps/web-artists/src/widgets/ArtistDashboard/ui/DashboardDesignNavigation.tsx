@@ -1,0 +1,84 @@
+import { cn } from '@bitrate/ui-react'
+import { useWorkspaceActions } from '@features/workspace-actions'
+import { ROUTES } from '@shared/routes/routes'
+import { Link } from '@tanstack/react-router'
+import {
+  ChartNoAxesCombined,
+  LayoutDashboard,
+  Megaphone,
+  Music2,
+  Settings2,
+  UserRound,
+} from 'lucide-react'
+
+/** Designed order: live sections link, upcoming ones explain themselves in a dialog. */
+const sections = [
+  { label: 'Dashboard', to: ROUTES.dashboard.home, icon: LayoutDashboard },
+  { label: 'Music', to: ROUTES.dashboard.music, icon: Music2 },
+  { label: 'Promotion', action: 'promotion', icon: Megaphone },
+  {
+    label: 'Analytics',
+    to: ROUTES.dashboard.analytics,
+    icon: ChartNoAxesCombined,
+  },
+  { label: 'Profile', to: ROUTES.dashboard.profile, icon: UserRound },
+  { label: 'Settings', to: ROUTES.dashboard.settings, icon: Settings2 },
+] as const
+
+export function DashboardDesignNavigation({
+  compact = false,
+  onNavigate,
+}: {
+  compact?: boolean
+  onNavigate?: () => void
+}) {
+  const { openAction } = useWorkspaceActions()
+  const itemClass = cn(
+    'artist-workspace-nav-item flex min-h-11 items-center gap-3 rounded-lg border border-transparent px-3.5 py-2 text-left text-sm font-normal text-text-secondary hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring',
+    compact && 'justify-center',
+  )
+
+  return (
+    <nav aria-label="Artist workspace" className="flex w-full flex-col gap-2">
+      {sections.map((section) => {
+        const Icon = section.icon
+        const content = (
+          <>
+            <Icon aria-hidden="true" className="size-5 shrink-0" />
+            <span className={cn(compact && 'sr-only')}>{section.label}</span>
+          </>
+        )
+        return 'to' in section ? (
+          <Link
+            activeOptions={{ exact: section.to === ROUTES.dashboard.home }}
+            activeProps={{
+              className: 'artist-workspace-nav-selected',
+              'aria-current': 'page',
+            }}
+            className={itemClass}
+            key={section.label}
+            onClick={onNavigate}
+            preload={false}
+            title={compact ? section.label : undefined}
+            to={section.to}
+          >
+            {content}
+          </Link>
+        ) : (
+          <button
+            className={itemClass}
+            key={section.label}
+            onClick={() => {
+              onNavigate?.()
+              openAction(section.action)
+            }}
+            title={compact ? section.label : undefined}
+            type="button"
+          >
+            {content}
+          </button>
+        )
+      })}
+    </nav>
+  )
+}

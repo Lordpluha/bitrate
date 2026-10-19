@@ -21,9 +21,44 @@ export function GetChartsSwagger() {
       type: String,
       description: 'Required when scope is country',
     }),
+    ApiQuery({
+      name: 'genre',
+      required: false,
+      type: String,
+      description: 'Only tracks in this browse category (genre slug)',
+    }),
     ApiQuery({ name: 'page', required: false, type: Number }),
     ApiQuery({ name: 'limit', required: false, type: Number }),
     ApiResponse({ status: HttpStatus.OK, description: 'A ranked page of tracks with play counts' }),
+    ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Unknown genre' }),
+    ApiResponse({
+      status: HttpStatus.BAD_REQUEST,
+      description: 'Invalid scope, or country scope missing the country param',
+    }),
+  )
+}
+
+/** Swagger for the artists chart. */
+export function GetArtistChartsSwagger() {
+  return applyDecorators(
+    ApiOperation({
+      summary: 'Get the artists chart',
+      description:
+        'Artists ranked by distinct listeners. `global` and `country` cover the last 28 days; `viral` covers the last 7.',
+    }),
+    ApiQuery({ name: 'scope', required: false, enum: ['global', 'viral', 'country'] }),
+    ApiQuery({
+      name: 'country',
+      required: false,
+      type: String,
+      description: 'Required when scope is country',
+    }),
+    ApiQuery({ name: 'page', required: false, type: Number }),
+    ApiQuery({ name: 'limit', required: false, type: Number }),
+    ApiResponse({
+      status: HttpStatus.OK,
+      description: 'A ranked page of artists with listener counts',
+    }),
     ApiResponse({
       status: HttpStatus.BAD_REQUEST,
       description: 'Invalid scope, or country scope missing the country param',

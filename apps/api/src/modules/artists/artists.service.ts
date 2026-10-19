@@ -7,6 +7,17 @@ import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/commo
 import { PUBLIC_ARTIST_SELECT } from './artists.select'
 import type { CreateArtistDto, UpdateArtistDto } from './dtos'
 import type { ArtistEntity } from './entities'
+import { ARTIST_ERRORS } from './errors/artist.errors'
+
+const TOP_TRACKS_DEFAULT = 10
+const TOP_TRACKS_MAX = 50
+
+/** Ready, not deleted tracks where the artist is the primary or a featured credit. */
+const playableTracksOf = (artistId: ArtistEntity['id']) => ({
+  deletedAt: null,
+  processingStatus: 'READY' as const,
+  OR: [{ artistId }, { artists: { some: { artistId } } }],
+})
 
 /** Service handling public artist CRUD, follow/unfollow, and cache-wrapped lookups. */
 @Injectable()
@@ -133,7 +144,7 @@ export class ArtistsService {
       where: { id: artistId, deletedAt: null },
       select: { id: true },
     })
-    if (!artist) throw new NotFoundException('Artist not found')
+    if (!artist) throw new NotFoundException(ARTIST_ERRORS.NOT_FOUND)
 
     await this.prisma.userFollowedArtist.upsert({
       where: { userId_artistId: { userId, artistId } },
@@ -155,7 +166,7 @@ export class ArtistsService {
       where: { id: artistId, deletedAt: null },
       select: { id: true },
     })
-    if (!artist) throw new NotFoundException('Artist not found')
+    if (!artist) throw new NotFoundException(ARTIST_ERRORS.NOT_FOUND)
 
     await this.prisma.userFollowedArtist.deleteMany({ where: { userId, artistId } })
     return await this.prisma.artist.findUniqueOrThrow({
@@ -194,5 +205,55 @@ export class ArtistsService {
       page: pagination.page,
       limit: pagination.limit,
     }
+  }
+
+  /** An artist's tracks (featured credits included) ranked by real listening. */
+  async findTopTracks(artistId: ArtistEntity['id'], limit = TOP_TRACKS_DEFAULT) {
+    await this.requireArtist(artistId)
+    return await this.prisma.track.findMany({
+      where: playableTracksOf(artistId),
+      /* popularity = plays in the last 28 days, playCount = all-time (ListeningStatsService) */
+      orderBy: [
+        { popularity: 'desc' },
+        { playCount: 'desc' },
+        { releaseDate: { sort: 'desc', nulls: 'last' } },
+        { id: 'asc' },
+      ],
+      take: Math.min(TOP_TRACKS_MAX, Math.max(1, limit)),
+      include: { artist: { select: { id: true, username: true, avatar: true } } },
+    })
+  }
+
+  /** Public playlists that contain the artist's playable tracks, most followed first. */
+  async findPlaylists(artistId: ArtistEntity['id'], page = 1, limit = 20) {
+    await this.requireArtist(artistId)
+    const pagination = normalizePagination(page, limit)
+    const where = {
+      isPublic: true,
+      deletedAt: null,
+      tracks: { some: { track: playableTracksOf(artistId) } },
+    }
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.playlist.findMany({
+        where,
+        orderBy: [{ followersCount: 'desc' }, { updatedAt: 'desc' }, { id: 'asc' }],
+        skip: pagination.skip,
+        take: pagination.limit,
+        include: {
+          user: { select: { id: true, username: true, avatar: true } },
+          _count: { select: { tracks: true } },
+        },
+      }),
+      this.prisma.playlist.count({ where }),
+    ])
+    return { data, total, page: pagination.page, limit: pagination.limit }
+  }
+
+  private async requireArtist(artistId: ArtistEntity['id']) {
+    const artist = await this.prisma.artist.findFirst({
+      where: { id: artistId, deletedAt: null },
+      select: { id: true },
+    })
+    if (!artist) throw new NotFoundException(ARTIST_ERRORS.NOT_FOUND)
   }
 }

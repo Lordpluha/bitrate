@@ -1,11 +1,7 @@
 'use client'
 
-import {
-  PlusIcon,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@bitrate/ui-react'
+import { Popover, PopoverContent, PopoverTrigger } from '@bitrate/ui-react'
+import { Plus } from 'lucide-react'
 import { useState } from 'react'
 import { useI18n } from '@/shared/i18n'
 import { CreatePlaylistActions } from '@/widgets/LeftSidebar/CreatePlaylistActions'
@@ -31,12 +27,13 @@ export const CreatePlaylistMenu = ({
     <Popover onOpenChange={setIsOpen} open={isOpen}>
       <PopoverTrigger asChild>
         <button
-          className="flex items-center gap-2 rounded-full bg-surface px-4 py-2 duration-200 hover:opacity-70 disabled:opacity-60"
+          aria-label={t('common.create')}
+          className="flex size-7 items-center justify-center rounded-[7px] text-muted-foreground transition-colors hover:bg-surface hover:text-foreground disabled:opacity-60"
           disabled={isPending}
+          title={t('common.create')}
           type="button"
         >
-          <PlusIcon />
-          <span className="font-bold">{t('common.create')}</span>
+          <Plus aria-hidden="true" size={16} />
         </button>
       </PopoverTrigger>
       <PopoverContent

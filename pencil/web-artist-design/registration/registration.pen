@@ -1,0 +1,1223 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "UwWMGn",
+      "name": "Artist / Registration / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "6PdN2L",
+          "ref": "ds:x4Fixv",
+          "name": "Surface/Panel",
+          "width": 440,
+          "gap": 20,
+          "descendants": {
+            "ds:xhr0E3": {
+              "type": "frame",
+              "id": "qhguhs",
+              "name": "Panel Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Dys8Wf",
+                  "ref": "ds:J95vY0",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "ref",
+                  "id": "2SV4bo",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Sign up and immerse yourself in music"
+                },
+                {
+                  "type": "ref",
+                  "id": "H75qWr",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "example@gmail.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "iGL3S9",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Continue",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Continue"
+                    },
+                    "ds:ksrFi": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "M4dxHE",
+                  "ref": "ds:WXUohP",
+                  "name": "Auth/Or Divider"
+                },
+                {
+                  "type": "ref",
+                  "id": "4TsY7x",
+                  "ref": "ds:G5tJp",
+                  "name": "Button / Continue with Google",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:d2zCI": {
+                      "content": "Continue with Google"
+                    },
+                    "ds:zDiHG": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "Y8gV8d",
+                  "name": "Row",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "B5mFSd",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "Already have an account?"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "SpJgDP",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Log in."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/registration — Two steps: email, then password with rules and the Artist Agreement."
+    },
+    {
+      "type": "frame",
+      "id": "y5wvJ6",
+      "name": "Artist / Registration / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "tZePzd",
+          "ref": "ds:x4Fixv",
+          "name": "Surface/Panel",
+          "width": 440,
+          "gap": 20,
+          "descendants": {
+            "ds:xhr0E3": {
+              "type": "frame",
+              "id": "xm5y3g",
+              "name": "Panel Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "W5MmH9",
+                  "ref": "ds:J95vY0",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "ref",
+                  "id": "Zjhbu6",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Sign up and immerse yourself in music"
+                },
+                {
+                  "type": "ref",
+                  "id": "72gjBk",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "example@gmail.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "r4e9BU",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Continue",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Continue"
+                    },
+                    "ds:ksrFi": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "A8RJgE",
+                  "ref": "ds:WXUohP",
+                  "name": "Auth/Or Divider"
+                },
+                {
+                  "type": "ref",
+                  "id": "Fzym72",
+                  "ref": "ds:G5tJp",
+                  "name": "Button / Continue with Google",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:d2zCI": {
+                      "content": "Continue with Google"
+                    },
+                    "ds:zDiHG": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "MCPotF",
+                  "name": "Row",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "2yBxES",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "Already have an account?"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "tGefEY",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Log in."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "/registration — Two steps: email, then password with rules and the Artist Agreement."
+    },
+    {
+      "type": "frame",
+      "id": "f8mM8j",
+      "name": "Artist / Registration / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "QR9ser",
+          "ref": "ds:x4Fixv",
+          "name": "Surface/Panel",
+          "width": 440,
+          "gap": 20,
+          "descendants": {
+            "ds:xhr0E3": {
+              "type": "frame",
+              "id": "j66ZRM",
+              "name": "Panel Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "ouXAFC",
+                  "ref": "ds:J95vY0",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "ref",
+                  "id": "oo3dmH",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Sign up and immerse yourself in music"
+                },
+                {
+                  "type": "ref",
+                  "id": "tUSyV8",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "example@gmail.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "LmtXh2",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Continue",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Continue"
+                    },
+                    "ds:ksrFi": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "d9Soyt",
+                  "ref": "ds:WXUohP",
+                  "name": "Auth/Or Divider"
+                },
+                {
+                  "type": "ref",
+                  "id": "PQswFS",
+                  "ref": "ds:G5tJp",
+                  "name": "Button / Continue with Google",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:d2zCI": {
+                      "content": "Continue with Google"
+                    },
+                    "ds:zDiHG": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "SH3iSq",
+                  "name": "Row",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "5vSgcE",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "Already have an account?"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "EciEZK",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Log in."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "/registration — Two steps: email, then password with rules and the Artist Agreement."
+    },
+    {
+      "type": "frame",
+      "id": "vCZ7Fh",
+      "name": "Artist / Registration / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "i9kCA2",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "bHhDhE",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "9AwhfN",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "ref",
+              "id": "rBLJFu",
+              "ref": "ds:RoXXJv",
+              "name": "Text/H2",
+              "content": "Sign up and immerse yourself in music"
+            },
+            {
+              "type": "ref",
+              "id": "Uokzvi",
+              "ref": "ds:j04F4",
+              "name": "Input / Email Address",
+              "width": "fill_container",
+              "descendants": {
+                "ds:l4agQ": {
+                  "content": "Email Address"
+                },
+                "ds:iI0CE": {
+                  "content": "example@gmail.com"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "kDcUSH",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Continue",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Continue"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "y5XL4t",
+              "ref": "ds:WXUohP",
+              "name": "Auth/Or Divider"
+            },
+            {
+              "type": "ref",
+              "id": "JVMQnT",
+              "ref": "ds:G5tJp",
+              "name": "Button / Continue with Google",
+              "width": "fill_container",
+              "descendants": {
+                "ds:d2zCI": {
+                  "content": "Continue with Google"
+                },
+                "ds:zDiHG": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "2h6ujE",
+              "name": "Row",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "uqekbB",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Already have an account?"
+                },
+                {
+                  "type": "ref",
+                  "id": "GHqvYa",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Log in."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/registration — Two steps: email, then password with rules and the Artist Agreement."
+    },
+    {
+      "type": "frame",
+      "id": "GSwjx3",
+      "name": "Artist / Registration / Step 2 — password / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "tPBVZq",
+          "ref": "ds:x4Fixv",
+          "name": "Surface/Panel",
+          "width": 440,
+          "gap": 20,
+          "descendants": {
+            "ds:xhr0E3": {
+              "type": "frame",
+              "id": "T5J2RY",
+              "name": "Panel Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "arT9J6",
+                  "ref": "ds:J95vY0",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "ref",
+                  "id": "kjbFY5",
+                  "ref": "ds:yjiPHo",
+                  "name": "Text/Eyebrow",
+                  "content": "STEP 2 OF 2"
+                },
+                {
+                  "type": "ref",
+                  "id": "CJPMJq",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Create a password"
+                },
+                {
+                  "type": "ref",
+                  "id": "yKbd7M",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Password",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Password"
+                    },
+                    "ds:iI0CE": {
+                      "content": "••••••••••"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "SqHSkX",
+                  "ref": "ds:SOt7Oe",
+                  "name": "Text/Body Strong",
+                  "content": "Password must contain at least:"
+                },
+                {
+                  "type": "ref",
+                  "id": "8VHKQb",
+                  "ref": "ds:ye2ZlZ",
+                  "name": "Checklist Row/Done",
+                  "descendants": {
+                    "ds:BWmC54": {
+                      "content": "1 letter"
+                    },
+                    "ds:ui1TFi": {
+                      "enabled": false
+                    },
+                    "ds:4QtRy2": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "G9u8XM",
+                  "ref": "ds:ye2ZlZ",
+                  "name": "Checklist Row/Done",
+                  "descendants": {
+                    "ds:BWmC54": {
+                      "content": "1 number or special symbol (for example, # ? ! &)"
+                    },
+                    "ds:ui1TFi": {
+                      "enabled": false
+                    },
+                    "ds:4QtRy2": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "aADRBc",
+                  "ref": "ds:BNKrLn",
+                  "name": "Checklist Row/Pending",
+                  "descendants": {
+                    "ds:kHGXMJ": {
+                      "content": "10 characters"
+                    },
+                    "ds:9U0qv6": {
+                      "enabled": false
+                    },
+                    "ds:9lRveR": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "EsZdxB",
+                  "ref": "ds:LWaLJ5",
+                  "name": "Form/Checkbox Row",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:eMN4Sq": {
+                      "content": "I accept the Terms of Use, Community Guidelines and Privacy Policy"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "4kX9SM",
+                  "ref": "ds:LWaLJ5",
+                  "name": "Form/Checkbox Row",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:eMN4Sq": {
+                      "content": "I accept the Artist Agreement"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "w9VHVS",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Continue",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Continue"
+                    },
+                    "ds:ksrFi": {
+                      "enabled": false
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/registration — Two steps: email, then password with rules and the Artist Agreement."
+    },
+    {
+      "type": "frame",
+      "id": "5R2aej",
+      "name": "Artist / Registration / Step 2 — password / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "n62WH4",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "XaW9fV",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "qdCZZy",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "ref",
+              "id": "TPb9bg",
+              "ref": "ds:yjiPHo",
+              "name": "Text/Eyebrow",
+              "content": "STEP 2 OF 2"
+            },
+            {
+              "type": "ref",
+              "id": "f9vbSs",
+              "ref": "ds:RoXXJv",
+              "name": "Text/H2",
+              "content": "Create a password"
+            },
+            {
+              "type": "ref",
+              "id": "oBGoas",
+              "ref": "ds:j04F4",
+              "name": "Input / Password",
+              "width": "fill_container",
+              "descendants": {
+                "ds:l4agQ": {
+                  "content": "Password"
+                },
+                "ds:iI0CE": {
+                  "content": "••••••••••"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "gNnViA",
+              "ref": "ds:SOt7Oe",
+              "name": "Text/Body Strong",
+              "content": "Password must contain at least:"
+            },
+            {
+              "type": "ref",
+              "id": "36ikow",
+              "ref": "ds:ye2ZlZ",
+              "name": "Checklist Row/Done",
+              "descendants": {
+                "ds:BWmC54": {
+                  "content": "1 letter"
+                },
+                "ds:ui1TFi": {
+                  "enabled": false
+                },
+                "ds:4QtRy2": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "NE4fBt",
+              "ref": "ds:ye2ZlZ",
+              "name": "Checklist Row/Done",
+              "descendants": {
+                "ds:BWmC54": {
+                  "content": "1 number or special symbol (for example, # ? ! &)"
+                },
+                "ds:ui1TFi": {
+                  "enabled": false
+                },
+                "ds:4QtRy2": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "sw5XMr",
+              "ref": "ds:BNKrLn",
+              "name": "Checklist Row/Pending",
+              "descendants": {
+                "ds:kHGXMJ": {
+                  "content": "10 characters"
+                },
+                "ds:9U0qv6": {
+                  "enabled": false
+                },
+                "ds:9lRveR": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "3auqt9",
+              "ref": "ds:LWaLJ5",
+              "name": "Form/Checkbox Row",
+              "width": "fill_container",
+              "descendants": {
+                "ds:eMN4Sq": {
+                  "content": "I accept the Terms of Use, Community Guidelines and Privacy Policy"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "H6Gc8N",
+              "ref": "ds:LWaLJ5",
+              "name": "Form/Checkbox Row",
+              "width": "fill_container",
+              "descendants": {
+                "ds:eMN4Sq": {
+                  "content": "I accept the Artist Agreement"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "KxxLMT",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Continue",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Continue"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/registration — Two steps: email, then password with rules and the Artist Agreement."
+    },
+    {
+      "type": "frame",
+      "id": "DwwCNo",
+      "name": "Artist / Registration / Step 2 — errors / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "tDxHt5",
+          "ref": "ds:x4Fixv",
+          "name": "Surface/Panel",
+          "width": 440,
+          "gap": 20,
+          "descendants": {
+            "ds:xhr0E3": {
+              "type": "frame",
+              "id": "5k8D8i",
+              "name": "Panel Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "LXRyHh",
+                  "ref": "ds:J95vY0",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "ref",
+                  "id": "2mdytd",
+                  "ref": "ds:yjiPHo",
+                  "name": "Text/Eyebrow",
+                  "content": "STEP 2 OF 2"
+                },
+                {
+                  "type": "ref",
+                  "id": "fCcq6k",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Create a password"
+                },
+                {
+                  "type": "ref",
+                  "id": "ASMyLo",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Password",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Password"
+                    },
+                    "ds:iI0CE": {
+                      "content": "••••••••••"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "kGK2VB",
+                  "ref": "ds:SOt7Oe",
+                  "name": "Text/Body Strong",
+                  "content": "Password must contain at least:"
+                },
+                {
+                  "type": "ref",
+                  "id": "4QzqyP",
+                  "ref": "ds:ye2ZlZ",
+                  "name": "Checklist Row/Done",
+                  "descendants": {
+                    "ds:BWmC54": {
+                      "content": "1 letter"
+                    },
+                    "ds:ui1TFi": {
+                      "enabled": false
+                    },
+                    "ds:4QtRy2": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "9mtEHs",
+                  "ref": "ds:ye2ZlZ",
+                  "name": "Checklist Row/Done",
+                  "descendants": {
+                    "ds:BWmC54": {
+                      "content": "1 number or special symbol (for example, # ? ! &)"
+                    },
+                    "ds:ui1TFi": {
+                      "enabled": false
+                    },
+                    "ds:4QtRy2": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "y9JZtd",
+                  "ref": "ds:EZJTw3",
+                  "name": "Checklist Row/Error",
+                  "descendants": {
+                    "ds:xwLzJQ": {
+                      "content": "10 characters"
+                    },
+                    "ds:CEcbRT": {
+                      "enabled": false
+                    },
+                    "ds:oEPH7v": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "u7Q6di",
+                  "ref": "ds:LWaLJ5",
+                  "name": "Form/Checkbox Row",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:eMN4Sq": {
+                      "content": "I accept the Terms of Use, Community Guidelines and Privacy Policy"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "vx5GiY",
+                  "ref": "ds:LWaLJ5",
+                  "name": "Form/Checkbox Row",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:eMN4Sq": {
+                      "content": "I accept the Artist Agreement"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "wCQD32",
+                  "ref": "ds:IqJK6E",
+                  "name": "Form/Field Error",
+                  "descendants": {
+                    "ds:brmWkY": {
+                      "content": "You must accept the Artist Agreement"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "5yyjST",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Continue",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Continue"
+                    },
+                    "ds:ksrFi": {
+                      "enabled": false
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/registration — Two steps: email, then password with rules and the Artist Agreement."
+    },
+    {
+      "type": "frame",
+      "id": "pBLhB3",
+      "name": "Artist / Registration / Step 2 — errors / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "ZkuFVd",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "YVfoxL",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "4GPuHo",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "ref",
+              "id": "ChnApZ",
+              "ref": "ds:yjiPHo",
+              "name": "Text/Eyebrow",
+              "content": "STEP 2 OF 2"
+            },
+            {
+              "type": "ref",
+              "id": "aud8G5",
+              "ref": "ds:RoXXJv",
+              "name": "Text/H2",
+              "content": "Create a password"
+            },
+            {
+              "type": "ref",
+              "id": "MedViX",
+              "ref": "ds:j04F4",
+              "name": "Input / Password",
+              "width": "fill_container",
+              "descendants": {
+                "ds:l4agQ": {
+                  "content": "Password"
+                },
+                "ds:iI0CE": {
+                  "content": "••••••••••"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "nSGiz2",
+              "ref": "ds:SOt7Oe",
+              "name": "Text/Body Strong",
+              "content": "Password must contain at least:"
+            },
+            {
+              "type": "ref",
+              "id": "PBPXCZ",
+              "ref": "ds:ye2ZlZ",
+              "name": "Checklist Row/Done",
+              "descendants": {
+                "ds:BWmC54": {
+                  "content": "1 letter"
+                },
+                "ds:ui1TFi": {
+                  "enabled": false
+                },
+                "ds:4QtRy2": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "KbtQQC",
+              "ref": "ds:ye2ZlZ",
+              "name": "Checklist Row/Done",
+              "descendants": {
+                "ds:BWmC54": {
+                  "content": "1 number or special symbol (for example, # ? ! &)"
+                },
+                "ds:ui1TFi": {
+                  "enabled": false
+                },
+                "ds:4QtRy2": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "RzhWSr",
+              "ref": "ds:EZJTw3",
+              "name": "Checklist Row/Error",
+              "descendants": {
+                "ds:xwLzJQ": {
+                  "content": "10 characters"
+                },
+                "ds:CEcbRT": {
+                  "enabled": false
+                },
+                "ds:oEPH7v": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "NoewWq",
+              "ref": "ds:LWaLJ5",
+              "name": "Form/Checkbox Row",
+              "width": "fill_container",
+              "descendants": {
+                "ds:eMN4Sq": {
+                  "content": "I accept the Terms of Use, Community Guidelines and Privacy Policy"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "f48sNM",
+              "ref": "ds:LWaLJ5",
+              "name": "Form/Checkbox Row",
+              "width": "fill_container",
+              "descendants": {
+                "ds:eMN4Sq": {
+                  "content": "I accept the Artist Agreement"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "QXhmw6",
+              "ref": "ds:IqJK6E",
+              "name": "Form/Field Error",
+              "descendants": {
+                "ds:brmWkY": {
+                  "content": "You must accept the Artist Agreement"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "RgM56z",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Continue",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Continue"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/registration — Two steps: email, then password with rules and the Artist Agreement."
+    }
+  ]
+}

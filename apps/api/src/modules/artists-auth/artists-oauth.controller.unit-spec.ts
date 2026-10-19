@@ -167,10 +167,11 @@ describe('ArtistsOAuthController', () => {
         res,
       )
 
-      expect(oauthService.handleGoogleCallback).toHaveBeenCalledWith('code', {
-        acceptLegal: true,
-        acceptArtistAgreement: true,
-      })
+      expect(oauthService.handleGoogleCallback).toHaveBeenCalledWith(
+        'code',
+        { acceptLegal: true, acceptArtistAgreement: true },
+        {},
+      )
       expect(res.clearCookie).toHaveBeenCalledWith('oauth_accept')
     })
 
