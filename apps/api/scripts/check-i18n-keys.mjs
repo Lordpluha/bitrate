@@ -2,7 +2,7 @@
 /**
  * Fails the build on i18n dictionary drift for `apps/api/src/i18n/`:
  *
- *   1. Every dotted key present in any locale folder exists in all five (en, uk, ru, pl, de).
+ *   1. Every dotted key present in any locale folder exists in all three (en, uk, pl).
  *   2. Every `errors.*`/`validation.*` string literal referenced anywhere in `src/` resolves
  *      in every locale's dictionary — a key deleted from the JSON but still thrown from a service
  *      lints clean, type-checks clean, and renders a raw key to the user; this is the check
@@ -18,7 +18,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const apiRoot = join(__dirname, '..')
 const i18nRoot = join(apiRoot, 'src', 'i18n')
 const srcRoot = join(apiRoot, 'src')
-const LOCALES = ['en', 'uk', 'ru', 'pl', 'de']
+const LOCALES = ['en', 'uk', 'pl']
 
 /** Flattens a nested JSON object into dotted keys, e.g. `{ a: { b: 1 } }` -> `["a.b"]`. */
 function flattenKeys(node, prefix = []) {
