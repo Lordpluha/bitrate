@@ -130,29 +130,6 @@ tasks:
     cmds:
       - cmd: pnpm --filter @bitrate/api run db:seed
 
-  db:backup:
-    desc: Dump the PREPROD database to backups/
-    cmds:
-      - cmd: mkdir -p backups
-        platforms: [linux, darwin]
-      - cmd: if not exist backups mkdir backups
-        platforms: [windows]
-      - cmd: |
-          {{.DC_DEV}} exec -T postgres sh -c \
-            'pg_dump -U "$POSTGRES_USER" -d "$POSTGRES_DB" --clean --if-exists' \
-            > "backups/$(date +%Y-%m-%d_%H%M%S).sql"
-      - cmd: ls -lh backups | tail -1
-
-  db:restore:
-    desc: Restore the database from a dump — DESTRUCTIVE, replaces current data. Pass FILE=path
-    prompt: This overwrites the current database. Continue?
-    requires:
-      vars: [FILE]
-    cmds:
-      - cmd: |
-          {{.DC_DEV}} exec -T postgres sh -c \
-            'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"' < "{{.FILE}}"
-
   db:studio:
     desc: Open Prisma Studio in browser
     cmds:
@@ -164,9 +141,6 @@ tasks:
     cmds:
       - cmd: '{{.DC_DEV}} exec api pnpm --filter @bitrate/api run db:migration:reset'
 
-  # Credentials come from the container's own environment rather than being
-  # hardcoded, so these keep working when POSTGRES_USER / POSTGRES_DB are
-  # overridden in .env. backups/ is gitignored — never commit a dump.
   # ─────────────────────────────────────────
   # Container shells
   # ─────────────────────────────────────────
@@ -315,10 +289,6 @@ tasks:
       # makes that a guarantee: without it compose silently falls back to building any service
       # whose image it cannot pull, and the deploy quietly becomes the slow path again.
       - cmd: '{{.DC_PROD}} pull'
-      # A dump before every migration: a migration that loses data is only recoverable from a
-      # copy taken right before it. Skipped on a first deploy, when there is no database yet.
-      - task: prod:backup
-        vars: { IF_RUNNING: 'true' }
       # Migrations run between the pull and the restart, from the image just pulled. Running them
       # afterwards meant the new code served requests against the old schema for as long as the
       # migration took — the window in which it is most likely to fail, since new code is exactly
@@ -327,7 +297,6 @@ tasks:
       - task: prod:migrate
       - cmd: '{{.DC_PROD}} up -d --no-build'
       - cmd: '{{.DC_PROD}} ps'
-      - task: prod:backup:schedule
       # Retention. Last, so the generation this deploy just replaced is what becomes a
       # candidate. Nothing removed these before and the host kept every release forever: four
       # generations in thirteen days took Docker to 64 GiB of a 250 GiB disk.
@@ -363,63 +332,6 @@ tasks:
       # migrations to happen after the restart and made every deploy race the container's boot.
       # A throwaway container from the same image needs nothing running but the database.
       - cmd: '{{.DC_PROD}} run --rm --no-TTY api pnpm --filter @bitrate/api run db:migration:deploy'
-
-  prod:backup:
-    desc: 'Dump the production database to backups/prod/ and keep the newest KEEP dumps (default 14)'
-    vars:
-      KEEP: '{{.KEEP | default "14"}}'
-      IF_RUNNING: '{{.IF_RUNNING | default "false"}}'
-    cmds:
-      - cmd: mkdir -p backups/prod
-      # Custom format (-Fc): compressed, and pg_restore can restore one table out of it. Written
-      # under a temporary name and renamed only once complete, so a dump cut off half way never
-      # looks like a backup. Restore: task prod:restore FILE=backups/prod/<name>.dump
-      - cmd: |
-          if [ "{{.IF_RUNNING}}" = "true" ] && ! {{.DC_PROD}} ps --status running --services | grep -qx postgres; then
-            echo "postgres is not running yet; nothing to back up."
-            exit 0
-          fi
-          stamp=$(date -u +%Y-%m-%dT%H%M%SZ)
-          partial="backups/prod/.$stamp.dump.partial"
-          {{.DC_PROD}} exec -T postgres sh -c 'pg_dump -U "$POSTGRES_USER" -d "$POSTGRES_DB" -Fc' > "$partial"
-          if [ ! -s "$partial" ]; then
-            rm -f "$partial"
-            echo "pg_dump wrote nothing; no backup was taken." >&2
-            exit 1
-          fi
-          mv "$partial" "backups/prod/$stamp.dump"
-          ls -lh "backups/prod/$stamp.dump"
-      - cmd: ls -1t backups/prod/*.dump | tail -n +$(({{.KEEP}} + 1)) | xargs -r rm -f --
-
-  prod:backup:schedule:
-    desc: Install or refresh the daily 03:17 UTC production backup in this user's crontab
-    # Lives on the server rather than in a scheduled workflow: the production environment only
-    # admits master and release tags and asks a reviewer to approve each job, so a nightly run
-    # from the default branch could never reach it. prod:deploy calls this, so the entry follows
-    # the deployed Taskfile. Idempotent: the tagged line is replaced, never duplicated.
-    cmds:
-      - cmd: |
-          if ! command -v crontab >/dev/null 2>&1; then
-            echo "crontab is not installed; the nightly backup is NOT scheduled." >&2
-            exit 0
-          fi
-          mkdir -p backups/prod
-          # cron's PATH is minimal, so the entry names task by its absolute path.
-          task_bin=$(command -v "{{.TASK_EXE}}")
-          entry="17 3 * * * cd $PWD && $task_bin prod:backup >> $PWD/backups/prod/cron.log 2>&1 # bitrate-prod-backup"
-          { crontab -l 2>/dev/null | grep -v '# bitrate-prod-backup$' || true; echo "$entry"; } | crontab -
-          crontab -l | grep '# bitrate-prod-backup$'
-
-  prod:restore:
-    desc: Restore production from a prod:backup dump — DESTRUCTIVE. Pass FILE=backups/prod/<name>.dump
-    prompt: This replaces the PRODUCTION database with the dump. Continue?
-    requires:
-      vars: [FILE]
-    cmds:
-      - cmd: |
-          {{.DC_PROD}} exec -T postgres sh -c \
-            'pg_restore -U "$POSTGRES_USER" -d "$POSTGRES_DB" --clean --if-exists --no-owner' < "{{.FILE}}"
-
 
   prod:down:
     desc: Stop production stack

@@ -365,21 +365,11 @@ certificate, or a missing certificate at `/etc/letsencrypt/live/<DOMAIN>/`.
 
 ## 6. Backups
 
-Production dumps its own database on the host
-([ADR-0062](../architecture/0062-on-host-database-dumps.md)):
-
-- `task prod:deploy` runs `task prod:backup` before every migration, and installs a crontab line
-  that runs it nightly at 03:17 UTC.
-- Dumps are `pg_dump -Fc` files in `~/bitrate/backups/prod/`; the newest 14 are kept. The nightly
-  run logs to `backups/prod/cron.log`.
-- Restore one with `task prod:restore FILE=backups/prod/<name>.dump` (destructive; it asks first).
-
-These copies live on the same disk, so they do not survive losing the host. The off-host design
-of [ADR-0033](../architecture/0033-off-host-backups-and-object-storage.md) was removed on
-2026-10-08 because its bucket and credentials were never provisioned; it is still the way to get
-copies off the host. SeaweedFS audio is not backed up (ADR-0050).
-
-For the preprod stack, `task db:backup` / `task db:restore FILE=…` write and read plain SQL.
+Production has **no automated backup**, and none of the tooling for one is in the repository. The
+off-host design of [ADR-0033](../architecture/0033-off-host-backups-and-object-storage.md) was
+removed on 2026-10-08 because its bucket and credentials were never provisioned, and the on-host
+`prod:backup` dumps that briefly replaced it were removed before they ever ran. Backups are
+tracked as separate work. SeaweedFS audio is not backed up either (ADR-0050).
 
 A snapshot of a volume with a running Postgres is not a consistent backup, so volume snapshots
 are a second line of defence, not a substitute.
@@ -1031,9 +1021,8 @@ Two things a rollback does not undo:
 - **Migrations.** `migrate deploy` only moves forward. An older image against a newer schema works
   only if the migration was additive. Before rolling back across one, check what it did — a dropped
   column is not recoverable by redeploying the previous image.
-- **The database's contents.** Restore the dump `prod:deploy` took right before the bad release's
-  migration (`task prod:restore FILE=backups/prod/<name>.dump`) if it wrote data the old code
-  cannot read.
+- **The database's contents.** There is no backup to restore from (§ 6), so data the bad release
+  wrote stays written.
 
 The durable fix is the next release, not the rollback: merge the revert into `develop` with a
 changeset, cut a release from it, and let the normal path run, so the registry, the tags and the
