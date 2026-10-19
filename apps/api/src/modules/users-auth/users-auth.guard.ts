@@ -14,6 +14,7 @@ import {
   Logger,
   UseGuards,
 } from '@nestjs/common'
+import { Reflector } from '@nestjs/core'
 import type { User } from '@prisma/client'
 import type { Request } from 'express'
 import type { JWTPayload } from '../tokens'
@@ -39,6 +40,14 @@ export function OptionalUserAuth() {
 @Injectable()
 export class UserAuthGuard extends SessionAuthGuard<User> {
   protected readonly audience = 'user' as const
+
+  /**
+   * Declared here rather than inherited: Nest reads the constructor's parameter types from
+   * this class's own `design:paramtypes`, which TypeScript only emits for a written constructor.
+   */
+  constructor(prisma: PrismaService, reflector: Reflector, tokenService: TokenService) {
+    super(prisma, reflector, tokenService)
+  }
 
   protected findAccount(id: string) {
     return this.prisma.user.findFirst({ where: { id, deletedAt: null } })
