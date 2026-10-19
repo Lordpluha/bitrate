@@ -40,6 +40,7 @@ export const followingActivityResponseSchema = z.array(
   z.object({
     listenedAt: z.coerce.date(),
     track: z.object({
+      artist: z.object({ username: z.string() }).nullish(),
       artistId: z.string(),
       cover: z.string().nullable(),
       id: z.string(),
