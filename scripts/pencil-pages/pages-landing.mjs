@@ -1099,9 +1099,9 @@ const menu = () =>
     Col(
       { name: 'Navigation', width: 'fill_container', padding: [16, 16], gap: 4 },
       [
-        ['Premium', 'sparkles'],
-        ['Support', 'life-buoy'],
-        ['Download', 'download'],
+        ['Terms of Use', 'file-text'],
+        ['Privacy Policy', 'shield'],
+        ['Community Guidelines', 'users-round'],
       ].map(([l, _icon]) =>
         R(
           'Setting Row',

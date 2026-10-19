@@ -1,16 +1,16 @@
-import banner1 from '@assets/images/banner-1.jpg'
-import banner2 from '@assets/images/banner-2.jpg'
-import banner3 from '@assets/images/banner-3.jpg'
-import banner4 from '@assets/images/banner-4.jpg'
+import cover1 from '@assets/images/cover-1.webp'
+import cover2 from '@assets/images/cover-2.webp'
+import cover3 from '@assets/images/cover-3.webp'
+import cover4 from '@assets/images/cover-4.webp'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { expect, userEvent } from 'storybook/test'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from './carousel'
 
 const slides = [
-  { src: banner1, alt: 'Banner 1' },
-  { src: banner2, alt: 'Banner 2' },
-  { src: banner3, alt: 'Banner 3' },
-  { src: banner4, alt: 'Banner 4' },
+  { src: cover1, alt: 'Banner 1' },
+  { src: cover2, alt: 'Banner 2' },
+  { src: cover3, alt: 'Banner 3' },
+  { src: cover4, alt: 'Banner 4' },
 ]
 
 type StoryArgs = { loop?: boolean }

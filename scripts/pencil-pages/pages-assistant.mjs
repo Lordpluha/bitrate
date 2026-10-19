@@ -44,7 +44,7 @@ const WELCOME = () => [
 const CONVO = (busy) => [
   msg('Is Bitrate free?', true),
   msg(
-    'Yes — listening in the browser is free. Plans for Premium are on the way; you can see your plan in Settings.',
+    'Yes — listening in the browser is free. Paid plans are on the way; you can see your plan in Settings.',
     false,
   ),
   msg('How do I release a single?', true),

@@ -4,7 +4,7 @@ React Native + Expo mobile app for Bitrate. Runs on Android, iOS, and web (via r
 
 ## Stack
 
-- **Expo SDK 54** + **React Native 0.81** + **React 19**
+- **Expo SDK 57** + **React Native 0.86** + **React 19**
 - **expo-router** — file-based routing (`app/` directory)
 - **React Navigation** — bottom tabs + stack navigation
 - **react-native-reanimated 4** + **react-native-gesture-handler** — animations

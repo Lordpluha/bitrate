@@ -2,38 +2,39 @@ name: "[monitoring] SSL Reusable"
 
 on:
   workflow_call:
-    secrets:
-      monitor-host:
-        required: true
+
+permissions:
+  contents: read
 
 jobs:
   ssl-check:
-    name: SSL Certificate Check
+    name: SSL / ${{ matrix.host }}
     runs-on: ubuntu-latest
-
-    env:
-      MONITOR_HOST: ${{ secrets.monitor-host }}
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        host:
+          - bitrate.me
+          - api.bitrate.me
+          - artists.bitrate.me
+          - docs.bitrate.me
+          - ui.bitrate.me
 
     steps:
-      - name: Validate monitoring host
+      - name: Check certificate
+        env:
+          HOST: ${{ matrix.host }}
         run: |
-          if [ -z "${{ env.MONITOR_HOST }}" ]; then
-            echo "❌ Missing monitoring host"
+          expiry=$(echo | openssl s_client -servername "$HOST" -connect "$HOST:443" 2>/dev/null \
+            | openssl x509 -noout -enddate | cut -d= -f2)
+          if [ -z "$expiry" ]; then
+            echo "::error title=SSL check failed::could not read the certificate of $HOST"
             exit 1
           fi
-
-      - name: Check certificate
-        run: |
-          expiry=$(echo | openssl s_client -servername ${{ env.MONITOR_HOST }} -connect ${{ env.MONITOR_HOST }}:443 2>/dev/null | openssl x509 -noout -enddate | cut -d= -f2)
-          echo "SSL certificate expires: $expiry"
-
-          expiry_epoch=$(date -d "$expiry" +%s)
-          now_epoch=$(date +%s)
-          days_left=$(( (expiry_epoch - now_epoch) / 86400 ))
-
-          echo "Days until expiry: $days_left"
-
-          if [ "$days_left" -lt 30 ]; then
-            echo "⚠️  SSL certificate expires in $days_left days!"
+          days_left=$(( ($(date -d "$expiry" +%s) - $(date +%s)) / 86400 ))
+          echo "$HOST certificate expires $expiry ($days_left days)"
+          if [ "$days_left" -lt 14 ]; then
+            echo "::error title=Certificate expiring::$HOST expires in $days_left days"
             exit 1
           fi

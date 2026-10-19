@@ -14,18 +14,21 @@ conventions, so native platform guidance applies to its design work when it begi
 
 ## Users
 
-**Artists — primary, and almost entirely unbuilt.** Independent musicians publishing through
-the platform: upload tracks and metadata, maintain a public artist page, and eventually run a
-release end to end and read what happened. **This is the audience the product's success is
-measured against** — the metric is artists completing a release, not listener retention. Served
-by `apps/web-artists` (port 3002), which today implements only the auth surface: login,
-registration, forgot/reset password. Artists have their own credentials, OAuth, and account
-model, separate from listener accounts.
+**Artists — primary, and early.** Independent musicians publishing through the platform:
+upload tracks and metadata, maintain a public artist page, run a release end to end and read
+what happened. **This is the audience the product's success is measured against** — the metric
+is artists completing a release, not listener retention. Served by `apps/web-artists`
+(port 3002): a public page at `/`, the auth screens, and a signed-in workspace — dashboard,
+music catalogue with a release workspace (drafts, credits, rights and splits, schedule,
+submission for review), release tasks, a distribution plan, analytics of plays and listeners on
+Bitrate, profile, and settings with signed-in devices. Artists have their own credentials,
+OAuth, and account model, separate from listener accounts.
 
-Note the gap between those two sentences. Artists are primary by decision
-([ADR-0032](apps/docs/docs/architecture/0032-artist-first.md)), not by present state — there is
-no artist product yet. Design work here is greenfield, and nothing about the existing artist
-surface should be read as established convention.
+Artists are primary by decision
+([ADR-0032](apps/docs/docs/architecture/0032-artist-first.md)), and the workspace is still
+thin behind that decision: promotion, artwork and track editing, review feedback and delivery
+to external stores are labelled "coming soon" in the UI, and no store integration is connected.
+Treat the existing artist surface as a first version, not as settled convention.
 
 **Listeners — the supporting surface, and the mature one.** People who want to play music:
 browse, search, build and manage playlists, like tracks/albums/playlists, follow artists, and
@@ -36,9 +39,11 @@ decision it exists to make an artist's page worth linking to — it is not where
 goes, but it is not deprecated either.
 
 **Operators — internal.** Staff uploading catalog, managing artists and users, and
-moderating content. There is no operator surface today: the Kottster admin panel was removed
-(ADR-0025) and nothing replaced it, so these tasks go through the API or the database
-directly. Its needs are throughput and correctness, not persuasion.
+moderating content. Served by `apps/admin`, an Angular panel
+([ADR-0035](apps/docs/docs/architecture/0035-admin-panel-on-angular.md)) that replaced the
+removed Kottster panel: overview and reports, moderation, catalog, release review, albums,
+playlists, podcasts, artists, listeners, genres, audit log, and staff with editable roles over
+a fixed permission set. Its needs are throughput and correctness, not persuasion.
 
 ## Product Purpose
 
@@ -90,16 +95,20 @@ this question to be answered first, not assumed.
 - Fuzzy search across tracks, artists, albums, and playlists (PostgreSQL `pg_trgm`
   trigram similarity plus `ILIKE`, with GIN trigram indexes — not full-text search).
 
-**Built but incomplete — UI lags the API.** Several capabilities exist server-side with the
-listener-facing UI still unbuilt: search page, artist page, album page, listening-history
-view, public user profiles, profile editing, follow-users, activity feed. Media player
-transport itself (play/pause/seek/next/prev, volume, progress, queue, shuffle, repeat, adaptive
-quality switching) is the current v0.3.0 focus and not yet complete. Treat "the API supports
-it" as a reason a surface is worth designing, not as evidence it already works.
+- Listener web app on real data: home, search, library, artist, album, playlist and Liked
+  Songs pages, queue, recents, public profiles, friends via requests, activity feed,
+  notifications, charts, listening stats, podcast pages, settings with privacy and an audio
+  quality cap.
+- Artist workspace (see Users) and the operator panel (see Users).
+
+**Built but incomplete.** Lyrics are plain text with no timing. Playback runs on web-player's
+own engine; the redesign and the move onto `@bitrate/player` are planned (Player V2), and that
+package is used only by the admin panel today. Treat "the API supports it" as a reason a
+surface is worth designing, not as evidence it already works.
 
 **Not started:** mobile app beyond scaffolding, desktop app beyond scaffolding, artist
-analytics and verification, monetization/subscriptions, lyrics, trending/charts, gapless
-playback, equalizer, offline mode, podcasts/audiobooks, recommendations.
+verification, monetization/subscriptions, delivery to external stores, gapless playback,
+equalizer, offline mode, audiobooks, recommendations.
 
 **Technical constraints that bind design work:**
 - Web UI is Next.js App Router with Feature-Sliced Design; imports flow
@@ -113,12 +122,15 @@ playback, equalizer, offline mode, podcasts/audiobooks, recommendations.
 - Server state lives in TanStack Query; cross-component client state in Zustand. The API
   contract is generated from Swagger into `@bitrate/contracts` — the UI cannot invent
   endpoints.
-- **No i18n runtime is wired.** `apps/web-artists` ships a `SwitchLanguages` UI shell with
-  no `next-intl`/`i18next` dependency behind it. Do not design flows that assume working
-  language switching, and do not describe the product as localized.
+- **Localization is partial.** The product ships English, Ukrainian and Polish only.
+  `apps/web-player` has its own provider with en/uk/pl catalogues, but most screens are still
+  hard-coded English and the server always renders English (moving to `next-intl` is planned);
+  `apps/admin` runs Transloco with only navigation and login translated; `apps/web-artists`
+  has no i18n runtime. Do not describe the product as localized.
 
 **Terminology:** *track*, *album*, *playlist*, *artist*, *liked songs*, *library*,
-*recents*. Listener-facing routes live under `/main`; artist auth under `/auth`.
+*recents*. Listener-facing routes live under `/main` and listener auth under `/auth`; the
+artist workspace lives under `/dashboard` in `apps/web-artists`.
 
 ## Brand Commitments
 
