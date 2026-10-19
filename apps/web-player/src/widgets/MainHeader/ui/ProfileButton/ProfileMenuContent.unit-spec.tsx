@@ -38,6 +38,7 @@ describe('ProfileMenuContent', () => {
     ).toEqual([
       { href: ROUTES.profile, label: 'Profile' },
       { href: ROUTES.recents, label: 'Recents' },
+      { href: ROUTES.friends, label: 'Friends' },
       { href: ROUTES.stats, label: 'Your listening' },
       { href: ROUTES.settings, label: 'Settings' },
     ])

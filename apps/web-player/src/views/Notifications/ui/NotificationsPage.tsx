@@ -20,6 +20,7 @@ const SKELETON_KEYS = Array.from({ length: 6 }, (_, row) => `note-row-${row}`)
 const FILTERS: ReadonlyArray<{ id: NotificationFilter; label: string }> = [
   { id: 'all', label: 'All' },
   { id: 'followers', label: 'Followers' },
+  { id: 'friends', label: 'Friends' },
   { id: 'releases', label: 'Releases' },
   { id: 'playlists', label: 'Playlists' },
   { id: 'events', label: 'Events' },

@@ -25,6 +25,16 @@ describe('getNotificationHref', () => {
     ).toBe('/main/artist/a1')
   })
 
+  it('opens the friend requests for a request, and the friends for an acceptance', () => {
+    const payload = { actorId: 'u1', actorUsername: 'ann', requestId: 'r1' }
+    expect(getNotificationHref({ payload, type: 'FRIEND_REQUEST' })).toBe(
+      '/main/friends/requests',
+    )
+    expect(getNotificationHref({ payload, type: 'FRIEND_ACCEPTED' })).toBe(
+      '/main/friends',
+    )
+  })
+
   it('has no target for a malformed payload or a type without one', () => {
     expect(getNotificationHref({ payload: null, type: 'FOLLOW' })).toBeNull()
     expect(

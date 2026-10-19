@@ -6,6 +6,7 @@ export const en = {
   'common.theme': 'Theme',
   'common.logOut': 'Log out',
   'common.loggingOut': 'Logging out…',
+  'friends.title': 'Friends',
   'profile.updates': 'Your Updates',
   'profile.caughtUp': "You're all caught up",
   'profile.updatesUnavailable': 'Updates are unavailable right now.',

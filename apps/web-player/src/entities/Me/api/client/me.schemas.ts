@@ -27,7 +27,14 @@ const notificationSchema = z.object({
   payload: z.unknown().nullable(),
   readAt: z.coerce.date().nullable(),
   title: z.string(),
-  type: z.enum(['NEW_RELEASE', 'PLAYLIST_UPDATE', 'FOLLOW', 'SYSTEM']),
+  type: z.enum([
+    'NEW_RELEASE',
+    'PLAYLIST_UPDATE',
+    'FOLLOW',
+    'SYSTEM',
+    'FRIEND_REQUEST',
+    'FRIEND_ACCEPTED',
+  ]),
   userId: z.string(),
 })
 
