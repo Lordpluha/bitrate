@@ -117,7 +117,7 @@ describeRedis('ArtistEmailCodeService with Redis', () => {
     const key = spy.mock.calls.at(-1)?.[0]
     if (typeof key === 'string') ownedKeys.add(key)
     await expect(service.reserveResend(email)).rejects.toThrow(
-      'Please wait before requesting another code',
+      ARTIST_AUTH_ERRORS.VERIFICATION_CODE_COOLDOWN,
     )
     spy.mockRestore()
   })
