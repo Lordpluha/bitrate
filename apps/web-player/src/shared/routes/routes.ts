@@ -19,6 +19,7 @@ export const ROUTES = {
   main: '/main',
   activity: '/main/activity',
   charts: '/main/charts',
+  stats: '/main/stats',
   notifications: '/main/notifications',
   likedSongs: '/main/liked-songs',
   library: '/main/library',

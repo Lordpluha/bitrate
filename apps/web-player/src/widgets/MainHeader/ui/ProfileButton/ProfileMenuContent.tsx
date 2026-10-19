@@ -31,6 +31,7 @@ export const ProfileMenuContent = ({
       <nav aria-label={t('common.profile')}>
         <ProfileMenuLink href={ROUTES.profile} label={t('common.profile')} />
         <ProfileMenuLink href={ROUTES.recents} label={t('recents.title')} />
+        <ProfileMenuLink href={ROUTES.stats} label={t('stats.title')} />
         <ProfileMenuLink href={ROUTES.settings} label={t('settings.title')} />
         <InstallBtn />
       </nav>

@@ -152,6 +152,7 @@ export const pl = {
   'search.recent': 'Ostatnie wyszukiwania',
   'search.searching': 'Wyszukiwanie...',
   'search.suggestions': 'Sugestie wyszukiwania',
+  'stats.title': 'Twoje słuchanie',
   'tracks.album': 'Album',
   'tracks.artist': 'Wykonawca',
   'tracks.dateAdded': 'Data dodania',
