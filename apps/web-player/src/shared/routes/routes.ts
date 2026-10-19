@@ -17,6 +17,7 @@ export const ROUTES = {
         : '/verify-email',
   },
   main: '/main',
+  activity: '/main/activity',
   charts: '/main/charts',
   notifications: '/main/notifications',
   likedSongs: '/main/liked-songs',
