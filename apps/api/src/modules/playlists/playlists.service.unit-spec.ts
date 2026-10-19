@@ -12,7 +12,7 @@ import {
 import { PlaylistsService } from './playlists.service'
 
 const mockInteractiveTransaction = (prisma: PrismaMock) =>
-  prisma.$transaction.mockImplementation((callback: unknown) =>
+  prisma.$transaction.mockImplementation(async (callback: unknown) =>
     (callback as (tx: PrismaMock) => unknown)(prisma),
   )
 

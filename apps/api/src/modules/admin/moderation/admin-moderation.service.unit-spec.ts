@@ -27,7 +27,7 @@ describe('AdminModerationService', () => {
     resetPrismaMock()
     prisma = prismaMock
     transaction = mockDeep<Prisma.TransactionClient>()
-    prisma.$transaction.mockImplementation((callback: unknown) =>
+    prisma.$transaction.mockImplementation(async (callback: unknown) =>
       (callback as (client: Prisma.TransactionClient) => unknown)(transaction),
     )
     service = new AdminModerationService(prisma)

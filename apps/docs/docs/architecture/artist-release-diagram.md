@@ -192,7 +192,7 @@ erDiagram
 > Подготовлена модель долей прав и территорий.
 > Загрузка, публикация и доставка находятся на следующих этапах разработки.
 
-Основание: [Prisma schema](https://github.com/Lordpluha/bitrate/blob/develop/apps/api/prisma/schema.prisma),
+Основание: [Prisma schema](https://github.com/Lordpluha/bitrate/tree/develop/apps/api/prisma/schema),
 [API релизов](https://github.com/Lordpluha/bitrate/blob/develop/apps/api/src/modules/releases/README.md),
 [ADR-0052](./0052-artist-release-workspace-foundation.md),
 [ADR-0053](./0053-private-artist-music-catalogue.md),

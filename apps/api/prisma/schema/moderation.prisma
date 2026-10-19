@@ -1,0 +1,24 @@
+enum ModerationStatus {
+  OPEN
+  REVIEWING
+  RESOLVED
+  REJECTED
+}
+
+model ModerationReport {
+  id         String           @id @default(uuid(7)) @db.Uuid
+  reporterId String           @db.Uuid
+  entityType String
+  entityId   String           @db.Uuid
+  reason     String
+  details    String?          @db.Text
+  status     ModerationStatus @default(OPEN)
+  resolvedAt DateTime?
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @default(now()) @updatedAt
+
+  reporter User @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+
+  @@index([status, createdAt])
+  @@index([entityType, entityId])
+}

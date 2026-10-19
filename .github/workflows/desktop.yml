@@ -58,7 +58,7 @@ jobs:
   # really changed (not just its docs, Docker files or another app's lockfile entries).
   changes:
     if: ${{ github.event_name == 'pull_request' }}
-    name: Did desktop change?
+    name: Desktop Change Detection
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:

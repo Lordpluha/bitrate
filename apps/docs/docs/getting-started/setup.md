@@ -190,7 +190,7 @@ pnpm --filter @bitrate/api run db:ui
 #### Creating Migrations
 
 ```bash
-# After modifying schema.prisma
+# After modifying a file in apps/api/prisma/schema/
 pnpm --filter @bitrate/api run db:migration:start
 ```
 
