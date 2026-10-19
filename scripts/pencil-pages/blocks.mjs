@@ -1074,12 +1074,6 @@ add(
       },
       [
         Ref(reg['Logo/Lockup'].id, { name: 'Lockup' }),
-        Row(
-          { gap: 28 },
-          ['Premium', 'Support', 'Download'].map((l) =>
-            T(l, { fontSize: 14, fill: C.mutedForeground }),
-          ),
-        ),
         Row({ gap: 10 }, [Button('Login', 'ghost'), Button('Register', 'default')]),
       ],
     ),
@@ -6454,7 +6448,7 @@ const ctxPage = F(
               dwSep(),
               dwI(null, 'Start a Jam', 'users-round'),
               dwI('Sub', 'Play on… (Bitrate Connect)', 'monitor-speaker'),
-              dwI('Disabled', 'Download', 'download', 'Available with Premium'),
+              dwI('Disabled', 'Download', 'download', 'Available with Bitrate Pro'),
               dwSep(),
               dwI('Destructive', 'Remove from this playlist', 'trash-2'),
             ],
