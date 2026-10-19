@@ -8,6 +8,7 @@ export const pl = {
   'common.theme': 'Motyw',
   'common.logOut': 'Wyloguj się',
   'common.loggingOut': 'Wylogowywanie…',
+  'friends.title': 'Znajomi',
   'profile.updates': 'Twoje aktualności',
   'profile.caughtUp': 'Wszystko przejrzane',
   'profile.updatesUnavailable': 'Aktualności są teraz niedostępne.',

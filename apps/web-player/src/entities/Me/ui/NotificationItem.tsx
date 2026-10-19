@@ -1,7 +1,14 @@
 'use client'
 
 import { cn } from '@bitrate/ui-react'
-import { Bell, Disc3, ListMusic, UserPlus } from 'lucide-react'
+import {
+  Bell,
+  Disc3,
+  HeartHandshake,
+  ListMusic,
+  UserCheck,
+  UserPlus,
+} from 'lucide-react'
 import Link from 'next/link'
 import { useReadNotification } from '@/entities/Me/api/client/hooks'
 import type { NotificationResponse } from '@/entities/Me/api/client/me.schemas'
@@ -14,6 +21,8 @@ const notificationDateFormatter = new Intl.DateTimeFormat(undefined, {
 
 const ICON_BY_TYPE = {
   FOLLOW: UserPlus,
+  FRIEND_ACCEPTED: UserCheck,
+  FRIEND_REQUEST: HeartHandshake,
   NEW_RELEASE: Disc3,
   PLAYLIST_UPDATE: ListMusic,
   SYSTEM: Bell,

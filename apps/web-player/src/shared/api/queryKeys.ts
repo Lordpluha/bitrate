@@ -103,6 +103,12 @@ export const apiQueryKeys = {
       title?: string
     }) => ['tracks', 'list', params] as const,
   },
+  friends: {
+    all: ['friends'] as const,
+    list: ['friends', 'list'] as const,
+    requests: (direction: 'incoming' | 'outgoing') =>
+      ['friends', 'requests', direction] as const,
+  },
   users: {
     all: ['users'] as const,
     byId: (userId: string) => ['users', 'by-id', userId] as const,

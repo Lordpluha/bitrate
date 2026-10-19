@@ -8,6 +8,7 @@ export const uk = {
   'common.theme': 'Тема',
   'common.logOut': 'Вийти',
   'common.loggingOut': 'Виходимо…',
+  'friends.title': 'Друзі',
   'profile.updates': 'Оновлення',
   'profile.caughtUp': 'Ви все переглянули',
   'profile.updatesUnavailable': 'Оновлення зараз недоступні.',

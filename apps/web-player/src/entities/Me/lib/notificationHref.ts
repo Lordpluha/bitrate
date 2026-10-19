@@ -24,5 +24,7 @@ export const getNotificationHref = ({
     const parsed = newReleasePayloadSchema.safeParse(payload)
     return parsed.success ? ROUTES.artist(parsed.data.artistId) : null
   }
+  if (type === 'FRIEND_REQUEST') return ROUTES.friendRequests
+  if (type === 'FRIEND_ACCEPTED') return ROUTES.friends
   return null
 }
