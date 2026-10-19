@@ -4,26 +4,19 @@ import { Injectable } from '@nestjs/common'
 import type { Request, Response } from 'express'
 import type { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
+import { HTTP_CACHEABLE_KEY } from './http-cacheable.decorator'
 
-const CACHEABLE_RESOURCE = /^\/api\/v1\/(albums|artists|playlists|browse|charts)(\/|\?|$)/
-
-/**
- * Per-user routes nested under an otherwise public resource, e.g.
- * `/api/v1/artists/me/following`. Their body depends on the caller, so they
- * must never be stored under a URL-only cache key.
- */
-const PER_USER_RESOURCE = /^\/api\/v1\/[^/?]+\/me(\/|\?|$)/
-
-/** Adds conditional HTTP caching to public read-only resource responses. */
+/** Adds conditional HTTP caching to routes marked `@HttpCacheable()`. */
 @Injectable()
 export class HttpCacheInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const request = context.switchToHttp().getRequest<Request>()
     const response = context.switchToHttp().getResponse<Response>()
+    const handler = context.getHandler()
     const cacheable =
       request.method === 'GET' &&
-      CACHEABLE_RESOURCE.test(request.originalUrl) &&
-      !PER_USER_RESOURCE.test(request.originalUrl)
+      handler !== undefined &&
+      Reflect.getMetadata(HTTP_CACHEABLE_KEY, handler) === true
 
     return next.handle().pipe(
       map((body: unknown) => {

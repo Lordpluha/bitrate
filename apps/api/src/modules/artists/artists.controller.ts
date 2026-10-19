@@ -1,3 +1,4 @@
+import { HttpCacheable } from '@common/interceptors/http-cacheable.decorator'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
 import type { ArtistAuthRequest } from '@modules/artists-auth/types'
 import type { UserAuthRequest } from '@modules/users-auth/types'
@@ -42,6 +43,7 @@ export class ArtistsController {
 
   /** Runs the get all operation. */
   @GetArtistsSwagger()
+  @HttpCacheable()
   @Get('')
   async getAll(
     @Query('username') username?: ArtistEntity['username'],
@@ -57,6 +59,7 @@ export class ArtistsController {
 
   /** Runs the get by id operation. */
   @GetArtistByIdSwagger()
+  @HttpCacheable()
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: ArtistEntity['id']) {
     return await this.artistsService.findById(id)
@@ -64,6 +67,7 @@ export class ArtistsController {
 
   /** Runs the get by username operation. */
   @GetArtistByUsernameSwagger()
+  @HttpCacheable()
   @Get('username/:username')
   getByUsername(@Param('username') username: ArtistEntity['username']) {
     return this.artistsService.findByUsername(username)
