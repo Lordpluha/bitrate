@@ -9,6 +9,12 @@ import { ARTIST_AUTH_ERRORS } from './errors'
 // Opt in with an isolated Redis endpoint; never flush the database or touch other keys.
 const describeRedis = process.env.EMAIL_CODE_TEST_REDIS_URL ? describe : describe.skip
 
+describe('ArtistEmailCodeService integration guard', () => {
+  it('has a Redis endpoint configured when running in CI', () => {
+    if (process.env.CI) expect(process.env.EMAIL_CODE_TEST_REDIS_URL).toBeTruthy()
+  })
+})
+
 describeRedis('ArtistEmailCodeService with Redis', () => {
   let redis: Redis
   let service: ArtistEmailCodeService

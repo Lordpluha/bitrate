@@ -216,6 +216,9 @@ jobs:
           S3_INT_BUCKET: bitrate-audio
           S3_INT_ACCESS_KEY: bitrateDevAccessKey
           S3_INT_SECRET_KEY: bitrateDevSecretKeyChangeMe0001
+          # The email-code suite skips without it. Database 15 keeps its keys apart from the
+          # app's; the suite only touches and deletes its own `test-<uuid>` keys anyway.
+          EMAIL_CODE_TEST_REDIS_URL: redis://localhost:6379/15
 
       - name: Run e2e tests
         run: pnpm --filter @bitrate/api run test:e2e
