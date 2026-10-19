@@ -17,7 +17,7 @@ describe('ListeningStatsService', () => {
     resetPrismaMock()
     prisma = prismaMock
     jest.useFakeTimers({ now })
-    prisma.executeRaw.mockResolvedValue(0 as never)
+    prisma.$executeRaw.mockResolvedValue(0 as never)
     prisma.$transaction.mockImplementation(
       (ops: unknown) => Promise.all(ops as Promise<unknown>[]) as never,
     )
@@ -31,7 +31,7 @@ describe('ListeningStatsService', () => {
   it('recomputes track play counts and popularity from listening history', async () => {
     await service.recompute()
 
-    const track = sqlOf(prisma.executeRaw.mock.calls[0]?.[0])
+    const track = sqlOf(prisma.$executeRaw.mock.calls[0]?.[0])
     expect(track.text).toContain('UPDATE "Track"')
     expect(track.text).toContain('FROM "ListeningHistory"')
     /* a play is one listener in one hour, the same unit the charts rank by */
@@ -46,7 +46,7 @@ describe('ListeningStatsService', () => {
   it('recomputes artist monthly listeners as distinct listeners in the window', async () => {
     await service.recompute()
 
-    const artist = sqlOf(prisma.executeRaw.mock.calls[1]?.[0])
+    const artist = sqlOf(prisma.$executeRaw.mock.calls[1]?.[0])
     expect(artist.text).toContain('UPDATE "Artist"')
     expect(artist.text).toContain('COUNT(DISTINCT h."userId")')
     expect(artist.text).toContain('"monthlyListeners" = COALESCE(')
@@ -58,7 +58,7 @@ describe('ListeningStatsService', () => {
   it('resets rows without plays to zero and only writes rows whose value changes', async () => {
     await service.recompute()
 
-    for (const [call] of prisma.executeRaw.mock.calls) {
+    for (const [call] of prisma.$executeRaw.mock.calls) {
       const { text } = sqlOf(call)
       /* LEFT JOIN keeps unplayed rows; IS DISTINCT FROM skips rows already up to date */
       expect(text).toContain('LEFT JOIN')
@@ -70,6 +70,6 @@ describe('ListeningStatsService', () => {
     await service.recompute()
 
     expect(prisma.$transaction).toHaveBeenCalledTimes(1)
-    expect(prisma.executeRaw).toHaveBeenCalledTimes(2)
+    expect(prisma.$executeRaw).toHaveBeenCalledTimes(2)
   })
 })

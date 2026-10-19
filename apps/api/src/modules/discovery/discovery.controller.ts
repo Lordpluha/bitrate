@@ -1,3 +1,4 @@
+import { HttpCacheable } from '@common/interceptors/http-cacheable.decorator'
 import type { OptionalUserAuthRequest, UserAuthRequest } from '@modules/users-auth/types'
 import { OptionalUserAuth, UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
@@ -42,6 +43,7 @@ export class DiscoveryController {
   ) {}
 
   @GetCategoriesSwagger()
+  @HttpCacheable()
   @Get('browse/categories')
   categories(
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
@@ -51,6 +53,7 @@ export class DiscoveryController {
   }
 
   @GetCategoryPlaylistsSwagger()
+  @HttpCacheable()
   @Get('browse/categories/:slug/playlists')
   categoryPlaylists(
     @Param('slug') slug: string,
@@ -77,6 +80,7 @@ export class DiscoveryController {
   }
 
   @GetChartsSwagger()
+  @HttpCacheable()
   @Get('charts/tracks')
   charts(
     @Query('scope') scope = 'global',

@@ -61,6 +61,8 @@ how to apply it day to day.
 | [0057](./0057-owned-release-contributor-addition.md) | Adding participant credits with unique roles and transactional draft version checks |
 | [0058](./0058-owned-release-contributor-editing.md) | Correcting participant names/roles while preserving identity, account links and splits |
 | [0059](./0059-release-rights-and-review-submission.md) | Rights confirmation, splits, optional UPC/ISRC, readiness and review submission/withdrawal |
+| [0060](./0060-api-data-write-ownership.md) | API Prisma write ownership per module, enforced by an oxlint JS plugin with a shrinking baseline |
+| [0061](./0061-shared-account-auth-core.md) | Shared login, lockout, session, recovery-token, 2FA and guard core for listeners and artists; no account merge |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.

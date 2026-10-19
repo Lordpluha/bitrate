@@ -1,0 +1,291 @@
+// Artist preparation workspace; albums remain the listener-facing catalogue.
+enum ReleaseStatus {
+  DRAFT
+  READY
+  SUBMITTED
+  RELEASED
+  REJECTED
+}
+
+enum ArtistTrackStatus {
+  DRAFT
+  PROCESSING
+  READY
+  NEEDS_CHANGES
+  PUBLISHED
+  UPLOAD_FAILED
+}
+
+enum ArtistTrackVersion {
+  ORIGINAL
+  REMASTER
+  LIVE
+  DEMO
+}
+
+// Private preparation metadata. Public Track/audio publication remains separate.
+model ArtistTrackDraft {
+  id            String @id @default(uuid(7)) @db.Uuid
+  ownerArtistId String @db.Uuid
+  releaseId     String? @db.Uuid
+  title         String
+  version       ArtistTrackVersion @default(ORIGINAL)
+  status        ArtistTrackStatus @default(DRAFT)
+  duration      Int?
+  cover         String?
+  previewUrl    String?
+  // Compact ISO 3901 form (no hyphens); optional until a distributor assigns one.
+  isrc          String? @unique @db.VarChar(12)
+  // Private uploaded master in STORAGE_SERVICE; never served publicly.
+  audioKey         String? @unique
+  audioFileName    String?
+  audioContentType String?
+  audioSizeBytes   Int?
+  /// Zero-based order on its release; new recordings go last.
+  position      Int     @default(0)
+  isDemo        Boolean @default(false)
+  deletedAt     DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now()) @updatedAt
+
+  owner   Artist @relation(fields: [ownerArtistId], references: [id], onDelete: Restrict)
+  release Release? @relation(fields: [releaseId, ownerArtistId], references: [id, ownerArtistId], onDelete: Restrict)
+
+  @@index([ownerArtistId, deletedAt, updatedAt(sort: Desc)])
+  @@index([releaseId])
+}
+
+enum ReleaseCreditRole {
+  PERFORMER
+  PRODUCER
+  COMPOSER
+  LYRICIST
+  OTHER
+}
+
+// Who controls the master recording; OTHER requires the owner's name.
+enum ReleaseMasterOwner {
+  ARTIST
+  OTHER
+}
+
+// Stores a release can be planned for. Which of them a partner can serve is decided by the
+// distribution adapter at read time, so an unsupported store reads as unavailable, not failed.
+enum DeliveryDestination {
+  SPOTIFY
+  APPLE_MUSIC
+  YOUTUBE_MUSIC
+  AMAZON_MUSIC
+  DEEZER
+  TIDAL
+}
+
+// External delivery lifecycle reported by the distribution partner (tech-roadmap states).
+enum DeliveryState {
+  SUBMITTED
+  ACCEPTED
+  LIVE
+  FAILED
+  TAKEN_DOWN
+}
+
+// The artist's plan: which stores to deliver to. Territories reuse ReleaseTerritory, where no
+// rows means worldwide.
+model ReleaseDestination {
+  releaseId   String              @db.Uuid
+  destination DeliveryDestination
+  createdAt   DateTime            @default(now())
+
+  release Release @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+
+  @@id([releaseId, destination])
+}
+
+// What a partner reported for one store. Rows exist only once something was actually sent.
+model ReleaseDelivery {
+  releaseId   String              @db.Uuid
+  destination DeliveryDestination
+  state       DeliveryState
+  externalId  String?
+  message     String?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @default(now()) @updatedAt
+
+  release Release @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+
+  @@id([releaseId, destination])
+  @@index([state])
+}
+
+// When the artist last opened the notification center; later notifications read as unread.
+// Kept apart from Artist so the public artist shape is unchanged.
+model ArtistNotificationState {
+  artistId String   @id @db.Uuid
+  seenAt   DateTime @db.Timestamptz(3)
+
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+}
+
+/// Groups of derived notifications an artist can switch off per channel.
+enum ArtistNotificationCategory {
+  TASKS
+  REVIEW
+  DELIVERY
+}
+
+/// Missing row means every category is on.
+model ArtistNotificationPreference {
+  artistId   String                       @id @db.Uuid
+  mutedInApp ArtistNotificationCategory[] @default([])
+  updatedAt  DateTime                     @updatedAt
+
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+}
+
+enum ReleaseReviewDecision {
+  APPROVED
+  CHANGES_REQUESTED
+}
+
+// One Bitrate review decision on a submitted release, kept as history. A decision moves the
+// release SUBMITTED -> READY (approved) or SUBMITTED -> REJECTED (changes requested).
+model ReleaseReview {
+  id              String                @id @default(uuid(7)) @db.Uuid
+  releaseId       String                @db.Uuid
+  staffId         String?               @db.Uuid
+  decision        ReleaseReviewDecision
+  message         String?
+  requiredChanges String[]              @default([])
+  recommendations String[]              @default([])
+  createdAt       DateTime              @default(now())
+
+  release Release @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+  staff   Staff?  @relation(fields: [staffId], references: [id], onDelete: SetNull)
+
+  @@index([releaseId, createdAt(sort: Desc)])
+  @@index([staffId])
+}
+
+enum ReleaseTaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+// Preparation work on a release. An assignee is a credited participant of the same release
+// (checked by the service); credits grant no account access until collaboration roles exist.
+model ReleaseTask {
+  id                    String            @id @default(uuid(7)) @db.Uuid
+  releaseId             String            @db.Uuid
+  title                 String
+  notes                 String?
+  status                ReleaseTaskStatus @default(TODO)
+  dueAt                 DateTime?         @db.Timestamptz(3)
+  assigneeContributorId String?           @db.Uuid
+  completedAt           DateTime?         @db.Timestamptz(3)
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @default(now()) @updatedAt
+
+  release  Release             @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+  assignee ReleaseContributor? @relation(fields: [assigneeContributorId], references: [id], onDelete: SetNull)
+
+  @@index([releaseId, status, dueAt])
+  @@index([assigneeContributorId])
+}
+
+enum ReleaseRightType {
+  RECORDING
+  COMPOSITION
+}
+
+model Release {
+  id            String        @id @default(uuid(7)) @db.Uuid
+  ownerArtistId String        @db.Uuid
+  title         String
+  cover         String?
+  isDemo        Boolean @default(false)
+  type          AlbumType     @default(SINGLE)
+  status        ReleaseStatus @default(DRAFT)
+  upc           String?       @unique @db.VarChar(13)
+  scheduledAt   DateTime?      @db.Timestamptz(3)
+  // Rights confirmation. Changing credits clears both confirmations; changing the
+  // owner or splits clears accuracy, so a confirmation always describes current data.
+  masterOwnerType     ReleaseMasterOwner?
+  masterOwnerName     String?
+  writersConfirmedAt  DateTime? @db.Timestamptz(3)
+  accuracyConfirmedAt DateTime? @db.Timestamptz(3)
+  submittedAt         DateTime? @db.Timestamptz(3)
+  deletedAt     DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @default(now()) @updatedAt
+
+  owner        Artist               @relation("ReleaseOwner", fields: [ownerArtistId], references: [id], onDelete: Restrict)
+  tracks       ReleaseTrack[]
+  trackDrafts  ArtistTrackDraft[]
+  contributors ReleaseContributor[]
+  splits       ReleaseSplit[]
+  territories  ReleaseTerritory[]
+  tasks        ReleaseTask[]
+  destinations ReleaseDestination[]
+  deliveries   ReleaseDelivery[]
+  reviews      ReleaseReview[]
+
+  @@index([ownerArtistId, deletedAt, createdAt(sort: Desc)])
+  @@unique([id, ownerArtistId])
+  @@index([status, scheduledAt])
+}
+
+// An explicit allow-list. An empty draft list does not grant worldwide distribution.
+model ReleaseTerritory {
+  releaseId   String @db.Uuid
+  countryCode String @db.Char(2)
+
+  release Release @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+
+  @@id([releaseId, countryCode])
+}
+
+model ReleaseTrack {
+  releaseId String @db.Uuid
+  trackId   String @db.Uuid
+  position  Int
+
+  release Release @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+  track   Track   @relation(fields: [trackId], references: [id], onDelete: Restrict)
+
+  @@id([releaseId, trackId])
+  @@unique([releaseId, position])
+  @@index([trackId])
+}
+
+// A credit identifies a contributor; it grants neither login nor workspace access.
+model ReleaseContributor {
+  id          String              @id @default(uuid(7)) @db.Uuid
+  releaseId   String              @db.Uuid
+  artistId    String?             @db.Uuid
+  displayName String
+  roles       ReleaseCreditRole[]
+
+  release Release        @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+  artist  Artist?        @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  splits  ReleaseSplit[]
+  tasks   ReleaseTask[]
+
+  // The composite key prevents a split from referencing a different release's contributor.
+  @@unique([id, releaseId])
+  @@index([releaseId])
+  @@index([artistId])
+}
+
+model ReleaseSplit {
+  releaseId        String           @db.Uuid
+  contributorId    String           @db.Uuid
+  rightType        ReleaseRightType
+  shareBasisPoints Int
+
+  release     Release            @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+  contributor ReleaseContributor @relation(fields: [contributorId, releaseId], references: [id, releaseId], onDelete: Cascade)
+
+  @@id([releaseId, contributorId, rightType])
+  @@index([contributorId, releaseId])
+}

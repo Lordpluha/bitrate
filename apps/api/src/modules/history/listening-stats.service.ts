@@ -21,7 +21,7 @@ export class ListeningStatsService {
   async recompute() {
     const since = new Date(Date.now() - LISTENING_WINDOW_DAYS * DAY_MS)
     await this.prisma.$transaction([
-      this.prisma.executeRaw(Prisma.sql`
+      this.prisma.$executeRaw(Prisma.sql`
         WITH plays AS (
           SELECT h."trackId",
                  COUNT(DISTINCT (h."userId", date_trunc('hour', h."listenedAt")))::int AS all_time,
@@ -41,7 +41,7 @@ export class ListeningStatsService {
         WHERE n.id = t.id
           AND (t."playCount" IS DISTINCT FROM n.play_count OR t."popularity" IS DISTINCT FROM n.popularity)
       `),
-      this.prisma.executeRaw(Prisma.sql`
+      this.prisma.$executeRaw(Prisma.sql`
         WITH listeners AS (
           SELECT t."artistId", COUNT(DISTINCT h."userId")::int AS listeners
           FROM "ListeningHistory" h

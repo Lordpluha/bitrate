@@ -130,7 +130,7 @@ COPY --from=build --chown=bitrateapi:nodejs /app/apps/api/dist ./apps/api/dist
 # `task prod:migrate` runs `prisma migrate deploy` in a throwaway container from this image, so
 # the migrations have to be here even though generation happened upstream.
 COPY --chown=bitrateapi:nodejs apps/api/prisma ./apps/api/prisma
-# Prisma looks for the config in the working directory, and schema.prisma declares no datasource
+# Prisma looks for the config in the working directory, and the schema (prisma/schema/) declares no datasource
 # url — it comes from here. The TypeScript source, not the compiled output: tsc emits CommonJS
 # that Prisma's config loader rejects with "Failed to parse syntax of config file".
 COPY --chown=bitrateapi:nodejs apps/api/prisma.config.ts ./apps/api/prisma.config.ts

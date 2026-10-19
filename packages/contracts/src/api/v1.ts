@@ -13687,9 +13687,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -15241,9 +15239,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -17471,9 +17467,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -17620,9 +17614,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -25200,9 +25192,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -27374,9 +27364,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -27699,9 +27687,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -27867,9 +27853,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -28035,9 +28019,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -28364,9 +28346,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -28544,9 +28524,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -29372,9 +29350,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -29870,9 +29846,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -31557,9 +31531,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -33290,9 +33262,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -34678,9 +34648,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -35279,9 +35247,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -35890,9 +35856,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -36041,9 +36005,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -36640,9 +36602,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -37100,9 +37060,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -37251,9 +37209,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -40143,9 +40099,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -40442,9 +40396,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -40607,9 +40559,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -40765,9 +40715,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -42401,7 +42349,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': Record<string, never>
+          'application/json': components['schemas']['AdminAlbumEntity']
         }
       }
     }
@@ -42559,7 +42507,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': Record<string, never>
+          'application/json': components['schemas']['AdminAlbumEntity']
         }
       }
     }
@@ -43008,7 +42956,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': Record<string, never>
+          'application/json': components['schemas']['AdminPlaylistEntity']
         }
       }
     }
@@ -43166,7 +43114,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': Record<string, never>
+          'application/json': components['schemas']['AdminPlaylistEntity']
         }
       }
     }
@@ -43324,7 +43272,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': Record<string, never>
+          'application/json': components['schemas']['AdminPlaylistEntity']
         }
       }
     }
@@ -43772,7 +43720,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': Record<string, never>
+          'application/json': components['schemas']['AdminPodcastEntity']
         }
       }
     }
@@ -43930,7 +43878,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': Record<string, never>
+          'application/json': components['schemas']['AdminPodcastEntity']
         }
       }
     }
@@ -44089,7 +44037,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': Record<string, never>
+          'application/json': components['schemas']['AdminPodcastEpisodeEntity']
         }
       }
     }
@@ -44248,7 +44196,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': Record<string, never>
+          'application/json': components['schemas']['AdminPodcastEpisodeEntity']
         }
       }
     }
@@ -44844,9 +44792,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -45002,9 +44948,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
