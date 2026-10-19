@@ -1,7 +1,6 @@
-import { randomBytes } from 'node:crypto'
 import type { LoginResult } from '@common/auth.types'
 import { ARTIST_AGREEMENT_VERSION, LEGAL_VERSION } from '@common/legal'
-import { MailService } from '@infra/mail/mail.service'
+import { type ArtistVerificationDelivery, MailService } from '@infra/mail/mail.service'
 import {
   DEFAULT_MAIL_LOCALE,
   type MailLocale,
@@ -11,35 +10,50 @@ import { PrismaService } from '@infra/prisma/prisma.service'
 import type { ArtistEntity } from '@modules/artists'
 import { ArtistsPrivateService } from '@modules/artists/artists.private.service'
 import { ArtistsService } from '@modules/artists/artists.service'
+import { AccountAuthCore } from '@modules/auth-core'
 import { TokenService } from '@modules/tokens/token.service'
 import {
   BadRequestException,
   ConflictException,
-  HttpException,
-  HttpStatus,
   Injectable,
+  Logger,
+  ServiceUnavailableException,
   UnauthorizedException,
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import type { ArtistSession } from '@prisma/client'
-import type { JWTPayload } from '../tokens'
+import type { Artist, ArtistSession } from '@prisma/client'
+import { ArtistAuthStore } from './artist-auth.store'
+import { ArtistEmailCodeService } from './artist-email-code.service'
 import type { ArtistRegistrationDto } from './dtos'
 import type { ArtistSessionEntity } from './entities'
+import { ARTIST_AUTH_ERRORS } from './errors'
+import type { SessionClient } from './session-client'
 
 /** Represents the artists auth service. */
 @Injectable()
 export class ArtistsAuthService {
-  private static readonly MAX_LOGIN_ATTEMPTS = 5
-  private static readonly LOCK_DURATION_MS = 15 * 60 * 1000
+  private readonly logger = new Logger(ArtistsAuthService.name)
+  /** The artist tables behind the shared core. */
+  private readonly store: ArtistAuthStore
+  /** Login, lockout, sessions and recovery tokens, shared with listeners. */
+  private readonly core: AccountAuthCore<Artist, SessionClient>
+
   /** Creates a new instance. */
   constructor(
     private artists: ArtistsService,
     private artistsPrivate: ArtistsPrivateService,
-    private jwtService: JwtService,
-    private prisma: PrismaService,
+    jwtService: JwtService,
+    prisma: PrismaService,
     private token: TokenService,
     private mail: MailService,
-  ) {}
+    private emailCodes: ArtistEmailCodeService,
+  ) {
+    this.store = new ArtistAuthStore(prisma, artists, artistsPrivate)
+    this.core = new AccountAuthCore(this.store, token, jwtService, {
+      audience: 'artist',
+      twoFactorAccountMissing: () => new UnauthorizedException('Artist not found'),
+    })
+  }
 
   /** Runs the register artist operation. */
   async registerArtist(registrationDto: ArtistRegistrationDto) {
@@ -47,6 +61,10 @@ export class ArtistsAuthService {
 
     if (artist) {
       throw new ConflictException('Artist with this email already exists')
+    }
+    // Without a token store or transport the account could never be verified.
+    if (this.mail.getArtistVerificationDelivery() === 'unavailable') {
+      throw new ServiceUnavailableException(ARTIST_AUTH_ERRORS.EMAIL_VERIFICATION_UNAVAILABLE)
     }
 
     const acceptedAt = new Date()
@@ -59,209 +77,78 @@ export class ArtistsAuthService {
       artistAgreementVersion: ARTIST_AGREEMENT_VERSION,
       artistAgreementAcceptedAt: acceptedAt,
     })
-    await this.issueEmailVerification(created.id, created.email, created.username)
-    return { requiresEmailVerification: true as const }
+    const delivery = await this.issueEmailVerification(created.id, created.email, created.username)
+    return { requiresEmailVerification: true as const, delivery }
   }
 
   /** Runs the login artist operation. */
-  async loginArtist(email: ArtistEntity['email'], password: string): Promise<LoginResult> {
-    const artist = await this.artistsPrivate.findByEmail(email)
-    if (artist?.lockedUntil && artist.lockedUntil > new Date()) {
-      throw new HttpException('Account is temporarily locked', HttpStatus.TOO_MANY_REQUESTS)
-    }
-    const passwordValid =
-      artist?.password && (await this.token.verifyPassword(password, artist.password))
-    if (!passwordValid) {
-      if (artist) await this.recordFailedLogin(artist.id)
-      throw new UnauthorizedException({ message: 'Invalid credentials' })
-    }
-    if (!artist.emailVerifiedAt) {
-      throw new UnauthorizedException({ message: 'Email address is not verified' })
-    }
-    if (artist.failedLoginAttempts > 0 || artist.lockedUntil) {
-      await this.prisma.artist.update({
-        where: { id: artist.id },
-        data: { failedLoginAttempts: 0, lockedUntil: null },
-      })
-    }
-
-    if (artist.twoFactorEnabled) {
-      const pendingToken = await this.token.generateTwoFAPendingToken(artist.id)
-      return { requires2fa: true as const, pendingToken }
-    }
-
-    const access_token = await this.token.generateAccessToken(artist.id, artist.username, 'artist')
-    const refresh_token = await this.token.generateRefreshToken(
-      artist.id,
-      artist.username,
-      'artist',
-    )
-
-    await this.prisma.artistSession.create({
-      data: {
-        access_token: this.token.hashToken(access_token),
-        refresh_token: this.token.hashToken(refresh_token),
-        artistId: artist.id,
-        expiresAt: this.token.getRefreshTokenExpiresAt(),
-      },
-    })
-
-    return { access_token, refresh_token }
+  loginArtist(
+    email: ArtistEntity['email'],
+    password: string,
+    client: SessionClient = {},
+  ): Promise<LoginResult> {
+    return this.core.login(email, password, client)
   }
 
   /** Runs the complete two factor login operation. */
-  async completeTwoFactorLogin(artistId: string) {
-    const artist = await this.artistsPrivate.findById(artistId)
-    if (!artist) throw new UnauthorizedException('Artist not found')
-
-    const access_token = await this.token.generateAccessToken(artist.id, artist.username, 'artist')
-    const refresh_token = await this.token.generateRefreshToken(
-      artist.id,
-      artist.username,
-      'artist',
-    )
-
-    await this.prisma.artistSession.create({
-      data: {
-        access_token: this.token.hashToken(access_token),
-        refresh_token: this.token.hashToken(refresh_token),
-        artistId: artist.id,
-        expiresAt: this.token.getRefreshTokenExpiresAt(),
-      },
-    })
-
-    return { access_token, refresh_token }
+  completeTwoFactorLogin(artistId: string, client: SessionClient = {}) {
+    return this.core.completeTwoFactorLogin(artistId, client)
   }
 
   /** Runs the refresh operation. */
-  async refresh(refresh_token: string) {
-    try {
-      const payload = await this.jwtService.verifyAsync<JWTPayload>(refresh_token, {
-        secret: process.env.JWT_SECRET,
-      })
-      const artist = await this.artists.findById(payload.sub)
-      if (!artist) throw new UnauthorizedException('Invalid refresh token')
-      const access_token = await this.token.generateAccessToken(
-        artist.id,
-        artist.username,
-        'artist',
-      )
-      const next_refresh_token = await this.token.generateRefreshToken(
-        artist.id,
-        artist.username,
-        'artist',
-      )
-
-      const updatedSessions = await this.prisma.artistSession.updateMany({
-        where: {
-          artistId: artist.id,
-          refresh_token: this.token.hashToken(refresh_token),
-        },
-        data: {
-          access_token: this.token.hashToken(access_token),
-          refresh_token: this.token.hashToken(next_refresh_token),
-          expiresAt: this.token.getRefreshTokenExpiresAt(),
-        },
-      })
-
-      if (updatedSessions.count !== 1) {
-        throw new UnauthorizedException('Invalid refresh token')
-      }
-
-      return { access_token, refresh_token: next_refresh_token }
-    } catch {
-      throw new UnauthorizedException('Invalid refresh token')
-    }
+  refresh(refresh_token: string, client: SessionClient = {}) {
+    return this.core.refresh(refresh_token, client)
   }
 
   /** Runs the logout operation. */
-  async logout(
-    artistId: ArtistSession['artistId'],
-    access_token: ArtistSessionEntity['access_token'],
-  ) {
-    const artist = await this.artists.findById(artistId)
-    if (!artist) {
-      throw new UnauthorizedException('Invalid access token')
-    }
-
-    await this.prisma.artistSession.deleteMany({
-      where: {
-        artistId: artist.id,
-        access_token: this.token.hashToken(access_token),
-      },
-    })
+  logout(artistId: ArtistSession['artistId'], access_token: ArtistSessionEntity['access_token']) {
+    return this.core.logout(artistId, access_token)
   }
 
-  /** Runs the forgot password operation. */
+  /** Runs the forgot password operation. Unknown emails return silently. */
   async forgotPassword(email: string) {
-    const artist = await this.artistsPrivate.findByEmail(email)
-    if (!artist) return
-
-    await this.prisma.artistPasswordReset.deleteMany({ where: { artistId: artist.id } })
-
-    const rawToken = randomBytes(32).toString('hex')
-    const expiresAt = new Date(Date.now() + 60 * 60 * 1000)
-
-    await this.prisma.artistPasswordReset.create({
-      data: { artistId: artist.id, token: this.token.hashToken(rawToken), expiresAt },
-    })
+    const reset = await this.core.createPasswordReset(email)
+    if (!reset) return
 
     await this.mail.sendArtistPasswordReset(
-      artist.email,
-      rawToken,
-      artist.username,
-      resolveMailLocale(artist.locale),
+      reset.account.email,
+      reset.rawToken,
+      reset.account.username,
+      resolveMailLocale(reset.account.locale),
     )
   }
 
   /** Runs the reset password operation. */
-  async resetPassword(rawToken: string, newPassword: string) {
-    const hashed = this.token.hashToken(rawToken)
-    const reset = await this.prisma.artistPasswordReset.findUnique({ where: { token: hashed } })
-
-    if (!reset || reset.expiresAt < new Date()) {
-      throw new BadRequestException('Invalid or expired reset token')
-    }
-
-    const hashedPassword = await this.token.hashPassword(newPassword)
-
-    await this.prisma.$transaction([
-      this.prisma.artist.update({
-        where: { id: reset.artistId },
-        data: { password: hashedPassword },
-      }),
-      this.prisma.artistPasswordReset.delete({ where: { token: hashed } }),
-      this.prisma.artistSession.deleteMany({ where: { artistId: reset.artistId } }),
-    ])
+  resetPassword(rawToken: string, newPassword: string) {
+    return this.core.resetPassword(rawToken, newPassword)
   }
 
-  async verifyEmail(rawToken: string) {
-    const verification = await this.prisma.artistEmailVerification.findUnique({
-      where: { token: this.token.hashToken(rawToken) },
-    })
-    if (!verification || verification.expiresAt < new Date()) {
-      throw new BadRequestException('Invalid or expired verification token')
-    }
-    await this.prisma.$transaction([
-      this.prisma.artist.update({
-        where: { id: verification.artistId },
-        data: { emailVerifiedAt: new Date() },
-      }),
-      this.prisma.artistEmailVerification.deleteMany({
-        where: { artistId: verification.artistId },
-      }),
-    ])
+  verifyEmail(rawToken: string) {
+    return this.core.verifyEmail(rawToken)
   }
 
   async resendEmailVerification(email: string) {
+    const delivery = this.mail.getArtistVerificationDelivery()
+    if (delivery === 'unavailable') return { delivery }
+    await this.emailCodes.reserveResend(email)
     const artist = await this.artistsPrivate.findByEmail(email)
-    if (!artist || artist.emailVerifiedAt) return
-    await this.issueEmailVerification(
+    if (!artist || artist.emailVerifiedAt) return { delivery }
+    const result = await this.issueEmailVerification(
       artist.id,
       artist.email,
       artist.username,
       resolveMailLocale(artist.locale),
     )
+    return { delivery: result }
+  }
+
+  async verifyEmailCode(email: string, code: string): Promise<void> {
+    const artist = await this.artistsPrivate.findByEmail(email)
+    if (!artist || artist.emailVerifiedAt) {
+      throw new BadRequestException(ARTIST_AUTH_ERRORS.INVALID_VERIFICATION_CODE)
+    }
+    await this.emailCodes.consume(artist.id, code)
+    await this.store.markEmailVerified(artist.id)
   }
 
   private async issueEmailVerification(
@@ -269,43 +156,18 @@ export class ArtistsAuthService {
     email: string,
     username: string,
     locale: MailLocale = DEFAULT_MAIL_LOCALE,
-  ) {
-    const rawToken = randomBytes(32).toString('hex')
-    await this.prisma.$transaction([
-      this.prisma.artistEmailVerification.deleteMany({ where: { artistId } }),
-      this.prisma.artistEmailVerification.create({
-        data: {
-          artistId,
-          token: this.token.hashToken(rawToken),
-          expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
-        },
-      }),
-    ])
-    await this.mail.sendArtistEmailVerification(email, rawToken, username, locale)
-  }
-
-  /**
-   * Increments the failure counter and locks the account once it reaches
-   * MAX_LOGIN_ATTEMPTS. Typed writes rather than raw SQL: a bind parameter inside a raw
-   * `CASE ... ELSE NULL` carries no type, so Postgres resolved the whole expression to
-   * `text` and rejected the assignment to the `timestamp(3)` column (SQLSTATE 42804).
-   */
-  private async recordFailedLogin(artistId: string) {
-    const [updated] = await this.prisma.artist.updateManyAndReturn({
-      where: { id: artistId },
-      data: { failedLoginAttempts: { increment: 1 } },
-      select: { failedLoginAttempts: true, lockedUntil: true },
-    })
-    if (!updated) return
-
-    const locked = updated.failedLoginAttempts >= ArtistsAuthService.MAX_LOGIN_ATTEMPTS
-    if (!locked && updated.lockedUntil === null) return
-
-    await this.prisma.artist.updateMany({
-      where: { id: artistId },
-      data: {
-        lockedUntil: locked ? new Date(Date.now() + ArtistsAuthService.LOCK_DURATION_MS) : null,
-      },
-    })
+  ): Promise<ArtistVerificationDelivery> {
+    const delivery = this.mail.getArtistVerificationDelivery()
+    if (delivery === 'unavailable') return delivery
+    const code = await this.emailCodes.issue(artistId)
+    const rawToken = await this.core.issueEmailVerificationToken(artistId)
+    try {
+      await this.mail.sendArtistEmailVerification(email, rawToken, username, locale, code)
+      return delivery
+    } catch {
+      this.logger.error('Artist verification email delivery failed; use resend to retry')
+      // Report the global transport mode equally for every address, including unknown accounts.
+      return delivery
+    }
   }
 }

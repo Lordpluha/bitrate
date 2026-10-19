@@ -15,3 +15,4 @@ paths:
 - Follow existing labels/icon/popup conventions; do not invent one-off component styles.
 - CSS token ownership is in `design-tokens.md`; this rule does not apply to Angular,
   React Native or Svelte markup. Recipes: `.claude/references/styling-guide.md` as needed.
+- New or restyled screens and tiles: `.claude/references/ui-design-practices.md`.

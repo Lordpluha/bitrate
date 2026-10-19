@@ -1,4 +1,4 @@
-import banner1 from '@assets/images/banner-1.jpg'
+import cover1 from '@assets/images/cover-1.webp'
 import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 
 import { Avatar, AvatarFallback, AvatarImage } from './avatar'
@@ -13,7 +13,7 @@ const meta = {
   argTypes: {},
   render: (args) => (
     <Avatar {...args}>
-      <AvatarImage src={banner1} />
+      <AvatarImage src={cover1} />
       <AvatarFallback>CN</AvatarFallback>
     </Avatar>
   ),

@@ -1,0 +1,2647 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "cnohRW",
+      "name": "Artist / Settings / Team & safety / Desktop / Dark",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "fX9Gv7",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:cOc4EM": {
+              "type": "ref",
+              "id": "WJz7Yb",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Settings",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "settings"
+                },
+                "ds:GZQzF3": {
+                  "content": "Settings"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Settings / Team & safety"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Invite member"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "5qFvya",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "PBs9dG",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Team & workspace safety"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Roles, access and deliberate account actions"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "XLQ8eF",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "sBTrMs",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "3Amrvt",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Account",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Account"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "AgJn7Z",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Security",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Security"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "55W2TM",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Notifications",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Notifications"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ASyag2",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Appearance",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Appearance"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "srjNgf",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Connected services",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Connected services"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "SKDjcL",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Team & safety",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Team & safety"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "UWCRa3",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "FfvJ8Z",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "72UnpF",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "2NvWyP",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "kEDeCx",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "EQQa66",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Workspace members"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "EzM5JL",
+                                      "ref": "ds:FJUa1",
+                                      "name": "Badge / 3 seats · Demo",
+                                      "descendants": {
+                                        "ds:BI0Pd": {
+                                          "content": "3 seats · Demo"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "BNrg5p",
+                                  "ref": "ds:GRbvMZ",
+                                  "name": "Person Row",
+                                  "descendants": {
+                                    "ds:s83WDX/ds:Z9DnE": {
+                                      "content": "DA"
+                                    },
+                                    "ds:XVDddC": {
+                                      "content": "Demo artist"
+                                    },
+                                    "ds:SVnQsi": {
+                                      "content": "demoartist@example.com"
+                                    },
+                                    "ds:kDIk3M": {
+                                      "type": "frame",
+                                      "id": "PpvjkP",
+                                      "name": "Tags",
+                                      "gap": 6,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "TRTfGJ",
+                                          "ref": "ds:e9YOsV",
+                                          "name": "Badge / Owner",
+                                          "descendants": {
+                                            "ds:c9raBZ": {
+                                              "content": "Owner"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "EBakvw",
+                                          "ref": "ds:xtDM73",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:HSv7ty": {
+                                              "content": "Active"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "FMntuj",
+                                  "ref": "ds:GRbvMZ",
+                                  "name": "Person Row",
+                                  "descendants": {
+                                    "ds:s83WDX/ds:Z9DnE": {
+                                      "content": "JM"
+                                    },
+                                    "ds:XVDddC": {
+                                      "content": "Jordan Miles"
+                                    },
+                                    "ds:SVnQsi": {
+                                      "content": "jordan@example.com"
+                                    },
+                                    "ds:kDIk3M": {
+                                      "type": "frame",
+                                      "id": "3WQN5F",
+                                      "name": "Tags",
+                                      "gap": 6,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "Ev6ndE",
+                                          "ref": "ds:e9YOsV",
+                                          "name": "Badge / Manager",
+                                          "descendants": {
+                                            "ds:c9raBZ": {
+                                              "content": "Manager"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "n3isu4",
+                                          "ref": "ds:xtDM73",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:HSv7ty": {
+                                              "content": "Active"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "DWjUdW",
+                                  "ref": "ds:GRbvMZ",
+                                  "name": "Person Row",
+                                  "descendants": {
+                                    "ds:s83WDX/ds:Z9DnE": {
+                                      "content": "TS"
+                                    },
+                                    "ds:XVDddC": {
+                                      "content": "Taylor Stone"
+                                    },
+                                    "ds:SVnQsi": {
+                                      "content": "taylor@example.com"
+                                    },
+                                    "ds:kDIk3M": {
+                                      "type": "frame",
+                                      "id": "ct36Je",
+                                      "name": "Tags",
+                                      "gap": 6,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "PHZwEP",
+                                          "ref": "ds:e9YOsV",
+                                          "name": "Badge / Viewer",
+                                          "descendants": {
+                                            "ds:c9raBZ": {
+                                              "content": "Viewer"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "DBM9US",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Pending"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "9rVjvV",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Pending invite expires in 5 days · Demo"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "CqRqB7",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "JU6gKz",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "nsefTj",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "PjHLVU",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Dangerous actions"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "UPS88R",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Every action opens a separate review. Nothing destructive happens from this screen."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "tpstju",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Sign out everywhere"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "End other sessions after confirmation."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "NgEJeU",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "KekpwR",
+                                          "ref": "ds:G5tJp",
+                                          "name": "Button / Review sign-out",
+                                          "descendants": {
+                                            "ds:d2zCI": {
+                                              "content": "Review sign-out"
+                                            },
+                                            "ds:zDiHG": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "TWgtWQ",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Deactivate workspace"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Pause access; explain restoration first."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "CGZZzT",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "BqCT2N",
+                                          "ref": "ds:G5tJp",
+                                          "name": "Button / Review deactivation",
+                                          "descendants": {
+                                            "ds:d2zCI": {
+                                              "content": "Review deactivation"
+                                            },
+                                            "ds:zDiHG": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "jnYhyg",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Delete artist account"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Export data and type confirmation."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "BNhNKu",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "aoDkzq",
+                                          "ref": "ds:uT1Ux",
+                                          "name": "Button / Review deletion",
+                                          "descendants": {
+                                            "ds:QLznA": {
+                                              "content": "Review deletion"
+                                            },
+                                            "ds:CxlXV": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "mNWDhp",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "9H8pvf",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "2eFbEg",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "sSyquk",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "dBQhzq",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Role boundaries"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "rwaMvG",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Owner"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "ranBEe",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "MtvUfe",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Security, team and deletion"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "vmfPfN",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Manager"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "CbLT6t",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "9XuDUe",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Releases, tasks and promotion"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "z6JKCx",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Viewer"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "kU5oHK",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "Gugg9h",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "No edits or account actions"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "myZP2o",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Only the owner can change ownership or review account deletion."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/settings/team — Roles are visible before invites; destructive actions open a separate review."
+    },
+    {
+      "type": "frame",
+      "id": "zi78xE",
+      "name": "Artist / Settings / Team & safety / Desktop / Light",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "RCefCw",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:cOc4EM": {
+              "type": "ref",
+              "id": "ok7wTN",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Settings",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "settings"
+                },
+                "ds:GZQzF3": {
+                  "content": "Settings"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Settings / Team & safety"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Invite member"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "YhD2Jc",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "TVTFdC",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Team & workspace safety"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Roles, access and deliberate account actions"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "KP75qQ",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "WXSZRd",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "aN9SUz",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Account",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Account"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "C3F8GQ",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Security",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Security"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Bzqs7g",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Notifications",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Notifications"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "8j72zu",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Appearance",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Appearance"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "mZuCZi",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Connected services",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Connected services"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "YacaBU",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Team & safety",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Team & safety"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ApcaKj",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Mg59Ww",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "mqEFve",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "6AfZNj",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "LTpg2A",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "tH2iy5",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Workspace members"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "kJSynC",
+                                      "ref": "ds:FJUa1",
+                                      "name": "Badge / 3 seats · Demo",
+                                      "descendants": {
+                                        "ds:BI0Pd": {
+                                          "content": "3 seats · Demo"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "EhCpZB",
+                                  "ref": "ds:GRbvMZ",
+                                  "name": "Person Row",
+                                  "descendants": {
+                                    "ds:s83WDX/ds:Z9DnE": {
+                                      "content": "DA"
+                                    },
+                                    "ds:XVDddC": {
+                                      "content": "Demo artist"
+                                    },
+                                    "ds:SVnQsi": {
+                                      "content": "demoartist@example.com"
+                                    },
+                                    "ds:kDIk3M": {
+                                      "type": "frame",
+                                      "id": "qVjHxE",
+                                      "name": "Tags",
+                                      "gap": 6,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "AkKtSc",
+                                          "ref": "ds:e9YOsV",
+                                          "name": "Badge / Owner",
+                                          "descendants": {
+                                            "ds:c9raBZ": {
+                                              "content": "Owner"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "QeAxHr",
+                                          "ref": "ds:xtDM73",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:HSv7ty": {
+                                              "content": "Active"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Sm7oj5",
+                                  "ref": "ds:GRbvMZ",
+                                  "name": "Person Row",
+                                  "descendants": {
+                                    "ds:s83WDX/ds:Z9DnE": {
+                                      "content": "JM"
+                                    },
+                                    "ds:XVDddC": {
+                                      "content": "Jordan Miles"
+                                    },
+                                    "ds:SVnQsi": {
+                                      "content": "jordan@example.com"
+                                    },
+                                    "ds:kDIk3M": {
+                                      "type": "frame",
+                                      "id": "pQmmze",
+                                      "name": "Tags",
+                                      "gap": 6,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "KBMutN",
+                                          "ref": "ds:e9YOsV",
+                                          "name": "Badge / Manager",
+                                          "descendants": {
+                                            "ds:c9raBZ": {
+                                              "content": "Manager"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "xWp9RR",
+                                          "ref": "ds:xtDM73",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:HSv7ty": {
+                                              "content": "Active"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "GiLMuF",
+                                  "ref": "ds:GRbvMZ",
+                                  "name": "Person Row",
+                                  "descendants": {
+                                    "ds:s83WDX/ds:Z9DnE": {
+                                      "content": "TS"
+                                    },
+                                    "ds:XVDddC": {
+                                      "content": "Taylor Stone"
+                                    },
+                                    "ds:SVnQsi": {
+                                      "content": "taylor@example.com"
+                                    },
+                                    "ds:kDIk3M": {
+                                      "type": "frame",
+                                      "id": "Kii6tE",
+                                      "name": "Tags",
+                                      "gap": 6,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "RGmKnV",
+                                          "ref": "ds:e9YOsV",
+                                          "name": "Badge / Viewer",
+                                          "descendants": {
+                                            "ds:c9raBZ": {
+                                              "content": "Viewer"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "iXMQt6",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Pending"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "r7qY5W",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Pending invite expires in 5 days · Demo"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "t4vynt",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "LqWVJN",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "HrzvDC",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "zx5385",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Dangerous actions"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "njYoip",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Every action opens a separate review. Nothing destructive happens from this screen."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Lquxgu",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Sign out everywhere"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "End other sessions after confirmation."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "D64m5L",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "UCHcYy",
+                                          "ref": "ds:G5tJp",
+                                          "name": "Button / Review sign-out",
+                                          "descendants": {
+                                            "ds:d2zCI": {
+                                              "content": "Review sign-out"
+                                            },
+                                            "ds:zDiHG": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "qko8ht",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Deactivate workspace"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Pause access; explain restoration first."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "TBLBuG",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "Vat3Kw",
+                                          "ref": "ds:G5tJp",
+                                          "name": "Button / Review deactivation",
+                                          "descendants": {
+                                            "ds:d2zCI": {
+                                              "content": "Review deactivation"
+                                            },
+                                            "ds:zDiHG": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "FsppgA",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Delete artist account"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Export data and type confirmation."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "jAVTjD",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "P89zRz",
+                                          "ref": "ds:uT1Ux",
+                                          "name": "Button / Review deletion",
+                                          "descendants": {
+                                            "ds:QLznA": {
+                                              "content": "Review deletion"
+                                            },
+                                            "ds:CxlXV": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "db3fsA",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "yUypQz",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "zRs4U5",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "Hokw8g",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "SNMRKA",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Role boundaries"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "FfAmdt",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Owner"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "4RdbTb",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "FJG5QN",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Security, team and deletion"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "RhJQt7",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Manager"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "sgkFLa",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "HTrncK",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Releases, tasks and promotion"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "TyZJv6",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Viewer"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "U2caxv",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "sKDzEE",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "No edits or account actions"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "FWMBHC",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Only the owner can change ownership or review account deletion."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "designed — /dashboard/settings/team — Roles are visible before invites; destructive actions open a separate review."
+    },
+    {
+      "type": "frame",
+      "id": "iXqEHf",
+      "name": "Artist / Settings / Team & safety / Desktop / Dim",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "krr8bi",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:cOc4EM": {
+              "type": "ref",
+              "id": "6G2SMV",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Settings",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "settings"
+                },
+                "ds:GZQzF3": {
+                  "content": "Settings"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Settings / Team & safety"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Invite member"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "72jtaE",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "p2G7RV",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Team & workspace safety"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Roles, access and deliberate account actions"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "mtzWEc",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "NaceKP",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "FBxdwU",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Account",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Account"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "nqZJfc",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Security",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Security"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "MpvLLs",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Notifications",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Notifications"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "8kUMgR",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Appearance",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Appearance"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "U9aumi",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Connected services",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Connected services"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "xxRveb",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Team & safety",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Team & safety"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "JJxzgZ",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "cbQ62C",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Z3fWJa",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "Sd3rwA",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "VUZiz7",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "5VTPSB",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Workspace members"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "od8uy9",
+                                      "ref": "ds:FJUa1",
+                                      "name": "Badge / 3 seats · Demo",
+                                      "descendants": {
+                                        "ds:BI0Pd": {
+                                          "content": "3 seats · Demo"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "8WNkJA",
+                                  "ref": "ds:GRbvMZ",
+                                  "name": "Person Row",
+                                  "descendants": {
+                                    "ds:s83WDX/ds:Z9DnE": {
+                                      "content": "DA"
+                                    },
+                                    "ds:XVDddC": {
+                                      "content": "Demo artist"
+                                    },
+                                    "ds:SVnQsi": {
+                                      "content": "demoartist@example.com"
+                                    },
+                                    "ds:kDIk3M": {
+                                      "type": "frame",
+                                      "id": "BaZcry",
+                                      "name": "Tags",
+                                      "gap": 6,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "XCKURT",
+                                          "ref": "ds:e9YOsV",
+                                          "name": "Badge / Owner",
+                                          "descendants": {
+                                            "ds:c9raBZ": {
+                                              "content": "Owner"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "2p9nsL",
+                                          "ref": "ds:xtDM73",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:HSv7ty": {
+                                              "content": "Active"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "9mTGUF",
+                                  "ref": "ds:GRbvMZ",
+                                  "name": "Person Row",
+                                  "descendants": {
+                                    "ds:s83WDX/ds:Z9DnE": {
+                                      "content": "JM"
+                                    },
+                                    "ds:XVDddC": {
+                                      "content": "Jordan Miles"
+                                    },
+                                    "ds:SVnQsi": {
+                                      "content": "jordan@example.com"
+                                    },
+                                    "ds:kDIk3M": {
+                                      "type": "frame",
+                                      "id": "3ce4Bn",
+                                      "name": "Tags",
+                                      "gap": 6,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "mJcMfV",
+                                          "ref": "ds:e9YOsV",
+                                          "name": "Badge / Manager",
+                                          "descendants": {
+                                            "ds:c9raBZ": {
+                                              "content": "Manager"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "hc73TK",
+                                          "ref": "ds:xtDM73",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:HSv7ty": {
+                                              "content": "Active"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "EFj29B",
+                                  "ref": "ds:GRbvMZ",
+                                  "name": "Person Row",
+                                  "descendants": {
+                                    "ds:s83WDX/ds:Z9DnE": {
+                                      "content": "TS"
+                                    },
+                                    "ds:XVDddC": {
+                                      "content": "Taylor Stone"
+                                    },
+                                    "ds:SVnQsi": {
+                                      "content": "taylor@example.com"
+                                    },
+                                    "ds:kDIk3M": {
+                                      "type": "frame",
+                                      "id": "pZPqBy",
+                                      "name": "Tags",
+                                      "gap": 6,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "7pwKQ2",
+                                          "ref": "ds:e9YOsV",
+                                          "name": "Badge / Viewer",
+                                          "descendants": {
+                                            "ds:c9raBZ": {
+                                              "content": "Viewer"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "geEtTe",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Pending"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "94uzAe",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Pending invite expires in 5 days · Demo"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ssKYxF",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "sdRn2g",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "NbDtGa",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "dr3EZe",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Dangerous actions"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "snvZPt",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Every action opens a separate review. Nothing destructive happens from this screen."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "QnoCSt",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Sign out everywhere"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "End other sessions after confirmation."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "BK6Gv9",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "JPqu3j",
+                                          "ref": "ds:G5tJp",
+                                          "name": "Button / Review sign-out",
+                                          "descendants": {
+                                            "ds:d2zCI": {
+                                              "content": "Review sign-out"
+                                            },
+                                            "ds:zDiHG": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Xv8CUo",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Deactivate workspace"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Pause access; explain restoration first."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "z2ZnSS",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "5RCcb7",
+                                          "ref": "ds:G5tJp",
+                                          "name": "Button / Review deactivation",
+                                          "descendants": {
+                                            "ds:d2zCI": {
+                                              "content": "Review deactivation"
+                                            },
+                                            "ds:zDiHG": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "tS8G8t",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Delete artist account"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Export data and type confirmation."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "nKXBVC",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "qMV3KU",
+                                          "ref": "ds:uT1Ux",
+                                          "name": "Button / Review deletion",
+                                          "descendants": {
+                                            "ds:QLznA": {
+                                              "content": "Review deletion"
+                                            },
+                                            "ds:CxlXV": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "YEpKg4",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "BwuK2K",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "PSZhAc",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "kbk68f",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "nMG7fx",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Role boundaries"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ZbikLk",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Owner"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "KRs4yB",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "4nTe8j",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Security, team and deletion"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "JjJkCf",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Manager"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "J3ojNf",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "76hbvX",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Releases, tasks and promotion"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "EPWXGc",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Viewer"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "StUzbY",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "9MCCsU",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "No edits or account actions"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "KChiuS",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Only the owner can change ownership or review account deletion."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "designed — /dashboard/settings/team — Roles are visible before invites; destructive actions open a separate review."
+    },
+    {
+      "type": "frame",
+      "id": "cBxMJr",
+      "name": "Artist / Settings / Team & safety / Mobile / Dark",
+      "width": 390,
+      "height": 1700,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "dC29qA",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1700,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "L8DLfB",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "zygp26",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Team & workspace safety"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Roles, access and deliberate account actions"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "TngERS",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "yhLZvf",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "xUkbbp",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Account",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Account"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "NV8xeo",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Security",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Security"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "3fM9C9",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Notifications",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Notifications"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ou7uV8",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Appearance",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Appearance"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ujLMx7",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Connected services",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Connected services"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "izgVSf",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Team & safety",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Team & safety"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "c6XAbY",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "Mo95HH",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "XTUZAf",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "JS3aNP",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Workspace members"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "cvrDH9",
+                              "ref": "ds:FJUa1",
+                              "name": "Badge / 3 seats · Demo",
+                              "descendants": {
+                                "ds:BI0Pd": {
+                                  "content": "3 seats · Demo"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "JLVMVu",
+                          "ref": "ds:GRbvMZ",
+                          "name": "Person Row",
+                          "descendants": {
+                            "ds:s83WDX/ds:Z9DnE": {
+                              "content": "DA"
+                            },
+                            "ds:XVDddC": {
+                              "content": "Demo artist"
+                            },
+                            "ds:SVnQsi": {
+                              "content": "demoartist@example.com"
+                            },
+                            "ds:kDIk3M": {
+                              "type": "frame",
+                              "id": "JXAyne",
+                              "name": "Tags",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "Y9eQQJ",
+                                  "ref": "ds:e9YOsV",
+                                  "name": "Badge / Owner",
+                                  "descendants": {
+                                    "ds:c9raBZ": {
+                                      "content": "Owner"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "oRk6je",
+                                  "ref": "ds:xtDM73",
+                                  "name": "Status/Success",
+                                  "descendants": {
+                                    "ds:HSv7ty": {
+                                      "content": "Active"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Tycp8Z",
+                          "ref": "ds:GRbvMZ",
+                          "name": "Person Row",
+                          "descendants": {
+                            "ds:s83WDX/ds:Z9DnE": {
+                              "content": "JM"
+                            },
+                            "ds:XVDddC": {
+                              "content": "Jordan Miles"
+                            },
+                            "ds:SVnQsi": {
+                              "content": "jordan@example.com"
+                            },
+                            "ds:kDIk3M": {
+                              "type": "frame",
+                              "id": "kpkBnu",
+                              "name": "Tags",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "mH4WnE",
+                                  "ref": "ds:e9YOsV",
+                                  "name": "Badge / Manager",
+                                  "descendants": {
+                                    "ds:c9raBZ": {
+                                      "content": "Manager"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "qoEhME",
+                                  "ref": "ds:xtDM73",
+                                  "name": "Status/Success",
+                                  "descendants": {
+                                    "ds:HSv7ty": {
+                                      "content": "Active"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "jSqFt6",
+                          "ref": "ds:GRbvMZ",
+                          "name": "Person Row",
+                          "descendants": {
+                            "ds:s83WDX/ds:Z9DnE": {
+                              "content": "TS"
+                            },
+                            "ds:XVDddC": {
+                              "content": "Taylor Stone"
+                            },
+                            "ds:SVnQsi": {
+                              "content": "taylor@example.com"
+                            },
+                            "ds:kDIk3M": {
+                              "type": "frame",
+                              "id": "8rw8ib",
+                              "name": "Tags",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "KrUGux",
+                                  "ref": "ds:e9YOsV",
+                                  "name": "Badge / Viewer",
+                                  "descendants": {
+                                    "ds:c9raBZ": {
+                                      "content": "Viewer"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "zTpz9X",
+                                  "ref": "ds:LUaCU2",
+                                  "name": "Status/Neutral",
+                                  "descendants": {
+                                    "ds:jPj56V": {
+                                      "content": "Pending"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "HCr5nY",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "Pending invite expires in 5 days · Demo"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "nev6eY",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "s7vaiW",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "M2M5FJ",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "uCgKxr",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Dangerous actions"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "nnFNSV",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "Every action opens a separate review. Nothing destructive happens from this screen."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "6humjm",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Sign out everywhere"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "End other sessions after confirmation."
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "qCn4Bf",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "8by7Tm",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Review sign-out",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Review sign-out"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "FKBFEc",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Deactivate workspace"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "Pause access; explain restoration first."
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "AVhh2b",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "a6brUs",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Review deactivation",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Review deactivation"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "UBExDj",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Delete artist account"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "Export data and type confirmation."
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "Fo55wV",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "B4byJx",
+                                  "ref": "ds:uT1Ux",
+                                  "name": "Button / Review deletion",
+                                  "descendants": {
+                                    "ds:QLznA": {
+                                      "content": "Review deletion"
+                                    },
+                                    "ds:CxlXV": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "N3iGis",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "He8qNT",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "vWvekT",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "2C95mR",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Role boundaries"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "SBauck",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Owner"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "i9hBp5",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "A8Zy34",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Security, team and deletion"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "tUtNCs",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Manager"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "v3fkdV",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "PmtNAt",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Releases, tasks and promotion"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "FS6xkT",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Viewer"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "5aMoJB",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "8XzCT3",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "No edits or account actions"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "te3icY",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "Only the owner can change ownership or review account deletion."
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/settings/team — Roles are visible before invites; destructive actions open a separate review."
+    }
+  ]
+}

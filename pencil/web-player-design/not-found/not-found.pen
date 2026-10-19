@@ -1,0 +1,2356 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "ihPZ6s",
+      "name": "Not found (404) / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "VjKLT7",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "4JoyfK",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "ref",
+              "id": "bkUptr",
+              "ref": "ds:ZZSOuz",
+              "name": "Text/Display Primary",
+              "content": "404"
+            },
+            {
+              "type": "ref",
+              "id": "cH3bbz",
+              "ref": "ds:XDvNAD",
+              "name": "Text/Paragraph",
+              "textGrowth": "fixed-width",
+              "width": 520,
+              "textAlign": "center",
+              "content": "This track skipped. The page you are looking for is not on the setlist."
+            },
+            {
+              "type": "ref",
+              "id": "CK3eGT",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": 620,
+              "gap": 18,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "CXCPoh",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 18,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "HsLQaK",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ce6JcM",
+                          "ref": "ds:yjiPHo",
+                          "name": "Text/Eyebrow",
+                          "content": "NOW PLAYING · SIGNAL LOST"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "NWxSrA",
+                          "ref": "ds:W2sXzc",
+                          "name": "Status/Error",
+                          "descendants": {
+                            "ds:cK1grY": {
+                              "content": "No signal"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "8aRhkC",
+                      "name": "Track",
+                      "gap": 16,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "UeTZmm",
+                          "ref": "ds:rUgRzr",
+                          "name": "Media/Cover",
+                          "width": 88,
+                          "height": 88,
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          },
+                          "opacity": 0.45
+                        },
+                        {
+                          "type": "frame",
+                          "id": "8zaumn",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "WG8vcs",
+                              "ref": "ds:RoXXJv",
+                              "name": "Text/H2",
+                              "content": "Page not found"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "PYyLLs",
+                              "ref": "ds:C5Ih8u",
+                              "name": "Text/Muted",
+                              "content": "The 404s · Lost Frequencies (B-side)"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Tcdmxo",
+                      "ref": "ds:YM0prq",
+                      "name": "NotFound/Flatline"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "fHXcAH",
+                      "ref": "ds:SbrVsk",
+                      "name": "Seek Bar",
+                      "descendants": {
+                        "ds:wkpv2G": {
+                          "width": 420
+                        },
+                        "ds:xyLIWE": {
+                          "content": "4:04"
+                        },
+                        "ds:ION9MQ": {
+                          "content": "4:04"
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "cVfp3e",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "kPm7s7",
+                          "ref": "ds:Y4ylzP",
+                          "name": "Button / Play something else",
+                          "descendants": {
+                            "ds:NVe7y": {
+                              "content": "Play something else"
+                            },
+                            "ds:D3xnv": {
+                              "icon": "play"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "xFfWMu",
+                          "ref": "ds:qz3aI",
+                          "name": "Button / Search",
+                          "descendants": {
+                            "ds:i6a4e": {
+                              "content": "Search"
+                            },
+                            "ds:vIxSI": {
+                              "icon": "search"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "kLevvN",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Report a broken link"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "5kSoX2",
+              "name": "Try instead",
+              "layout": "vertical",
+              "gap": 12,
+              "width": 620,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "rA5Zgc",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Try these instead"
+                },
+                {
+                  "type": "frame",
+                  "id": "E5hKDn",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "BtXprQ",
+                      "ref": "ds:EEaGAD",
+                      "name": "Quick Tile/Liked",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:XbsHet": {
+                          "content": "Liked Songs"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "gAGGJv",
+                      "ref": "ds:ong2il",
+                      "name": "Quick Tile",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:KuWCpb": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/hero/luma-vale.png",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:HwrK18": {
+                          "content": "Discover"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "fek3qX",
+                      "ref": "ds:ong2il",
+                      "name": "Quick Tile",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:KuWCpb": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-drift-control.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:HwrK18": {
+                          "content": "Your Library"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "xPJbeo",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "DWtNPN",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "any unknown route — Global not-found page (app/not-found.tsx) as \"Signal lost\": the page is a track that does not exist — The 404s, stuck at 4:04, a flatline in the middle of the spectrum. Play goes home; search and report a broken link; suggestions below."
+    },
+    {
+      "type": "frame",
+      "id": "TXdqpP",
+      "name": "Not found (404) / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "9f5K3y",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "hbdiCt",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "ref",
+              "id": "y3Wceq",
+              "ref": "ds:ZZSOuz",
+              "name": "Text/Display Primary",
+              "content": "404"
+            },
+            {
+              "type": "ref",
+              "id": "vB8kaT",
+              "ref": "ds:XDvNAD",
+              "name": "Text/Paragraph",
+              "textGrowth": "fixed-width",
+              "width": 520,
+              "textAlign": "center",
+              "content": "This track skipped. The page you are looking for is not on the setlist."
+            },
+            {
+              "type": "ref",
+              "id": "Ccwjmi",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": 620,
+              "gap": 18,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "hYMDoQ",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 18,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "m6ErRv",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "JoNunC",
+                          "ref": "ds:yjiPHo",
+                          "name": "Text/Eyebrow",
+                          "content": "NOW PLAYING · SIGNAL LOST"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Ev5CsN",
+                          "ref": "ds:W2sXzc",
+                          "name": "Status/Error",
+                          "descendants": {
+                            "ds:cK1grY": {
+                              "content": "No signal"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "NAdKBT",
+                      "name": "Track",
+                      "gap": 16,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "bQ68h7",
+                          "ref": "ds:rUgRzr",
+                          "name": "Media/Cover",
+                          "width": 88,
+                          "height": 88,
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          },
+                          "opacity": 0.45
+                        },
+                        {
+                          "type": "frame",
+                          "id": "HCq8s8",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "Vnitsf",
+                              "ref": "ds:RoXXJv",
+                              "name": "Text/H2",
+                              "content": "Page not found"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "zFjXGT",
+                              "ref": "ds:C5Ih8u",
+                              "name": "Text/Muted",
+                              "content": "The 404s · Lost Frequencies (B-side)"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "CeRmj8",
+                      "ref": "ds:YM0prq",
+                      "name": "NotFound/Flatline"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "oSZKuE",
+                      "ref": "ds:SbrVsk",
+                      "name": "Seek Bar",
+                      "descendants": {
+                        "ds:wkpv2G": {
+                          "width": 420
+                        },
+                        "ds:xyLIWE": {
+                          "content": "4:04"
+                        },
+                        "ds:ION9MQ": {
+                          "content": "4:04"
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "pR2ezQ",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "9Jwqc6",
+                          "ref": "ds:Y4ylzP",
+                          "name": "Button / Play something else",
+                          "descendants": {
+                            "ds:NVe7y": {
+                              "content": "Play something else"
+                            },
+                            "ds:D3xnv": {
+                              "icon": "play"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "9jvAR7",
+                          "ref": "ds:qz3aI",
+                          "name": "Button / Search",
+                          "descendants": {
+                            "ds:i6a4e": {
+                              "content": "Search"
+                            },
+                            "ds:vIxSI": {
+                              "icon": "search"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "9f5JLR",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Report a broken link"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "ksYy2K",
+              "name": "Try instead",
+              "layout": "vertical",
+              "gap": 12,
+              "width": 620,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "FkKj4m",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Try these instead"
+                },
+                {
+                  "type": "frame",
+                  "id": "7ajUtj",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "LiiDLL",
+                      "ref": "ds:EEaGAD",
+                      "name": "Quick Tile/Liked",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:XbsHet": {
+                          "content": "Liked Songs"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "SiHeSL",
+                      "ref": "ds:ong2il",
+                      "name": "Quick Tile",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:KuWCpb": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/hero/luma-vale.png",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:HwrK18": {
+                          "content": "Discover"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "humSAd",
+                      "ref": "ds:ong2il",
+                      "name": "Quick Tile",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:KuWCpb": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-drift-control.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:HwrK18": {
+                          "content": "Your Library"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "EJas5A",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "2hokHV",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "any unknown route — Global not-found page (app/not-found.tsx) as \"Signal lost\": the page is a track that does not exist — The 404s, stuck at 4:04, a flatline in the middle of the spectrum. Play goes home; search and report a broken link; suggestions below."
+    },
+    {
+      "type": "frame",
+      "id": "XxWexS",
+      "name": "Not found (404) / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "7HyJoH",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "DvLWwM",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "ref",
+              "id": "rZ6vj8",
+              "ref": "ds:ZZSOuz",
+              "name": "Text/Display Primary",
+              "content": "404"
+            },
+            {
+              "type": "ref",
+              "id": "wdXEkZ",
+              "ref": "ds:XDvNAD",
+              "name": "Text/Paragraph",
+              "textGrowth": "fixed-width",
+              "width": 520,
+              "textAlign": "center",
+              "content": "This track skipped. The page you are looking for is not on the setlist."
+            },
+            {
+              "type": "ref",
+              "id": "pWxCz7",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": 620,
+              "gap": 18,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "bvYurL",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 18,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "NhNdrn",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "K8RCUj",
+                          "ref": "ds:yjiPHo",
+                          "name": "Text/Eyebrow",
+                          "content": "NOW PLAYING · SIGNAL LOST"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "L8xNwf",
+                          "ref": "ds:W2sXzc",
+                          "name": "Status/Error",
+                          "descendants": {
+                            "ds:cK1grY": {
+                              "content": "No signal"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "TLETgQ",
+                      "name": "Track",
+                      "gap": 16,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "nBXfvw",
+                          "ref": "ds:rUgRzr",
+                          "name": "Media/Cover",
+                          "width": 88,
+                          "height": 88,
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          },
+                          "opacity": 0.45
+                        },
+                        {
+                          "type": "frame",
+                          "id": "FtNxpZ",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "GkgaqP",
+                              "ref": "ds:RoXXJv",
+                              "name": "Text/H2",
+                              "content": "Page not found"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "RMtSae",
+                              "ref": "ds:C5Ih8u",
+                              "name": "Text/Muted",
+                              "content": "The 404s · Lost Frequencies (B-side)"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "emdGx6",
+                      "ref": "ds:YM0prq",
+                      "name": "NotFound/Flatline"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ZQe5yt",
+                      "ref": "ds:SbrVsk",
+                      "name": "Seek Bar",
+                      "descendants": {
+                        "ds:wkpv2G": {
+                          "width": 420
+                        },
+                        "ds:xyLIWE": {
+                          "content": "4:04"
+                        },
+                        "ds:ION9MQ": {
+                          "content": "4:04"
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "CeD5dB",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "j4xQZ4",
+                          "ref": "ds:Y4ylzP",
+                          "name": "Button / Play something else",
+                          "descendants": {
+                            "ds:NVe7y": {
+                              "content": "Play something else"
+                            },
+                            "ds:D3xnv": {
+                              "icon": "play"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "osK2N7",
+                          "ref": "ds:qz3aI",
+                          "name": "Button / Search",
+                          "descendants": {
+                            "ds:i6a4e": {
+                              "content": "Search"
+                            },
+                            "ds:vIxSI": {
+                              "icon": "search"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "EXh75d",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Report a broken link"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "tFQ3ve",
+              "name": "Try instead",
+              "layout": "vertical",
+              "gap": 12,
+              "width": 620,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "J5WR8P",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Try these instead"
+                },
+                {
+                  "type": "frame",
+                  "id": "LfRJJw",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "h3hA5T",
+                      "ref": "ds:EEaGAD",
+                      "name": "Quick Tile/Liked",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:XbsHet": {
+                          "content": "Liked Songs"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "EPKiFZ",
+                      "ref": "ds:ong2il",
+                      "name": "Quick Tile",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:KuWCpb": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/hero/luma-vale.png",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:HwrK18": {
+                          "content": "Discover"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "VdcX8D",
+                      "ref": "ds:ong2il",
+                      "name": "Quick Tile",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:KuWCpb": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-drift-control.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:HwrK18": {
+                          "content": "Your Library"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "PFQb7E",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "RaF8LE",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "any unknown route — Global not-found page (app/not-found.tsx) as \"Signal lost\": the page is a track that does not exist — The 404s, stuck at 4:04, a flatline in the middle of the spectrum. Play goes home; search and report a broken link; suggestions below."
+    },
+    {
+      "type": "frame",
+      "id": "n237i2",
+      "name": "Not found (404) / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "mm7RvW",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "CxoxSW",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "ref",
+              "id": "9paZEF",
+              "ref": "ds:ZZSOuz",
+              "name": "Text/Display Primary",
+              "content": "404"
+            },
+            {
+              "type": "ref",
+              "id": "qEzkht",
+              "ref": "ds:XDvNAD",
+              "name": "Text/Paragraph",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "textAlign": "center",
+              "content": "This track skipped. The page you are looking for is not on the setlist."
+            },
+            {
+              "type": "ref",
+              "id": "efuWWs",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": "fill_container",
+              "gap": 18,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "7rgs2c",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 18,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "rpJWH9",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "xqX8yo",
+                          "ref": "ds:yjiPHo",
+                          "name": "Text/Eyebrow",
+                          "content": "NOW PLAYING · SIGNAL LOST"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "9qMeUE",
+                          "ref": "ds:W2sXzc",
+                          "name": "Status/Error",
+                          "descendants": {
+                            "ds:cK1grY": {
+                              "content": "No signal"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "jqKtp9",
+                      "name": "Track",
+                      "gap": 16,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "komLKU",
+                          "ref": "ds:rUgRzr",
+                          "name": "Media/Cover",
+                          "width": 64,
+                          "height": 64,
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          },
+                          "opacity": 0.45
+                        },
+                        {
+                          "type": "frame",
+                          "id": "aoiu7o",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "fb49uu",
+                              "ref": "ds:Qjj2NE",
+                              "name": "Text/H3",
+                              "content": "Page not found"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "Zg6T9R",
+                              "ref": "ds:C5Ih8u",
+                              "name": "Text/Muted",
+                              "content": "The 404s · Lost Frequencies (B-side)"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "agE2Ms",
+                      "ref": "ds:YM0prq",
+                      "name": "NotFound/Flatline",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Fiu58A",
+                      "ref": "ds:SbrVsk",
+                      "name": "Seek Bar",
+                      "descendants": {
+                        "ds:wkpv2G": {
+                          "width": 260
+                        },
+                        "ds:xyLIWE": {
+                          "content": "4:04"
+                        },
+                        "ds:ION9MQ": {
+                          "content": "4:04"
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "EzCxg3",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "WKQUbX",
+                          "ref": "ds:Y4ylzP",
+                          "name": "Button / Play something else",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:NVe7y": {
+                              "content": "Play something else"
+                            },
+                            "ds:D3xnv": {
+                              "icon": "play"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "RGtdaK",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Report a broken link"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "ZqmdDM",
+              "name": "Try instead",
+              "layout": "vertical",
+              "gap": 12,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "DwSF9c",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Try these instead"
+                },
+                {
+                  "type": "frame",
+                  "id": "avCwqZ",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "RNZMB9",
+                      "ref": "ds:EEaGAD",
+                      "name": "Quick Tile/Liked",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:XbsHet": {
+                          "content": "Liked Songs"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Nh5h8w",
+                      "ref": "ds:ong2il",
+                      "name": "Quick Tile",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:KuWCpb": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/hero/luma-vale.png",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:HwrK18": {
+                          "content": "Discover"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "qAeqow",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            16,
+            20,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "y56h7a",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "any unknown route — Global not-found page (app/not-found.tsx) as \"Signal lost\": the page is a track that does not exist — The 404s, stuck at 4:04, a flatline in the middle of the spectrum. Play goes home; search and report a broken link; suggestions below."
+    },
+    {
+      "type": "frame",
+      "id": "ZxiTBV",
+      "name": "Not found (404) / Broken link reported / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "uaLMGT",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "QoM2kN",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "ref",
+              "id": "JxzZhH",
+              "ref": "ds:ZZSOuz",
+              "name": "Text/Display Primary",
+              "content": "404"
+            },
+            {
+              "type": "ref",
+              "id": "CMppbi",
+              "ref": "ds:XDvNAD",
+              "name": "Text/Paragraph",
+              "textGrowth": "fixed-width",
+              "width": 520,
+              "textAlign": "center",
+              "content": "This track skipped. The page you are looking for is not on the setlist."
+            },
+            {
+              "type": "ref",
+              "id": "jHAMUd",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": 620,
+              "gap": 18,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "jvpy3V",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 18,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "GvbR9X",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "p76drv",
+                          "ref": "ds:yjiPHo",
+                          "name": "Text/Eyebrow",
+                          "content": "NOW PLAYING · SIGNAL LOST"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "JQVNK8",
+                          "ref": "ds:W2sXzc",
+                          "name": "Status/Error",
+                          "descendants": {
+                            "ds:cK1grY": {
+                              "content": "No signal"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "tApy7h",
+                      "name": "Track",
+                      "gap": 16,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "cPomL6",
+                          "ref": "ds:rUgRzr",
+                          "name": "Media/Cover",
+                          "width": 88,
+                          "height": 88,
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          },
+                          "opacity": 0.45
+                        },
+                        {
+                          "type": "frame",
+                          "id": "ybVkeM",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "GyVacq",
+                              "ref": "ds:RoXXJv",
+                              "name": "Text/H2",
+                              "content": "Page not found"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "36eNCv",
+                              "ref": "ds:C5Ih8u",
+                              "name": "Text/Muted",
+                              "content": "The 404s · Lost Frequencies (B-side)"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "xpMHhf",
+                      "ref": "ds:YM0prq",
+                      "name": "NotFound/Flatline"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "teCXuh",
+                      "ref": "ds:SbrVsk",
+                      "name": "Seek Bar",
+                      "descendants": {
+                        "ds:wkpv2G": {
+                          "width": 420
+                        },
+                        "ds:xyLIWE": {
+                          "content": "4:04"
+                        },
+                        "ds:ION9MQ": {
+                          "content": "4:04"
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Diyj94",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "vYBrBh",
+                          "ref": "ds:Y4ylzP",
+                          "name": "Button / Play something else",
+                          "descendants": {
+                            "ds:NVe7y": {
+                              "content": "Play something else"
+                            },
+                            "ds:D3xnv": {
+                              "icon": "play"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Brar8R",
+                          "ref": "ds:qz3aI",
+                          "name": "Button / Search",
+                          "descendants": {
+                            "ds:i6a4e": {
+                              "content": "Search"
+                            },
+                            "ds:vIxSI": {
+                              "icon": "search"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ZBab5k",
+                      "ref": "ds:ogW5t",
+                      "name": "Alert / Thanks — link reported",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:L7SHNm": {
+                          "content": "Thanks — link reported"
+                        },
+                        "ds:F9kE6W": {
+                          "content": "We will fix where it points. You can keep listening meanwhile."
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "zJpeAP",
+              "name": "Try instead",
+              "layout": "vertical",
+              "gap": 12,
+              "width": 620,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "umfskK",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Try these instead"
+                },
+                {
+                  "type": "frame",
+                  "id": "MqzV4f",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ogCp2i",
+                      "ref": "ds:EEaGAD",
+                      "name": "Quick Tile/Liked",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:XbsHet": {
+                          "content": "Liked Songs"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "AAQBwo",
+                      "ref": "ds:ong2il",
+                      "name": "Quick Tile",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:KuWCpb": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/hero/luma-vale.png",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:HwrK18": {
+                          "content": "Discover"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "vWtBdN",
+                      "ref": "ds:ong2il",
+                      "name": "Quick Tile",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:KuWCpb": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-drift-control.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:HwrK18": {
+                          "content": "Your Library"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "TjBaSr",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "bdgFkh",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "any unknown route — Global not-found page (app/not-found.tsx) as \"Signal lost\": the page is a track that does not exist — The 404s, stuck at 4:04, a flatline in the middle of the spectrum. Play goes home; search and report a broken link; suggestions below."
+    },
+    {
+      "type": "frame",
+      "id": "c85qfX",
+      "name": "Not found (404) / Broken link reported / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "MA8coG",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "2reASD",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "ref",
+              "id": "SkrvXT",
+              "ref": "ds:ZZSOuz",
+              "name": "Text/Display Primary",
+              "content": "404"
+            },
+            {
+              "type": "ref",
+              "id": "6FynRr",
+              "ref": "ds:XDvNAD",
+              "name": "Text/Paragraph",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "textAlign": "center",
+              "content": "This track skipped. The page you are looking for is not on the setlist."
+            },
+            {
+              "type": "ref",
+              "id": "g8TdPf",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": "fill_container",
+              "gap": 18,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "N6Egyf",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 18,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "WModaA",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "RbtpHG",
+                          "ref": "ds:yjiPHo",
+                          "name": "Text/Eyebrow",
+                          "content": "NOW PLAYING · SIGNAL LOST"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "kRR9up",
+                          "ref": "ds:W2sXzc",
+                          "name": "Status/Error",
+                          "descendants": {
+                            "ds:cK1grY": {
+                              "content": "No signal"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "JeEY7x",
+                      "name": "Track",
+                      "gap": 16,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "342XEE",
+                          "ref": "ds:rUgRzr",
+                          "name": "Media/Cover",
+                          "width": 64,
+                          "height": 64,
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          },
+                          "opacity": 0.45
+                        },
+                        {
+                          "type": "frame",
+                          "id": "FubuFj",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "Vr9pDE",
+                              "ref": "ds:Qjj2NE",
+                              "name": "Text/H3",
+                              "content": "Page not found"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "XPhzJh",
+                              "ref": "ds:C5Ih8u",
+                              "name": "Text/Muted",
+                              "content": "The 404s · Lost Frequencies (B-side)"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "QtqiyE",
+                      "ref": "ds:YM0prq",
+                      "name": "NotFound/Flatline",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ZzHoir",
+                      "ref": "ds:SbrVsk",
+                      "name": "Seek Bar",
+                      "descendants": {
+                        "ds:wkpv2G": {
+                          "width": 260
+                        },
+                        "ds:xyLIWE": {
+                          "content": "4:04"
+                        },
+                        "ds:ION9MQ": {
+                          "content": "4:04"
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "gJaEL9",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "WY77mx",
+                          "ref": "ds:Y4ylzP",
+                          "name": "Button / Play something else",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:NVe7y": {
+                              "content": "Play something else"
+                            },
+                            "ds:D3xnv": {
+                              "icon": "play"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qiTpNi",
+                      "ref": "ds:ogW5t",
+                      "name": "Alert / Thanks — link reported",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:L7SHNm": {
+                          "content": "Thanks — link reported"
+                        },
+                        "ds:F9kE6W": {
+                          "content": "We will fix where it points. You can keep listening meanwhile."
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "9GFRmF",
+              "name": "Try instead",
+              "layout": "vertical",
+              "gap": 12,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "nPWonh",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Try these instead"
+                },
+                {
+                  "type": "frame",
+                  "id": "BfpFeT",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "LLwWRA",
+                      "ref": "ds:EEaGAD",
+                      "name": "Quick Tile/Liked",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:XbsHet": {
+                          "content": "Liked Songs"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ywQkbY",
+                      "ref": "ds:ong2il",
+                      "name": "Quick Tile",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:KuWCpb": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/hero/luma-vale.png",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:HwrK18": {
+                          "content": "Discover"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "hfERGr",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            16,
+            20,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "X7uMc2",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "any unknown route — Global not-found page (app/not-found.tsx) as \"Signal lost\": the page is a track that does not exist — The 404s, stuck at 4:04, a flatline in the middle of the spectrum. Play goes home; search and report a broken link; suggestions below."
+    },
+    {
+      "type": "frame",
+      "id": "VdBmg5",
+      "name": "Not found (404) / Signed out / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "6FmLJ6",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "yNN6VN",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "ref",
+              "id": "BPkAC9",
+              "ref": "ds:ZZSOuz",
+              "name": "Text/Display Primary",
+              "content": "404"
+            },
+            {
+              "type": "ref",
+              "id": "4MBYTt",
+              "ref": "ds:XDvNAD",
+              "name": "Text/Paragraph",
+              "textGrowth": "fixed-width",
+              "width": 520,
+              "textAlign": "center",
+              "content": "This track skipped. The page you are looking for is not on the setlist."
+            },
+            {
+              "type": "ref",
+              "id": "GM49dm",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": 620,
+              "gap": 18,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "9MJKz3",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 18,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "J9hbmM",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "YEoSFf",
+                          "ref": "ds:yjiPHo",
+                          "name": "Text/Eyebrow",
+                          "content": "NOW PLAYING · SIGNAL LOST"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "3ieSCq",
+                          "ref": "ds:W2sXzc",
+                          "name": "Status/Error",
+                          "descendants": {
+                            "ds:cK1grY": {
+                              "content": "No signal"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "nT3vBy",
+                      "name": "Track",
+                      "gap": 16,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ipFTPL",
+                          "ref": "ds:rUgRzr",
+                          "name": "Media/Cover",
+                          "width": 88,
+                          "height": 88,
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          },
+                          "opacity": 0.45
+                        },
+                        {
+                          "type": "frame",
+                          "id": "2cL3LL",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "eXSqTf",
+                              "ref": "ds:RoXXJv",
+                              "name": "Text/H2",
+                              "content": "Page not found"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "UE9bX6",
+                              "ref": "ds:C5Ih8u",
+                              "name": "Text/Muted",
+                              "content": "The 404s · Lost Frequencies (B-side)"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "y49ZdE",
+                      "ref": "ds:YM0prq",
+                      "name": "NotFound/Flatline"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "kiRR3g",
+                      "ref": "ds:SbrVsk",
+                      "name": "Seek Bar",
+                      "descendants": {
+                        "ds:wkpv2G": {
+                          "width": 420
+                        },
+                        "ds:xyLIWE": {
+                          "content": "4:04"
+                        },
+                        "ds:ION9MQ": {
+                          "content": "4:04"
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Rmpqm5",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "rPiUQS",
+                          "ref": "ds:Y4ylzP",
+                          "name": "Button / Back to the start",
+                          "descendants": {
+                            "ds:NVe7y": {
+                              "content": "Back to the start"
+                            },
+                            "ds:D3xnv": {
+                              "icon": "play"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "mAwQGD",
+                          "ref": "ds:qz3aI",
+                          "name": "Button / Search",
+                          "descendants": {
+                            "ds:i6a4e": {
+                              "content": "Search"
+                            },
+                            "ds:vIxSI": {
+                              "icon": "search"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "XKwukw",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Report a broken link"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "swaNYb",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "NPDqSg",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "any unknown route — Global not-found page (app/not-found.tsx) as \"Signal lost\": the page is a track that does not exist — The 404s, stuck at 4:04, a flatline in the middle of the spectrum. Play goes home; search and report a broken link; suggestions below."
+    },
+    {
+      "type": "frame",
+      "id": "Vzp73n",
+      "name": "Not found (404) / Signed out / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "EiEpo4",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "Ytpz4f",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "ref",
+              "id": "DZCUVz",
+              "ref": "ds:ZZSOuz",
+              "name": "Text/Display Primary",
+              "content": "404"
+            },
+            {
+              "type": "ref",
+              "id": "St6WRt",
+              "ref": "ds:XDvNAD",
+              "name": "Text/Paragraph",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "textAlign": "center",
+              "content": "This track skipped. The page you are looking for is not on the setlist."
+            },
+            {
+              "type": "ref",
+              "id": "Eg9Swh",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": "fill_container",
+              "gap": 18,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "ZnqU7m",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 18,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "V464ec",
+                      "name": "Row",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "c5fWLQ",
+                          "ref": "ds:yjiPHo",
+                          "name": "Text/Eyebrow",
+                          "content": "NOW PLAYING · SIGNAL LOST"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "BdW4SF",
+                          "ref": "ds:W2sXzc",
+                          "name": "Status/Error",
+                          "descendants": {
+                            "ds:cK1grY": {
+                              "content": "No signal"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "EdTsAh",
+                      "name": "Track",
+                      "gap": 16,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "VtrBZb",
+                          "ref": "ds:rUgRzr",
+                          "name": "Media/Cover",
+                          "width": 64,
+                          "height": 64,
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          },
+                          "opacity": 0.45
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Jo3LSd",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "sA8K3t",
+                              "ref": "ds:Qjj2NE",
+                              "name": "Text/H3",
+                              "content": "Page not found"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "vYrY9W",
+                              "ref": "ds:C5Ih8u",
+                              "name": "Text/Muted",
+                              "content": "The 404s · Lost Frequencies (B-side)"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Xsjipt",
+                      "ref": "ds:YM0prq",
+                      "name": "NotFound/Flatline",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "QYzJgM",
+                      "ref": "ds:SbrVsk",
+                      "name": "Seek Bar",
+                      "descendants": {
+                        "ds:wkpv2G": {
+                          "width": 260
+                        },
+                        "ds:xyLIWE": {
+                          "content": "4:04"
+                        },
+                        "ds:ION9MQ": {
+                          "content": "4:04"
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "GPSL5Q",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Cqsobi",
+                          "ref": "ds:Y4ylzP",
+                          "name": "Button / Back to the start",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:NVe7y": {
+                              "content": "Back to the start"
+                            },
+                            "ds:D3xnv": {
+                              "icon": "play"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "tXdKTd",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Report a broken link"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "wpHRwW",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            16,
+            20,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "63h4C2",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "any unknown route — Global not-found page (app/not-found.tsx) as \"Signal lost\": the page is a track that does not exist — The 404s, stuck at 4:04, a flatline in the middle of the spectrum. Play goes home; search and report a broken link; suggestions below."
+    }
+  ]
+}

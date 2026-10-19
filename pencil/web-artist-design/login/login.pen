@@ -1,0 +1,1815 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "oXp4t5",
+      "name": "Artist / Login / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "hHKEFG",
+          "ref": "ds:x4Fixv",
+          "name": "Surface/Panel",
+          "width": 440,
+          "gap": 20,
+          "descendants": {
+            "ds:xhr0E3": {
+              "type": "frame",
+              "id": "uWjyDs",
+              "name": "Panel Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "ZabyKg",
+                  "ref": "ds:J95vY0",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "ref",
+                  "id": "8AcKjB",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Welcome back!"
+                },
+                {
+                  "type": "ref",
+                  "id": "GtKDxL",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "example@gmail.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "VgJgqJ",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Password",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Password"
+                    },
+                    "ds:iI0CE": {
+                      "content": "••••••••"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "6axWtY",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Continue",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Continue"
+                    },
+                    "ds:ksrFi": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "u9zzj5",
+                  "ref": "ds:WXUohP",
+                  "name": "Auth/Or Divider"
+                },
+                {
+                  "type": "ref",
+                  "id": "iwju3B",
+                  "ref": "ds:G5tJp",
+                  "name": "Button / Continue with Google",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:d2zCI": {
+                      "content": "Continue with Google"
+                    },
+                    "ds:zDiHG": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "gAjxfh",
+                  "ref": "ds:G5tJp",
+                  "name": "Button / Continue with Facebook",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:d2zCI": {
+                      "content": "Continue with Facebook"
+                    },
+                    "ds:zDiHG": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "4G77at",
+                  "name": "Row",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "j3ewNt",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "Don't have an account?"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "KynEZK",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Sign up."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/login — Email/password sign-in with Google and Facebook; 2FA step."
+    },
+    {
+      "type": "frame",
+      "id": "GGfYLh",
+      "name": "Artist / Login / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "ZMWn6P",
+          "ref": "ds:x4Fixv",
+          "name": "Surface/Panel",
+          "width": 440,
+          "gap": 20,
+          "descendants": {
+            "ds:xhr0E3": {
+              "type": "frame",
+              "id": "7bBSht",
+              "name": "Panel Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "8mmXh5",
+                  "ref": "ds:J95vY0",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "ref",
+                  "id": "thnxjq",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Welcome back!"
+                },
+                {
+                  "type": "ref",
+                  "id": "aNwKfQ",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "example@gmail.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "fXxVRt",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Password",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Password"
+                    },
+                    "ds:iI0CE": {
+                      "content": "••••••••"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "fs9BRG",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Continue",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Continue"
+                    },
+                    "ds:ksrFi": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "D5JLeo",
+                  "ref": "ds:WXUohP",
+                  "name": "Auth/Or Divider"
+                },
+                {
+                  "type": "ref",
+                  "id": "JJW8kq",
+                  "ref": "ds:G5tJp",
+                  "name": "Button / Continue with Google",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:d2zCI": {
+                      "content": "Continue with Google"
+                    },
+                    "ds:zDiHG": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "jWayry",
+                  "ref": "ds:G5tJp",
+                  "name": "Button / Continue with Facebook",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:d2zCI": {
+                      "content": "Continue with Facebook"
+                    },
+                    "ds:zDiHG": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "7nGCik",
+                  "name": "Row",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "9vEWfp",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "Don't have an account?"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "25t8mW",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Sign up."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "/login — Email/password sign-in with Google and Facebook; 2FA step."
+    },
+    {
+      "type": "frame",
+      "id": "EDxQmk",
+      "name": "Artist / Login / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "rfnpDf",
+          "ref": "ds:x4Fixv",
+          "name": "Surface/Panel",
+          "width": 440,
+          "gap": 20,
+          "descendants": {
+            "ds:xhr0E3": {
+              "type": "frame",
+              "id": "2ksKdB",
+              "name": "Panel Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "U9wbYF",
+                  "ref": "ds:J95vY0",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "ref",
+                  "id": "Q7X5rj",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Welcome back!"
+                },
+                {
+                  "type": "ref",
+                  "id": "CGBugA",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "example@gmail.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "6Duvxj",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Password",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Password"
+                    },
+                    "ds:iI0CE": {
+                      "content": "••••••••"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "Cm4Bsv",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Continue",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Continue"
+                    },
+                    "ds:ksrFi": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "fSTbsG",
+                  "ref": "ds:WXUohP",
+                  "name": "Auth/Or Divider"
+                },
+                {
+                  "type": "ref",
+                  "id": "jEXaFX",
+                  "ref": "ds:G5tJp",
+                  "name": "Button / Continue with Google",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:d2zCI": {
+                      "content": "Continue with Google"
+                    },
+                    "ds:zDiHG": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "Fi8VNm",
+                  "ref": "ds:G5tJp",
+                  "name": "Button / Continue with Facebook",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:d2zCI": {
+                      "content": "Continue with Facebook"
+                    },
+                    "ds:zDiHG": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "btJGok",
+                  "name": "Row",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "iNKY5n",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "Don't have an account?"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "C7XL2T",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Sign up."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "/login — Email/password sign-in with Google and Facebook; 2FA step."
+    },
+    {
+      "type": "frame",
+      "id": "sxATCH",
+      "name": "Artist / Login / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Pu3dks",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "CPjxza",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "PxzrPn",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "ref",
+              "id": "WDXYxr",
+              "ref": "ds:RoXXJv",
+              "name": "Text/H2",
+              "content": "Welcome back!"
+            },
+            {
+              "type": "ref",
+              "id": "DfiWxg",
+              "ref": "ds:j04F4",
+              "name": "Input / Email Address",
+              "width": "fill_container",
+              "descendants": {
+                "ds:l4agQ": {
+                  "content": "Email Address"
+                },
+                "ds:iI0CE": {
+                  "content": "example@gmail.com"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "jVLAw9",
+              "ref": "ds:j04F4",
+              "name": "Input / Password",
+              "width": "fill_container",
+              "descendants": {
+                "ds:l4agQ": {
+                  "content": "Password"
+                },
+                "ds:iI0CE": {
+                  "content": "••••••••"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "YzvBfM",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Continue",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Continue"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "Tz4qdF",
+              "ref": "ds:WXUohP",
+              "name": "Auth/Or Divider"
+            },
+            {
+              "type": "ref",
+              "id": "ge9bcT",
+              "ref": "ds:G5tJp",
+              "name": "Button / Continue with Google",
+              "width": "fill_container",
+              "descendants": {
+                "ds:d2zCI": {
+                  "content": "Continue with Google"
+                },
+                "ds:zDiHG": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "EecEnF",
+              "ref": "ds:G5tJp",
+              "name": "Button / Continue with Facebook",
+              "width": "fill_container",
+              "descendants": {
+                "ds:d2zCI": {
+                  "content": "Continue with Facebook"
+                },
+                "ds:zDiHG": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "Uysb97",
+              "name": "Row",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "N7Aa96",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Don't have an account?"
+                },
+                {
+                  "type": "ref",
+                  "id": "obnHbA",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Sign up."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/login — Email/password sign-in with Google and Facebook; 2FA step."
+    },
+    {
+      "type": "frame",
+      "id": "hYkqrM",
+      "name": "Artist / Login / Two-factor step / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "JuwMYz",
+          "ref": "ds:x4Fixv",
+          "name": "Surface/Panel",
+          "width": 440,
+          "gap": 20,
+          "descendants": {
+            "ds:xhr0E3": {
+              "type": "frame",
+              "id": "s544Z6",
+              "name": "Panel Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "BcNgdG",
+                  "ref": "ds:J95vY0",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "ref",
+                  "id": "YwFEBG",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Verify your sign-in"
+                },
+                {
+                  "type": "ref",
+                  "id": "9jN6nc",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Enter the code from your authenticator app."
+                },
+                {
+                  "type": "ref",
+                  "id": "u96c6q",
+                  "ref": "ds:tdJjE3",
+                  "name": "Form/OTP/Empty",
+                  "descendants": {
+                    "ds:Bdivxa": {
+                      "content": "Authentication code"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "xBBbF4",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Verify and sign in",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Verify and sign in"
+                    },
+                    "ds:ksrFi": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "Ptkpne",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Back to sign-in"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/login — Email/password sign-in with Google and Facebook; 2FA step."
+    },
+    {
+      "type": "frame",
+      "id": "bsJeFj",
+      "name": "Artist / Login / Two-factor step / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "UVoKCB",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "yLhYX6",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "Fbet4Z",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "ref",
+              "id": "wEaHjv",
+              "ref": "ds:RoXXJv",
+              "name": "Text/H2",
+              "content": "Verify your sign-in"
+            },
+            {
+              "type": "ref",
+              "id": "gRqXFv",
+              "ref": "ds:XDvNAD",
+              "name": "Text/Paragraph",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Enter the code from your authenticator app."
+            },
+            {
+              "type": "ref",
+              "id": "6C7t7q",
+              "ref": "ds:tdJjE3",
+              "name": "Form/OTP/Empty",
+              "descendants": {
+                "ds:Bdivxa": {
+                  "content": "Authentication code"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "Q7dWVk",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Verify and sign in",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Verify and sign in"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "DHoSYF",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Back to sign-in"
+            }
+          ]
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/login — Email/password sign-in with Google and Facebook; 2FA step."
+    },
+    {
+      "type": "frame",
+      "id": "bNB7ec",
+      "name": "Artist / Login / Invalid credentials / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "qmUhyC",
+          "ref": "ds:x4Fixv",
+          "name": "Surface/Panel",
+          "width": 440,
+          "gap": 20,
+          "descendants": {
+            "ds:xhr0E3": {
+              "type": "frame",
+              "id": "xC8q5y",
+              "name": "Panel Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "ZJR2wY",
+                  "ref": "ds:J95vY0",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "ref",
+                  "id": "k3y3Tg",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Welcome back!"
+                },
+                {
+                  "type": "ref",
+                  "id": "YL9R3Y",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "example@gmail.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "moFNyn",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Password",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Password"
+                    },
+                    "ds:iI0CE": {
+                      "content": "••••••••"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "waoabm",
+                  "ref": "ds:IqJK6E",
+                  "name": "Form/Field Error",
+                  "descendants": {
+                    "ds:brmWkY": {
+                      "content": "Invalid email or password. Please try again."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "JVDL6s",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Continue",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Continue"
+                    },
+                    "ds:ksrFi": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "2aMt3L",
+                  "ref": "ds:WXUohP",
+                  "name": "Auth/Or Divider"
+                },
+                {
+                  "type": "ref",
+                  "id": "9MPqa5",
+                  "ref": "ds:G5tJp",
+                  "name": "Button / Continue with Google",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:d2zCI": {
+                      "content": "Continue with Google"
+                    },
+                    "ds:zDiHG": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "WXitQ4",
+                  "ref": "ds:G5tJp",
+                  "name": "Button / Continue with Facebook",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:d2zCI": {
+                      "content": "Continue with Facebook"
+                    },
+                    "ds:zDiHG": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "zRKbEB",
+                  "name": "Row",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "RWvpuh",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "Don't have an account?"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "7MtEtq",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Sign up."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/login — Email/password sign-in with Google and Facebook; 2FA step."
+    },
+    {
+      "type": "frame",
+      "id": "dLoh5Q",
+      "name": "Artist / Login / Invalid credentials / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "QugaTV",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "Kn6spj",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "HJVGWU",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "ref",
+              "id": "muUy4m",
+              "ref": "ds:RoXXJv",
+              "name": "Text/H2",
+              "content": "Welcome back!"
+            },
+            {
+              "type": "ref",
+              "id": "a9eLMV",
+              "ref": "ds:j04F4",
+              "name": "Input / Email Address",
+              "width": "fill_container",
+              "descendants": {
+                "ds:l4agQ": {
+                  "content": "Email Address"
+                },
+                "ds:iI0CE": {
+                  "content": "example@gmail.com"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "Vzn5eB",
+              "ref": "ds:j04F4",
+              "name": "Input / Password",
+              "width": "fill_container",
+              "descendants": {
+                "ds:l4agQ": {
+                  "content": "Password"
+                },
+                "ds:iI0CE": {
+                  "content": "••••••••"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "MwFNJn",
+              "ref": "ds:IqJK6E",
+              "name": "Form/Field Error",
+              "descendants": {
+                "ds:brmWkY": {
+                  "content": "Invalid email or password. Please try again."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "YghSY4",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Continue",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Continue"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "RskPZt",
+              "ref": "ds:WXUohP",
+              "name": "Auth/Or Divider"
+            },
+            {
+              "type": "ref",
+              "id": "q4QmZa",
+              "ref": "ds:G5tJp",
+              "name": "Button / Continue with Google",
+              "width": "fill_container",
+              "descendants": {
+                "ds:d2zCI": {
+                  "content": "Continue with Google"
+                },
+                "ds:zDiHG": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "x3Hd6Q",
+              "ref": "ds:G5tJp",
+              "name": "Button / Continue with Facebook",
+              "width": "fill_container",
+              "descendants": {
+                "ds:d2zCI": {
+                  "content": "Continue with Facebook"
+                },
+                "ds:zDiHG": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "W7MhS3",
+              "name": "Row",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "dzGZdN",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Don't have an account?"
+                },
+                {
+                  "type": "ref",
+                  "id": "sgjfnj",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Sign up."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/login — Email/password sign-in with Google and Facebook; 2FA step."
+    },
+    {
+      "type": "frame",
+      "id": "PatSKF",
+      "name": "Artist / Login / Email not verified / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "4viCfz",
+          "ref": "ds:x4Fixv",
+          "name": "Surface/Panel",
+          "width": 440,
+          "gap": 20,
+          "descendants": {
+            "ds:xhr0E3": {
+              "type": "frame",
+              "id": "q9Minp",
+              "name": "Panel Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Mst47i",
+                  "ref": "ds:J95vY0",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "ref",
+                  "id": "625x7V",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Welcome back!"
+                },
+                {
+                  "type": "ref",
+                  "id": "eZ7xKy",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "example@gmail.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "Ger7wp",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Password",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Password"
+                    },
+                    "ds:iI0CE": {
+                      "content": "••••••••"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "B67KKa",
+                  "ref": "ds:ogW5t",
+                  "name": "Alert / Verify your email before signing in.",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:L7SHNm": {
+                      "content": "Verify your email before signing in."
+                    },
+                    "ds:F9kE6W": {
+                      "content": "Open the link in your inbox, or verify now."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "wVMtpk",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Continue",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Continue"
+                    },
+                    "ds:ksrFi": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "oG5M72",
+                  "ref": "ds:WXUohP",
+                  "name": "Auth/Or Divider"
+                },
+                {
+                  "type": "ref",
+                  "id": "rSHvNV",
+                  "ref": "ds:G5tJp",
+                  "name": "Button / Continue with Google",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:d2zCI": {
+                      "content": "Continue with Google"
+                    },
+                    "ds:zDiHG": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "SCefFf",
+                  "ref": "ds:G5tJp",
+                  "name": "Button / Continue with Facebook",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:d2zCI": {
+                      "content": "Continue with Facebook"
+                    },
+                    "ds:zDiHG": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "LsuxjV",
+                  "name": "Row",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "q2p6cU",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "Don't have an account?"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "46vbWP",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Sign up."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 9170,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/login — Email/password sign-in with Google and Facebook; 2FA step."
+    },
+    {
+      "type": "frame",
+      "id": "LLvogQ",
+      "name": "Artist / Login / Email not verified / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Y98eJU",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "USCGeS",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "zX7FCs",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "ref",
+              "id": "Vq2bn5",
+              "ref": "ds:RoXXJv",
+              "name": "Text/H2",
+              "content": "Welcome back!"
+            },
+            {
+              "type": "ref",
+              "id": "HVNaPv",
+              "ref": "ds:j04F4",
+              "name": "Input / Email Address",
+              "width": "fill_container",
+              "descendants": {
+                "ds:l4agQ": {
+                  "content": "Email Address"
+                },
+                "ds:iI0CE": {
+                  "content": "example@gmail.com"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "TmvZDY",
+              "ref": "ds:j04F4",
+              "name": "Input / Password",
+              "width": "fill_container",
+              "descendants": {
+                "ds:l4agQ": {
+                  "content": "Password"
+                },
+                "ds:iI0CE": {
+                  "content": "••••••••"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "hsvAgM",
+              "ref": "ds:ogW5t",
+              "name": "Alert / Verify your email before signing in.",
+              "width": "fill_container",
+              "descendants": {
+                "ds:L7SHNm": {
+                  "content": "Verify your email before signing in."
+                },
+                "ds:F9kE6W": {
+                  "content": "Open the link in your inbox, or verify now."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "SKGbcM",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Continue",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Continue"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "LKX8UQ",
+              "ref": "ds:WXUohP",
+              "name": "Auth/Or Divider"
+            },
+            {
+              "type": "ref",
+              "id": "bQPVbR",
+              "ref": "ds:G5tJp",
+              "name": "Button / Continue with Google",
+              "width": "fill_container",
+              "descendants": {
+                "ds:d2zCI": {
+                  "content": "Continue with Google"
+                },
+                "ds:zDiHG": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "sny9ou",
+              "ref": "ds:G5tJp",
+              "name": "Button / Continue with Facebook",
+              "width": "fill_container",
+              "descendants": {
+                "ds:d2zCI": {
+                  "content": "Continue with Facebook"
+                },
+                "ds:zDiHG": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "NKJofA",
+              "name": "Row",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "ma7Y6t",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Don't have an account?"
+                },
+                {
+                  "type": "ref",
+                  "id": "dkE4yQ",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Sign up."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 10710,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/login — Email/password sign-in with Google and Facebook; 2FA step."
+    },
+    {
+      "type": "frame",
+      "id": "XeLzsG",
+      "name": "Artist / Login / Submitting / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "JWmrrX",
+          "ref": "ds:x4Fixv",
+          "name": "Surface/Panel",
+          "width": 440,
+          "gap": 20,
+          "descendants": {
+            "ds:xhr0E3": {
+              "type": "frame",
+              "id": "N6kfjA",
+              "name": "Panel Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "tPLxy2",
+                  "ref": "ds:J95vY0",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "ref",
+                  "id": "DkWXKN",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Welcome back!"
+                },
+                {
+                  "type": "ref",
+                  "id": "Vtri8A",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email Address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "example@gmail.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "2sYEGb",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Password",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Password"
+                    },
+                    "ds:iI0CE": {
+                      "content": "••••••••"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "tFAKze",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Logging in...",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Logging in..."
+                    },
+                    "ds:ksrFi": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "cRGwmR",
+                  "ref": "ds:WXUohP",
+                  "name": "Auth/Or Divider"
+                },
+                {
+                  "type": "ref",
+                  "id": "3eNSdu",
+                  "ref": "ds:G5tJp",
+                  "name": "Button / Continue with Google",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:d2zCI": {
+                      "content": "Continue with Google"
+                    },
+                    "ds:zDiHG": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "DEix8y",
+                  "ref": "ds:G5tJp",
+                  "name": "Button / Continue with Facebook",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:d2zCI": {
+                      "content": "Continue with Facebook"
+                    },
+                    "ds:zDiHG": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "sZQAkL",
+                  "name": "Row",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "uK5anT",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "Don't have an account?"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "MUhukz",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Sign up."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 11200,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/login — Email/password sign-in with Google and Facebook; 2FA step."
+    },
+    {
+      "type": "frame",
+      "id": "7RmWdz",
+      "name": "Artist / Login / Submitting / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "FeKZhB",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "WBEPSv",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "xhxFwX",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "ref",
+              "id": "MekoKz",
+              "ref": "ds:RoXXJv",
+              "name": "Text/H2",
+              "content": "Welcome back!"
+            },
+            {
+              "type": "ref",
+              "id": "cPo3o9",
+              "ref": "ds:j04F4",
+              "name": "Input / Email Address",
+              "width": "fill_container",
+              "descendants": {
+                "ds:l4agQ": {
+                  "content": "Email Address"
+                },
+                "ds:iI0CE": {
+                  "content": "example@gmail.com"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "xBXCm9",
+              "ref": "ds:j04F4",
+              "name": "Input / Password",
+              "width": "fill_container",
+              "descendants": {
+                "ds:l4agQ": {
+                  "content": "Password"
+                },
+                "ds:iI0CE": {
+                  "content": "••••••••"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "o5Pnfq",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Logging in...",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Logging in..."
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "ajJqMz",
+              "ref": "ds:WXUohP",
+              "name": "Auth/Or Divider"
+            },
+            {
+              "type": "ref",
+              "id": "CusfWd",
+              "ref": "ds:G5tJp",
+              "name": "Button / Continue with Google",
+              "width": "fill_container",
+              "descendants": {
+                "ds:d2zCI": {
+                  "content": "Continue with Google"
+                },
+                "ds:zDiHG": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "RVX3Pr",
+              "ref": "ds:G5tJp",
+              "name": "Button / Continue with Facebook",
+              "width": "fill_container",
+              "descendants": {
+                "ds:d2zCI": {
+                  "content": "Continue with Facebook"
+                },
+                "ds:zDiHG": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "DYRqYS",
+              "name": "Row",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "KY6e8i",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Don't have an account?"
+                },
+                {
+                  "type": "ref",
+                  "id": "HLP4yN",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Sign up."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 12740,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/login — Email/password sign-in with Google and Facebook; 2FA step."
+    }
+  ]
+}

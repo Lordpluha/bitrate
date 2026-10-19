@@ -16,8 +16,13 @@ export const SocialLegalConsent = ({
   id,
   onCheckedChange,
 }: SocialLegalConsentProps) => (
-  <div className="flex items-start gap-3 text-sm">
-    <Checkbox checked={checked} id={id} onCheckedChange={onCheckedChange} />
+  <div className="flex items-start gap-2.5">
+    <Checkbox
+      checked={checked}
+      className="mt-0.5 size-4 rounded border-input bg-transparent"
+      id={id}
+      onCheckedChange={onCheckedChange}
+    />
     <LegalConsentLabel id={id} />
   </div>
 )

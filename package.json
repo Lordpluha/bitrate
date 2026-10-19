@@ -35,18 +35,22 @@
     "knip": "knip",
     "check:artifacts": "bash scripts/check-repository-artifacts.sh",
     "check:tokens": "node scripts/check-design-tokens.mjs",
+    "design:tokens": "node scripts/sync-pen-tokens.mjs",
+    "design:bind-colors": "node scripts/bind-pen-colors.mjs",
+    "check:pen-tokens": "node scripts/sync-pen-tokens.mjs --check",
+    "design:pages": "node scripts/pencil-pages/blocks.mjs pencil/web-player-design/design-system/bitrate.lib.pen scripts/pencil-pages/registry.json && node scripts/pencil-pages/run.mjs pencil/web-player-design && node scripts/pencil-pages/run-artist.mjs pencil/web-artist-design",
     "clean:dist": "rimraf --glob \"apps/*/dist\" \"packages/*/dist\"",
     "clean:cache": "rimraf --glob \"apps/*/.next/dev/cache\" \"apps/*/.next/cache\" \".turbo/cache\""
   },
   "devDependencies": {
-    "@changesets/cli": "^2.31.0",
-    "@commitlint/cli": "^21.0.2",
-    "@commitlint/config-conventional": "^21.0.2",
-    "@types/node": "^25.9.3",
+    "@changesets/cli": "^3.0.3",
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
+    "@types/node": "^26.6.4",
     "commitizen": "^4.3.2",
     "cz-customizable": "^7.5.4",
-    "knip": "^6.16.1",
-    "lefthook": "^2.1.9",
+    "knip": "^6.40.0",
+    "lefthook": "^2.2.0",
     "rimraf": "^6.1.3",
     "turbo": "^2.11.7",
     "typescript": "^6.0.3"
@@ -60,5 +64,5 @@
       "path": "cz-customizable"
     }
   },
-  "version": "0.4.0"
+  "version": "0.5.0"
 }

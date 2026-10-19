@@ -14,6 +14,7 @@ import type { StorageService } from './storage.types'
 export const PUBLIC_IMAGE_FOLDERS = [
   'tracks/covers',
   'albums/covers',
+  'releases/covers',
   'playlists/covers',
   'artists/avatars',
   'artists/backgrounds',

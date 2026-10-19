@@ -2,6 +2,7 @@
 
 import { selectMusicPlayer, usePlayerStore } from '@/entities/Player'
 import type { TrackEntity } from '@/entities/Track'
+import { showApiSuccessToast } from '@/shared/api/feedback'
 import type { PlaylistPlayback } from '@/views/Playlist/model/playlist.types'
 import { shuffleTracks } from '@/views/Playlist/model/playlist.utils'
 
@@ -21,6 +22,7 @@ export const usePlaylistPlayback = ({
   const togglePlay = usePlayerStore((state) => state.togglePlay)
   const setPlaylistTracks = usePlayerStore((state) => state.setPlaylistTracks)
   const setShuffleEnabled = usePlayerStore((state) => state.setShuffleEnabled)
+  const addToQueue = usePlayerStore((state) => state.addToQueue)
   const isActive = musicPlayer.currentPlaylistId === playlistId
 
   const startPlaylist = (
@@ -73,8 +75,19 @@ export const usePlaylistPlayback = ({
     startPlaylist(startTrack, nextTracks, 0)
   }
 
+  const handleAddToQueue = () => {
+    if (tracks.length === 0) return
+    for (const track of tracks) addToQueue(track)
+    showApiSuccessToast(
+      tracks.length === 1
+        ? 'Added 1 track to the queue'
+        : `Added ${tracks.length} tracks to the queue`,
+    )
+  }
+
   return {
     currentTrackId: musicPlayer.currentTrack?.id,
+    handleAddToQueue,
     handlePlayPlaylist,
     handleShufflePlaylist,
     isActive,

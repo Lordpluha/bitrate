@@ -23,15 +23,16 @@ export const useHeaderSearch = () => {
     useRecentSearches()
   const { data: serverHistory } = useSearchHistory(1, 8, isAuthenticated)
   const trimmedQuery = query.trim()
-  const suggestions = useSearchSuggestions(trimmedQuery, debouncedQuery)
-  const recentSearches = [
-    ...localRecentSearches,
-    ...(serverHistory?.data.map((item) => ({
-      query: item.query,
-      subtitle: t('common.search'),
-      title: item.query,
-    })) ?? []),
-  ]
+  /* signed-in users see their account's search history; guests see this browser's */
+  const recentSearches = (
+    isAuthenticated
+      ? (serverHistory?.data.map((item) => ({
+          query: item.query,
+          subtitle: t('common.search'),
+          title: item.query,
+        })) ?? [])
+      : localRecentSearches
+  )
     .filter(
       (item, index, items) =>
         items.findIndex(
@@ -41,6 +42,11 @@ export const useHeaderSearch = () => {
         ) === index,
     )
     .slice(0, 8)
+  const suggestions = useSearchSuggestions({
+    query: trimmedQuery,
+    debouncedQuery,
+    history: recentSearches.map((item) => item.query ?? item.title),
+  })
 
   useEffect(() => {
     setQuery(searchParams.get('q') ?? '')

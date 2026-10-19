@@ -11,5 +11,11 @@
     "skipLibCheck": true
   },
   "include": ["src", "src/**/*"],
-  "exclude": ["**/*.unit-spec.*", "**/*.browser-spec.*", "**/__tests__/**"]
+  "exclude": [
+    "**/*.unit-spec.*",
+    "**/*.browser-spec.*",
+    "**/__tests__/**",
+    "**/*.stories.*",
+    "**/stories/**"
+  ]
 }

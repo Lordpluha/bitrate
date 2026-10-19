@@ -1,0 +1,2015 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "6fHHvr",
+      "name": "Artist / Settings / Security / Desktop / Dark",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "NDufQF",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:cOc4EM": {
+              "type": "ref",
+              "id": "HiEHJC",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Settings",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "settings"
+                },
+                "ds:GZQzF3": {
+                  "content": "Settings"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Settings / Security"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Security help"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "oqVTaV",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "s3Bru3",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Security"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Password, two-factor protection and sessions"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "cuVgFY",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "PrnGqx",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "bh8XD7",
+                      "ref": "ds:WcSzPr",
+                      "name": "Status/Warning",
+                      "descendants": {
+                        "ds:8sj0Ew": {
+                          "content": "Needs attention"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sJUweC",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "2 sessions · 2FA is off"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "sKwg24",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Gu83BZ",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Account",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Account"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ukyXDb",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Security",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Security"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "625m2y",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Notifications",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Notifications"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "w7Q7T2",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Appearance",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Appearance"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "rTZ2Eg",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Connected services",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Connected services"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "hkNadF",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Team & safety",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Team & safety"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "m2Xj8q",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "6s38zs",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "QyVYMv",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "wFanhp",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "92JHR8",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "8uoBZn",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Sign-in protection"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "9FbDn8",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Password"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Configured for email sign-in · Demo state"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "ME9cud",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "5YZHhL",
+                                          "ref": "ds:G5tJp",
+                                          "name": "Button / Change password",
+                                          "descendants": {
+                                            "ds:d2zCI": {
+                                              "content": "Change password"
+                                            },
+                                            "ds:zDiHG": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Y7ifc3",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Two-factor authentication"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Add a second step to supported sign-in flows."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "jLxwUd",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "j4A9Tg",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Off"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "ijqg2D",
+                                          "ref": "ds:exjwf",
+                                          "name": "Button / Set up 2FA",
+                                          "descendants": {
+                                            "ds:E23bq6": {
+                                              "content": "Set up 2FA"
+                                            },
+                                            "ds:o7NXW": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "G5DTWT",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Recovery options"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Recovery codes become available after 2FA setup."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "6NFDHq",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "bBbdo8",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Unavailable"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "mwCvtD",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "Security changes require explicit confirmation and must never happen automatically."
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "QZT3yV",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "hT95QK",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "TzZqyF",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "cyA5Qq",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "RuLJdL",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Active sessions"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ngY69n",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "This computer"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Chrome · Linux · Europe/Kyiv"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "h47nxB",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "vFpr8M",
+                                          "ref": "ds:U7YZW8",
+                                          "name": "Status/Info",
+                                          "descendants": {
+                                            "ds:OvU9Iz": {
+                                              "content": "Current"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "xSyJva",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Pixel 8"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Last active 2 hours ago · Demo"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "sGntfF",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "PUTVAt",
+                                          "ref": "ds:DTwJb",
+                                          "name": "Button / Sign out session",
+                                          "descendants": {
+                                            "ds:GyGLK": {
+                                              "content": "Sign out session"
+                                            },
+                                            "ds:uRXDu": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "9gQuUG",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Review sign-out",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Review sign-out"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "h4ojNr",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Ends other sessions after confirmation. This device stays signed in."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/settings/security — 2FA, recovery codes and session sign-out are separate confirmable flows."
+    },
+    {
+      "type": "frame",
+      "id": "ggXuTt",
+      "name": "Artist / Settings / Security / Desktop / Light",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "ij6pcF",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:cOc4EM": {
+              "type": "ref",
+              "id": "StUNu7",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Settings",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "settings"
+                },
+                "ds:GZQzF3": {
+                  "content": "Settings"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Settings / Security"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Security help"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "m4eL7a",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "G6DfYa",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Security"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Password, two-factor protection and sessions"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "57bCd7",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "cKB9Ri",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "E2hfH9",
+                      "ref": "ds:WcSzPr",
+                      "name": "Status/Warning",
+                      "descendants": {
+                        "ds:8sj0Ew": {
+                          "content": "Needs attention"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "rvgN7Q",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "2 sessions · 2FA is off"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "koEKZA",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "csSefM",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Account",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Account"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qvAPYv",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Security",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Security"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ogXSWH",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Notifications",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Notifications"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "eN2ote",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Appearance",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Appearance"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "dc2MWJ",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Connected services",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Connected services"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "PjQA9u",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Team & safety",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Team & safety"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "6waqKt",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "MVP8Wg",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "YhQYEY",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "nHHhoq",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "iBGhsz",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "a6sZcr",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Sign-in protection"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "dotxtn",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Password"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Configured for email sign-in · Demo state"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "UXZaLJ",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "Fo4As9",
+                                          "ref": "ds:G5tJp",
+                                          "name": "Button / Change password",
+                                          "descendants": {
+                                            "ds:d2zCI": {
+                                              "content": "Change password"
+                                            },
+                                            "ds:zDiHG": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "YmZPJM",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Two-factor authentication"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Add a second step to supported sign-in flows."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "3sn4Zz",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "muUoCn",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Off"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "4Bnh8q",
+                                          "ref": "ds:exjwf",
+                                          "name": "Button / Set up 2FA",
+                                          "descendants": {
+                                            "ds:E23bq6": {
+                                              "content": "Set up 2FA"
+                                            },
+                                            "ds:o7NXW": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "u4KaHE",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Recovery options"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Recovery codes become available after 2FA setup."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "sAbJne",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "VwVcRZ",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Unavailable"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "jBCss5",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "Security changes require explicit confirmation and must never happen automatically."
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "rmRf7V",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "iBbJbf",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "dJ264a",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "vcqS69",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "eHDVu3",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Active sessions"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Ag25W3",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "This computer"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Chrome · Linux · Europe/Kyiv"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "uXheZf",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "D8LbTe",
+                                          "ref": "ds:U7YZW8",
+                                          "name": "Status/Info",
+                                          "descendants": {
+                                            "ds:OvU9Iz": {
+                                              "content": "Current"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "VkmrA7",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Pixel 8"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Last active 2 hours ago · Demo"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "vCgcne",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "n9bHfW",
+                                          "ref": "ds:DTwJb",
+                                          "name": "Button / Sign out session",
+                                          "descendants": {
+                                            "ds:GyGLK": {
+                                              "content": "Sign out session"
+                                            },
+                                            "ds:uRXDu": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "jqmfEs",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Review sign-out",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Review sign-out"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "gmBG76",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Ends other sessions after confirmation. This device stays signed in."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "designed — /dashboard/settings/security — 2FA, recovery codes and session sign-out are separate confirmable flows."
+    },
+    {
+      "type": "frame",
+      "id": "iKRXWP",
+      "name": "Artist / Settings / Security / Desktop / Dim",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "tv9wRr",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:cOc4EM": {
+              "type": "ref",
+              "id": "tWBcJj",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Settings",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "settings"
+                },
+                "ds:GZQzF3": {
+                  "content": "Settings"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Settings / Security"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Security help"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "cTgU95",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "5Acrem",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Security"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Password, two-factor protection and sessions"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "3j8Pvr",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "waHxZK",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "4Covf9",
+                      "ref": "ds:WcSzPr",
+                      "name": "Status/Warning",
+                      "descendants": {
+                        "ds:8sj0Ew": {
+                          "content": "Needs attention"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ycQL43",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "2 sessions · 2FA is off"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "8PJv9N",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "zTwm35",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Account",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Account"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "V2Zd9N",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Security",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Security"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Ksjczg",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Notifications",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Notifications"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "nwVbhm",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Appearance",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Appearance"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "9bHu7C",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Connected services",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Connected services"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "zmdcue",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Team & safety",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Team & safety"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "MButj4",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "9SuJ5T",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Vgyd4z",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "nPGY42",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "hbTZhS",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "pJoakb",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Sign-in protection"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "UH8SD3",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Password"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Configured for email sign-in · Demo state"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "JDz95Y",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "v3d5d9",
+                                          "ref": "ds:G5tJp",
+                                          "name": "Button / Change password",
+                                          "descendants": {
+                                            "ds:d2zCI": {
+                                              "content": "Change password"
+                                            },
+                                            "ds:zDiHG": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "9TtFni",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Two-factor authentication"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Add a second step to supported sign-in flows."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "jChumD",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "t9GucW",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Off"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "naYFxN",
+                                          "ref": "ds:exjwf",
+                                          "name": "Button / Set up 2FA",
+                                          "descendants": {
+                                            "ds:E23bq6": {
+                                              "content": "Set up 2FA"
+                                            },
+                                            "ds:o7NXW": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ThQHtp",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Recovery options"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Recovery codes become available after 2FA setup."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "Guq9sE",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "8jLcbe",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Unavailable"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "wHxAJ8",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "Security changes require explicit confirmation and must never happen automatically."
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "SLviQ2",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "7zt4ri",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "nM6NJs",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "zpSTgC",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "HdwtGs",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Active sessions"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "LfBDSc",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "This computer"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Chrome · Linux · Europe/Kyiv"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "KppJSM",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "vHcuTs",
+                                          "ref": "ds:U7YZW8",
+                                          "name": "Status/Info",
+                                          "descendants": {
+                                            "ds:OvU9Iz": {
+                                              "content": "Current"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "v483Ff",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Pixel 8"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Last active 2 hours ago · Demo"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "PGUAjj",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "kCDLFJ",
+                                          "ref": "ds:DTwJb",
+                                          "name": "Button / Sign out session",
+                                          "descendants": {
+                                            "ds:GyGLK": {
+                                              "content": "Sign out session"
+                                            },
+                                            "ds:uRXDu": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "uw2tHW",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Review sign-out",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Review sign-out"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "novxfs",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Ends other sessions after confirmation. This device stays signed in."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "designed — /dashboard/settings/security — 2FA, recovery codes and session sign-out are separate confirmable flows."
+    },
+    {
+      "type": "frame",
+      "id": "wSEyvz",
+      "name": "Artist / Settings / Security / Mobile / Dark",
+      "width": 390,
+      "height": 1700,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "yDARyW",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1700,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "yvGVbo",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "b9yfxZ",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Security"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Password, two-factor protection and sessions"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "7KBZeg",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "Ew5asm",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "runFfJ",
+                      "ref": "ds:WcSzPr",
+                      "name": "Status/Warning",
+                      "descendants": {
+                        "ds:8sj0Ew": {
+                          "content": "Needs attention"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "L467s9",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "2 sessions · 2FA is off"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "6VkHjb",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "9kQoYw",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Account",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Account"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "7z5kpW",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Security",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Security"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "yCdZV7",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Notifications",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Notifications"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "mcDGZc",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Appearance",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Appearance"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "FCwz53",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Connected services",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Connected services"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "VRMcer",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Team & safety",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Team & safety"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "idZ974",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "sZW6eR",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "qJaA42",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "4f24d5",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Sign-in protection"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "gQR8uL",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Password"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "Configured for email sign-in · Demo state"
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "EuqSER",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "xcUK6Y",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Change password",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Change password"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "m3qLW3",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Two-factor authentication"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "Add a second step to supported sign-in flows."
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "AcgYdY",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "tYPgoj",
+                                  "ref": "ds:LUaCU2",
+                                  "name": "Status/Neutral",
+                                  "descendants": {
+                                    "ds:jPj56V": {
+                                      "content": "Off"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "2rAbDM",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Set up 2FA",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Set up 2FA"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "FfPUPs",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Recovery options"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "Recovery codes become available after 2FA setup."
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "hcxBWz",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "Yp5e3J",
+                                  "ref": "ds:LUaCU2",
+                                  "name": "Status/Neutral",
+                                  "descendants": {
+                                    "ds:jPj56V": {
+                                      "content": "Unavailable"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "KNENzW",
+                  "ref": "ds:PiqhAO",
+                  "name": "Text/Caption",
+                  "content": "Security changes require explicit confirmation and must never happen automatically."
+                },
+                {
+                  "type": "ref",
+                  "id": "BvuCP4",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "p5EwSK",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "SaBBra",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "8wANxA",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Active sessions"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "PmH97L",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "This computer"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "Chrome · Linux · Europe/Kyiv"
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "JKoBun",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "PF6rwk",
+                                  "ref": "ds:U7YZW8",
+                                  "name": "Status/Info",
+                                  "descendants": {
+                                    "ds:OvU9Iz": {
+                                      "content": "Current"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "DNgeTH",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Pixel 8"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "Last active 2 hours ago · Demo"
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "knjacu",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "gzTFMx",
+                                  "ref": "ds:DTwJb",
+                                  "name": "Button / Sign out session",
+                                  "descendants": {
+                                    "ds:GyGLK": {
+                                      "content": "Sign out session"
+                                    },
+                                    "ds:uRXDu": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "umMq3D",
+                          "ref": "ds:G5tJp",
+                          "name": "Button / Review sign-out",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:d2zCI": {
+                              "content": "Review sign-out"
+                            },
+                            "ds:zDiHG": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "gua7Hr",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "Ends other sessions after confirmation. This device stays signed in."
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/settings/security — 2FA, recovery codes and session sign-out are separate confirmable flows."
+    }
+  ]
+}

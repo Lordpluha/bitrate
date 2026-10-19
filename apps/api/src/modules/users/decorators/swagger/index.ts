@@ -1,3 +1,4 @@
+export * from './follow-lists.decorator'
 export * from './follow-user.decorator'
 export * from './get-following.decorator'
 export * from './get-user.decorator'

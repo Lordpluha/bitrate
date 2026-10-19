@@ -1,0 +1,179 @@
+import {
+  MIN_SEARCH_LENGTH,
+  useWorkspaceSearch,
+} from '@entities/workspace-search'
+import { useDebouncedValue } from '@shared/hooks'
+import { ROUTES } from '@shared/routes/routes'
+import { Link } from '@tanstack/react-router'
+import { Disc3, ListChecks, Music2, Search } from 'lucide-react'
+import { type ReactNode, useId, useState } from 'react'
+
+export interface WorkspaceDestination {
+  label: string
+  to: (typeof ROUTES.dashboard)[keyof typeof ROUTES.dashboard]
+}
+
+const SEARCH_DELAY_MS = 250
+
+const resultClass =
+  'flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+
+/** Workspace sections plus the artist's releases, tracks and tasks matching the query. */
+export function WorkspaceSearch({
+  artistId,
+  destinations,
+  onNavigate,
+}: {
+  artistId: string
+  destinations: readonly WorkspaceDestination[]
+  onNavigate: () => void
+}) {
+  const inputId = useId()
+  const [query, setQuery] = useState('')
+  const debounced = useDebouncedValue(query, SEARCH_DELAY_MS)
+  const search = useWorkspaceSearch(artistId, debounced)
+  const term = query.trim().toLowerCase()
+  const sections = destinations.filter(({ label }) =>
+    label.toLowerCase().includes(term),
+  )
+  const searching = term.length >= MIN_SEARCH_LENGTH
+  const data = searching ? search.data : undefined
+  const found =
+    sections.length +
+    (data ? data.releases.length + data.tracks.length + data.tasks.length : 0)
+
+  return (
+    <div className="space-y-4">
+      <label className="sr-only" htmlFor={inputId}>
+        Search workspace
+      </label>
+      <input
+        className="h-11 w-full rounded-lg border border-input bg-background px-3 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        data-initial-focus
+        id={inputId}
+        onChange={(event) => setQuery(event.target.value)}
+        placeholder="Search releases, tracks, tasks and sections…"
+        type="search"
+        value={query}
+      />
+      <nav
+        aria-label="Search results"
+        className="max-h-[60vh] space-y-4 overflow-y-auto"
+      >
+        {sections.length > 0 && (
+          <ResultGroup title="Sections">
+            {sections.map(({ label, to }) => (
+              <Link
+                className={resultClass}
+                key={to}
+                onClick={onNavigate}
+                preload={false}
+                to={to}
+              >
+                <Search
+                  aria-hidden="true"
+                  className="size-4 text-text-secondary"
+                />
+                {label}
+              </Link>
+            ))}
+          </ResultGroup>
+        )}
+        {data && data.releases.length > 0 && (
+          <ResultGroup title="Releases">
+            {data.releases.map((release) => (
+              <Link
+                className={resultClass}
+                key={release.id}
+                onClick={onNavigate}
+                params={{ releaseId: release.id }}
+                preload={false}
+                to="/dashboard/music/$releaseId"
+              >
+                <Disc3 aria-hidden="true" className="size-4 text-accent" />
+                <span className="min-w-0 flex-1 truncate">{release.title}</span>
+              </Link>
+            ))}
+          </ResultGroup>
+        )}
+        {data && data.tracks.length > 0 && (
+          <ResultGroup title="Tracks">
+            {data.tracks.map((track) =>
+              track.releaseId ? (
+                <Link
+                  className={resultClass}
+                  key={track.id}
+                  onClick={onNavigate}
+                  params={{ releaseId: track.releaseId }}
+                  preload={false}
+                  to="/dashboard/music/$releaseId"
+                >
+                  <Music2 aria-hidden="true" className="size-4 text-accent" />
+                  <span className="min-w-0 flex-1 truncate">{track.title}</span>
+                </Link>
+              ) : (
+                <Link
+                  className={resultClass}
+                  key={track.id}
+                  onClick={onNavigate}
+                  preload={false}
+                  search={{ tab: 'tracks', q: track.title }}
+                  to={ROUTES.dashboard.music}
+                >
+                  <Music2 aria-hidden="true" className="size-4 text-accent" />
+                  <span className="min-w-0 flex-1 truncate">{track.title}</span>
+                </Link>
+              ),
+            )}
+          </ResultGroup>
+        )}
+        {data && data.tasks.length > 0 && (
+          <ResultGroup title="Tasks">
+            {data.tasks.map((task) => (
+              <Link
+                className={resultClass}
+                key={task.id}
+                onClick={onNavigate}
+                params={{ releaseId: task.release.id }}
+                preload={false}
+                to="/dashboard/music/$releaseId"
+              >
+                <ListChecks aria-hidden="true" className="size-4 text-accent" />
+                <span className="min-w-0 flex-1 truncate">{task.title}</span>
+                <span className="truncate text-xs text-text-secondary">
+                  {task.release.title}
+                </span>
+              </Link>
+            ))}
+          </ResultGroup>
+        )}
+      </nav>
+      <p className="text-sm text-text-secondary" role="status">
+        {searching && search.isError
+          ? search.error.message
+          : searching && (search.isFetching || query !== debounced)
+            ? 'Searching…'
+            : found === 0
+              ? 'Nothing matches your search.'
+              : ''}
+      </p>
+    </div>
+  )
+}
+
+function ResultGroup({
+  title,
+  children,
+}: {
+  title: string
+  children: ReactNode
+}) {
+  return (
+    <div className="space-y-1">
+      <p className="px-3 text-xs uppercase tracking-wide text-text-secondary">
+        {title}
+      </p>
+      {children}
+    </div>
+  )
+}

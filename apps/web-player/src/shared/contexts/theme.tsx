@@ -41,8 +41,8 @@ export const ThemeProvider = ({ children }: PropsWithChildren) => {
     document.documentElement.classList.add(theme)
   }, [theme, hydrated])
 
-  if (!hydrated) return null
-
+  /* Children render on the server too: ThemeScript has already put the stored theme class on
+     <html> before paint, so waiting for hydration only hid the page from crawlers and first paint. */
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
       {children}

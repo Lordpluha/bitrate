@@ -305,7 +305,7 @@ built with [Vite](https://vite.dev) 8; a framework-free contract that any host a
 
 ### Mobile — `apps/mobile`
 
-[React Native](https://reactnative.dev) 0.81 on [Expo](https://expo.dev) SDK 54 with
+[React Native](https://reactnative.dev) 0.86 on [Expo](https://expo.dev) SDK 57 with
 [Expo Router](https://docs.expo.dev/router/introduction/) 6 and
 [Reanimated](https://docs.swmansion.com/react-native-reanimated/) 4. Scaffolded, not started; the
 web conventions above deliberately do not apply there.

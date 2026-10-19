@@ -1,6 +1,6 @@
-import banner1 from '@assets/images/banner-1.jpg'
-import banner2 from '@assets/images/banner-2.jpg'
-import banner3 from '@assets/images/banner-3.jpg'
+import cover1 from '@assets/images/cover-1.webp'
+import cover2 from '@assets/images/cover-2.webp'
+import cover3 from '@assets/images/cover-3.webp'
 import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 import {
   BadgeCheckIcon,
@@ -104,7 +104,7 @@ export const Outline: Story = {
       <Item {...args} variant="outline">
         <ItemMedia>
           <Avatar className="size-10">
-            <AvatarImage src={banner1} />
+            <AvatarImage src={cover1} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </ItemMedia>
@@ -156,7 +156,7 @@ export const Small: Story = {
         <Item {...args} variant="outline" size="sm">
           <ItemMedia>
             <Avatar className="size-8">
-              <AvatarImage src={banner1} />
+              <AvatarImage src={cover1} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </ItemMedia>
@@ -169,7 +169,7 @@ export const Small: Story = {
         <Item variant="outline" size="sm">
           <ItemMedia>
             <Avatar className="size-8">
-              <AvatarImage src={banner2} />
+              <AvatarImage src={cover2} />
               <AvatarFallback>ML</AvatarFallback>
             </Avatar>
           </ItemMedia>
@@ -216,7 +216,7 @@ export const WithAvatar: Story = {
       <Item {...args} variant="outline">
         <ItemMedia>
           <Avatar className="size-10">
-            <AvatarImage src={banner3} />
+            <AvatarImage src={cover3} />
             <AvatarFallback>ER</AvatarFallback>
           </Avatar>
         </ItemMedia>
@@ -234,15 +234,15 @@ export const WithAvatar: Story = {
         <ItemMedia>
           <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
             <Avatar className="hidden sm:flex">
-              <AvatarImage src={banner1} alt="@member-1" />
+              <AvatarImage src={cover1} alt="@member-1" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <Avatar className="hidden sm:flex">
-              <AvatarImage src={banner2} alt="@member-2" />
+              <AvatarImage src={cover2} alt="@member-2" />
               <AvatarFallback>LR</AvatarFallback>
             </Avatar>
             <Avatar>
-              <AvatarImage src={banner3} alt="@member-3" />
+              <AvatarImage src={cover3} alt="@member-3" />
               <AvatarFallback>ER</AvatarFallback>
             </Avatar>
           </div>
@@ -266,7 +266,7 @@ export const WithAvatar: Story = {
  */
 export const WithImage: Story = {
   render: (args) => {
-    const coverImages = [banner1, banner2, banner3]
+    const coverImages = [cover1, cover2, cover3]
 
     const music = [
       {
@@ -293,7 +293,7 @@ export const WithImage: Story = {
       <div className="flex w-full max-w-md flex-col gap-6">
         <ItemGroup className="gap-4">
           {music.map((song, index) => {
-            const coverImage = coverImages[index % coverImages.length] ?? banner1
+            const coverImage = coverImages[index % coverImages.length] ?? cover1
 
             return (
               <Item key={song.title} {...args} variant="outline" asChild role="listitem">
@@ -334,17 +334,17 @@ export const WithGroup: Story = {
     const people = [
       {
         username: 'shadcn',
-        avatar: banner1,
+        avatar: cover1,
         email: 'shadcn@vercel.com',
       },
       {
         username: 'maxleiter',
-        avatar: banner2,
+        avatar: cover2,
         email: 'maxleiter@vercel.com',
       },
       {
         username: 'evilrabbit',
-        avatar: banner3,
+        avatar: cover3,
         email: 'evilrabbit@vercel.com',
       },
     ]
@@ -389,19 +389,19 @@ export const WithHeader: Story = {
       {
         name: 'v0-1.5-sm',
         description: 'Everyday tasks and UI generation.',
-        image: banner1,
+        image: cover1,
         credit: 'Valeria Reverdo on Unsplash',
       },
       {
         name: 'v0-1.5-lg',
         description: 'Advanced thinking or reasoning.',
-        image: banner2,
+        image: cover2,
         credit: 'Michael Oeser on Unsplash',
       },
       {
         name: 'v0-2.0-mini',
         description: 'Open Source model for everyone.',
-        image: banner3,
+        image: cover3,
         credit: 'Cherry Laithang on Unsplash',
       },
     ]
@@ -440,17 +440,17 @@ export const WithDropdown: Story = {
     const people = [
       {
         username: 'shadcn',
-        avatar: banner1,
+        avatar: cover1,
         email: 'shadcn@vercel.com',
       },
       {
         username: 'maxleiter',
-        avatar: banner2,
+        avatar: cover2,
         email: 'maxleiter@vercel.com',
       },
       {
         username: 'evilrabbit',
-        avatar: banner3,
+        avatar: cover3,
         email: 'evilrabbit@vercel.com',
       },
     ]

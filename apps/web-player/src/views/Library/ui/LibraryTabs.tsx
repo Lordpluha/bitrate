@@ -14,17 +14,17 @@ export const LibraryTabs = ({ controls, onChange }: LibraryTabsProps) => {
   return (
     <div
       aria-label={t('library.title')}
-      className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden"
+      className="-mx-4 flex gap-1 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden"
       role="tablist"
     >
       {libraryTabs.map((tab) => (
         <button
           aria-selected={controls.activeSection === tab.id}
           className={cn(
-            'shrink-0 rounded-full px-3 py-1.5 text-sm font-medium transition-colors',
+            'h-9 shrink-0 rounded-md px-3 text-sm font-medium transition-colors',
             controls.activeSection === tab.id
-              ? 'bg-text text-background'
-              : 'bg-surface text-text hover:bg-surface-hover',
+              ? 'bg-secondary text-foreground'
+              : 'text-muted-foreground hover:bg-surface hover:text-foreground',
           )}
           key={tab.id}
           onClick={() => onChange({ activeSection: tab.id })}

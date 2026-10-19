@@ -1,0 +1,919 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "pQTRnt",
+      "name": "Artist / Verify email / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "aaNHuT",
+          "ref": "ds:x4Fixv",
+          "name": "Surface/Panel",
+          "width": 440,
+          "gap": 20,
+          "descendants": {
+            "ds:xhr0E3": {
+              "type": "frame",
+              "id": "st4xVe",
+              "name": "Panel Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "VDKfA2",
+                  "ref": "ds:J95vY0",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "ref",
+                  "id": "MNVUpe",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Verify your email"
+                },
+                {
+                  "type": "ref",
+                  "id": "LRYPHr",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "One more step to your artist workspace."
+                },
+                {
+                  "type": "ref",
+                  "id": "Z2GygL",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "demoartist@example.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "DufgfL",
+                  "ref": "ds:OPjx8q",
+                  "name": "Form/OTP/Active",
+                  "descendants": {
+                    "ds:yqJVXC": {
+                      "content": "Verification code"
+                    },
+                    "ds:QeWSg4": {
+                      "content": "Six digits. You can paste the entire code."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "juvT2o",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Verify and continue",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Verify and continue"
+                    },
+                    "ds:ksrFi": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "bvn5Tp",
+                  "ref": "ds:q9t60e",
+                  "name": "Button / Resend verification email",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:KOjgg": {
+                      "content": "Resend verification email"
+                    },
+                    "ds:X8D8m": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "Uassp3",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Back to login"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/verify-email — Six-digit code verification."
+    },
+    {
+      "type": "frame",
+      "id": "adKZU9",
+      "name": "Artist / Verify email / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "EWGLQT",
+          "ref": "ds:x4Fixv",
+          "name": "Surface/Panel",
+          "width": 440,
+          "gap": 20,
+          "descendants": {
+            "ds:xhr0E3": {
+              "type": "frame",
+              "id": "ESGrnr",
+              "name": "Panel Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "ShkEzz",
+                  "ref": "ds:J95vY0",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "ref",
+                  "id": "WBQk9U",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Verify your email"
+                },
+                {
+                  "type": "ref",
+                  "id": "i3UBK2",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "One more step to your artist workspace."
+                },
+                {
+                  "type": "ref",
+                  "id": "yK8yCt",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "demoartist@example.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "DTqpww",
+                  "ref": "ds:OPjx8q",
+                  "name": "Form/OTP/Active",
+                  "descendants": {
+                    "ds:yqJVXC": {
+                      "content": "Verification code"
+                    },
+                    "ds:QeWSg4": {
+                      "content": "Six digits. You can paste the entire code."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "qzb4Nf",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Verify and continue",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Verify and continue"
+                    },
+                    "ds:ksrFi": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "TcrzAF",
+                  "ref": "ds:q9t60e",
+                  "name": "Button / Resend verification email",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:KOjgg": {
+                      "content": "Resend verification email"
+                    },
+                    "ds:X8D8m": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "Pd83Bj",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Back to login"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "/verify-email — Six-digit code verification."
+    },
+    {
+      "type": "frame",
+      "id": "cEkwXB",
+      "name": "Artist / Verify email / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "KpnvED",
+          "ref": "ds:x4Fixv",
+          "name": "Surface/Panel",
+          "width": 440,
+          "gap": 20,
+          "descendants": {
+            "ds:xhr0E3": {
+              "type": "frame",
+              "id": "o4NSEJ",
+              "name": "Panel Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "q2Am5F",
+                  "ref": "ds:J95vY0",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "ref",
+                  "id": "CUbHB4",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Verify your email"
+                },
+                {
+                  "type": "ref",
+                  "id": "s6V4oU",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "One more step to your artist workspace."
+                },
+                {
+                  "type": "ref",
+                  "id": "NXarwV",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "demoartist@example.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "A4F3tD",
+                  "ref": "ds:OPjx8q",
+                  "name": "Form/OTP/Active",
+                  "descendants": {
+                    "ds:yqJVXC": {
+                      "content": "Verification code"
+                    },
+                    "ds:QeWSg4": {
+                      "content": "Six digits. You can paste the entire code."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "8CWDvc",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Verify and continue",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Verify and continue"
+                    },
+                    "ds:ksrFi": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "zEh92p",
+                  "ref": "ds:q9t60e",
+                  "name": "Button / Resend verification email",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:KOjgg": {
+                      "content": "Resend verification email"
+                    },
+                    "ds:X8D8m": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "aavpMj",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Back to login"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "/verify-email — Six-digit code verification."
+    },
+    {
+      "type": "frame",
+      "id": "roSeSu",
+      "name": "Artist / Verify email / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "CXZdhP",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "A3FEwp",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "CeMzpS",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "ref",
+              "id": "eoPDG3",
+              "ref": "ds:RoXXJv",
+              "name": "Text/H2",
+              "content": "Verify your email"
+            },
+            {
+              "type": "ref",
+              "id": "3EvJc4",
+              "ref": "ds:XDvNAD",
+              "name": "Text/Paragraph",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "One more step to your artist workspace."
+            },
+            {
+              "type": "ref",
+              "id": "dHuyBf",
+              "ref": "ds:j04F4",
+              "name": "Input / Email address",
+              "width": "fill_container",
+              "descendants": {
+                "ds:l4agQ": {
+                  "content": "Email address"
+                },
+                "ds:iI0CE": {
+                  "content": "demoartist@example.com"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "kZaanZ",
+              "ref": "ds:OPjx8q",
+              "name": "Form/OTP/Active",
+              "descendants": {
+                "ds:yqJVXC": {
+                  "content": "Verification code"
+                },
+                "ds:QeWSg4": {
+                  "content": "Six digits. You can paste the entire code."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "fLiZzi",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Verify and continue",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Verify and continue"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "FPDiEA",
+              "ref": "ds:q9t60e",
+              "name": "Button / Resend verification email",
+              "width": "fill_container",
+              "descendants": {
+                "ds:KOjgg": {
+                  "content": "Resend verification email"
+                },
+                "ds:X8D8m": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "PcUJym",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Back to login"
+            }
+          ]
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/verify-email — Six-digit code verification."
+    },
+    {
+      "type": "frame",
+      "id": "6DqnRG",
+      "name": "Artist / Verify email / Verified / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "YosEnU",
+          "ref": "ds:x4Fixv",
+          "name": "Surface/Panel",
+          "width": 440,
+          "gap": 20,
+          "descendants": {
+            "ds:xhr0E3": {
+              "type": "frame",
+              "id": "HUNhdh",
+              "name": "Panel Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "cjU3Tb",
+                  "ref": "ds:J95vY0",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "ref",
+                  "id": "rByUWr",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "You're ready to make some noise."
+                },
+                {
+                  "type": "ref",
+                  "id": "3FuAts",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Your email has been verified. You can now sign in."
+                },
+                {
+                  "type": "ref",
+                  "id": "5fP5ij",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Log in",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Log in"
+                    },
+                    "ds:ksrFi": {
+                      "enabled": false
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/verify-email — Six-digit code verification."
+    },
+    {
+      "type": "frame",
+      "id": "iM5PEP",
+      "name": "Artist / Verify email / Verified / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "9HcX4s",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "rXdwqk",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "KLY6kY",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "ref",
+              "id": "h3tNVS",
+              "ref": "ds:RoXXJv",
+              "name": "Text/H2",
+              "content": "You're ready to make some noise."
+            },
+            {
+              "type": "ref",
+              "id": "iFpMwH",
+              "ref": "ds:XDvNAD",
+              "name": "Text/Paragraph",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Your email has been verified. You can now sign in."
+            },
+            {
+              "type": "ref",
+              "id": "GYE5DJ",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Log in",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Log in"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/verify-email — Six-digit code verification."
+    },
+    {
+      "type": "frame",
+      "id": "v6Pghs",
+      "name": "Artist / Verify email / Invalid code / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "P9dLgc",
+          "ref": "ds:x4Fixv",
+          "name": "Surface/Panel",
+          "width": 440,
+          "gap": 20,
+          "descendants": {
+            "ds:xhr0E3": {
+              "type": "frame",
+              "id": "w3jXe9",
+              "name": "Panel Content",
+              "layout": "vertical",
+              "gap": 20,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "wqHVZY",
+                  "ref": "ds:J95vY0",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "ref",
+                  "id": "Zjyxf3",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Verify your email"
+                },
+                {
+                  "type": "ref",
+                  "id": "vyQAs6",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "One more step to your artist workspace."
+                },
+                {
+                  "type": "ref",
+                  "id": "KPcgdF",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "demoartist@example.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "Z52WfR",
+                  "ref": "ds:OPjx8q",
+                  "name": "Form/OTP/Active",
+                  "descendants": {
+                    "ds:yqJVXC": {
+                      "content": "Verification code"
+                    },
+                    "ds:QeWSg4": {
+                      "content": "Six digits. You can paste the entire code."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "6h9iF7",
+                  "ref": "ds:IqJK6E",
+                  "name": "Form/Field Error",
+                  "descendants": {
+                    "ds:brmWkY": {
+                      "content": "That code is not valid. Check it and try again."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "JzE2GP",
+                  "ref": "ds:q9t60e",
+                  "name": "Button / Resend verification email",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:KOjgg": {
+                      "content": "Resend verification email"
+                    },
+                    "ds:X8D8m": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "wX934t",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Back to login"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/verify-email — Six-digit code verification."
+    },
+    {
+      "type": "frame",
+      "id": "DJymjM",
+      "name": "Artist / Verify email / Invalid code / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "MkTcw2",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "YADVDK",
+          "name": "Form",
+          "layout": "vertical",
+          "gap": 22,
+          "width": "fill_container",
+          "padding": [
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "T3zVNo",
+              "ref": "ds:J95vY0",
+              "name": "Logo/Lockup"
+            },
+            {
+              "type": "ref",
+              "id": "u7eYSP",
+              "ref": "ds:RoXXJv",
+              "name": "Text/H2",
+              "content": "Verify your email"
+            },
+            {
+              "type": "ref",
+              "id": "WY5dGy",
+              "ref": "ds:XDvNAD",
+              "name": "Text/Paragraph",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "One more step to your artist workspace."
+            },
+            {
+              "type": "ref",
+              "id": "8xUgDJ",
+              "ref": "ds:j04F4",
+              "name": "Input / Email address",
+              "width": "fill_container",
+              "descendants": {
+                "ds:l4agQ": {
+                  "content": "Email address"
+                },
+                "ds:iI0CE": {
+                  "content": "demoartist@example.com"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "JB6FB4",
+              "ref": "ds:OPjx8q",
+              "name": "Form/OTP/Active",
+              "descendants": {
+                "ds:yqJVXC": {
+                  "content": "Verification code"
+                },
+                "ds:QeWSg4": {
+                  "content": "Six digits. You can paste the entire code."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "t4k5YN",
+              "ref": "ds:IqJK6E",
+              "name": "Form/Field Error",
+              "descendants": {
+                "ds:brmWkY": {
+                  "content": "That code is not valid. Check it and try again."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "TPR98C",
+              "ref": "ds:q9t60e",
+              "name": "Button / Resend verification email",
+              "width": "fill_container",
+              "descendants": {
+                "ds:KOjgg": {
+                  "content": "Resend verification email"
+                },
+                "ds:X8D8m": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "kJLeod",
+              "ref": "ds:LSzB6i",
+              "name": "Text/Link",
+              "content": "Back to login"
+            }
+          ]
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/verify-email — Six-digit code verification."
+    }
+  ]
+}

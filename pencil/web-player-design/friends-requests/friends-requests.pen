@@ -1,0 +1,2898 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "Xe6rDj",
+      "name": "Friend requests / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "PpGWKy",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "a3qbaA",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "zKfQsL",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ijrTfv",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "tmo7p5",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Friend requests"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "f9AnGP",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "FMsRDb",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "wjh2J8",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Received · 2",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Received · 2"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "AnBMKb",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Sent · 1",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Sent · 1"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "7mEyoy",
+                  "name": "List",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "x4qtFx",
+                      "name": "Received",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "SoVAoD",
+                          "ref": "ds:urCVIA",
+                          "name": "People Row",
+                          "descendants": {
+                            "ds:ArHqyJ": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar1.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:XPciBb": {
+                              "content": "Mayan Echo"
+                            },
+                            "ds:0XJUix": {
+                              "content": "1 mutual friend · 2 h ago"
+                            },
+                            "ds:GygVTw": {
+                              "type": "frame",
+                              "id": "uLuyF8",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "MJCLje",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Accept",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Accept"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "wZ9gyg",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Decline",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Decline"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "uz6d6w",
+                          "ref": "ds:urCVIA",
+                          "name": "People Row",
+                          "descendants": {
+                            "ds:ArHqyJ": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar3.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:XPciBb": {
+                              "content": "Lena Voss"
+                            },
+                            "ds:0XJUix": {
+                              "content": "6 mutual friends · Yesterday"
+                            },
+                            "ds:GygVTw": {
+                              "type": "frame",
+                              "id": "Q7T8Ln",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "KXVPpL",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Accept",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Accept"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "37VCyG",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Decline",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Decline"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends/requests — Received requests to accept or decline, sent requests to cancel; accepting reveals presence. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "o7vPq9",
+      "name": "Friend requests / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "q8on2v",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "AP5cCV",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "mHNaJX",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "nWybsq",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "hNhyWR",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Friend requests"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "2vBrG3",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "bJS5xt",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "hmuopC",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Received · 2",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Received · 2"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "MFHZn5",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Sent · 1",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Sent · 1"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "vCFhmX",
+                  "name": "List",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "tyLigQ",
+                      "name": "Received",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "nGnPnS",
+                          "ref": "ds:urCVIA",
+                          "name": "People Row",
+                          "descendants": {
+                            "ds:ArHqyJ": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar1.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:XPciBb": {
+                              "content": "Mayan Echo"
+                            },
+                            "ds:0XJUix": {
+                              "content": "1 mutual friend · 2 h ago"
+                            },
+                            "ds:GygVTw": {
+                              "type": "frame",
+                              "id": "2FjvkZ",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "brGXGL",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Accept",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Accept"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "CMKVQV",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Decline",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Decline"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "yQsxYR",
+                          "ref": "ds:urCVIA",
+                          "name": "People Row",
+                          "descendants": {
+                            "ds:ArHqyJ": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar3.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:XPciBb": {
+                              "content": "Lena Voss"
+                            },
+                            "ds:0XJUix": {
+                              "content": "6 mutual friends · Yesterday"
+                            },
+                            "ds:GygVTw": {
+                              "type": "frame",
+                              "id": "VC6fkv",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "ZZm7ry",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Accept",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Accept"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "opUBsz",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Decline",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Decline"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "concept — /friends/requests — Received requests to accept or decline, sent requests to cancel; accepting reveals presence. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "pcujwD",
+      "name": "Friend requests / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "r7RyV2",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "hv7Pkp",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "z5fcGU",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "F84tMN",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "qSqoXU",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Friend requests"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "FnSowX",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "nMnrqD",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "nGVnkx",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Received · 2",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Received · 2"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "uKPY5t",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Sent · 1",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Sent · 1"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "9cv3h8",
+                  "name": "List",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "twCxoD",
+                      "name": "Received",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "UCGyDP",
+                          "ref": "ds:urCVIA",
+                          "name": "People Row",
+                          "descendants": {
+                            "ds:ArHqyJ": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar1.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:XPciBb": {
+                              "content": "Mayan Echo"
+                            },
+                            "ds:0XJUix": {
+                              "content": "1 mutual friend · 2 h ago"
+                            },
+                            "ds:GygVTw": {
+                              "type": "frame",
+                              "id": "U3wgPn",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "y6etdo",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Accept",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Accept"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "i4GqDm",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Decline",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Decline"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "z6N9vU",
+                          "ref": "ds:urCVIA",
+                          "name": "People Row",
+                          "descendants": {
+                            "ds:ArHqyJ": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar3.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:XPciBb": {
+                              "content": "Lena Voss"
+                            },
+                            "ds:0XJUix": {
+                              "content": "6 mutual friends · Yesterday"
+                            },
+                            "ds:GygVTw": {
+                              "type": "frame",
+                              "id": "ft2VkZ",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "jUw2Q8",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Accept",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Accept"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Wpdy4c",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Decline",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Decline"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "concept — /friends/requests — Received requests to accept or decline, sent requests to cancel; accepting reveals presence. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "FrqPTP",
+      "name": "Friend requests / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "cbc3Hf",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "3Wab8W",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Requests"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "dpdFS8",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "oyHhXu",
+              "name": "Chips",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "a5BVJK",
+                  "ref": "ds:AdNrrb",
+                  "name": "Chip/Active",
+                  "descendants": {
+                    "ds:cUY4Fi": {
+                      "content": "Received · 2"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "uKDzd3",
+                  "ref": "ds:LUcTan",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:lXs2ja": {
+                      "content": "Sent · 1"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "p3U8ry",
+              "name": "Received",
+              "layout": "vertical",
+              "gap": 0,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "nUMJB5",
+                  "ref": "ds:urCVIA",
+                  "name": "People Row",
+                  "descendants": {
+                    "ds:ArHqyJ": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/avatars/avatar1.jpg",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:XPciBb": {
+                      "content": "Mayan Echo"
+                    },
+                    "ds:0XJUix": {
+                      "content": "1 mutual friend · 2 h ago"
+                    },
+                    "ds:GygVTw": {
+                      "type": "frame",
+                      "id": "ee6rUg",
+                      "name": "Actions",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "8MDMXU",
+                          "ref": "ds:exjwf",
+                          "name": "Button / Accept",
+                          "descendants": {
+                            "ds:E23bq6": {
+                              "content": "Accept"
+                            },
+                            "ds:o7NXW": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "GAWRo3",
+                          "ref": "ds:cS9uPp",
+                          "name": "Button/Icon Ghost",
+                          "descendants": {
+                            "ds:KFmiLY": {
+                              "icon": "x"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "eXaDE7",
+                  "ref": "ds:urCVIA",
+                  "name": "People Row",
+                  "descendants": {
+                    "ds:ArHqyJ": {
+                      "fill": {
+                        "type": "image",
+                        "url": "../design-system/assets/avatars/avatar3.jpg",
+                        "mode": "cover"
+                      }
+                    },
+                    "ds:XPciBb": {
+                      "content": "Lena Voss"
+                    },
+                    "ds:0XJUix": {
+                      "content": "6 mutual friends · Yesterday"
+                    },
+                    "ds:GygVTw": {
+                      "type": "frame",
+                      "id": "6DzoFs",
+                      "name": "Actions",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "YT6DDX",
+                          "ref": "ds:exjwf",
+                          "name": "Button / Accept",
+                          "descendants": {
+                            "ds:E23bq6": {
+                              "content": "Accept"
+                            },
+                            "ds:o7NXW": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "6E8nfE",
+                          "ref": "ds:cS9uPp",
+                          "name": "Button/Icon Ghost",
+                          "descendants": {
+                            "ds:KFmiLY": {
+                              "icon": "x"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "8b2uPA",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "nvvbLL",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends/requests — Received requests to accept or decline, sent requests to cancel; accepting reveals presence. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "Rd4AJe",
+      "name": "Friend requests / Sent / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "4FVTNC",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "Kohbvx",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "hZeP9g",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "p3AVMS",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "YkpyZZ",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Friend requests"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "mVqsNz",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "atrULh",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "vSACMF",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Received · 2",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Received · 2"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "PzKi8V",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Sent · 1",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Sent · 1"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "3RezYo",
+                  "name": "List",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "hYGKJj",
+                      "name": "Sent",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "8PW3yN",
+                          "ref": "ds:urCVIA",
+                          "name": "People Row",
+                          "descendants": {
+                            "ds:ArHqyJ": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/avatars/avatar3.jpg",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:XPciBb": {
+                              "content": "Maya Chen"
+                            },
+                            "ds:0XJUix": {
+                              "content": "Sent 3 days ago"
+                            },
+                            "ds:GygVTw": {
+                              "type": "frame",
+                              "id": "fFu9EJ",
+                              "name": "Actions",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "ZJrfcc",
+                                  "ref": "ds:DTwJb",
+                                  "name": "Button / Cancel request",
+                                  "descendants": {
+                                    "ds:GyGLK": {
+                                      "content": "Cancel request"
+                                    },
+                                    "ds:uRXDu": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends/requests — Received requests to accept or decline, sent requests to cancel; accepting reveals presence. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "DMQrcN",
+      "name": "Friend requests / Sent / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "m4ZMcU",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "fNXMyf",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Requests"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "RzcXDj",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "PkcEXN",
+              "name": "Chips",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "MV6rzR",
+                  "ref": "ds:LUcTan",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:lXs2ja": {
+                      "content": "Received · 2"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "3cGCCw",
+                  "ref": "ds:AdNrrb",
+                  "name": "Chip/Active",
+                  "descendants": {
+                    "ds:cUY4Fi": {
+                      "content": "Sent · 1"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "yDnxUB",
+              "ref": "ds:urCVIA",
+              "name": "People Row",
+              "descendants": {
+                "ds:ArHqyJ": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/avatars/avatar3.jpg",
+                    "mode": "cover"
+                  }
+                },
+                "ds:XPciBb": {
+                  "content": "Maya Chen"
+                },
+                "ds:0XJUix": {
+                  "content": "Sent 3 days ago"
+                },
+                "ds:GygVTw": {
+                  "type": "frame",
+                  "id": "c6PXGf",
+                  "name": "Actions",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "vpQQct",
+                      "ref": "ds:DTwJb",
+                      "name": "Button / Cancel",
+                      "descendants": {
+                        "ds:GyGLK": {
+                          "content": "Cancel"
+                        },
+                        "ds:uRXDu": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "JpyuYt",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "o5cLm8",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends/requests — Received requests to accept or decline, sent requests to cancel; accepting reveals presence. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "oNJ2et",
+      "name": "Friend requests / Accepted / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "ftYSfS",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "XnwV2d",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Crt6DP",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "5CaDJ2",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Xz25Uc",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Friend requests"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "qjjFRS",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "YyPJyJ",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "z325eh",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Received · 2",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Received · 2"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "oAjqoP",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Sent · 1",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Sent · 1"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "et7Bms",
+                  "name": "List",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "CCMov7",
+                      "ref": "ds:ogW5t",
+                      "name": "Alert / You and Mayan Echo are now friends",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:L7SHNm": {
+                          "content": "You and Mayan Echo are now friends"
+                        },
+                        "ds:F9kE6W": {
+                          "content": "You can see each other’s online status."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "JZki9r",
+                      "ref": "ds:pEvz1E",
+                      "name": "Friend Row/Online",
+                      "descendants": {
+                        "ds:Xuh20u": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/avatars/avatar1.jpg",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:02aOUU": {
+                          "content": "Mayan Echo"
+                        },
+                        "ds:EimJ1W": {
+                          "content": "Online"
+                        },
+                        "ds:9bARuq": {
+                          "type": "frame",
+                          "id": "mzNADz",
+                          "name": "Actions",
+                          "gap": 6,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "LtWK5A",
+                              "ref": "ds:Y4q2pj",
+                              "name": "Badge / New friend",
+                              "descendants": {
+                                "ds:IlFc9": {
+                                  "content": "New friend"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "whVJ5f",
+                      "ref": "ds:urCVIA",
+                      "name": "People Row",
+                      "descendants": {
+                        "ds:ArHqyJ": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/avatars/avatar3.jpg",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:XPciBb": {
+                          "content": "Lena Voss"
+                        },
+                        "ds:0XJUix": {
+                          "content": "6 mutual friends · Yesterday"
+                        },
+                        "ds:GygVTw": {
+                          "type": "frame",
+                          "id": "foSY6K",
+                          "name": "Actions",
+                          "gap": 6,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "ZkYoKp",
+                              "ref": "ds:exjwf",
+                              "name": "Button / Accept",
+                              "descendants": {
+                                "ds:E23bq6": {
+                                  "content": "Accept"
+                                },
+                                "ds:o7NXW": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "DggSUY",
+                              "ref": "ds:G5tJp",
+                              "name": "Button / Decline",
+                              "descendants": {
+                                "ds:d2zCI": {
+                                  "content": "Decline"
+                                },
+                                "ds:zDiHG": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends/requests — Received requests to accept or decline, sent requests to cancel; accepting reveals presence. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "wxG2xA",
+      "name": "Friend requests / Accepted / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "pevEPp",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "uUQEp9",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Requests"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "YnUdzo",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "BRS2VS",
+              "name": "Chips",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "7KyYWi",
+                  "ref": "ds:AdNrrb",
+                  "name": "Chip/Active",
+                  "descendants": {
+                    "ds:cUY4Fi": {
+                      "content": "Received · 2"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "JjYJ7T",
+                  "ref": "ds:LUcTan",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:lXs2ja": {
+                      "content": "Sent · 1"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "n2HoQg",
+              "ref": "ds:ogW5t",
+              "name": "Alert / You and Mayan Echo are now friends",
+              "width": "fill_container",
+              "descendants": {
+                "ds:L7SHNm": {
+                  "content": "You and Mayan Echo are now friends"
+                },
+                "ds:F9kE6W": {
+                  "content": "You can see each other’s online status."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "YBpE7j",
+              "ref": "ds:pEvz1E",
+              "name": "Friend Row/Online",
+              "descendants": {
+                "ds:Xuh20u": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/avatars/avatar1.jpg",
+                    "mode": "cover"
+                  }
+                },
+                "ds:02aOUU": {
+                  "content": "Mayan Echo"
+                },
+                "ds:EimJ1W": {
+                  "content": "Online"
+                },
+                "ds:9bARuq": {
+                  "type": "frame",
+                  "id": "CM8ZVw",
+                  "name": "Actions",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "558FaV",
+                      "ref": "ds:Y4q2pj",
+                      "name": "Badge / New",
+                      "descendants": {
+                        "ds:IlFc9": {
+                          "content": "New"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "P8bX2S",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "P2jMvH",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends/requests — Received requests to accept or decline, sent requests to cancel; accepting reveals presence. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "phnJFL",
+      "name": "Friend requests / No requests / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "BRYnPe",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "WNXmkc",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "BFax8f",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "jDQC9u",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "MRDBGY",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Friend requests"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "xao6Ux",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "rSbX2u",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "5JXuqJ",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Received · 2",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Received · 2"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Lsr6AG",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Sent · 1",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Sent · 1"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "XhZRQq",
+                  "name": "List",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Rdyxre",
+                      "name": "State Area",
+                      "width": "fill_container",
+                      "height": "fill_container",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "layout": "vertical",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "f4u6Rs",
+                          "ref": "ds:UacIqy",
+                          "name": "State / No friend requests",
+                          "descendants": {
+                            "ds:QTS6fY": {
+                              "icon": "user-plus"
+                            },
+                            "ds:LaYbWr": {
+                              "content": "No friend requests"
+                            },
+                            "ds:IowS15": {
+                              "content": "When someone adds you, you can accept it here."
+                            },
+                            "ds:PKR600/ds:NVe7y": {
+                              "content": "Find friends"
+                            },
+                            "ds:Sk1EVh": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 9170,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends/requests — Received requests to accept or decline, sent requests to cancel; accepting reveals presence. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "eH5zzj",
+      "name": "Friend requests / No requests / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Sp67qd",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "bbPcKF",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Requests"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "weCqNR",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "ffurQQ",
+              "name": "Chips",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "5MYpQF",
+                  "ref": "ds:AdNrrb",
+                  "name": "Chip/Active",
+                  "descendants": {
+                    "ds:cUY4Fi": {
+                      "content": "Received · 2"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "8KKzEJ",
+                  "ref": "ds:LUcTan",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:lXs2ja": {
+                      "content": "Sent · 1"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "4EbDex",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "iMHb3h",
+                  "ref": "ds:UacIqy",
+                  "name": "State / No friend requests",
+                  "descendants": {
+                    "ds:QTS6fY": {
+                      "icon": "user-plus"
+                    },
+                    "ds:LaYbWr": {
+                      "content": "No friend requests"
+                    },
+                    "ds:IowS15": {
+                      "content": "When someone adds you, you can accept it here."
+                    },
+                    "ds:PKR600/ds:NVe7y": {
+                      "content": "Find friends"
+                    },
+                    "ds:Sk1EVh": {
+                      "enabled": false
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "9pEQwM",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "jHPcQp",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 10710,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends/requests — Received requests to accept or decline, sent requests to cancel; accepting reveals presence. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "zDDQ8y",
+      "name": "Friend requests / Loading / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "qx3vdZ",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "EF6PWY",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "p8x4A4",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "GvPBP8",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ENQYrj",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Friend requests"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Cao9dG",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "h6yqdX",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "SVTnhT",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Received · 2",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Received · 2"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "YYVfs4",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Sent · 1",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Sent · 1"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "53kyUD",
+                  "name": "List",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "RA5CEa",
+                      "name": "Loading",
+                      "layout": "vertical",
+                      "gap": 24,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "J2HZLA",
+                          "name": "Skeleton Rows",
+                          "layout": "vertical",
+                          "gap": 0,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "RRrRHw",
+                              "ref": "ds:2Hcwnz",
+                              "name": "Skeleton/Person Row",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "2AHZia",
+                              "ref": "ds:2Hcwnz",
+                              "name": "Skeleton/Person Row",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "6EFJ2n",
+                              "ref": "ds:2Hcwnz",
+                              "name": "Skeleton/Person Row",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "TeFRF8",
+                              "ref": "ds:2Hcwnz",
+                              "name": "Skeleton/Person Row",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "Gw39qc",
+                              "ref": "ds:2Hcwnz",
+                              "name": "Skeleton/Person Row",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "xGJ6mb",
+                              "ref": "ds:2Hcwnz",
+                              "name": "Skeleton/Person Row",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "wPtR2p",
+                              "ref": "ds:2Hcwnz",
+                              "name": "Skeleton/Person Row",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "FNTSAq",
+                              "ref": "ds:2Hcwnz",
+                              "name": "Skeleton/Person Row",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "Au8zoG",
+                              "ref": "ds:2Hcwnz",
+                              "name": "Skeleton/Person Row",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "QWyQJJ",
+                              "ref": "ds:2Hcwnz",
+                              "name": "Skeleton/Person Row",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "msGCSr",
+                              "ref": "ds:2Hcwnz",
+                              "name": "Skeleton/Person Row",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "HJHZaD",
+                              "ref": "ds:2Hcwnz",
+                              "name": "Skeleton/Person Row",
+                              "width": "fill_container"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 11200,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends/requests — Received requests to accept or decline, sent requests to cancel; accepting reveals presence. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "ArPurX",
+      "name": "Friend requests / Loading / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "YrBpTQ",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "YPorGk",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Requests"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "kjmJr7",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "rTX7cB",
+              "name": "Chips",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "6dcUAT",
+                  "ref": "ds:AdNrrb",
+                  "name": "Chip/Active",
+                  "descendants": {
+                    "ds:cUY4Fi": {
+                      "content": "Received · 2"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "EfPzjV",
+                  "ref": "ds:LUcTan",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:lXs2ja": {
+                      "content": "Sent · 1"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "F2NkPs",
+              "name": "Loading",
+              "layout": "vertical",
+              "gap": 24,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "wwbnF3",
+                  "name": "Skeleton Rows",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "8z32WZ",
+                      "ref": "ds:2Hcwnz",
+                      "name": "Skeleton/Person Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "vq9q9x",
+                      "ref": "ds:2Hcwnz",
+                      "name": "Skeleton/Person Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "anJM4s",
+                      "ref": "ds:2Hcwnz",
+                      "name": "Skeleton/Person Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "HFabj8",
+                      "ref": "ds:2Hcwnz",
+                      "name": "Skeleton/Person Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "UhJC6p",
+                      "ref": "ds:2Hcwnz",
+                      "name": "Skeleton/Person Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "4BSMUN",
+                      "ref": "ds:2Hcwnz",
+                      "name": "Skeleton/Person Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Ky7vpz",
+                      "ref": "ds:2Hcwnz",
+                      "name": "Skeleton/Person Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "oJPeEw",
+                      "ref": "ds:2Hcwnz",
+                      "name": "Skeleton/Person Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "7rn8fB",
+                      "ref": "ds:2Hcwnz",
+                      "name": "Skeleton/Person Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "tgfs2T",
+                      "ref": "ds:2Hcwnz",
+                      "name": "Skeleton/Person Row",
+                      "width": "fill_container"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "hoRNrJ",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "mtQgti",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 12740,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends/requests — Received requests to accept or decline, sent requests to cancel; accepting reveals presence. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "ka9bWL",
+      "name": "Friend requests / Error / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "nr49sv",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "5bWDab",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "HJzY4h",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "P86QBP",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "5paV4s",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Friend requests"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "3QpFqE",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "zkRQyp",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "TzVJuj",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Received · 2",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Received · 2"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "abNETP",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Sent · 1",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Sent · 1"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "EuLL2o",
+                  "name": "List",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "WC9aCC",
+                      "name": "State Area",
+                      "width": "fill_container",
+                      "height": "fill_container",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "layout": "vertical",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "MtRsru",
+                          "ref": "ds:LQ8GwL",
+                          "name": "State / Requests are unavailable right now",
+                          "descendants": {
+                            "ds:zG3uZd": {
+                              "icon": "triangle-alert"
+                            },
+                            "ds:ATKZVK": {
+                              "content": "Requests are unavailable right now"
+                            },
+                            "ds:h7OAoY": {
+                              "content": "Try again in a moment."
+                            },
+                            "ds:ydkfG5/ds:NVe7y": {
+                              "content": "Try again"
+                            },
+                            "ds:voqjVU/ds:i6a4e": {
+                              "content": "Back to home"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 13230,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends/requests — Received requests to accept or decline, sent requests to cancel; accepting reveals presence. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "rAjh64",
+      "name": "Friend requests / Error / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "mkPsNK",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "dnrJRb",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Requests"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "WLPDf3",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "YBcmLj",
+              "name": "Chips",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "pAXwqf",
+                  "ref": "ds:AdNrrb",
+                  "name": "Chip/Active",
+                  "descendants": {
+                    "ds:cUY4Fi": {
+                      "content": "Received · 2"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "dC5JDD",
+                  "ref": "ds:LUcTan",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:lXs2ja": {
+                      "content": "Sent · 1"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "uVjSiA",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "zxAY73",
+                  "ref": "ds:LQ8GwL",
+                  "name": "State / Requests are unavailable right now",
+                  "descendants": {
+                    "ds:zG3uZd": {
+                      "icon": "triangle-alert"
+                    },
+                    "ds:ATKZVK": {
+                      "content": "Requests are unavailable right now"
+                    },
+                    "ds:h7OAoY": {
+                      "content": "Try again in a moment."
+                    },
+                    "ds:ydkfG5/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:voqjVU/ds:i6a4e": {
+                      "content": "Back to home"
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "fmT7AQ",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "FrjNSH",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 14770,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — /friends/requests — Received requests to accept or decline, sent requests to cancel; accepting reveals presence. Concept."
+    }
+  ]
+}

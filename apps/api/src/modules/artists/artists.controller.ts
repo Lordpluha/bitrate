@@ -1,3 +1,4 @@
+import { HttpCacheable } from '@common/interceptors/http-cacheable.decorator'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
 import type { ArtistAuthRequest } from '@modules/artists-auth/types'
 import type { UserAuthRequest } from '@modules/users-auth/types'
@@ -24,7 +25,9 @@ import {
   FollowArtistSwagger,
   GetArtistByIdSwagger,
   GetArtistByUsernameSwagger,
+  GetArtistPlaylistsSwagger,
   GetArtistsSwagger,
+  GetArtistTopTracksSwagger,
   GetFollowingSwagger,
   UnfollowArtistSwagger,
   UpdateArtistSwagger,
@@ -42,6 +45,7 @@ export class ArtistsController {
 
   /** Runs the get all operation. */
   @GetArtistsSwagger()
+  @HttpCacheable()
   @Get('')
   async getAll(
     @Query('username') username?: ArtistEntity['username'],
@@ -55,8 +59,30 @@ export class ArtistsController {
     })
   }
 
+  /** The artist's most played tracks. */
+  @GetArtistTopTracksSwagger()
+  @Get(':id/top-tracks')
+  getTopTracks(
+    @Param('id', ParseUUIDPipe) id: ArtistEntity['id'],
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+  ) {
+    return this.artistsService.findTopTracks(id, limit)
+  }
+
+  /** Public playlists featuring the artist. */
+  @GetArtistPlaylistsSwagger()
+  @Get(':id/playlists')
+  getPlaylists(
+    @Param('id', ParseUUIDPipe) id: ArtistEntity['id'],
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+  ) {
+    return this.artistsService.findPlaylists(id, page, limit)
+  }
+
   /** Runs the get by id operation. */
   @GetArtistByIdSwagger()
+  @HttpCacheable()
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: ArtistEntity['id']) {
     return await this.artistsService.findById(id)
@@ -64,6 +90,7 @@ export class ArtistsController {
 
   /** Runs the get by username operation. */
   @GetArtistByUsernameSwagger()
+  @HttpCacheable()
   @Get('username/:username')
   getByUsername(@Param('username') username: ArtistEntity['username']) {
     return this.artistsService.findByUsername(username)

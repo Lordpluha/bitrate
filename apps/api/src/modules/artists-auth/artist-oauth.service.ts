@@ -16,6 +16,7 @@ import {
 import { ConfigService } from '@nestjs/config'
 import { Prisma } from '@prisma/client'
 import { TokenService } from '../tokens/token.service'
+import { type SessionClient, sessionActivity } from './session-client'
 
 /** What the artist accepted before leaving for the provider. */
 interface LegalAcceptance {
@@ -71,9 +72,13 @@ export class ArtistOAuthService {
   }
 
   /** Runs the handle google callback operation. */
-  async handleGoogleCallback(code: string, acceptance: LegalAcceptance): Promise<LoginResult> {
+  async handleGoogleCallback(
+    code: string,
+    acceptance: LegalAcceptance,
+    client: SessionClient = {},
+  ): Promise<LoginResult> {
     const profile = await this.exchangeGoogleCode(code)
-    return this.findOrCreateArtistAndLogin('google', profile, acceptance)
+    return this.findOrCreateArtistAndLogin('google', profile, acceptance, client)
   }
 
   /** Runs the get facebook auth url operation. */
@@ -91,9 +96,13 @@ export class ArtistOAuthService {
   }
 
   /** Runs the handle facebook callback operation. */
-  async handleFacebookCallback(code: string, acceptance: LegalAcceptance): Promise<LoginResult> {
+  async handleFacebookCallback(
+    code: string,
+    acceptance: LegalAcceptance,
+    client: SessionClient = {},
+  ): Promise<LoginResult> {
     const profile = await this.exchangeFacebookCode(code)
-    return this.findOrCreateArtistAndLogin('facebook', profile, acceptance)
+    return this.findOrCreateArtistAndLogin('facebook', profile, acceptance, client)
   }
 
   /** Runs the build redirect uri operation. */
@@ -170,6 +179,7 @@ export class ArtistOAuthService {
     provider: string,
     profile: OAuthProfile,
     acceptance: LegalAcceptance,
+    client: SessionClient,
   ) {
     const existing = await this.prisma.artistOAuthAccount.findUnique({
       where: { provider_providerAccountId: { provider, providerAccountId: profile.id } },
@@ -180,7 +190,7 @@ export class ArtistOAuthService {
       if (existing.artist.deletedAt) {
         throw new UnauthorizedException('Artist account is unavailable')
       }
-      return this.sessionOrPending(existing.artist)
+      return this.sessionOrPending(existing.artist, client)
     }
 
     const existingArtist = await this.prisma.artist.findUnique({ where: { email: profile.email } })
@@ -224,24 +234,27 @@ export class ArtistOAuthService {
       data: { artistId: artist.id, provider, providerAccountId: profile.id },
     })
 
-    return this.sessionOrPending(artist)
+    return this.sessionOrPending(artist, client)
   }
 
   /** Runs the session or pending operation. */
-  private async sessionOrPending(artist: {
-    id: string
-    username: string
-    twoFactorEnabled: boolean
-  }) {
+  private async sessionOrPending(
+    artist: {
+      id: string
+      username: string
+      twoFactorEnabled: boolean
+    },
+    client: SessionClient,
+  ) {
     if (artist.twoFactorEnabled) {
       const pendingToken = await this.token.generateTwoFAPendingToken(artist.id)
       return { requires2fa: true as const, pendingToken }
     }
-    return this.createSession(artist)
+    return this.createSession(artist, client)
   }
 
   /** Runs the create session operation. */
-  private async createSession(artist: { id: string; username: string }) {
+  private async createSession(artist: { id: string; username: string }, client: SessionClient) {
     const access_token = await this.token.generateAccessToken(artist.id, artist.username, 'artist')
     const refresh_token = await this.token.generateRefreshToken(
       artist.id,
@@ -255,6 +268,7 @@ export class ArtistOAuthService {
         refresh_token: this.token.hashToken(refresh_token),
         artistId: artist.id,
         expiresAt: this.token.getRefreshTokenExpiresAt(),
+        ...sessionActivity(client),
       },
     })
 

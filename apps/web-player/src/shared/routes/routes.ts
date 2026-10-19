@@ -1,5 +1,7 @@
 export const ROUTES = {
   landing: '/',
+  /** A landing scene by its id, e.g. `/#library`. */
+  landingScene: (id: string) => `/#${id}`,
   auth: {
     login: '/auth/login',
     twoFactorLogin: '/auth/login/2fa',
@@ -15,6 +17,13 @@ export const ROUTES = {
         : '/verify-email',
   },
   main: '/main',
+  activity: '/main/activity',
+  charts: '/main/charts',
+  friends: '/main/friends',
+  friendRequests: '/main/friends/requests',
+  findFriends: '/main/friends/find',
+  stats: '/main/stats',
+  notifications: '/main/notifications',
   likedSongs: '/main/liked-songs',
   library: '/main/library',
   createPlaylist: '/main/library?create=playlist',
@@ -38,7 +47,4 @@ export const ROUTES = {
   community: '/legal/community',
   complaints: '/legal/complaints',
   copyright: '/legal/copyright',
-  download: '#download',
-  plans: '#plans',
-  forStudents: '#for-students',
 } as const

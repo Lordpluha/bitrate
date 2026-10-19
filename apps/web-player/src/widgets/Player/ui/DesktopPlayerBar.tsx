@@ -53,22 +53,21 @@ export const DesktopPlayerBar = ({
   volume,
 }: DesktopPlayerBarProps) => (
   <div
-    className={`fixed bottom-0 left-0 right-0 h-22.5 bg-background border-t border-border px-4 hidden xl:flex items-center justify-between gap-4 z-50 transition-transform duration-300 ease-in-out ${
-      isVisible ? 'translate-y-0' : 'translate-y-full'
+    className={`fixed inset-x-4 bottom-4 z-50 hidden h-22 items-center gap-6 rounded-2xl border border-border bg-card px-5.5 shadow-2xl transition-transform duration-300 ease-in-out xl:flex ${
+      isVisible ? 'translate-y-0' : 'translate-y-[calc(100%+16px)]'
     }`}
   >
-    <div className="w-[25%]">
+    <div className="w-80 min-w-0 shrink-0">
       <TrackInfo
         artist={artist}
         coverUrl={coverUrl}
         isLiked={isLiked}
         onLikeToggle={onLikeToggle}
-        onPictureInPicture={onPictureInPicture}
         title={title}
       />
     </div>
 
-    <div className="w-[40%] flex justify-center">
+    <div className="flex min-w-0 flex-1 justify-center">
       <PlayerControls
         currentTime={currentTime}
         duration={duration}
@@ -84,9 +83,10 @@ export const DesktopPlayerBar = ({
       />
     </div>
 
-    <div className="w-[35%] flex justify-end">
+    <div className="flex shrink-0 justify-end">
       <PlayerActions
         onExpand={onExpand}
+        onPictureInPicture={onPictureInPicture}
         onVolumeChange={onVolumeChange}
         volume={volume}
       />

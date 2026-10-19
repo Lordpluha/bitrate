@@ -1,27 +1,40 @@
 'use client'
 
-import { useMeSettings, useUpdateMeSettings } from '@/entities/Me'
+import {
+  type MeSettings,
+  useMeSettings,
+  useUpdateMeSettings,
+} from '@/entities/Me'
 import { showApiErrorToast } from '@/shared/api/feedback'
 import { useAuth } from '@/shared/hooks'
+import { useI18n } from '@/shared/i18n'
 import {
   SettingsRow,
   SettingsSection,
 } from '@/views/Settings/ui/controls/SettingsSection'
 import { SettingsSwitch } from '@/views/Settings/ui/controls/SettingsSwitch'
 
+type PrivacyKey = keyof Pick<
+  MeSettings,
+  | 'explicitContent'
+  | 'followersVisible'
+  | 'privateSession'
+  | 'publicPlaylistsOnProfile'
+  | 'showListeningActivity'
+>
+
+/** Account privacy, applied by the server: activity feed, follower lists, profile playlists, history. */
 export const ServerPrivacySettingsSection = () => {
+  const { t } = useI18n()
   const { isAuthenticated } = useAuth()
   const { data: settings } = useMeSettings(isAuthenticated)
   const updateSettings = useUpdateMeSettings()
 
   if (!settings) return null
 
-  const updatePreference = (
-    key: 'explicitContent' | 'privateSession',
-    value: boolean,
-  ) => {
+  const toggle = (key: PrivacyKey) => {
     updateSettings.mutate(
-      { [key]: value },
+      { [key]: !settings[key] },
       {
         onError: (error) =>
           showApiErrorToast(error, 'Unable to save this preference.'),
@@ -29,35 +42,47 @@ export const ServerPrivacySettingsSection = () => {
     )
   }
 
+  const row = (key: PrivacyKey, label: string, description?: string) => (
+    <SettingsRow description={description} label={label}>
+      <SettingsSwitch
+        ariaLabel={label}
+        checked={settings[key]}
+        onChange={() => toggle(key)}
+      />
+    </SettingsRow>
+  )
+
   return (
-    <SettingsSection
-      searchTerms={['explicit content', 'private session']}
-      title="Account privacy"
-    >
-      <SettingsRow
-        description="Allow tracks marked as explicit to appear in your account."
-        label="Explicit content"
-      >
-        <SettingsSwitch
-          ariaLabel="Explicit content"
-          checked={settings.explicitContent}
-          onChange={() =>
-            updatePreference('explicitContent', !settings.explicitContent)
-          }
-        />
-      </SettingsRow>
-      <SettingsRow
-        description="Keep your listening activity private for this account."
-        label="Private session"
-      >
-        <SettingsSwitch
-          ariaLabel="Private session"
-          checked={settings.privateSession}
-          onChange={() =>
-            updatePreference('privateSession', !settings.privateSession)
-          }
-        />
-      </SettingsRow>
-    </SettingsSection>
+    <>
+      <SettingsSection title={t('settings.privacy.activity')}>
+        {row(
+          'showListeningActivity',
+          t('settings.privacy.activity.label'),
+          t('settings.privacy.activity.description'),
+        )}
+        {row(
+          'privateSession',
+          'Private session',
+          'Listening is not saved to your history and does not appear in activity.',
+        )}
+      </SettingsSection>
+
+      <SettingsSection title={t('settings.privacy.profile')}>
+        {row(
+          'followersVisible',
+          t('settings.privacy.followers'),
+          t('settings.privacy.followers.description'),
+        )}
+        {row('publicPlaylistsOnProfile', t('settings.privacy.playlists'))}
+      </SettingsSection>
+
+      <SettingsSection searchTerms={['explicit content']} title="Content">
+        {row(
+          'explicitContent',
+          'Explicit content',
+          'Show tracks marked as explicit in search and recommendations.',
+        )}
+      </SettingsSection>
+    </>
   )
 }

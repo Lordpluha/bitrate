@@ -25,7 +25,7 @@ export default defineConfig({
         '**/*.unit-spec.*',
         '**/*.int-spec.*',
       ],
-      outDir: 'dist/types',
+      outDirs: 'dist/types',
       tsconfigPath: './tsconfig.build.json',
       insertTypesEntry: true,
     }),

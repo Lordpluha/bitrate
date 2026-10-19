@@ -10,6 +10,9 @@ export const UpdateSettingsSchema = z.object({
   autoplay: z.boolean().optional(),
   explicitContent: z.boolean().optional(),
   privateSession: z.boolean().optional(),
+  showListeningActivity: z.boolean().optional(),
+  followersVisible: z.boolean().optional(),
+  publicPlaylistsOnProfile: z.boolean().optional(),
 })
 export class UpdateSettingsDto extends createZodDto(UpdateSettingsSchema) {}
 

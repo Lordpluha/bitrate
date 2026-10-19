@@ -53,10 +53,10 @@ export const SearchFilterTabs = ({
         <button
           aria-selected={activeTab === tab}
           className={cn(
-            'shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors',
+            'flex h-8 shrink-0 items-center rounded-full border px-3.5 text-[13px] text-foreground transition-colors',
             activeTab === tab
-              ? 'bg-text text-background'
-              : 'bg-surface text-text hover:bg-surface-hover',
+              ? 'border-primary bg-primary font-semibold text-primary-foreground'
+              : 'border-border hover:bg-surface',
           )}
           key={tab}
           onClick={() => onTabChange(tab)}

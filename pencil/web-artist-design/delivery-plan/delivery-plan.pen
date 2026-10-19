@@ -1,0 +1,2749 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "mQpQmL",
+      "name": "Artist / Delivery plan / Desktop / Dark",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "rhqKL8",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6bAVSI": {
+              "type": "ref",
+              "id": "uQMBCL",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "disc-3"
+                },
+                "ds:GZQzF3": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Music / Afterglow / Delivery"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Release overview"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "uLn7w6",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "bACQ4j",
+                  "name": "Release Head",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "FdJzEb",
+                      "ref": "ds:rUgRzr",
+                      "name": "Media/Cover",
+                      "width": 64,
+                      "height": 64,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "DXBfSs",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "PBZJXY",
+                          "ref": "ds:RoXXJv",
+                          "name": "Text/H2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Afterglow"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "pG4Btc",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Single · Approved for Bitrate review · Planned Sep 18, 2026 · Europe/Kyiv"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "rbDGti",
+                      "ref": "ds:xtDM73",
+                      "name": "Status/Success",
+                      "descendants": {
+                        "ds:HSv7ty": {
+                          "content": "Approved"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ooxqzT",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "DqMXfA",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Overview",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Overview"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "PPMiRR",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Tasks",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Tasks"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "W34wvt",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Feedback",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Feedback"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Jm2UpY",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Delivery",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Delivery"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "xJtQ6E",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Versions",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Versions"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "HEwL8f",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Activity",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Activity"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "qEE8jT",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "yjMnBA",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "VCVrpb",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "bH8Qyq",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "uoxBNV",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "Tn7454",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Release timing"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "wwn7CB",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "This remains a plan until the release is submitted for delivery."
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "mgLBHK",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "tVpbPN",
+                                      "ref": "ds:j04F4",
+                                      "name": "Input / Release date",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:l4agQ": {
+                                          "content": "Release date"
+                                        },
+                                        "ds:iI0CE": {
+                                          "content": "Sep 18, 2026"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "H4QujM",
+                                      "ref": "ds:j04F4",
+                                      "name": "Input / Time",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:l4agQ": {
+                                          "content": "Time"
+                                        },
+                                        "ds:iI0CE": {
+                                          "content": "00:00"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "rpxQmi",
+                                      "ref": "ds:Kfq8t",
+                                      "name": "Select / Time zone",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:PLkpD": {
+                                          "content": "Time zone"
+                                        },
+                                        "ds:USlYG": {
+                                          "content": "Europe/Kyiv"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "npLqjB",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Changing the time zone changes the displayed local time, not the selected instant."
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Boy3hS",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "CPofbb",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "mZ2DUP",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "kKDxvb",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Destinations"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "pufMhB",
+                                      "ref": "ds:FJUa1",
+                                      "name": "Badge / 0 of 3 ready",
+                                      "descendants": {
+                                        "ds:BI0Pd": {
+                                          "content": "0 of 3 ready"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "KwdTKp",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Spotify"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Connect an account to continue."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "4xXRSS",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "n6KvuH",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Not connected"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "YPcTB6",
+                                          "ref": "ds:G5tJp",
+                                          "name": "Button / Connect",
+                                          "descendants": {
+                                            "ds:d2zCI": {
+                                              "content": "Connect"
+                                            },
+                                            "ds:zDiHG": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "EDYNVS",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Apple Music"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Connection request is still pending."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "rCbGJf",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "TLcNuK",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Pending"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "6fN2V3",
+                                          "ref": "ds:DTwJb",
+                                          "name": "Button / View status",
+                                          "descendants": {
+                                            "ds:GyGLK": {
+                                              "content": "View status"
+                                            },
+                                            "ds:uRXDu": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "u6NBdq",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "YouTube Music"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Delivery is not available in this demo."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "nwfyi3",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "P7c49v",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Unavailable"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ZdEVdJ",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "GHeKE8",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "MgD3BG",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "pWDBdF",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "DyVHfp",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Before you continue"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "T7cJDx",
+                                  "ref": "ds:ye2ZlZ",
+                                  "name": "Checklist Row/Done",
+                                  "descendants": {
+                                    "ds:BWmC54": {
+                                      "content": "Bitrate review approved"
+                                    },
+                                    "ds:ui1TFi": {
+                                      "enabled": false
+                                    },
+                                    "ds:4QtRy2": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "zv6NZn",
+                                  "ref": "ds:ye2ZlZ",
+                                  "name": "Checklist Row/Done",
+                                  "descendants": {
+                                    "ds:BWmC54": {
+                                      "content": "Release date selected"
+                                    },
+                                    "ds:ui1TFi": {
+                                      "enabled": false
+                                    },
+                                    "ds:4QtRy2": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "zTTJij",
+                                  "ref": "ds:KdKXRG",
+                                  "name": "Checklist Row/Blocked",
+                                  "descendants": {
+                                    "ds:Vmx3Ga": {
+                                      "content": "No destination is ready"
+                                    },
+                                    "ds:SolG4j": {
+                                      "enabled": false
+                                    },
+                                    "ds:IkujNN": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "78qqLv",
+                                  "ref": "ds:yjiPHo",
+                                  "name": "Text/Eyebrow",
+                                  "content": "NEXT ACTION"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "QfGDzr",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Connect at least one destination"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "TeEHyP",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Save delivery plan",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Save delivery plan"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "4mJtRd",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Preview timeline",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Preview timeline"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "r8HQUW",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Saving this plan does not send the release to any external platform."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/dashboard/distribution (placeholder in code) · designed per release — Timing and destinations; saving never sends anything."
+    },
+    {
+      "type": "frame",
+      "id": "qnLW6h",
+      "name": "Artist / Delivery plan / Desktop / Light",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "kUn8tc",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6bAVSI": {
+              "type": "ref",
+              "id": "D9vZ9f",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "disc-3"
+                },
+                "ds:GZQzF3": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Music / Afterglow / Delivery"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Release overview"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "KP5wT3",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "HWpxnc",
+                  "name": "Release Head",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "pZMTBG",
+                      "ref": "ds:rUgRzr",
+                      "name": "Media/Cover",
+                      "width": 64,
+                      "height": 64,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "XCkGnf",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "WtwC9W",
+                          "ref": "ds:RoXXJv",
+                          "name": "Text/H2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Afterglow"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ZkC5CQ",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Single · Approved for Bitrate review · Planned Sep 18, 2026 · Europe/Kyiv"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "KeDiWs",
+                      "ref": "ds:xtDM73",
+                      "name": "Status/Success",
+                      "descendants": {
+                        "ds:HSv7ty": {
+                          "content": "Approved"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "JhkEWS",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Qs6WeN",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Overview",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Overview"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "AmjcfP",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Tasks",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Tasks"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "3e2bfm",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Feedback",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Feedback"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Lk5RDm",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Delivery",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Delivery"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "oK8wsn",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Versions",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Versions"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jXbgKc",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Activity",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Activity"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "CcVr5Z",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "KpcE6Z",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "z8oS8g",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "JgiYKp",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "gTyK3j",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "C6JvY6",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Release timing"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Kj8BYs",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "This remains a plan until the release is submitted for delivery."
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "zayNMp",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "Zt93mz",
+                                      "ref": "ds:j04F4",
+                                      "name": "Input / Release date",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:l4agQ": {
+                                          "content": "Release date"
+                                        },
+                                        "ds:iI0CE": {
+                                          "content": "Sep 18, 2026"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "WWf9Px",
+                                      "ref": "ds:j04F4",
+                                      "name": "Input / Time",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:l4agQ": {
+                                          "content": "Time"
+                                        },
+                                        "ds:iI0CE": {
+                                          "content": "00:00"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "bdUdy2",
+                                      "ref": "ds:Kfq8t",
+                                      "name": "Select / Time zone",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:PLkpD": {
+                                          "content": "Time zone"
+                                        },
+                                        "ds:USlYG": {
+                                          "content": "Europe/Kyiv"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ZQBh4V",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Changing the time zone changes the displayed local time, not the selected instant."
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ZzzWiZ",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "t5Tx5b",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "yo3Jkb",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "jUQzMG",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Destinations"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "QrK7mh",
+                                      "ref": "ds:FJUa1",
+                                      "name": "Badge / 0 of 3 ready",
+                                      "descendants": {
+                                        "ds:BI0Pd": {
+                                          "content": "0 of 3 ready"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "jm774P",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Spotify"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Connect an account to continue."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "TdB34o",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "NpMEBx",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Not connected"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "FK6iV8",
+                                          "ref": "ds:G5tJp",
+                                          "name": "Button / Connect",
+                                          "descendants": {
+                                            "ds:d2zCI": {
+                                              "content": "Connect"
+                                            },
+                                            "ds:zDiHG": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "cCXZwP",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Apple Music"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Connection request is still pending."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "gioU3P",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "mSmbpC",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Pending"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "siUFX3",
+                                          "ref": "ds:DTwJb",
+                                          "name": "Button / View status",
+                                          "descendants": {
+                                            "ds:GyGLK": {
+                                              "content": "View status"
+                                            },
+                                            "ds:uRXDu": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "zAj4Uh",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "YouTube Music"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Delivery is not available in this demo."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "rjk3et",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "ovzUKL",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Unavailable"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "CSfbxP",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "uh2QMW",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "oahCeu",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "eRiwZC",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "LLLFAD",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Before you continue"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "3Skhf4",
+                                  "ref": "ds:ye2ZlZ",
+                                  "name": "Checklist Row/Done",
+                                  "descendants": {
+                                    "ds:BWmC54": {
+                                      "content": "Bitrate review approved"
+                                    },
+                                    "ds:ui1TFi": {
+                                      "enabled": false
+                                    },
+                                    "ds:4QtRy2": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Xhdgo3",
+                                  "ref": "ds:ye2ZlZ",
+                                  "name": "Checklist Row/Done",
+                                  "descendants": {
+                                    "ds:BWmC54": {
+                                      "content": "Release date selected"
+                                    },
+                                    "ds:ui1TFi": {
+                                      "enabled": false
+                                    },
+                                    "ds:4QtRy2": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "2nTZRp",
+                                  "ref": "ds:KdKXRG",
+                                  "name": "Checklist Row/Blocked",
+                                  "descendants": {
+                                    "ds:Vmx3Ga": {
+                                      "content": "No destination is ready"
+                                    },
+                                    "ds:SolG4j": {
+                                      "enabled": false
+                                    },
+                                    "ds:IkujNN": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "pD3G5X",
+                                  "ref": "ds:yjiPHo",
+                                  "name": "Text/Eyebrow",
+                                  "content": "NEXT ACTION"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "NiSnp2",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Connect at least one destination"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "XqxmWj",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Save delivery plan",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Save delivery plan"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "i2z4er",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Preview timeline",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Preview timeline"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Kvcq3D",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Saving this plan does not send the release to any external platform."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "/dashboard/distribution (placeholder in code) · designed per release — Timing and destinations; saving never sends anything."
+    },
+    {
+      "type": "frame",
+      "id": "kQM2hq",
+      "name": "Artist / Delivery plan / Desktop / Dim",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "NJMvKC",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6bAVSI": {
+              "type": "ref",
+              "id": "ABsm5V",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "disc-3"
+                },
+                "ds:GZQzF3": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Music / Afterglow / Delivery"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Release overview"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "yzMyeQ",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "WbweZg",
+                  "name": "Release Head",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "CrwFpg",
+                      "ref": "ds:rUgRzr",
+                      "name": "Media/Cover",
+                      "width": 64,
+                      "height": 64,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "FnTgkh",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "KDvJiw",
+                          "ref": "ds:RoXXJv",
+                          "name": "Text/H2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Afterglow"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "gBXEJy",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Single · Approved for Bitrate review · Planned Sep 18, 2026 · Europe/Kyiv"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "TntfE2",
+                      "ref": "ds:xtDM73",
+                      "name": "Status/Success",
+                      "descendants": {
+                        "ds:HSv7ty": {
+                          "content": "Approved"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "4f6Xh7",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "LzNd6L",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Overview",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Overview"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ynu4sE",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Tasks",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Tasks"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "zG8rAY",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Feedback",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Feedback"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "7fZ8ud",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Delivery",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Delivery"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "epCGHG",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Versions",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Versions"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "vQGkyH",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Activity",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Activity"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "7btPco",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "iA7B3e",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "UX2UzP",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "HaEhWF",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "37AzJt",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "P4rKmw",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Release timing"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "c895mG",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "This remains a plan until the release is submitted for delivery."
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "XWUBEm",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "5ozznh",
+                                      "ref": "ds:j04F4",
+                                      "name": "Input / Release date",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:l4agQ": {
+                                          "content": "Release date"
+                                        },
+                                        "ds:iI0CE": {
+                                          "content": "Sep 18, 2026"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "BbTdtf",
+                                      "ref": "ds:j04F4",
+                                      "name": "Input / Time",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:l4agQ": {
+                                          "content": "Time"
+                                        },
+                                        "ds:iI0CE": {
+                                          "content": "00:00"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "zatdm9",
+                                      "ref": "ds:Kfq8t",
+                                      "name": "Select / Time zone",
+                                      "width": "fill_container",
+                                      "descendants": {
+                                        "ds:PLkpD": {
+                                          "content": "Time zone"
+                                        },
+                                        "ds:USlYG": {
+                                          "content": "Europe/Kyiv"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "i5Wr9b",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Changing the time zone changes the displayed local time, not the selected instant."
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "RgvWVJ",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "z2UBSe",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "K8uuY3",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "Vdpm7w",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Destinations"
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "uDYSfs",
+                                      "ref": "ds:FJUa1",
+                                      "name": "Badge / 0 of 3 ready",
+                                      "descendants": {
+                                        "ds:BI0Pd": {
+                                          "content": "0 of 3 ready"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "znKj5x",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Spotify"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Connect an account to continue."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "qR7Nyt",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "nounes",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Not connected"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "p8kmk3",
+                                          "ref": "ds:G5tJp",
+                                          "name": "Button / Connect",
+                                          "descendants": {
+                                            "ds:d2zCI": {
+                                              "content": "Connect"
+                                            },
+                                            "ds:zDiHG": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "WhVZxN",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Apple Music"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Connection request is still pending."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "VG6tgf",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "f4jD2A",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Pending"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "LvNprR",
+                                          "ref": "ds:DTwJb",
+                                          "name": "Button / View status",
+                                          "descendants": {
+                                            "ds:GyGLK": {
+                                              "content": "View status"
+                                            },
+                                            "ds:uRXDu": {
+                                              "enabled": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "JJdinB",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "YouTube Music"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Delivery is not available in this demo."
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "srFrsj",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "E8ovb6",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Unavailable"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "wfdiwb",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "KCWHEm",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "ffBkLP",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "kZkms5",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "Vgouwi",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Before you continue"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "J4DUqp",
+                                  "ref": "ds:ye2ZlZ",
+                                  "name": "Checklist Row/Done",
+                                  "descendants": {
+                                    "ds:BWmC54": {
+                                      "content": "Bitrate review approved"
+                                    },
+                                    "ds:ui1TFi": {
+                                      "enabled": false
+                                    },
+                                    "ds:4QtRy2": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "JgfVqk",
+                                  "ref": "ds:ye2ZlZ",
+                                  "name": "Checklist Row/Done",
+                                  "descendants": {
+                                    "ds:BWmC54": {
+                                      "content": "Release date selected"
+                                    },
+                                    "ds:ui1TFi": {
+                                      "enabled": false
+                                    },
+                                    "ds:4QtRy2": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "HeAT8A",
+                                  "ref": "ds:KdKXRG",
+                                  "name": "Checklist Row/Blocked",
+                                  "descendants": {
+                                    "ds:Vmx3Ga": {
+                                      "content": "No destination is ready"
+                                    },
+                                    "ds:SolG4j": {
+                                      "enabled": false
+                                    },
+                                    "ds:IkujNN": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "4debxR",
+                                  "ref": "ds:yjiPHo",
+                                  "name": "Text/Eyebrow",
+                                  "content": "NEXT ACTION"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "NJWZtQ",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Connect at least one destination"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "tYok26",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Save delivery plan",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Save delivery plan"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "KqqoyT",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Preview timeline",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Preview timeline"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "eyPScg",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Saving this plan does not send the release to any external platform."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "/dashboard/distribution (placeholder in code) · designed per release — Timing and destinations; saving never sends anything."
+    },
+    {
+      "type": "frame",
+      "id": "mzuBjU",
+      "name": "Artist / Delivery plan / Mobile / Dark",
+      "width": 390,
+      "height": 1800,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "hFxAx8",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1800,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "thMUiw",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "QH85xj",
+                  "name": "Release Head",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "96qTiS",
+                      "ref": "ds:rUgRzr",
+                      "name": "Media/Cover",
+                      "width": 64,
+                      "height": 64,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Xi9twq",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "3VAJ7j",
+                          "ref": "ds:RoXXJv",
+                          "name": "Text/H2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Afterglow"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "vAuQeo",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Single · Approved for Bitrate review · Planned Sep 18, 2026 · Europe/Kyiv"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "PQ35nJ",
+                      "ref": "ds:xtDM73",
+                      "name": "Status/Success",
+                      "descendants": {
+                        "ds:HSv7ty": {
+                          "content": "Approved"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "sSJhXy",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "LAR8js",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Overview",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Overview"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "aiFSyX",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Tasks",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Tasks"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "7DgDCV",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Feedback",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Feedback"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "8cvLGH",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Delivery",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Delivery"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "55oJGf",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Versions",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Versions"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "o27beQ",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Activity",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Activity"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "hCDRDf",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "kyHZyS",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "oxfbt3",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "vAZmdm",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Release timing"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "XQbJVT",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "This remains a plan until the release is submitted for delivery."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "eGqgrb",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "WfEY5u",
+                              "ref": "ds:j04F4",
+                              "name": "Input / Release date",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:l4agQ": {
+                                  "content": "Release date"
+                                },
+                                "ds:iI0CE": {
+                                  "content": "Sep 18, 2026"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "rMEgJb",
+                              "ref": "ds:j04F4",
+                              "name": "Input / Time",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:l4agQ": {
+                                  "content": "Time"
+                                },
+                                "ds:iI0CE": {
+                                  "content": "00:00"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "oMXqJr",
+                              "ref": "ds:Kfq8t",
+                              "name": "Select / Time zone",
+                              "width": "fill_container",
+                              "descendants": {
+                                "ds:PLkpD": {
+                                  "content": "Time zone"
+                                },
+                                "ds:USlYG": {
+                                  "content": "Europe/Kyiv"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "dg2ZBU",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "Changing the time zone changes the displayed local time, not the selected instant."
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "Ky82Qo",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "iJtxiW",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "9seU2x",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "yetHhd",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Destinations"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "mRuUUE",
+                              "ref": "ds:FJUa1",
+                              "name": "Badge / 0 of 3 ready",
+                              "descendants": {
+                                "ds:BI0Pd": {
+                                  "content": "0 of 3 ready"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "yeWYRz",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Spotify"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "Connect an account to continue."
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "J2GVso",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "8Co6F6",
+                                  "ref": "ds:LUaCU2",
+                                  "name": "Status/Neutral",
+                                  "descendants": {
+                                    "ds:jPj56V": {
+                                      "content": "Not connected"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Z8LUqv",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Connect",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Connect"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "QsvgyB",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Apple Music"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "Connection request is still pending."
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "Yfte3Y",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "fnfRT4",
+                                  "ref": "ds:LUaCU2",
+                                  "name": "Status/Neutral",
+                                  "descendants": {
+                                    "ds:jPj56V": {
+                                      "content": "Pending"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "3Dykr4",
+                                  "ref": "ds:DTwJb",
+                                  "name": "Button / View status",
+                                  "descendants": {
+                                    "ds:GyGLK": {
+                                      "content": "View status"
+                                    },
+                                    "ds:uRXDu": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "iXELWk",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "YouTube Music"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "Delivery is not available in this demo."
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "PTBayB",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "afpbGE",
+                                  "ref": "ds:LUaCU2",
+                                  "name": "Status/Neutral",
+                                  "descendants": {
+                                    "ds:jPj56V": {
+                                      "content": "Unavailable"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "rZhcUG",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "bMS5me",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "NZQTZf",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "uhg4at",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Before you continue"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "tLEa4B",
+                          "ref": "ds:ye2ZlZ",
+                          "name": "Checklist Row/Done",
+                          "descendants": {
+                            "ds:BWmC54": {
+                              "content": "Bitrate review approved"
+                            },
+                            "ds:ui1TFi": {
+                              "enabled": false
+                            },
+                            "ds:4QtRy2": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "y4Qnsz",
+                          "ref": "ds:ye2ZlZ",
+                          "name": "Checklist Row/Done",
+                          "descendants": {
+                            "ds:BWmC54": {
+                              "content": "Release date selected"
+                            },
+                            "ds:ui1TFi": {
+                              "enabled": false
+                            },
+                            "ds:4QtRy2": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "NmYgwF",
+                          "ref": "ds:KdKXRG",
+                          "name": "Checklist Row/Blocked",
+                          "descendants": {
+                            "ds:Vmx3Ga": {
+                              "content": "No destination is ready"
+                            },
+                            "ds:SolG4j": {
+                              "enabled": false
+                            },
+                            "ds:IkujNN": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "aAj4TS",
+                          "ref": "ds:yjiPHo",
+                          "name": "Text/Eyebrow",
+                          "content": "NEXT ACTION"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "eRYm8X",
+                          "ref": "ds:SOt7Oe",
+                          "name": "Text/Body Strong",
+                          "content": "Connect at least one destination"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "NxCRAX",
+                          "ref": "ds:exjwf",
+                          "name": "Button / Save delivery plan",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:E23bq6": {
+                              "content": "Save delivery plan"
+                            },
+                            "ds:o7NXW": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "v3bBEc",
+                          "ref": "ds:G5tJp",
+                          "name": "Button / Preview timeline",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:d2zCI": {
+                              "content": "Preview timeline"
+                            },
+                            "ds:zDiHG": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "8S6jNV",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "Saving this plan does not send the release to any external platform."
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/dashboard/distribution (placeholder in code) · designed per release — Timing and destinations; saving never sends anything."
+    },
+    {
+      "type": "frame",
+      "id": "7MWs5R",
+      "name": "Artist / Delivery plan / Placeholder (current app) / Desktop",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "vpLeAZ",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:3YKZVX": {
+              "type": "ref",
+              "id": "od95ah",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Dashboard",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "layout-dashboard"
+                },
+                "ds:GZQzF3": {
+                  "content": "Dashboard"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Distribution"
+            },
+            "ds:YLdi4o": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "iKEMqb",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Ysh8za",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "9pbLVn",
+                      "ref": "ds:UacIqy",
+                      "name": "State / Distribution",
+                      "descendants": {
+                        "ds:QTS6fY": {
+                          "icon": "send"
+                        },
+                        "ds:LaYbWr": {
+                          "content": "Distribution"
+                        },
+                        "ds:IowS15": {
+                          "content": "External delivery is not connected. No music has been sent to a streaming service from this workspace."
+                        },
+                        "ds:PKR600/ds:NVe7y": {
+                          "content": "Back to dashboard"
+                        },
+                        "ds:Sk1EVh": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/dashboard/distribution (placeholder in code) · designed per release — Timing and destinations; saving never sends anything."
+    },
+    {
+      "type": "frame",
+      "id": "XbNcB4",
+      "name": "Artist / Delivery plan / Placeholder (current app) / Mobile",
+      "width": 390,
+      "height": 1100,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "gmnzsS",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1100,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "iYkoKD",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "bfcnVN",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ysQojM",
+                      "ref": "ds:UacIqy",
+                      "name": "State / Distribution",
+                      "descendants": {
+                        "ds:QTS6fY": {
+                          "icon": "send"
+                        },
+                        "ds:LaYbWr": {
+                          "content": "Distribution"
+                        },
+                        "ds:IowS15": {
+                          "content": "External delivery is not connected. No music has been sent to a streaming service from this workspace."
+                        },
+                        "ds:PKR600/ds:NVe7y": {
+                          "content": "Back to dashboard"
+                        },
+                        "ds:Sk1EVh": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/dashboard/distribution (placeholder in code) · designed per release — Timing and destinations; saving never sends anything."
+    }
+  ]
+}

@@ -9,31 +9,29 @@ import {
   CustomNextIcon,
   CustomPrevIcon,
 } from '@bitrate/ui-react'
-import { useArtists } from '@entities/Artist'
+import { useArtistCharts } from '@entities/Discovery'
+import { SectionHeader } from '@shared/ui'
 import { MusicCardLg } from '@shared/ui/MusicCardLg'
 import { useI18n } from '@/shared/i18n'
 import { getArtistAvatarUrl } from '@/shared/utils/mediaUrl'
 
+/** Artists ranked by distinct listeners (`GET /charts/artists`); hidden when nobody has listened yet. */
 export const PopularArtists = () => {
   const { t } = useI18n()
-  const { data, isPending: loadingArtists } = useArtists()
+  const { data, isPending: loadingArtists } = useArtistCharts()
 
-  const artists = Array.isArray(data)
-    ? data.map((artist) => ({
-        id: artist.id,
-        name: artist.username,
-        description: t('common.artist'),
-        imageUrl: getArtistAvatarUrl(artist.avatar),
-      }))
-    : []
+  const artists = (data?.data ?? []).map((artist) => ({
+    id: artist.id,
+    name: artist.username,
+    description: t('common.artist'),
+    imageUrl: getArtistAvatarUrl(artist.avatar),
+  }))
+
+  if (!loadingArtists && artists.length === 0) return null
 
   return (
-    <div className="relative mt-8">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-text text-2xl font-bold">
-          {t('main.popularArtists')}
-        </h2>
-      </div>
+    <section className="relative">
+      <SectionHeader title={t('main.popularArtists')} />
       <div className="relative group">
         <Carousel className="w-full" slidesToShow={5}>
           <CarouselPrevious
@@ -47,11 +45,12 @@ export const PopularArtists = () => {
           <CarouselContent className="flex">
             {loadingArtists ? (
               <div className="text-text-subdued p-4">{t('common.loading')}</div>
-            ) : artists.length === 0 ? (
-              <div className="text-text-subdued p-4">{t('main.noArtists')}</div>
             ) : (
               artists.map((artist) => (
-                <CarouselItem className="basis-auto max-w-50" key={artist.id}>
+                <CarouselItem
+                  className="mr-4 max-w-50 basis-auto"
+                  key={artist.id}
+                >
                   <MusicCardLg
                     description={artist.description}
                     id={artist.id}
@@ -65,6 +64,6 @@ export const PopularArtists = () => {
           </CarouselContent>
         </Carousel>
       </div>
-    </div>
+    </section>
   )
 }

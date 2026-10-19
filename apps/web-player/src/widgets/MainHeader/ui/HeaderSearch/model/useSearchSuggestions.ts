@@ -1,76 +1,42 @@
+import { useBrowseCategories } from '@/entities/Discovery'
 import { useSearch } from '@/features/Search'
 import { useI18n } from '@/shared/i18n'
-import { ROUTES } from '@/shared/routes'
-import {
-  getAlbumCoverUrl,
-  getPlaylistCoverUrl,
-  getTrackCoverUrl,
-} from '@/shared/utils/mediaUrl'
-import {
-  categorySuggestions,
-  headerSearchTypes,
-} from '@/widgets/MainHeader/ui/HeaderSearch/model/headerSearch.constants'
-import type { HeaderSuggestion } from '@/widgets/MainHeader/ui/HeaderSearch/model/headerSearch.types'
+import { buildHeaderSuggestions } from '@/widgets/MainHeader/ui/HeaderSearch/model/buildHeaderSuggestions'
+import { headerSearchTypes } from '@/widgets/MainHeader/ui/HeaderSearch/model/headerSearch.constants'
 
-export const useSearchSuggestions = (query: string, debouncedQuery: string) => {
+type UseSearchSuggestionsInput = {
+  query: string
+  debouncedQuery: string
+  /** Past searches, newest first, from the same source as the recent searches list. */
+  history: readonly string[]
+}
+
+/** Dropdown suggestions for the header search, from real search, history and categories only. */
+export const useSearchSuggestions = ({
+  query,
+  debouncedQuery,
+  history,
+}: UseSearchSuggestionsInput) => {
   const { t } = useI18n()
   const { data } = useSearch({
     limit: 4,
     query: debouncedQuery,
     types: headerSearchTypes,
   })
-  const querySuggestions: HeaderSuggestion[] = [
-    `${query} playlist`,
+  const { data: categories } = useBrowseCategories()
+  return buildHeaderSuggestions({
     query,
-    `${query} motivation`,
-    `${query} playlist 2026`,
-  ].map((title) => ({
-    query: title,
-    subtitle: t('common.search'),
-    title,
-    type: 'query',
-  }))
-  const normalizedQuery = query.toLowerCase()
-  const categoryMatches: HeaderSuggestion[] = categorySuggestions
-    .filter(({ title }) => {
-      const normalizedTitle = title.toLowerCase()
-      return (
-        normalizedTitle.includes(normalizedQuery) ||
-        normalizedQuery.includes(normalizedTitle.replace(' music', ''))
-      )
-    })
-    .slice(0, 2)
-    .map((category) => ({
-      ...category,
-      href: ROUTES.searchCategory(category.title),
-      subtitle: t('search.genre'),
-      type: 'media',
-    }))
-  const mediaMatches: HeaderSuggestion[] =
-    debouncedQuery === query
-      ? [
-          ...(data?.tracks ?? []).slice(0, 3).map((track) => ({
-            image: getTrackCoverUrl(track.cover),
-            subtitle: `${t('common.song')} • ${track.artistId || t('common.unknown')}`,
-            title: track.title,
-            type: 'media' as const,
-          })),
-          ...(data?.playlists ?? []).slice(0, 3).map((playlist) => ({
-            href: ROUTES.playlist(playlist.id),
-            image: getPlaylistCoverUrl(playlist.cover),
-            subtitle: t('common.playlist'),
-            title: playlist.title,
-            type: 'media' as const,
-          })),
-          ...(data?.albums ?? []).slice(0, 2).map((album) => ({
-            href: ROUTES.album(album.id),
-            image: getAlbumCoverUrl(album.cover),
-            subtitle: t('common.album'),
-            title: album.title,
-            type: 'media' as const,
-          })),
-        ]
-      : []
-
-  return [...querySuggestions, ...categoryMatches, ...mediaMatches].slice(0, 9)
+    history,
+    categories: categories?.data ?? [],
+    /* results belong to the settled query only, never to a stale one */
+    results: debouncedQuery === query && data ? data : undefined,
+    labels: {
+      album: t('common.album'),
+      genre: t('search.genre'),
+      playlist: t('common.playlist'),
+      search: t('common.search'),
+      song: t('common.song'),
+      unknown: t('common.unknown'),
+    },
+  })
 }

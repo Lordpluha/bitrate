@@ -1,0 +1,1176 @@
+// Landing (Original Edition content), composed only from library instances; three themes, mobile, states.
+import { TRACKS, img, id, C } from './kit.mjs'
+import {
+  R,
+  L,
+  Row,
+  Col,
+  Tx,
+  Ic,
+  BigCover,
+  MobileTrack,
+  Switch,
+  Chips,
+  Panel,
+  Logo,
+  SettingRow,
+  CheckRow,
+  state,
+  Button,
+  Input,
+  Badge,
+  ART,
+  OAuth,
+  Avatar,
+  Progress,
+} from './ui.mjs'
+
+const W = 1440
+const style = (tone, mobile) =>
+  (mobile ? 'H1' : 'Display') +
+  (tone === 'accent' ? ' Accent' : tone === 'magenta' ? ' Magenta' : '')
+const headline = (parts, mobile) =>
+  Col(
+    { name: 'Headline', gap: 0, width: 'fill_container' },
+    parts.map(([t, tone]) => Tx(style(tone, mobile), t, { wrap: true })),
+  )
+const copy = ({ eyebrow, parts, desc, extra = [] }, mobile) =>
+  Col({ name: 'Copy', gap: 18, width: mobile ? 'fill_container' : 480 }, [
+    eyebrow && Tx('Eyebrow', eyebrow),
+    headline(parts, mobile),
+    desc && Tx('Paragraph', desc, { wrap: true }),
+    ...extra,
+  ])
+const feature = (icon, title, desc) =>
+  R('Landing/Feature', {}, { icon: { icon }, title: { content: title }, desc: { content: desc } })
+
+/* Eleven fullscreen scenes, kept in sync with landing/motion-prototype.html (same order, copy and motion notes).
+   Flex cannot overlap layers, so each scene shows the prototype's composition side by side with a motion note. */
+const SIGNAL = (size, phase) =>
+  R(
+    'Landing/Signal',
+    {},
+    { image: { width: size, height: size, cornerRadius: size / 2 }, phase: { content: phase } },
+  )
+const TOTAL = 11
+const mt = (t, m) => MobileTrack(t[0], m ?? t[1], t[4])
+const seek = () => R('Seek Bar')
+const step = (kind, label, n) =>
+  R(
+    `Stepper/Step ${kind}`,
+    {},
+    kind === 'Done'
+      ? { label: { content: label } }
+      : { number: { content: String(n) }, label: { content: label } },
+  )
+const node = (focus, name, sub, art) =>
+  R(
+    focus ? 'Graph Node/Focus' : 'Graph Node',
+    {},
+    { avatar: { fill: img(ART[art]) }, label: { content: name }, sub: { content: sub } },
+  )
+const sphere = (k, label, size) =>
+  R(
+    `Landing/Partner Sphere ${k}`,
+    { width: size, height: size, cornerRadius: size / 2 },
+    { label: { content: label } },
+  )
+const tech = (label, size = 90) =>
+  R(
+    'Landing/Bubble Tech',
+    { width: size, height: size, cornerRadius: size / 2 },
+    { label: { content: label } },
+  )
+const person = (initials) => R('Landing/Bubble Person', {}, { initials: { content: initials } })
+const hoverCard = () => R('Landing/Hover Card')
+const loopCard = (icon, n, title, desc, body) =>
+  Panel([Tx('Eyebrow', n), feature(icon, title, desc), ...body], { width: 'fill_container' })
+
+const SCENES = [
+  {
+    name: '01 • Signal',
+    copy: {
+      eyebrow: 'WEB PLAYER',
+      parts: [['Your music,'], ['already where'], ['you are.', 'accent']],
+      desc: 'Instant access in your browser. Listen, save and return to your library.',
+      extra: [
+        Row({ gap: 12 }, [
+          Button('Open web player', 'large-default', { icon: 'arrow-right' }),
+          Button('Create account', 'large-outline'),
+        ]),
+        Tx('Eyebrow', 'INTERACTIVE PLAYER PREVIEW'),
+      ],
+    },
+    mobileExtra: () => [
+      Button('Open web player', 'large-default', { icon: 'arrow-right', width: 'fill_container' }),
+      Button('Create account', 'large-outline', { width: 'fill_container' }),
+    ],
+    signal: [140, 'SIGNAL · SPHERE'],
+    /* the player window: now playing, up next, and the technical strip */
+    ui: (m) =>
+      !m &&
+      Panel(
+        [
+          Row({ name: 'Window Bar', width: 'fill_container', justifyContent: 'space_between' }, [
+            Tx('Eyebrow', 'NOW PLAYING'),
+            Row({ gap: 12 }, [
+              Tx('Eyebrow', 'PREVIEW SESSION'),
+              R('Status/Success', {}, { label: { content: 'Signal stable' } }),
+            ]),
+          ]),
+          Row({ name: 'Player', gap: 20, width: 'fill_container', alignItems: 'start' }, [
+            Col({ name: 'Now Playing', gap: 12, width: 290 }, [
+              BigCover('night', 290),
+              Row({ width: 'fill_container' }, [
+                Col({ gap: 2, width: 'fill_container' }, [
+                  Tx('H3', 'Night Signal'),
+                  Tx('Muted', 'Demo artist'),
+                ]),
+                Ic('heart', 'Primary', 20),
+              ]),
+              seek(),
+              R('Transport'),
+            ]),
+            Col({ name: 'Up Next', gap: 6, width: 'fill_container' }, [
+              Row({ width: 'fill_container', justifyContent: 'space_between' }, [
+                Tx('Eyebrow', 'UP NEXT'),
+                Tx('Eyebrow', 'CLEAR'),
+              ]),
+              ...TRACKS.slice(2, 6).map((t) => mt(t, `${t[1]} · ${t[3]}`)),
+            ]),
+          ]),
+          Row({ name: 'Technical Strip', gap: 28, width: 'fill_container' }, [
+            ...[
+              ['SOURCE', 'BITRATE'],
+              ['OUTPUT', 'WEB'],
+              ['MODE', 'PREVIEW'],
+            ].map(([k, v]) => Col({ gap: 2 }, [Tx('Eyebrow', k), Tx('Body Strong', v)])),
+            R('Comments/Waveform Empty', { width: 'fill_container' }),
+          ]),
+        ],
+        { width: 640 },
+      ),
+    note: 'Enter: letters rise one by one; the player window tilts into 3D and follows the cursor. 3D: noise-displaced sphere behind the glass. Glitch on "you are." and the SIGNAL STABLE label.',
+  },
+  {
+    name: '02 • Play. Save. Return.',
+    stack: true,
+    copy: {
+      parts: [['Play. Save. Return.']],
+      desc: 'One listening loop. Built around the music you come back to.',
+    },
+    signal: [120, 'SIGNAL · WAVE'],
+    ui: (m) =>
+      (m ? Col : Row)(
+        { name: 'Loop Cards', gap: 20, width: 'fill_container', alignItems: 'start' },
+        [
+          loopCard(
+            'play',
+            '01',
+            'Play without losing focus',
+            'The controls you need, within reach.',
+            [mt(TRACKS[0]), seek()],
+          ),
+          !m &&
+            loopCard(
+              'heart',
+              '02',
+              'Save what matters',
+              'Build a library that sounds more like you.',
+              TRACKS.slice(1, 4).map((t) => mt(t)),
+            ),
+          !m &&
+            loopCard(
+              'history',
+              '03',
+              'Find your way back',
+              'Your returns, together in recents.',
+              TRACKS.slice(3, 6).map((t) => mt(t, 'Today')),
+            ),
+        ],
+      ),
+    note: 'Enter: three cards rise with a 3D tilt; the seek bar fills, hearts pop. 3D: the surface becomes a wave ribbon over a 72-band particle spectrum.',
+  },
+  {
+    name: '03 • Playlist Workshop',
+    copy: {
+      eyebrow: 'PLAYLIST WORKSHOP · CONCEPT',
+      parts: [['Start with a feeling.'], ['Finish with'], ['your playlist.', 'accent']],
+      desc: 'Describe the session. Compare a few tracks. Shape a playlist that feels like you.',
+      extra: [
+        feature('zap', 'Turn intent into music', 'Describe the mood, the activity or the moment.'),
+        feature(
+          'layers',
+          'Compare and refine',
+          'Rank a few tracks. Swap the ones that do not fit.',
+        ),
+        feature(
+          'sliders-horizontal',
+          'You stay in control',
+          'Approve, reorder or replace. Nothing is final until you say so.',
+        ),
+      ],
+    },
+    signal: [120, 'SIGNAL · KNOT'],
+    /* the workshop window: four steps, the session and its signals, ranked candidates, the decision bar */
+    ui: (m) =>
+      Panel(
+        [
+          Row({ name: 'Window Bar', width: 'fill_container', justifyContent: 'space_between' }, [
+            Tx('Body Strong', 'Workshop · Untitled session'),
+            Badge('Draft', 'outline'),
+          ]),
+          !m &&
+            Row({ name: 'Steps', width: 'fill_container', gap: 8 }, [
+              step('Done', 'Describe'),
+              R('Stepper/Connector Done', { width: 'fill_container' }),
+              step('Done', 'Shape'),
+              R('Stepper/Connector Done', { width: 'fill_container' }),
+              step('Current', 'Compare', 3),
+              R('Stepper/Connector', { width: 'fill_container' }),
+              step('Upcoming', 'Approve', 4),
+            ]),
+          Row({ name: 'Body', gap: 18, width: 'fill_container', alignItems: 'start' }, [
+            !m &&
+              Col({ name: 'Session', gap: 10, width: 210 }, [
+                Tx('Eyebrow', 'YOUR SESSION'),
+                Tx('Paragraph', 'Calm late-night focus, 45 minutes, from my liked songs.', {
+                  wrap: true,
+                }),
+                Chips(['Calm', 'Late night', '45 min']),
+                Tx('Eyebrow', 'SIGNALS'),
+                ...[
+                  ['Energy', 'Low'],
+                  ['Tempo', '88 BPM'],
+                  ['Mood', 'Warm'],
+                ].map(([k, v]) =>
+                  Col({ gap: 4, width: 'fill_container' }, [
+                    Row({ width: 'fill_container', justifyContent: 'space_between' }, [
+                      Tx('Caption', k),
+                      Tx('Caption', v),
+                    ]),
+                    Progress(),
+                  ]),
+                ),
+              ]),
+            Col({ name: 'Candidates', gap: 8, width: 'fill_container' }, [
+              Row({ width: 'fill_container', justifyContent: 'space_between' }, [
+                Tx('Eyebrow', 'CANDIDATES'),
+                Tx('Eyebrow', 'RANKED BY FIT'),
+              ]),
+              ...TRACKS.slice(0, m ? 2 : 4).map((t, i) =>
+                R(
+                  'Candidate Row/Compact',
+                  {},
+                  {
+                    rank: { content: `#${i + 1}` },
+                    cover: { fill: img(ART[t[4]]) },
+                    title: { content: t[0] },
+                    meta: { content: `${t[1]} · ${t[3]}` },
+                  },
+                ),
+              ),
+            ]),
+          ]),
+          Row({ name: 'Decision', width: 'fill_container', gap: 10, alignItems: 'center' }, [
+            Tx('Eyebrow', '12 TRACKS · 44 MIN'),
+            L({ name: 'Spacer', width: 'fill_container' }),
+            Button('Swap two', 'outline'),
+            Button('Approve playlist', 'default'),
+          ]),
+        ],
+        { width: m ? 'fill_container' : 640 },
+      ),
+    note: 'Enter: the prompt types itself, the four-step bar fills, candidates slide in and re-rank every 2.6 s (FLIP). 3D: a trefoil knot; four concentric particle orbits.',
+  },
+  {
+    name: '04 • Your Player. Your Rules.',
+    copy: {
+      eyebrow: 'MAKE IT YOURS',
+      parts: [['Your player.'], ['Your rules.', 'accent']],
+      desc: 'Less clutter. More of what you use. Change the layout. Choose your tools. Find your rhythm.',
+    },
+    signal: [110, 'SIGNAL · VINYL'],
+    /* the player canvas: now playing, library, the queue dock with the floating queue, and the layout panel */
+    ui: (m) =>
+      m
+        ? Panel(
+            [
+              Tx('H4', 'Make it yours'),
+              Chips(['Focus', 'Studio', 'Mini']),
+              SettingRow('Lyrics', null, Switch('', true)),
+              SettingRow('Floating queue', null, Switch('', true)),
+              R('Landing/Accent Swatches'),
+            ],
+            { width: 'fill_container' },
+          )
+        : Row({ name: 'Player Canvas', gap: 14, width: 780, alignItems: 'start' }, [
+            Col({ name: 'Player', gap: 14, width: 'fill_container' }, [
+              Row({ gap: 14, width: 'fill_container', alignItems: 'start' }, [
+                Panel(
+                  [
+                    Tx('Eyebrow', 'NOW PLAYING'),
+                    BigCover('night', 150),
+                    Tx('Body Strong', 'Night Signal'),
+                    Tx('Caption', 'Demo artist'),
+                    seek(),
+                  ],
+                  { width: 180 },
+                ),
+                Panel(
+                  [Tx('Eyebrow', 'LIBRARY'), ...TRACKS.slice(0, 4).map((t) => mt(t, 'Playlist'))],
+                  { width: 'fill_container' },
+                ),
+              ]),
+              Panel(
+                [Tx('Eyebrow', 'FLOATING QUEUE · DOCKED'), ...TRACKS.slice(2, 4).map((t) => mt(t))],
+                { width: 'fill_container' },
+              ),
+            ]),
+            Panel(
+              [
+                Tx('H4', 'Make it yours'),
+                Tx('Eyebrow', 'LAYOUT'),
+                Chips(['Focus', 'Studio', 'Mini']),
+                Tx('Eyebrow', 'PANELS'),
+                SettingRow('Lyrics', null, Switch('', true)),
+                SettingRow('Floating queue', null, Switch('', true)),
+                SettingRow('Visualizer', null, Switch('', false)),
+                Tx('Eyebrow', 'ACCENT'),
+                R('Landing/Accent Swatches'),
+                Tx('Caption', 'Saved to this device. Reset any time.'),
+              ],
+              { width: 260 },
+            ),
+          ]),
+    note: 'Enter: the player canvas rises over its back plate; the floating queue is dropped in at −5° and keeps floating; the toggle switches on. 3D: a vinyl with grooves over a perspective floor grid.',
+  },
+  {
+    name: '05 • A Library With A Memory',
+    stack: true,
+    copy: {
+      eyebrow: 'YOUR COLLECTION, CONNECTED',
+      parts: [['A library with'], ['a memory.', 'accent']],
+      desc: 'Find it faster. Keep it organised. Bring a version back.',
+    },
+    signal: [110, 'SIGNAL · HELIX'],
+    ui: (m) =>
+      (m ? Col : Row)({ name: 'Library', gap: 20, width: 'fill_container' }, [
+        !m &&
+          Panel(
+            [Tx('Eyebrow', 'YOUR LIBRARY'), ...TRACKS.slice(0, 4).map((t) => mt(t, 'Playlist'))],
+            { width: 260 },
+          ),
+        !m &&
+          Panel([Input(null, 'night'), ...TRACKS.slice(0, 4).map((t) => mt(t))], {
+            width: 'fill_container',
+          }),
+        Panel(
+          [
+            Tx('H4', 'Night drive · history'),
+            SettingRow('Today', '24 tracks', Badge('Current', 'secondary')),
+            SettingRow('Yesterday', '21 tracks', Badge('Selected', 'default')),
+            SettingRow('Sep 02', '18 tracks', Badge('Saved', 'outline')),
+            Button('Restore this version', 'default', { width: 'fill_container' }),
+            Tx('Caption', 'Your current version stays in history.'),
+          ],
+          { width: m ? 'fill_container' : 340 },
+        ),
+      ]),
+    note: 'Enter: the search types "night", results and history rows cascade in. 3D: a double-helix ribbon (memory); particles stack into three version rings.',
+  },
+  {
+    name: '06 • Follow The Sound',
+    copy: {
+      eyebrow: 'DISCOVER THE CONNECTIONS',
+      parts: [['Follow the'], ['sound.', 'accent']],
+      desc: 'Explore the artists, influences and scenes behind what you love.',
+    },
+    signal: [100, 'SIGNAL · BLOOM'],
+    /* the connection graph, the focus artist card and the explored route */
+    ui: (m) =>
+      m
+        ? Col({ gap: 12, width: 'fill_container', alignItems: 'center' }, [
+            node(true, 'Luma Vale', 'You are here', 'luma'),
+            Chips(['Electronic', 'Dream pop', 'Night']),
+            Tx(
+              'Paragraph',
+              'Dreamlike synth textures, spacious vocals and a shared late-night scene.',
+              { wrap: true, textAlign: 'center' },
+            ),
+          ])
+        : Col({ name: 'Discover', gap: 18, width: 720 }, [
+            Row({ gap: 20, width: 'fill_container', alignItems: 'start' }, [
+              Col({ name: 'Graph', gap: 22, width: 'fill_container', alignItems: 'center' }, [
+                Row({ gap: 90 }, [
+                  node(false, 'Mira Sol', 'Influence · Dream pop', 'avatar1'),
+                  node(false, 'Night Pulse Collective', 'Shared scene', 'avatar3'),
+                ]),
+                Row({ gap: 30, alignItems: 'center' }, [
+                  node(false, 'Static Bloom', 'Similar sound', 'avatar4'),
+                  node(true, 'Luma Vale', 'You are here', 'luma'),
+                  node(false, 'Velvet Coast', 'Similar sound', 'avatar2'),
+                ]),
+                Row({ gap: 90 }, [
+                  node(false, 'Afterhours District', 'Shared scene', 'avatar2'),
+                  node(false, 'Glass Harbour', 'Similar sound', 'avatar1'),
+                ]),
+              ]),
+              Panel(
+                [
+                  BigCover('luma', 200),
+                  Tx('H3', 'Luma Vale'),
+                  Chips(['Electronic', 'Dream pop']),
+                  Tx('Eyebrow', 'ILLUSTRATIVE CONNECTION'),
+                  Tx('Body Strong', 'Why this connection'),
+                  Tx(
+                    'Muted',
+                    'Dreamlike synth textures, spacious vocals and a shared late-night scene.',
+                    { wrap: true },
+                  ),
+                  Tx('Body Strong', 'Top tracks'),
+                  mt(TRACKS[1], '3:56'),
+                  Button('Explore this artist', 'default', {
+                    icon: 'arrow-right',
+                    width: 'fill_container',
+                  }),
+                ],
+                { width: 240 },
+              ),
+            ]),
+            Panel(
+              [
+                Row({ gap: 14, width: 'fill_container', alignItems: 'center' }, [
+                  Col({ gap: 0 }, [
+                    Tx('Body Strong', 'Your explored route'),
+                    Tx('Caption', '3 steps · Follow the journey'),
+                  ]),
+                  L({ name: 'Spacer', width: 'fill_container' }),
+                  ...['Luma Vale', 'Mira Sol', 'Night Pulse Collective'].flatMap((n, i) =>
+                    [i && Ic('arrow-right', 'Muted', 14), step('Current', n, i + 1)].filter(
+                      Boolean,
+                    ),
+                  ),
+                ]),
+              ],
+              { width: 'fill_container' },
+            ),
+          ]),
+    note: 'Enter: eight links draw from Luma Vale, nodes pop from the edges, connection tags fade in. 3D: a spiked bloom sits behind the focus node; particles trace the same graph.',
+  },
+  {
+    name: '07 • Same Queue. New Scene.',
+    copy: {
+      eyebrow: 'KEEP THE SESSION GOING',
+      parts: [['Same queue.'], ['New scene.', 'accent']],
+      desc: 'Move playback between devices with Bitrate Connect. Or start a Jam with friends.',
+      extra: [
+        feature('smartphone', 'Bitrate Connect', 'Move playback to any device'),
+        feature('users-round', 'Jam', 'Listen together'),
+      ],
+    },
+    signal: [100, 'SIGNAL · TWIST'],
+    /* the phone with its Bitrate Connect sheet next to the desktop window running the Jam */
+    ui: (m) => {
+      const connect = Panel(
+        [
+          Tx('H4', 'Bitrate Connect'),
+          R(
+            'Device Row/Active',
+            {},
+            {
+              icon: { icon: 'smartphone' },
+              name: { content: 'This phone' },
+              status: { content: 'Ready to play' },
+            },
+          ),
+          R(
+            'Device Row',
+            {},
+            {
+              icon: { icon: 'laptop' },
+              name: { content: 'Desktop' },
+              status: { content: 'Playing' },
+            },
+          ),
+          Button('Move playback to this phone', 'default', { width: 'fill_container' }),
+        ],
+        { width: m ? 'fill_container' : 240 },
+      )
+      if (m) return connect
+      return Row({ name: 'Devices', gap: 18, width: 720, alignItems: 'end' }, [
+        Col({ name: 'Phone', gap: 12, width: 240 }, [
+          Panel(
+            [
+              Tx('Caption', 'Jam: After hours'),
+              BigCover('night', 200),
+              Tx('Body Strong', 'Night Signal'),
+              Tx('Caption', 'Demo artist'),
+              seek(),
+            ],
+            { width: 'fill_container' },
+          ),
+          connect,
+        ]),
+        Panel(
+          [
+            Row({ width: 'fill_container', justifyContent: 'space_between' }, [
+              Tx('Eyebrow', 'JAM'),
+              R('Status/Success', {}, { label: { content: 'Jam live' } }),
+            ]),
+            Tx('H2', 'Jam: After hours'),
+            Row({ gap: 16, width: 'fill_container', alignItems: 'start' }, [
+              BigCover('night', 160),
+              Col({ gap: 6, width: 'fill_container' }, [
+                Tx('Eyebrow', 'NOW PLAYING · IN SYNC'),
+                Tx('H3', 'Night Signal'),
+                Tx('Muted', 'Demo artist'),
+                seek(),
+              ]),
+            ]),
+            Tx('Eyebrow', 'UP NEXT · SHARED QUEUE'),
+            mt(TRACKS[3], 'Added by Maya · 4:21'),
+            mt(TRACKS[2], 'Added by Jonah · 3:47'),
+          ],
+          { width: 'fill_container' },
+        ),
+      ])
+    },
+    note: 'Enter: the phone slides in over the desktop window and the dashed link draws between them; both progress bars tick in sync. 3D: a twisted torus; particles outline both devices.',
+  },
+  {
+    name: '08 • Beyond The Play Button',
+    copy: {
+      eyebrow: 'MUSIC IS A CONVERSATION',
+      parts: [['Beyond the'], ['play button.', 'accent']],
+      desc: "Share the moment. Follow a friend's taste. Talk with the artist.",
+      extra: [
+        Panel(
+          [
+            Row({ gap: 12, width: 'fill_container' }, [
+              Avatar('avatar1', 44),
+              Col({ gap: 0, width: 'fill_container' }, [
+                Tx('H4', "Maya's listening"),
+                Tx('Caption', 'Her music, lately.'),
+              ]),
+            ]),
+            Chips(['Electronic', 'Ambient', 'UK Garage']),
+            Tx('Body Strong', 'Taste history'),
+            Tx('Caption', 'This month: Broken beat · Last month: Ambient'),
+            Row(
+              { width: 'fill_container', justifyContent: 'space_between', alignItems: 'center' },
+              [
+                Tx('Caption', 'Recently saved'),
+                Button('Explore profile', 'outline', { icon: 'arrow-right' }),
+              ],
+            ),
+          ],
+          { width: 'fill_container' },
+        ),
+      ],
+    },
+    signal: [100, 'SIGNAL · VOICE'],
+    /* friends, and the track discussion: timed comments on the waveform, the artist answers */
+    ui: (m) =>
+      Row({ name: 'Social', gap: 16, width: m ? 'fill_container' : 700, alignItems: 'start' }, [
+        !m &&
+          Panel(
+            [
+              Tx('Eyebrow', 'FRIENDS'),
+              ...[
+                ['avatar1', 'Maya'],
+                ['avatar2', 'Jonah'],
+                ['avatar3', 'Ava'],
+              ].map(([a, n]) => Row({ gap: 8 }, [Avatar(a, 24), Tx('Caption', n)])),
+            ],
+            { width: 130 },
+          ),
+        Panel(
+          [
+            Row({ gap: 14, width: 'fill_container' }, [
+              BigCover('night', 64),
+              Col({ gap: 2, width: 'fill_container' }, [
+                Tx('Eyebrow', 'TRACK DISCUSSION'),
+                Tx('H3', 'Night Signal'),
+                Tx('Muted', 'Demo artist · 3:56 · 24 comments'),
+              ]),
+            ]),
+            R('Comments/Waveform', { width: 'fill_container' }),
+            ...[
+              ['avatar1', 'Maya', '0:42', 'That synth swell — this is the moment it opens up.'],
+              ['avatar2', 'Jonah', '1:36', 'Sounds like the whole city at 2 AM.'],
+              !m && [
+                'avatar3',
+                'Demo artist',
+                '2:28',
+                'Recorded that part in one take. Glad it lands.',
+              ],
+            ]
+              .filter(Boolean)
+              .map(([av, n, t, text]) =>
+                R(
+                  'Comments/Row',
+                  { width: 'fill_container' },
+                  {
+                    avatar: { fill: img(ART[av]) },
+                    name: { content: n },
+                    time: { content: t },
+                    text: { content: text },
+                    ago: { content: 'Today' },
+                  },
+                ),
+              ),
+            R('Comments/Composer', { width: 'fill_container' }, { time: { content: '1:38' } }),
+          ],
+          { width: 'fill_container' },
+        ),
+      ]),
+    note: 'Enter: comment markers pop on the waveform, comments appear one by one. 3D: the sphere speaks — high noise amplitude; particles ripple out from the friend card.',
+  },
+  {
+    name: '09 • Our Partners',
+    copy: {
+      eyebrow: 'OUR PARTNERS',
+      parts: [['Partners who keep'], ['the signal on air.', 'accent']],
+      desc: 'Labels, studios and services we build with. Grab one and throw it — they bounce back.',
+      extra: [
+        Button('Become a partner', 'large-default', { icon: 'arrow-right' }),
+        Tx('Eyebrow', 'DRAG · THROW · SQUEEZE'),
+        Tx('Caption', 'Placeholder marks — replace with real partner logos'),
+      ],
+    },
+    mobileExtra: () => [
+      Button('Become a partner', 'large-default', { icon: 'arrow-right', width: 'fill_container' }),
+    ],
+    signal: [90, 'SIGNAL · BLOOM'],
+    ui: (m) =>
+      Col(
+        {
+          name: 'Partner Spheres',
+          gap: 0,
+          width: m ? 'fill_container' : 620,
+          alignItems: 'center',
+        },
+        [
+          Row({ gap: 0, alignItems: 'end' }, [
+            sphere('Primary', 'ON AIR', m ? 80 : 130),
+            sphere('Magenta', 'LABEL', m ? 96 : 150),
+            sphere('Blue', 'STUDIO', m ? 76 : 120),
+          ]),
+          Row({ gap: 0 }, [
+            sphere('Blue', 'SYNC', m ? 70 : 110),
+            sphere('Primary', 'FM', m ? 100 : 160),
+            sphere('Magenta', 'LIVE', m ? 80 : 124),
+            !m && sphere('Primary', 'DSP', 100),
+          ]),
+          Row({ gap: 0, alignItems: 'start' }, [
+            sphere('Magenta', 'MIX', m ? 76 : 120),
+            sphere('Blue', 'WAVE', m ? 90 : 140),
+          ]),
+        ],
+      ),
+    note: 'Interactive: 30 inflated rubber spheres (clearcoat) pulled to the centre, colliding; the cursor pushes them, grab to drag and throw, they squash with speed. Enter: they fly in from the edges.',
+  },
+  {
+    name: '10 • About Our Team',
+    copy: {
+      eyebrow: 'ABOUT OUR TEAM',
+      parts: [['Small team.'], ['Loud signal.', 'accent']],
+      desc: 'Two people build Bitrate — the player, the artist portal, the API and everything in between. Hover a bubble to meet us, drag it to play.',
+      extra: [
+        Row({ gap: 12 }, [
+          R(
+            'Stat Tile',
+            {},
+            { label: { content: 'People' }, value: { content: '2' }, sub: { enabled: false } },
+          ),
+          R(
+            'Stat Tile',
+            {},
+            { label: { content: 'Workspaces' }, value: { content: '9' }, sub: { enabled: false } },
+          ),
+          R(
+            'Stat Tile',
+            {},
+            { label: { content: 'Palette' }, value: { content: '1' }, sub: { enabled: false } },
+          ),
+        ]),
+        Row({ gap: 12 }, [
+          Button('Join us', 'large-default', { icon: 'arrow-right' }),
+          Button('How we work', 'large-outline'),
+        ]),
+      ],
+    },
+    mobileExtra: () => [
+      Button('Join us', 'large-default', { icon: 'arrow-right', width: 'fill_container' }),
+    ],
+    signal: [90, 'SIGNAL · SPHERE'],
+    ui: (m, open) =>
+      Col({ name: 'Team Pit', gap: 0, width: m ? 'fill_container' : 700, alignItems: 'center' }, [
+        open && !m && hoverCard(),
+        Row({ gap: 0, alignItems: 'end' }, [
+          tech('Next.js'),
+          person('VT'),
+          tech('NestJS', 80),
+          !m && tech('Svelte 5', 76),
+        ]),
+        Row({ gap: 0, alignItems: 'start' }, [
+          tech('Redis', 70),
+          tech('TanStack Start', 100),
+          person('AK'),
+          tech('Tauri 2', 74),
+          !m && tech('Expo', 70),
+        ]),
+      ]),
+    note: 'Interactive: bubbles fall with gravity and stack in the pit; drag and throw them. Hover a person → shadcn-style hover card with GitHub and repository links; hover a stack bubble → where it lives in the repo.',
+  },
+]
+const FINAL = {
+  name: '11 • Start',
+  note: 'Enter: the Newton\'s cradle swings in (chrome matcap balls, one sine split between the outer balls); the dome rises behind; glitch on "left off." Footer: the status pill opens the health panel.',
+}
+
+const dots = (active) =>
+  Col(
+    { name: 'Scene Dots', gap: 12, alignItems: 'center' },
+    Array.from({ length: TOTAL }, (_, i) =>
+      R(i === active ? 'Landing/Scene Dot Active' : 'Landing/Scene Dot'),
+    ),
+  )
+const counter = (i) =>
+  R(
+    'Landing/Scene Counter',
+    {},
+    {
+      index: { content: String(i + 1).padStart(2, '0') },
+      total: { content: String(TOTAL) },
+      progress: { width: Math.round((120 * (i + 1)) / TOTAL) },
+    },
+  )
+const note = (text, w = 440) => R('Landing/Motion Note', {}, { note: { content: text, width: w } })
+const sceneBar = (i, text) =>
+  L(
+    {
+      name: 'Scene Bar',
+      width: 'fill_container',
+      padding: [0, 24, 24, 120],
+      gap: 24,
+      alignItems: 'end',
+    },
+    [counter(i), L({ name: 'Spacer', width: 'fill_container' }), note(text), R('Assistant/FAB')],
+  )
+const sceneD = (sc, i, open) => {
+  const c = copy(sc.copy, false)
+  const v = sc.ui?.(false, open)
+  const stage = sc.stack
+    ? L(
+        {
+          name: 'Stage',
+          width: 'fill_container',
+          height: 'fill_container',
+          padding: [40, 64, 0, 120],
+          gap: 40,
+          alignItems: 'start',
+        },
+        [
+          Col({ name: 'Main', width: 'fill_container', gap: 36 }, [
+            Row({ name: 'Head', width: 'fill_container', gap: 40, alignItems: 'start' }, [
+              Col({ name: 'Copy', gap: 14, width: 'fill_container' }, c.children),
+              SIGNAL(...sc.signal),
+            ]),
+            v,
+          ]),
+          L(
+            {
+              name: 'Rail',
+              height: 'fill_container',
+              layout: 'vertical',
+              justifyContent: 'center',
+            },
+            [dots(i)],
+          ),
+        ],
+      )
+    : L(
+        {
+          name: 'Stage',
+          width: 'fill_container',
+          height: 'fill_container',
+          padding: [0, 64, 0, 120],
+          gap: 32,
+          alignItems: 'center',
+        },
+        [
+          ...(sc.reverse ? [v, c] : [c, v]),
+          L({ name: 'Spacer', width: 'fill_container' }),
+          SIGNAL(...sc.signal),
+          dots(i),
+        ],
+      )
+  return L({ name: sc.name, width: 'fill_container', height: 900, layout: 'vertical' }, [
+    R('Landing/Header'),
+    stage,
+    sceneBar(i, sc.note),
+  ])
+}
+const finalCopy = (m) =>
+  Col({ name: 'Copy', gap: 16, alignItems: 'center', width: m ? 'fill_container' : 900 }, [
+    Tx('Eyebrow', 'READY WHEN YOU ARE'),
+    Col({ gap: 0, alignItems: 'center', width: 'fill_container' }, [
+      Tx(style(null, m), 'Pick up where the', { wrap: true, textAlign: 'center' }),
+      Tx(style('accent', m), 'last track left off.', { wrap: true, textAlign: 'center' }),
+    ]),
+    Tx('Paragraph', 'Open Bitrate in the browser and make the next session yours.', {
+      wrap: true,
+      textAlign: 'center',
+      width: m ? 'fill_container' : 560,
+    }),
+    Button('Open web player', 'large-default', {
+      icon: 'arrow-right',
+      ...(m ? { width: 'fill_container' } : {}),
+    }),
+  ])
+/* footer with the health status slot: default pill, or a given pill variant */
+const footer = (pill) =>
+  pill
+    ? R(
+        'Landing/Footer',
+        {},
+        {
+          status: {
+            type: 'frame',
+            id: id(),
+            name: 'Status Slot',
+            children: [R(`Health/Pill ${pill}`)],
+          },
+        },
+      )
+    : R('Landing/Footer')
+const finalD = (pill, overlay) =>
+  L({ name: FINAL.name, width: 'fill_container', height: 900, layout: 'vertical' }, [
+    R('Landing/Header'),
+    L(
+      {
+        name: 'Stage',
+        width: 'fill_container',
+        height: 'fill_container',
+        padding: [0, 64, 0, 120],
+        gap: 40,
+        alignItems: 'center',
+      },
+      [
+        L({ name: 'Spacer', width: 'fill_container' }),
+        Col({ name: 'Centre', gap: 28, alignItems: 'center' }, [
+          finalCopy(false),
+          R('Landing/Cradle'),
+          Tx('Eyebrow', 'ENERGY CARRIES ON. SO DOES YOUR QUEUE.'),
+        ]),
+        L({ name: 'Spacer', width: 'fill_container' }),
+        overlay
+          ? L(
+              {
+                name: 'Overlay',
+                layout: 'vertical',
+                alignItems: 'end',
+                height: 'fill_container',
+                justifyContent: 'end',
+                padding: [0, 0, 12, 0],
+              },
+              [overlay],
+            )
+          : dots(TOTAL - 1),
+      ],
+    ),
+    sceneBar(TOTAL - 1, FINAL.note),
+    footer(pill),
+  ])
+
+const mobileHeader = () =>
+  L(
+    {
+      name: 'Mobile Header',
+      width: 'fill_container',
+      height: 64,
+      padding: [0, 8, 0, 16],
+      justifyContent: 'space_between',
+      alignItems: 'center',
+    },
+    [Logo(), R('Button/Icon Ghost', {}, { icon: { icon: 'menu' } })],
+  )
+const sceneM = (name, i, signal, body) =>
+  L({ name, width: 'fill_container', height: 844, layout: 'vertical', clip: true }, [
+    R('Mobile/Status Bar', { width: 'fill_container' }),
+    mobileHeader(),
+    L(
+      {
+        name: 'Stage',
+        width: 'fill_container',
+        height: 'fill_container',
+        layout: 'vertical',
+        padding: [8, 16],
+        gap: 18,
+        alignItems: 'center',
+      },
+      [signal && SIGNAL(...signal), ...body],
+    ),
+    L(
+      {
+        name: 'Scene Bar',
+        width: 'fill_container',
+        padding: [0, 16, 28, 16],
+        justifyContent: 'space_between',
+        alignItems: 'center',
+      },
+      [counter(i), Tx('Caption', 'Swipe'), R('Assistant/FAB')],
+    ),
+  ])
+const mobileSignal = ([size, phase], i) => (i === 0 ? null : [Math.min(size, 80), phase])
+
+const pageFrame = (name, w, children) => ({
+  type: 'frame',
+  id: id(),
+  name,
+  width: w,
+  layout: 'vertical',
+  clip: true,
+  fill: C.background,
+  children: children.flat().filter(Boolean),
+})
+
+const desktop = () => pageFrame('Landing', W, [...SCENES.map(sceneD), finalD()])
+const mobile = () =>
+  pageFrame('Landing', 390, [
+    ...SCENES.map((sc, i) =>
+      sceneM(sc.name, i, mobileSignal(sc.signal, i), [
+        copy({ ...sc.copy, extra: sc.mobileExtra?.() ?? [] }, true),
+        sc.ui?.(true),
+      ]),
+    ),
+    sceneM(FINAL.name, TOTAL - 1, null, [finalCopy(true), R('Landing/Cradle')]),
+  ])
+
+/* service health: the footer pill opens a panel of every service (demo data until /health exists) */
+const SERVICES = [
+  ['API', 'NestJS · apps/api'],
+  ['Web player', 'apps/web-player'],
+  ['Artist portal', 'apps/web-artists'],
+  ['Streaming', 'Audio delivery'],
+  ['Realtime', 'Socket.io · queue sync'],
+  ['Background jobs', 'BullMQ'],
+  ['Database', 'PostgreSQL'],
+  ['Cache', 'Redis'],
+]
+const healthPanel = (variant, w = 460) => {
+  const status = (i) =>
+    variant === 'Degraded' && i === 3
+      ? 'Degraded'
+      : variant === 'Outage' && i === 4
+        ? 'Outage'
+        : variant === 'Outage' && i === 3
+          ? 'Degraded'
+          : variant === 'Checking'
+            ? 'Checking'
+            : variant === 'Maintenance' && i === 6
+              ? 'Maintenance'
+              : 'Operational'
+  const uptime = {
+    Operational: '99.98%',
+    Degraded: '99.71%',
+    Outage: '98.40%',
+    Maintenance: '99.95%',
+    Checking: '—',
+  }
+  return R(
+    'Health/Panel',
+    { width: w },
+    {
+      overall: {
+        type: 'frame',
+        id: id(),
+        name: 'Overall',
+        children: [R(`Health/Pill ${variant}`)],
+      },
+      rows: {
+        type: 'frame',
+        id: id(),
+        name: 'Rows',
+        layout: 'vertical',
+        width: 'fill_container',
+        children: SERVICES.map(([n, meta], i) =>
+          R(
+            `Health/Service ${status(i)}`,
+            {},
+            { name: { content: n }, meta: { content: `${uptime[status(i)]} · ${meta}` } },
+          ),
+        ),
+      },
+      incident: {
+        content:
+          variant === 'Operational'
+            ? 'No incidents in the last 30 days'
+            : variant === 'Checking'
+              ? 'Fetching the latest checks…'
+              : variant === 'Maintenance'
+                ? 'Database maintenance · 02:00–02:30 UTC'
+                : variant === 'Outage'
+                  ? 'Realtime sync is down · investigating'
+                  : 'Streaming is slower than usual · monitoring',
+      },
+    },
+  )
+}
+const healthMobile = (name, variant) =>
+  L(
+    {
+      name,
+      width: 'fill_container',
+      height: 844,
+      layout: 'vertical',
+      justifyContent: 'end',
+      padding: [0, 12, 20, 12],
+      gap: 12,
+    },
+    [healthPanel(variant, 'fill_container'), R(`Health/Pill ${variant}`)],
+  )
+
+/* overlays shown on their own scrim frame: flex has no stacking, so the modal is the frame's content */
+const scrimFrame = (name, w, h, panel) => ({
+  type: 'frame',
+  id: id(),
+  name,
+  width: w,
+  height: h,
+  layout: 'vertical',
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: 16,
+  fill: C.scrim,
+  children: [panel],
+})
+const loginModal = (w) =>
+  Panel(
+    [
+      Logo(),
+      Tx('H2', 'Sign in'),
+      Tx('Paragraph', 'Please login to continue to your account.', { wrap: true }),
+      Input('Email Address', 'you@example.com'),
+      Input('Password', '••••••••'),
+      Tx('Link', 'Forgot password?'),
+      Button('Log in', 'large-default', { width: 'fill_container' }),
+      R('Auth/Or Divider'),
+      OAuth(),
+      Row({ gap: 6 }, [Tx('Muted', "Don't have an account?"), Tx('Link', 'Sign up')]),
+    ],
+    { width: w },
+  )
+const signUpModal = (w) =>
+  Panel(
+    [
+      Logo(),
+      Tx('H2', 'Sign Up'),
+      Tx('Paragraph', 'Sign up to enjoy the features of Bitrate.', { wrap: true }),
+      Input('Full Name', 'Maya Rivers'),
+      Input('Email Address', 'you@example.com'),
+      Input('Password', '••••••••'),
+      Input('Confirm Password', '••••••••'),
+      CheckRow(
+        'I am at least 16 years old, I accept the Terms of Use and Community Guidelines, and I have read the Privacy Policy.',
+      ),
+      Button('Register', 'large-default', { width: 'fill_container' }),
+      R('Auth/Or Divider'),
+      OAuth(false, { consent: false }),
+    ],
+    { width: w },
+  )
+const menu = () =>
+  pageFrame('Menu open', 390, [
+    R('Mobile/Status Bar', { width: 'fill_container' }),
+    L(
+      {
+        name: 'Mobile Header',
+        width: 'fill_container',
+        height: 64,
+        padding: [0, 8, 0, 16],
+        justifyContent: 'space_between',
+        alignItems: 'center',
+      },
+      [Logo(), R('Button/Icon Ghost', {}, { icon: { icon: 'x' } })],
+    ),
+    Col(
+      { name: 'Navigation', width: 'fill_container', padding: [16, 16], gap: 4 },
+      [
+        ['Terms of Use', 'file-text'],
+        ['Privacy Policy', 'shield'],
+        ['Community Guidelines', 'users-round'],
+      ].map(([l, _icon]) =>
+        R(
+          'Setting Row',
+          {},
+          {
+            title: { content: l },
+            desc: { enabled: false },
+            control: L({ name: 'Chevron' }, [Ic('chevron-right')]),
+          },
+        ),
+      ),
+    ),
+    L({ name: 'Spacer', width: 'fill_container', height: 360 }),
+    Col({ name: 'Actions', width: 'fill_container', padding: [16, 16, 32, 16], gap: 12 }, [
+      Button('Register', 'large-default', { width: 'fill_container' }),
+      Button('Login', 'large-outline', { width: 'fill_container' }),
+    ]),
+  ])
+
+export const landing = {
+  title: 'Landing',
+  route: '/',
+  context:
+    'Public landing as twelve fullscreen scenes, one per scroll gesture, kept in sync with landing/motion-prototype.html: signal, loop, artists, workshop, your rules, library, discovery, devices, conversation, partners, team, start. Each scene carries its motion note; the footer holds the service-health pill. Concepts and placeholder marks are labelled.',
+  desktop,
+  mobile,
+  states: [
+    state(
+      'Login modal',
+      () => scrimFrame('Login modal', W, 900, loginModal(420)),
+      () => scrimFrame('Login modal', 390, 844, loginModal('fill_container')),
+    ),
+    state(
+      'Sign-up modal',
+      () => scrimFrame('Sign-up modal', W, 900, signUpModal(440)),
+      () => scrimFrame('Sign-up modal', 390, 844, signUpModal('fill_container')),
+    ),
+    state('Menu open', null, menu, 'the desktop header shows the navigation inline'),
+    state(
+      'Status open',
+      () => pageFrame('Status open', W, [finalD('Operational', healthPanel('Operational'))]),
+      () => pageFrame('Status open', 390, [healthMobile('Status open', 'Operational')]),
+    ),
+    state(
+      'Status degraded',
+      () => pageFrame('Status degraded', W, [finalD('Degraded', healthPanel('Degraded'))]),
+      () => pageFrame('Status degraded', 390, [healthMobile('Status degraded', 'Degraded')]),
+    ),
+    state(
+      'Status outage',
+      () => pageFrame('Status outage', W, [finalD('Outage', healthPanel('Outage'))]),
+      () => pageFrame('Status outage', 390, [healthMobile('Status outage', 'Outage')]),
+    ),
+    state(
+      'Status maintenance',
+      () => pageFrame('Status maintenance', W, [finalD('Maintenance', healthPanel('Maintenance'))]),
+      () =>
+        pageFrame('Status maintenance', 390, [healthMobile('Status maintenance', 'Maintenance')]),
+    ),
+    state(
+      'Status checking',
+      () => pageFrame('Status checking', W, [finalD('Checking', healthPanel('Checking'))]),
+      () => pageFrame('Status checking', 390, [healthMobile('Status checking', 'Checking')]),
+    ),
+    state(
+      'Team hover card',
+      () => pageFrame('Team hover card', W, [sceneD(SCENES[9], 9, true)]),
+      null,
+      'hover cards need a pointer; on touch a tap opens the same card',
+    ),
+  ],
+}

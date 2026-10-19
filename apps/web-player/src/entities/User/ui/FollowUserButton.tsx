@@ -50,7 +50,7 @@ export const FollowUserButton = ({
     <button
       aria-pressed={isFollowing}
       className={cn(
-        'mt-4 rounded-full border border-white/40 px-5 py-2 text-sm font-bold text-text transition hover:scale-105 hover:border-white disabled:cursor-not-allowed disabled:opacity-60',
+        'h-9 shrink-0 rounded-md border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-surface disabled:cursor-not-allowed disabled:opacity-60',
         className,
       )}
       disabled={isPending}

@@ -1,0 +1,127 @@
+model UserSettings {
+  userId                   String   @id @db.Uuid
+  language                 String   @default("en")
+  streamingQuality         String   @default("automatic")
+  normalizeVolume          Boolean  @default(true)
+  compactLibrary           Boolean  @default(false)
+  showNowPlaying           Boolean  @default(true)
+  autoplay                 Boolean  @default(true)
+  explicitContent          Boolean  @default(true)
+  privateSession           Boolean  @default(false)
+  /// Followers see what the user is playing (friend activity).
+  showListeningActivity    Boolean  @default(true)
+  /// Other people can list who follows the user and whom the user follows.
+  followersVisible         Boolean  @default(true)
+  /// The user's public playlists are listed on their profile.
+  publicPlaylistsOnProfile Boolean  @default(true)
+  updatedAt                DateTime @default(now()) @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum NotificationType {
+  NEW_RELEASE
+  PLAYLIST_UPDATE
+  FOLLOW
+  SYSTEM
+  FRIEND_REQUEST
+  FRIEND_ACCEPTED
+}
+
+model Notification {
+  id        String           @id @default(uuid(7)) @db.Uuid
+  userId    String           @db.Uuid
+  type      NotificationType
+  title     String
+  body      String?          @db.Text
+  payload   Json?
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([userId, readAt])
+}
+
+model PlayerDevice {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  userId     String   @db.Uuid
+  name       String
+  type       String
+  isActive   Boolean  @default(false)
+  lastSeenAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  playerState PlayerState?
+
+  @@index([userId, lastSeenAt(sort: Desc)])
+}
+
+model PlayerState {
+  id             String   @id @default(uuid(7)) @db.Uuid
+  userId         String   @unique @db.Uuid
+  deviceId       String?  @unique @db.Uuid
+  currentTrackId String?  @db.Uuid
+  contextType    String?
+  contextId      String?  @db.Uuid
+  positionMs     Int      @default(0)
+  isPlaying      Boolean  @default(false)
+  shuffle        Boolean  @default(false)
+  repeatMode     String   @default("off")
+  updatedAt      DateTime @default(now()) @updatedAt
+
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  device       PlayerDevice?     @relation(fields: [deviceId], references: [id], onDelete: SetNull)
+  currentTrack Track?            @relation(fields: [currentTrackId], references: [id], onDelete: SetNull)
+  queue        PlayerQueueItem[]
+
+  @@index([currentTrackId])
+}
+
+model PlayerQueueItem {
+  id            String   @id @default(uuid(7)) @db.Uuid
+  playerStateId String   @db.Uuid
+  trackId       String   @db.Uuid
+  position      Int
+  addedAt       DateTime @default(now())
+
+  playerState PlayerState @relation(fields: [playerStateId], references: [id], onDelete: Cascade)
+  track       Track       @relation(fields: [trackId], references: [id], onDelete: Cascade)
+
+  @@unique([playerStateId, position])
+  @@index([trackId])
+}
+
+enum SubscriptionPlan {
+  FREE
+  PREMIUM_INDIVIDUAL
+  PREMIUM_DUO
+  PREMIUM_FAMILY
+  PREMIUM_STUDENT
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELED
+  PAST_DUE
+  EXPIRED
+}
+
+model Subscription {
+  id                     String             @id @default(uuid(7)) @db.Uuid
+  userId                 String             @db.Uuid
+  plan                   SubscriptionPlan   @default(FREE)
+  status                 SubscriptionStatus @default(ACTIVE)
+  provider               String?
+  providerSubscriptionId String?            @unique
+  currentPeriodStart     DateTime           @default(now())
+  currentPeriodEnd       DateTime?
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @default(now()) @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+}

@@ -1,0 +1,2459 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "TDJMae",
+      "name": "Artist / Music lifecycle & archive / Desktop / Dark",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "KnpgKK",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6bAVSI": {
+              "type": "ref",
+              "id": "GRoCMN",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "disc-3"
+                },
+                "ds:GZQzF3": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Music / Lifecycle"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Back to music"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "USZ8eH",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "EaWwKq",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "States & archive"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Know what can be changed, archived or deleted"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "kP56bu",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "HAfULR",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "4VHt5J",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "wYZAgR",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "3RLg4G",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Music lifecycle"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "rRx76a",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "Status always includes meaning and next action."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "pEW23v",
+                          "name": "Row",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "VbLGWQ",
+                              "ref": "ds:LUaCU2",
+                              "name": "Status/Neutral",
+                              "descendants": {
+                                "ds:jPj56V": {
+                                  "content": "Draft"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "3dSH6y",
+                              "ref": "ds:U7YZW8",
+                              "name": "Status/Info",
+                              "descendants": {
+                                "ds:OvU9Iz": {
+                                  "content": "Processing"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "8XmYKr",
+                              "ref": "ds:W2sXzc",
+                              "name": "Status/Error",
+                              "descendants": {
+                                "ds:cK1grY": {
+                                  "content": "Processing failed"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "byBcZz",
+                              "ref": "ds:U7YZW8",
+                              "name": "Status/Info",
+                              "descendants": {
+                                "ds:OvU9Iz": {
+                                  "content": "In review"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "uaSGA6",
+                              "ref": "ds:xtDM73",
+                              "name": "Status/Success",
+                              "descendants": {
+                                "ds:HSv7ty": {
+                                  "content": "Published"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "rEAxwA",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "mE52i4",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "KQwNSW",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "chH4GR",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Actions by current state"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "n4QabU",
+                          "ref": "ds:LYSQXR",
+                          "name": "Table/Header Row",
+                          "descendants": {
+                            "ds:pFdzls": {
+                              "type": "frame",
+                              "id": "N2QTDT",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "ckbAM7",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Item"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "NzWXRZ",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "textGrowth": "fixed-width",
+                                  "width": 140,
+                                  "content": "State"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "QardJc",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "textGrowth": "fixed-width",
+                                  "width": 240,
+                                  "content": "Available actions"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "UTA8HF",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "textGrowth": "fixed-width",
+                                  "width": 220,
+                                  "content": "Impact"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "4qFdvX",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "JqAQ8P",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "eXQBv6",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Neon Sketches"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "ptZ2Fy",
+                                  "name": "Cell",
+                                  "width": 140,
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "4E52tc",
+                                      "ref": "ds:LUaCU2",
+                                      "name": "Status/Neutral",
+                                      "descendants": {
+                                        "ds:jPj56V": {
+                                          "content": "Draft"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "AbJNyt",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 240,
+                                  "content": "Edit · Archive · Delete draft"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "rqc8z9",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 220,
+                                  "content": "No public listeners"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "2oUpiB",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "hiABdy",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "uSoKFN",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Parallel Minds"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "nPoWdj",
+                                  "name": "Cell",
+                                  "width": 140,
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "fVM6HJ",
+                                      "ref": "ds:W2sXzc",
+                                      "name": "Status/Error",
+                                      "descendants": {
+                                        "ds:cK1grY": {
+                                          "content": "Processing failed"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "qvQVh8",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 240,
+                                  "content": "Retry · Remove upload"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "k3yWjq",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 220,
+                                  "content": "Draft remains intact"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "jSFZzD",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "uRMjTF",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "PKai6J",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Afterglow"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "8bAdm6",
+                                  "name": "Cell",
+                                  "width": 140,
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "kTzNGG",
+                                      "ref": "ds:U7YZW8",
+                                      "name": "Status/Info",
+                                      "descendants": {
+                                        "ds:OvU9Iz": {
+                                          "content": "In review"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "HDpnCG",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 240,
+                                  "content": "Open workspace"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "5fvQhF",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 220,
+                                  "content": "Archive unavailable during review"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "QnSSQb",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "YerHJa",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "sKpK3W",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Night Signal"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "VWTvQY",
+                                  "name": "Cell",
+                                  "width": 140,
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "4fdXPt",
+                                      "ref": "ds:xtDM73",
+                                      "name": "Status/Success",
+                                      "descendants": {
+                                        "ds:HSv7ty": {
+                                          "content": "Published"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "gk6Qrx",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 240,
+                                  "content": "Archive"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "wpkRwu",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 220,
+                                  "content": "Analytics and history preserved"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — lifecycle, archive and delete — What can be changed, archived or deleted in each state."
+    },
+    {
+      "type": "frame",
+      "id": "SP9h7c",
+      "name": "Artist / Music lifecycle & archive / Desktop / Light",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "N6fi7v",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6bAVSI": {
+              "type": "ref",
+              "id": "ovjkFY",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "disc-3"
+                },
+                "ds:GZQzF3": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Music / Lifecycle"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Back to music"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "gN38LX",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "VFYc4e",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "States & archive"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Know what can be changed, archived or deleted"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "Nwgpw2",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "GEFyp7",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "w4WKsb",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "CQZiuD",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "eGxn34",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Music lifecycle"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "5ezgs4",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "Status always includes meaning and next action."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Pkx9RT",
+                          "name": "Row",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "6azcUT",
+                              "ref": "ds:LUaCU2",
+                              "name": "Status/Neutral",
+                              "descendants": {
+                                "ds:jPj56V": {
+                                  "content": "Draft"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "b9WR2g",
+                              "ref": "ds:U7YZW8",
+                              "name": "Status/Info",
+                              "descendants": {
+                                "ds:OvU9Iz": {
+                                  "content": "Processing"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "9fwQQM",
+                              "ref": "ds:W2sXzc",
+                              "name": "Status/Error",
+                              "descendants": {
+                                "ds:cK1grY": {
+                                  "content": "Processing failed"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "twzYUx",
+                              "ref": "ds:U7YZW8",
+                              "name": "Status/Info",
+                              "descendants": {
+                                "ds:OvU9Iz": {
+                                  "content": "In review"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "eLNfbu",
+                              "ref": "ds:xtDM73",
+                              "name": "Status/Success",
+                              "descendants": {
+                                "ds:HSv7ty": {
+                                  "content": "Published"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "EB77bk",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "ezFe2c",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "RchJ8g",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "iuAh89",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Actions by current state"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "658FXK",
+                          "ref": "ds:LYSQXR",
+                          "name": "Table/Header Row",
+                          "descendants": {
+                            "ds:pFdzls": {
+                              "type": "frame",
+                              "id": "3f8sY9",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "yGNCA2",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Item"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "YCG5iw",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "textGrowth": "fixed-width",
+                                  "width": 140,
+                                  "content": "State"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "EibDSC",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "textGrowth": "fixed-width",
+                                  "width": 240,
+                                  "content": "Available actions"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "5UcGTr",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "textGrowth": "fixed-width",
+                                  "width": 220,
+                                  "content": "Impact"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "XiWYk6",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "Qfusar",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "DTqZg9",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Neon Sketches"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "MCjn9k",
+                                  "name": "Cell",
+                                  "width": 140,
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "iS6UMU",
+                                      "ref": "ds:LUaCU2",
+                                      "name": "Status/Neutral",
+                                      "descendants": {
+                                        "ds:jPj56V": {
+                                          "content": "Draft"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "asXWFC",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 240,
+                                  "content": "Edit · Archive · Delete draft"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "zqLMyb",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 220,
+                                  "content": "No public listeners"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "zANLsK",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "njWXQd",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "kJSuLi",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Parallel Minds"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "cbSPYb",
+                                  "name": "Cell",
+                                  "width": 140,
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "X9rDPz",
+                                      "ref": "ds:W2sXzc",
+                                      "name": "Status/Error",
+                                      "descendants": {
+                                        "ds:cK1grY": {
+                                          "content": "Processing failed"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "9Up97R",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 240,
+                                  "content": "Retry · Remove upload"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "sNrmwq",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 220,
+                                  "content": "Draft remains intact"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "7dTx5c",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "i7tDmT",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "PYW5CM",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Afterglow"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "PrBH2U",
+                                  "name": "Cell",
+                                  "width": 140,
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "DBZghk",
+                                      "ref": "ds:U7YZW8",
+                                      "name": "Status/Info",
+                                      "descendants": {
+                                        "ds:OvU9Iz": {
+                                          "content": "In review"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "G7JnF7",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 240,
+                                  "content": "Open workspace"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "cNYYGV",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 220,
+                                  "content": "Archive unavailable during review"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "WZtU6P",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "7QJsQH",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "QV5BhV",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Night Signal"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "xV6q3Y",
+                                  "name": "Cell",
+                                  "width": 140,
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "nqdKYC",
+                                      "ref": "ds:xtDM73",
+                                      "name": "Status/Success",
+                                      "descendants": {
+                                        "ds:HSv7ty": {
+                                          "content": "Published"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "U37igQ",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 240,
+                                  "content": "Archive"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "3WNUSV",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 220,
+                                  "content": "Analytics and history preserved"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "designed — lifecycle, archive and delete — What can be changed, archived or deleted in each state."
+    },
+    {
+      "type": "frame",
+      "id": "nsWRGW",
+      "name": "Artist / Music lifecycle & archive / Desktop / Dim",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "zDLBbT",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6bAVSI": {
+              "type": "ref",
+              "id": "2rEWFA",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "disc-3"
+                },
+                "ds:GZQzF3": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Music / Lifecycle"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Back to music"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "LgVuV2",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "shrgLh",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "States & archive"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Know what can be changed, archived or deleted"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "Lmce5J",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "63KS9r",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "mh2u2E",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "aHEiU5",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "uLNwWt",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Music lifecycle"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "uN4EnK",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "Status always includes meaning and next action."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "29arkZ",
+                          "name": "Row",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "R9ecWv",
+                              "ref": "ds:LUaCU2",
+                              "name": "Status/Neutral",
+                              "descendants": {
+                                "ds:jPj56V": {
+                                  "content": "Draft"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "K7XiBN",
+                              "ref": "ds:U7YZW8",
+                              "name": "Status/Info",
+                              "descendants": {
+                                "ds:OvU9Iz": {
+                                  "content": "Processing"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "CrcGuM",
+                              "ref": "ds:W2sXzc",
+                              "name": "Status/Error",
+                              "descendants": {
+                                "ds:cK1grY": {
+                                  "content": "Processing failed"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "VEaaHm",
+                              "ref": "ds:U7YZW8",
+                              "name": "Status/Info",
+                              "descendants": {
+                                "ds:OvU9Iz": {
+                                  "content": "In review"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "JhGJzg",
+                              "ref": "ds:xtDM73",
+                              "name": "Status/Success",
+                              "descendants": {
+                                "ds:HSv7ty": {
+                                  "content": "Published"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "kB2B9H",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "VCjyRx",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "9wShJ7",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "VwtcTY",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Actions by current state"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "xcemQq",
+                          "ref": "ds:LYSQXR",
+                          "name": "Table/Header Row",
+                          "descendants": {
+                            "ds:pFdzls": {
+                              "type": "frame",
+                              "id": "MrJBsB",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "7rDcdT",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Item"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "D5JNdK",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "textGrowth": "fixed-width",
+                                  "width": 140,
+                                  "content": "State"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ZmC6a5",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "textGrowth": "fixed-width",
+                                  "width": 240,
+                                  "content": "Available actions"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "QqsBm4",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "textGrowth": "fixed-width",
+                                  "width": 220,
+                                  "content": "Impact"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "2R7Txz",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "VRYYfY",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "B4CkHd",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Neon Sketches"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "WDnycp",
+                                  "name": "Cell",
+                                  "width": 140,
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "d7VQjS",
+                                      "ref": "ds:LUaCU2",
+                                      "name": "Status/Neutral",
+                                      "descendants": {
+                                        "ds:jPj56V": {
+                                          "content": "Draft"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "i2jcAb",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 240,
+                                  "content": "Edit · Archive · Delete draft"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "QDWsR8",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 220,
+                                  "content": "No public listeners"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "xNkGeu",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "MW2hfn",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "Sco7ig",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Parallel Minds"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "5JEB2c",
+                                  "name": "Cell",
+                                  "width": 140,
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "37hpj8",
+                                      "ref": "ds:W2sXzc",
+                                      "name": "Status/Error",
+                                      "descendants": {
+                                        "ds:cK1grY": {
+                                          "content": "Processing failed"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "DFnuNt",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 240,
+                                  "content": "Retry · Remove upload"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "JHVL53",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 220,
+                                  "content": "Draft remains intact"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "tf97Jf",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "DxFPk8",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "FcSAPm",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Afterglow"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "u69wer",
+                                  "name": "Cell",
+                                  "width": 140,
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "Pfy9GP",
+                                      "ref": "ds:U7YZW8",
+                                      "name": "Status/Info",
+                                      "descendants": {
+                                        "ds:OvU9Iz": {
+                                          "content": "In review"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ogq4pd",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 240,
+                                  "content": "Open workspace"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "5kPavS",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 220,
+                                  "content": "Archive unavailable during review"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "tBJiWd",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "QEHk6r",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "itdoWT",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Night Signal"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "r8Nw35",
+                                  "name": "Cell",
+                                  "width": 140,
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "UkSwHd",
+                                      "ref": "ds:xtDM73",
+                                      "name": "Status/Success",
+                                      "descendants": {
+                                        "ds:HSv7ty": {
+                                          "content": "Published"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "GRU3Dx",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 240,
+                                  "content": "Archive"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "nkSZLw",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "textGrowth": "fixed-width",
+                                  "width": 220,
+                                  "content": "Analytics and history preserved"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "designed — lifecycle, archive and delete — What can be changed, archived or deleted in each state."
+    },
+    {
+      "type": "frame",
+      "id": "Anqmfj",
+      "name": "Artist / Music lifecycle & archive / Mobile / Dark",
+      "width": 390,
+      "height": 1800,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "pajHyE",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1800,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "kmi6Uh",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "ppacGp",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "States & archive"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Know what can be changed, archived or deleted"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "gbrqFb",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "7UKvVB",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "UatMDG",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "tv6HNK",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "JYjszr",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Music lifecycle"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "SbN4aH",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "Status always includes meaning and next action."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "5HJs8E",
+                          "name": "Row",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "v2Z8pb",
+                              "ref": "ds:LUaCU2",
+                              "name": "Status/Neutral",
+                              "descendants": {
+                                "ds:jPj56V": {
+                                  "content": "Draft"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "dx6Yj6",
+                              "ref": "ds:U7YZW8",
+                              "name": "Status/Info",
+                              "descendants": {
+                                "ds:OvU9Iz": {
+                                  "content": "Processing"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "5xpMGf",
+                              "ref": "ds:W2sXzc",
+                              "name": "Status/Error",
+                              "descendants": {
+                                "ds:cK1grY": {
+                                  "content": "Processing failed"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "r476NN",
+                              "ref": "ds:U7YZW8",
+                              "name": "Status/Info",
+                              "descendants": {
+                                "ds:OvU9Iz": {
+                                  "content": "In review"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "t9y7AF",
+                              "ref": "ds:xtDM73",
+                              "name": "Status/Success",
+                              "descendants": {
+                                "ds:HSv7ty": {
+                                  "content": "Published"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "BsJLsB",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "s2kVfo",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "jwCbxU",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "VyFWBg",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Actions by current state"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ynp3FQ",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "iVrQVy",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "QYsGGY",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Neon Sketches"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "26QPq8",
+                                  "name": "Cell",
+                                  "width": 140,
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "kfzXEi",
+                                      "ref": "ds:LUaCU2",
+                                      "name": "Status/Neutral",
+                                      "descendants": {
+                                        "ds:jPj56V": {
+                                          "content": "Draft"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "RmacTw",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "x3d7nW",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "W55dyK",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Parallel Minds"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "YQK86E",
+                                  "name": "Cell",
+                                  "width": 140,
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "Shw8NN",
+                                      "ref": "ds:W2sXzc",
+                                      "name": "Status/Error",
+                                      "descendants": {
+                                        "ds:cK1grY": {
+                                          "content": "Processing failed"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "CSZ7pP",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "nDJHQV",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "9w2JSg",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Afterglow"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "wRCTbb",
+                                  "name": "Cell",
+                                  "width": 140,
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "zQkeNV",
+                                      "ref": "ds:U7YZW8",
+                                      "name": "Status/Info",
+                                      "descendants": {
+                                        "ds:OvU9Iz": {
+                                          "content": "In review"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "KL8VDH",
+                          "ref": "ds:0nFJkJ",
+                          "name": "Table/Row",
+                          "descendants": {
+                            "ds:idqVqd": {
+                              "type": "frame",
+                              "id": "SZAR9z",
+                              "name": "Cells",
+                              "gap": 16,
+                              "alignItems": "center",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "WeRU7y",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Night Signal"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "YmyxeV",
+                                  "name": "Cell",
+                                  "width": 140,
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "g9SPLb",
+                                      "ref": "ds:xtDM73",
+                                      "name": "Status/Success",
+                                      "descendants": {
+                                        "ds:HSv7ty": {
+                                          "content": "Published"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — lifecycle, archive and delete — What can be changed, archived or deleted in each state."
+    },
+    {
+      "type": "frame",
+      "id": "fcGWfx",
+      "name": "Artist / Music lifecycle & archive / Archive confirmation / Desktop",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "uDvZGq",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6bAVSI": {
+              "type": "ref",
+              "id": "s29bYm",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "disc-3"
+                },
+                "ds:GZQzF3": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Music / Lifecycle"
+            },
+            "ds:YLdi4o": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "aAX53c",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "4cMa9y",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "width": 520,
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "zXQzwC",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "rWJS5L",
+                          "ref": "ds:yjiPHo",
+                          "name": "Text/Eyebrow",
+                          "content": "PUBLISHED RELEASE"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "pCm2pT",
+                          "ref": "ds:Qjj2NE",
+                          "name": "Text/H3",
+                          "content": "Archive Night Signal?"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ntWuCZ",
+                          "ref": "ds:XDvNAD",
+                          "name": "Text/Paragraph",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "The release will disappear from your public catalog on Bitrate. Existing analytics, comments and history stay."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "yoKZrS",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Preserved"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "7f4dCD",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "zuFY3C",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Analytics · history · release workspace"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "sGB3X8",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Hidden publicly"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "8a9nL8",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "jw4oqC",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Removed from the artist catalog"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "nXLdaa",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "You can restore this release later."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "u2JxXa",
+                          "name": "Row",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "N5RLTV",
+                              "ref": "ds:uT1Ux",
+                              "name": "Button / Archive release",
+                              "descendants": {
+                                "ds:QLznA": {
+                                  "content": "Archive release"
+                                },
+                                "ds:CxlXV": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "XvoAN5",
+                              "ref": "ds:DTwJb",
+                              "name": "Button / Cancel",
+                              "descendants": {
+                                "ds:GyGLK": {
+                                  "content": "Cancel"
+                                },
+                                "ds:uRXDu": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — lifecycle, archive and delete — What can be changed, archived or deleted in each state."
+    },
+    {
+      "type": "frame",
+      "id": "rbwjpk",
+      "name": "Artist / Music lifecycle & archive / Archive confirmation / Mobile",
+      "width": 390,
+      "height": 1100,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "mdixQQ",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1100,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "3Jiybg",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "b5jTgs",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "7QgmvR",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "iVyyfk",
+                          "ref": "ds:yjiPHo",
+                          "name": "Text/Eyebrow",
+                          "content": "PUBLISHED RELEASE"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Y26ap6",
+                          "ref": "ds:Qjj2NE",
+                          "name": "Text/H3",
+                          "content": "Archive Night Signal?"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "xWNgZw",
+                          "ref": "ds:XDvNAD",
+                          "name": "Text/Paragraph",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "The release will disappear from your public catalog on Bitrate. Existing analytics, comments and history stay."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "LbdgSu",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Preserved"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "2oPhB2",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "WoZ9ai",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Analytics · history · release workspace"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "5pwQTM",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Hidden publicly"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "R3F6d3",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "DSE2px",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Removed from the artist catalog"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ADhzoH",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "You can restore this release later."
+                        },
+                        {
+                          "type": "frame",
+                          "id": "TBySU5",
+                          "name": "Row",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "zR4eLn",
+                              "ref": "ds:uT1Ux",
+                              "name": "Button / Archive release",
+                              "descendants": {
+                                "ds:QLznA": {
+                                  "content": "Archive release"
+                                },
+                                "ds:CxlXV": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "RBtQ44",
+                              "ref": "ds:DTwJb",
+                              "name": "Button / Cancel",
+                              "descendants": {
+                                "ds:GyGLK": {
+                                  "content": "Cancel"
+                                },
+                                "ds:uRXDu": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — lifecycle, archive and delete — What can be changed, archived or deleted in each state."
+    }
+  ]
+}

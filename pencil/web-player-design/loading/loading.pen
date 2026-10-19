@@ -1,0 +1,3786 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "Bwfgpi",
+      "name": "Loading & progress / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "tbJPd2",
+          "ref": "ds:YMwTjK",
+          "name": "Loader/Splash"
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide loading, progress and status patterns — How every screen waits: boot splash, route bar, list skeletons that mirror the final layout, buffering, saving, inline statuses, slow network and infinite lists."
+    },
+    {
+      "type": "frame",
+      "id": "CWEvMB",
+      "name": "Loading & progress / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "fcKCXz",
+          "ref": "ds:YMwTjK",
+          "name": "Loader/Splash"
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "system — app-wide loading, progress and status patterns — How every screen waits: boot splash, route bar, list skeletons that mirror the final layout, buffering, saving, inline statuses, slow network and infinite lists."
+    },
+    {
+      "type": "frame",
+      "id": "fMphS5",
+      "name": "Loading & progress / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "zamy55",
+          "ref": "ds:YMwTjK",
+          "name": "Loader/Splash"
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "system — app-wide loading, progress and status patterns — How every screen waits: boot splash, route bar, list skeletons that mirror the final layout, buffering, saving, inline statuses, slow network and infinite lists."
+    },
+    {
+      "type": "frame",
+      "id": "gqLQYJ",
+      "name": "Loading & progress / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "LDJ73e",
+          "ref": "ds:YMwTjK",
+          "name": "Loader/Splash"
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide loading, progress and status patterns — How every screen waits: boot splash, route bar, list skeletons that mirror the final layout, buffering, saving, inline statuses, slow network and infinite lists."
+    },
+    {
+      "type": "frame",
+      "id": "WxiZzt",
+      "name": "Loading & progress / Logo loader / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "g8XiW9",
+          "ref": "ds:RoXXJv",
+          "name": "Text/H2",
+          "content": "Logo loader — write, pulse, erase"
+        },
+        {
+          "type": "frame",
+          "id": "j7iqNs",
+          "name": "Keyframes",
+          "gap": 56,
+          "alignItems": "end",
+          "children": [
+            {
+              "type": "frame",
+              "id": "shib8Z",
+              "name": "Column",
+              "layout": "vertical",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "nQV7jL",
+                  "ref": "ds:LkHVQN",
+                  "name": "Loader/Logo Write"
+                },
+                {
+                  "type": "ref",
+                  "id": "dXVc6R",
+                  "ref": "ds:PiqhAO",
+                  "name": "Text/Caption",
+                  "content": "0–0.9 s · a brush writes the upper ribbon"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "BvJNc6",
+              "name": "Column",
+              "layout": "vertical",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "VuyF95",
+                  "ref": "ds:fXIWRe",
+                  "name": "Loader/Logo Pulse"
+                },
+                {
+                  "type": "ref",
+                  "id": "u6sK36",
+                  "ref": "ds:PiqhAO",
+                  "name": "Text/Caption",
+                  "content": "0.9–1.6 s · the lower ribbon lands, a light runs the contour"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "RuUf7p",
+              "name": "Column",
+              "layout": "vertical",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "6Q6r4a",
+                  "ref": "ds:sqk2uu",
+                  "name": "Loader/Logo Erase"
+                },
+                {
+                  "type": "ref",
+                  "id": "Wszrv4",
+                  "ref": "ds:PiqhAO",
+                  "name": "Text/Caption",
+                  "content": "1.6–2.3 s · erased in the same direction, loop"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "JHAAHW",
+              "name": "Column",
+              "layout": "vertical",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Pr2ayL",
+                  "ref": "ds:fme70x",
+                  "name": "Loader/Logo Mini",
+                  "width": 48,
+                  "height": 47
+                },
+                {
+                  "type": "ref",
+                  "id": "7HSnKu",
+                  "ref": "ds:PiqhAO",
+                  "name": "Text/Caption",
+                  "content": "Mini · comet on the outline"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "ref",
+          "id": "imZyNa",
+          "ref": "ds:BkcFhG",
+          "name": "Landing/Motion Note",
+          "descendants": {
+            "ds:ECEzQk": {
+              "content": "A mask of two strokes along the ribbon spines reveals the real mark; a glowing head follows the brush tip. Determinate mode maps progress to the write. Reduced motion: the mark fades in and out.",
+              "width": 620
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide loading, progress and status patterns — How every screen waits: boot splash, route bar, list skeletons that mirror the final layout, buffering, saving, inline statuses, slow network and infinite lists."
+    },
+    {
+      "type": "frame",
+      "id": "6FoNqe",
+      "name": "Loading & progress / Logo loader / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "iDiCoU",
+          "ref": "ds:fXIWRe",
+          "name": "Loader/Logo Pulse"
+        },
+        {
+          "type": "ref",
+          "id": "5mGuPe",
+          "ref": "ds:PiqhAO",
+          "name": "Text/Caption",
+          "content": "Splash on phones: the same write-on, 120 px"
+        },
+        {
+          "type": "ref",
+          "id": "wqeBhP",
+          "ref": "ds:fme70x",
+          "name": "Loader/Logo Mini",
+          "width": 32,
+          "height": 31
+        },
+        {
+          "type": "ref",
+          "id": "PkgMGC",
+          "ref": "ds:PiqhAO",
+          "name": "Text/Caption",
+          "content": "Inline: the mini comet beside a label"
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide loading, progress and status patterns — How every screen waits: boot splash, route bar, list skeletons that mirror the final layout, buffering, saving, inline statuses, slow network and infinite lists."
+    },
+    {
+      "type": "frame",
+      "id": "QuAbRV",
+      "name": "Loading & progress / Route change / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "xttR22",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "CdAHaw",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "9m9GXt",
+                  "ref": "ds:FJ4n0F",
+                  "name": "Progress/Route Bar"
+                },
+                {
+                  "type": "frame",
+                  "id": "X8Gi3y",
+                  "name": "Loading",
+                  "layout": "vertical",
+                  "gap": 24,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "rbUj9a",
+                      "ref": "ds:Jjegi",
+                      "name": "Skeleton",
+                      "width": 220,
+                      "height": 28
+                    },
+                    {
+                      "type": "frame",
+                      "id": "SQVYzJ",
+                      "name": "Skeleton Grid",
+                      "layout": "vertical",
+                      "gap": 24,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Jwc8cF",
+                          "name": "Skeleton Cards",
+                          "gap": 20,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "8a399w",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "Wzs2zE",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "hRpVKj",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "DDUSoR",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "RjMC8t",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "eKagzr",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Y5iKRE",
+                          "name": "Skeleton Cards",
+                          "gap": 20,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "Rxh5ym",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "XQhsh4",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "RarhHE",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "FyyxMW",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "hf9sST",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "GVgxPm",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "WGPsMB",
+                          "name": "Skeleton Cards",
+                          "gap": 20,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "khFdux",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "S7eeDT",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "GCsPFy",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "Syztny",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "uL9s4S",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "bH5oPy",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide loading, progress and status patterns — How every screen waits: boot splash, route bar, list skeletons that mirror the final layout, buffering, saving, inline statuses, slow network and infinite lists."
+    },
+    {
+      "type": "frame",
+      "id": "DJVhFH",
+      "name": "Loading & progress / Route change / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "k4GVGJ",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "PjbFwi",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Library"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "XibYUu",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "giH73N",
+              "ref": "ds:FJ4n0F",
+              "name": "Progress/Route Bar"
+            },
+            {
+              "type": "frame",
+              "id": "WgeLBW",
+              "name": "Loading",
+              "layout": "vertical",
+              "gap": 24,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "zsS3bp",
+                  "ref": "ds:Jjegi",
+                  "name": "Skeleton",
+                  "width": 140,
+                  "height": 28
+                },
+                {
+                  "type": "frame",
+                  "id": "PF3BQQ",
+                  "name": "Skeleton Grid",
+                  "layout": "vertical",
+                  "gap": 24,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "cX2Cuz",
+                      "name": "Skeleton Cards",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "VNbtWo",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "9RH6wP",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "hfLBtR",
+                      "name": "Skeleton Cards",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "XHsGtJ",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "S5TbUy",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "XEWYhL",
+                      "name": "Skeleton Cards",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "W3Rwxh",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Qo4j2D",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "sUR5wx",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "RF88tX",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:67K2eN": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:ApEsiS": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide loading, progress and status patterns — How every screen waits: boot splash, route bar, list skeletons that mirror the final layout, buffering, saving, inline statuses, slow network and infinite lists."
+    },
+    {
+      "type": "frame",
+      "id": "Nqw9h8",
+      "name": "Loading & progress / Buffering / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Zxy5oG",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "6My8Hm",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "mBb9ut",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "kNHhKU",
+                      "name": "Player",
+                      "layout": "vertical",
+                      "gap": 18,
+                      "width": 420,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "gpDYHT",
+                          "ref": "ds:awAtR9",
+                          "name": "Media/Cover Large",
+                          "width": 360,
+                          "height": 360,
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "5XVoUP",
+                          "name": "Column",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "m9rwTk",
+                              "ref": "ds:Qjj2NE",
+                              "name": "Text/H3",
+                              "content": "Night Signal"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "39MECM",
+                              "ref": "ds:C5Ih8u",
+                              "name": "Text/Muted",
+                              "content": "Demo artist"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "tvmu7e",
+                          "ref": "ds:RzC9ls",
+                          "name": "Seek Bar/Buffering"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Y3YnvK",
+                          "ref": "ds:8PfYYb",
+                          "name": "Transport"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": true
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 9170,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide loading, progress and status patterns — How every screen waits: boot splash, route bar, list skeletons that mirror the final layout, buffering, saving, inline statuses, slow network and infinite lists."
+    },
+    {
+      "type": "frame",
+      "id": "du6xiC",
+      "name": "Loading & progress / Buffering / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "usyPgj",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "SDDANY",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Now playing"
+            },
+            "ds:hgNxYE": {
+              "icon": "chevron-down"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "AeC5zX",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "qKXHkF",
+              "name": "Player",
+              "layout": "vertical",
+              "gap": 18,
+              "width": "fill_container",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "BksKd4",
+                  "ref": "ds:awAtR9",
+                  "name": "Media/Cover Large",
+                  "width": 300,
+                  "height": 300,
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-night-signal.webp",
+                    "mode": "cover"
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "E4f8Ns",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "wZLGAa",
+                      "ref": "ds:Qjj2NE",
+                      "name": "Text/H3",
+                      "content": "Night Signal"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "3XeDS2",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "Demo artist"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "tYUkct",
+                  "ref": "ds:RzC9ls",
+                  "name": "Seek Bar/Buffering"
+                },
+                {
+                  "type": "ref",
+                  "id": "HLkzi7",
+                  "ref": "ds:8PfYYb",
+                  "name": "Transport"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "hM63LV",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "UCfSSp",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:67K2eN": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:ApEsiS": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 10710,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide loading, progress and status patterns — How every screen waits: boot splash, route bar, list skeletons that mirror the final layout, buffering, saving, inline statuses, slow network and infinite lists."
+    },
+    {
+      "type": "frame",
+      "id": "TW7oBP",
+      "name": "Loading & progress / Saving / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "zouVaq",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "RNq2Bg",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "6E734v",
+                  "ref": "ds:MgMQ2L",
+                  "name": "Text/H1",
+                  "content": "Night Drive"
+                },
+                {
+                  "type": "frame",
+                  "id": "ufEUso",
+                  "name": "Track Table",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ZU8Pfx",
+                      "ref": "ds:gwXgvi",
+                      "name": "Track Table/Header"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "JQiSrt",
+                      "ref": "ds:XzmRy1",
+                      "name": "Track Row/Playing",
+                      "descendants": {
+                        "ds:c4PJ5R": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-afterglow.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:RKnhla": {
+                          "content": "Afterglow"
+                        },
+                        "ds:07Q8NN": {
+                          "content": "Nova & the Static"
+                        },
+                        "ds:VxmOIl": {
+                          "content": "Afterglow"
+                        },
+                        "ds:0Dde7d": {
+                          "content": "Today"
+                        },
+                        "ds:QnYex1": {
+                          "content": "3:42"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "xWKdVR",
+                      "ref": "ds:WQxBT",
+                      "name": "Track / Night Signal",
+                      "descendants": {
+                        "ds:YSAj4": {
+                          "content": "2"
+                        },
+                        "ds:PptA9": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:eGEfP": {
+                          "content": "Night Signal"
+                        },
+                        "ds:cNYVw": {
+                          "content": "Mira Sol"
+                        },
+                        "ds:REBNx": {
+                          "content": "Night Signal"
+                        },
+                        "ds:QCCe4": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "4B2tWX",
+                      "ref": "ds:WQxBT",
+                      "name": "Track / Static Lines",
+                      "descendants": {
+                        "ds:YSAj4": {
+                          "content": "3"
+                        },
+                        "ds:PptA9": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-static-lines.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:eGEfP": {
+                          "content": "Static Lines"
+                        },
+                        "ds:cNYVw": {
+                          "content": "Kite Harbor"
+                        },
+                        "ds:REBNx": {
+                          "content": "Static Lines"
+                        },
+                        "ds:QCCe4": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "PoTt5f",
+                      "ref": "ds:WQxBT",
+                      "name": "Track / Echoes in Motion",
+                      "descendants": {
+                        "ds:YSAj4": {
+                          "content": "4"
+                        },
+                        "ds:PptA9": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:eGEfP": {
+                          "content": "Echoes in Motion"
+                        },
+                        "ds:cNYVw": {
+                          "content": "Lumen Choir"
+                        },
+                        "ds:REBNx": {
+                          "content": "Echoes in Motion"
+                        },
+                        "ds:QCCe4": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "GmYg8R",
+                      "ref": "ds:WQxBT",
+                      "name": "Track / Drift Control",
+                      "descendants": {
+                        "ds:YSAj4": {
+                          "content": "5"
+                        },
+                        "ds:PptA9": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-drift-control.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:eGEfP": {
+                          "content": "Drift Control"
+                        },
+                        "ds:cNYVw": {
+                          "content": "Mira Sol"
+                        },
+                        "ds:REBNx": {
+                          "content": "Drift Control"
+                        },
+                        "ds:QCCe4": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "TqGTv3",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "LEmVeF",
+                      "ref": "ds:API0AZ",
+                      "name": "Toast/Progress"
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 11200,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide loading, progress and status patterns — How every screen waits: boot splash, route bar, list skeletons that mirror the final layout, buffering, saving, inline statuses, slow network and infinite lists."
+    },
+    {
+      "type": "frame",
+      "id": "sRr97u",
+      "name": "Loading & progress / Saving / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "8f3MZe",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "PDz52H",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Night Drive"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "2jwU8D",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "A6QbaZ",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Afterglow",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-afterglow.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Afterglow"
+                },
+                "ds:rFh9q": {
+                  "content": "Nova & the Static"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "ZMv5Hc",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night Signal",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-night-signal.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night Signal"
+                },
+                "ds:rFh9q": {
+                  "content": "Mira Sol"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "D6pZoQ",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Static Lines",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-static-lines.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Static Lines"
+                },
+                "ds:rFh9q": {
+                  "content": "Kite Harbor"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "PUQ7hk",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Echoes in Motion",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Echoes in Motion"
+                },
+                "ds:rFh9q": {
+                  "content": "Lumen Choir"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "QyHPtU",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Drift Control",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-drift-control.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Drift Control"
+                },
+                "ds:rFh9q": {
+                  "content": "Mira Sol"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "fQDhm2",
+              "ref": "ds:API0AZ",
+              "name": "Toast/Progress",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "vLA2LT",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "Emx3Bp",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:67K2eN": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:ApEsiS": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 12740,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide loading, progress and status patterns — How every screen waits: boot splash, route bar, list skeletons that mirror the final layout, buffering, saving, inline statuses, slow network and infinite lists."
+    },
+    {
+      "type": "frame",
+      "id": "y9JGf8",
+      "name": "Loading & progress / Statuses / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "tX2kQu",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "QTucyx",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "HgWC4E",
+                  "ref": "ds:MgMQ2L",
+                  "name": "Text/H1",
+                  "content": "Loading & status patterns"
+                },
+                {
+                  "type": "frame",
+                  "id": "MEsZqu",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "UaUb2T",
+                      "ref": "ds:x4Fixv",
+                      "name": "Surface/Panel",
+                      "descendants": {
+                        "ds:xhr0E3": {
+                          "type": "frame",
+                          "id": "xXNkCc",
+                          "name": "Panel Content",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "Vm3SvD",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Statuses"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "uq2xja",
+                              "ref": "ds:N5g4u6",
+                              "name": "Setting Row",
+                              "descendants": {
+                                "ds:FznZ4S": {
+                                  "content": "Library"
+                                },
+                                "ds:CVvAJE": {
+                                  "content": "Fetching your playlists and liked songs."
+                                },
+                                "ds:ahEMZM": {
+                                  "type": "frame",
+                                  "id": "HwRRhQ",
+                                  "name": "Control",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "FwfmvA",
+                                      "ref": "ds:SCXKCc",
+                                      "name": "Status/Loading",
+                                      "descendants": {
+                                        "ds:RtIlHB": {
+                                          "content": "Loading"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "SrAYHt",
+                              "ref": "ds:N5g4u6",
+                              "name": "Setting Row",
+                              "descendants": {
+                                "ds:FznZ4S": {
+                                  "content": "Devices"
+                                },
+                                "ds:CVvAJE": {
+                                  "content": "Queue and position follow you between devices."
+                                },
+                                "ds:ahEMZM": {
+                                  "type": "frame",
+                                  "id": "DC9S4C",
+                                  "name": "Control",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "6qF7EP",
+                                      "ref": "ds:Ltfcwo",
+                                      "name": "Status/Syncing",
+                                      "descendants": {
+                                        "ds:IyJdUz": {
+                                          "content": "Syncing"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "wtimdT",
+                              "ref": "ds:N5g4u6",
+                              "name": "Setting Row",
+                              "descendants": {
+                                "ds:FznZ4S": {
+                                  "content": "Offline changes"
+                                },
+                                "ds:CVvAJE": {
+                                  "content": "Likes made offline are sent when you reconnect."
+                                },
+                                "ds:ahEMZM": {
+                                  "type": "frame",
+                                  "id": "AGomG2",
+                                  "name": "Control",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "xUryc6",
+                                      "ref": "ds:BJdEmQ",
+                                      "name": "Status/Queued",
+                                      "descendants": {
+                                        "ds:o56ZbH": {
+                                          "content": "Queued offline"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "fr9kJ8",
+                              "ref": "ds:N5g4u6",
+                              "name": "Setting Row",
+                              "descendants": {
+                                "ds:FznZ4S": {
+                                  "content": "Playlist"
+                                },
+                                "ds:CVvAJE": {
+                                  "content": "Night Drive · saved a moment ago."
+                                },
+                                "ds:ahEMZM": {
+                                  "type": "frame",
+                                  "id": "wprs72",
+                                  "name": "Control",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "pHa9ix",
+                                      "ref": "ds:xtDM73",
+                                      "name": "Status/Success",
+                                      "descendants": {
+                                        "ds:HSv7ty": {
+                                          "content": "Saved"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "pDvuSq",
+                              "ref": "ds:N5g4u6",
+                              "name": "Setting Row",
+                              "descendants": {
+                                "ds:FznZ4S": {
+                                  "content": "Upload"
+                                },
+                                "ds:CVvAJE": {
+                                  "content": "Cover could not be sent. Try again."
+                                },
+                                "ds:ahEMZM": {
+                                  "type": "frame",
+                                  "id": "HQT6Qo",
+                                  "name": "Control",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "7t7dk4",
+                                      "ref": "ds:W2sXzc",
+                                      "name": "Status/Error",
+                                      "descendants": {
+                                        "ds:cK1grY": {
+                                          "content": "Failed"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "FQmppn",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Actions in progress"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "JauRgK",
+                              "name": "Row",
+                              "gap": 10,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "YsaNxY",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Saving…",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Saving…"
+                                    },
+                                    "ds:k0WCtI": {
+                                      "icon": "loader-circle"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "kxojYc",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Loading…",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Loading…"
+                                    },
+                                    "ds:wFUna": {
+                                      "icon": "loader-circle"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "4jC8gE",
+                                  "ref": "ds:qmEOyG",
+                                  "name": "Loader/Spinner"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Cmfut3",
+                                  "ref": "ds:9VibVf",
+                                  "name": "Loader/Spinner Small"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ref",
+                              "id": "5fdgfG",
+                              "ref": "ds:FFFCJb",
+                              "name": "Upload Progress",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "58Rvv8",
+                              "ref": "ds:GOPguN",
+                              "name": "Skeleton/Shimmer",
+                              "width": "fill_container"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "jdBNt8",
+                              "ref": "ds:PiqhAO",
+                              "name": "Text/Caption",
+                              "content": "Skeletons pulse with a soft shimmer sweep, 1.4 s; reduced motion keeps them static."
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 13230,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide loading, progress and status patterns — How every screen waits: boot splash, route bar, list skeletons that mirror the final layout, buffering, saving, inline statuses, slow network and infinite lists."
+    },
+    {
+      "type": "frame",
+      "id": "yQPwG3",
+      "name": "Loading & progress / Statuses / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Q5aEW9",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "EqfAQ3",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Statuses"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "TVP3vy",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "Xebxxh",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "iaP8Pm",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "BPgggt",
+                      "ref": "ds:fLuqjC",
+                      "name": "Text/H4",
+                      "content": "Statuses"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "anfLt2",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Library"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Fetching your playlists and liked songs."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "y43urF",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "dWLAnB",
+                              "ref": "ds:SCXKCc",
+                              "name": "Status/Loading",
+                              "descendants": {
+                                "ds:RtIlHB": {
+                                  "content": "Loading"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "psSSFn",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Devices"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Queue and position follow you between devices."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "TyDwJR",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "nf9NdM",
+                              "ref": "ds:Ltfcwo",
+                              "name": "Status/Syncing",
+                              "descendants": {
+                                "ds:IyJdUz": {
+                                  "content": "Syncing"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "4XNjsZ",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Offline changes"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Likes made offline are sent when you reconnect."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "wqD9nu",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "ZvPtRc",
+                              "ref": "ds:BJdEmQ",
+                              "name": "Status/Queued",
+                              "descendants": {
+                                "ds:o56ZbH": {
+                                  "content": "Queued offline"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "g4dX57",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Playlist"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Night Drive · saved a moment ago."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "ZqzPfR",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "aX2Fga",
+                              "ref": "ds:xtDM73",
+                              "name": "Status/Success",
+                              "descendants": {
+                                "ds:HSv7ty": {
+                                  "content": "Saved"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Ap3vzx",
+                      "ref": "ds:N5g4u6",
+                      "name": "Setting Row",
+                      "descendants": {
+                        "ds:FznZ4S": {
+                          "content": "Upload"
+                        },
+                        "ds:CVvAJE": {
+                          "content": "Cover could not be sent. Try again."
+                        },
+                        "ds:ahEMZM": {
+                          "type": "frame",
+                          "id": "8Lovru",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "8g3tKS",
+                              "ref": "ds:W2sXzc",
+                              "name": "Status/Error",
+                              "descendants": {
+                                "ds:cK1grY": {
+                                  "content": "Failed"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "FwjgA9",
+                      "ref": "ds:fLuqjC",
+                      "name": "Text/H4",
+                      "content": "Actions in progress"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Ar2d4R",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "aY97bU",
+                          "ref": "ds:exjwf",
+                          "name": "Button / Saving…",
+                          "descendants": {
+                            "ds:E23bq6": {
+                              "content": "Saving…"
+                            },
+                            "ds:k0WCtI": {
+                              "icon": "loader-circle"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "WozUCP",
+                          "ref": "ds:qmEOyG",
+                          "name": "Loader/Spinner"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ViwDsb",
+                          "ref": "ds:9VibVf",
+                          "name": "Loader/Spinner Small"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "MGcF3y",
+                      "ref": "ds:FFFCJb",
+                      "name": "Upload Progress",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Jcvyyo",
+                      "ref": "ds:GOPguN",
+                      "name": "Skeleton/Shimmer",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "BMjMj9",
+                      "ref": "ds:PiqhAO",
+                      "name": "Text/Caption",
+                      "content": "Skeletons pulse with a soft shimmer sweep, 1.4 s; reduced motion keeps them static."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "smRmfM",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "FZCa8f",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:67K2eN": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:ApEsiS": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 14770,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide loading, progress and status patterns — How every screen waits: boot splash, route bar, list skeletons that mirror the final layout, buffering, saving, inline statuses, slow network and infinite lists."
+    },
+    {
+      "type": "frame",
+      "id": "2RiUtR",
+      "name": "Loading & progress / Slow network / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "jhBSDh",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "QByYcP",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "uHhaiS",
+                  "ref": "ds:ogW5t",
+                  "name": "Alert / Still loading…",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:L7SHNm": {
+                      "content": "Still loading…"
+                    },
+                    "ds:F9kE6W": {
+                      "content": "Your connection is slow. We keep trying — playback continues from the cache."
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "DizCQB",
+                  "name": "Loading",
+                  "layout": "vertical",
+                  "gap": 24,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "pPbHha",
+                      "ref": "ds:Jjegi",
+                      "name": "Skeleton",
+                      "width": 220,
+                      "height": 28
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Dsvsx2",
+                      "name": "Skeleton Rows",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "YehZNU",
+                          "ref": "ds:gwXgvi",
+                          "name": "Track Table/Header"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Pswbnb",
+                          "ref": "ds:UQLq9V",
+                          "name": "Skeleton/Track Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "zJBYUe",
+                          "ref": "ds:UQLq9V",
+                          "name": "Skeleton/Track Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "UiADgJ",
+                          "ref": "ds:UQLq9V",
+                          "name": "Skeleton/Track Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "gengK4",
+                          "ref": "ds:UQLq9V",
+                          "name": "Skeleton/Track Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "85XyqQ",
+                          "ref": "ds:UQLq9V",
+                          "name": "Skeleton/Track Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "imVLLa",
+                          "ref": "ds:UQLq9V",
+                          "name": "Skeleton/Track Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "EdLx4c",
+                          "ref": "ds:UQLq9V",
+                          "name": "Skeleton/Track Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Gg2LAu",
+                          "ref": "ds:UQLq9V",
+                          "name": "Skeleton/Track Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "wrqX9S",
+                          "ref": "ds:UQLq9V",
+                          "name": "Skeleton/Track Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Msu4XE",
+                          "ref": "ds:UQLq9V",
+                          "name": "Skeleton/Track Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "QC3Rhn",
+                          "ref": "ds:UQLq9V",
+                          "name": "Skeleton/Track Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ipNE2s",
+                          "ref": "ds:UQLq9V",
+                          "name": "Skeleton/Track Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ZxK5qG",
+                          "ref": "ds:UQLq9V",
+                          "name": "Skeleton/Track Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "k87yiZ",
+                          "ref": "ds:UQLq9V",
+                          "name": "Skeleton/Track Row",
+                          "width": "fill_container"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 15260,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide loading, progress and status patterns — How every screen waits: boot splash, route bar, list skeletons that mirror the final layout, buffering, saving, inline statuses, slow network and infinite lists."
+    },
+    {
+      "type": "frame",
+      "id": "fpanGN",
+      "name": "Loading & progress / Slow network / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "jsatsH",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "Vwz9i4",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Liked Songs"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "gso9G4",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "QQLrY3",
+              "ref": "ds:ogW5t",
+              "name": "Alert / Still loading…",
+              "width": "fill_container",
+              "descendants": {
+                "ds:L7SHNm": {
+                  "content": "Still loading…"
+                },
+                "ds:F9kE6W": {
+                  "content": "Your connection is slow. We keep trying."
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "fKHCDK",
+              "name": "Loading",
+              "layout": "vertical",
+              "gap": 24,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "PWQ3Zo",
+                  "ref": "ds:Jjegi",
+                  "name": "Skeleton",
+                  "width": 140,
+                  "height": 28
+                },
+                {
+                  "type": "frame",
+                  "id": "UeGPUs",
+                  "name": "Skeleton Rows",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "CEYNGN",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "TGmc4k",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "hRvMm8",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Pi9bue",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jW83MC",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "iMTrEX",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "mQhwdJ",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "t4Rykd",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "USB8M8",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "BS6wuJ",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "xs7VKf",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "Tn34h2",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:67K2eN": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:ApEsiS": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 16800,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide loading, progress and status patterns — How every screen waits: boot splash, route bar, list skeletons that mirror the final layout, buffering, saving, inline statuses, slow network and infinite lists."
+    },
+    {
+      "type": "frame",
+      "id": "5Awzef",
+      "name": "Loading & progress / Long list / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "vJBM3E",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "RXg6CG",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "vcoCmj",
+                  "name": "Row",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "URqnzM",
+                      "ref": "ds:MgMQ2L",
+                      "name": "Text/H1",
+                      "content": "Liked Songs"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "3wEAoj",
+                      "ref": "ds:e9YOsV",
+                      "name": "Badge / 1,240 songs",
+                      "descendants": {
+                        "ds:c9raBZ": {
+                          "content": "1,240 songs"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "T5CpMW",
+                  "name": "Track Table",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "qyfpXC",
+                      "ref": "ds:gwXgvi",
+                      "name": "Track Table/Header"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "GEcMSQ",
+                      "ref": "ds:XzmRy1",
+                      "name": "Track Row/Playing",
+                      "descendants": {
+                        "ds:c4PJ5R": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-afterglow.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:RKnhla": {
+                          "content": "Afterglow"
+                        },
+                        "ds:07Q8NN": {
+                          "content": "Nova & the Static"
+                        },
+                        "ds:VxmOIl": {
+                          "content": "Afterglow"
+                        },
+                        "ds:0Dde7d": {
+                          "content": "Today"
+                        },
+                        "ds:QnYex1": {
+                          "content": "3:42"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Bbg5vv",
+                      "ref": "ds:WQxBT",
+                      "name": "Track / Night Signal",
+                      "descendants": {
+                        "ds:YSAj4": {
+                          "content": "2"
+                        },
+                        "ds:PptA9": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:eGEfP": {
+                          "content": "Night Signal"
+                        },
+                        "ds:cNYVw": {
+                          "content": "Mira Sol"
+                        },
+                        "ds:REBNx": {
+                          "content": "Night Signal"
+                        },
+                        "ds:QCCe4": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "GSeuLY",
+                      "ref": "ds:WQxBT",
+                      "name": "Track / Static Lines",
+                      "descendants": {
+                        "ds:YSAj4": {
+                          "content": "3"
+                        },
+                        "ds:PptA9": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-static-lines.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:eGEfP": {
+                          "content": "Static Lines"
+                        },
+                        "ds:cNYVw": {
+                          "content": "Kite Harbor"
+                        },
+                        "ds:REBNx": {
+                          "content": "Static Lines"
+                        },
+                        "ds:QCCe4": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "a6bDpS",
+                      "ref": "ds:WQxBT",
+                      "name": "Track / Echoes in Motion",
+                      "descendants": {
+                        "ds:YSAj4": {
+                          "content": "4"
+                        },
+                        "ds:PptA9": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:eGEfP": {
+                          "content": "Echoes in Motion"
+                        },
+                        "ds:cNYVw": {
+                          "content": "Lumen Choir"
+                        },
+                        "ds:REBNx": {
+                          "content": "Echoes in Motion"
+                        },
+                        "ds:QCCe4": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "zCzHXw",
+                      "ref": "ds:WQxBT",
+                      "name": "Track / Drift Control",
+                      "descendants": {
+                        "ds:YSAj4": {
+                          "content": "5"
+                        },
+                        "ds:PptA9": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-drift-control.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:eGEfP": {
+                          "content": "Drift Control"
+                        },
+                        "ds:cNYVw": {
+                          "content": "Mira Sol"
+                        },
+                        "ds:REBNx": {
+                          "content": "Drift Control"
+                        },
+                        "ds:QCCe4": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "KTPNec",
+                      "ref": "ds:WQxBT",
+                      "name": "Track / Glass Horizon",
+                      "descendants": {
+                        "ds:YSAj4": {
+                          "content": "6"
+                        },
+                        "ds:PptA9": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-afterglow.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:eGEfP": {
+                          "content": "Glass Horizon"
+                        },
+                        "ds:cNYVw": {
+                          "content": "Nova & the Static"
+                        },
+                        "ds:REBNx": {
+                          "content": "Afterglow"
+                        },
+                        "ds:QCCe4": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "thiMy7",
+                  "name": "Loading More",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "af9qye",
+                      "ref": "ds:UQLq9V",
+                      "name": "Skeleton/Track Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "SBRVpn",
+                      "ref": "ds:UQLq9V",
+                      "name": "Skeleton/Track Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "QhVRtS",
+                      "ref": "ds:Nk6cmg",
+                      "name": "List/Load More",
+                      "descendants": {
+                        "ds:Z1ZCZ2": {
+                          "content": "50 of 1,240"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 17290,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide loading, progress and status patterns — How every screen waits: boot splash, route bar, list skeletons that mirror the final layout, buffering, saving, inline statuses, slow network and infinite lists."
+    },
+    {
+      "type": "frame",
+      "id": "5v3y5z",
+      "name": "Loading & progress / Long list / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "eBvjoJ",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "evxSyo",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Liked Songs"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "GpHHYE",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "gp3Scb",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Afterglow",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-afterglow.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Afterglow"
+                },
+                "ds:rFh9q": {
+                  "content": "Nova & the Static"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "g5khWx",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night Signal",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-night-signal.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night Signal"
+                },
+                "ds:rFh9q": {
+                  "content": "Mira Sol"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "JEZe3F",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Static Lines",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-static-lines.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Static Lines"
+                },
+                "ds:rFh9q": {
+                  "content": "Kite Harbor"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "rWN59k",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Echoes in Motion",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Echoes in Motion"
+                },
+                "ds:rFh9q": {
+                  "content": "Lumen Choir"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "oRQFZw",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Drift Control",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-drift-control.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Drift Control"
+                },
+                "ds:rFh9q": {
+                  "content": "Mira Sol"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "GnQufA",
+              "name": "Loading More",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "xAZBVb",
+                  "ref": "ds:Gq2CrB",
+                  "name": "Skeleton/Track Row Mobile",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "AHUGum",
+                  "ref": "ds:Gq2CrB",
+                  "name": "Skeleton/Track Row Mobile",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "nTyDWy",
+                  "ref": "ds:Gq2CrB",
+                  "name": "Skeleton/Track Row Mobile",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "k3t7cm",
+                  "ref": "ds:Nk6cmg",
+                  "name": "List/Load More",
+                  "descendants": {
+                    "ds:Z1ZCZ2": {
+                      "content": "50 of 1,240"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "kxY55x",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "J9EPgp",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:67K2eN": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:ApEsiS": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 18830,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide loading, progress and status patterns — How every screen waits: boot splash, route bar, list skeletons that mirror the final layout, buffering, saving, inline statuses, slow network and infinite lists."
+    },
+    {
+      "type": "frame",
+      "id": "jztUsm",
+      "name": "Loading & progress / End of list / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "WPTBSb",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "fq7uNY",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "UfHR55",
+                  "ref": "ds:MgMQ2L",
+                  "name": "Text/H1",
+                  "content": "Liked Songs"
+                },
+                {
+                  "type": "frame",
+                  "id": "d3youH",
+                  "name": "Track Table",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "7CjgxK",
+                      "ref": "ds:gwXgvi",
+                      "name": "Track Table/Header"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "dHqXdE",
+                      "ref": "ds:XzmRy1",
+                      "name": "Track Row/Playing",
+                      "descendants": {
+                        "ds:c4PJ5R": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-afterglow.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:RKnhla": {
+                          "content": "Afterglow"
+                        },
+                        "ds:07Q8NN": {
+                          "content": "Nova & the Static"
+                        },
+                        "ds:VxmOIl": {
+                          "content": "Afterglow"
+                        },
+                        "ds:0Dde7d": {
+                          "content": "Today"
+                        },
+                        "ds:QnYex1": {
+                          "content": "3:42"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "AcPHDG",
+                      "ref": "ds:WQxBT",
+                      "name": "Track / Night Signal",
+                      "descendants": {
+                        "ds:YSAj4": {
+                          "content": "2"
+                        },
+                        "ds:PptA9": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:eGEfP": {
+                          "content": "Night Signal"
+                        },
+                        "ds:cNYVw": {
+                          "content": "Mira Sol"
+                        },
+                        "ds:REBNx": {
+                          "content": "Night Signal"
+                        },
+                        "ds:QCCe4": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "CZTaf2",
+                      "ref": "ds:WQxBT",
+                      "name": "Track / Static Lines",
+                      "descendants": {
+                        "ds:YSAj4": {
+                          "content": "3"
+                        },
+                        "ds:PptA9": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-static-lines.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:eGEfP": {
+                          "content": "Static Lines"
+                        },
+                        "ds:cNYVw": {
+                          "content": "Kite Harbor"
+                        },
+                        "ds:REBNx": {
+                          "content": "Static Lines"
+                        },
+                        "ds:QCCe4": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "YsL2WT",
+                      "ref": "ds:WQxBT",
+                      "name": "Track / Echoes in Motion",
+                      "descendants": {
+                        "ds:YSAj4": {
+                          "content": "4"
+                        },
+                        "ds:PptA9": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:eGEfP": {
+                          "content": "Echoes in Motion"
+                        },
+                        "ds:cNYVw": {
+                          "content": "Lumen Choir"
+                        },
+                        "ds:REBNx": {
+                          "content": "Echoes in Motion"
+                        },
+                        "ds:QCCe4": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "tXAfBj",
+                      "ref": "ds:WQxBT",
+                      "name": "Track / Drift Control",
+                      "descendants": {
+                        "ds:YSAj4": {
+                          "content": "5"
+                        },
+                        "ds:PptA9": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-drift-control.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:eGEfP": {
+                          "content": "Drift Control"
+                        },
+                        "ds:cNYVw": {
+                          "content": "Mira Sol"
+                        },
+                        "ds:REBNx": {
+                          "content": "Drift Control"
+                        },
+                        "ds:QCCe4": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "4gTVLs",
+                      "ref": "ds:WQxBT",
+                      "name": "Track / Glass Horizon",
+                      "descendants": {
+                        "ds:YSAj4": {
+                          "content": "6"
+                        },
+                        "ds:PptA9": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-afterglow.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:eGEfP": {
+                          "content": "Glass Horizon"
+                        },
+                        "ds:cNYVw": {
+                          "content": "Nova & the Static"
+                        },
+                        "ds:REBNx": {
+                          "content": "Afterglow"
+                        },
+                        "ds:QCCe4": {
+                          "content": "2 days ago"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "VzLTrF",
+                  "ref": "ds:fp5J1B",
+                  "name": "List/End",
+                  "descendants": {
+                    "ds:MnUcOT": {
+                      "content": "That's everything · 1,240 songs"
+                    }
+                  }
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 19320,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide loading, progress and status patterns — How every screen waits: boot splash, route bar, list skeletons that mirror the final layout, buffering, saving, inline statuses, slow network and infinite lists."
+    },
+    {
+      "type": "frame",
+      "id": "CT6BnX",
+      "name": "Loading & progress / End of list / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "BPNkXH",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "BWB2Et",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Liked Songs"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "LV5dYc",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "jw4TyS",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Afterglow",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-afterglow.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Afterglow"
+                },
+                "ds:rFh9q": {
+                  "content": "Nova & the Static"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "keWADU",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night Signal",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-night-signal.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night Signal"
+                },
+                "ds:rFh9q": {
+                  "content": "Mira Sol"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "FoC3LL",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Static Lines",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-static-lines.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Static Lines"
+                },
+                "ds:rFh9q": {
+                  "content": "Kite Harbor"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "uKDHow",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Echoes in Motion",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Echoes in Motion"
+                },
+                "ds:rFh9q": {
+                  "content": "Lumen Choir"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "z5K8mr",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Drift Control",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-drift-control.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Drift Control"
+                },
+                "ds:rFh9q": {
+                  "content": "Mira Sol"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "DogeS2",
+              "ref": "ds:fp5J1B",
+              "name": "List/End",
+              "descendants": {
+                "ds:MnUcOT": {
+                  "content": "That's everything · 1,240 songs"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Qt6m7J",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "6Ls2pD",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:67K2eN": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:ApEsiS": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 20860,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide loading, progress and status patterns — How every screen waits: boot splash, route bar, list skeletons that mirror the final layout, buffering, saving, inline statuses, slow network and infinite lists."
+    },
+    {
+      "type": "frame",
+      "id": "2Xpg2h",
+      "name": "Loading & progress / Failed / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "ADWUNv",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "oJG8j5",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "qkTECM",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "3o6dEw",
+                      "ref": "ds:LQ8GwL",
+                      "name": "State / This took too long",
+                      "descendants": {
+                        "ds:zG3uZd": {
+                          "icon": "triangle-alert"
+                        },
+                        "ds:ATKZVK": {
+                          "content": "This took too long"
+                        },
+                        "ds:h7OAoY": {
+                          "content": "We could not load the page. Check your connection and try again."
+                        },
+                        "ds:ydkfG5/ds:NVe7y": {
+                          "content": "Try again"
+                        },
+                        "ds:voqjVU/ds:i6a4e": {
+                          "content": "Back to home"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 21350,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide loading, progress and status patterns — How every screen waits: boot splash, route bar, list skeletons that mirror the final layout, buffering, saving, inline statuses, slow network and infinite lists."
+    },
+    {
+      "type": "frame",
+      "id": "Qm9hkZ",
+      "name": "Loading & progress / Failed / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "z3QANF",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "rSVLXE",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": ""
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "2Cak3B",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "V46SYk",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "td5Vgn",
+                  "ref": "ds:LQ8GwL",
+                  "name": "State / This took too long",
+                  "descendants": {
+                    "ds:zG3uZd": {
+                      "icon": "triangle-alert"
+                    },
+                    "ds:ATKZVK": {
+                      "content": "This took too long"
+                    },
+                    "ds:h7OAoY": {
+                      "content": "We could not load the page. Check your connection and try again."
+                    },
+                    "ds:ydkfG5/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:voqjVU/ds:i6a4e": {
+                      "content": "Back to home"
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "gojcPg",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "ikXpa3",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:67K2eN": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:ApEsiS": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 22890,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "system — app-wide loading, progress and status patterns — How every screen waits: boot splash, route bar, list skeletons that mirror the final layout, buffering, saving, inline statuses, slow network and infinite lists."
+    }
+  ]
+}

@@ -26,13 +26,13 @@ export const LibraryItemCover = ({
   item,
 }: LibraryItemCoverProps) => {
   const [imageError, setImageError] = useState(false)
-  const size = collapsed ? 56 : 48
+  const size = collapsed ? 56 : 40
 
   return (
     <div
       className={cn(
         'relative shrink-0 overflow-hidden rounded-md shadow-md transition-shadow duration-150 group-hover:shadow-lg',
-        collapsed ? 'size-14' : 'size-12',
+        collapsed ? 'size-14' : 'size-10',
       )}
     >
       {!imageError ? (

@@ -1,19 +1,14 @@
-import { PlaylistHeader } from '@views/Playlist/ui/PlaylistHeader'
+import { ROUTES } from '@shared/routes'
+import { StateMessage } from '@shared/ui'
+import { Music } from 'lucide-react'
 
 export default function PlaylistNotFound() {
   return (
-    <>
-      <PlaylistHeader
-        author="Unknown"
-        duration={0}
-        imageUrl="/images/default-playlist.jpg"
-        title="Playlist Not Found"
-        tracksCount={0}
-        type="Playlist"
-      />
-      <div className="flex justify-center items-center h-64">
-        <div className="text-text">Playlist not found</div>
-      </div>
-    </>
+    <StateMessage
+      description="This playlist may have been removed, or the link is incorrect."
+      icon={Music}
+      primary={{ href: ROUTES.main, label: 'Back to home' }}
+      title="Playlist not found"
+    />
   )
 }

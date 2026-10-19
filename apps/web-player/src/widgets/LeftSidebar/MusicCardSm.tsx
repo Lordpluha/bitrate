@@ -67,7 +67,7 @@ export const MusicCardSm = ({
   return (
     <Link
       className={cn(
-        'group flex items-center gap-3 p-2 rounded-md hover:bg-surface cursor-pointer transition-all duration-150',
+        'group flex h-13 items-center gap-3 rounded-md px-1.5 hover:bg-surface cursor-pointer transition-all duration-150',
         isActive && 'bg-surface',
       )}
       href={href}
@@ -79,16 +79,16 @@ export const MusicCardSm = ({
       <div className="flex-1 min-w-0">
         <h3
           className={cn(
-            'font-semibold text-sm truncate group-hover:text-text transition-colors duration-150 leading-tight',
+            'truncate font-[family-name:var(--font-landing-body)] text-sm leading-tight font-semibold transition-colors duration-150 group-hover:text-text',
             isPlaying ? 'text-primary' : 'text-text',
           )}
         >
           {item.title}
         </h3>
-        <p className="text-text-subdued text-xs truncate group-hover:text-text-secondary transition-colors duration-150 mt-0.5">
+        <p className="mt-0.75 truncate text-xs text-muted-foreground transition-colors duration-150 group-hover:text-text-secondary">
           {item.type.slice(0, 1).toUpperCase() + item.type.slice(1)} •{' '}
           {item.username}
-          {item.tracksCount && ` • ${item.tracksCount} songs`}
+          {item.tracksCount ? ` • ${item.tracksCount} songs` : null}
         </p>
       </div>
       {isPlaying && (

@@ -13,6 +13,8 @@ export type ArtistContent = {
   isPending: boolean
   isError: boolean
   tracks: TrackEntity[]
+  /** The artist's most played tracks, ranked by listening (falls back to `tracks`). */
+  popularTracks: TrackEntity[]
 }
 
 export type ArtistHeroProps = {

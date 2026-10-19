@@ -1,3 +1,4 @@
+import { HttpCacheable } from '@common/interceptors/http-cacheable.decorator'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
 import { ArtistAuthRequest } from '@modules/artists-auth/types'
 import type { UserAuthRequest } from '@modules/users-auth/types'
@@ -23,12 +24,20 @@ import {
   CreateAlbumSwagger,
   DeleteAlbumSwagger,
   GetAlbumByIdSwagger,
+  GetAlbumsForTracksSwagger,
   GetAlbumsSwagger,
+  GetLikedAlbumsSwagger,
   LikeAlbumSwagger,
   UnlikeAlbumSwagger,
   UpdateAlbumByIdSwagger,
 } from './decorators'
-import { CreateAlbumDto, CreateAlbumSchema, UpdateAlbumDto, UpdateAlbumSchema } from './dtos'
+import {
+  CreateAlbumDto,
+  CreateAlbumSchema,
+  TrackIdsQuerySchema,
+  UpdateAlbumDto,
+  UpdateAlbumSchema,
+} from './dtos'
 import { AlbumEntity } from './entities'
 
 /** Represents the albums controller. */
@@ -40,6 +49,7 @@ export class AlbumsController {
 
   /** Runs the get all albums operation. */
   @GetAlbumsSwagger()
+  @HttpCacheable()
   @Get('')
   async getAllAlbums(
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
@@ -55,8 +65,30 @@ export class AlbumsController {
     })
   }
 
+  /** The album of each listed track, for track-list album columns. Declared before `:id`. */
+  @GetAlbumsForTracksSwagger()
+  @Get('by-tracks')
+  getAlbumsForTracks(
+    @Query('trackIds', new ZodValidationPipe(TrackIdsQuerySchema)) trackIds: string[],
+  ) {
+    return this.albumsService.findForTracks(trackIds)
+  }
+
+  /** The signed-in user's saved albums. Declared before `:id` so `liked` is not parsed as an id. */
+  @GetLikedAlbumsSwagger()
+  @UserAuth()
+  @Get('liked')
+  getLikedAlbums(
+    @Req() req: UserAuthRequest,
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+  ) {
+    return this.albumsService.findLiked(req.user.id, { page, limit })
+  }
+
   /** Runs the get by id operation. */
   @GetAlbumByIdSwagger()
+  @HttpCacheable()
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: AlbumEntity['id']) {
     return await this.albumsService.getById(id)

@@ -1,0 +1,1050 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Bitrate Island Player</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Bitrate mobile player: the navigation is a floating island that carries playback, shrinks while you read,
+   blooms into the player and briefly shows live activity. One palette, three themes (Dark, Light, Dim). */
+:root {
+  --bg: #0b0d12; --card: #151923; --card-2: #1b2030; --fg: #ffffff; --muted: #9ca3af; --subdued: #6b7280; --border: #2a303c;
+  --primary: #7c3aed; --accent: #a78bfa; --magenta: #ec4899; --blue: #3b82f6; --success: #10b981; --warning: #f59e0b;
+  --glass: rgba(21, 25, 35, .72); --glass-border: rgba(255, 255, 255, .08); --shadow: rgba(0, 0, 0, .55);
+  --tint-a: #6d28d9; --tint-b: #ec4899;
+  --font-display: "Unbounded", system-ui, sans-serif; --font-body: "Inter", system-ui, sans-serif; --font-data: "JetBrains Mono", ui-monospace, monospace;
+  color-scheme: dark;
+}
+:root[data-theme="dim"] { --bg: #0e1117; --card: #171b24; --card-2: #1d2230; --fg: #e5e7eb; --muted: #a1a7b3; --border: #2b3242; --accent: #8b5cf6; --glass: rgba(23, 27, 36, .74); }
+:root[data-theme="light"] { --bg: #f7f6fb; --card: #ffffff; --card-2: #f1eff8; --fg: #0b0d12; --muted: #4b5563; --subdued: #5f6a78; --border: #e5e7eb; --accent: #7c3aed; --glass: rgba(255, 255, 255, .78); --glass-border: rgba(15, 12, 30, .08); --shadow: rgba(76, 29, 149, .22); color-scheme: light; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: var(--bg); color: var(--fg); font: 14px/1.45 var(--font-body); -webkit-font-smoothing: antialiased; overflow: hidden; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+button:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 10px; }
+svg.i { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+img { display: block; }
+.mono { font-family: var(--font-data); letter-spacing: .08em; font-size: 10px; text-transform: uppercase; color: var(--muted); }
+
+/* presentation: notes, phone, controls (on a phone the phone is the page) */
+.stage { height: 100%; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 40px; align-items: center; padding: 24px 32px; }
+.notes, .ctrl { max-width: 340px; font-size: 13px; color: var(--muted); }
+.notes { justify-self: end; }
+.notes h1 { font: 600 22px/1.15 var(--font-display); color: var(--fg); margin: 0 0 6px; }
+.notes ol { margin: 14px 0 0; padding-left: 18px; display: grid; gap: 8px; }
+.notes b, .ctrl b { color: var(--fg); font-weight: 600; }
+.ctrl { display: grid; gap: 14px; }
+.ctrl .row { display: flex; gap: 8px; flex-wrap: wrap; }
+.chipb { height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--card); color: var(--fg); font-size: 12px; font-weight: 500; }
+.chipb[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: #fff; }
+.ctrl ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.phone { position: relative; width: 390px; height: 844px; max-height: calc(100vh - 48px); border-radius: 48px; overflow: hidden; background: var(--bg); box-shadow: 0 0 0 10px #05060a, 0 0 0 11px #2a303c, 0 40px 90px -30px var(--shadow); isolation: isolate; }
+@media (max-width: 1100px) { .notes { display: none; } .stage { grid-template-columns: auto minmax(0, 1fr); } }
+@media (max-width: 760px) {
+  .stage { display: block; padding: 0; }
+  .ctrl { display: none; }
+  .phone { width: 100%; height: 100%; max-height: none; border-radius: 0; box-shadow: none; }
+}
+
+/* status bar + ambient tint taken from the current artwork */
+.status { position: absolute; inset: 0 0 auto; height: 48px; padding: 16px 28px 0; display: flex; justify-content: space-between; font: 600 14px/1 var(--font-body); z-index: 30; pointer-events: none; }
+@media (max-width: 760px) { .status { display: none; } }
+.ambient { position: absolute; inset: -20% -30% auto; height: 60%; background: radial-gradient(60% 60% at 30% 40%, var(--tint-a), transparent 70%), radial-gradient(50% 50% at 80% 30%, var(--tint-b), transparent 70%); opacity: .28; filter: blur(40px); z-index: 0; pointer-events: none; transition: background .8s; }
+:root[data-theme="light"] .ambient { opacity: .18; }
+
+/* screens */
+.screen { position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain; padding: 60px 16px 132px; z-index: 1; scrollbar-width: none; }
+.screen::-webkit-scrollbar { display: none; }
+.screen[hidden] { display: none; }
+@media (max-width: 760px) { .screen { padding-top: calc(env(safe-area-inset-top, 0px) + 20px); } }
+.hdr { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.hdr .ava { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+.hdr .sp { flex: 1; }
+.iconb { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--card); border: 1px solid var(--border); }
+.h1 { font: 600 28px/1.08 var(--font-display); margin: 0 0 4px; letter-spacing: -.01em; }
+.h3 { font: 600 15px/1.2 var(--font-display); margin: 0; }
+.sub { color: var(--muted); margin: 0; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; }
+.blk { margin-top: 22px; }
+.blk-h { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+
+/* home: resume card */
+.resume { position: relative; overflow: hidden; padding: 16px; display: grid; grid-template-columns: 92px 1fr; gap: 14px; align-items: center; }
+.resume img { width: 92px; height: 92px; border-radius: 16px; object-fit: cover; }
+.resume .t { font: 600 17px/1.2 var(--font-display); margin: 4px 0 2px; }
+.resume .bar { height: 3px; border-radius: 2px; background: var(--border); margin: 10px 0 8px; overflow: hidden; }
+.resume .bar i { display: block; height: 100%; width: 47%; background: linear-gradient(90deg, var(--primary), var(--magenta)); }
+.resume .go { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 999px; background: var(--fg); color: var(--bg); font-weight: 600; font-size: 12px; }
+.resume .go svg { width: 14px; height: 14px; }
+
+/* home: tuner — drag the needle across the spectrum to tune a station by feeling */
+.tuner { padding: 16px 16px 14px; }
+.tuner .dial { position: relative; height: 74px; margin: 12px 0 8px; touch-action: none; cursor: ew-resize; }
+.tuner .bars { position: absolute; inset: 14px 0 18px; display: flex; align-items: flex-end; justify-content: space-between; }
+.tuner .bars i { width: 3px; border-radius: 2px; background: var(--border); transition: background .2s; }
+.tuner .bars i.on { background: var(--accent); }
+.tuner .needle { position: absolute; top: 0; bottom: 14px; left: 0; width: 2px; margin-left: -1px; background: linear-gradient(var(--magenta), var(--primary)); border-radius: 2px; will-change: transform; }
+.tuner .needle::before { content: ""; position: absolute; top: -4px; left: -5px; width: 12px; height: 12px; border-radius: 50%; background: var(--magenta); box-shadow: 0 0 0 4px color-mix(in srgb, var(--magenta) 25%, transparent); }
+.tuner .lbls { position: absolute; inset: auto 0 0; display: flex; justify-content: space-between; font: 500 10px/1 var(--font-data); color: var(--subdued); letter-spacing: .06em; }
+.tuner .st { display: flex; align-items: baseline; justify-content: space-between; }
+.tuner .freq { font: 600 22px/1 var(--font-display); }
+.tuner .picks { display: flex; gap: 8px; margin-top: 12px; }
+.tuner .picks img { width: 100%; aspect-ratio: 1; border-radius: 12px; object-fit: cover; }
+.tuner .picks span { flex: 1; min-width: 0; font-size: 11px; color: var(--muted); }
+.tuner .picks b { display: block; color: var(--fg); font-size: 12px; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* home: bento tiles — sizes differ on purpose; later the user can rearrange them */
+.bento { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tile { padding: 14px; min-height: 132px; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; overflow: hidden; position: relative; }
+.tile.wide { grid-column: span 2; min-height: 0; }
+.tile .k { font: 600 24px/1 var(--font-display); }
+.faces { display: flex; }
+.faces img { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--card); margin-left: -8px; object-fit: cover; }
+.faces img:first-child { margin-left: 0; }
+.livedot { display: inline-flex; align-items: center; gap: 6px; font: 600 11px/1 var(--font-body); color: var(--success); }
+.livedot::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 0 rgba(16, 185, 129, .6); animation: ping 1.8s infinite; }
+@keyframes ping { to { box-shadow: 0 0 0 7px rgba(16, 185, 129, 0) } }
+.week { display: flex; align-items: flex-end; gap: 5px; height: 46px; }
+.week i { flex: 1; border-radius: 4px 4px 2px 2px; background: color-mix(in srgb, var(--accent) 35%, transparent); }
+.week i.now { background: linear-gradient(var(--magenta), var(--primary)); }
+.note { display: grid; grid-template-columns: 44px 1fr; gap: 12px; align-items: start; }
+.note img { width: 44px; height: 44px; border-radius: 12px; object-fit: cover; }
+.note q { display: block; font-size: 13px; color: var(--fg); margin-top: 4px; quotes: "“" "”"; }
+
+/* search / library / jam */
+.ask { display: flex; align-items: center; gap: 10px; height: 54px; padding: 0 16px; border-radius: 18px; background: var(--card); border: 1px solid var(--border); color: var(--muted); }
+.ask input { flex: 1; min-width: 0; border: 0; background: none; color: var(--fg); font: 500 15px var(--font-body); outline: none; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { height: 34px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--card); font-size: 13px; display: inline-flex; align-items: center; }
+.bands { display: grid; gap: 8px; }
+.band { height: 64px; border-radius: 18px; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; color: #fff; font: 600 15px/1 var(--font-display); }
+.seg { margin-inline: 0; min-width: 0; display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--card); border: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+.seg { scroll-snap-type: x proximity; scroll-padding-inline: 12px; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--fade-l, 0px), #000 calc(100% - var(--fade-r, 0px)), transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 var(--fade-l, 0px), #000 calc(100% - var(--fade-r, 0px)), transparent 100%); }
+.seg button { scroll-snap-align: start; }
+.seg button { flex: none; height: 30px; padding: 0 12px; border-radius: 999px; font-size: 12px; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--card-2); color: var(--fg); }
+.tl { position: relative; padding-left: 18px; display: grid; gap: 10px; }
+.tl::before { content: ""; position: absolute; left: 4px; top: 6px; bottom: 6px; width: 2px; background: var(--border); border-radius: 2px; }
+.tl .day { position: relative; font: 500 10px/1 var(--font-data); letter-spacing: .08em; color: var(--muted); text-transform: uppercase; margin-top: 6px; }
+.tl .day::before { content: ""; position: absolute; left: -18px; top: -1px; width: 10px; height: 10px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); }
+.li { display: grid; grid-template-columns: 48px 1fr auto; gap: 12px; align-items: center; padding: 8px; border-radius: 16px; }
+.li img { width: 48px; height: 48px; border-radius: 12px; object-fit: cover; }
+.li b { display: block; font-weight: 600; }
+.li small { color: var(--muted); font-size: 12px; }
+.pill { height: 24px; padding: 0 9px; border-radius: 999px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; border: 1px solid var(--border); color: var(--muted); }
+.jam-card { padding: 14px; display: grid; gap: 12px; }
+.jam-list { display: grid; gap: 10px; }
+#s-lib [data-view][hidden] { display: none; }
+.jam-card .top { display: flex; align-items: center; gap: 12px; }
+.jam-card img.cv { width: 54px; height: 54px; border-radius: 14px; object-fit: cover; }
+.jam-card .join { margin-left: auto; height: 34px; padding: 0 14px; border-radius: 999px; background: var(--primary); color: #fff; font-weight: 600; font-size: 13px; }
+.cta { width: 100%; height: 52px; border-radius: 18px; border: 1px dashed var(--border); color: var(--muted); font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+/* ---------- the island ---------- */
+.island { position: absolute; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 18px); z-index: 20; width: calc(100% - 28px); height: 66px; margin-left: calc((100% - 28px) / -2); border-radius: 33px; background: var(--glass); border: 1px solid var(--glass-border); -webkit-backdrop-filter: blur(22px) saturate(160%); backdrop-filter: blur(22px) saturate(160%); box-shadow: 0 18px 40px -18px var(--shadow), 0 2px 0 0 rgba(255, 255, 255, .03) inset; display: flex; align-items: center; padding: 0 8px; gap: 4px; touch-action: none; user-select: none; -webkit-user-select: none; transition: width .5s cubic-bezier(.34, 1.3, .64, 1), margin-left .5s cubic-bezier(.34, 1.3, .64, 1), height .45s cubic-bezier(.34, 1.3, .64, 1), border-radius .45s; }
+.island.compact { width: 248px; margin-left: -124px; }
+.island.live { height: 78px; border-radius: 39px; }
+.isl-art { position: relative; width: 50px; height: 50px; flex: none; border-radius: 50%; }
+.isl-cv { position: absolute; inset: 5px; border-radius: 50%; overflow: hidden; }
+/* images must not start a native drag: it cancels the pointer mid-swipe */
+.island img, .qa img { -webkit-user-drag: none; user-select: none; }
+.isl-cv img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; will-change: transform; }
+.isl-next { width: 36px; height: 36px; flex: none; border-radius: 50%; display: grid; place-items: center; background: color-mix(in srgb, var(--fg) 10%, transparent); color: var(--fg); margin-right: 4px; }
+.isl-next svg { width: 16px; height: 16px; }
+.isl-art svg.ring { position: absolute; inset: 0; transform: rotate(-90deg); }
+.isl-art .ring circle { fill: none; stroke-width: 2.5; }
+.isl-art .ring .tr { stroke: var(--border); }
+.isl-art .ring .pr { stroke: url(#ringGrad); stroke-linecap: round; transition: stroke-dashoffset .9s linear; }
+.isl-body { position: relative; flex: 1; min-width: 0; height: 100%; }
+.isl-tabs, .isl-mini, .isl-live { position: absolute; inset: 0; display: flex; align-items: center; transition: opacity .25s, transform .35s cubic-bezier(.2, .8, .2, 1); }
+.isl-tabs { justify-content: space-around; }
+.isl-mini { gap: 10px; padding-left: 4px; opacity: 0; pointer-events: none; transform: translateY(6px); }
+.isl-live { gap: 10px; padding: 0 6px 0 4px; opacity: 0; pointer-events: none; transform: translateY(8px); }
+.island.compact .isl-tabs, .island.live .isl-tabs { opacity: 0; pointer-events: none; transform: translateY(-6px); }
+.island.compact .isl-mini { opacity: 1; pointer-events: auto; transform: none; }
+.island.live .isl-mini { opacity: 0; }
+.island.live .isl-live { opacity: 1; pointer-events: auto; transform: none; }
+.island.compact .isl-play, .island.live .isl-play { opacity: 0; pointer-events: none; width: 0; }
+.tab { position: relative; width: 52px; height: 52px; border-radius: 26px; display: grid; place-items: center; color: var(--muted); transition: color .2s; }
+.tab[aria-selected="true"] { color: var(--fg); }
+.tab .dot { position: absolute; bottom: 7px; width: 4px; height: 4px; border-radius: 50%; background: var(--magenta); opacity: 0; transform: scale(0); transition: opacity .2s, transform .35s cubic-bezier(.34, 1.56, .64, 1); }
+.tab[aria-selected="true"] .dot { opacity: 1; transform: none; }
+.tab .badge { position: absolute; top: 10px; right: 11px; width: 8px; height: 8px; border-radius: 50%; background: var(--success); border: 2px solid var(--card); }
+.isl-pill { position: absolute; top: 7px; left: 0; width: 52px; height: 52px; border-radius: 26px; background: color-mix(in srgb, var(--fg) 8%, transparent); transition: transform .45s cubic-bezier(.34, 1.4, .64, 1); pointer-events: none; }
+.island.compact .isl-pill, .island.live .isl-pill { opacity: 0; }
+.isl-play { width: 50px; height: 50px; flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--fg); color: var(--bg); transition: opacity .2s, width .4s; overflow: hidden; }
+.isl-play svg { width: 18px; height: 18px; }
+.isl-mini .tt { flex: 1; min-width: 0; }
+.isl-mini b { display: block; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.isl-mini small { font-size: 11px; color: var(--muted); white-space: nowrap; }
+.eq { display: flex; gap: 2px; align-items: flex-end; height: 16px; margin-right: 2px; }
+.eq i { width: 3px; height: 4px; border-radius: 1px; background: var(--accent); animation: eq .9s ease-in-out infinite alternate; }
+.eq i:nth-child(2) { animation-delay: -.3s } .eq i:nth-child(3) { animation-delay: -.6s } .eq i:nth-child(4) { animation-delay: -.15s }
+@keyframes eq { to { height: 16px } }
+.paused .eq i { animation-play-state: paused; }
+.isl-live img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+.isl-live .tt { flex: 1; min-width: 0; font-size: 13px; line-height: 1.25; }
+.isl-live .tt small { color: var(--muted); font-size: 11px; display: block; }
+.isl-live .act { height: 40px; padding: 0 14px; border-radius: 20px; background: var(--primary); color: #fff; font-weight: 600; font-size: 13px; }
+
+/* quick actions above the island (long press) */
+.qa { position: absolute; left: 14px; right: 14px; bottom: calc(env(safe-area-inset-bottom, 0px) + 96px); z-index: 21; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; pointer-events: none; }
+.qa button { height: 64px; border-radius: 20px; background: var(--glass); border: 1px solid var(--glass-border); -webkit-backdrop-filter: blur(22px); backdrop-filter: blur(22px); display: grid; place-items: center; align-content: center; gap: 4px; font-size: 11px; font-weight: 500; opacity: 0; transform: translateY(14px) scale(.9); }
+.qa.open { pointer-events: auto; }
+.scrim { position: absolute; inset: 0; z-index: 19; background: rgba(5, 6, 10, .35); opacity: 0; pointer-events: none; transition: opacity .25s; }
+.scrim.open { opacity: 1; pointer-events: auto; }
+
+/* toast-like swipe hint on track change */
+.skipcue { position: absolute; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 94px); z-index: 18; transform: translateX(-50%); padding: 7px 12px; border-radius: 999px; background: var(--glass); border: 1px solid var(--glass-border); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); font: 500 11px/1 var(--font-data); letter-spacing: .08em; color: var(--fg); opacity: 0; pointer-events: none; white-space: nowrap; }
+
+/* ---------- now playing: the island blooms into it ---------- */
+.np { position: absolute; inset: 0; z-index: 25; overflow: hidden; visibility: hidden; color: #fff; background: #0b0d12; }
+.np-bg { position: absolute; inset: 0; background: radial-gradient(90% 60% at 20% 10%, var(--tint-a), transparent 70%), radial-gradient(70% 50% at 90% 40%, var(--tint-b), transparent 70%), #0b0d12; opacity: .9; }
+.np-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 30%, rgba(5, 6, 10, .78) 75%); }
+.np-in { position: relative; height: 100%; display: flex; flex-direction: column; padding: 56px 22px calc(env(safe-area-inset-bottom, 0px) + 22px); gap: 16px; }
+@media (max-width: 760px) { .np-in { padding-top: calc(env(safe-area-inset-top, 0px) + 14px); } }
+.np-top { display: flex; align-items: center; justify-content: space-between; }
+.np-top .from { text-align: center; font-size: 12px; color: rgba(255, 255, 255, .7); }
+.np-top .from b { display: block; color: #fff; font-size: 13px; }
+.np .iconb { background: rgba(255, 255, 255, .1); border-color: transparent; color: #fff; }
+.np-cover { width: 100%; aspect-ratio: 1; max-height: 42vh; border-radius: 28px; object-fit: cover; box-shadow: 0 30px 60px -25px rgba(0, 0, 0, .7); align-self: center; touch-action: pan-y; }
+.np-meta { display: flex; align-items: flex-end; gap: 12px; }
+.np-meta .tt { flex: 1; min-width: 0; }
+.np-meta h2 { font: 600 24px/1.1 var(--font-display); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.np-meta p { margin: 4px 0 0; color: rgba(255, 255, 255, .72); }
+.like[aria-pressed="true"] svg { fill: var(--magenta); stroke: var(--magenta); }
+/* waveform scrubber with moments friends left on the track */
+.wave { position: relative; height: 56px; touch-action: none; cursor: pointer; }
+.wave .bars { position: absolute; inset: 14px 0 0; display: flex; align-items: center; gap: 2px; }
+.wave .bars i { flex: 1; border-radius: 2px; background: rgba(255, 255, 255, .26); }
+.wave .bars i.on { background: #fff; }
+.wave .mo { position: absolute; top: 0; width: 18px; height: 18px; margin-left: -9px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; cursor: pointer; }
+.wave .mo.mine { border-color: var(--accent); }
+.wave.nocm .mo { display: none; }
+/* timed comments: the bubble rises from the marker when playback reaches its second */
+.wavewrap { position: relative; }
+.cbub { position: absolute; bottom: calc(100% + 4px); left: 0; width: 232px; padding: 8px 10px; border-radius: 14px; background: rgba(12, 14, 20, .86); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border: 1px solid rgba(255, 255, 255, .12); display: grid; grid-template-columns: 26px 1fr; gap: 8px; align-items: start; opacity: 0; pointer-events: none; transform-origin: 50% 100%; z-index: 2; }
+.cbub img { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; }
+.cbub b { font-size: 12px; }
+.cbub p { margin: 2px 0 0; font-size: 13px; line-height: 1.35; }
+.tchip { display: inline-flex; align-items: center; gap: 3px; height: 18px; padding: 0 6px; border-radius: 9px; background: rgba(167, 139, 250, .18); color: var(--accent); font: 500 10px/1 var(--font-data); margin-left: 6px; border: 0; }
+button.tchip { cursor: pointer; }
+.csheet { position: absolute; left: 0; right: 0; bottom: 0; height: 74%; z-index: 3; display: flex; flex-direction: column; background: #12141c; color: #fff; border-radius: 26px 26px 0 0; border-top: 1px solid rgba(255, 255, 255, .08); transform: translateY(102%); box-shadow: 0 -20px 50px -20px rgba(0, 0, 0, .7); }
+.csheet .grab { width: 100px; height: 6px; border-radius: 3px; background: rgba(255, 255, 255, .16); margin: 10px auto 6px; }
+.csheet .ch { display: flex; align-items: center; gap: 8px; padding: 6px 18px 10px; }
+.csheet .ch h3 { font: 600 18px/1 var(--font-display); margin: 0; }
+.csheet .ch small { color: rgba(255, 255, 255, .55); }
+.csheet .ch label { margin-left: auto; display: inline-flex; gap: 8px; align-items: center; font-size: 12px; color: rgba(255, 255, 255, .7); }
+.csheet .ch input { accent-color: var(--primary); width: 16px; height: 16px; }
+.csheet .cl { flex: 1; overflow-y: auto; padding: 0 12px; display: grid; align-content: start; gap: 4px; overscroll-behavior: contain; }
+.crow { display: grid; grid-template-columns: 32px 1fr; gap: 10px; padding: 10px; border-radius: 14px; border: 1px solid transparent; }
+.crow.now { background: rgba(124, 58, 237, .16); border-color: rgba(167, 139, 250, .45); }
+.crow img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+.crow b { font-size: 13px; }
+.crow p { margin: 3px 0 0; font-size: 14px; line-height: 1.4; }
+.ccomp { display: flex; align-items: center; gap: 8px; margin: 8px 12px calc(env(safe-area-inset-bottom, 0px) + 14px); padding: 4px 4px 4px 12px; border-radius: 24px; background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .1); }
+.ccomp:focus-within { border-color: var(--accent); }
+.ccomp input { flex: 1; min-width: 0; border: 0; background: none; color: #fff; font: 500 14px var(--font-body); outline: none; }
+.ccomp .send { width: 36px; height: 36px; border-radius: 50%; background: var(--primary); color: #fff; display: grid; place-items: center; }
+.ccomp .send svg { width: 16px; height: 16px; }
+.times { display: flex; justify-content: space-between; font: 500 11px/1 var(--font-data); color: rgba(255, 255, 255, .6); margin-top: 8px; }
+.ctrls { display: flex; align-items: center; justify-content: space-between; }
+.ctrls .iconb { width: 48px; height: 48px; background: none; }
+.ctrls .big { width: 76px; height: 76px; border-radius: 50%; background: #fff; color: #0b0d12; display: grid; place-items: center; }
+.ctrls .big svg { width: 28px; height: 28px; }
+.ctrls .on { color: var(--accent); }
+.sig { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.sig .q { white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border-radius: 999px; background: rgba(255, 255, 255, .1); font: 500 11px/1 var(--font-data); letter-spacing: .04em; }
+.sig .q i { width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
+.next { margin-top: auto; display: grid; grid-template-columns: 40px 1fr auto; gap: 12px; align-items: center; padding: 10px; border-radius: 18px; background: rgba(255, 255, 255, .08); }
+.next img { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; }
+.next small { color: rgba(255, 255, 255, .6); font-size: 11px; display: block; }
+.next b { font-size: 13px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><path id="bitrate-logo" d="M 399 145 L 400 146 L 400 150 L 401 151 L 401 154 L 403 158 L 403 161 L 404 162 L 406 170 L 409 175 L 409 177 L 416 191 L 418 193 L 419 196 L 421 198 L 425 205 L 431 212 L 431 213 L 436 218 L 436 219 L 451 234 L 452 234 L 456 238 L 457 238 L 464 244 L 465 244 L 470 248 L 475 250 L 477 252 L 489 258 L 491 258 L 496 261 L 498 261 L 501 263 L 504 263 L 505 264 L 511 265 L 515 267 L 519 267 L 520 268 L 524 268 L 525 269 L 530 269 L 531 270 L 539 270 L 540 271 L 918 271 L 919 272 L 925 272 L 926 273 L 931 273 L 932 274 L 935 274 L 939 276 L 942 276 L 945 278 L 947 278 L 950 280 L 952 280 L 960 284 L 962 286 L 965 287 L 971 292 L 972 292 L 987 307 L 987 308 L 990 311 L 991 314 L 993 316 L 997 324 L 997 326 L 998 327 L 998 329 L 1000 333 L 1000 336 L 1001 337 L 1001 342 L 1002 343 L 1002 358 L 1001 359 L 1001 364 L 1000 365 L 1000 368 L 999 369 L 997 377 L 992 387 L 990 389 L 986 396 L 970 412 L 969 412 L 966 415 L 965 415 L 957 421 L 943 428 L 941 428 L 935 431 L 932 431 L 931 432 L 928 432 L 927 433 L 924 433 L 923 434 L 912 435 L 911 436 L 685 436 L 684 437 L 674 437 L 673 438 L 667 438 L 666 439 L 661 439 L 660 440 L 656 440 L 655 441 L 652 441 L 651 442 L 643 443 L 642 444 L 640 444 L 639 445 L 637 445 L 636 446 L 634 446 L 633 447 L 625 449 L 617 453 L 615 453 L 589 466 L 587 468 L 579 472 L 573 477 L 566 481 L 555 490 L 554 490 L 538 505 L 537 505 L 535 507 L 535 508 L 521 522 L 521 523 L 514 530 L 514 531 L 511 534 L 511 535 L 508 538 L 508 539 L 504 543 L 504 544 L 498 551 L 495 557 L 487 568 L 486 571 L 484 573 L 480 581 L 478 583 L 462 615 L 462 617 L 459 622 L 459 624 L 456 629 L 456 631 L 454 634 L 454 636 L 451 641 L 450 646 L 448 649 L 448 651 L 447 652 L 447 654 L 446 655 L 446 657 L 445 658 L 445 660 L 444 661 L 444 663 L 443 664 L 443 666 L 442 667 L 442 669 L 441 670 L 441 672 L 440 673 L 440 675 L 439 676 L 439 678 L 437 682 L 437 685 L 435 689 L 435 692 L 433 696 L 433 699 L 432 700 L 432 703 L 430 707 L 429 715 L 428 716 L 428 719 L 427 720 L 427 724 L 426 725 L 426 728 L 425 729 L 425 733 L 424 734 L 424 738 L 423 739 L 423 743 L 422 744 L 422 749 L 421 750 L 421 753 L 420 754 L 420 760 L 419 761 L 419 767 L 418 768 L 418 773 L 417 774 L 417 779 L 416 780 L 416 783 L 419 779 L 422 773 L 425 770 L 425 769 L 427 767 L 429 763 L 432 760 L 432 759 L 435 756 L 437 752 L 441 748 L 441 747 L 444 744 L 444 743 L 447 740 L 447 739 L 451 735 L 451 734 L 455 730 L 455 729 L 461 723 L 461 722 L 465 718 L 465 717 L 476 706 L 476 705 L 518 663 L 519 663 L 528 654 L 529 654 L 535 648 L 536 648 L 542 642 L 543 642 L 553 633 L 554 633 L 557 630 L 558 630 L 562 626 L 563 626 L 574 617 L 575 617 L 581 612 L 588 608 L 591 605 L 597 602 L 599 600 L 605 597 L 615 590 L 622 587 L 624 585 L 646 574 L 648 574 L 660 568 L 662 568 L 663 567 L 665 567 L 666 566 L 668 566 L 674 563 L 677 563 L 681 561 L 684 561 L 685 560 L 688 560 L 689 559 L 693 559 L 694 558 L 697 558 L 698 557 L 710 556 L 711 555 L 720 555 L 721 554 L 909 554 L 910 555 L 914 555 L 918 557 L 925 558 L 926 559 L 934 561 L 937 563 L 939 563 L 945 566 L 947 568 L 954 571 L 956 573 L 959 574 L 962 577 L 963 577 L 966 580 L 967 580 L 972 585 L 973 585 L 985 598 L 985 599 L 990 605 L 998 621 L 998 623 L 999 624 L 999 626 L 1001 630 L 1002 640 L 1003 641 L 1003 654 L 1002 655 L 1002 661 L 1001 662 L 1000 669 L 996 677 L 995 681 L 993 683 L 992 686 L 990 688 L 988 692 L 985 695 L 985 696 L 968 712 L 967 712 L 959 718 L 943 726 L 941 726 L 937 728 L 934 728 L 933 729 L 930 729 L 929 730 L 926 730 L 925 731 L 920 731 L 919 732 L 912 732 L 911 733 L 697 733 L 696 734 L 687 734 L 686 735 L 674 736 L 673 737 L 669 737 L 668 738 L 661 739 L 657 741 L 654 741 L 653 742 L 651 742 L 650 743 L 648 743 L 647 744 L 639 746 L 636 748 L 634 748 L 627 752 L 625 752 L 611 759 L 606 763 L 603 764 L 601 766 L 593 770 L 590 773 L 589 773 L 582 779 L 581 779 L 577 783 L 576 783 L 572 787 L 571 787 L 547 811 L 547 812 L 541 818 L 541 819 L 538 822 L 538 823 L 535 826 L 535 827 L 532 830 L 532 831 L 529 834 L 529 835 L 525 840 L 524 843 L 518 851 L 512 863 L 925 863 L 926 862 L 938 862 L 939 861 L 946 861 L 947 860 L 953 860 L 954 859 L 958 859 L 959 858 L 968 857 L 969 856 L 976 855 L 980 853 L 987 852 L 988 851 L 993 850 L 996 848 L 998 848 L 999 847 L 1004 846 L 1007 844 L 1009 844 L 1016 840 L 1018 840 L 1028 835 L 1030 833 L 1037 830 L 1047 823 L 1050 822 L 1053 819 L 1054 819 L 1057 816 L 1058 816 L 1061 813 L 1062 813 L 1065 810 L 1066 810 L 1086 791 L 1086 790 L 1092 784 L 1092 783 L 1101 773 L 1102 770 L 1110 759 L 1112 754 L 1114 752 L 1120 740 L 1120 738 L 1122 736 L 1122 734 L 1124 731 L 1124 729 L 1125 728 L 1127 720 L 1129 717 L 1129 714 L 1131 710 L 1131 707 L 1132 706 L 1132 703 L 1133 702 L 1133 698 L 1134 697 L 1134 694 L 1135 693 L 1135 685 L 1136 684 L 1136 676 L 1137 675 L 1137 650 L 1136 649 L 1136 641 L 1135 640 L 1134 628 L 1133 627 L 1133 624 L 1132 623 L 1131 616 L 1129 612 L 1129 609 L 1127 606 L 1127 604 L 1126 603 L 1125 598 L 1122 593 L 1122 591 L 1115 577 L 1113 575 L 1112 572 L 1110 570 L 1110 569 L 1108 567 L 1108 566 L 1106 564 L 1102 557 L 1092 546 L 1092 545 L 1080 533 L 1079 533 L 1067 522 L 1066 522 L 1059 516 L 1056 515 L 1051 511 L 1058 505 L 1059 505 L 1062 502 L 1063 502 L 1067 498 L 1068 498 L 1084 483 L 1084 482 L 1092 474 L 1092 473 L 1100 464 L 1100 463 L 1106 455 L 1107 452 L 1111 447 L 1112 444 L 1114 442 L 1119 432 L 1119 430 L 1123 423 L 1124 418 L 1126 415 L 1126 413 L 1127 412 L 1127 410 L 1129 406 L 1129 403 L 1131 399 L 1131 396 L 1132 395 L 1133 385 L 1134 384 L 1134 378 L 1135 377 L 1135 368 L 1136 367 L 1136 343 L 1135 342 L 1135 333 L 1134 332 L 1134 325 L 1133 324 L 1133 319 L 1132 318 L 1132 314 L 1131 313 L 1130 306 L 1129 305 L 1129 303 L 1127 299 L 1127 296 L 1126 295 L 1124 287 L 1122 284 L 1122 282 L 1120 279 L 1120 277 L 1110 257 L 1108 255 L 1106 250 L 1104 248 L 1100 241 L 1097 238 L 1097 237 L 1094 234 L 1094 233 L 1090 229 L 1090 228 L 1085 223 L 1085 222 L 1063 200 L 1062 200 L 1053 192 L 1052 192 L 1049 189 L 1042 185 L 1036 180 L 1024 174 L 1022 172 L 1012 167 L 1010 167 L 1003 163 L 998 162 L 995 160 L 993 160 L 992 159 L 990 159 L 989 158 L 987 158 L 986 157 L 984 157 L 983 156 L 981 156 L 977 154 L 974 154 L 973 153 L 970 153 L 969 152 L 966 152 L 965 151 L 961 151 L 960 150 L 957 150 L 956 149 L 951 149 L 950 148 L 946 148 L 945 147 L 938 147 L 937 146 L 927 146 L 926 145 Z"/><linearGradient id="bm" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#490AE5"/><stop offset=".45" stop-color="#6824F8"/><stop offset="1" stop-color="#C060FA"/></linearGradient></defs></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ec4899"/><stop offset="1" stop-color="#7c3aed"/></linearGradient>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-lib" viewBox="0 0 24 24"><path d="M5 4v16M10 4v16M15 4.5l5 15"/></symbol>
+    <symbol id="i-jam" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5a6 6 0 0 1 3.5 5.5"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M6.5 4h4v16h-4zM13.5 4h4v16h-4z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-prev" viewBox="0 0 24 24"><path d="M19 20 9 12l10-8z" fill="currentColor"/><path d="M5 19V5"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><path d="m5 4 10 8-10 8z" fill="currentColor"/><path d="M19 5v14"/></symbol>
+    <symbol id="i-shuffle" viewBox="0 0 24 24"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></symbol>
+    <symbol id="i-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v1a4 4 0 0 1-4 4H3"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M19.5 12.6 12 20l-7.5-7.4A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 7.5 6.5z"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/><circle cx="19" cy="12" r="1.3" fill="currentColor"/></symbol>
+    <symbol id="i-device" viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><circle cx="12" cy="14" r="3.5"/><path d="M12 6.5h.01"/></symbol>
+    <symbol id="i-down2" viewBox="0 0 24 24"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.9 1.9 0 0 0 3.4 0"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-5A8 8 0 1 1 21 12z"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10a7 7 0 0 1-14 0M12 17v5"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.8 4.7 4.7 1.8-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.8 2.2 2.2.8-2.2.8L19 21l-.8-2.2-2.2-.8 2.2-.8z"/></symbol>
+  </defs>
+</svg>
+
+<div class="stage">
+  <aside class="notes" aria-label="Why this is not another streaming clone">
+    <h1>Not shelves. A signal.</h1>
+    <p>A mobile player concept where the navigation is an island that carries playback.</p>
+    <ol>
+      <li><b>The island is the player.</b> Tabs, artwork with a progress ring and play live in one floating shape. There is no strip stacked on a tab bar.</li>
+      <li><b>Home resumes, then tunes.</b> It opens on where you stopped and on which device. A dial by feeling replaces "Good evening" and the tile grid.</li>
+      <li><b>Bento, not shelves.</b> The tiles have different sizes and jobs: friends listening now, an artist's own note, offline space, your week in sound.</li>
+      <li><b>Jam lives in Library.</b> Listening together sits next to what you saved, as a filter with live Jams on top — no extra tab. Moving playback between devices is Bitrate Connect, one tap from the player.</li>
+      <li><b>Moments on the waveform.</b> Friends' reactions sit on the track timeline.</li>
+      <li><b>The name is visible.</b> A live quality badge (format, bit depth, kbps) and the output device sit next to the controls.</li>
+    </ol>
+  </aside>
+
+  <div class="phone" id="phone">
+    <div class="ambient" id="ambient" aria-hidden="true"></div>
+    <div class="status" aria-hidden="true"><span>9:41</span><span>● ● ●</span></div>
+
+    <main>
+      <div class="screen" id="s-home" role="tabpanel" aria-labelledby="t-home">
+        <div class="hdr">
+          <img class="ava" src="../design-system/assets/avatars/avatar1.jpg" alt="Maya">
+          <div class="sp"><span class="mono">Sat · 21:40 · late set</span><div style="font-weight:600">Evening, Maya</div></div>
+          <button class="iconb" type="button" aria-label="Notifications"><svg aria-hidden="true" class="i"><use href="#i-bell"/></svg></button>
+        </div>
+        <h1 class="h1">Pick up the signal.</h1>
+        <p class="sub">You left off on Desktop an hour ago.</p>
+
+        <section class="blk card resume" aria-label="Resume">
+          <img src="../design-system/assets/albums/album-afterglow.webp" alt="">
+          <div>
+            <span class="mono">Resume · from desktop</span>
+            <div class="t">Afterglow</div>
+            <small class="sub">Nova &amp; the Static · 1:48 of 3:42</small>
+            <div class="bar"><i></i></div>
+            <button class="go" type="button" id="resumeBtn"><svg aria-hidden="true" class="i"><use href="#i-play"/></svg>Continue here</button>
+          </div>
+        </section>
+
+        <section class="blk card tuner" aria-label="Tune by feeling">
+          <div class="st"><span><span class="mono">Tune by feeling</span><div class="freq" id="freq">Night · 92.4</div></span><span class="mono" id="freqN">3 picks</span></div>
+          <div class="dial" id="dial" role="slider" tabindex="0" aria-label="Mood" aria-valuemin="0" aria-valuemax="100" aria-valuenow="58">
+            <div class="bars" id="dialBars"></div>
+            <div class="needle" id="needle"></div>
+            <div class="lbls"><span>CALM</span><span>FOCUS</span><span>NIGHT</span><span>DRIVE</span><span>RUSH</span></div>
+          </div>
+          <div class="picks" id="picks"></div>
+        </section>
+
+        <section class="blk">
+          <div class="blk-h"><h2 class="h3">Your space</h2><span class="mono">Hold a tile to rearrange</span></div>
+          <div class="bento">
+            <div class="card tile">
+              <span class="livedot">3 listening now</span>
+              <div><div class="faces"><img src="../design-system/assets/avatars/avatar2.jpg" alt="Jonah"><img src="../design-system/assets/avatars/avatar3.jpg" alt=""><img src="../design-system/assets/avatars/avatar4.jpg" alt=""></div><small class="sub">Jonah's Jam · Luma Vale</small></div>
+            </div>
+            <div class="card tile">
+              <span class="mono">This week</span>
+              <div class="week"><i style="height:30%"></i><i style="height:52%"></i><i style="height:40%"></i><i style="height:74%"></i><i style="height:46%"></i><i class="now" style="height:96%"></i><i style="height:20%"></i></div>
+              <small class="sub"><b style="color:var(--fg)">11 h</b> · mostly at night</small>
+            </div>
+            <div class="card tile wide note">
+              <img src="../design-system/assets/albums/album-night-signal.webp" alt="">
+              <div><span class="mono">From Mira Sol · new single</span><q>Recorded it in one take at 3 am. Play it loud, in the dark.</q></div>
+            </div>
+            <div class="card tile">
+              <svg aria-hidden="true" class="i" style="color:var(--accent)"><use href="#i-down2"/></svg>
+              <div><div class="k">2.1 GB</div><small class="sub">Ready offline · 214 tracks</small></div>
+            </div>
+            <div class="card tile" style="background:linear-gradient(150deg,#4c1d95,#be185d);border-color:transparent;color:#fff">
+              <svg aria-hidden="true" class="i"><use href="#i-spark"/></svg>
+              <div><div class="h3">Daily drift</div><small style="color:rgba(255,255,255,.78)">Built from tonight's tuning</small></div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="screen" id="s-search" role="tabpanel" aria-labelledby="t-search" hidden>
+        <h1 class="h1" style="margin-top:8px">Find a sound.</h1>
+        <p class="sub">Describe it the way you would to a friend.</p>
+        <label class="ask blk"><svg aria-hidden="true" class="i"><use href="#i-search"/></svg><input type="text" placeholder="rain on a night drive…" aria-label="Describe a sound"><svg aria-hidden="true" class="i"><use href="#i-mic"/></svg></label>
+        <section class="blk"><div class="blk-h"><h2 class="h3">Try</h2></div>
+          <div class="chips"><span class="chip">slow synths, no vocals</span><span class="chip">like Luma Vale, but faster</span><span class="chip">3 am in a big city</span><span class="chip">focus for an hour</span></div></section>
+        <section class="blk"><div class="blk-h"><h2 class="h3">Browse the spectrum</h2></div>
+          <div class="bands">
+            <div class="band" style="background:linear-gradient(90deg,#1d4ed8,#0ea5e9)">Calm<span class="mono" style="color:#fff">84–88</span></div>
+            <div class="band" style="background:linear-gradient(90deg,#4c1d95,#7c3aed)">Night<span class="mono" style="color:#fff">90–94</span></div>
+            <div class="band" style="background:linear-gradient(90deg,#be185d,#f59e0b)">Rush<span class="mono" style="color:#fff">100+</span></div>
+          </div></section>
+      </div>
+
+      <div class="screen" id="s-lib" role="tabpanel" aria-labelledby="t-lib" hidden>
+        <h1 class="h1" style="margin-top:8px">Your library remembers.</h1>
+        <p class="sub">Everything you played, saved and changed, in order.</p>
+        <fieldset class="seg blk" aria-label="Filter" id="libSeg"><button type="button" aria-pressed="true" data-v="all">Everything</button><button type="button" aria-pressed="false" data-v="jam">Jam <span class="livedot" style="margin-left:4px">2</span></button><button type="button" aria-pressed="false">Saved</button><button type="button" aria-pressed="false">Downloads</button><button type="button" aria-pressed="false">Podcasts</button><button type="button" aria-pressed="false">Made by you</button><button type="button" aria-pressed="false">Offline</button></fieldset>
+        <div class="blk" data-view="all"><div class="blk-h"><h2 class="h3">Live now</h2><button class="mono" type="button" data-goto="jam" style="color:var(--accent)">All Jams</button></div><div class="card jam-card"><div class="top"><img class="cv" src="../design-system/assets/albums/album-drift-control.webp" alt=""><div><b>Jonah's Jam</b><br><small class="sub">Luma Vale · Drift Control</small></div><button class="join" type="button">Join</button></div><div style="display:flex;align-items:center;justify-content:space-between"><div class="faces"><img src="../design-system/assets/avatars/avatar2.jpg" alt=""><img src="../design-system/assets/avatars/avatar3.jpg" alt=""><img src="../design-system/assets/avatars/avatar4.jpg" alt=""></div><span class="livedot">Live · 3</span></div></div></div>
+        <div class="blk jam-list" data-view="jam" hidden><p class="sub" style="margin:0">Listen together: one queue, everyone hears the same second.</p><div class="card jam-card"><div class="top"><img class="cv" src="../design-system/assets/albums/album-drift-control.webp" alt=""><div><b>Jonah's Jam</b><br><small class="sub">Luma Vale · Drift Control</small></div><button class="join" type="button">Join</button></div><div style="display:flex;align-items:center;justify-content:space-between"><div class="faces"><img src="../design-system/assets/avatars/avatar2.jpg" alt=""><img src="../design-system/assets/avatars/avatar3.jpg" alt=""><img src="../design-system/assets/avatars/avatar4.jpg" alt=""></div><span class="livedot">Live · 3</span></div></div>
+          <div class="card jam-card"><div class="top"><img class="cv" src="../design-system/assets/albums/album-static-lines.webp" alt=""><div><b>Late set crew</b><br><small class="sub">Starts at 23:00 · 6 going</small></div><button class="join" type="button" style="background:var(--card-2);color:var(--fg)">Remind me</button></div></div><button class="cta" type="button"><svg aria-hidden="true" class="i"><use href="#i-plus"/></svg>Start a Jam from what you're playing</button></div>
+        <div class="tl blk" data-view="all">
+          <div class="day">Tonight</div>
+          <div class="li"><img src="../design-system/assets/albums/album-afterglow.webp" alt=""><span><b>Afterglow</b><small>Played 4 times · Nova &amp; the Static</small></span><span class="pill">Liked</span></div>
+          <div class="li"><img src="../design-system/assets/albums/album-night-signal.webp" alt=""><span><b>Night drive</b><small>Playlist · 3 tracks added</small></span><span class="pill">v6</span></div>
+          <div class="day">Yesterday</div>
+          <div class="li"><img src="../design-system/assets/albums/album-static-lines.webp" alt=""><span><b>Static Lines</b><small>Album · Kite Harbor</small></span><span class="pill">Offline</span></div>
+          <div class="li"><img src="../design-system/assets/albums/album-drift-control.webp" alt=""><span><b>Drift Control</b><small>Saved from Jonah's Jam</small></span><span class="pill">Jam</span></div>
+          <div class="day">Last week</div>
+          <div class="li"><img src="../design-system/assets/albums/album-echoes-in-motion.webp" alt=""><span><b>Echoes in Motion</b><small>Restored version from Sep 02</small></span><span class="pill">Restored</span></div>
+        </div>
+      </div>
+
+    </main>
+
+    <div class="scrim" id="scrim"></div>
+    <div class="qa" id="qa" aria-hidden="true">
+      <button type="button" data-q="like"><svg aria-hidden="true" class="i"><use href="#i-heart"/></svg>Like</button>
+      <button type="button" data-q="queue"><svg aria-hidden="true" class="i"><use href="#i-list"/></svg>Queue</button>
+      <button type="button" data-q="device"><svg aria-hidden="true" class="i"><use href="#i-device"/></svg>Connect</button>
+      <button type="button" data-q="sleep"><svg aria-hidden="true" class="i"><use href="#i-moon"/></svg>Sleep</button>
+    </div>
+    <div class="skipcue" id="skipcue"></div>
+
+    <nav class="island" id="island" aria-label="Navigation and playback">
+      <button class="isl-art" id="islArt" type="button" aria-label="Open the player">
+        <svg aria-hidden="true" class="ring" viewBox="0 0 50 50"><circle class="tr" cx="25" cy="25" r="23"/><circle class="pr" id="ringPr" cx="25" cy="25" r="23"/></svg>
+        <span class="isl-cv"><img id="islImg" draggable="false" src="../design-system/assets/albums/album-afterglow.webp" alt=""><img id="islPeek" draggable="false" src="../design-system/assets/albums/album-static-lines.webp" alt=""></span>
+      </button>
+      <div class="isl-body">
+        <div class="isl-tabs" role="tablist" id="tabs">
+          <span class="isl-pill" id="pill" aria-hidden="true"></span>
+          <button class="tab" id="t-home" role="tab" aria-selected="true" aria-controls="s-home" aria-label="Home" type="button"><svg aria-hidden="true" class="i"><use href="#i-home"/></svg><span class="dot"></span></button>
+          <button class="tab" id="t-search" role="tab" aria-selected="false" aria-controls="s-search" aria-label="Search" type="button"><svg aria-hidden="true" class="i"><use href="#i-search"/></svg><span class="dot"></span></button>
+          <button class="tab" id="t-lib" role="tab" aria-selected="false" aria-controls="s-lib" aria-label="Library" type="button"><svg aria-hidden="true" class="i"><use href="#i-lib"/></svg><span class="dot"></span><span class="badge" aria-hidden="true"></span></button>
+        </div>
+        <div class="isl-mini" id="mini" aria-hidden="true">
+          <span class="tt"><b id="miniT">Afterglow</b><small id="miniA">Nova &amp; the Static</small></span>
+          <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <button class="isl-next" id="islNext" type="button" aria-label="Next track"><svg aria-hidden="true" class="i"><use href="#i-next"/></svg></button>
+        </div>
+        <div class="isl-live" id="live" aria-live="polite"></div>
+      </div>
+      <button class="isl-play" id="islPlay" type="button" aria-label="Pause"><svg aria-hidden="true" class="i"><use href="#i-pause"/></svg></button>
+    </nav>
+
+    <section class="np" id="np" aria-label="Now playing" aria-hidden="true">
+      <div class="np-bg"></div>
+      <div class="np-in">
+        <div class="np-top" data-s>
+          <button class="iconb" id="npClose" type="button" aria-label="Close the player"><svg aria-hidden="true" class="i"><use href="#i-down"/></svg></button>
+          <span class="from">Playing from<b>Night drive</b></span>
+          <button class="iconb" type="button" aria-label="More"><svg aria-hidden="true" class="i"><use href="#i-more"/></svg></button>
+        </div>
+        <img class="np-cover" id="npCover" data-s src="../design-system/assets/albums/album-afterglow.webp" alt="">
+        <div class="np-meta" data-s>
+          <div class="tt"><h2 id="npT">Afterglow</h2><p id="npA">Nova &amp; the Static</p></div>
+          <button class="iconb like" id="like" type="button" aria-pressed="false" aria-label="Like"><svg aria-hidden="true" class="i"><use href="#i-heart"/></svg></button>
+        </div>
+        <div data-s class="wavewrap">
+          <div class="cbub" id="cbub" aria-live="polite"></div>
+          <div class="wave" id="wave" role="slider" tabindex="0" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="47"><div class="bars" id="waveBars"></div></div>
+          <div class="times"><span id="tCur">1:48</span><span id="tDur">3:42</span></div>
+        </div>
+        <div class="ctrls" data-s>
+          <button class="iconb on" type="button" aria-label="Shuffle"><svg aria-hidden="true" class="i"><use href="#i-shuffle"/></svg></button>
+          <button class="iconb" id="npPrev" type="button" aria-label="Previous"><svg aria-hidden="true" class="i"><use href="#i-prev"/></svg></button>
+          <button class="big" id="npPlay" type="button" aria-label="Pause"><svg aria-hidden="true" class="i"><use href="#i-pause"/></svg></button>
+          <button class="iconb" id="npNext" type="button" aria-label="Next"><svg aria-hidden="true" class="i"><use href="#i-next"/></svg></button>
+          <button class="iconb" type="button" aria-label="Repeat"><svg aria-hidden="true" class="i"><use href="#i-repeat"/></svg></button>
+        </div>
+        <div class="sig" data-s>
+          <span class="q"><i></i><span id="qual">FLAC 24/96 · 2304 kbps</span></span>
+          <button class="q" type="button" id="npComments" aria-label="Open comments"><svg aria-hidden="true" class="i" style="width:13px;height:13px"><use href="#i-chat"/></svg><span id="cmCount">5</span></button>
+          <button class="q" type="button" id="npConnect" aria-label="Bitrate Connect: playing on this phone"><svg aria-hidden="true" class="i" style="width:13px;height:13px"><use href="#i-device"/></svg>This phone</button>
+        </div>
+        <div class="next" data-s><img id="nxImg" src="../design-system/assets/albums/album-static-lines.webp" alt=""><span><small>Up next</small><b id="nxT">Static Lines · Kite Harbor</b></span><svg aria-hidden="true" class="i"><use href="#i-list"/></svg></div>
+      </div>
+      <div class="csheet" id="csheet" aria-hidden="true">
+        <div class="grab"></div>
+        <div class="ch"><h3>Comments</h3><small id="cmCount2">5</small><label><input type="checkbox" id="cmShow" checked>Show while listening</label></div>
+        <div class="cl" id="cl"></div>
+        <form class="ccomp" id="ccomp"><input id="cin" type="text" autocomplete="off" placeholder="Comment at 1:48" aria-label="Write a comment"><button class="send" type="submit" aria-label="Post comment"><svg aria-hidden="true" class="i"><use href="#i-up"/></svg></button></form>
+      </div>
+    </section>
+  </div>
+
+  <aside class="ctrl" aria-label="Prototype controls">
+    <div><b>Theme</b><div class="row" style="margin-top:8px" id="themes"><button class="chipb" type="button" data-t="dark" aria-pressed="true">Dark</button><button class="chipb" type="button" data-t="light" aria-pressed="false">Light</button><button class="chipb" type="button" data-t="dim" aria-pressed="false">Dim</button></div></div>
+    <div><b>Live activity</b><div class="row" style="margin-top:8px"><button class="chipb" type="button" data-live="jam">Friend joins the Jam</button><button class="chipb" type="button" data-live="device">Bitrate Connect</button><button class="chipb" type="button" data-live="release">New release</button></div></div>
+    <div><b>Try on the island</b>
+      <ul>
+        <li>Tap the artwork or swipe up to open the player.</li>
+        <li>Swipe left or right to skip a track.</li>
+        <li>Hold for quick actions.</li>
+        <li>Scroll down a screen and the island shrinks; scroll up and it returns.</li>
+        <li>In the player: drag down or tap ⌄ to close; drag the waveform to seek.</li>
+      </ul>
+    </div>
+  </aside>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+;(() => {
+  const $ = (s, r = document) => r.querySelector(s)
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)]
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
+  const dur = (d) => (reduce ? 0.01 : d)
+  const A = '../design-system/assets/albums/'
+  const TRACKS = [
+    { t: 'Afterglow', a: 'Nova & the Static', img: 'album-afterglow.webp', len: 222, c: ['#6d28d9', '#ec4899'], q: 'FLAC 24/96 · 2304 kbps' },
+    { t: 'Static Lines', a: 'Kite Harbor', img: 'album-static-lines.webp', len: 227, c: ['#1d4ed8', '#0ea5e9'], q: 'FLAC 16/44.1 · 1411 kbps' },
+    { t: 'Drift Control', a: 'Mira Sol', img: 'album-drift-control.webp', len: 192, c: ['#0ea5e9', '#312e81'], q: 'AAC · 256 kbps' },
+    { t: 'Echoes in Motion', a: 'Lumen Choir', img: 'album-echoes-in-motion.webp', len: 261, c: ['#be185d', '#4c1d95'], q: 'FLAC 24/48 · 1980 kbps' },
+    { t: 'Night Signal', a: 'Mira Sol', img: 'album-night-signal.webp', len: 214, c: ['#7c3aed', '#db2777'], q: 'FLAC 24/96 · 2304 kbps' },
+  ]
+  const root = document.documentElement
+  const phone = $('#phone')
+  const island = $('#island')
+  const np = $('#np')
+  let cur = 0
+  let pos = 108
+  let playing = true
+  let npOpen = false
+
+  /* ---------- themes ---------- */
+  for (const b of $$('#themes button')) b.addEventListener('click', () => {
+    root.dataset.theme = b.dataset.t
+    for (const x of $$('#themes button')) x.setAttribute('aria-pressed', String(x === b))
+  })
+
+  /* ---------- playback state ---------- */
+  const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`
+  const RING = 2 * Math.PI * 23
+  const ringPr = $('#ringPr')
+  ringPr.style.strokeDasharray = `${RING}`
+  const WB = 46
+  const seed = (i, k) => 0.25 + 0.75 * Math.abs(Math.sin(i * 1.7 + k * 3.1) * Math.cos(i * 0.37 + k))
+  const waveBars = $('#waveBars')
+  /* timed comments: each is pinned to a share of the track and shows up when playback reaches it */
+  const COMMENTS = [
+    { f: 0.12, av: 'avatar2', n: 'Jonah', t: 'This synth entrance gets me every time.' },
+    { f: 0.29, av: 'avatar3', n: 'Ava', t: 'Volume up for the bridge 🎧' },
+    { f: 0.46, av: 'avatar4', n: 'Leo', t: 'the drop here is unreal 🔥' },
+    { f: 0.64, av: 'avatar1', n: 'Maya', t: 'Saving this for the late set.' },
+    { f: 0.83, av: 'avatar2', n: 'Jonah', t: 'That outro fade 🥲' },
+  ]
+  let showCm = true
+  const drawWave = () => {
+    waveBars.innerHTML = Array.from({ length: WB }, (_, i) => `<i style="height:${Math.round(seed(i, cur) * 40)}px"></i>`).join('')
+    const wave = $('#wave')
+    for (const m of $$('.mo', wave)) m.remove()
+    for (const c of COMMENTS) {
+      const im = document.createElement('img')
+      im.className = c.mine ? 'mo mine' : 'mo'
+      im.alt = `${c.n}: ${c.t}`
+      im.src = `../design-system/assets/avatars/${c.av}.jpg`
+      im.style.left = `${c.f * 100}%`
+      im.dataset.k = String(COMMENTS.indexOf(c))
+      wave.appendChild(im)
+    }
+  }
+  const paint = () => {
+    const tr = TRACKS[cur]
+    const p = pos / tr.len
+    ringPr.style.strokeDashoffset = String(RING * (1 - p))
+    const on = Math.round(p * WB)
+    waveBars.querySelectorAll('i').forEach((b, i) => { b.classList.toggle('on', i < on) })
+    $('#tCur').textContent = fmt(pos)
+    $('#wave').setAttribute('aria-valuenow', String(Math.round(p * 100)))
+  }
+  const setTrack = (k) => {
+    cur = (k + TRACKS.length) % TRACKS.length
+    const tr = TRACKS[cur]
+    const nx = TRACKS[(cur + 1) % TRACKS.length]
+    root.style.setProperty('--tint-a', tr.c[0])
+    root.style.setProperty('--tint-b', tr.c[1])
+    $('#islImg').src = A + tr.img
+    $('#npCover').src = A + tr.img
+    $('#miniT').textContent = tr.t
+    $('#miniA').textContent = tr.a
+    $('#npT').textContent = tr.t
+    $('#npA').textContent = tr.a
+    $('#tDur').textContent = fmt(tr.len)
+    $('#qual').textContent = tr.q
+    $('#nxImg').src = A + nx.img
+    $('#nxT').textContent = `${nx.t} · ${nx.a}`
+    drawWave()
+    paint()
+  }
+  const setPlaying = (on) => {
+    playing = on
+    phone.classList.toggle('paused', !on)
+    for (const b of [$('#islPlay'), $('#npPlay')]) {
+      b.setAttribute('aria-label', on ? 'Pause' : 'Play')
+      b.querySelector('use').setAttribute('href', on ? '#i-pause' : '#i-play')
+    }
+  }
+  setInterval(() => {
+    if (!playing) return
+    pos += 1
+    if (pos >= TRACKS[cur].len) { pos = 0; setTrack(cur + 1) }
+    paint()
+    window.__cmTick?.()
+  }, 1000)
+  $('#islPlay').addEventListener('click', (e) => { e.stopPropagation(); setPlaying(!playing); gsap.fromTo('#islPlay', { scale: 0.86 }, { scale: 1, duration: dur(0.4), ease: 'back.out(3)' }) })
+  $('#npPlay').addEventListener('click', () => { setPlaying(!playing); gsap.fromTo('#npPlay', { scale: 0.9 }, { scale: 1, duration: dur(0.4), ease: 'back.out(3)' }) })
+  $('#resumeBtn').addEventListener('click', () => { pos = 108; setTrack(0); setPlaying(true); live('device') })
+  $('#like').addEventListener('click', (e) => {
+    const b = e.currentTarget
+    b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true'))
+    gsap.fromTo(b, { scale: 0.75 }, { scale: 1, duration: dur(0.5), ease: 'back.out(4)' })
+  })
+
+  /* skip with a slide of the artwork, in the island and in the player */
+  const skip = (dir) => {
+    const imgs = npOpen ? [$('#npCover')] : [$('#islImg')]
+    gsap.to(imgs, { x: -28 * dir, opacity: 0, duration: dur(0.16), ease: 'power2.in', onComplete: () => {
+      pos = 0
+      setTrack(cur + dir)
+      gsap.fromTo(imgs, { x: 28 * dir, opacity: 0 }, { x: 0, opacity: 1, duration: dur(0.38), ease: 'power3.out' })
+    } })
+    const cue = $('#skipcue')
+    cue.textContent = `${dir > 0 ? 'NEXT' : 'PREVIOUS'} · ${TRACKS[(cur + dir + TRACKS.length) % TRACKS.length].t.toUpperCase()}`
+    if (!npOpen) gsap.fromTo(cue, { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: dur(0.2), yoyo: true, repeat: 1, repeatDelay: 0.7 })
+  }
+  $('#npPrev').addEventListener('click', () => skip(-1))
+  $('#npNext').addEventListener('click', () => skip(1))
+
+  /* ---------- tabs: the pill slides under the active tab ---------- */
+  const tabs = $$('.tab')
+  const pill = $('#pill')
+  const movePill = (t, instant) => {
+    const x = t.offsetLeft
+    if (instant) pill.style.transition = 'none'
+    pill.style.transform = `translateX(${x}px)`
+    if (instant) { pill.offsetWidth; pill.style.transition = '' }
+  }
+  const select = (t) => {
+    for (const x of tabs) {
+      const on = x === t
+      x.setAttribute('aria-selected', String(on))
+      $(`#${x.getAttribute('aria-controls')}`).hidden = !on
+    }
+    movePill(t)
+    const s = $(`#${t.getAttribute('aria-controls')}`)
+    s.scrollTop = 0
+    setCompact(false)
+    if (!reduce) gsap.fromTo(s.children, { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out', stagger: 0.04 })
+  }
+  for (const t of tabs) t.addEventListener('click', (e) => { e.stopPropagation(); select(t) })
+  requestAnimationFrame(() => movePill(tabs[0], true))
+  new ResizeObserver(() => movePill(tabs.find((t) => t.getAttribute('aria-selected') === 'true'), true)).observe(island)
+
+  /* ---------- scroll: shrink while reading, return on the way back ---------- */
+  let compact = false
+  const setCompact = (on) => {
+    if (on === compact || island.classList.contains('live')) return
+    compact = on
+    island.classList.toggle('compact', on)
+    $('#mini').setAttribute('aria-hidden', String(!on))
+  }
+  for (const s of $$('.screen')) {
+    let last = 0
+    let ticking = false
+    s.addEventListener('scroll', () => {
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        const y = s.scrollTop
+        if (Math.abs(y - last) > 8) { setCompact(y > last && y > 80); last = y }
+        ticking = false
+      })
+    }, { passive: true })
+  }
+
+  /* ---------- live activity: the island briefly widens with news ---------- */
+  const LIVE = {
+    jam: ['../design-system/assets/avatars/avatar2.jpg', 'Jonah joined your Jam', 'Listening to Afterglow with you', 'Say hi'],
+    device: ['', 'Bitrate Connect · Desktop', 'Move playback to this phone?', 'Move'],
+    release: [A + 'album-night-signal.webp', 'Mira Sol released “Night Signal”', 'An artist you follow · just now', 'Play'],
+  }
+  let liveTimer = null
+  const live = (k) => {
+    const [img, t, s, act] = LIVE[k]
+    const L = $('#live')
+    L.innerHTML = `${img ? `<img src="${img}" alt="" draggable="false">` : '<span class="iconb" style="width:40px;height:40px"><svg aria-hidden="true" class="i"><use href="#i-device"/></svg></span>'}<span class="tt"><b>${t}</b><small>${s}</small></span><button class="act" type="button">${act}</button>`
+    L.querySelector('.act').addEventListener('click', (e) => { e.stopPropagation(); endLive(); if (k === 'jam') openJams() })
+    const wasCompact = compact
+    island.classList.remove('compact')
+    compact = false
+    island.classList.add('live')
+    island.dataset.back = wasCompact ? '1' : ''
+    clearTimeout(liveTimer)
+    liveTimer = setTimeout(endLive, 4200)
+  }
+  const endLive = () => {
+    clearTimeout(liveTimer)
+    island.classList.remove('live')
+    if (island.dataset.back) setCompact(true)
+  }
+  for (const b of $$('[data-live]')) b.addEventListener('click', () => live(b.dataset.live))
+  /* Library filters: Everything (live Jams on top of the timeline) or Jam */
+  const libView = (v) => {
+    for (const b of $$('#libSeg button')) b.setAttribute('aria-pressed', String((b.dataset.v ?? '') === v || (!b.dataset.v && false)))
+    for (const el of $$('#s-lib [data-view]')) el.hidden = el.dataset.view !== v
+    if (!reduce) gsap.fromTo($$(`#s-lib [data-view="${v}"]`), { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: 'power3.out', stagger: 0.05 })
+  }
+  for (const b of $$('#libSeg button[data-v]')) b.addEventListener('click', () => libView(b.dataset.v))
+  /* filter rows scroll sideways when they overflow: the edges fade only where more chips hide, the chosen
+     chip scrolls into view, and a mouse wheel scrolls the row horizontally */
+  for (const seg of $$('.seg')) {
+    const edges = () => {
+      const max = seg.scrollWidth - seg.clientWidth
+      seg.style.setProperty('--fade-l', seg.scrollLeft > 2 ? '28px' : '0px')
+      seg.style.setProperty('--fade-r', seg.scrollLeft < max - 2 ? '28px' : '0px')
+    }
+    seg.addEventListener('scroll', edges, { passive: true })
+    new ResizeObserver(edges).observe(seg)
+    seg.addEventListener('wheel', (e) => {
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX) || seg.scrollWidth <= seg.clientWidth) return
+      e.preventDefault()
+      seg.scrollLeft += e.deltaY
+    }, { passive: false })
+    seg.addEventListener('click', (e) => {
+      const b = e.target.closest('button')
+      if (b) b.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest', inline: 'nearest' })
+    })
+    edges()
+  }
+  for (const b of $$('[data-goto="jam"]')) b.addEventListener('click', () => libView('jam'))
+  function openJams() {
+    if (npOpen) closeNP()
+    select($('#t-lib'))
+    libView('jam')
+  }
+  setTimeout(() => live('jam'), 6500)
+
+  /* ---------- quick actions: hold the island ---------- */
+  const qa = $('#qa')
+  const scrim = $('#scrim')
+  let qaOpen = false
+  const setQA = (on) => {
+    qaOpen = on
+    qa.classList.toggle('open', on)
+    qa.setAttribute('aria-hidden', String(!on))
+    scrim.classList.toggle('open', on)
+    gsap.to($$('button', qa), on ? { opacity: 1, y: 0, scale: 1, duration: dur(0.42), ease: 'back.out(2)', stagger: 0.04 } : { opacity: 0, y: 14, scale: 0.9, duration: dur(0.18), stagger: { each: 0.02, from: 'end' } })
+    gsap.to(island, { scale: on ? 0.97 : 1, duration: dur(0.25) })
+  }
+  scrim.addEventListener('click', () => setQA(false))
+  for (const b of $$('button', qa)) b.addEventListener('click', () => {
+    setQA(false)
+    if (b.dataset.q === 'device') live('device')
+    if (b.dataset.q === 'like') $('#like').setAttribute('aria-pressed', 'true')
+  })
+
+  /* ---------- gestures on the island: tap, swipe up, swipe sideways, hold ---------- */
+  let g = null
+  /* skipping from the island: the cover follows the finger and the neighbour slides into the circle, with its
+     title above the island; past the threshold it commits, short of it springs back */
+  const islImg = $('#islImg')
+  const islPeek = $('#islPeek')
+  const cueEl = $('#skipcue')
+  const PEEK = 40
+  const SKIP_AT = 46
+  let peekDir = 0
+  gsap.set(islPeek, { x: PEEK })
+  const neighbour = (dir) => TRACKS[(cur + dir + TRACKS.length) % TRACKS.length]
+  const peek = (dx) => {
+    const dir = dx < 0 ? 1 : -1
+    if (dir !== peekDir) {
+      peekDir = dir
+      islPeek.src = A + neighbour(dir).img
+      cueEl.textContent = `${dir > 0 ? 'NEXT' : 'PREVIOUS'} · ${neighbour(dir).t.toUpperCase()}`
+    }
+    const x = Math.max(-PEEK, Math.min(PEEK, dx * 0.85))
+    gsap.set(islImg, { x })
+    gsap.set(islPeek, { x: x + (dir > 0 ? PEEK : -PEEK) })
+    gsap.set(cueEl, { opacity: Math.min(1, Math.abs(dx) / SKIP_AT), y: 0 })
+  }
+  const commitPeek = (dir) => {
+    gsap.to(islImg, { x: -PEEK * dir, duration: dur(0.18), ease: 'power2.out' })
+    gsap.to(islPeek, { x: 0, duration: dur(0.18), ease: 'power2.out', onComplete: () => {
+      pos = 0
+      setTrack(cur + dir)
+      gsap.set(islImg, { x: 0 })
+      gsap.set(islPeek, { x: PEEK })
+      peekDir = 0
+    } })
+    gsap.fromTo(island, { scale: 0.97 }, { scale: 1, duration: dur(0.45), ease: 'back.out(3)' })
+    gsap.to(cueEl, { opacity: 0, duration: dur(0.3), delay: 0.6 })
+  }
+  const cancelPeek = () => {
+    gsap.to(islImg, { x: 0, duration: dur(0.35), ease: 'back.out(2)' })
+    gsap.to(islPeek, { x: peekDir < 0 ? -PEEK : PEEK, duration: dur(0.35), ease: 'power3.out' })
+    gsap.to(cueEl, { opacity: 0, duration: dur(0.2) })
+    peekDir = 0
+  }
+  $('#islNext').addEventListener('click', (e) => { e.stopPropagation(); commitPeekFromButton(1) })
+  const commitPeekFromButton = (dir) => {
+    islPeek.src = A + neighbour(dir).img
+    gsap.set(islPeek, { x: PEEK * dir })
+    peekDir = dir
+    cueEl.textContent = `${dir > 0 ? 'NEXT' : 'PREVIOUS'} · ${neighbour(dir).t.toUpperCase()}`
+    gsap.set(cueEl, { opacity: 1, y: 0 })
+    commitPeek(dir)
+  }
+  island.addEventListener('pointerdown', (e) => {
+    if (e.target.closest('.isl-play, .act, .isl-next')) return
+    /* a swipe may start anywhere on the island, tabs included; the pointer is captured only once it moves,
+       so a plain tap still reaches the tab */
+    g = { x: e.clientX, y: e.clientY, t: performance.now(), moved: false, onTab: !!e.target.closest('.tab'), onArt: !!e.target.closest('.isl-art, .isl-mini'), hold: setTimeout(() => { if (g && !g.moved && !g.onTab) { g.held = true; setQA(true) } }, 480) }
+  })
+  island.addEventListener('pointermove', (e) => {
+    if (!g) return
+    const dx = e.clientX - g.x
+    const dy = e.clientY - g.y
+    if (!g.moved && Math.hypot(dx, dy) > 8) { g.moved = true; clearTimeout(g.hold); island.setPointerCapture(e.pointerId) }
+    if (g.moved && !g.held) {
+      if (!g.axis) g.axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y'
+      if (g.axis === 'x') { peek(dx); gsap.set(island, { x: dx * 0.08 }) }
+      else gsap.set(island, { y: Math.min(0, dy * 0.3) })
+    }
+  })
+  const release = (e) => {
+    if (!g) return
+    clearTimeout(g.hold)
+    const dx = e.clientX - g.x
+    const dy = e.clientY - g.y
+    gsap.to(island, { x: 0, y: 0, duration: dur(0.5), ease: 'elastic.out(1, .6)' })
+    if (!g.held) {
+      if (g.axis === 'x') { if (Math.abs(dx) > SKIP_AT) commitPeek(dx < 0 ? 1 : -1); else cancelPeek() }
+      else if (dy < -36 && Math.abs(dy) > Math.abs(dx)) openNP()
+      else if (!g.moved && g.onArt) openNP()
+      else if (!g.moved && compact) setCompact(false)
+    }
+    g = null
+  }
+  island.addEventListener('pointerup', release)
+  /* the browser took the gesture over (scroll, native drag): undo the peek, never act on it */
+  island.addEventListener('pointercancel', () => {
+    if (!g) return
+    clearTimeout(g.hold)
+    if (g.axis === 'x') cancelPeek()
+    gsap.to(island, { x: 0, y: 0, duration: dur(0.5), ease: 'elastic.out(1, .6)' })
+    g = null
+  })
+  island.addEventListener('keydown', (e) => { if (e.key === 'ArrowUp' && e.target === $('#islArt')) openNP() })
+  $('#islArt').addEventListener('click', (e) => { if (e.detail === 0) openNP() })
+
+  /* first visit: the cover nudges once so the swipe is discoverable */
+  let hinted = false
+  try { hinted = localStorage.getItem('bitrate-island-skip-hint') === '1' } catch (e) { hinted = true }
+  if (!hinted && !reduce) setTimeout(() => {
+    if (npOpen || g) return
+    const o = { dx: 0 }
+    gsap.timeline({ onComplete: () => { cancelPeek(); try { localStorage.setItem('bitrate-island-skip-hint', '1') } catch (e) { /* storage unavailable */ } } })
+      .to(o, { dx: -30, duration: 0.45, ease: 'power2.out', onUpdate: () => { peek(o.dx); cueEl.textContent = 'SWIPE THE ISLAND TO SKIP' } })
+      .to(o, { dx: 0, duration: 0.5, ease: 'back.out(2)', delay: 0.9, onUpdate: () => peek(o.dx || -0.01) })
+  }, 2600)
+
+  /* ---------- the island blooms into the player (clip-path from the island's own rect) ---------- */
+  const islandClip = () => {
+    const p = phone.getBoundingClientRect()
+    const r = island.getBoundingClientRect()
+    return `inset(${r.top - p.top}px ${p.right - r.right}px ${p.bottom - r.bottom}px ${r.left - p.left}px round ${r.height / 2}px)`
+  }
+  const full = () => `inset(0px 0px 0px 0px round ${phone.offsetWidth >= 390 && innerWidth > 760 ? 48 : 0}px)`
+  function openNP() {
+    if (npOpen) return
+    npOpen = true
+    if (qaOpen) setQA(false)
+    endLive()
+    np.setAttribute('aria-hidden', 'false')
+    gsap.killTweensOf([np, island])
+    gsap.set(np, { visibility: 'visible', clipPath: islandClip() })
+    gsap.to(island, { opacity: 0, scale: 0.96, duration: dur(0.18) })
+    gsap.to(np, { clipPath: full(), duration: dur(0.62), ease: 'expo.out' })
+    gsap.fromTo($$('[data-s]', np), { y: 26, opacity: 0 }, { y: 0, opacity: 1, duration: dur(0.5), ease: 'power3.out', stagger: 0.045, delay: dur(0.08) })
+    setTimeout(() => $('#npClose').focus(), 60)
+  }
+  function closeNP() {
+    if (!npOpen) return
+    if (sheetOpen) { setSheet(false); return }
+    npOpen = false
+    gsap.killTweensOf([np, island])
+    gsap.set(np, { y: 0 })
+    gsap.to($$('[data-s]', np), { opacity: 0, duration: dur(0.12) })
+    gsap.to(np, { clipPath: islandClip(), duration: dur(0.42), ease: 'power3.in', onComplete: () => { gsap.set(np, { visibility: 'hidden' }); np.setAttribute('aria-hidden', 'true') } })
+    gsap.fromTo(island, { opacity: 0, scale: 0.94 }, { opacity: 1, scale: 1, duration: dur(0.5), ease: 'back.out(2)', delay: dur(0.32) })
+    $('#islArt').focus({ preventScroll: true })
+  }
+  $('#npClose').addEventListener('click', closeNP)
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') { if (npOpen) closeNP(); else if (qaOpen) setQA(false) } })
+
+  /* drag the player down to put it back into the island */
+  let d = null
+  np.addEventListener('pointerdown', (e) => { if (e.target.closest('button, .wave, .csheet, input')) return; d = { y: e.clientY, x: e.clientX } })
+  np.addEventListener('pointermove', (e) => { if (!d) return; const dy = Math.max(0, e.clientY - d.y); gsap.set(np, { y: dy * 0.6 }) })
+  const npUp = (e) => {
+    if (!d) return
+    const dy = e.clientY - d.y
+    const dx = e.clientX - d.x
+    d = null
+    if (dy > 110) closeNP()
+    else {
+      gsap.to(np, { y: 0, duration: dur(0.4), ease: 'power3.out' })
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) skip(dx < 0 ? 1 : -1)
+    }
+  }
+  np.addEventListener('pointerup', npUp)
+  np.addEventListener('pointercancel', npUp)
+
+  /* seek on the waveform */
+  const wave = $('#wave')
+  const seekTo = (clientX) => { const r = wave.getBoundingClientRect(); pos = Math.max(0, Math.min(1, (clientX - r.left) / r.width)) * TRACKS[cur].len; paint() }
+  let seeking = false
+  wave.addEventListener('pointerdown', (e) => { seeking = true; wave.setPointerCapture(e.pointerId); seekTo(e.clientX) })
+  wave.addEventListener('pointermove', (e) => { if (seeking) seekTo(e.clientX) })
+  wave.addEventListener('pointerup', () => { seeking = false })
+  wave.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { pos = Math.max(0, Math.min(TRACKS[cur].len - 1, pos + (e.key === 'ArrowRight' ? 5 : -5))); paint() } })
+
+  /* ---------- timed comments: live bubbles, the list sheet and the composer ---------- */
+  const cbub = $('#cbub')
+  const csheet = $('#csheet')
+  const cl = $('#cl')
+  const cin = $('#cin')
+  let bubTimer = null
+  let sheetOpen = false
+  const esc = (t) => t.replace(/[<>&"]/g, (ch) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' })[ch])
+  const showBubble = (c) => {
+    if (!showCm || !npOpen) return
+    const w = wave.clientWidth
+    const left = Math.max(0, Math.min(w - 232, c.f * w - 116))
+    cbub.innerHTML = `<img src="../design-system/assets/avatars/${c.av}.jpg" alt=""><span><b>${esc(c.n)}</b><span class="tchip">${fmt(c.f * TRACKS[cur].len)}</span><p>${esc(c.t)}</p></span>`
+    cbub.style.left = `${left}px`
+    gsap.killTweensOf(cbub)
+    gsap.fromTo(cbub, { opacity: 0, y: 8, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: dur(0.35), ease: 'back.out(2)' })
+    const m = wave.querySelector(`.mo[data-k="${COMMENTS.indexOf(c)}"]`)
+    if (m) gsap.fromTo(m, { scale: 1.5 }, { scale: 1, duration: dur(0.5), ease: 'back.out(3)' })
+    clearTimeout(bubTimer)
+    bubTimer = setTimeout(() => gsap.to(cbub, { opacity: 0, y: 4, duration: dur(0.25) }), 3400)
+  }
+  /* called every second by the playback clock: surface the comment pinned to this second */
+  window.__cmTick = () => {
+    const len = TRACKS[cur].len
+    const hit = COMMENTS.find((c) => Math.floor(c.f * len) === Math.floor(pos))
+    if (hit) showBubble(hit)
+    $('#cin').placeholder = `Comment at ${fmt(pos)}`
+    if (sheetOpen) markNow()
+  }
+  const sorted = () => [...COMMENTS].sort((a, b) => a.f - b.f)
+  const markNow = () => {
+    const p = pos / TRACKS[cur].len
+    const list = sorted()
+    let k = -1
+    list.forEach((c, i) => { if (c.f <= p) k = i })
+    $$('.crow', cl).forEach((r, i) => { r.classList.toggle('now', i === k) })
+  }
+  const renderList = () => {
+    cl.innerHTML = sorted().map((c) => `<div class="crow"><img src="../design-system/assets/avatars/${c.av}.jpg" alt=""><span><b>${esc(c.n)}</b><button class="tchip" type="button" data-f="${c.f}" aria-label="Play from ${fmt(c.f * TRACKS[cur].len)}">${fmt(c.f * TRACKS[cur].len)}</button><p>${esc(c.t)}</p></span></div>`).join('')
+    $('#cmCount').textContent = String(COMMENTS.length)
+    $('#cmCount2').textContent = String(COMMENTS.length)
+    markNow()
+  }
+  const setSheet = (on) => {
+    sheetOpen = on
+    csheet.setAttribute('aria-hidden', String(!on))
+    if (on) renderList()
+    gsap.to(csheet, { y: on ? '0%' : '102%', duration: dur(on ? 0.5 : 0.35), ease: on ? 'expo.out' : 'power3.in' })
+    if (on) setTimeout(() => cin.focus({ preventScroll: true }), 80)
+  }
+  $('#npComments').addEventListener('click', () => setSheet(!sheetOpen))
+  cl.addEventListener('click', (e) => {
+    const b = e.target.closest('.tchip')
+    if (!b) return
+    pos = Number(b.dataset.f) * TRACKS[cur].len
+    paint()
+    markNow()
+  })
+  $('#cmShow').addEventListener('change', (e) => {
+    showCm = e.target.checked
+    wave.classList.toggle('nocm', !showCm)
+    if (!showCm) gsap.to(cbub, { opacity: 0, duration: dur(0.2) })
+  })
+  $('#ccomp').addEventListener('submit', (e) => {
+    e.preventDefault()
+    const t = cin.value.trim()
+    if (!t) return
+    const c = { f: pos / TRACKS[cur].len, av: 'avatar1', n: 'You', t, mine: true }
+    COMMENTS.push(c)
+    cin.value = ''
+    drawWave()
+    paint()
+    renderList()
+    const was = showCm
+    showCm = true
+    showBubble(c)
+    showCm = was
+  })
+  wave.addEventListener('click', (e) => {
+    const m = e.target.closest('.mo')
+    if (m) showBubble(COMMENTS[Number(m.dataset.k)])
+  })
+
+  /* ---------- tuner: drag the needle; the station and picks follow ---------- */
+  const dial = $('#dial')
+  const needle = $('#needle')
+  const NB = 44
+  $('#dialBars').innerHTML = Array.from({ length: NB }, (_, i) => `<i style="height:${Math.round(10 + 32 * Math.abs(Math.sin(i * 0.9) * Math.cos(i * 0.23)))}px"></i>`).join('')
+  const ZONES = [['Calm', 86.1, [2, 3, 1]], ['Focus', 88.7, [1, 3, 2]], ['Night', 92.4, [4, 0, 2]], ['Drive', 96.8, [0, 1, 3]], ['Rush', 101.3, [3, 4, 0]]]
+  let tune = 0.58
+  let zoneNow = -1
+  const setTune = (v, anim) => {
+    tune = Math.max(0, Math.min(1, v))
+    const w = dial.clientWidth
+    if (anim && !reduce) gsap.to(needle, { x: tune * w, duration: 0.5, ease: 'elastic.out(1, .7)' })
+    else gsap.set(needle, { x: tune * w })
+    const lit = Math.round(tune * (NB - 1))
+    $$('#dialBars i').forEach((b, i) => { b.classList.toggle('on', Math.abs(i - lit) <= 2) })
+    const z = Math.min(ZONES.length - 1, Math.floor(tune * ZONES.length))
+    const [name, f, picks] = ZONES[z]
+    $('#freq').textContent = `${name} · ${(f + (tune * ZONES.length - z) * 1.8).toFixed(1)}`
+    dial.setAttribute('aria-valuenow', String(Math.round(tune * 100)))
+    dial.setAttribute('aria-valuetext', name)
+    if (z !== zoneNow) {
+      zoneNow = z
+      const P = $('#picks')
+      P.innerHTML = picks.map((k) => `<span><img src="${A + TRACKS[k].img}" alt=""><b>${TRACKS[k].t}</b>${TRACKS[k].a}</span>`).join('')
+      if (!reduce) gsap.fromTo(P.children, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.05, ease: 'power3.out' })
+    }
+  }
+  let tuning = false
+  const tuneAt = (x) => { const r = dial.getBoundingClientRect(); setTune((x - r.left) / r.width) }
+  dial.addEventListener('pointerdown', (e) => { tuning = true; dial.setPointerCapture(e.pointerId); tuneAt(e.clientX) })
+  dial.addEventListener('pointermove', (e) => { if (tuning) tuneAt(e.clientX) })
+  dial.addEventListener('pointerup', () => { tuning = false; const z = Math.floor(tune * ZONES.length); setTune((z + 0.5) / ZONES.length, true) })
+  dial.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); setTune(tune + (e.key === 'ArrowRight' ? 0.2 : -0.2), true) } })
+  new ResizeObserver(() => setTune(tune)).observe(dial)
+
+  /* ---------- boot ---------- */
+  setTrack(0)
+  setPlaying(true)
+  setTune(0.58)
+  document.addEventListener('visibilitychange', () => { if (document.hidden) gsap.globalTimeline.pause(); else gsap.globalTimeline.resume() })
+})()
+</script>
+</body>
+</html>

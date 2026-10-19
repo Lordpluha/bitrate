@@ -18,7 +18,7 @@ export type ArtistPopularTracksProps = {
 
 const COLLAPSED_COUNT = 5
 
-/** Numbered "Popular" list — the artist's most-played tracks. */
+/** Numbered "Popular" list — the artist's most played tracks (`GET /artists/{id}/top-tracks`). */
 export const ArtistPopularTracks = ({
   isPlaybackContextActive,
   likedTrackIds,
@@ -33,8 +33,8 @@ export const ArtistPopularTracks = ({
   if (tracks.length === 0) return null
 
   return (
-    <section className="px-4 sm:px-6">
-      <h2 className="mb-4 text-2xl font-bold text-text">Popular</h2>
+    <section className="flex min-w-0 flex-col gap-2">
+      <h2 className="text-[19px] leading-[1.25] font-semibold">Popular</h2>
 
       <ul className="flex flex-col">
         {visibleTracks.map((track, index) => {
@@ -58,7 +58,7 @@ export const ArtistPopularTracks = ({
 
       {tracks.length > COLLAPSED_COUNT && (
         <button
-          className="mt-2 px-2 py-2 text-sm font-bold text-text-subdued transition-colors hover:text-text sm:px-3"
+          className="self-start px-3 py-1 text-[13px] font-semibold text-accent transition-colors hover:underline"
           onClick={() => setIsExpanded((value) => !value)}
           type="button"
         >

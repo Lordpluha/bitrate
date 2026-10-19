@@ -1,0 +1,2248 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "ahPYQL",
+      "name": "Artist / Profile details / Desktop / Dark",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "9rXB4k",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:92zIez": {
+              "type": "ref",
+              "id": "PAhyoo",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Profile",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "user-round"
+                },
+                "ds:GZQzF3": {
+                  "content": "Profile"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Profile / Public details"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Preview public profile"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "icon": "eye"
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "prPTgT",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "rAi6uG",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Edit artist profile"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Public details · Draft changes"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "XuRuYW",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "Sj2MHU",
+                  "name": "Profile Head",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "8dxFGd",
+                      "ref": "ds:pIPJZe",
+                      "name": "Media/Avatar",
+                      "width": 64,
+                      "height": 64,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/hero/luma-vale.png",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "rXeHmk",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "GfXVke",
+                          "ref": "ds:Qjj2NE",
+                          "name": "Text/H3",
+                          "content": "Demo artist"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "fVUFhK",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "@demoartist · Public profile"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "vj94T8",
+                      "ref": "ds:xtDM73",
+                      "name": "Status/Success",
+                      "descendants": {
+                        "ds:HSv7ty": {
+                          "content": "Published"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "YsU7uz",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "2KZDfm",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Details",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "nRT2vq",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Catalog",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Catalog"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jWB7gb",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Verification",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Verification"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Kkqk38",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "fpHmQs",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "3ZW5EL",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "9Czr7e",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "BMnLjL",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "tWFGSY",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Public profile details"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "suQgo4",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "These fields appear on the artist page after saving."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "vCFwTS",
+                                  "ref": "ds:17mlfB",
+                                  "name": "Form/Drop Zone",
+                                  "descendants": {
+                                    "ds:QxcQW6": {
+                                      "content": "Profile image · Change image"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "bV3uav",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Display name",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Display name"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Demo artist"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "exavo8",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Public handle",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Public handle"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "@demoartist"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "pGCRxD",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Bio",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Bio"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Independent electronic artist building late-night worlds."
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "WZCVNk",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "58 / 300"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Pw4skd",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Website",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Website"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "https://example.com"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "nha4QP",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Social link",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Social link"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "https://social.example/demoartist"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "wg8BLf",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "zL6PYM",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "4wmY7U",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "mzFj3S",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "4r4uiD",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Visibility"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "3kifAX",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Public on artist profile"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "cAhnnq",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "HuCWcb",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Name · Image · Cover · Bio · Links"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ggiotH",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Private account data"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "W75v63",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "UVHoEM",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Login email · Security · Billing"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "uNMRb7",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Managed separately in account settings."
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "d2by8E",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "MXNchR",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "fG6Mpb",
+                                  "ref": "ds:WcSzPr",
+                                  "name": "Status/Warning",
+                                  "descendants": {
+                                    "ds:8sj0Ew": {
+                                      "content": "Unsaved changes"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "GnJ9Nd",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "4 public fields changed"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "kZHGPp",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Save profile changes",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Save profile changes"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Rd5xDn",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Cancel changes",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Cancel changes"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "gw3shj",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "This edits the artist page, not your listener profile."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/profile — Public artist page fields; private account data stays separate."
+    },
+    {
+      "type": "frame",
+      "id": "jBhp6k",
+      "name": "Artist / Profile details / Desktop / Light",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "k84Jh6",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:92zIez": {
+              "type": "ref",
+              "id": "SCV9LS",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Profile",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "user-round"
+                },
+                "ds:GZQzF3": {
+                  "content": "Profile"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Profile / Public details"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Preview public profile"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "icon": "eye"
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "ZbDHaT",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "39w52A",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Edit artist profile"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Public details · Draft changes"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "Wnapz7",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "QnJY5s",
+                  "name": "Profile Head",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Nocwr6",
+                      "ref": "ds:pIPJZe",
+                      "name": "Media/Avatar",
+                      "width": 64,
+                      "height": 64,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/hero/luma-vale.png",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "G9dSnE",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "RXEBK5",
+                          "ref": "ds:Qjj2NE",
+                          "name": "Text/H3",
+                          "content": "Demo artist"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ozvmNf",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "@demoartist · Public profile"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ZZc8V9",
+                      "ref": "ds:xtDM73",
+                      "name": "Status/Success",
+                      "descendants": {
+                        "ds:HSv7ty": {
+                          "content": "Published"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "NQdadj",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "RHMmLC",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Details",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Kqrw6n",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Catalog",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Catalog"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "kGjerJ",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Verification",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Verification"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "MeAVFX",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "fuus4P",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "jKbFsD",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "UezvGY",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "dYFcpd",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "JzmRZW",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Public profile details"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "unXSFq",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "These fields appear on the artist page after saving."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "4MDDLq",
+                                  "ref": "ds:17mlfB",
+                                  "name": "Form/Drop Zone",
+                                  "descendants": {
+                                    "ds:QxcQW6": {
+                                      "content": "Profile image · Change image"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "3aJsyL",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Display name",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Display name"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Demo artist"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "MtKRfZ",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Public handle",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Public handle"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "@demoartist"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "pmyToZ",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Bio",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Bio"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Independent electronic artist building late-night worlds."
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "CwDDuC",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "58 / 300"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "GJPm7h",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Website",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Website"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "https://example.com"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "pxFAny",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Social link",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Social link"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "https://social.example/demoartist"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "PaQRMv",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "PkWtdh",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "fhbN3E",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "TRrmmG",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "9LTBSB",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Visibility"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "fL4og4",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Public on artist profile"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "mQDZSH",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "h5MLT9",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Name · Image · Cover · Bio · Links"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "k9pWWs",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Private account data"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "G8RZ9J",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "jVREA8",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Login email · Security · Billing"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "25mL2e",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Managed separately in account settings."
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "tETeNZ",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "ehqTYu",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "Jm8H5Q",
+                                  "ref": "ds:WcSzPr",
+                                  "name": "Status/Warning",
+                                  "descendants": {
+                                    "ds:8sj0Ew": {
+                                      "content": "Unsaved changes"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "W9YH3y",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "4 public fields changed"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "bahG79",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Save profile changes",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Save profile changes"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ihpXxV",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Cancel changes",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Cancel changes"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "A7cTb5",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "This edits the artist page, not your listener profile."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "designed — /dashboard/profile — Public artist page fields; private account data stays separate."
+    },
+    {
+      "type": "frame",
+      "id": "SbxgC6",
+      "name": "Artist / Profile details / Desktop / Dim",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "ywy4z7",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:92zIez": {
+              "type": "ref",
+              "id": "sPQysP",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Profile",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "user-round"
+                },
+                "ds:GZQzF3": {
+                  "content": "Profile"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Profile / Public details"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Preview public profile"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "icon": "eye"
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "xHjaRr",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "WiqUTA",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Edit artist profile"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Public details · Draft changes"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "vfkNp7",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "Ws76SD",
+                  "name": "Profile Head",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "GVnegs",
+                      "ref": "ds:pIPJZe",
+                      "name": "Media/Avatar",
+                      "width": 64,
+                      "height": 64,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/hero/luma-vale.png",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "o8aQvn",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "7Zhz4V",
+                          "ref": "ds:Qjj2NE",
+                          "name": "Text/H3",
+                          "content": "Demo artist"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Xgbgum",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "@demoartist · Public profile"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "tvnZqS",
+                      "ref": "ds:xtDM73",
+                      "name": "Status/Success",
+                      "descendants": {
+                        "ds:HSv7ty": {
+                          "content": "Published"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "gZFQxG",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "gY5ttg",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Details",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "fyEKF5",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Catalog",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Catalog"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "vsFh8Q",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Verification",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Verification"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "w2YEQa",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Pmsfu4",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "TVg238",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "5CJSeE",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "bXokDt",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "SQ9ovQ",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Public profile details"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "NAbcGf",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "These fields appear on the artist page after saving."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Rfhp7M",
+                                  "ref": "ds:17mlfB",
+                                  "name": "Form/Drop Zone",
+                                  "descendants": {
+                                    "ds:QxcQW6": {
+                                      "content": "Profile image · Change image"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "32vKFX",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Display name",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Display name"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Demo artist"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "p5uEHc",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Public handle",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Public handle"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "@demoartist"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "qEqhXj",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Bio",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Bio"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Independent electronic artist building late-night worlds."
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "BhyJHD",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "58 / 300"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "3X6TmS",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Website",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Website"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "https://example.com"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Z2DQTr",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Social link",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Social link"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "https://social.example/demoartist"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "fyBD3a",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "2ADxA9",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "cnFxMX",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "8aoRAW",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "96EpPQ",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Visibility"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "jtgGvG",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Public on artist profile"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "zmGzDT",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "WAH4m3",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Name · Image · Cover · Bio · Links"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "6vCNBH",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Private account data"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "MQbfPR",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "8Tyx7K",
+                                          "ref": "ds:SOt7Oe",
+                                          "name": "Text/Body Strong",
+                                          "content": "Login email · Security · Billing"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "BryCT7",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Managed separately in account settings."
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "PqBqoq",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "V5HibL",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "cEK2TH",
+                                  "ref": "ds:WcSzPr",
+                                  "name": "Status/Warning",
+                                  "descendants": {
+                                    "ds:8sj0Ew": {
+                                      "content": "Unsaved changes"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "zdiYGq",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "4 public fields changed"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ZGLVNU",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Save profile changes",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Save profile changes"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "YXDrnX",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Cancel changes",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Cancel changes"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "GtxDFj",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "This edits the artist page, not your listener profile."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "designed — /dashboard/profile — Public artist page fields; private account data stays separate."
+    },
+    {
+      "type": "frame",
+      "id": "FHwiPm",
+      "name": "Artist / Profile details / Mobile / Dark",
+      "width": 390,
+      "height": 1700,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "mMALFU",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1700,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "mapuB4",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "xhB9UE",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Edit artist profile"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Public details · Draft changes"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "BdMT8P",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "jPDDsw",
+                  "name": "Profile Head",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "QSxBgv",
+                      "ref": "ds:pIPJZe",
+                      "name": "Media/Avatar",
+                      "width": 64,
+                      "height": 64,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/hero/luma-vale.png",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "sZ8S7f",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "8ynBhy",
+                          "ref": "ds:Qjj2NE",
+                          "name": "Text/H3",
+                          "content": "Demo artist"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "AKPsrv",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "@demoartist · Public profile"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "NH5tKT",
+                      "ref": "ds:xtDM73",
+                      "name": "Status/Success",
+                      "descendants": {
+                        "ds:HSv7ty": {
+                          "content": "Published"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "xvHePW",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "eEiiPh",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Details",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ngN9ZG",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Catalog",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Catalog"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "YVkE4Y",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Verification",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Verification"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "jbhf4i",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "PevJZA",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Usu3Rs",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "DvAavg",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Public profile details"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "T3tXqo",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "These fields appear on the artist page after saving."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "xNBZ73",
+                          "ref": "ds:17mlfB",
+                          "name": "Form/Drop Zone",
+                          "descendants": {
+                            "ds:QxcQW6": {
+                              "content": "Profile image · Change image"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "z57UgM",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Display name",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Display name"
+                            },
+                            "ds:iI0CE": {
+                              "content": "Demo artist"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "WhvRuD",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Public handle",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Public handle"
+                            },
+                            "ds:iI0CE": {
+                              "content": "@demoartist"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ai5PdJ",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Bio",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Bio"
+                            },
+                            "ds:iI0CE": {
+                              "content": "Independent electronic artist building late-night worlds."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "NGxzNo",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "58 / 300"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Dxodub",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Website",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Website"
+                            },
+                            "ds:iI0CE": {
+                              "content": "https://example.com"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "hNxxQV",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Social link",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Social link"
+                            },
+                            "ds:iI0CE": {
+                              "content": "https://social.example/demoartist"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "qVjSRA",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "uPcQCx",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "M9VJpY",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "Sca8z8",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Visibility"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "5wUf9M",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Public on artist profile"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "W9Kayq",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "9n7NRt",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Name · Image · Cover · Bio · Links"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "YGzV5n",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Private account data"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "mJnzdC",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "YynMHa",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Login email · Security · Billing"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "JkAoXq",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "Managed separately in account settings."
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "YGj4rb",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "6Dtbyy",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "4zPUfa",
+                          "ref": "ds:WcSzPr",
+                          "name": "Status/Warning",
+                          "descendants": {
+                            "ds:8sj0Ew": {
+                              "content": "Unsaved changes"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ZjTemt",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "4 public fields changed"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Y6dmtU",
+                          "ref": "ds:exjwf",
+                          "name": "Button / Save profile changes",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:E23bq6": {
+                              "content": "Save profile changes"
+                            },
+                            "ds:o7NXW": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "M3Rfz5",
+                          "ref": "ds:G5tJp",
+                          "name": "Button / Cancel changes",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:d2zCI": {
+                              "content": "Cancel changes"
+                            },
+                            "ds:zDiHG": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "YyMB9Q",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "This edits the artist page, not your listener profile."
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/profile — Public artist page fields; private account data stays separate."
+    },
+    {
+      "type": "frame",
+      "id": "zFeoTk",
+      "name": "Artist / Profile details / Coming soon (current app) / Desktop",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "ewAwSN",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:92zIez": {
+              "type": "ref",
+              "id": "4T72ne",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Profile",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "user-round"
+                },
+                "ds:GZQzF3": {
+                  "content": "Profile"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Profile / Public details"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Preview public profile"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "icon": "eye"
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "5RhDpR",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "ZQMUoC",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "b9a4TE",
+                      "ref": "ds:UacIqy",
+                      "name": "State / Artist profile editing is coming soon.",
+                      "descendants": {
+                        "ds:QTS6fY": {
+                          "icon": "user-round"
+                        },
+                        "ds:LaYbWr": {
+                          "content": "Artist profile editing is coming soon."
+                        },
+                        "ds:IowS15": {
+                          "content": "Your current account is shown in the workspace menu."
+                        },
+                        "ds:PKR600/ds:NVe7y": {
+                          "content": "Got it"
+                        },
+                        "ds:Sk1EVh": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/profile — Public artist page fields; private account data stays separate."
+    },
+    {
+      "type": "frame",
+      "id": "kLR39i",
+      "name": "Artist / Profile details / Coming soon (current app) / Mobile",
+      "width": 390,
+      "height": 1200,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "M8iSPx",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1200,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "2JoQPE",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "9QQnzd",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "vAFrDH",
+                      "ref": "ds:UacIqy",
+                      "name": "State / Artist profile editing is coming soon.",
+                      "descendants": {
+                        "ds:QTS6fY": {
+                          "icon": "user-round"
+                        },
+                        "ds:LaYbWr": {
+                          "content": "Artist profile editing is coming soon."
+                        },
+                        "ds:IowS15": {
+                          "content": "Your current account is shown in the workspace menu."
+                        },
+                        "ds:PKR600/ds:NVe7y": {
+                          "content": "Got it"
+                        },
+                        "ds:Sk1EVh": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/profile — Public artist page fields; private account data stays separate."
+    }
+  ]
+}

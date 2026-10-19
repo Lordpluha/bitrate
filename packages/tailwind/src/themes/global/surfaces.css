@@ -37,6 +37,10 @@
   --color-primary-active: var(--color-purple-700);
   /* Secondary action surface on hover. */
   --color-secondary-hover: var(--color-neutral-700);
+  /* Drop-shadow colour for raised surfaces — the colour behind every `shadow-*` elevation. */
+  --color-shadow: color-mix(in srgb, var(--color-black) 40%, transparent);
+  /* Backdrop behind dialogs, sheets and hover actions on artwork (shadcn's `bg-black/50`). */
+  --color-scrim: color-mix(in srgb, var(--color-black) 50%, transparent);
 }
 
 /**
@@ -57,4 +61,6 @@
   --color-primary-hover: var(--color-purple-600);
   --color-primary-active: var(--color-purple-700);
   --color-secondary-hover: #dde1e7;
+  --color-shadow: color-mix(in srgb, var(--color-black) 12%, transparent);
+  --color-scrim: color-mix(in srgb, var(--color-black) 50%, transparent);
 }

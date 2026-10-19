@@ -52,7 +52,7 @@ export class TrackAudioPlayer {
       const source = await this.prepareAudio.execute({ id: this.track().id, bitrate: target })
       return source.url
     } catch (probeError) {
-      throw new Error(probeAudioErrorMessage(probeError))
+      throw new Error(probeAudioErrorMessage(probeError), { cause: probeError })
     }
   }
 }
