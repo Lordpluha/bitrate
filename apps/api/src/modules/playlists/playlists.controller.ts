@@ -1,3 +1,4 @@
+import { HttpCacheable } from '@common/interceptors/http-cacheable.decorator'
 import { TrackEntity } from '@modules/tracks/entities'
 import type { OptionalUserAuthRequest, UserAuthRequest } from '@modules/users-auth/types'
 import { OptionalUserAuth, UserAuth } from '@modules/users-auth/users-auth.guard'
@@ -45,6 +46,7 @@ export class PlaylistsController {
   /** Runs the get all operation. */
   @GetPlaylistsSwagger()
   @Throttle({ default: { ttl: 60_000, limit: 240 } })
+  @HttpCacheable()
   @Get('')
   async getAll(
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
@@ -70,6 +72,7 @@ export class PlaylistsController {
   @GetPlaylistByIdSwagger()
   @Throttle({ default: { ttl: 60_000, limit: 240 } })
   @OptionalUserAuth()
+  @HttpCacheable()
   @Get(':id')
   async getById(
     @Req() req: OptionalUserAuthRequest,

@@ -1,3 +1,4 @@
+import { HttpCacheable } from '@common/interceptors/http-cacheable.decorator'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
 import { ArtistAuthRequest } from '@modules/artists-auth/types'
 import type { UserAuthRequest } from '@modules/users-auth/types'
@@ -40,6 +41,7 @@ export class AlbumsController {
 
   /** Runs the get all albums operation. */
   @GetAlbumsSwagger()
+  @HttpCacheable()
   @Get('')
   async getAllAlbums(
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
@@ -57,6 +59,7 @@ export class AlbumsController {
 
   /** Runs the get by id operation. */
   @GetAlbumByIdSwagger()
+  @HttpCacheable()
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: AlbumEntity['id']) {
     return await this.albumsService.getById(id)
