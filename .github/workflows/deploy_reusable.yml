@@ -632,6 +632,16 @@ jobs:
           mkdir -p "$HOME/bitrate"
           cd "$HOME/bitrate"
 
+          # prod:backup dumps here before every migration. Postgres used to bind-mount
+          # ../backups, and the Docker daemon creates a missing bind source as root, which
+          # left the deploy user unable to write its own backups. Fail here, before the
+          # pull, rather than half way through prod:deploy.
+          if ! mkdir -p backups/prod 2>/dev/null || [ ! -w backups/prod ]; then
+            echo "::error::$HOME/bitrate/backups is not writable by $(id -un) (owner: $(stat -c %U backups 2>/dev/null || echo unknown))."
+            echo "Fix it once on the server: sudo chown -R $(id -un): $HOME/bitrate/backups"
+            exit 1
+          fi
+
           command -v docker >/dev/null 2>&1 || { echo "::error::docker is not on the deploy user's PATH."; exit 1; }
           docker compose version >/dev/null 2>&1 || { echo "::error::docker compose v2 is unavailable."; exit 1; }
 
