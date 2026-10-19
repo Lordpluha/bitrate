@@ -1,5 +1,5 @@
 export const fallbackPlaylistCover = '/images/default-playlist.jpg'
 export const fallbackTrackCover = '/images/default-playlist.jpg'
 export const fallbackAlbumCover = '/images/default-playlist.jpg'
-export const fallbackUserAvatar = '/images/default-playlist.jpg'
-export const fallbackArtistImage = '/images/default-playlist.jpg'
+export const fallbackUserAvatar = '/images/default-avatar.svg'
+export const fallbackArtistImage = '/images/default-artist.svg'
