@@ -1,5 +1,164 @@
 # @bitrate/web-artists
 
+## 1.3.0
+
+### Minor Changes
+
+- 97b1b5e: Add the artist Analytics page for Bitrate-owned listening signals. For the last 7, 28 or
+  90 UTC days it shows plays and distinct listeners with the change against the previous
+  period in words, plays per day as a single-series bar chart with hover values and a table
+  view, and the top tracks. An artist without published tracks, or whose tracks nobody has
+  played yet, sees a clear No data yet state instead of a chart of zeroes, and Spotify,
+  Apple Music and YouTube Music read Not connected rather than zero. Analytics is now a real
+  section in the workspace navigation and the dashboard links to it.
+- 5da2f64: Add the protected artist dashboard with responsive navigation, verified server sessions,
+  safe return-to-login redirects, two-factor sign-in and recoverable auth errors. Prepare the
+  release workspace schema with contributors, recording/composition splits, UPC and territories;
+  share pending two-factor cookies across the configured API/portal domain.
+
+  Complete the artist email-verification flow: explain the verification requirement after
+  registration and at login, handle confirmation links and allow resending expired links.
+  Add six-digit artist verification codes with a ten-minute lifetime, atomic attempt limits
+  and resend cooldowns. Match verification and two-factor forms to the existing auth style
+  and report unavailable or local mail delivery without claiming an email was sent.
+
+  Add artist-owned release draft creation and paginated workspace listing with validated
+  inputs, session-derived ownership, soft-deletion filtering and private no-store responses.
+
+  Connect Create release and Music to the release API: validate the title/type form, prevent
+  duplicate submissions while saving, show confirmed drafts and paginated summaries, and
+  handle loading, empty, malformed-response and retry states. Scope release query caches
+  to the signed-in artist and keep one responsive layout across Light, Dark and Dim.
+
+  Add the private database-backed Music catalogue: tracks/releases tabs, combined search
+  and filters, stable sorting, pagination, read-only details and optional audio previews.
+  Use the design's original cover/background assets and one layout across all three
+  themes. Add owner-constrained preparation recordings and an opt-in idempotent demo
+  seed without inserting public tracks or implementing publication and upload transitions.
+
+  Add title/type editing for owned release drafts with a latest-summary read and an
+  atomic owner/status/version-guarded PATCH. Keep entered values on failed or conflicting
+  saves, validate responses before confirming success, refresh artist-scoped catalogue
+  caches and reuse accessible responsive fields across create/edit dialogs.
+
+  Add an addressable artist-owned release workspace with active private/existing
+  recording metadata, optional scheduled date and credited participants. Bound relation
+  previews with genuine totals, validate private API responses and refresh the workspace
+  after a draft edit. Reuse the Pencil waveform and responsive desktop/mobile geometry
+  across all three themes without fabricating review history or delivery results.
+
+  Add planned UTC date/time editing and clearing for owned DRAFT workspaces through
+  the existing version-guarded PATCH. Preserve omitted metadata and entered values
+  on errors, and validate the saved instant before displaying success. Saving a plan
+  does not submit review or start external delivery.
+
+  Add credited participants to owned release drafts with validated names and unique
+  roles. Persist each credit and the guarded release version in one transaction;
+  refresh Music/workspace after confirmed writes and preserve form entries on errors.
+  Use a shared responsive three-theme dialog with pending dismissal locks.
+
+  Allow correcting an existing participant's name and roles with a current single-credit
+  read and the same transactional draft/version guard. Preserve contributor identity,
+  artist links and splits; repair legacy credits without roles and keep entries on
+  conflicts or unconfirmed saves. Share the accessible form with contributor addition.
+
+- 5258ea0: Add the artist notification center. The bell opens notifications split into Action
+  required (overdue tasks, tasks due within two days, changes requested by the reviewer,
+  failed store deliveries) and Updates (submitted, approved, released, live on a store), each
+  linking to its release, with relative times and unread marking; a dot on the bell shows
+  unread items and Mark all as read clears them. Notifications are derived from saved tasks,
+  review and delivery states, so they never disagree with them; only the last-seen time is
+  stored, in its own table.
+- cc05365: Add the artist Profile and Settings pages. Profile edits the public handle, country, bio
+  and links with a live preview, and uploads or removes the profile photo and header image
+  through the object store with content checks, instead of client-supplied URLs. Writes carry
+  the profile version, so two tabs never silently overwrite each other, and a taken handle
+  reports a clear conflict. Settings shows the sign-in email and its verification, turns
+  two-factor sign-in on with a QR code or manual key and off with a code, sends a password
+  reset link, switches appearance, and deletes the account after the handle is typed.
+  Profile and Settings are now real routes in the workspace navigation, in the designed
+  order, and the Music upload shortcut explains that tracks are uploaded inside a release.
+- abf65f1: Artists can now see the devices signed in to their account in Settings → Security. Each session
+  records its browser and last activity at sign-in and on token refresh. An artist can sign out one
+  other device or every device except the current one; the current session still ends through
+  sign-out.
+- 7494aaa: The artists portal's public page no longer copies Spotify for Artists. The old page reproduced its structure, copy, product names (Campaign Kit, Marquee, Showcase, Discovery Mode, Canvas, Countdown Pages, Loud & Clear), blog images, and photos and videos of real artists; all of it is gone, together with its mega-menu header, footer and the non-functional language switcher. The new page says what the workspace does today — release workspace, tasks, distribution plan, analytics — with sign-up and log-in, on Bitrate's own artwork. In ui-react, `PlayIcon` and `SavedSongIcon` default to Bitrate purple instead of Spotify green, the Storybook stories use Bitrate album covers instead of four Spotify advertising posters, and unused payment-method icons were removed. web-player no longer serves those posters from `/images/banner-*.jpg`.
+- acf3455: Artists can switch notification categories (tasks and deadlines, Bitrate review, delivery and
+  release) off for the in-app notification center from Settings → Notifications. Switched-off
+  categories are no longer queried or shown there; the dashboard still lists anything that needs
+  action. Email and push are shown as not sent yet instead of offering settings that do nothing.
+- 57ce6cb: Add the delivery plan and Distribution page, and the returning-artist dashboard. Artists
+  plan which stores (Spotify, Apple Music, YouTube Music, Amazon Music, Deezer, TIDAL) and
+  which territories a draft release goes to; saving a plan sends nothing. Each store reports
+  an honest state: Not connected while no distribution partner is connected, and Pending,
+  Live, Failed or Taken down only once a partner reports it. Behind this is one distribution
+  adapter interface with a not-connected default and the documented delivery state machine,
+  ready for a confirmed partner. The dashboard now shows, once a release exists, the current
+  release with its remaining steps, items needing attention, next tasks, catalogue counts,
+  upcoming planned dates and an analytics placeholder that never shows invented numbers.
+- 60b0f46: Artwork and track upload dialogs accepted a file dragged onto them, alongside the Choose file
+  button. A dropped file went through the same format and size checks, and a drop during an
+  upload in progress was ignored instead of opening the file in the browser.
+- eb49605: Add artwork and master audio uploads to owned release drafts. Artists upload, replace and
+  remove the cover (JPEG, PNG or WebP up to 20 MB, checked against its content) and add
+  recordings from a WAV, FLAC, MP3 or OGG master up to 512 MB, which is stored privately in
+  the object store and played back only by its owner. Recordings can be renamed, have their
+  master replaced or be removed, which also deletes the stored file and frees the ISRC.
+  Adding, replacing or removing audio clears the accuracy confirmation. Submission now also
+  requires artwork and uploaded audio for every draft recording. Nothing is published or
+  delivered by these uploads.
+- ad7fb4c: Bitrate operators can now review artist release submissions. A new release review queue in the
+  operator panel lists submissions oldest first. Each submission opens on its recordings with
+  playable masters, its rights, credits and shares, its delivery plan and its earlier decisions.
+  Operators holding `releases:review` approve a release or request changes, giving required changes
+  and optional recommendations; a decision only applies to the version the operator read and is
+  written to the audit log. Artists see the latest decision in their release workspace and can
+  reopen a release sent back for changes, then submit it again.
+- adef79e: Add rights confirmation, splits, identifiers and submission to owned release drafts.
+  Artists record the master owner and confirm that every writer is credited and the
+  information is accurate; changing credits clears both confirmations and changing splits
+  clears accuracy. Recording and composition splits may stay partial in a draft but never
+  exceed 100%. An optional UPC (with check digit) and per-recording ISRC are validated and
+  kept unique. The workspace reports submission blockers and non-blocking notices, and a
+  ready draft can be submitted for Bitrate review (re-checked in the same transaction) or
+  withdrawn back to its draft. Submission never starts external delivery.
+
+  The release workspace shows rights and identifiers, Master/Publishing splits with a live
+  total, per-recording ISRC and a readiness checklist with blockers and notes. Artists edit
+  rights, splits, UPC and ISRC in dialogs that keep entries on errors, confirm the review,
+  submit for Bitrate review and withdraw the request.
+
+- 48da82c: Add a release roadmap to the release workspace. It shows each step from draft details,
+  artwork, tracks with audio, credits and rights and splits through submission, Bitrate
+  review and store delivery, marks what is done, what is next and what is left, and links to
+  the section that resolves each step. It is derived from the saved release, so it always
+  reflects the real stage. The release timeline now also reports the actual review and
+  release status.
+- a172a4a: Add preparation tasks to releases. Artists add tasks with notes, a due date and an
+  assignee chosen from the participants credited on the release, move them between To do,
+  In progress and Done, edit and delete them. Tasks are planning notes: they stay editable
+  after submission and never change the release version or its confirmations, and each task
+  carries its own version so concurrent edits are rejected instead of overwritten. The
+  release workspace has a Tasks panel, and the dashboard's Tasks page lists every task
+  across the artist's releases with status filters, counts and overdue deadlines.
+- 45b94a0: Recordings on a release now have a running order. Existing recordings keep their upload order,
+  new uploads go last, and artists move recordings up or down in the release workspace. The new
+  order must name every recording on the draft once, so a recording added or removed meanwhile
+  fails the write instead of being placed silently. The operator review page lists recordings in
+  the same order.
+- febc8c9: Settings → Appearance now offers a compact density and a reduced-motion option next to the theme.
+  Both are saved in the browser, applied before the page paints, and only affect the artist
+  workspace.
+- b394751: Make the workspace search global. Besides the workspace sections, now including Profile
+  and Settings, it finds the artist's releases, tracks and tasks by title as you type and
+  opens the matching release workspace, or the Music tracks view for a track outside a
+  release. The API answers at most five results per group and never returns deleted items.
+
+### Patch Changes
+
+- Updated dependencies [7494aaa]
+  - @bitrate/ui-react@1.2.1
+
 ## 1.2.0
 
 ### Minor Changes
