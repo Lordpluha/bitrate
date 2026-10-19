@@ -21,6 +21,9 @@ import { AppModule } from './app.module'
 import type { AppConfig } from './common/config'
 import { resolveTrustProxySetting } from './common/config/trusted-proxy.config'
 
+/** The production API origin listed in Swagger when `API_BASE_URL` is not set. */
+const DEFAULT_DEPLOYED_API_URL = 'https://api.bitrate.me'
+
 /** Runs the bootstrap operation. */
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { bufferLogs: true })
@@ -61,14 +64,15 @@ async function bootstrap() {
   app.enableCors(configService.getOrThrow('connections').http)
   app.enableShutdownHooks()
 
-  const apiBaseUrl = configService.get('API_BASE_URL')
+  /** The deployed origin comes from `API_BASE_URL`, so it is listed once whichever is set. */
+  const deployedApiUrl = configService.get('API_BASE_URL') ?? DEFAULT_DEPLOYED_API_URL
 
   const documentBuilder = new DocumentBuilder()
     .setTitle(API_DOC_TITLE)
     .setDescription(API_DOC_DESCRIPTION)
     .setVersion(API_DOC_VERSION)
     .addServer(`http://localhost:${configService.getOrThrow('PORT')}`, 'Local server')
-    .addServer('https://api.bitrate.me', 'Deployed server')
+    .addServer(deployedApiUrl, 'Deployed server')
     .addOAuth2({
       type: 'oauth2',
       flows: {
@@ -133,14 +137,6 @@ async function bootstrap() {
       status: HttpStatus.TOO_MANY_REQUESTS,
       description: 'Too many requests',
     })
-
-  /**
-   * Added after the chain because the deployed origin is optional — `addServer` only accepts a
-   * real URL, and `build()` returns the document rather than the builder.
-   */
-  if (apiBaseUrl) {
-    documentBuilder.addServer(apiBaseUrl, 'Deployed server')
-  }
 
   const config = documentBuilder.build()
 

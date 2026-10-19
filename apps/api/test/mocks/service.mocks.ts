@@ -38,9 +38,11 @@ export const makeStorageMock = () =>
 
 /** Makes `$transaction(fn)` run its callback against the same Prisma mock. */
 export const mockTransaction = (prisma: PrismaMock) =>
-  prisma.$transaction.mockImplementation((fn: unknown) => {
-    if (typeof fn === 'function') return (fn as (p: typeof prisma) => unknown)(prisma)
-  })
+  prisma.$transaction.mockImplementation((fn: unknown) =>
+    Promise.resolve(
+      typeof fn === 'function' ? (fn as (p: typeof prisma) => unknown)(prisma) : undefined,
+    ),
+  )
 
 /** A `ProcessingAttemptRecorder` whose methods resolve without ever touching Prisma. */
 export const makeProcessingAttemptRecorderMock = () =>

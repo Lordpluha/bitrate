@@ -17,6 +17,12 @@ Four CLI commands cover mechanical verification. Run from the monorepo root.
 > monorepo is Biome. See [ADR-0035](../../apps/docs/docs/architecture/0035-admin-panel-on-angular.md),
 > [ADR-0039](../../apps/docs/docs/architecture/0039-player-as-svelte-custom-element-package.md),
 > `.claude/rules/admin-rules.md`, and `.claude/rules/player-rules.md`.
+>
+> `apps/api` stays a Biome workspace but also runs **oxlint for one rule only**:
+> `bitrate-api/prisma-write-ownership` (only the owning module writes a Prisma model, with a
+> shrinking baseline). Every built-in oxlint category is off there, so it never overlaps Biome.
+> `pnpm --filter @bitrate/api lint` runs both; `lint:data-ownership` runs the rule's tests and
+> oxlint alone. See [ADR-0060](../../apps/docs/docs/architecture/0060-api-data-write-ownership.md).
 
 ### Keeping Biome out of the ESLint apps takes `files.includes`, not an override
 
@@ -99,7 +105,7 @@ with a bare exit code `137` that looks nothing like a lint failure.
 ### `pnpm lint`
 
 Runs `biome lint --error-on-warnings` in `api`, `web-player`, `web-artists`, and `ui-react`
-(plus `expo lint` in `mobile`).
+(plus `expo lint` in `mobile`, and the oxlint data-ownership rule in `api`, ADR-0060).
 
 - **PASS** — exits 0, no diagnostics.
 - **FAIL** — exits non-zero; violations printed with file:line. Fix every one before committing.

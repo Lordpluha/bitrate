@@ -9,6 +9,12 @@ import { ARTIST_AUTH_ERRORS } from './errors'
 // Opt in with an isolated Redis endpoint; never flush the database or touch other keys.
 const describeRedis = process.env.EMAIL_CODE_TEST_REDIS_URL ? describe : describe.skip
 
+describe('ArtistEmailCodeService integration guard', () => {
+  it('has a Redis endpoint configured when running in CI', () => {
+    if (process.env.CI) expect(process.env.EMAIL_CODE_TEST_REDIS_URL).toBeTruthy()
+  })
+})
+
 describeRedis('ArtistEmailCodeService with Redis', () => {
   let redis: Redis
   let service: ArtistEmailCodeService
@@ -111,7 +117,7 @@ describeRedis('ArtistEmailCodeService with Redis', () => {
     const key = spy.mock.calls.at(-1)?.[0]
     if (typeof key === 'string') ownedKeys.add(key)
     await expect(service.reserveResend(email)).rejects.toThrow(
-      'Please wait before requesting another code',
+      ARTIST_AUTH_ERRORS.VERIFICATION_CODE_COOLDOWN,
     )
     spy.mockRestore()
   })
