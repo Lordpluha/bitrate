@@ -1,5 +1,160 @@
 # @bitrate/api
 
+## 1.3.0
+
+### Minor Changes
+
+- 7eeb53a: Error responses gain an additive `code` field: the dictionary key the message was translated from (for example `errors.track.not_found`). A message that is still an untranslated English literal has no `code`. A validation failure answers `code: errors.validation.failed` plus an `errors` array of `{ path, code?, message }`, with each zod issue translated in the request locale (`validation.too_small.string`, `validation.invalid_format.email`, `validation.required`, …); a hand-written DTO message is kept as written and has no per-field `code`. The API now translates into en, uk, ru, pl and de (ru, pl and de are unreviewed machine-written text), falling back to en. Transactional emails keep en/uk: the mail locale comes from the account's stored locale, and any other value falls back to en. New `TranslatableException` base for keyed errors; a Jest scan (TypeScript AST) now fails when a file gains a literal exception message, `super()` message or DTO message beyond its count in the per-file baseline `apps/api/test/i18n-literal-baseline.json`, and also asks to lower the baseline when a file improves, so the baseline can only shrink.
+- 97b1b5e: Add the artist Analytics page for Bitrate-owned listening signals. For the last 7, 28 or
+  90 UTC days it shows plays and distinct listeners with the change against the previous
+  period in words, plays per day as a single-series bar chart with hover values and a table
+  view, and the top tracks. An artist without published tracks, or whose tracks nobody has
+  played yet, sees a clear No data yet state instead of a chart of zeroes, and Spotify,
+  Apple Music and YouTube Music read Not connected rather than zero. Analytics is now a real
+  section in the workspace navigation and the dashboard links to it.
+- 5da2f64: Add the protected artist dashboard with responsive navigation, verified server sessions,
+  safe return-to-login redirects, two-factor sign-in and recoverable auth errors. Prepare the
+  release workspace schema with contributors, recording/composition splits, UPC and territories;
+  share pending two-factor cookies across the configured API/portal domain.
+
+  Complete the artist email-verification flow: explain the verification requirement after
+  registration and at login, handle confirmation links and allow resending expired links.
+  Add six-digit artist verification codes with a ten-minute lifetime, atomic attempt limits
+  and resend cooldowns. Match verification and two-factor forms to the existing auth style
+  and report unavailable or local mail delivery without claiming an email was sent.
+
+  Add artist-owned release draft creation and paginated workspace listing with validated
+  inputs, session-derived ownership, soft-deletion filtering and private no-store responses.
+
+  Connect Create release and Music to the release API: validate the title/type form, prevent
+  duplicate submissions while saving, show confirmed drafts and paginated summaries, and
+  handle loading, empty, malformed-response and retry states. Scope release query caches
+  to the signed-in artist and keep one responsive layout across Light, Dark and Dim.
+
+  Add the private database-backed Music catalogue: tracks/releases tabs, combined search
+  and filters, stable sorting, pagination, read-only details and optional audio previews.
+  Use the design's original cover/background assets and one layout across all three
+  themes. Add owner-constrained preparation recordings and an opt-in idempotent demo
+  seed without inserting public tracks or implementing publication and upload transitions.
+
+  Add title/type editing for owned release drafts with a latest-summary read and an
+  atomic owner/status/version-guarded PATCH. Keep entered values on failed or conflicting
+  saves, validate responses before confirming success, refresh artist-scoped catalogue
+  caches and reuse accessible responsive fields across create/edit dialogs.
+
+  Add an addressable artist-owned release workspace with active private/existing
+  recording metadata, optional scheduled date and credited participants. Bound relation
+  previews with genuine totals, validate private API responses and refresh the workspace
+  after a draft edit. Reuse the Pencil waveform and responsive desktop/mobile geometry
+  across all three themes without fabricating review history or delivery results.
+
+  Add planned UTC date/time editing and clearing for owned DRAFT workspaces through
+  the existing version-guarded PATCH. Preserve omitted metadata and entered values
+  on errors, and validate the saved instant before displaying success. Saving a plan
+  does not submit review or start external delivery.
+
+  Add credited participants to owned release drafts with validated names and unique
+  roles. Persist each credit and the guarded release version in one transaction;
+  refresh Music/workspace after confirmed writes and preserve form entries on errors.
+  Use a shared responsive three-theme dialog with pending dismissal locks.
+
+  Allow correcting an existing participant's name and roles with a current single-credit
+  read and the same transactional draft/version guard. Preserve contributor identity,
+  artist links and splits; repair legacy credits without roles and keep entries on
+  conflicts or unconfirmed saves. Share the accessible form with contributor addition.
+
+- 5258ea0: Add the artist notification center. The bell opens notifications split into Action
+  required (overdue tasks, tasks due within two days, changes requested by the reviewer,
+  failed store deliveries) and Updates (submitted, approved, released, live on a store), each
+  linking to its release, with relative times and unread marking; a dot on the bell shows
+  unread items and Mark all as read clears them. Notifications are derived from saved tasks,
+  review and delivery states, so they never disagree with them; only the last-seen time is
+  stored, in its own table.
+- cc05365: Add the artist Profile and Settings pages. Profile edits the public handle, country, bio
+  and links with a live preview, and uploads or removes the profile photo and header image
+  through the object store with content checks, instead of client-supplied URLs. Writes carry
+  the profile version, so two tabs never silently overwrite each other, and a taken handle
+  reports a clear conflict. Settings shows the sign-in email and its verification, turns
+  two-factor sign-in on with a QR code or manual key and off with a code, sends a password
+  reset link, switches appearance, and deletes the account after the handle is typed.
+  Profile and Settings are now real routes in the workspace navigation, in the designed
+  order, and the Music upload shortcut explains that tracks are uploaded inside a release.
+- abf65f1: Artists can now see the devices signed in to their account in Settings → Security. Each session
+  records its browser and last activity at sign-in and on token refresh. An artist can sign out one
+  other device or every device except the current one; the current session still ends through
+  sign-out.
+- 622b21c: Bitrate ships three languages: English, Ukrainian and Polish. Russian and German are removed from the web player's language picker and from the API's error and validation messages; a saved Russian or German preference, or a matching Accept-Language, falls back to English.
+- 22e24a7: Notifications are now produced: following someone sends them a FOLLOW notification (once per unread follow), and a track's first publication sends a NEW_RELEASE notification to everyone following its artist. Both go through a BullMQ `notifications` queue, carry a structured `payload` for localized rendering, and never fail the follow or the conversion if the queue is down.
+- 9024023: Add friends via requests: send, accept, decline and cancel friend requests, list friends with their presence (online, away, offline and what they are playing when they share it), remove friends, and notify on new and accepted requests.
+- acf3455: Artists can switch notification categories (tasks and deadlines, Bitrate review, delivery and
+  release) off for the in-app notification center from Settings → Notifications. Switched-off
+  categories are no longer queried or shown there; the dashboard still lists anything that needs
+  action. Email and push are shown as not sent yet instead of offering settings that do nothing.
+- 7aa86ae: Privacy settings now take effect on the server: a private session records no listening, explicit content can be hidden from search and the feed, and three new settings (`showListeningActivity`, `followersVisible`, `publicPlaylistsOnProfile`) control friend activity, the new public follower lists (`GET /users/{id}/followers`, `GET /users/{id}/following`) and profile playlists. `GET /users/me/following/activity` shows what the people you follow last played. Recording a listen now answers `{ recorded, id, listenedAt }`.
+- 816bb36: Rankings now come from real listening: a scheduled job recomputes track play counts, popularity and artist monthly listeners from listening history, and new endpoints serve an artist's top tracks (`GET /artists/{id}/top-tracks`), public playlists featuring an artist (`GET /artists/{id}/playlists`), an artists chart (`GET /charts/artists`) and genre-filtered track charts (`GET /charts/tracks?genre=`).
+- 57ce6cb: Add the delivery plan and Distribution page, and the returning-artist dashboard. Artists
+  plan which stores (Spotify, Apple Music, YouTube Music, Amazon Music, Deezer, TIDAL) and
+  which territories a draft release goes to; saving a plan sends nothing. Each store reports
+  an honest state: Not connected while no distribution partner is connected, and Pending,
+  Live, Failed or Taken down only once a partner reports it. Behind this is one distribution
+  adapter interface with a not-connected default and the documented delivery state machine,
+  ready for a confirmed partner. The dashboard now shows, once a release exists, the current
+  release with its remaining steps, items needing attention, next tasks, catalogue counts,
+  upcoming planned dates and an analytics placeholder that never shows invented numbers.
+- eb49605: Add artwork and master audio uploads to owned release drafts. Artists upload, replace and
+  remove the cover (JPEG, PNG or WebP up to 20 MB, checked against its content) and add
+  recordings from a WAV, FLAC, MP3 or OGG master up to 512 MB, which is stored privately in
+  the object store and played back only by its owner. Recordings can be renamed, have their
+  master replaced or be removed, which also deletes the stored file and frees the ISRC.
+  Adding, replacing or removing audio clears the accuracy confirmation. Submission now also
+  requires artwork and uploaded audio for every draft recording. Nothing is published or
+  delivered by these uploads.
+- ad7fb4c: Bitrate operators can now review artist release submissions. A new release review queue in the
+  operator panel lists submissions oldest first. Each submission opens on its recordings with
+  playable masters, its rights, credits and shares, its delivery plan and its earlier decisions.
+  Operators holding `releases:review` approve a release or request changes, giving required changes
+  and optional recommendations; a decision only applies to the version the operator read and is
+  written to the audit log. Artists see the latest decision in their release workspace and can
+  reopen a release sent back for changes, then submit it again.
+- adef79e: Add rights confirmation, splits, identifiers and submission to owned release drafts.
+  Artists record the master owner and confirm that every writer is credited and the
+  information is accurate; changing credits clears both confirmations and changing splits
+  clears accuracy. Recording and composition splits may stay partial in a draft but never
+  exceed 100%. An optional UPC (with check digit) and per-recording ISRC are validated and
+  kept unique. The workspace reports submission blockers and non-blocking notices, and a
+  ready draft can be submitted for Bitrate review (re-checked in the same transaction) or
+  withdrawn back to its draft. Submission never starts external delivery.
+
+  The release workspace shows rights and identifiers, Master/Publishing splits with a live
+  total, per-recording ISRC and a readiness checklist with blockers and notes. Artists edit
+  rights, splits, UPC and ISRC in dialogs that keep entries on errors, confirm the review,
+  submit for Bitrate review and withdraw the request.
+
+- a172a4a: Add preparation tasks to releases. Artists add tasks with notes, a due date and an
+  assignee chosen from the participants credited on the release, move them between To do,
+  In progress and Done, edit and delete them. Tasks are planning notes: they stay editable
+  after submission and never change the release version or its confirmations, and each task
+  carries its own version so concurrent edits are rejected instead of overwritten. The
+  release workspace has a Tasks panel, and the dashboard's Tasks page lists every task
+  across the artist's releases with status filters, counts and overdue deadlines.
+- 45b94a0: Recordings on a release now have a running order. Existing recordings keep their upload order,
+  new uploads go last, and artists move recordings up or down in the release workspace. The new
+  order must name every recording on the draft once, so a recording added or removed meanwhile
+  fails the write instead of being placed silently. The operator review page lists recordings in
+  the same order.
+- 9b7c50f: Added `GET /albums/liked` and `GET /playlists/liked` for the signed-in user's saved albums and liked playlists, newest like first, and an optional `userId` filter on `GET /playlists` for one owner's public playlists.
+- 0e9e5f8: Track lists show the album each track belongs to, linked to the album page, instead of "Unknown Album". The API gained `GET /albums/by-tracks?trackIds=…`, which answers the earliest live album of up to 100 tracks per call (null for singles). The player now uses the design system's type: Unbounded for headings and lyrics, Inter for text.
+- b394751: Make the workspace search global. Besides the workspace sections, now including Profile
+  and Settings, it finds the artist's releases, tracks and tasks by title as you type and
+  opens the matching release workspace, or the Music tracks view for a track outside a
+  release. The API answers at most five results per group and never returns deleted items.
+
+### Patch Changes
+
+- f38b32d: Conditional HTTP caching (ETag and a 30-second `Cache-Control`) is now opted into per route with `@HttpCacheable()` instead of a URL pattern. The same public catalogue reads stay cached — artists, albums and playlists lists and details, browse categories and track charts — while GET routes under `artists/auth/*`, which the pattern had matched by accident, no longer carry those headers. Swagger lists the deployed server once, from `API_BASE_URL` or `https://api.bitrate.me` when it is unset. `PrismaService` now extends `PrismaClient`, so a new model needs no hand-written delegate, and transaction results are typed precisely.
+- e4472e6: Transitive dependencies with published advisories were moved to patched releases through workspace overrides: tinypool 2.2 under Docusaurus (two critical advisories), deepmerge-ts 8 under the Prisma CLI, serialize-javascript 7, uuid 11, postcss-selector-parser 7 and katex 0.18. node-forge and braces, used only by Expo's build tooling, have no patched release yet and are listed in the audit's ignore list with that reason.
+- b6f11ac: Release master uploads are now read, probed and removed only through a path inside the private upload directory, the same guard track uploads already use.
+
 ## 1.2.0
 
 ### Minor Changes
