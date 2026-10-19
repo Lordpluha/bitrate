@@ -72,6 +72,8 @@ after changes, missing evidence, failures or a need for independent reproduction
 | Exploration, ADRs and tracker work | [Knowledge management](references/knowledge-base.md) |
 | Host/Flatpak tool failures | [Environment](references/environment.md) |
 | MCP setup | [MCP reference](references/mcp.md) |
+| Designing or restyling a screen, tile or component | [UI design practices](references/ui-design-practices.md) |
+| Writing or editing a skill, rule, agent, command or reference | [Skill-writing lessons](references/skill-writing-lessons.md) |
 | Tracker or documentation terminology | [Vocabulary](CONTEXT.md) |
 | Token usage investigation | [Token budget](TOKEN_BUDGET.md) |
 
