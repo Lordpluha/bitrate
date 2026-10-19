@@ -59,12 +59,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      # The default branch is develop, so `base: <default branch>` equalled HEAD on every develop
+      # push and every scheduled run, and TruffleHog refused to scan. Scan the commits the event
+      # brought instead: the PR's range, the push's range, or (schedule, dispatch, a new branch's
+      # first push) the whole history, which an empty base means.
       - name: TruffleHog
         uses: trufflesecurity/trufflehog@e76dff8a7e57d6df0c60ad8cbf5d5cba505a8fc9 # v3.99.2
         with:
           path: ./
-          base: ${{ github.event.repository.default_branch }}
-          head: HEAD
+          base: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || (github.event_name == 'push' && github.event.before != '0000000000000000000000000000000000000000' && github.event.before) || '' }}
+          head: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
           extra_args: --only-verified
 
   trivy-fs:

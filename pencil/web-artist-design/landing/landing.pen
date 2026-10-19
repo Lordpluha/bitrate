@@ -6,7 +6,7 @@
   "children": [
     {
       "type": "frame",
-      "id": "bCz2Hy",
+      "id": "w4u74X",
       "name": "Artist / Landing / Desktop / Dark",
       "width": 1440,
       "height": 1100,
@@ -20,13 +20,13 @@
       "children": [
         {
           "type": "ref",
-          "id": "QWVwC6",
+          "id": "xe2pT6",
           "ref": "ds:h25UaM",
           "name": "Public Header"
         },
         {
           "type": "frame",
-          "id": "3K7ym9",
+          "id": "tbQMM4",
           "name": "Hero",
           "width": "fill_container",
           "layout": "horizontal",
@@ -39,52 +39,52 @@
           "children": [
             {
               "type": "frame",
-              "id": "PArG5H",
+              "id": "fEFUw7",
               "name": "Column",
               "layout": "vertical",
               "gap": 20,
-              "width": 520,
+              "width": 560,
               "children": [
                 {
                   "type": "ref",
-                  "id": "nqFnih",
+                  "id": "dQfAwJ",
                   "ref": "ds:yjiPHo",
                   "name": "Text/Eyebrow",
                   "content": "BITRATE FOR ARTISTS"
                 },
                 {
                   "type": "ref",
-                  "id": "MTgiKp",
+                  "id": "Sgh3MV",
                   "ref": "ds:NEeFbL",
                   "name": "Text/Display",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Release, promote and grow on Bitrate."
+                  "content": "Plan, prepare and track your releases."
                 },
                 {
                   "type": "ref",
-                  "id": "gxfTsV",
+                  "id": "8ABgNg",
                   "ref": "ds:XDvNAD",
                   "name": "Text/Paragraph",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Your releases, campaigns and listeners in one workspace."
+                  "content": "One workspace for the releases you put out on Bitrate: drafts, credits and rights, tasks and listening analytics."
                 },
                 {
                   "type": "frame",
-                  "id": "UPVBNf",
+                  "id": "JtaLMx",
                   "name": "Row",
                   "gap": 12,
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "ref",
-                      "id": "aj9c4e",
+                      "id": "dwMPZS",
                       "ref": "ds:Y4ylzP",
-                      "name": "Button / Get started",
+                      "name": "Button / Create an account",
                       "descendants": {
                         "ds:NVe7y": {
-                          "content": "Get started"
+                          "content": "Create an account"
                         },
                         "ds:D3xnv": {
                           "icon": "arrow-right"
@@ -93,12 +93,12 @@
                     },
                     {
                       "type": "ref",
-                      "id": "2F7Wa2",
+                      "id": "kQAxCx",
                       "ref": "ds:qz3aI",
-                      "name": "Button / Explore Campaign Kit",
+                      "name": "Button / Log in",
                       "descendants": {
                         "ds:i6a4e": {
-                          "content": "Explore Campaign Kit"
+                          "content": "Log in"
                         },
                         "ds:MlIUw": {
                           "enabled": false
@@ -110,110 +110,108 @@
               ]
             },
             {
-              "type": "frame",
-              "id": "DDM8Du",
-              "name": "Video Slides",
-              "gap": 16,
-              "alignItems": "center",
+              "type": "ref",
+              "id": "pyNv4k",
+              "ref": "ds:T26AVG",
+              "name": "Media/Hero Image",
               "width": "fill_container",
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "2sw9hr",
-                  "name": "Slide / Artist Profile",
-                  "layout": "vertical",
-                  "gap": 10,
-                  "width": "fill_container",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "rZ2iba",
-                      "ref": "ds:T26AVG",
-                      "name": "Media/Hero Image",
-                      "width": "fill_container",
-                      "height": 420,
-                      "fill": {
-                        "type": "image",
-                        "url": "../../web-player-design/design-system/assets/hero/luma-vale.png",
-                        "mode": "cover"
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "KjscTH",
-                      "ref": "ds:SOt7Oe",
-                      "name": "Text/Body Strong",
-                      "content": "Artist Profile"
-                    }
-                  ]
+              "height": 420,
+              "fill": {
+                "type": "image",
+                "url": "../../web-player-design/design-system/assets/hero/night-signal.png",
+                "mode": "cover"
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "4fNDoR",
+          "name": "Features",
+          "width": "fill_container",
+          "layout": "horizontal",
+          "padding": [
+            0,
+            120,
+            80,
+            120
+          ],
+          "gap": 32,
+          "alignItems": "start",
+          "children": [
+            {
+              "type": "ref",
+              "id": "cYAXDr",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "disc-3"
                 },
-                {
-                  "type": "frame",
-                  "id": "53fHi2",
-                  "name": "Slide / Sell and promote merch",
-                  "layout": "vertical",
-                  "gap": 10,
-                  "width": "fill_container",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "MF5ie7",
-                      "ref": "ds:T26AVG",
-                      "name": "Media/Hero Image",
-                      "width": "fill_container",
-                      "height": 420,
-                      "fill": {
-                        "type": "image",
-                        "url": "../../web-player-design/design-system/assets/hero/stage.png",
-                        "mode": "cover"
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "L2S4kk",
-                      "ref": "ds:SOt7Oe",
-                      "name": "Text/Body Strong",
-                      "content": "Sell and promote merch"
-                    }
-                  ]
+                "ds:s1h8AF": {
+                  "content": "Release workspace"
                 },
-                {
-                  "type": "frame",
-                  "id": "ikSzoW",
-                  "name": "Slide / Explore Campaign Kit",
-                  "layout": "vertical",
-                  "gap": 10,
-                  "width": "fill_container",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "oqVMfw",
-                      "ref": "ds:T26AVG",
-                      "name": "Media/Hero Image",
-                      "width": "fill_container",
-                      "height": 420,
-                      "fill": {
-                        "type": "image",
-                        "url": "../../web-player-design/design-system/assets/hero/night-signal.png",
-                        "mode": "cover"
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "Nk399X",
-                      "ref": "ds:SOt7Oe",
-                      "name": "Text/Body Strong",
-                      "content": "Explore Campaign Kit"
-                    }
-                  ]
+                "ds:pM4Pyy": {
+                  "content": "Draft a release, credit everyone who worked on it, confirm rights and splits, and submit it for review."
                 }
-              ]
+              }
+            },
+            {
+              "type": "ref",
+              "id": "zUV8Xa",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "list-checks"
+                },
+                "ds:s1h8AF": {
+                  "content": "Release tasks"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Keep the work each release needs in one list, with due dates and status."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "K7ZqjM",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "send"
+                },
+                "ds:s1h8AF": {
+                  "content": "Distribution plan"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Choose the stores a release is planned for. Delivery to external stores is not connected yet."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "5MKtcN",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "chart-line"
+                },
+                "ds:s1h8AF": {
+                  "content": "Analytics"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Plays and listeners on Bitrate over 7, 28 or 90 days, track by track."
+                }
+              }
             }
           ]
         },
         {
           "type": "ref",
-          "id": "NgPdAn",
+          "id": "AP93ng",
           "ref": "ds:shs4K4",
           "name": "Landing/Footer"
         }
@@ -223,11 +221,11 @@
       "theme": {
         "ds:Mode": "Dark"
       },
-      "context": "/ — Marketing page for artists: header with Features submenu, video slides, footer."
+      "context": "/ — Public page for artists: what the workspace does today, with sign-up and log-in. Static content, so it has no loading, empty or error state."
     },
     {
       "type": "frame",
-      "id": "CCygm5",
+      "id": "5y35Jt",
       "name": "Artist / Landing / Desktop / Light",
       "width": 1440,
       "height": 1100,
@@ -241,13 +239,13 @@
       "children": [
         {
           "type": "ref",
-          "id": "jtUptm",
+          "id": "dBV5UH",
           "ref": "ds:h25UaM",
           "name": "Public Header"
         },
         {
           "type": "frame",
-          "id": "LVJsQu",
+          "id": "BDQiHX",
           "name": "Hero",
           "width": "fill_container",
           "layout": "horizontal",
@@ -260,52 +258,52 @@
           "children": [
             {
               "type": "frame",
-              "id": "UEyXbP",
+              "id": "2zKEzy",
               "name": "Column",
               "layout": "vertical",
               "gap": 20,
-              "width": 520,
+              "width": 560,
               "children": [
                 {
                   "type": "ref",
-                  "id": "QrHQFc",
+                  "id": "myzMQm",
                   "ref": "ds:yjiPHo",
                   "name": "Text/Eyebrow",
                   "content": "BITRATE FOR ARTISTS"
                 },
                 {
                   "type": "ref",
-                  "id": "FiYAzK",
+                  "id": "sguQTz",
                   "ref": "ds:NEeFbL",
                   "name": "Text/Display",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Release, promote and grow on Bitrate."
+                  "content": "Plan, prepare and track your releases."
                 },
                 {
                   "type": "ref",
-                  "id": "HU7FZs",
+                  "id": "4p7Nvy",
                   "ref": "ds:XDvNAD",
                   "name": "Text/Paragraph",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Your releases, campaigns and listeners in one workspace."
+                  "content": "One workspace for the releases you put out on Bitrate: drafts, credits and rights, tasks and listening analytics."
                 },
                 {
                   "type": "frame",
-                  "id": "PiXSb2",
+                  "id": "d2TdJX",
                   "name": "Row",
                   "gap": 12,
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "ref",
-                      "id": "4GpbMj",
+                      "id": "wcckXR",
                       "ref": "ds:Y4ylzP",
-                      "name": "Button / Get started",
+                      "name": "Button / Create an account",
                       "descendants": {
                         "ds:NVe7y": {
-                          "content": "Get started"
+                          "content": "Create an account"
                         },
                         "ds:D3xnv": {
                           "icon": "arrow-right"
@@ -314,12 +312,12 @@
                     },
                     {
                       "type": "ref",
-                      "id": "Pytcci",
+                      "id": "5MJhDW",
                       "ref": "ds:qz3aI",
-                      "name": "Button / Explore Campaign Kit",
+                      "name": "Button / Log in",
                       "descendants": {
                         "ds:i6a4e": {
-                          "content": "Explore Campaign Kit"
+                          "content": "Log in"
                         },
                         "ds:MlIUw": {
                           "enabled": false
@@ -331,110 +329,108 @@
               ]
             },
             {
-              "type": "frame",
-              "id": "JgRZB7",
-              "name": "Video Slides",
-              "gap": 16,
-              "alignItems": "center",
+              "type": "ref",
+              "id": "tsQXD2",
+              "ref": "ds:T26AVG",
+              "name": "Media/Hero Image",
               "width": "fill_container",
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "KHftAn",
-                  "name": "Slide / Artist Profile",
-                  "layout": "vertical",
-                  "gap": 10,
-                  "width": "fill_container",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "QdHNLG",
-                      "ref": "ds:T26AVG",
-                      "name": "Media/Hero Image",
-                      "width": "fill_container",
-                      "height": 420,
-                      "fill": {
-                        "type": "image",
-                        "url": "../../web-player-design/design-system/assets/hero/luma-vale.png",
-                        "mode": "cover"
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "Jkz6T4",
-                      "ref": "ds:SOt7Oe",
-                      "name": "Text/Body Strong",
-                      "content": "Artist Profile"
-                    }
-                  ]
+              "height": 420,
+              "fill": {
+                "type": "image",
+                "url": "../../web-player-design/design-system/assets/hero/night-signal.png",
+                "mode": "cover"
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ZPNhps",
+          "name": "Features",
+          "width": "fill_container",
+          "layout": "horizontal",
+          "padding": [
+            0,
+            120,
+            80,
+            120
+          ],
+          "gap": 32,
+          "alignItems": "start",
+          "children": [
+            {
+              "type": "ref",
+              "id": "p2XiUz",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "disc-3"
                 },
-                {
-                  "type": "frame",
-                  "id": "Ry79Su",
-                  "name": "Slide / Sell and promote merch",
-                  "layout": "vertical",
-                  "gap": 10,
-                  "width": "fill_container",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "rBxiRH",
-                      "ref": "ds:T26AVG",
-                      "name": "Media/Hero Image",
-                      "width": "fill_container",
-                      "height": 420,
-                      "fill": {
-                        "type": "image",
-                        "url": "../../web-player-design/design-system/assets/hero/stage.png",
-                        "mode": "cover"
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "jdmX8D",
-                      "ref": "ds:SOt7Oe",
-                      "name": "Text/Body Strong",
-                      "content": "Sell and promote merch"
-                    }
-                  ]
+                "ds:s1h8AF": {
+                  "content": "Release workspace"
                 },
-                {
-                  "type": "frame",
-                  "id": "Jmz7pJ",
-                  "name": "Slide / Explore Campaign Kit",
-                  "layout": "vertical",
-                  "gap": 10,
-                  "width": "fill_container",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "vsbXbv",
-                      "ref": "ds:T26AVG",
-                      "name": "Media/Hero Image",
-                      "width": "fill_container",
-                      "height": 420,
-                      "fill": {
-                        "type": "image",
-                        "url": "../../web-player-design/design-system/assets/hero/night-signal.png",
-                        "mode": "cover"
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "Az36GE",
-                      "ref": "ds:SOt7Oe",
-                      "name": "Text/Body Strong",
-                      "content": "Explore Campaign Kit"
-                    }
-                  ]
+                "ds:pM4Pyy": {
+                  "content": "Draft a release, credit everyone who worked on it, confirm rights and splits, and submit it for review."
                 }
-              ]
+              }
+            },
+            {
+              "type": "ref",
+              "id": "oYMJ7P",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "list-checks"
+                },
+                "ds:s1h8AF": {
+                  "content": "Release tasks"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Keep the work each release needs in one list, with due dates and status."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "FpfQgQ",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "send"
+                },
+                "ds:s1h8AF": {
+                  "content": "Distribution plan"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Choose the stores a release is planned for. Delivery to external stores is not connected yet."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "WU4NmJ",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "chart-line"
+                },
+                "ds:s1h8AF": {
+                  "content": "Analytics"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Plays and listeners on Bitrate over 7, 28 or 90 days, track by track."
+                }
+              }
             }
           ]
         },
         {
           "type": "ref",
-          "id": "KXWiXW",
+          "id": "HDEXHj",
           "ref": "ds:shs4K4",
           "name": "Landing/Footer"
         }
@@ -444,11 +440,11 @@
       "theme": {
         "ds:Mode": "Light"
       },
-      "context": "/ — Marketing page for artists: header with Features submenu, video slides, footer."
+      "context": "/ — Public page for artists: what the workspace does today, with sign-up and log-in. Static content, so it has no loading, empty or error state."
     },
     {
       "type": "frame",
-      "id": "jUVpJx",
+      "id": "fTcQcU",
       "name": "Artist / Landing / Desktop / Dim",
       "width": 1440,
       "height": 1100,
@@ -462,13 +458,13 @@
       "children": [
         {
           "type": "ref",
-          "id": "PmdZET",
+          "id": "5FpNCZ",
           "ref": "ds:h25UaM",
           "name": "Public Header"
         },
         {
           "type": "frame",
-          "id": "nUjEgJ",
+          "id": "hDNvpo",
           "name": "Hero",
           "width": "fill_container",
           "layout": "horizontal",
@@ -481,52 +477,52 @@
           "children": [
             {
               "type": "frame",
-              "id": "wWqv49",
+              "id": "bLjTXj",
               "name": "Column",
               "layout": "vertical",
               "gap": 20,
-              "width": 520,
+              "width": 560,
               "children": [
                 {
                   "type": "ref",
-                  "id": "tFgsmg",
+                  "id": "v3mjqE",
                   "ref": "ds:yjiPHo",
                   "name": "Text/Eyebrow",
                   "content": "BITRATE FOR ARTISTS"
                 },
                 {
                   "type": "ref",
-                  "id": "qnF2h3",
+                  "id": "ym4BYo",
                   "ref": "ds:NEeFbL",
                   "name": "Text/Display",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Release, promote and grow on Bitrate."
+                  "content": "Plan, prepare and track your releases."
                 },
                 {
                   "type": "ref",
-                  "id": "X6M9dG",
+                  "id": "nQS5SM",
                   "ref": "ds:XDvNAD",
                   "name": "Text/Paragraph",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Your releases, campaigns and listeners in one workspace."
+                  "content": "One workspace for the releases you put out on Bitrate: drafts, credits and rights, tasks and listening analytics."
                 },
                 {
                   "type": "frame",
-                  "id": "M532Tn",
+                  "id": "Gyr66J",
                   "name": "Row",
                   "gap": 12,
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "ref",
-                      "id": "AJWHEB",
+                      "id": "CqTzfr",
                       "ref": "ds:Y4ylzP",
-                      "name": "Button / Get started",
+                      "name": "Button / Create an account",
                       "descendants": {
                         "ds:NVe7y": {
-                          "content": "Get started"
+                          "content": "Create an account"
                         },
                         "ds:D3xnv": {
                           "icon": "arrow-right"
@@ -535,12 +531,12 @@
                     },
                     {
                       "type": "ref",
-                      "id": "zQ2hz7",
+                      "id": "3aPaaj",
                       "ref": "ds:qz3aI",
-                      "name": "Button / Explore Campaign Kit",
+                      "name": "Button / Log in",
                       "descendants": {
                         "ds:i6a4e": {
-                          "content": "Explore Campaign Kit"
+                          "content": "Log in"
                         },
                         "ds:MlIUw": {
                           "enabled": false
@@ -552,110 +548,108 @@
               ]
             },
             {
-              "type": "frame",
-              "id": "xBMLkq",
-              "name": "Video Slides",
-              "gap": 16,
-              "alignItems": "center",
+              "type": "ref",
+              "id": "5HSX4E",
+              "ref": "ds:T26AVG",
+              "name": "Media/Hero Image",
               "width": "fill_container",
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "DQcFGr",
-                  "name": "Slide / Artist Profile",
-                  "layout": "vertical",
-                  "gap": 10,
-                  "width": "fill_container",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "tQ2iQD",
-                      "ref": "ds:T26AVG",
-                      "name": "Media/Hero Image",
-                      "width": "fill_container",
-                      "height": 420,
-                      "fill": {
-                        "type": "image",
-                        "url": "../../web-player-design/design-system/assets/hero/luma-vale.png",
-                        "mode": "cover"
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "YK5MYi",
-                      "ref": "ds:SOt7Oe",
-                      "name": "Text/Body Strong",
-                      "content": "Artist Profile"
-                    }
-                  ]
+              "height": 420,
+              "fill": {
+                "type": "image",
+                "url": "../../web-player-design/design-system/assets/hero/night-signal.png",
+                "mode": "cover"
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Vq4b24",
+          "name": "Features",
+          "width": "fill_container",
+          "layout": "horizontal",
+          "padding": [
+            0,
+            120,
+            80,
+            120
+          ],
+          "gap": 32,
+          "alignItems": "start",
+          "children": [
+            {
+              "type": "ref",
+              "id": "Uc6DCV",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "disc-3"
                 },
-                {
-                  "type": "frame",
-                  "id": "FnvSsF",
-                  "name": "Slide / Sell and promote merch",
-                  "layout": "vertical",
-                  "gap": 10,
-                  "width": "fill_container",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "K78JdR",
-                      "ref": "ds:T26AVG",
-                      "name": "Media/Hero Image",
-                      "width": "fill_container",
-                      "height": 420,
-                      "fill": {
-                        "type": "image",
-                        "url": "../../web-player-design/design-system/assets/hero/stage.png",
-                        "mode": "cover"
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "pPsXwu",
-                      "ref": "ds:SOt7Oe",
-                      "name": "Text/Body Strong",
-                      "content": "Sell and promote merch"
-                    }
-                  ]
+                "ds:s1h8AF": {
+                  "content": "Release workspace"
                 },
-                {
-                  "type": "frame",
-                  "id": "66hfMM",
-                  "name": "Slide / Explore Campaign Kit",
-                  "layout": "vertical",
-                  "gap": 10,
-                  "width": "fill_container",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "5netCd",
-                      "ref": "ds:T26AVG",
-                      "name": "Media/Hero Image",
-                      "width": "fill_container",
-                      "height": 420,
-                      "fill": {
-                        "type": "image",
-                        "url": "../../web-player-design/design-system/assets/hero/night-signal.png",
-                        "mode": "cover"
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "2pLqG7",
-                      "ref": "ds:SOt7Oe",
-                      "name": "Text/Body Strong",
-                      "content": "Explore Campaign Kit"
-                    }
-                  ]
+                "ds:pM4Pyy": {
+                  "content": "Draft a release, credit everyone who worked on it, confirm rights and splits, and submit it for review."
                 }
-              ]
+              }
+            },
+            {
+              "type": "ref",
+              "id": "LRCRvw",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "list-checks"
+                },
+                "ds:s1h8AF": {
+                  "content": "Release tasks"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Keep the work each release needs in one list, with due dates and status."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "syCmZf",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "send"
+                },
+                "ds:s1h8AF": {
+                  "content": "Distribution plan"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Choose the stores a release is planned for. Delivery to external stores is not connected yet."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "YiCmzB",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "chart-line"
+                },
+                "ds:s1h8AF": {
+                  "content": "Analytics"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Plays and listeners on Bitrate over 7, 28 or 90 days, track by track."
+                }
+              }
             }
           ]
         },
         {
           "type": "ref",
-          "id": "hvp8iU",
+          "id": "5Cnr63",
           "ref": "ds:shs4K4",
           "name": "Landing/Footer"
         }
@@ -665,14 +659,14 @@
       "theme": {
         "ds:Mode": "Dim"
       },
-      "context": "/ — Marketing page for artists: header with Features submenu, video slides, footer."
+      "context": "/ — Public page for artists: what the workspace does today, with sign-up and log-in. Static content, so it has no loading, empty or error state."
     },
     {
       "type": "frame",
-      "id": "C8SiVm",
+      "id": "AKFh5j",
       "name": "Artist / Landing / Mobile / Dark",
       "width": 390,
-      "height": 1000,
+      "height": 1400,
       "clip": true,
       "layout": "vertical",
       "justifyContent": "center",
@@ -683,14 +677,14 @@
       "children": [
         {
           "type": "ref",
-          "id": "7PCRvX",
+          "id": "2aM6S3",
           "ref": "ds:h25UaM",
           "name": "Public Header",
           "width": "fill_container"
         },
         {
           "type": "frame",
-          "id": "rSZoUd",
+          "id": "a5WYft",
           "name": "Hero",
           "width": "fill_container",
           "layout": "vertical",
@@ -703,7 +697,7 @@
           "children": [
             {
               "type": "frame",
-              "id": "4UCamu",
+              "id": "nnSWfG",
               "name": "Column",
               "layout": "vertical",
               "gap": 20,
@@ -711,44 +705,44 @@
               "children": [
                 {
                   "type": "ref",
-                  "id": "U5HmUf",
+                  "id": "Py2NzN",
                   "ref": "ds:yjiPHo",
                   "name": "Text/Eyebrow",
                   "content": "BITRATE FOR ARTISTS"
                 },
                 {
                   "type": "ref",
-                  "id": "SYRpba",
+                  "id": "pbszG7",
                   "ref": "ds:MgMQ2L",
                   "name": "Text/H1",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Release, promote and grow on Bitrate."
+                  "content": "Plan, prepare and track your releases."
                 },
                 {
                   "type": "ref",
-                  "id": "dXvKvd",
+                  "id": "PCFAmY",
                   "ref": "ds:XDvNAD",
                   "name": "Text/Paragraph",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Your releases, campaigns and listeners in one workspace."
+                  "content": "One workspace for the releases you put out on Bitrate: drafts, credits and rights, tasks and listening analytics."
                 },
                 {
                   "type": "frame",
-                  "id": "HBCFWY",
+                  "id": "7wGhpU",
                   "name": "Row",
                   "gap": 12,
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "ref",
-                      "id": "j3XuaM",
+                      "id": "HyHFo2",
                       "ref": "ds:Y4ylzP",
-                      "name": "Button / Get started",
+                      "name": "Button / Create an account",
                       "descendants": {
                         "ds:NVe7y": {
-                          "content": "Get started"
+                          "content": "Create an account"
                         },
                         "ds:D3xnv": {
                           "icon": "arrow-right"
@@ -757,12 +751,12 @@
                     },
                     {
                       "type": "ref",
-                      "id": "pn3GEs",
+                      "id": "RTWPbE",
                       "ref": "ds:qz3aI",
-                      "name": "Button / Explore Campaign Kit",
+                      "name": "Button / Log in",
                       "descendants": {
                         "ds:i6a4e": {
-                          "content": "Explore Campaign Kit"
+                          "content": "Log in"
                         },
                         "ds:MlIUw": {
                           "enabled": false
@@ -774,44 +768,102 @@
               ]
             },
             {
-              "type": "frame",
-              "id": "UCJC9m",
-              "name": "Video Slides",
-              "gap": 16,
-              "alignItems": "center",
+              "type": "ref",
+              "id": "9canJP",
+              "ref": "ds:T26AVG",
+              "name": "Media/Hero Image",
               "width": "fill_container",
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "qGL5P2",
-                  "name": "Slide / Artist Profile",
-                  "layout": "vertical",
-                  "gap": 10,
-                  "width": "fill_container",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "m3AUGs",
-                      "ref": "ds:T26AVG",
-                      "name": "Media/Hero Image",
-                      "width": "fill_container",
-                      "height": 260,
-                      "fill": {
-                        "type": "image",
-                        "url": "../../web-player-design/design-system/assets/hero/luma-vale.png",
-                        "mode": "cover"
-                      }
-                    },
-                    {
-                      "type": "ref",
-                      "id": "QLS6w6",
-                      "ref": "ds:SOt7Oe",
-                      "name": "Text/Body Strong",
-                      "content": "Artist Profile"
-                    }
-                  ]
+              "height": 260,
+              "fill": {
+                "type": "image",
+                "url": "../../web-player-design/design-system/assets/hero/night-signal.png",
+                "mode": "cover"
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "VNVitH",
+          "name": "Features",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            8,
+            16,
+            32,
+            16
+          ],
+          "gap": 20,
+          "alignItems": "start",
+          "children": [
+            {
+              "type": "ref",
+              "id": "4ufbPu",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "disc-3"
+                },
+                "ds:s1h8AF": {
+                  "content": "Release workspace"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Draft a release, credit everyone who worked on it, confirm rights and splits, and submit it for review."
                 }
-              ]
+              }
+            },
+            {
+              "type": "ref",
+              "id": "CGP4FX",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "list-checks"
+                },
+                "ds:s1h8AF": {
+                  "content": "Release tasks"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Keep the work each release needs in one list, with due dates and status."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "NCjNcu",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "send"
+                },
+                "ds:s1h8AF": {
+                  "content": "Distribution plan"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Choose the stores a release is planned for. Delivery to external stores is not connected yet."
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "znYywA",
+              "ref": "ds:T5hvsX",
+              "name": "Landing/Feature",
+              "descendants": {
+                "ds:JgHSuC": {
+                  "icon": "chart-line"
+                },
+                "ds:s1h8AF": {
+                  "content": "Analytics"
+                },
+                "ds:pM4Pyy": {
+                  "content": "Plays and listeners on Bitrate over 7, 28 or 90 days, track by track."
+                }
+              }
             }
           ]
         }
@@ -821,244 +873,7 @@
       "theme": {
         "ds:Mode": "Dark"
       },
-      "context": "/ — Marketing page for artists: header with Features submenu, video slides, footer."
-    },
-    {
-      "type": "frame",
-      "id": "sSdTCw",
-      "name": "Artist / Landing / Features menu / Desktop",
-      "width": 1440,
-      "height": 900,
-      "clip": true,
-      "layout": "vertical",
-      "justifyContent": "center",
-      "alignItems": "center",
-      "gap": 20,
-      "padding": 24,
-      "fill": "$ds:--background",
-      "children": [
-        {
-          "type": "ref",
-          "id": "CSKBTA",
-          "ref": "ds:h25UaM",
-          "name": "Public Header"
-        },
-        {
-          "type": "frame",
-          "id": "7xee9m",
-          "name": "Row",
-          "gap": 40,
-          "alignItems": "start",
-          "width": "fill_container",
-          "padding": [
-            24,
-            120
-          ],
-          "children": [
-            {
-              "type": "ref",
-              "id": "oCQ8ZX",
-              "ref": "ds:x4Fixv",
-              "name": "Surface/Panel",
-              "width": 320,
-              "descendants": {
-                "ds:xhr0E3": {
-                  "type": "frame",
-                  "id": "sgpt4G",
-                  "name": "Panel Content",
-                  "layout": "vertical",
-                  "gap": 14,
-                  "width": "fill_container",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "5HQDEB",
-                      "ref": "ds:yjiPHo",
-                      "name": "Text/Eyebrow",
-                      "content": "AMPLIFY YOUR MUSIC"
-                    },
-                    {
-                      "type": "ref",
-                      "id": "cAtXzo",
-                      "ref": "ds:SOt7Oe",
-                      "name": "Text/Body Strong",
-                      "content": "Campaign Kit"
-                    },
-                    {
-                      "type": "ref",
-                      "id": "5W3VBT",
-                      "ref": "ds:SOt7Oe",
-                      "name": "Text/Body Strong",
-                      "content": "Algorithmic promotion"
-                    },
-                    {
-                      "type": "ref",
-                      "id": "ATELui",
-                      "ref": "ds:SOt7Oe",
-                      "name": "Text/Body Strong",
-                      "content": "Release campaigns"
-                    },
-                    {
-                      "type": "ref",
-                      "id": "AvTPy7",
-                      "ref": "ds:SOt7Oe",
-                      "name": "Text/Body Strong",
-                      "content": "Playlisting"
-                    },
-                    {
-                      "type": "ref",
-                      "id": "UJ3KkW",
-                      "ref": "ds:SOt7Oe",
-                      "name": "Text/Body Strong",
-                      "content": "Sponsored recommendations"
-                    }
-                  ]
-                }
-              }
-            },
-            {
-              "type": "ref",
-              "id": "UurBho",
-              "ref": "ds:x4Fixv",
-              "name": "Surface/Panel",
-              "width": 320,
-              "descendants": {
-                "ds:xhr0E3": {
-                  "type": "frame",
-                  "id": "CGaSF3",
-                  "name": "Panel Content",
-                  "layout": "vertical",
-                  "gap": 14,
-                  "width": "fill_container",
-                  "children": [
-                    {
-                      "type": "ref",
-                      "id": "rZTtgu",
-                      "ref": "ds:yjiPHo",
-                      "name": "Text/Eyebrow",
-                      "content": "CONNECT WITH FANS"
-                    },
-                    {
-                      "type": "ref",
-                      "id": "UTpETJ",
-                      "ref": "ds:SOt7Oe",
-                      "name": "Text/Body Strong",
-                      "content": "Video & Visuals"
-                    },
-                    {
-                      "type": "ref",
-                      "id": "zQDbqh",
-                      "ref": "ds:SOt7Oe",
-                      "name": "Text/Body Strong",
-                      "content": "Artist Profile"
-                    },
-                    {
-                      "type": "ref",
-                      "id": "wiK6Jd",
-                      "ref": "ds:SOt7Oe",
-                      "name": "Text/Body Strong",
-                      "content": "Sell and promote merch"
-                    }
-                  ]
-                }
-              }
-            }
-          ]
-        }
-      ],
-      "x": 5110,
-      "y": 0,
-      "theme": {
-        "ds:Mode": "Dark"
-      },
-      "context": "/ — Marketing page for artists: header with Features submenu, video slides, footer."
-    },
-    {
-      "type": "frame",
-      "id": "n7GkLm",
-      "name": "Artist / Landing / Features menu / Mobile",
-      "width": 390,
-      "height": 844,
-      "clip": true,
-      "layout": "vertical",
-      "fill": "$ds:--background",
-      "children": [
-        {
-          "type": "ref",
-          "id": "bWwuz9",
-          "ref": "ds:xBZUrc",
-          "name": "Mobile/Status Bar",
-          "width": "fill_container"
-        },
-        {
-          "type": "frame",
-          "id": "ru3CmS",
-          "name": "Form",
-          "layout": "vertical",
-          "gap": 22,
-          "width": "fill_container",
-          "padding": [
-            20,
-            20
-          ],
-          "children": [
-            {
-              "type": "ref",
-              "id": "UPhbhQ",
-              "ref": "ds:J95vY0",
-              "name": "Logo/Lockup"
-            },
-            {
-              "type": "ref",
-              "id": "idjTLQ",
-              "ref": "ds:Qjj2NE",
-              "name": "Text/H3",
-              "content": "Get started"
-            },
-            {
-              "type": "ref",
-              "id": "236qyN",
-              "ref": "ds:Qjj2NE",
-              "name": "Text/H3",
-              "content": "Features"
-            },
-            {
-              "type": "ref",
-              "id": "YbnNhW",
-              "ref": "ds:P2oa0L",
-              "name": "Text/Body",
-              "content": "Campaign Kit"
-            },
-            {
-              "type": "ref",
-              "id": "nDHskh",
-              "ref": "ds:P2oa0L",
-              "name": "Text/Body",
-              "content": "Release campaigns"
-            },
-            {
-              "type": "ref",
-              "id": "Rv77Kq",
-              "ref": "ds:P2oa0L",
-              "name": "Text/Body",
-              "content": "Playlisting"
-            },
-            {
-              "type": "ref",
-              "id": "oeTvQb",
-              "ref": "ds:P2oa0L",
-              "name": "Text/Body",
-              "content": "Video & Visuals"
-            }
-          ]
-        }
-      ],
-      "x": 6650,
-      "y": 0,
-      "theme": {
-        "ds:Mode": "Dark"
-      },
-      "context": "/ — Marketing page for artists: header with Features submenu, video slides, footer."
+      "context": "/ — Public page for artists: what the workspace does today, with sign-up and log-in. Static content, so it has no loading, empty or error state."
     }
   ]
 }

@@ -201,6 +201,28 @@ const cardSt = (label, form) =>
     () => CardDesktop(label, form()),
     () => AuthMobile(label, form()),
   )
+const LANDING_FEATURES = [
+  [
+    'disc-3',
+    'Release workspace',
+    'Draft a release, credit everyone who worked on it, confirm rights and splits, and submit it for review.',
+  ],
+  [
+    'list-checks',
+    'Release tasks',
+    'Keep the work each release needs in one list, with due dates and status.',
+  ],
+  [
+    'send',
+    'Distribution plan',
+    'Choose the stores a release is planned for. Delivery to external stores is not connected yet.',
+  ],
+  [
+    'chart-line',
+    'Analytics',
+    'Plays and listeners on Bitrate over 7, 28 or 90 days, track by track.',
+  ],
+]
 const landingHero = (m) => [
   R('Public Header', m ? { width: 'fill_container' } : {}),
   L(
@@ -213,35 +235,42 @@ const landingHero = (m) => [
       alignItems: m ? 'start' : 'center',
     },
     [
-      Col({ gap: 20, width: m ? 'fill_container' : 520 }, [
+      Col({ gap: 20, width: m ? 'fill_container' : 560 }, [
         Tx('Eyebrow', 'BITRATE FOR ARTISTS'),
-        Tx(m ? 'H1' : 'Display', 'Release, promote and grow on Bitrate.', { wrap: true }),
-        Tx('Paragraph', 'Your releases, campaigns and listeners in one workspace.', { wrap: true }),
+        Tx(m ? 'H1' : 'Display', 'Plan, prepare and track your releases.', { wrap: true }),
+        Tx(
+          'Paragraph',
+          'One workspace for the releases you put out on Bitrate: drafts, credits and rights, tasks and listening analytics.',
+          { wrap: true },
+        ),
         Row({ gap: 12 }, [
-          Button('Get started', 'large-default', { icon: 'arrow-right' }),
-          Button('Explore Campaign Kit', 'large-outline'),
+          Button('Create an account', 'large-default', { icon: 'arrow-right' }),
+          Button('Log in', 'large-outline'),
         ]),
       ]),
-      Row(
-        { name: 'Video Slides', gap: 16, width: m ? 'fill_container' : 'fill_container' },
-        [
-          ['Artist Profile', 'luma'],
-          ['Sell and promote merch', 'stage'],
-          ['Explore Campaign Kit', 'hero'],
-        ]
-          .slice(0, m ? 1 : 3)
-          .map(([t, a]) =>
-            Col({ name: `Slide / ${t}`, gap: 10, width: 'fill_container' }, [
-              R('Media/Hero Image', {
-                width: 'fill_container',
-                height: m ? 260 : 420,
-                fill: img(ART[a]),
-              }),
-              Tx('Body Strong', t),
-            ]),
-          ),
-      ),
+      R('Media/Hero Image', {
+        width: 'fill_container',
+        height: m ? 260 : 420,
+        fill: img(ART.hero),
+      }),
     ],
+  ),
+  L(
+    {
+      name: 'Features',
+      width: 'fill_container',
+      layout: m ? 'vertical' : 'horizontal',
+      padding: m ? [8, 16, 32, 16] : [0, 120, 80, 120],
+      gap: m ? 20 : 32,
+      alignItems: 'start',
+    },
+    LANDING_FEATURES.map(([icon, title, desc]) =>
+      R(
+        'Landing/Feature',
+        {},
+        { icon: { icon }, title: { content: title }, desc: { content: desc } },
+      ),
+    ),
   ),
   !m && R('Landing/Footer'),
 ]
@@ -250,49 +279,11 @@ export const artistPages = {
   landing: {
     title: 'Artist / Landing',
     route: '/',
-    context: 'Marketing page for artists: header with Features submenu, video slides, footer.',
+    context:
+      'Public page for artists: what the workspace does today, with sign-up and log-in. Static content, so it has no loading, empty or error state.',
     desktop: () => Blank('Landing', 1440, 1100, landingHero(false)),
-    mobile: () => Blank('Landing', 390, 1000, landingHero(true)),
-    states: [
-      state(
-        'Features menu',
-        () =>
-          Blank('Features', 1440, 900, [
-            R('Public Header'),
-            Row(
-              { width: 'fill_container', padding: [24, 120], gap: 40, alignItems: 'start' },
-              [
-                [
-                  'Amplify your music',
-                  [
-                    'Campaign Kit',
-                    'Algorithmic promotion',
-                    'Release campaigns',
-                    'Playlisting',
-                    'Sponsored recommendations',
-                  ],
-                ],
-                [
-                  'Connect with fans',
-                  ['Video & Visuals', 'Artist Profile', 'Sell and promote merch'],
-                ],
-              ].map(([h, items]) =>
-                Panel([Tx('Eyebrow', h.toUpperCase()), ...items.map((i) => Tx('Body Strong', i))], {
-                  width: 320,
-                }),
-              ),
-            ),
-          ]),
-        () =>
-          AuthMobile('Menu', [
-            Tx('H3', 'Get started'),
-            Tx('H3', 'Features'),
-            ...['Campaign Kit', 'Release campaigns', 'Playlisting', 'Video & Visuals'].map((i) =>
-              Tx('Body', i),
-            ),
-          ]),
-      ),
-    ],
+    mobile: () => Blank('Landing', 390, 1400, landingHero(true)),
+    states: [],
   },
   login: {
     title: 'Artist / Login',

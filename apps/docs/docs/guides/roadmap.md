@@ -130,11 +130,12 @@ Delivers the "extract the transcode worker" item of [Tech roadmap](../strategy/t
 This is one deliberate split, not a step toward microservices.
 
 - [ ] Graceful shutdown with readiness gating and job draining (#179)
-- [ ] Design the worker process boundary and job contract
-- [ ] Extract transcode logic into a standalone worker process (`AUDIO_PROCESSING_WORKER_ENABLED` already exists)
-- [ ] Run the worker as a separate deployed service
-- [ ] Health checks and monitoring for the worker
-- [ ] Staged rollout with a documented rollback
+- [x] Design the worker process boundary and job contract
+- [x] Extract transcode logic into a standalone worker process
+- [x] Run the worker as a separate deployed service
+- [x] Health checks and monitoring for the worker
+- [x] Staged rollout with a documented rollback — the production switch itself is still on;
+  see the [worker rollout runbook](../infrastructure/worker-rollout-runbook.md)
 
 ---
 
@@ -161,13 +162,13 @@ This is one deliberate split, not a step toward microservices.
 Tracked in [#212](https://github.com/Lordpluha/bitrate/issues/212). Due 2027-03-05.
 Follows the staged operator-panel plan; overview, detail pages and take-down/restore already shipped.
 
-- [ ] Vendored `dialog`, `select`, `tabs`, `toast` primitives
-- [ ] Genres CRUD with guarded delete
-- [ ] Albums, public playlists and podcasts — list, detail, take-down and restore
-- [ ] ADR addendum: operator panel resource coverage
-- [ ] Bulk actions on moderation, catalog and users
-- [ ] CSV export for operator lists
-- [ ] Drill-down analytics on the Overview dashboard
+- [x] Vendored `dialog`, `select`, `tabs`, `toast` primitives
+- [x] Genres CRUD with guarded delete
+- [x] Albums, public playlists and podcasts — list, detail, take-down and restore
+- [x] ADR addendum: operator panel resource coverage
+- [x] Bulk actions on moderation, catalog and users
+- [x] CSV export for operator lists
+- [x] Drill-down analytics on the Overview dashboard
 - [ ] Notifications and Settings pages — deliberately parked until a notifications / billing backend exists
 
 ---

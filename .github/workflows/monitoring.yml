@@ -1,5 +1,9 @@
 name: "[platform] Release Monitoring"
 
+# Production is the only deployed environment, and a schedule always runs on the default branch
+# (develop), so the old develop/master split meant production was never checked on schedule.
+# One run now checks production whichever branch triggered it.
+
 on:
   schedule:
     - cron: '0 */6 * * *'
@@ -22,18 +26,5 @@ permissions:
   issues: write
 
 jobs:
-  monitoring-develop:
-    if: ${{ github.ref == 'refs/heads/develop' }}
+  monitoring:
     uses: ./.github/workflows/monitoring_reusable.yml
-    with:
-      branch-name: develop
-    secrets:
-      monitor-host: ${{ secrets.DEVELOP_SERVER_HOST || secrets.SERVER_HOST }}
-
-  monitoring-master:
-    if: ${{ github.ref == 'refs/heads/master' }}
-    uses: ./.github/workflows/monitoring_reusable.yml
-    with:
-      branch-name: master
-    secrets:
-      monitor-host: ${{ secrets.SERVER_HOST }}
