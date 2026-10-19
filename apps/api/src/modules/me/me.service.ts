@@ -1,4 +1,5 @@
 import { normalizePagination } from '@common/pagination'
+import { USER_SETTINGS_DEFAULTS } from '@common/user-settings'
 import { isPrismaP2002 } from '@common/utils/prisma'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import {
@@ -10,16 +11,7 @@ import {
 import { Prisma } from '@prisma/client'
 import type { UpdatePlayerDto, UpdateQueueDto, UpdateSettingsDto, UpsertDeviceDto } from './dtos'
 
-const DEFAULT_SETTINGS = {
-  language: 'en',
-  streamingQuality: 'automatic',
-  normalizeVolume: true,
-  compactLibrary: false,
-  showNowPlaying: true,
-  autoplay: true,
-  explicitContent: true,
-  privateSession: false,
-} as const
+const DEFAULT_SETTINGS = USER_SETTINGS_DEFAULTS
 
 @Injectable()
 export class MeService {

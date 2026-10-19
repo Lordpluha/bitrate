@@ -1,4 +1,4 @@
-const supportedLocales = ['en', 'uk', 'ru', 'pl', 'de'] as const
+const supportedLocales = ['en', 'uk', 'pl'] as const
 
 export type Locale = (typeof supportedLocales)[number]
 
@@ -10,14 +10,11 @@ export const localeLabels: ReadonlyArray<{
 }> = [
   { label: 'English', value: 'en' },
   { label: 'Українська', value: 'uk' },
-  { label: 'Русский', value: 'ru' },
   { label: 'Polski', value: 'pl' },
-  { label: 'Deutsch', value: 'de' },
 ]
 
 const legacyLocales: Record<string, Locale> = {
   'English (English)': 'en',
-  'Русский (Russian)': 'ru',
   'Українська (Ukrainian)': 'uk',
 }
 

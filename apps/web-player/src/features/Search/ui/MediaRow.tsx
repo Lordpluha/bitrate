@@ -10,14 +10,16 @@ import {
 } from '@bitrate/ui-react'
 import { useCallback, useEffect, useState } from 'react'
 import type { MediaCardItem } from '@/features/Search/model/types'
-import { MusicCardLg } from '@/shared/ui'
+import { MusicCardLg, SectionHeader } from '@/shared/ui'
 
 type MediaRowProps = {
   items: MediaCardItem[]
+  /** Starts an item that can play (`playKind`) from its card's play button. */
+  onPlayItem?: (item: MediaCardItem) => void
   title: string
 }
 
-export const MediaRow = ({ items, title }: MediaRowProps) => {
+export const MediaRow = ({ items, onPlayItem, title }: MediaRowProps) => {
   const [carouselApi, setCarouselApi] = useState<CarouselApi>()
   const [canScrollPrev, setCanScrollPrev] = useState(false)
   const [canScrollNext, setCanScrollNext] = useState(false)
@@ -44,14 +46,7 @@ export const MediaRow = ({ items, title }: MediaRowProps) => {
 
   return (
     <section>
-      <div className="mb-4 flex items-center justify-between gap-4">
-        <h2 className="text-xl font-bold text-text">{title}</h2>
-        {items.length > 5 ? (
-          <span className="text-xs font-bold uppercase text-text-subdued">
-            Show all
-          </span>
-        ) : null}
-      </div>
+      <SectionHeader title={title} />
       <div className="group relative">
         <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[164px] md:h-[178px]">
           {canScrollPrev ? (
@@ -94,6 +89,11 @@ export const MediaRow = ({ items, title }: MediaRowProps) => {
                   id={item.id}
                   imageUrl={item.image}
                   name={item.title}
+                  onPlay={
+                    item.playKind && onPlayItem
+                      ? () => onPlayItem(item)
+                      : undefined
+                  }
                 />
               </CarouselItem>
             ))}

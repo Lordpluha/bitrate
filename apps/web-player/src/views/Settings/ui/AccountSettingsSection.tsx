@@ -12,11 +12,11 @@ export const AccountSettingsSection = () => {
   return (
     <SettingsSection title={t('settings.account')}>
       <div className="flex items-center justify-between gap-4">
-        <p className="text-sm text-text-subdued">
+        <p className="text-sm text-muted-foreground">
           {t('settings.account.edit')}
         </p>
         <Link
-          className="inline-flex items-center gap-2 rounded-full border border-white/40 px-5 py-2 text-sm font-bold text-text transition-colors hover:border-white"
+          className="inline-flex h-9 shrink-0 items-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-surface disabled:opacity-60"
           href={ROUTES.profile}
         >
           {t('common.edit')}
@@ -24,18 +24,18 @@ export const AccountSettingsSection = () => {
         </Link>
       </div>
       {user ? (
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
           <div>
             <p className="text-sm font-semibold text-text">Email address</p>
-            <p className="text-sm text-text-subdued">{user.email}</p>
+            <p className="text-sm text-muted-foreground">{user.email}</p>
           </div>
           {user.emailVerifiedAt ? (
-            <span className="rounded-full bg-accent/15 px-3 py-1 text-xs font-bold text-accent">
+            <span className="rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold text-foreground">
               Verified
             </span>
           ) : (
             <Link
-              className="rounded-full border border-white/40 px-4 py-2 text-sm font-bold text-text hover:border-white"
+              className="inline-flex h-9 shrink-0 items-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-surface disabled:opacity-60"
               href={ROUTES.auth.verifyEmail(user.email)}
             >
               Verify email

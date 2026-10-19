@@ -20,9 +20,26 @@ export function GetPlaylistsSwagger() {
       description: 'Number of items per page',
       type: Number,
     }),
+    ApiQuery({
+      name: 'userId',
+      required: false,
+      type: String,
+      format: 'uuid',
+      description: "Only this user's public playlists (a profile page)",
+    }),
     ApiResponse({
       status: HttpStatus.OK,
       schema: paginatedResponseSchema(PlaylistEntity),
     }),
+  )
+}
+
+/** Swagger for the playlists the signed-in user liked. */
+export function GetLikedPlaylistsSwagger() {
+  return applyDecorators(
+    ApiOperation({ summary: 'Get the playlists the signed-in user liked, newest like first' }),
+    ApiQuery({ name: 'page', required: false, type: Number, minimum: 1 }),
+    ApiQuery({ name: 'limit', required: false, type: Number, minimum: 1, maximum: 100 }),
+    ApiResponse({ status: HttpStatus.OK, schema: paginatedResponseSchema(PlaylistEntity) }),
   )
 }

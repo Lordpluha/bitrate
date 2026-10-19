@@ -1,0 +1,2179 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "Ejvm2D",
+      "name": "Artist / Profile catalog & layout / Desktop / Dark",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "ZdRhtt",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:92zIez": {
+              "type": "ref",
+              "id": "GCxh6P",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Profile",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "user-round"
+                },
+                "ds:GZQzF3": {
+                  "content": "Profile"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Profile / Catalog"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Preview public profile"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "icon": "eye"
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "kebZ5T",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Lm8jb5",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Profile catalog"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Featured release and public layout"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "fvsobb",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "MXbWUL",
+                  "name": "Profile Head",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "eug9wp",
+                      "ref": "ds:pIPJZe",
+                      "name": "Media/Avatar",
+                      "width": 64,
+                      "height": 64,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/hero/luma-vale.png",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "AVckEQ",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "nGvCzp",
+                          "ref": "ds:Qjj2NE",
+                          "name": "Text/H3",
+                          "content": "Demo artist"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "TFJry5",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "@demoartist · Public profile"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "dvEzb7",
+                      "ref": "ds:LUaCU2",
+                      "name": "Status/Neutral",
+                      "descendants": {
+                        "ds:jPj56V": {
+                          "content": "Draft"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Yds36k",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "PTdRbu",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Details",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "e7tzTc",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Catalog",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Catalog"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "24LV9r",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Verification",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Verification"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "gUSw6T",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "28oML9",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "BythHF",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "Yb5jaz",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "fptcbL",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "58aWLu",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Public profile preview"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "sN9kWY",
+                                  "ref": "ds:FJUa1",
+                                  "name": "Badge / PREVIEW · DRAFT",
+                                  "descendants": {
+                                    "ds:BI0Pd": {
+                                      "content": "PREVIEW · DRAFT"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "xzoY3m",
+                                  "ref": "ds:IYh6C6",
+                                  "name": "Artist Hero",
+                                  "height": 240,
+                                  "descendants": {
+                                    "ds:HW0Nfy": {
+                                      "content": "Demo artist"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "kgzPCf",
+                                  "ref": "ds:yjiPHo",
+                                  "name": "Text/Eyebrow",
+                                  "content": "FEATURED RELEASE"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "Ve4wBZ",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "hKVnc3",
+                                      "ref": "ds:rUgRzr",
+                                      "name": "Media/Cover",
+                                      "width": 72,
+                                      "height": 72,
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "zJEp3d",
+                                      "name": "Column",
+                                      "layout": "vertical",
+                                      "gap": 2,
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "9XUr9i",
+                                          "ref": "ds:fLuqjC",
+                                          "name": "Text/H4",
+                                          "content": "Afterglow"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "L2LGkq",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "content": "Single · 2026"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "FqjiLv",
+                                      "ref": "ds:G5tJp",
+                                      "name": "Button / Preview release",
+                                      "descendants": {
+                                        "ds:d2zCI": {
+                                          "content": "Preview release"
+                                        },
+                                        "ds:zDiHG": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "JcsZES",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "6cXMPQ",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "rD7RN4",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "zQcWGi",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "BKHVbD",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Profile blocks"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "bU5zuy",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Reorder available blocks and choose which ones are public."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "2FSAUy",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Releases"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "6 published releases"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "XmMh5j",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "jZ5mAB",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / ",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": ""
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "SPoCiG",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "About"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Public bio"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "yjjTZm",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "q2SmzG",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / ",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": ""
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "XgNicx",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "External links"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "2 public links"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "SSQyNd",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "P8D72e",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / ",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": ""
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "6DiG8R",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Listener history"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Not part of the artist profile"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "xUVTjN",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "zRG8pi",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Unavailable"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "TgpSFQ",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Save profile layout",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Save profile layout"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "KYapQy",
+                                  "ref": "ds:DTwJb",
+                                  "name": "Button / Reset order",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:GyGLK": {
+                                      "content": "Reset order"
+                                    },
+                                    "ds:uRXDu": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/profile (Catalog) — Featured release and public block order."
+    },
+    {
+      "type": "frame",
+      "id": "KjA4CW",
+      "name": "Artist / Profile catalog & layout / Desktop / Light",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "nqb4sj",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:92zIez": {
+              "type": "ref",
+              "id": "cKByRJ",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Profile",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "user-round"
+                },
+                "ds:GZQzF3": {
+                  "content": "Profile"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Profile / Catalog"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Preview public profile"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "icon": "eye"
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "aEh2Xu",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "pqNfCY",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Profile catalog"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Featured release and public layout"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "BKDjJ2",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "RvRo2g",
+                  "name": "Profile Head",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "U7MBeC",
+                      "ref": "ds:pIPJZe",
+                      "name": "Media/Avatar",
+                      "width": 64,
+                      "height": 64,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/hero/luma-vale.png",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "tecgsQ",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "JCBshm",
+                          "ref": "ds:Qjj2NE",
+                          "name": "Text/H3",
+                          "content": "Demo artist"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "sGWZSi",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "@demoartist · Public profile"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "KkK9dm",
+                      "ref": "ds:LUaCU2",
+                      "name": "Status/Neutral",
+                      "descendants": {
+                        "ds:jPj56V": {
+                          "content": "Draft"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "rtQvjv",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "zfdoZK",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Details",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Ji2Tq8",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Catalog",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Catalog"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "WPax8q",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Verification",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Verification"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "94EF2T",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "quiUBL",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ac4r6r",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "cbKGNB",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "BJqLrr",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "hmvUUP",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Public profile preview"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "4HTgV9",
+                                  "ref": "ds:FJUa1",
+                                  "name": "Badge / PREVIEW · DRAFT",
+                                  "descendants": {
+                                    "ds:BI0Pd": {
+                                      "content": "PREVIEW · DRAFT"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "NYmft8",
+                                  "ref": "ds:IYh6C6",
+                                  "name": "Artist Hero",
+                                  "height": 240,
+                                  "descendants": {
+                                    "ds:HW0Nfy": {
+                                      "content": "Demo artist"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "j2dkN7",
+                                  "ref": "ds:yjiPHo",
+                                  "name": "Text/Eyebrow",
+                                  "content": "FEATURED RELEASE"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "ZEvUoJ",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "dQDKVv",
+                                      "ref": "ds:rUgRzr",
+                                      "name": "Media/Cover",
+                                      "width": 72,
+                                      "height": 72,
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "RxnYMM",
+                                      "name": "Column",
+                                      "layout": "vertical",
+                                      "gap": 2,
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "oRwiZR",
+                                          "ref": "ds:fLuqjC",
+                                          "name": "Text/H4",
+                                          "content": "Afterglow"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "b2aTZX",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "content": "Single · 2026"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "RWBN3y",
+                                      "ref": "ds:G5tJp",
+                                      "name": "Button / Preview release",
+                                      "descendants": {
+                                        "ds:d2zCI": {
+                                          "content": "Preview release"
+                                        },
+                                        "ds:zDiHG": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "XLvG7S",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "mYF2wB",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "7zkMs2",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "QwRJeW",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "wCiAHu",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Profile blocks"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "UQKghX",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Reorder available blocks and choose which ones are public."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "WZF4UF",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Releases"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "6 published releases"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "TsteGN",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "hMJGPG",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / ",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": ""
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "zXMh4M",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "About"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Public bio"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "LsbjEZ",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "FEetjg",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / ",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": ""
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Ap5gwB",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "External links"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "2 public links"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "eZfvkf",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "F2KaP4",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / ",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": ""
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "qi3oUh",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Listener history"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Not part of the artist profile"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "X4iFhB",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "Q37vEj",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Unavailable"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Y4nBKy",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Save profile layout",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Save profile layout"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "yuudDa",
+                                  "ref": "ds:DTwJb",
+                                  "name": "Button / Reset order",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:GyGLK": {
+                                      "content": "Reset order"
+                                    },
+                                    "ds:uRXDu": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "designed — /dashboard/profile (Catalog) — Featured release and public block order."
+    },
+    {
+      "type": "frame",
+      "id": "we62CB",
+      "name": "Artist / Profile catalog & layout / Desktop / Dim",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "QQ4vcF",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:92zIez": {
+              "type": "ref",
+              "id": "TV3NcY",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Profile",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "user-round"
+                },
+                "ds:GZQzF3": {
+                  "content": "Profile"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Profile / Catalog"
+            },
+            "ds:YLdi4o/ds:E23bq6": {
+              "content": "Preview public profile"
+            },
+            "ds:YLdi4o/ds:k0WCtI": {
+              "icon": "eye"
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "heigFN",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "EogmJJ",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Profile catalog"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Featured release and public layout"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "eac7Xj",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "uCmtSV",
+                  "name": "Profile Head",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "mBr7Ba",
+                      "ref": "ds:pIPJZe",
+                      "name": "Media/Avatar",
+                      "width": 64,
+                      "height": 64,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/hero/luma-vale.png",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "xmeQer",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "2MTSsH",
+                          "ref": "ds:Qjj2NE",
+                          "name": "Text/H3",
+                          "content": "Demo artist"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "2SfnpL",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "@demoartist · Public profile"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "FUuf29",
+                      "ref": "ds:LUaCU2",
+                      "name": "Status/Neutral",
+                      "descendants": {
+                        "ds:jPj56V": {
+                          "content": "Draft"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "JV8693",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "hHvXcR",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Details",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "x9n4JS",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Catalog",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Catalog"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "vBP9CM",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Verification",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Verification"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "8D3WjX",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "juwxSR",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "T2BAsC",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "iw4pQj",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "pRooJg",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "bYYw3X",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Public profile preview"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "pqUwNM",
+                                  "ref": "ds:FJUa1",
+                                  "name": "Badge / PREVIEW · DRAFT",
+                                  "descendants": {
+                                    "ds:BI0Pd": {
+                                      "content": "PREVIEW · DRAFT"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Crmyxn",
+                                  "ref": "ds:IYh6C6",
+                                  "name": "Artist Hero",
+                                  "height": 240,
+                                  "descendants": {
+                                    "ds:HW0Nfy": {
+                                      "content": "Demo artist"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Twirwn",
+                                  "ref": "ds:yjiPHo",
+                                  "name": "Text/Eyebrow",
+                                  "content": "FEATURED RELEASE"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "2ii4XP",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "UkQuFP",
+                                      "ref": "ds:rUgRzr",
+                                      "name": "Media/Cover",
+                                      "width": 72,
+                                      "height": 72,
+                                      "fill": {
+                                        "type": "image",
+                                        "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                                        "mode": "cover"
+                                      }
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "kBrrsc",
+                                      "name": "Column",
+                                      "layout": "vertical",
+                                      "gap": 2,
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "kU3dVH",
+                                          "ref": "ds:fLuqjC",
+                                          "name": "Text/H4",
+                                          "content": "Afterglow"
+                                        },
+                                        {
+                                          "type": "ref",
+                                          "id": "EAQVYd",
+                                          "ref": "ds:C5Ih8u",
+                                          "name": "Text/Muted",
+                                          "content": "Single · 2026"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "t9Bz3s",
+                                      "ref": "ds:G5tJp",
+                                      "name": "Button / Preview release",
+                                      "descendants": {
+                                        "ds:d2zCI": {
+                                          "content": "Preview release"
+                                        },
+                                        "ds:zDiHG": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "8L8nnv",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 380,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "K2aLVX",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "K2at57",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "2E5Dw4",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "VQCQUN",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Profile blocks"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "LCzMPP",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Reorder available blocks and choose which ones are public."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "anuz6q",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Releases"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "6 published releases"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "MXM4mT",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "RFDbQh",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / ",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": ""
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Usm9CT",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "About"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Public bio"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "kSmzn5",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "6vgugD",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / ",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": ""
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "5gY795",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "External links"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "2 public links"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "eGcFFi",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "QTUUDK",
+                                          "ref": "ds:HjQNJ",
+                                          "name": "Switch / ",
+                                          "descendants": {
+                                            "ds:mNVZY": {
+                                              "content": ""
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ACLH3h",
+                                  "ref": "ds:N5g4u6",
+                                  "name": "Setting Row",
+                                  "descendants": {
+                                    "ds:FznZ4S": {
+                                      "content": "Listener history"
+                                    },
+                                    "ds:CVvAJE": {
+                                      "content": "Not part of the artist profile"
+                                    },
+                                    "ds:ahEMZM": {
+                                      "type": "frame",
+                                      "id": "nedxLb",
+                                      "name": "Layout",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "dnBnHo",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Unavailable"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "HrpHpC",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Save profile layout",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Save profile layout"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "hwJ6E7",
+                                  "ref": "ds:DTwJb",
+                                  "name": "Button / Reset order",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:GyGLK": {
+                                      "content": "Reset order"
+                                    },
+                                    "ds:uRXDu": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "designed — /dashboard/profile (Catalog) — Featured release and public block order."
+    },
+    {
+      "type": "frame",
+      "id": "hoKvhn",
+      "name": "Artist / Profile catalog & layout / Mobile / Dark",
+      "width": 390,
+      "height": 1700,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "JxZd57",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1700,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "tyFXBL",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "UKoPGi",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Profile catalog"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Featured release and public layout"
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "qcRFiJ",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "YjCdKm",
+                  "name": "Profile Head",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "AoRVEX",
+                      "ref": "ds:pIPJZe",
+                      "name": "Media/Avatar",
+                      "width": 64,
+                      "height": 64,
+                      "fill": {
+                        "type": "image",
+                        "url": "../../web-player-design/design-system/assets/hero/luma-vale.png",
+                        "mode": "cover"
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "wyeL6A",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "wAcbbV",
+                          "ref": "ds:Qjj2NE",
+                          "name": "Text/H3",
+                          "content": "Demo artist"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "9FXeYT",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "@demoartist · Public profile"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "8QEbf8",
+                      "ref": "ds:LUaCU2",
+                      "name": "Status/Neutral",
+                      "descendants": {
+                        "ds:jPj56V": {
+                          "content": "Draft"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "7QH8hc",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "EqUMXJ",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Details",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "A9EfHX",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Catalog",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Catalog"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sxhiAk",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Verification",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Verification"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "RkpJfb",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "52Qzmr",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "vtZAAB",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "mhTACc",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Public profile preview"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "gMdTsn",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / PREVIEW · DRAFT",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "PREVIEW · DRAFT"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "2TWk3e",
+                          "ref": "ds:IYh6C6",
+                          "name": "Artist Hero",
+                          "height": 220,
+                          "descendants": {
+                            "ds:HW0Nfy": {
+                              "content": "Demo artist"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "TTj2W4",
+                          "ref": "ds:yjiPHo",
+                          "name": "Text/Eyebrow",
+                          "content": "FEATURED RELEASE"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "MFmpc4",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "ZebXxm",
+                              "ref": "ds:rUgRzr",
+                              "name": "Media/Cover",
+                              "width": 72,
+                              "height": 72,
+                              "fill": {
+                                "type": "image",
+                                "url": "../../web-player-design/design-system/assets/albums/album-afterglow.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Wn8Uxm",
+                              "name": "Column",
+                              "layout": "vertical",
+                              "gap": 2,
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "jHjh3K",
+                                  "ref": "ds:fLuqjC",
+                                  "name": "Text/H4",
+                                  "content": "Afterglow"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ewmVQT",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Single · 2026"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ref",
+                              "id": "6oJMrY",
+                              "ref": "ds:G5tJp",
+                              "name": "Button / Preview release",
+                              "descendants": {
+                                "ds:d2zCI": {
+                                  "content": "Preview release"
+                                },
+                                "ds:zDiHG": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "kYv4J3",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "GVHoYD",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "PjQfPo",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "o99XuY",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Profile blocks"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "feqsgU",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "Reorder available blocks and choose which ones are public."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "R8LFBD",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Releases"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "6 published releases"
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "qgD46o",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "hRLVYi",
+                                  "ref": "ds:HjQNJ",
+                                  "name": "Switch / ",
+                                  "descendants": {
+                                    "ds:mNVZY": {
+                                      "content": ""
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "cdkYfn",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "About"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "Public bio"
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "64t4G3",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "8cKGXE",
+                                  "ref": "ds:HjQNJ",
+                                  "name": "Switch / ",
+                                  "descendants": {
+                                    "ds:mNVZY": {
+                                      "content": ""
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "BXqJcv",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "External links"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "2 public links"
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "QeJDhB",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "4N48sW",
+                                  "ref": "ds:HjQNJ",
+                                  "name": "Switch / ",
+                                  "descendants": {
+                                    "ds:mNVZY": {
+                                      "content": ""
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "r5msie",
+                          "ref": "ds:N5g4u6",
+                          "name": "Setting Row",
+                          "descendants": {
+                            "ds:FznZ4S": {
+                              "content": "Listener history"
+                            },
+                            "ds:CVvAJE": {
+                              "content": "Not part of the artist profile"
+                            },
+                            "ds:ahEMZM": {
+                              "type": "frame",
+                              "id": "Rfey3u",
+                              "name": "Layout",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "EJb6ob",
+                                  "ref": "ds:LUaCU2",
+                                  "name": "Status/Neutral",
+                                  "descendants": {
+                                    "ds:jPj56V": {
+                                      "content": "Unavailable"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "yYTjXW",
+                          "ref": "ds:exjwf",
+                          "name": "Button / Save profile layout",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:E23bq6": {
+                              "content": "Save profile layout"
+                            },
+                            "ds:o7NXW": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "7FxxPR",
+                          "ref": "ds:DTwJb",
+                          "name": "Button / Reset order",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:GyGLK": {
+                              "content": "Reset order"
+                            },
+                            "ds:uRXDu": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/profile (Catalog) — Featured release and public block order."
+    }
+  ]
+}

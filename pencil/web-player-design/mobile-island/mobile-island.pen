@@ -1,0 +1,3551 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "M9KJPR",
+      "name": "Mobile island player / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Tbfoph",
+          "ref": "ds:Qjj2NE",
+          "name": "Text/H3",
+          "content": "The island carries playback"
+        },
+        {
+          "type": "ref",
+          "id": "EzXnEY",
+          "ref": "ds:C5Ih8u",
+          "name": "Text/Muted",
+          "content": "Default with tabs · swipe sideways to skip · compact while scrolling · live activity · quick actions on hold"
+        },
+        {
+          "type": "frame",
+          "id": "wVFzAd",
+          "name": "States",
+          "gap": 40,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "ZDFxcu",
+              "name": "Column",
+              "layout": "vertical",
+              "gap": 24,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "XkpH6D",
+                  "ref": "ds:DrlRuW",
+                  "name": "Mobile/Island",
+                  "descendants": {
+                    "ds:67K2eN": {
+                      "fill": "$ds:--secondary"
+                    },
+                    "ds:ApEsiS": {
+                      "fill": "$ds:--foreground"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "MshoTG",
+                  "name": "Skipping",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ZHeBds",
+                      "ref": "ds:UyeVWt",
+                      "name": "Mobile/Island Cue",
+                      "descendants": {
+                        "ds:s2WyoY": {
+                          "content": "NEXT · STATIC LINES"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "4BzFPu",
+                      "ref": "ds:gEXIhU",
+                      "name": "Mobile/Island Skipping",
+                      "descendants": {
+                        "ds:1ek0KV": {
+                          "fill": "$ds:--secondary"
+                        },
+                        "ds:5etSH2": {
+                          "fill": "$ds:--foreground"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "8CcH9H",
+                  "ref": "ds:yyx5Do",
+                  "name": "Mobile/Island Compact"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "RzUpXb",
+              "name": "Column",
+              "layout": "vertical",
+              "gap": 24,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "YJRggq",
+                  "ref": "ds:VjqEgo",
+                  "name": "Mobile/Island Live",
+                  "descendants": {
+                    "ds:res4nn": {
+                      "content": "Jonah joined your Jam"
+                    },
+                    "ds:CCnOnN": {
+                      "content": "Listening to Afterglow with you"
+                    },
+                    "ds:WDT2zi": {
+                      "content": "Say hi"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "wTUxus",
+                  "ref": "ds:VjqEgo",
+                  "name": "Mobile/Island Live",
+                  "descendants": {
+                    "ds:res4nn": {
+                      "content": "Bitrate Connect · Desktop"
+                    },
+                    "ds:CCnOnN": {
+                      "content": "Move playback to this phone?"
+                    },
+                    "ds:WDT2zi": {
+                      "content": "Move"
+                    },
+                    "ds:8zdqXG": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "WT3xC9",
+                  "ref": "ds:mqjW7V",
+                  "name": "Mobile/Island Actions"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — mobile web player navigation — Navigation is one floating island that carries playback: artwork with a progress ring, three tabs (Home, Search, Library — Jam lives in Library as a filter with live Jams on top) and play. It shrinks to artwork + track while scrolling down, widens for live activity (Jam, Bitrate Connect, releases), shows quick actions on hold and blooms into the player on tap or swipe up. Swipe anywhere on it sideways to skip: the neighbour’s cover slides into the ring with its title above the island, past 46px it commits, short of it springs back; the compact island adds a next button; the first visit nudges the cover once. Home resumes, tunes by feeling and shows bento tiles instead of shelves."
+    },
+    {
+      "type": "frame",
+      "id": "9BEzJW",
+      "name": "Mobile island player / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "mrxgQg",
+          "ref": "ds:Qjj2NE",
+          "name": "Text/H3",
+          "content": "The island carries playback"
+        },
+        {
+          "type": "ref",
+          "id": "f9JGGt",
+          "ref": "ds:C5Ih8u",
+          "name": "Text/Muted",
+          "content": "Default with tabs · swipe sideways to skip · compact while scrolling · live activity · quick actions on hold"
+        },
+        {
+          "type": "frame",
+          "id": "W5owXQ",
+          "name": "States",
+          "gap": 40,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "6MDVZh",
+              "name": "Column",
+              "layout": "vertical",
+              "gap": 24,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "iExhaz",
+                  "ref": "ds:DrlRuW",
+                  "name": "Mobile/Island",
+                  "descendants": {
+                    "ds:67K2eN": {
+                      "fill": "$ds:--secondary"
+                    },
+                    "ds:ApEsiS": {
+                      "fill": "$ds:--foreground"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "9dRYWy",
+                  "name": "Skipping",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "xLf6c8",
+                      "ref": "ds:UyeVWt",
+                      "name": "Mobile/Island Cue",
+                      "descendants": {
+                        "ds:s2WyoY": {
+                          "content": "NEXT · STATIC LINES"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qBJRmR",
+                      "ref": "ds:gEXIhU",
+                      "name": "Mobile/Island Skipping",
+                      "descendants": {
+                        "ds:1ek0KV": {
+                          "fill": "$ds:--secondary"
+                        },
+                        "ds:5etSH2": {
+                          "fill": "$ds:--foreground"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "KbGJMb",
+                  "ref": "ds:yyx5Do",
+                  "name": "Mobile/Island Compact"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "T5qg8A",
+              "name": "Column",
+              "layout": "vertical",
+              "gap": 24,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "wCHEHv",
+                  "ref": "ds:VjqEgo",
+                  "name": "Mobile/Island Live",
+                  "descendants": {
+                    "ds:res4nn": {
+                      "content": "Jonah joined your Jam"
+                    },
+                    "ds:CCnOnN": {
+                      "content": "Listening to Afterglow with you"
+                    },
+                    "ds:WDT2zi": {
+                      "content": "Say hi"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "kmK3Vd",
+                  "ref": "ds:VjqEgo",
+                  "name": "Mobile/Island Live",
+                  "descendants": {
+                    "ds:res4nn": {
+                      "content": "Bitrate Connect · Desktop"
+                    },
+                    "ds:CCnOnN": {
+                      "content": "Move playback to this phone?"
+                    },
+                    "ds:WDT2zi": {
+                      "content": "Move"
+                    },
+                    "ds:8zdqXG": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "oJgp3C",
+                  "ref": "ds:mqjW7V",
+                  "name": "Mobile/Island Actions"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "concept — mobile web player navigation — Navigation is one floating island that carries playback: artwork with a progress ring, three tabs (Home, Search, Library — Jam lives in Library as a filter with live Jams on top) and play. It shrinks to artwork + track while scrolling down, widens for live activity (Jam, Bitrate Connect, releases), shows quick actions on hold and blooms into the player on tap or swipe up. Swipe anywhere on it sideways to skip: the neighbour’s cover slides into the ring with its title above the island, past 46px it commits, short of it springs back; the compact island adds a next button; the first visit nudges the cover once. Home resumes, tunes by feeling and shows bento tiles instead of shelves."
+    },
+    {
+      "type": "frame",
+      "id": "iWrgVr",
+      "name": "Mobile island player / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "gap": 20,
+      "padding": 24,
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "y4c2mR",
+          "ref": "ds:Qjj2NE",
+          "name": "Text/H3",
+          "content": "The island carries playback"
+        },
+        {
+          "type": "ref",
+          "id": "7dbuU5",
+          "ref": "ds:C5Ih8u",
+          "name": "Text/Muted",
+          "content": "Default with tabs · swipe sideways to skip · compact while scrolling · live activity · quick actions on hold"
+        },
+        {
+          "type": "frame",
+          "id": "zwME5e",
+          "name": "States",
+          "gap": 40,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "tyukC8",
+              "name": "Column",
+              "layout": "vertical",
+              "gap": 24,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "vSiGGD",
+                  "ref": "ds:DrlRuW",
+                  "name": "Mobile/Island",
+                  "descendants": {
+                    "ds:67K2eN": {
+                      "fill": "$ds:--secondary"
+                    },
+                    "ds:ApEsiS": {
+                      "fill": "$ds:--foreground"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "CMKdbx",
+                  "name": "Skipping",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "w9ZKFn",
+                      "ref": "ds:UyeVWt",
+                      "name": "Mobile/Island Cue",
+                      "descendants": {
+                        "ds:s2WyoY": {
+                          "content": "NEXT · STATIC LINES"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "PWEYoT",
+                      "ref": "ds:gEXIhU",
+                      "name": "Mobile/Island Skipping",
+                      "descendants": {
+                        "ds:1ek0KV": {
+                          "fill": "$ds:--secondary"
+                        },
+                        "ds:5etSH2": {
+                          "fill": "$ds:--foreground"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "SaF5Eu",
+                  "ref": "ds:yyx5Do",
+                  "name": "Mobile/Island Compact"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "6M3X4y",
+              "name": "Column",
+              "layout": "vertical",
+              "gap": 24,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "RhYrCG",
+                  "ref": "ds:VjqEgo",
+                  "name": "Mobile/Island Live",
+                  "descendants": {
+                    "ds:res4nn": {
+                      "content": "Jonah joined your Jam"
+                    },
+                    "ds:CCnOnN": {
+                      "content": "Listening to Afterglow with you"
+                    },
+                    "ds:WDT2zi": {
+                      "content": "Say hi"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "aGKvLL",
+                  "ref": "ds:VjqEgo",
+                  "name": "Mobile/Island Live",
+                  "descendants": {
+                    "ds:res4nn": {
+                      "content": "Bitrate Connect · Desktop"
+                    },
+                    "ds:CCnOnN": {
+                      "content": "Move playback to this phone?"
+                    },
+                    "ds:WDT2zi": {
+                      "content": "Move"
+                    },
+                    "ds:8zdqXG": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "GVCmGU",
+                  "ref": "ds:mqjW7V",
+                  "name": "Mobile/Island Actions"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "concept — mobile web player navigation — Navigation is one floating island that carries playback: artwork with a progress ring, three tabs (Home, Search, Library — Jam lives in Library as a filter with live Jams on top) and play. It shrinks to artwork + track while scrolling down, widens for live activity (Jam, Bitrate Connect, releases), shows quick actions on hold and blooms into the player on tap or swipe up. Swipe anywhere on it sideways to skip: the neighbour’s cover slides into the ring with its title above the island, past 46px it commits, short of it springs back; the compact island adds a next button; the first visit nudges the cover once. Home resumes, tunes by feeling and shows bento tiles instead of shelves."
+    },
+    {
+      "id": "zvETnN",
+      "type": "frame",
+      "name": "Mobile island player / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "LmzJtP",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "a6XPzf",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 22,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "PUXEdM",
+              "name": "Header",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "NjyZQe",
+                  "ref": "ds:pIPJZe",
+                  "name": "Media/Avatar",
+                  "width": 36,
+                  "height": 36,
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/avatars/avatar1.jpg",
+                    "mode": "cover"
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "Xhhc6A",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "rS4dJz",
+                      "ref": "ds:yjiPHo",
+                      "name": "Text/Eyebrow",
+                      "content": "SAT · 21:40 · LATE SET"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "bMJa4q",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Evening, Maya"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "ykuuZg",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "bell"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "8N3ziG",
+              "name": "Title",
+              "layout": "vertical",
+              "gap": 4,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "rSiD67",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Pick up the signal."
+                },
+                {
+                  "type": "ref",
+                  "id": "MJHX29",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "You left off on Desktop an hour ago."
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "VvDFpZ",
+              "ref": "ds:MXLHe4",
+              "name": "Home/Resume",
+              "width": "fill_container"
+            },
+            {
+              "type": "ref",
+              "id": "uUBadR",
+              "ref": "ds:15s1NF",
+              "name": "Home/Tuner",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "Y9ET6s",
+              "name": "Space Head",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Rr8Zht",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Your space"
+                },
+                {
+                  "type": "ref",
+                  "id": "g5W4kA",
+                  "ref": "ds:yjiPHo",
+                  "name": "Text/Eyebrow",
+                  "content": "HOLD A TILE TO REARRANGE"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "2yNcum",
+              "name": "Bento 1",
+              "gap": 10,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "WkQPyF",
+                  "ref": "ds:Mjj1ce",
+                  "name": "Home/Tile Friends",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "mD8AyK",
+                  "ref": "ds:ZRJq9F",
+                  "name": "Home/Tile Week",
+                  "width": "fill_container"
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "CP8hKv",
+              "ref": "ds:4rHUBF",
+              "name": "Home/Tile Artist Note",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "sCfreY",
+              "name": "Bento 2",
+              "gap": 10,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "cK5KWM",
+                  "ref": "ds:yOodEK",
+                  "name": "Home/Tile Offline",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "VxcW8j",
+                  "ref": "ds:9XacEL",
+                  "name": "Home/Tile Mix",
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "jM8tj4",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "K7aEaB",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "descendants": {
+                "ds:67K2eN": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:ApEsiS": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — mobile web player navigation — Navigation is one floating island that carries playback: artwork with a progress ring, three tabs (Home, Search, Library — Jam lives in Library as a filter with live Jams on top) and play. It shrinks to artwork + track while scrolling down, widens for live activity (Jam, Bitrate Connect, releases), shows quick actions on hold and blooms into the player on tap or swipe up. Swipe anywhere on it sideways to skip: the neighbour’s cover slides into the ring with its title above the island, past 46px it commits, short of it springs back; the compact island adds a next button; the first visit nudges the cover once. Home resumes, tunes by feeling and shows bento tiles instead of shelves."
+    },
+    {
+      "id": "b9i7Ch",
+      "type": "frame",
+      "name": "Mobile island player / Scrolling / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Jxubqr",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "AiTokA",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 22,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "p97UMY",
+              "ref": "ds:15s1NF",
+              "name": "Home/Tuner",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "gcVq84",
+              "name": "Space Head",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Y3guTG",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Your space"
+                },
+                {
+                  "type": "ref",
+                  "id": "VpzpQn",
+                  "ref": "ds:yjiPHo",
+                  "name": "Text/Eyebrow",
+                  "content": "HOLD A TILE TO REARRANGE"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "qQ67HW",
+              "name": "Bento 1",
+              "gap": 10,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "ijNLyD",
+                  "ref": "ds:Mjj1ce",
+                  "name": "Home/Tile Friends",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "GcQycE",
+                  "ref": "ds:ZRJq9F",
+                  "name": "Home/Tile Week",
+                  "width": "fill_container"
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "FQJvQn",
+              "ref": "ds:4rHUBF",
+              "name": "Home/Tile Artist Note",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "v7RZBE",
+              "name": "Bento 2",
+              "gap": 10,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "JPHRrR",
+                  "ref": "ds:yOodEK",
+                  "name": "Home/Tile Offline",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "TEqZCk",
+                  "ref": "ds:9XacEL",
+                  "name": "Home/Tile Mix",
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "GCeqgm",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "Jwjipu",
+              "ref": "ds:yyx5Do",
+              "name": "Mobile/Island Compact"
+            }
+          ]
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — mobile web player navigation — Navigation is one floating island that carries playback: artwork with a progress ring, three tabs (Home, Search, Library — Jam lives in Library as a filter with live Jams on top) and play. It shrinks to artwork + track while scrolling down, widens for live activity (Jam, Bitrate Connect, releases), shows quick actions on hold and blooms into the player on tap or swipe up. Swipe anywhere on it sideways to skip: the neighbour’s cover slides into the ring with its title above the island, past 46px it commits, short of it springs back; the compact island adds a next button; the first visit nudges the cover once. Home resumes, tunes by feeling and shows bento tiles instead of shelves. · no desktop frame: mobile concept"
+    },
+    {
+      "id": "L3TguC",
+      "type": "frame",
+      "name": "Mobile island player / Skipping / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "hudCPn",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "DCfjDz",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 22,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "Bng4QU",
+              "name": "Header",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "U4DP54",
+                  "ref": "ds:pIPJZe",
+                  "name": "Media/Avatar",
+                  "width": 36,
+                  "height": 36,
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/avatars/avatar1.jpg",
+                    "mode": "cover"
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "nubs9n",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "vNSnzx",
+                      "ref": "ds:yjiPHo",
+                      "name": "Text/Eyebrow",
+                      "content": "SAT · 21:40 · LATE SET"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "WiReUS",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Evening, Maya"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "bfpjBC",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "bell"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "FnYmpw",
+              "name": "Title",
+              "layout": "vertical",
+              "gap": 4,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "izspqg",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Pick up the signal."
+                },
+                {
+                  "type": "ref",
+                  "id": "mUHY66",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "You left off on Desktop an hour ago."
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "yESMbP",
+              "ref": "ds:MXLHe4",
+              "name": "Home/Resume",
+              "width": "fill_container"
+            },
+            {
+              "type": "ref",
+              "id": "wLFSx8",
+              "ref": "ds:15s1NF",
+              "name": "Home/Tuner",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "pSCQmD",
+              "name": "Space Head",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "uDBCes",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Your space"
+                },
+                {
+                  "type": "ref",
+                  "id": "Pb3Qa7",
+                  "ref": "ds:yjiPHo",
+                  "name": "Text/Eyebrow",
+                  "content": "HOLD A TILE TO REARRANGE"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "GodTrG",
+              "name": "Bento 1",
+              "gap": 10,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "r4dGSi",
+                  "ref": "ds:Mjj1ce",
+                  "name": "Home/Tile Friends",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "xEomXB",
+                  "ref": "ds:ZRJq9F",
+                  "name": "Home/Tile Week",
+                  "width": "fill_container"
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "kZHVLp",
+              "ref": "ds:4rHUBF",
+              "name": "Home/Tile Artist Note",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "VrWYmL",
+              "name": "Bento 2",
+              "gap": 10,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "2kKyQa",
+                  "ref": "ds:yOodEK",
+                  "name": "Home/Tile Offline",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "JEZScR",
+                  "ref": "ds:9XacEL",
+                  "name": "Home/Tile Mix",
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "HsPfUD",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "PhwEys",
+              "name": "Skipping",
+              "layout": "vertical",
+              "gap": 10,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "L3q7rP",
+                  "ref": "ds:UyeVWt",
+                  "name": "Mobile/Island Cue",
+                  "descendants": {
+                    "ds:s2WyoY": {
+                      "content": "NEXT · STATIC LINES"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "VLXwHr",
+                  "ref": "ds:gEXIhU",
+                  "name": "Mobile/Island Skipping",
+                  "descendants": {
+                    "ds:1ek0KV": {
+                      "fill": "$ds:--secondary"
+                    },
+                    "ds:5etSH2": {
+                      "fill": "$ds:--foreground"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 5600,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — mobile web player navigation — Navigation is one floating island that carries playback: artwork with a progress ring, three tabs (Home, Search, Library — Jam lives in Library as a filter with live Jams on top) and play. It shrinks to artwork + track while scrolling down, widens for live activity (Jam, Bitrate Connect, releases), shows quick actions on hold and blooms into the player on tap or swipe up. Swipe anywhere on it sideways to skip: the neighbour’s cover slides into the ring with its title above the island, past 46px it commits, short of it springs back; the compact island adds a next button; the first visit nudges the cover once. Home resumes, tunes by feeling and shows bento tiles instead of shelves. · no desktop frame: mobile concept · swipe the island sideways; past 46px it commits"
+    },
+    {
+      "id": "bvKGdp",
+      "type": "frame",
+      "name": "Mobile island player / Skip hint / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "meWQWK",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "HFayay",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 22,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "TZzLzz",
+              "name": "Header",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "mcXrxx",
+                  "ref": "ds:pIPJZe",
+                  "name": "Media/Avatar",
+                  "width": 36,
+                  "height": 36,
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/avatars/avatar1.jpg",
+                    "mode": "cover"
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "PWWmEr",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "3km5Yg",
+                      "ref": "ds:yjiPHo",
+                      "name": "Text/Eyebrow",
+                      "content": "SAT · 21:40 · LATE SET"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "XqUB46",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Evening, Maya"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "afnd9X",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "bell"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "BxTte6",
+              "name": "Title",
+              "layout": "vertical",
+              "gap": 4,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "d8A2Gv",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Pick up the signal."
+                },
+                {
+                  "type": "ref",
+                  "id": "a2EhKe",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "You left off on Desktop an hour ago."
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "WpG6Qt",
+              "ref": "ds:MXLHe4",
+              "name": "Home/Resume",
+              "width": "fill_container"
+            },
+            {
+              "type": "ref",
+              "id": "SYWTWk",
+              "ref": "ds:15s1NF",
+              "name": "Home/Tuner",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "hNYSRG",
+              "name": "Space Head",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "qaiEBJ",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Your space"
+                },
+                {
+                  "type": "ref",
+                  "id": "C5RMfj",
+                  "ref": "ds:yjiPHo",
+                  "name": "Text/Eyebrow",
+                  "content": "HOLD A TILE TO REARRANGE"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "E8eNuK",
+              "name": "Bento 1",
+              "gap": 10,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "hLWieB",
+                  "ref": "ds:Mjj1ce",
+                  "name": "Home/Tile Friends",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "XUrEq3",
+                  "ref": "ds:ZRJq9F",
+                  "name": "Home/Tile Week",
+                  "width": "fill_container"
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "xALiTx",
+              "ref": "ds:4rHUBF",
+              "name": "Home/Tile Artist Note",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "wCWtZq",
+              "name": "Bento 2",
+              "gap": 10,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "XXnYQZ",
+                  "ref": "ds:yOodEK",
+                  "name": "Home/Tile Offline",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "VLpEwd",
+                  "ref": "ds:9XacEL",
+                  "name": "Home/Tile Mix",
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "v3Eak3",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "q7vGdz",
+              "name": "Skipping",
+              "layout": "vertical",
+              "gap": 10,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "JhBPfG",
+                  "ref": "ds:UyeVWt",
+                  "name": "Mobile/Island Cue",
+                  "descendants": {
+                    "ds:s2WyoY": {
+                      "content": "SWIPE THE ISLAND TO SKIP"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "igZ9nf",
+                  "ref": "ds:gEXIhU",
+                  "name": "Mobile/Island Skipping",
+                  "descendants": {
+                    "ds:1ek0KV": {
+                      "fill": "$ds:--secondary"
+                    },
+                    "ds:5etSH2": {
+                      "fill": "$ds:--foreground"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 6090,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — mobile web player navigation — Navigation is one floating island that carries playback: artwork with a progress ring, three tabs (Home, Search, Library — Jam lives in Library as a filter with live Jams on top) and play. It shrinks to artwork + track while scrolling down, widens for live activity (Jam, Bitrate Connect, releases), shows quick actions on hold and blooms into the player on tap or swipe up. Swipe anywhere on it sideways to skip: the neighbour’s cover slides into the ring with its title above the island, past 46px it commits, short of it springs back; the compact island adds a next button; the first visit nudges the cover once. Home resumes, tunes by feeling and shows bento tiles instead of shelves. · no desktop frame: mobile concept · first visit only: the cover nudges once"
+    },
+    {
+      "id": "wCTGzY",
+      "type": "frame",
+      "name": "Mobile island player / Jam joined / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Tq9MSL",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "U2R746",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 22,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "mFPGzZ",
+              "name": "Header",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "JNR2a4",
+                  "ref": "ds:pIPJZe",
+                  "name": "Media/Avatar",
+                  "width": 36,
+                  "height": 36,
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/avatars/avatar1.jpg",
+                    "mode": "cover"
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "oKV7BF",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "7a3Tb5",
+                      "ref": "ds:yjiPHo",
+                      "name": "Text/Eyebrow",
+                      "content": "SAT · 21:40 · LATE SET"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "tgZaqv",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Evening, Maya"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "WVSEqV",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "bell"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Wb5Rze",
+              "name": "Title",
+              "layout": "vertical",
+              "gap": 4,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "fpemWS",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Pick up the signal."
+                },
+                {
+                  "type": "ref",
+                  "id": "83T8d3",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "You left off on Desktop an hour ago."
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "3NhkAN",
+              "ref": "ds:MXLHe4",
+              "name": "Home/Resume",
+              "width": "fill_container"
+            },
+            {
+              "type": "ref",
+              "id": "wvDeR8",
+              "ref": "ds:15s1NF",
+              "name": "Home/Tuner",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "yHfXFF",
+              "name": "Space Head",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "4pY9Kp",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Your space"
+                },
+                {
+                  "type": "ref",
+                  "id": "HwV8Zz",
+                  "ref": "ds:yjiPHo",
+                  "name": "Text/Eyebrow",
+                  "content": "HOLD A TILE TO REARRANGE"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "PVUtfu",
+              "name": "Bento 1",
+              "gap": 10,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "RjBtNy",
+                  "ref": "ds:Mjj1ce",
+                  "name": "Home/Tile Friends",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "pAGwzG",
+                  "ref": "ds:ZRJq9F",
+                  "name": "Home/Tile Week",
+                  "width": "fill_container"
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "d24mU8",
+              "ref": "ds:4rHUBF",
+              "name": "Home/Tile Artist Note",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "peFTZU",
+              "name": "Bento 2",
+              "gap": 10,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "y4vYf2",
+                  "ref": "ds:yOodEK",
+                  "name": "Home/Tile Offline",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "Qhnr3P",
+                  "ref": "ds:9XacEL",
+                  "name": "Home/Tile Mix",
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "XqTjoM",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "m7DgBd",
+              "ref": "ds:VjqEgo",
+              "name": "Mobile/Island Live",
+              "descendants": {
+                "ds:res4nn": {
+                  "content": "Jonah joined your Jam"
+                },
+                "ds:CCnOnN": {
+                  "content": "Listening to Afterglow with you"
+                },
+                "ds:WDT2zi": {
+                  "content": "Say hi"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 6580,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — mobile web player navigation — Navigation is one floating island that carries playback: artwork with a progress ring, three tabs (Home, Search, Library — Jam lives in Library as a filter with live Jams on top) and play. It shrinks to artwork + track while scrolling down, widens for live activity (Jam, Bitrate Connect, releases), shows quick actions on hold and blooms into the player on tap or swipe up. Swipe anywhere on it sideways to skip: the neighbour’s cover slides into the ring with its title above the island, past 46px it commits, short of it springs back; the compact island adds a next button; the first visit nudges the cover once. Home resumes, tunes by feeling and shows bento tiles instead of shelves. · no desktop frame: mobile concept"
+    },
+    {
+      "id": "qWoxBA",
+      "type": "frame",
+      "name": "Mobile island player / Bitrate Connect / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "tezGgh",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "4effxh",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 22,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "q54Di5",
+              "name": "Header",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "MxLrXV",
+                  "ref": "ds:pIPJZe",
+                  "name": "Media/Avatar",
+                  "width": 36,
+                  "height": 36,
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/avatars/avatar1.jpg",
+                    "mode": "cover"
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "dGcmUW",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "rQeSuC",
+                      "ref": "ds:yjiPHo",
+                      "name": "Text/Eyebrow",
+                      "content": "SAT · 21:40 · LATE SET"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qHU9bG",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Evening, Maya"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "uiCssk",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "bell"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "qYjdJL",
+              "name": "Title",
+              "layout": "vertical",
+              "gap": 4,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "gs6aa4",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Pick up the signal."
+                },
+                {
+                  "type": "ref",
+                  "id": "YeuAMR",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "You left off on Desktop an hour ago."
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "Ag7F5n",
+              "ref": "ds:MXLHe4",
+              "name": "Home/Resume",
+              "width": "fill_container"
+            },
+            {
+              "type": "ref",
+              "id": "oLAMGJ",
+              "ref": "ds:15s1NF",
+              "name": "Home/Tuner",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "DuEcjF",
+              "name": "Space Head",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "wxu82A",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Your space"
+                },
+                {
+                  "type": "ref",
+                  "id": "C75oBF",
+                  "ref": "ds:yjiPHo",
+                  "name": "Text/Eyebrow",
+                  "content": "HOLD A TILE TO REARRANGE"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "eU9nkm",
+              "name": "Bento 1",
+              "gap": 10,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "NwgrDa",
+                  "ref": "ds:Mjj1ce",
+                  "name": "Home/Tile Friends",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "sJDnYg",
+                  "ref": "ds:ZRJq9F",
+                  "name": "Home/Tile Week",
+                  "width": "fill_container"
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "ZrJocC",
+              "ref": "ds:4rHUBF",
+              "name": "Home/Tile Artist Note",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "H7umDB",
+              "name": "Bento 2",
+              "gap": 10,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "p7SVkJ",
+                  "ref": "ds:yOodEK",
+                  "name": "Home/Tile Offline",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "SNVeJz",
+                  "ref": "ds:9XacEL",
+                  "name": "Home/Tile Mix",
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "FTEiC6",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "kJmvjs",
+              "ref": "ds:VjqEgo",
+              "name": "Mobile/Island Live",
+              "descendants": {
+                "ds:res4nn": {
+                  "content": "Bitrate Connect · Desktop"
+                },
+                "ds:CCnOnN": {
+                  "content": "Move playback to this phone?"
+                },
+                "ds:WDT2zi": {
+                  "content": "Move"
+                },
+                "ds:8zdqXG": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 7070,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — mobile web player navigation — Navigation is one floating island that carries playback: artwork with a progress ring, three tabs (Home, Search, Library — Jam lives in Library as a filter with live Jams on top) and play. It shrinks to artwork + track while scrolling down, widens for live activity (Jam, Bitrate Connect, releases), shows quick actions on hold and blooms into the player on tap or swipe up. Swipe anywhere on it sideways to skip: the neighbour’s cover slides into the ring with its title above the island, past 46px it commits, short of it springs back; the compact island adds a next button; the first visit nudges the cover once. Home resumes, tunes by feeling and shows bento tiles instead of shelves. · no desktop frame: mobile concept"
+    },
+    {
+      "id": "KFTw6X",
+      "type": "frame",
+      "name": "Mobile island player / Quick actions / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "keLkhb",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "bjSTSF",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 22,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "PRvsnW",
+              "name": "Header",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "rW93wY",
+                  "ref": "ds:pIPJZe",
+                  "name": "Media/Avatar",
+                  "width": 36,
+                  "height": 36,
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/avatars/avatar1.jpg",
+                    "mode": "cover"
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "bRu9mo",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Z3dJWa",
+                      "ref": "ds:yjiPHo",
+                      "name": "Text/Eyebrow",
+                      "content": "SAT · 21:40 · LATE SET"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "X5uesm",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Evening, Maya"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "cpZsZw",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "bell"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "7ErJo2",
+              "name": "Title",
+              "layout": "vertical",
+              "gap": 4,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "L3vqbX",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Pick up the signal."
+                },
+                {
+                  "type": "ref",
+                  "id": "c4ukRA",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "You left off on Desktop an hour ago."
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "mK5tS7",
+              "ref": "ds:MXLHe4",
+              "name": "Home/Resume",
+              "width": "fill_container"
+            },
+            {
+              "type": "ref",
+              "id": "k7DHdG",
+              "ref": "ds:15s1NF",
+              "name": "Home/Tuner",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "RSZxHc",
+              "name": "Space Head",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "BxFK73",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Your space"
+                },
+                {
+                  "type": "ref",
+                  "id": "YecjQL",
+                  "ref": "ds:yjiPHo",
+                  "name": "Text/Eyebrow",
+                  "content": "HOLD A TILE TO REARRANGE"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "mHtHgq",
+              "name": "Bento 1",
+              "gap": 10,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "N6aUVb",
+                  "ref": "ds:Mjj1ce",
+                  "name": "Home/Tile Friends",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "Cv4SJ5",
+                  "ref": "ds:ZRJq9F",
+                  "name": "Home/Tile Week",
+                  "width": "fill_container"
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "Sws9gG",
+              "ref": "ds:4rHUBF",
+              "name": "Home/Tile Artist Note",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "rgoyfk",
+              "name": "Bento 2",
+              "gap": 10,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "N6yoXC",
+                  "ref": "ds:yOodEK",
+                  "name": "Home/Tile Offline",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "ucRETe",
+                  "ref": "ds:9XacEL",
+                  "name": "Home/Tile Mix",
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "eqnrzU",
+          "name": "Actions Slot",
+          "width": "fill_container",
+          "padding": [
+            0,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "LGRk2K",
+              "ref": "ds:mqjW7V",
+              "name": "Mobile/Island Actions"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "XSrRwF",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "E96wwo",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "descendants": {
+                "ds:67K2eN": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:ApEsiS": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 7560,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — mobile web player navigation — Navigation is one floating island that carries playback: artwork with a progress ring, three tabs (Home, Search, Library — Jam lives in Library as a filter with live Jams on top) and play. It shrinks to artwork + track while scrolling down, widens for live activity (Jam, Bitrate Connect, releases), shows quick actions on hold and blooms into the player on tap or swipe up. Swipe anywhere on it sideways to skip: the neighbour’s cover slides into the ring with its title above the island, past 46px it commits, short of it springs back; the compact island adds a next button; the first visit nudges the cover once. Home resumes, tunes by feeling and shows bento tiles instead of shelves. · no desktop frame: mobile concept"
+    },
+    {
+      "id": "zpcdgA",
+      "type": "frame",
+      "name": "Mobile island player / Now playing / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": {
+        "type": "gradient",
+        "gradientType": "linear",
+        "rotation": 180,
+        "colors": [
+          {
+            "color": "$ds:--primary",
+            "position": 0
+          },
+          {
+            "color": "$ds:--background",
+            "position": 0.62
+          }
+        ]
+      },
+      "children": [
+        {
+          "type": "ref",
+          "id": "SRorPh",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "dWP6oK",
+          "name": "Player",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 18,
+          "padding": [
+            8,
+            22,
+            24,
+            22
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "W6NmmT",
+              "name": "Top",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "RiDReH",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "chevron-down"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "vUgF9u",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "VJvnbx",
+                      "ref": "ds:PiqhAO",
+                      "name": "Text/Caption",
+                      "content": "Playing from"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "V46ZeP",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Night drive"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "7LQ4iW",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "ellipsis"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "3qspUJ",
+              "ref": "ds:awAtR9",
+              "name": "Media/Cover Large",
+              "width": 346,
+              "height": 346,
+              "fill": {
+                "type": "image",
+                "url": "../design-system/assets/albums/album-afterglow.webp",
+                "mode": "cover"
+              }
+            },
+            {
+              "type": "frame",
+              "id": "Qiz3wY",
+              "name": "Meta",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "VQ5g7i",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "VD3Sr5",
+                      "ref": "ds:RoXXJv",
+                      "name": "Text/H2",
+                      "content": "Afterglow"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "bq96Kf",
+                      "ref": "ds:C5Ih8u",
+                      "name": "Text/Muted",
+                      "content": "Nova & the Static"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "pT9oWP",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "heart"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "fAQJZS",
+              "ref": "ds:SbrVsk",
+              "name": "Seek Bar",
+              "width": "fill_container"
+            },
+            {
+              "type": "ref",
+              "id": "iucn8j",
+              "ref": "ds:8PfYYb",
+              "name": "Transport",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "Vd8syB",
+              "name": "Signal",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "7LLBtW",
+                  "ref": "ds:BgfhEI",
+                  "name": "Player/Quality Badge"
+                },
+                {
+                  "type": "ref",
+                  "id": "uXBiqR",
+                  "ref": "ds:BgfhEI",
+                  "name": "Player/Quality Badge",
+                  "descendants": {
+                    "ds:tqaPB4": {
+                      "enabled": false
+                    },
+                    "ds:qcsaKv": {
+                      "enabled": true
+                    },
+                    "ds:JPfnbf": {
+                      "content": "This phone"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "x": 8050,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — mobile web player navigation — Navigation is one floating island that carries playback: artwork with a progress ring, three tabs (Home, Search, Library — Jam lives in Library as a filter with live Jams on top) and play. It shrinks to artwork + track while scrolling down, widens for live activity (Jam, Bitrate Connect, releases), shows quick actions on hold and blooms into the player on tap or swipe up. Swipe anywhere on it sideways to skip: the neighbour’s cover slides into the ring with its title above the island, past 46px it commits, short of it springs back; the compact island adds a next button; the first visit nudges the cover once. Home resumes, tunes by feeling and shows bento tiles instead of shelves. · no desktop frame: mobile concept"
+    },
+    {
+      "id": "i8cnDJ",
+      "type": "frame",
+      "name": "Mobile island player / Library / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "RtWsPN",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "qL2gHS",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 22,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "hQYBPL",
+              "name": "Title",
+              "layout": "vertical",
+              "gap": 4,
+              "width": "fill_container",
+              "padding": [
+                12,
+                0,
+                0,
+                0
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "WYNJvv",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Your library remembers."
+                },
+                {
+                  "type": "ref",
+                  "id": "5X94VG",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Everything you played, saved and changed, in order."
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "HjvZKz",
+              "name": "Filter Scroller",
+              "width": 374,
+              "clip": true,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "4rJuXu",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "VXHG9L",
+                      "ref": "ds:AdNrrb",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:cUY4Fi": {
+                          "content": "Everything"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "yVgAow",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Jam · 2"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "eNmiVb",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Saved"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "tJAHBs",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Podcasts"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "QSb2tD",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Downloads"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "WVKQo6",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Offline"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "2ZRLsc",
+              "name": "Live Head",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Q5TfV7",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Live now"
+                },
+                {
+                  "type": "ref",
+                  "id": "YEuXUk",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "All Jams"
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "ud4TW8",
+              "ref": "ds:27j1cL",
+              "name": "Jam/Card",
+              "width": "fill_container"
+            },
+            {
+              "type": "ref",
+              "id": "iT7E2q",
+              "ref": "ds:yjiPHo",
+              "name": "Text/Eyebrow",
+              "content": "TONIGHT"
+            },
+            {
+              "type": "ref",
+              "id": "EHfoGY",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Afterglow",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-afterglow.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Afterglow"
+                },
+                "ds:rFh9q": {
+                  "content": "Played 4 times · Nova & the Static"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "ufvoqc",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night drive",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-night-signal.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night drive"
+                },
+                "ds:rFh9q": {
+                  "content": "Playlist · 3 tracks added"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "SbNygF",
+              "ref": "ds:yjiPHo",
+              "name": "Text/Eyebrow",
+              "content": "YESTERDAY"
+            },
+            {
+              "type": "ref",
+              "id": "muX7A7",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Drift Control",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-drift-control.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Drift Control"
+                },
+                "ds:rFh9q": {
+                  "content": "Saved from Jonah's Jam"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "4VZfeH",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "3Jns6U",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 8540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — mobile web player navigation — Navigation is one floating island that carries playback: artwork with a progress ring, three tabs (Home, Search, Library — Jam lives in Library as a filter with live Jams on top) and play. It shrinks to artwork + track while scrolling down, widens for live activity (Jam, Bitrate Connect, releases), shows quick actions on hold and blooms into the player on tap or swipe up. Swipe anywhere on it sideways to skip: the neighbour’s cover slides into the ring with its title above the island, past 46px it commits, short of it springs back; the compact island adds a next button; the first visit nudges the cover once. Home resumes, tunes by feeling and shows bento tiles instead of shelves. · no desktop frame: mobile concept · Jam is a Library filter, live Jams on top"
+    },
+    {
+      "id": "yJbF53",
+      "type": "frame",
+      "name": "Mobile island player / Library · Jam / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Gv9V49",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "oTsWKC",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 22,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "TUT9hC",
+              "name": "Title",
+              "layout": "vertical",
+              "gap": 4,
+              "width": "fill_container",
+              "padding": [
+                12,
+                0,
+                0,
+                0
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Ad923R",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Your library remembers."
+                },
+                {
+                  "type": "ref",
+                  "id": "aJ2FEP",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Everything you played, saved and changed, in order."
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "UFdHpV",
+              "name": "Filter Scroller",
+              "width": 374,
+              "clip": true,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "rhnPUd",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "KDaJgt",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Everything"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "hVigZa",
+                      "ref": "ds:AdNrrb",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:cUY4Fi": {
+                          "content": "Jam · 2"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "DDmAw7",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Saved"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "VY5qjm",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Podcasts"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Xwipm6",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Downloads"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "2VCQPJ",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Offline"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "TMp2hX",
+              "ref": "ds:C5Ih8u",
+              "name": "Text/Muted",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Listen together: one queue, everyone hears the same second."
+            },
+            {
+              "type": "ref",
+              "id": "AYVzPM",
+              "ref": "ds:27j1cL",
+              "name": "Jam/Card",
+              "width": "fill_container"
+            },
+            {
+              "type": "ref",
+              "id": "9GTvzC",
+              "ref": "ds:27j1cL",
+              "name": "Jam/Card",
+              "width": "fill_container",
+              "descendants": {
+                "ds:0JnqSW": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-static-lines.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:3LNk3y": {
+                  "content": "Late set crew"
+                },
+                "ds:Wq7BYF": {
+                  "content": "Starts at 23:00 · 6 going"
+                },
+                "ds:YdjHSR": {
+                  "content": "Remind me",
+                  "fill": "$ds:--foreground"
+                },
+                "ds:U8oZXz": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:t2E4wW": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "xHthzD",
+              "ref": "ds:G5tJp",
+              "name": "Button / Start a Jam from what you are playing",
+              "width": "fill_container",
+              "descendants": {
+                "ds:d2zCI": {
+                  "content": "Start a Jam from what you are playing"
+                },
+                "ds:wFUna": {
+                  "icon": "plus"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "xuvtPC",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "xWqqwr",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 9030,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — mobile web player navigation — Navigation is one floating island that carries playback: artwork with a progress ring, three tabs (Home, Search, Library — Jam lives in Library as a filter with live Jams on top) and play. It shrinks to artwork + track while scrolling down, widens for live activity (Jam, Bitrate Connect, releases), shows quick actions on hold and blooms into the player on tap or swipe up. Swipe anywhere on it sideways to skip: the neighbour’s cover slides into the ring with its title above the island, past 46px it commits, short of it springs back; the compact island adds a next button; the first visit nudges the cover once. Home resumes, tunes by feeling and shows bento tiles instead of shelves. · no desktop frame: mobile concept"
+    },
+    {
+      "id": "6sbi73",
+      "type": "frame",
+      "name": "Mobile island player / Loading / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "JVHXeT",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "vQ22u2",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 22,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "EoGSUV",
+              "name": "Header",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "c2nbhv",
+                  "ref": "ds:pIPJZe",
+                  "name": "Media/Avatar",
+                  "width": 36,
+                  "height": 36,
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/avatars/avatar1.jpg",
+                    "mode": "cover"
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "vefmRi",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "a4kNF2",
+                      "ref": "ds:yjiPHo",
+                      "name": "Text/Eyebrow",
+                      "content": "SAT · 21:40 · LATE SET"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "3xGSf7",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Evening, Maya"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "PW3VwE",
+                  "ref": "ds:cS9uPp",
+                  "name": "Button/Icon Ghost",
+                  "descendants": {
+                    "ds:KFmiLY": {
+                      "icon": "bell"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "8zBpzi",
+              "name": "Title",
+              "layout": "vertical",
+              "gap": 4,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "2qE85o",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Pick up the signal."
+                },
+                {
+                  "type": "ref",
+                  "id": "jNkrST",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "content": "Finding where you left off…"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "WZACN9",
+              "name": "Loading",
+              "layout": "vertical",
+              "gap": 24,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "MHDcQC",
+                  "ref": "ds:Jjegi",
+                  "name": "Skeleton",
+                  "width": 140,
+                  "height": 28
+                },
+                {
+                  "type": "frame",
+                  "id": "ykLwoi",
+                  "name": "Skeleton Grid",
+                  "layout": "vertical",
+                  "gap": 24,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "WovCTz",
+                      "name": "Skeleton Cards",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "xLUkS6",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "eZArYK",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "PxpZJy",
+                      "name": "Skeleton Cards",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ZJ9J6y",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "YPR5Tb",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "xR6Wr8",
+                      "name": "Skeleton Cards",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "aaQLe2",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "LxntKK",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "tqhyy6",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "KYg9wP",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "descendants": {
+                "ds:67K2eN": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:ApEsiS": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 9520,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — mobile web player navigation — Navigation is one floating island that carries playback: artwork with a progress ring, three tabs (Home, Search, Library — Jam lives in Library as a filter with live Jams on top) and play. It shrinks to artwork + track while scrolling down, widens for live activity (Jam, Bitrate Connect, releases), shows quick actions on hold and blooms into the player on tap or swipe up. Swipe anywhere on it sideways to skip: the neighbour’s cover slides into the ring with its title above the island, past 46px it commits, short of it springs back; the compact island adds a next button; the first visit nudges the cover once. Home resumes, tunes by feeling and shows bento tiles instead of shelves. · no desktop frame: mobile concept"
+    },
+    {
+      "id": "rpFWYj",
+      "type": "frame",
+      "name": "Mobile island player / Library · no Jams / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "eUbY45",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "Fmsxuo",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 22,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "xyW4Ds",
+              "name": "Title",
+              "layout": "vertical",
+              "gap": 4,
+              "width": "fill_container",
+              "padding": [
+                12,
+                0,
+                0,
+                0
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "vadfw7",
+                  "ref": "ds:RoXXJv",
+                  "name": "Text/H2",
+                  "content": "Your library remembers."
+                },
+                {
+                  "type": "ref",
+                  "id": "HxdS4B",
+                  "ref": "ds:C5Ih8u",
+                  "name": "Text/Muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Everything you played, saved and changed, in order."
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "BvQDDF",
+              "name": "Filter Scroller",
+              "width": 374,
+              "clip": true,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "QqXRY2",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "dZsyGQ",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Everything"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "VXvXQS",
+                      "ref": "ds:AdNrrb",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:cUY4Fi": {
+                          "content": "Jam · 2"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "QXSsov",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Saved"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "j6JfH7",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Podcasts"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "AdUMN2",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Downloads"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "668pDK",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Offline"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ie5ocF",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "ujvzxT",
+                  "ref": "ds:UacIqy",
+                  "name": "State / No Jams right now",
+                  "descendants": {
+                    "ds:QTS6fY": {
+                      "icon": "users-round"
+                    },
+                    "ds:LaYbWr": {
+                      "content": "No Jams right now"
+                    },
+                    "ds:IowS15": {
+                      "content": "Start one from what you are playing, or wait for a friend to invite you."
+                    },
+                    "ds:PKR600/ds:NVe7y": {
+                      "content": "Start a Jam"
+                    },
+                    "ds:Sk1EVh": {
+                      "enabled": false
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "EoFFhK",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "LSKMcK",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 10010,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — mobile web player navigation — Navigation is one floating island that carries playback: artwork with a progress ring, three tabs (Home, Search, Library — Jam lives in Library as a filter with live Jams on top) and play. It shrinks to artwork + track while scrolling down, widens for live activity (Jam, Bitrate Connect, releases), shows quick actions on hold and blooms into the player on tap or swipe up. Swipe anywhere on it sideways to skip: the neighbour’s cover slides into the ring with its title above the island, past 46px it commits, short of it springs back; the compact island adds a next button; the first visit nudges the cover once. Home resumes, tunes by feeling and shows bento tiles instead of shelves. · no desktop frame: mobile concept"
+    },
+    {
+      "id": "c52Xrm",
+      "type": "frame",
+      "name": "Mobile island player / Error / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "8TRLn4",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "MY73Fz",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 22,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "fCcRAS",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "RcMfJo",
+                  "ref": "ds:LQ8GwL",
+                  "name": "State / Could not load your home",
+                  "descendants": {
+                    "ds:zG3uZd": {
+                      "icon": "triangle-alert"
+                    },
+                    "ds:ATKZVK": {
+                      "content": "Could not load your home"
+                    },
+                    "ds:h7OAoY": {
+                      "content": "Check your connection. Playback and downloads keep working."
+                    },
+                    "ds:ydkfG5/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:voqjVU/ds:i6a4e": {
+                      "content": "Back to home"
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "5HFUen",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "VQGibA",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "descendants": {
+                "ds:67K2eN": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:ApEsiS": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 10500,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — mobile web player navigation — Navigation is one floating island that carries playback: artwork with a progress ring, three tabs (Home, Search, Library — Jam lives in Library as a filter with live Jams on top) and play. It shrinks to artwork + track while scrolling down, widens for live activity (Jam, Bitrate Connect, releases), shows quick actions on hold and blooms into the player on tap or swipe up. Swipe anywhere on it sideways to skip: the neighbour’s cover slides into the ring with its title above the island, past 46px it commits, short of it springs back; the compact island adds a next button; the first visit nudges the cover once. Home resumes, tunes by feeling and shows bento tiles instead of shelves. · no desktop frame: mobile concept"
+    }
+  ]
+}

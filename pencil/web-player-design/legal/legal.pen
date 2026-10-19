@@ -1,0 +1,1169 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "7rRsE7",
+      "name": "Legal / Document / Desktop / Dark",
+      "width": 1440,
+      "height": 1500,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "sx7m8G",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "VTjpsE",
+              "ref": "ds:h25UaM",
+              "name": "Public Header"
+            },
+            {
+              "type": "frame",
+              "id": "cEwjwH",
+              "name": "Document Column",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "padding": [
+                48,
+                0
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "xWvvQe",
+                  "name": "Document",
+                  "layout": "vertical",
+                  "gap": 18,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "zStdzq",
+                      "ref": "ds:cFuiSI",
+                      "name": "Alert/Warning",
+                      "descendants": {
+                        "ds:3d5wsO": {
+                          "content": "Draft — pending legal review. Text in [[double brackets]] is not filled in yet."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "YnhBz7",
+                      "ref": "ds:yjiPHo",
+                      "name": "Text/Eyebrow",
+                      "content": "LEGAL"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "VPtAYg",
+                      "ref": "ds:MgMQ2L",
+                      "name": "Text/H1",
+                      "content": "Terms of Use"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "w9Q5Fp",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "These terms govern your use of Bitrate — the web player, the mobile apps and the artist tools."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "9wVwXq",
+                      "ref": "ds:Qjj2NE",
+                      "name": "Text/H3",
+                      "content": "1. Acceptance and eligibility"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "t25FbK",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "You must be at least 16 years old to use Bitrate."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "RfoDzN",
+                      "ref": "ds:Qjj2NE",
+                      "name": "Text/H3",
+                      "content": "2. Your account"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "6354Qe",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Keep your login details safe. Tell us at [[support email]] if you suspect unauthorised access."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "cJUmRF",
+                      "ref": "ds:Qjj2NE",
+                      "name": "Text/H3",
+                      "content": "3. Using the service"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "TkVmBC",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Bitrate gives you a personal, non-transferable licence to stream music for private listening."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qZHHEq",
+                      "ref": "ds:T9XpwH",
+                      "name": "Note",
+                      "descendants": {
+                        "ds:jouPnZ": {
+                          "content": "Note — these terms do not limit rights you have under the consumer law of your country."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ypPz9j",
+                      "ref": "ds:RlxQk",
+                      "name": "Divider",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ib7jru",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Other legal documents"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "pSRGuz",
+                      "name": "Row",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "h2jFUi",
+                          "ref": "ds:Kq8Urf",
+                          "name": "Icon/Muted",
+                          "icon": "file-text",
+                          "width": 16,
+                          "height": 16
+                        },
+                        {
+                          "type": "ref",
+                          "id": "u8BjJy",
+                          "ref": "ds:LSzB6i",
+                          "name": "Text/Link",
+                          "content": "Privacy Policy"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "akmH8D",
+                      "name": "Row",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "SxhJfq",
+                          "ref": "ds:Kq8Urf",
+                          "name": "Icon/Muted",
+                          "icon": "file-text",
+                          "width": 16,
+                          "height": 16
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ozwKJc",
+                          "ref": "ds:LSzB6i",
+                          "name": "Text/Link",
+                          "content": "Community Guidelines"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Ne3Jz4",
+                      "name": "Row",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "4cFGA5",
+                          "ref": "ds:Kq8Urf",
+                          "name": "Icon/Muted",
+                          "icon": "file-text",
+                          "width": 16,
+                          "height": 16
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Daqnwu",
+                          "ref": "ds:LSzB6i",
+                          "name": "Text/Link",
+                          "content": "Complaints and reports"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "xxU7YG",
+                      "name": "Row",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "uFiHMY",
+                          "ref": "ds:Kq8Urf",
+                          "name": "Icon/Muted",
+                          "icon": "file-text",
+                          "width": 16,
+                          "height": 16
+                        },
+                        {
+                          "type": "ref",
+                          "id": "joVNBf",
+                          "ref": "ds:LSzB6i",
+                          "name": "Text/Link",
+                          "content": "Copyright and notice-and-action"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "9saPZF",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "dpEGr8",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/legal/[slug] — terms, privacy, community, complaints, copyright — One template renders every legal document; shown with Terms of Use."
+    },
+    {
+      "type": "frame",
+      "id": "92HeTJ",
+      "name": "Legal / Document / Desktop / Light",
+      "width": 1440,
+      "height": 1500,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "Sa6mSZ",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "dmyRyj",
+              "ref": "ds:h25UaM",
+              "name": "Public Header"
+            },
+            {
+              "type": "frame",
+              "id": "eWsgu3",
+              "name": "Document Column",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "padding": [
+                48,
+                0
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "QU5w7J",
+                  "name": "Document",
+                  "layout": "vertical",
+                  "gap": 18,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "L24jXH",
+                      "ref": "ds:cFuiSI",
+                      "name": "Alert/Warning",
+                      "descendants": {
+                        "ds:3d5wsO": {
+                          "content": "Draft — pending legal review. Text in [[double brackets]] is not filled in yet."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "YG6oXw",
+                      "ref": "ds:yjiPHo",
+                      "name": "Text/Eyebrow",
+                      "content": "LEGAL"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sWTJXA",
+                      "ref": "ds:MgMQ2L",
+                      "name": "Text/H1",
+                      "content": "Terms of Use"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "GbnVWF",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "These terms govern your use of Bitrate — the web player, the mobile apps and the artist tools."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "wK5c2P",
+                      "ref": "ds:Qjj2NE",
+                      "name": "Text/H3",
+                      "content": "1. Acceptance and eligibility"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "7VPgXa",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "You must be at least 16 years old to use Bitrate."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "TUZQVk",
+                      "ref": "ds:Qjj2NE",
+                      "name": "Text/H3",
+                      "content": "2. Your account"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "H4nGqT",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Keep your login details safe. Tell us at [[support email]] if you suspect unauthorised access."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jDxTd8",
+                      "ref": "ds:Qjj2NE",
+                      "name": "Text/H3",
+                      "content": "3. Using the service"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "WTu2do",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Bitrate gives you a personal, non-transferable licence to stream music for private listening."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "UtojBB",
+                      "ref": "ds:T9XpwH",
+                      "name": "Note",
+                      "descendants": {
+                        "ds:jouPnZ": {
+                          "content": "Note — these terms do not limit rights you have under the consumer law of your country."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "UEC8Ty",
+                      "ref": "ds:RlxQk",
+                      "name": "Divider",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "uPBsqG",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Other legal documents"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "eRDLbZ",
+                      "name": "Row",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "AdSCok",
+                          "ref": "ds:Kq8Urf",
+                          "name": "Icon/Muted",
+                          "icon": "file-text",
+                          "width": 16,
+                          "height": 16
+                        },
+                        {
+                          "type": "ref",
+                          "id": "8Xy3eQ",
+                          "ref": "ds:LSzB6i",
+                          "name": "Text/Link",
+                          "content": "Privacy Policy"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "oenwid",
+                      "name": "Row",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "JFYyXM",
+                          "ref": "ds:Kq8Urf",
+                          "name": "Icon/Muted",
+                          "icon": "file-text",
+                          "width": 16,
+                          "height": 16
+                        },
+                        {
+                          "type": "ref",
+                          "id": "NV9t2B",
+                          "ref": "ds:LSzB6i",
+                          "name": "Text/Link",
+                          "content": "Community Guidelines"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "HYcWZa",
+                      "name": "Row",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "78jGkS",
+                          "ref": "ds:Kq8Urf",
+                          "name": "Icon/Muted",
+                          "icon": "file-text",
+                          "width": 16,
+                          "height": 16
+                        },
+                        {
+                          "type": "ref",
+                          "id": "igs32G",
+                          "ref": "ds:LSzB6i",
+                          "name": "Text/Link",
+                          "content": "Complaints and reports"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "doS8Vc",
+                      "name": "Row",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "rkGpvR",
+                          "ref": "ds:Kq8Urf",
+                          "name": "Icon/Muted",
+                          "icon": "file-text",
+                          "width": 16,
+                          "height": 16
+                        },
+                        {
+                          "type": "ref",
+                          "id": "E6MWdv",
+                          "ref": "ds:LSzB6i",
+                          "name": "Text/Link",
+                          "content": "Copyright and notice-and-action"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "qW4f42",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "KzxWjx",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "/legal/[slug] — terms, privacy, community, complaints, copyright — One template renders every legal document; shown with Terms of Use."
+    },
+    {
+      "type": "frame",
+      "id": "W2ztJj",
+      "name": "Legal / Document / Desktop / Dim",
+      "width": 1440,
+      "height": 1500,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "uJQZsq",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "pLizz3",
+              "ref": "ds:h25UaM",
+              "name": "Public Header"
+            },
+            {
+              "type": "frame",
+              "id": "23H7KE",
+              "name": "Document Column",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "padding": [
+                48,
+                0
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "P7FGCP",
+                  "name": "Document",
+                  "layout": "vertical",
+                  "gap": 18,
+                  "width": 760,
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "kqqstH",
+                      "ref": "ds:cFuiSI",
+                      "name": "Alert/Warning",
+                      "descendants": {
+                        "ds:3d5wsO": {
+                          "content": "Draft — pending legal review. Text in [[double brackets]] is not filled in yet."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "wt8PxX",
+                      "ref": "ds:yjiPHo",
+                      "name": "Text/Eyebrow",
+                      "content": "LEGAL"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ua8nyq",
+                      "ref": "ds:MgMQ2L",
+                      "name": "Text/H1",
+                      "content": "Terms of Use"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "DfSx2m",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "These terms govern your use of Bitrate — the web player, the mobile apps and the artist tools."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "PqDSn9",
+                      "ref": "ds:Qjj2NE",
+                      "name": "Text/H3",
+                      "content": "1. Acceptance and eligibility"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pDvMse",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "You must be at least 16 years old to use Bitrate."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "WN5s7W",
+                      "ref": "ds:Qjj2NE",
+                      "name": "Text/H3",
+                      "content": "2. Your account"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ZCgVYr",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Keep your login details safe. Tell us at [[support email]] if you suspect unauthorised access."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "EQZhYw",
+                      "ref": "ds:Qjj2NE",
+                      "name": "Text/H3",
+                      "content": "3. Using the service"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "YVZHDu",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Bitrate gives you a personal, non-transferable licence to stream music for private listening."
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jmt9bf",
+                      "ref": "ds:T9XpwH",
+                      "name": "Note",
+                      "descendants": {
+                        "ds:jouPnZ": {
+                          "content": "Note — these terms do not limit rights you have under the consumer law of your country."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "hxizkL",
+                      "ref": "ds:RlxQk",
+                      "name": "Divider",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "L9af6C",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Other legal documents"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "wJ7Hjo",
+                      "name": "Row",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "bzdgeG",
+                          "ref": "ds:Kq8Urf",
+                          "name": "Icon/Muted",
+                          "icon": "file-text",
+                          "width": 16,
+                          "height": 16
+                        },
+                        {
+                          "type": "ref",
+                          "id": "RmvUr5",
+                          "ref": "ds:LSzB6i",
+                          "name": "Text/Link",
+                          "content": "Privacy Policy"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "FZiDMW",
+                      "name": "Row",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Ez4JL6",
+                          "ref": "ds:Kq8Urf",
+                          "name": "Icon/Muted",
+                          "icon": "file-text",
+                          "width": 16,
+                          "height": 16
+                        },
+                        {
+                          "type": "ref",
+                          "id": "q6e8NK",
+                          "ref": "ds:LSzB6i",
+                          "name": "Text/Link",
+                          "content": "Community Guidelines"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "4KLVJz",
+                      "name": "Row",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "2aHnDz",
+                          "ref": "ds:Kq8Urf",
+                          "name": "Icon/Muted",
+                          "icon": "file-text",
+                          "width": 16,
+                          "height": 16
+                        },
+                        {
+                          "type": "ref",
+                          "id": "z8QQuq",
+                          "ref": "ds:LSzB6i",
+                          "name": "Text/Link",
+                          "content": "Complaints and reports"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "tkV3fE",
+                      "name": "Row",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "AhbeM4",
+                          "ref": "ds:Kq8Urf",
+                          "name": "Icon/Muted",
+                          "icon": "file-text",
+                          "width": 16,
+                          "height": 16
+                        },
+                        {
+                          "type": "ref",
+                          "id": "NMdKZq",
+                          "ref": "ds:LSzB6i",
+                          "name": "Text/Link",
+                          "content": "Copyright and notice-and-action"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "wGhtZq",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "sKqHLf",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "/legal/[slug] — terms, privacy, community, complaints, copyright — One template renders every legal document; shown with Terms of Use."
+    },
+    {
+      "type": "frame",
+      "id": "LaKck8",
+      "name": "Legal / Document / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "Rx7bLZ",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "ref",
+              "id": "CYnaKU",
+              "ref": "ds:xBZUrc",
+              "name": "Mobile/Status Bar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "5Rx4X4",
+              "name": "Form",
+              "layout": "vertical",
+              "gap": 22,
+              "width": "fill_container",
+              "padding": [
+                20,
+                20
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "UL8NVA",
+                  "ref": "ds:J95vY0",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "ref",
+                  "id": "ea4drw",
+                  "ref": "ds:cFuiSI",
+                  "name": "Alert/Warning",
+                  "descendants": {
+                    "ds:3d5wsO": {
+                      "content": "Draft — pending legal review. Text in [[double brackets]] is not filled in yet."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "kBQk4p",
+                  "ref": "ds:yjiPHo",
+                  "name": "Text/Eyebrow",
+                  "content": "LEGAL"
+                },
+                {
+                  "type": "ref",
+                  "id": "3GUS66",
+                  "ref": "ds:MgMQ2L",
+                  "name": "Text/H1",
+                  "content": "Terms of Use"
+                },
+                {
+                  "type": "ref",
+                  "id": "2x8UVU",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "These terms govern your use of Bitrate — the web player, the mobile apps and the artist tools."
+                },
+                {
+                  "type": "ref",
+                  "id": "7DjCtw",
+                  "ref": "ds:Qjj2NE",
+                  "name": "Text/H3",
+                  "content": "1. Acceptance and eligibility"
+                },
+                {
+                  "type": "ref",
+                  "id": "yAARgU",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "You must be at least 16 years old to use Bitrate."
+                },
+                {
+                  "type": "ref",
+                  "id": "wtu8Ay",
+                  "ref": "ds:Qjj2NE",
+                  "name": "Text/H3",
+                  "content": "2. Your account"
+                },
+                {
+                  "type": "ref",
+                  "id": "JS7oaj",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Keep your login details safe. Tell us at [[support email]] if you suspect unauthorised access."
+                },
+                {
+                  "type": "ref",
+                  "id": "74vEEr",
+                  "ref": "ds:Qjj2NE",
+                  "name": "Text/H3",
+                  "content": "3. Using the service"
+                },
+                {
+                  "type": "ref",
+                  "id": "4cVN4H",
+                  "ref": "ds:XDvNAD",
+                  "name": "Text/Paragraph",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Bitrate gives you a personal, non-transferable licence to stream music for private listening."
+                },
+                {
+                  "type": "ref",
+                  "id": "5U32Qy",
+                  "ref": "ds:T9XpwH",
+                  "name": "Note",
+                  "descendants": {
+                    "ds:jouPnZ": {
+                      "content": "Note — these terms do not limit rights you have under the consumer law of your country."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "MLTU6U",
+                  "ref": "ds:RlxQk",
+                  "name": "Divider",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "nCxNRj",
+                  "ref": "ds:SOt7Oe",
+                  "name": "Text/Body Strong",
+                  "content": "Other legal documents"
+                },
+                {
+                  "type": "frame",
+                  "id": "4QXU9E",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "zmngCt",
+                      "ref": "ds:Kq8Urf",
+                      "name": "Icon/Muted",
+                      "icon": "file-text",
+                      "width": 16,
+                      "height": 16
+                    },
+                    {
+                      "type": "ref",
+                      "id": "F3Ley4",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Privacy Policy"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Q5tTLm",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "GL93TY",
+                      "ref": "ds:Kq8Urf",
+                      "name": "Icon/Muted",
+                      "icon": "file-text",
+                      "width": 16,
+                      "height": 16
+                    },
+                    {
+                      "type": "ref",
+                      "id": "tF4Pni",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Community Guidelines"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ZMY66A",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "K9bZhS",
+                      "ref": "ds:Kq8Urf",
+                      "name": "Icon/Muted",
+                      "icon": "file-text",
+                      "width": 16,
+                      "height": 16
+                    },
+                    {
+                      "type": "ref",
+                      "id": "bS7WJi",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Complaints and reports"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "8z4cxu",
+                  "name": "Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "XERMFe",
+                      "ref": "ds:Kq8Urf",
+                      "name": "Icon/Muted",
+                      "icon": "file-text",
+                      "width": 16,
+                      "height": 16
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sahyjN",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Copyright and notice-and-action"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "RhLY4v",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            16,
+            20,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "gsuNwe",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/legal/[slug] — terms, privacy, community, complaints, copyright — One template renders every legal document; shown with Terms of Use."
+    }
+  ]
+}

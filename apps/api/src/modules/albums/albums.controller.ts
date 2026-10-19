@@ -24,12 +24,20 @@ import {
   CreateAlbumSwagger,
   DeleteAlbumSwagger,
   GetAlbumByIdSwagger,
+  GetAlbumsForTracksSwagger,
   GetAlbumsSwagger,
+  GetLikedAlbumsSwagger,
   LikeAlbumSwagger,
   UnlikeAlbumSwagger,
   UpdateAlbumByIdSwagger,
 } from './decorators'
-import { CreateAlbumDto, CreateAlbumSchema, UpdateAlbumDto, UpdateAlbumSchema } from './dtos'
+import {
+  CreateAlbumDto,
+  CreateAlbumSchema,
+  TrackIdsQuerySchema,
+  UpdateAlbumDto,
+  UpdateAlbumSchema,
+} from './dtos'
 import { AlbumEntity } from './entities'
 
 /** Represents the albums controller. */
@@ -55,6 +63,27 @@ export class AlbumsController {
       page,
       title,
     })
+  }
+
+  /** The album of each listed track, for track-list album columns. Declared before `:id`. */
+  @GetAlbumsForTracksSwagger()
+  @Get('by-tracks')
+  getAlbumsForTracks(
+    @Query('trackIds', new ZodValidationPipe(TrackIdsQuerySchema)) trackIds: string[],
+  ) {
+    return this.albumsService.findForTracks(trackIds)
+  }
+
+  /** The signed-in user's saved albums. Declared before `:id` so `liked` is not parsed as an id. */
+  @GetLikedAlbumsSwagger()
+  @UserAuth()
+  @Get('liked')
+  getLikedAlbums(
+    @Req() req: UserAuthRequest,
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+  ) {
+    return this.albumsService.findLiked(req.user.id, { page, limit })
   }
 
   /** Runs the get by id operation. */

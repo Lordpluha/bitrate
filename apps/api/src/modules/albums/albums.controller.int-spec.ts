@@ -15,6 +15,8 @@ const makeServiceMock = () =>
     create: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
+    findLiked: jest.fn(),
+    findForTracks: jest.fn(),
   }) as unknown as jest.Mocked<AlbumsService>
 
 describe('AlbumsController (int)', () => {
@@ -61,6 +63,7 @@ describe('AlbumsController (int)', () => {
     service.create.mockReset()
     service.update.mockReset()
     service.delete.mockReset()
+    service.findLiked.mockReset()
   })
 
   it('GET /albums should return 200 with albums list', async () => {
@@ -131,5 +134,53 @@ describe('AlbumsController (int)', () => {
 
     expect(res.status).toBe(200)
     expect(service.delete).toHaveBeenCalledWith(artist.id, 'f47ac10b-58cc-4372-a567-0e02b2c3d479')
+  })
+
+  it('GET /albums/liked should list the signed-in user saved albums, not parse liked as an id', async () => {
+    service.findLiked.mockResolvedValue({ data: [], total: 0, page: 1, limit: 20 } as never)
+
+    const res = await request(app.getHttpServer())
+      .get('/albums/liked')
+      .query({ page: 1, limit: 20 })
+
+    expect(res.status).toBe(200)
+    expect(service.findLiked).toHaveBeenCalledWith('user-1', { page: 1, limit: 20 })
+    expect(service.getById).not.toHaveBeenCalled()
+  })
+
+  describe('GET /albums/by-tracks', () => {
+    const A = '01a10c5c-0000-7000-8000-00000000000a'
+    const B = '01a10c5c-0000-7000-8000-00000000000b'
+
+    beforeEach(() => {
+      service.findForTracks.mockReset()
+      service.getById.mockReset()
+    })
+
+    it('answers the albums of a comma-separated track list, not parse by-tracks as an id', async () => {
+      const body = {
+        data: [
+          { trackId: A, album: { id: 'album-1', title: 'Glass Cities' } },
+          { trackId: B, album: null },
+        ],
+      }
+      service.findForTracks.mockResolvedValue(body as never)
+
+      const res = await request(app.getHttpServer()).get(`/albums/by-tracks?trackIds=${A},${B}`)
+
+      expect(res.status).toBe(200)
+      expect(res.body).toEqual(body)
+      expect(service.findForTracks).toHaveBeenCalledWith([A, B])
+      expect(service.getById).not.toHaveBeenCalled()
+    })
+
+    it('refuses a missing, malformed or oversized list', async () => {
+      const tooMany = Array.from({ length: 101 }, () => A).join(',')
+      for (const query of ['', '?trackIds=', '?trackIds=not-a-uuid', `?trackIds=${tooMany}`]) {
+        const res = await request(app.getHttpServer()).get(`/albums/by-tracks${query}`)
+        expect(res.status).toBe(400)
+      }
+      expect(service.findForTracks).not.toHaveBeenCalled()
+    })
   })
 })

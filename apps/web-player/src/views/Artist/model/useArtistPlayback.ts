@@ -12,6 +12,8 @@ export type UseArtistPlaybackInput = {
   artistId: string
   artistName: string
   tracks: TrackEntity[]
+  /** Popular order; the play button starts here. Empty while it loads. */
+  popularTracks?: TrackEntity[]
 }
 
 const shuffleTracks = (tracks: TrackEntity[]) => {
@@ -34,7 +36,10 @@ export const useArtistPlayback = ({
   artistId,
   artistName,
   tracks,
+  popularTracks = [],
 }: UseArtistPlaybackInput) => {
+  /* the play button plays the artist's popular tracks first, like the list it sits above */
+  const playOrder = popularTracks.length > 0 ? popularTracks : tracks
   const playPlaylist = usePlayerStore((state) => state.playPlaylist)
   const togglePlay = usePlayerStore((state) => state.togglePlay)
   const setShuffleEnabled = usePlayerStore((state) => state.setShuffleEnabled)
@@ -65,8 +70,8 @@ export const useArtistPlayback = ({
       togglePlay()
       return
     }
-    playFrom(tracks, 0)
-  }, [isContextActive, togglePlay, playFrom, tracks])
+    playFrom(playOrder, 0)
+  }, [isContextActive, togglePlay, playFrom, playOrder])
 
   const handleShuffle = useCallback(() => {
     if (tracks.length === 0) return
@@ -74,12 +79,33 @@ export const useArtistPlayback = ({
     playFrom(shuffleTracks(tracks), 0)
   }, [tracks, setShuffleEnabled, playFrom])
 
+  /* a track is found by id in the list it was picked from, so a re-ordered list plays the right one */
   const handlePlayTrack = useCallback(
-    (_track: TrackEntity, index: number) => playFrom(tracks, index),
+    (track: TrackEntity) =>
+      playFrom(
+        tracks,
+        Math.max(
+          0,
+          tracks.findIndex((t) => t.id === track.id),
+        ),
+      ),
     [playFrom, tracks],
   )
 
+  const handlePlayPopular = useCallback(
+    (track: TrackEntity) =>
+      playFrom(
+        playOrder,
+        Math.max(
+          0,
+          playOrder.findIndex((t) => t.id === track.id),
+        ),
+      ),
+    [playFrom, playOrder],
+  )
+
   return {
+    handlePlayPopular,
     handlePlayTrack,
     handleShuffle,
     handleTogglePlay,

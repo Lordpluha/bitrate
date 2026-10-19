@@ -1,0 +1,3436 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "Z2HBfd",
+      "name": "Library / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "jDxKEy",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "2dXUkH",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "bom7pf",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "mJwVVS",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "eMaVY5",
+                          "ref": "ds:yjiPHo",
+                          "name": "Text/Eyebrow",
+                          "content": "YOUR LIBRARY"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "72Mesf",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Library"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "U6BXUM",
+                      "ref": "ds:exjwf",
+                      "name": "Button / Create playlist",
+                      "descendants": {
+                        "ds:E23bq6": {
+                          "content": "Create playlist"
+                        },
+                        "ds:k0WCtI": {
+                          "icon": "plus"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "AfStqq",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "bSxqa2",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Playlists",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Playlists"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "vKxFHq",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Liked tracks",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Liked tracks"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jrFsS6",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Albums",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Albums"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Er3eYZ",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / History",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "History"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "yprS3H",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "4wBQ5e",
+                      "ref": "ds:UDBbv",
+                      "name": "Input / Filter your library",
+                      "width": 320,
+                      "descendants": {
+                        "ds:MHjg8": {
+                          "enabled": false
+                        },
+                        "ds:kB4hd": {
+                          "content": "Filter your library"
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Y53xgR",
+                      "name": "Spacer",
+                      "width": "fill_container",
+                      "height": 1,
+                      "children": []
+                    },
+                    {
+                      "type": "ref",
+                      "id": "8VyYtT",
+                      "ref": "ds:Kfq8t",
+                      "name": "Select / null",
+                      "width": 180,
+                      "descendants": {
+                        "ds:PLkpD": {
+                          "enabled": false
+                        },
+                        "ds:USlYG": {
+                          "content": "Recents"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "QWC4LD",
+                  "name": "Grid",
+                  "layout": "vertical",
+                  "gap": 22,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "w5bvJi",
+                      "name": "Card Row",
+                      "gap": 20,
+                      "alignItems": "start",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "fBhivw",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Night Drive",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-night-signal.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Night Drive"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Playlist · 24 songs"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "gPfthb",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Afterglow Sessions",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-afterglow.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Afterglow Sessions"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Playlist · 18 songs"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "mEecDm",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Static Lines",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-static-lines.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Static Lines"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Album · Kite Harbor"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "QsCdkQ",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Echoes in Motion",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Echoes in Motion"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Album · Lumen Choir"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "9SeHqw",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Drift Control",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-drift-control.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Drift Control"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Album · Mira Sol"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "zKtaRh",
+                      "name": "Card Row",
+                      "gap": 20,
+                      "alignItems": "start",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "WS9XwT",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Road Radio",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-afterglow.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Road Radio"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Playlist · 31 songs"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "PajUxa",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Low Orbit",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-static-lines.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Low Orbit"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Playlist · 12 songs"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "QtwB5a",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Late Signal",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Late Signal"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Playlist · 9 songs"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/library (?create=playlist) — Saved collection: tabs, filter, sort; inline create form."
+    },
+    {
+      "type": "frame",
+      "id": "Dd6Yk2",
+      "name": "Library / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "WnUeh9",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "Rb5mqS",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "8sbgKd",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "GXNvfy",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "3mocPQ",
+                          "ref": "ds:yjiPHo",
+                          "name": "Text/Eyebrow",
+                          "content": "YOUR LIBRARY"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "3vqcjT",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Library"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "CCLc73",
+                      "ref": "ds:exjwf",
+                      "name": "Button / Create playlist",
+                      "descendants": {
+                        "ds:E23bq6": {
+                          "content": "Create playlist"
+                        },
+                        "ds:k0WCtI": {
+                          "icon": "plus"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Ws4xrL",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "crM43F",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Playlists",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Playlists"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "PQCEsG",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Liked tracks",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Liked tracks"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "E7JHM2",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Albums",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Albums"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "hkHzEE",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / History",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "History"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "XkyzRc",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Qc5yk3",
+                      "ref": "ds:UDBbv",
+                      "name": "Input / Filter your library",
+                      "width": 320,
+                      "descendants": {
+                        "ds:MHjg8": {
+                          "enabled": false
+                        },
+                        "ds:kB4hd": {
+                          "content": "Filter your library"
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "CsPb7W",
+                      "name": "Spacer",
+                      "width": "fill_container",
+                      "height": 1,
+                      "children": []
+                    },
+                    {
+                      "type": "ref",
+                      "id": "xqPiUp",
+                      "ref": "ds:Kfq8t",
+                      "name": "Select / null",
+                      "width": 180,
+                      "descendants": {
+                        "ds:PLkpD": {
+                          "enabled": false
+                        },
+                        "ds:USlYG": {
+                          "content": "Recents"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "p46vbQ",
+                  "name": "Grid",
+                  "layout": "vertical",
+                  "gap": 22,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "UPTZgn",
+                      "name": "Card Row",
+                      "gap": 20,
+                      "alignItems": "start",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "nTBjhJ",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Night Drive",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-night-signal.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Night Drive"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Playlist · 24 songs"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "NBa9Ey",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Afterglow Sessions",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-afterglow.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Afterglow Sessions"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Playlist · 18 songs"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "X2c7x7",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Static Lines",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-static-lines.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Static Lines"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Album · Kite Harbor"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "fdqvNo",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Echoes in Motion",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Echoes in Motion"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Album · Lumen Choir"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "F3dEd5",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Drift Control",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-drift-control.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Drift Control"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Album · Mira Sol"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "9gBQnz",
+                      "name": "Card Row",
+                      "gap": 20,
+                      "alignItems": "start",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "P5fQaK",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Road Radio",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-afterglow.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Road Radio"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Playlist · 31 songs"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "85yAoU",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Low Orbit",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-static-lines.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Low Orbit"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Playlist · 12 songs"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "5BGHyc",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Late Signal",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Late Signal"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Playlist · 9 songs"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "/main/library (?create=playlist) — Saved collection: tabs, filter, sort; inline create form."
+    },
+    {
+      "type": "frame",
+      "id": "WNCaE8",
+      "name": "Library / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "LHAp5m",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "qKucX9",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "7KACwV",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Vezuh7",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Mrboaa",
+                          "ref": "ds:yjiPHo",
+                          "name": "Text/Eyebrow",
+                          "content": "YOUR LIBRARY"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "yRZSe7",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Library"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "yUgZvQ",
+                      "ref": "ds:exjwf",
+                      "name": "Button / Create playlist",
+                      "descendants": {
+                        "ds:E23bq6": {
+                          "content": "Create playlist"
+                        },
+                        "ds:k0WCtI": {
+                          "icon": "plus"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "uBbbtj",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "QYB2u7",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Playlists",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Playlists"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "adXmLA",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Liked tracks",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Liked tracks"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "t6cr2W",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Albums",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Albums"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sib67M",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / History",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "History"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "St7bFU",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "C8pdbF",
+                      "ref": "ds:UDBbv",
+                      "name": "Input / Filter your library",
+                      "width": 320,
+                      "descendants": {
+                        "ds:MHjg8": {
+                          "enabled": false
+                        },
+                        "ds:kB4hd": {
+                          "content": "Filter your library"
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "rNkpXc",
+                      "name": "Spacer",
+                      "width": "fill_container",
+                      "height": 1,
+                      "children": []
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pFPgJR",
+                      "ref": "ds:Kfq8t",
+                      "name": "Select / null",
+                      "width": 180,
+                      "descendants": {
+                        "ds:PLkpD": {
+                          "enabled": false
+                        },
+                        "ds:USlYG": {
+                          "content": "Recents"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "WMQNgs",
+                  "name": "Grid",
+                  "layout": "vertical",
+                  "gap": 22,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "TtSTSD",
+                      "name": "Card Row",
+                      "gap": 20,
+                      "alignItems": "start",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "VZSrPr",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Night Drive",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-night-signal.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Night Drive"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Playlist · 24 songs"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "8QBBTB",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Afterglow Sessions",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-afterglow.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Afterglow Sessions"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Playlist · 18 songs"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "9gZaaE",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Static Lines",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-static-lines.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Static Lines"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Album · Kite Harbor"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "QurUvp",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Echoes in Motion",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Echoes in Motion"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Album · Lumen Choir"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "MTFEMH",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Drift Control",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-drift-control.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Drift Control"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Album · Mira Sol"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "uSiUDz",
+                      "name": "Card Row",
+                      "gap": 20,
+                      "alignItems": "start",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "SZLSLA",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Road Radio",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-afterglow.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Road Radio"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Playlist · 31 songs"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "tgeyUU",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Low Orbit",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-static-lines.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Low Orbit"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Playlist · 12 songs"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "igWixq",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Late Signal",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Late Signal"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Playlist · 9 songs"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "/main/library (?create=playlist) — Saved collection: tabs, filter, sort; inline create form."
+    },
+    {
+      "type": "frame",
+      "id": "SbW3hG",
+      "name": "Library / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "7jyK3k",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "4G7rqA",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Your Library"
+            },
+            "ds:B4rkef": {
+              "enabled": false
+            },
+            "ds:zbRXzZ": {
+              "icon": "search"
+            },
+            "ds:kI4p9F": {
+              "icon": "plus"
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "ESVbAM",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "DFGz9X",
+              "name": "Filter Scroller",
+              "width": 374,
+              "clip": true,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "4e5FVR",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Hsxdga",
+                      "ref": "ds:AdNrrb",
+                      "name": "Chip/Active",
+                      "descendants": {
+                        "ds:cUY4Fi": {
+                          "content": "Playlists"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "K62oBZ",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Jam · 2"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "gfQpZw",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Liked tracks"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "f39Znu",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "Albums"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "65HQDs",
+                      "ref": "ds:LUcTan",
+                      "name": "Chip/Default",
+                      "descendants": {
+                        "ds:lXs2ja": {
+                          "content": "History"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "crKpib",
+              "name": "Live Head",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "pEgGxy",
+                  "ref": "ds:fLuqjC",
+                  "name": "Text/H4",
+                  "content": "Live now"
+                },
+                {
+                  "type": "ref",
+                  "id": "h5e36x",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "All Jams"
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "2ENGzJ",
+              "ref": "ds:27j1cL",
+              "name": "Jam/Card",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "YWfx5a",
+              "name": "Row",
+              "gap": 12,
+              "alignItems": "center",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "xtGt8J",
+                  "name": "Row",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "xYESuo",
+                      "ref": "ds:sMRwMA",
+                      "name": "Icon/Foreground",
+                      "icon": "arrow-down-up",
+                      "width": 16,
+                      "height": 16
+                    },
+                    {
+                      "type": "ref",
+                      "id": "C7AHsz",
+                      "ref": "ds:SOt7Oe",
+                      "name": "Text/Body Strong",
+                      "content": "Recents"
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "Jae3xC",
+                  "ref": "ds:Kq8Urf",
+                  "name": "Icon/Muted",
+                  "icon": "layout-grid",
+                  "width": 20,
+                  "height": 20
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "oGSSQg",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Night Drive",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-night-signal.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Night Drive"
+                },
+                "ds:rFh9q": {
+                  "content": "Playlist · 24 songs"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "a94zUQ",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Afterglow Sessions",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-afterglow.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Afterglow Sessions"
+                },
+                "ds:rFh9q": {
+                  "content": "Playlist · 18 songs"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "ziXLAC",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Static Lines",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-static-lines.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Static Lines"
+                },
+                "ds:rFh9q": {
+                  "content": "Album · Kite Harbor"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "oX2uar",
+              "ref": "ds:Y2h8VV",
+              "name": "Track / Echoes in Motion",
+              "width": "fill_container",
+              "descendants": {
+                "ds:fjPYf": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:RJ2go": {
+                  "content": "Echoes in Motion"
+                },
+                "ds:rFh9q": {
+                  "content": "Album · Lumen Choir"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "d2tYqa",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "BmCbNS",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/library (?create=playlist) — Saved collection: tabs, filter, sort; inline create form."
+    },
+    {
+      "type": "frame",
+      "id": "Cw5jpQ",
+      "name": "Library / Create playlist / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "KoNsDz",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "uwKhr4",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "QJcoXX",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "P6LQx6",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "QZCvAa",
+                          "ref": "ds:yjiPHo",
+                          "name": "Text/Eyebrow",
+                          "content": "YOUR LIBRARY"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "y4mkNn",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Library"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "K7DhnH",
+                      "ref": "ds:exjwf",
+                      "name": "Button / Create playlist",
+                      "descendants": {
+                        "ds:E23bq6": {
+                          "content": "Create playlist"
+                        },
+                        "ds:k0WCtI": {
+                          "icon": "plus"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "PY6iHs",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Z9dMuY",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Playlists",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Playlists"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "uT6FNP",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Liked tracks",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Liked tracks"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Hss5Lk",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Albums",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Albums"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "b2XBSt",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / History",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "History"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "zNMnbv",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "width": 560,
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "F5gDRV",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ArcHcf",
+                          "ref": "ds:fLuqjC",
+                          "name": "Text/H4",
+                          "content": "New playlist"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "fGHQfo",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Playlist title",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Playlist title"
+                            },
+                            "ds:iI0CE": {
+                              "content": "My playlist #4"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "qGVbwK",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Description",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Description"
+                            },
+                            "ds:iI0CE": {
+                              "content": "Add an optional description"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "yjWJsg",
+                          "ref": "ds:HjQNJ",
+                          "name": "Switch / Public playlist",
+                          "descendants": {
+                            "ds:mNVZY": {
+                              "content": "Public playlist"
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "iy6uth",
+                          "name": "Row",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "4xsM9U",
+                              "ref": "ds:exjwf",
+                              "name": "Button / Create",
+                              "descendants": {
+                                "ds:E23bq6": {
+                                  "content": "Create"
+                                },
+                                "ds:o7NXW": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "3Dhqz2",
+                              "ref": "ds:DTwJb",
+                              "name": "Button / Cancel",
+                              "descendants": {
+                                "ds:GyGLK": {
+                                  "content": "Cancel"
+                                },
+                                "ds:uRXDu": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/library (?create=playlist) — Saved collection: tabs, filter, sort; inline create form."
+    },
+    {
+      "type": "frame",
+      "id": "xF7ynn",
+      "name": "Library / Create playlist / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "QsVzk8",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "kk5KoM",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Create playlist"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "CAMaya",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "pGbNor",
+              "ref": "ds:Qjj2NE",
+              "name": "Text/H3",
+              "content": "New playlist"
+            },
+            {
+              "type": "ref",
+              "id": "AHmzQE",
+              "ref": "ds:j04F4",
+              "name": "Input / Playlist title",
+              "width": "fill_container",
+              "descendants": {
+                "ds:l4agQ": {
+                  "content": "Playlist title"
+                },
+                "ds:iI0CE": {
+                  "content": "My playlist #4"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "VCZvVd",
+              "ref": "ds:j04F4",
+              "name": "Input / Description",
+              "width": "fill_container",
+              "descendants": {
+                "ds:l4agQ": {
+                  "content": "Description"
+                },
+                "ds:iI0CE": {
+                  "content": "Add an optional description"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "Y4yUEh",
+              "ref": "ds:HjQNJ",
+              "name": "Switch / Public playlist",
+              "descendants": {
+                "ds:mNVZY": {
+                  "content": "Public playlist"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "oZHgki",
+              "ref": "ds:Y4ylzP",
+              "name": "Button / Create",
+              "width": "fill_container",
+              "descendants": {
+                "ds:NVe7y": {
+                  "content": "Create"
+                },
+                "ds:ksrFi": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "E7hGwQ",
+              "ref": "ds:qz3aI",
+              "name": "Button / Cancel",
+              "width": "fill_container",
+              "descendants": {
+                "ds:i6a4e": {
+                  "content": "Cancel"
+                },
+                "ds:MlIUw": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "bPhBir",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "xuiPXC",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/library (?create=playlist) — Saved collection: tabs, filter, sort; inline create form."
+    },
+    {
+      "type": "frame",
+      "id": "T89kvp",
+      "name": "Library / Create menu / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "HwkdKT",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "58GkbH",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Tofc7J",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "rkCHPD",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "7ayPAK",
+                          "ref": "ds:yjiPHo",
+                          "name": "Text/Eyebrow",
+                          "content": "YOUR LIBRARY"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "d4qTnu",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Library"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pVMRNv",
+                      "ref": "ds:exjwf",
+                      "name": "Button / Create playlist",
+                      "descendants": {
+                        "ds:E23bq6": {
+                          "content": "Create playlist"
+                        },
+                        "ds:k0WCtI": {
+                          "icon": "plus"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "yT5tkT",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Exsdyn",
+                      "ref": "ds:GVEaR8",
+                      "name": "Surface/Menu",
+                      "descendants": {
+                        "ds:W2CUQL": {
+                          "type": "frame",
+                          "id": "2H7RD5",
+                          "name": "Menu Items",
+                          "layout": "vertical",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "uPFdLw",
+                              "ref": "ds:UZOah5",
+                              "name": "Menu/Item",
+                              "descendants": {
+                                "ds:E4qaLC": {
+                                  "content": "Playlist — Create a playlist with songs or episodes"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "iXXasc",
+                              "ref": "ds:YleZMN",
+                              "name": "Menu/Item Disabled",
+                              "descendants": {
+                                "ds:irLm65": {
+                                  "content": "Blend — Combine your friends' tastes into a playlist"
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "RSJLXj",
+                              "ref": "ds:YleZMN",
+                              "name": "Menu/Item Disabled",
+                              "descendants": {
+                                "ds:irLm65": {
+                                  "content": "Folder — Organize your playlists"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "pzUXUv",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "gvT9sf",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Playlists",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Playlists"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "4dmAfM",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Liked tracks",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Liked tracks"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "AfMbqt",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Albums",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Albums"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "zWdhGz",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / History",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "History"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "G9Espi",
+                  "name": "Grid",
+                  "layout": "vertical",
+                  "gap": 22,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "UFXuBd",
+                      "name": "Card Row",
+                      "gap": 20,
+                      "alignItems": "start",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "rhFvFc",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Night Drive",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-night-signal.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Night Drive"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Playlist · 24 songs"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "MobJna",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Afterglow Sessions",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-afterglow.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Afterglow Sessions"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Playlist · 18 songs"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "wGrKDU",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Static Lines",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-static-lines.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Static Lines"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Album · Kite Harbor"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "PhgHPt",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Echoes in Motion",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Echoes in Motion"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Album · Lumen Choir"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "uShP8V",
+                          "ref": "ds:dKgOu",
+                          "name": "Playlist / Drift Control",
+                          "width": 168,
+                          "height": "fit_content",
+                          "descendants": {
+                            "ds:D3rpRY": {
+                              "fill": {
+                                "type": "image",
+                                "url": "../design-system/assets/albums/album-drift-control.webp",
+                                "mode": "cover"
+                              }
+                            },
+                            "ds:I1BLb": {
+                              "content": "Drift Control"
+                            },
+                            "ds:oEjKW": {
+                              "content": "Album · Mira Sol"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/library (?create=playlist) — Saved collection: tabs, filter, sort; inline create form."
+    },
+    {
+      "type": "frame",
+      "id": "iBwR8V",
+      "name": "Library / Create menu / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "SyyEVd",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "oXYUQQ",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Your Library"
+            },
+            "ds:B4rkef": {
+              "enabled": false
+            },
+            "ds:zbRXzZ": {
+              "icon": "search"
+            },
+            "ds:kI4p9F": {
+              "icon": "plus"
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "9Y9mqg",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "ref",
+              "id": "YJ9UG3",
+              "ref": "ds:GVEaR8",
+              "name": "Surface/Menu",
+              "descendants": {
+                "ds:W2CUQL": {
+                  "type": "frame",
+                  "id": "RMqonp",
+                  "name": "Menu Items",
+                  "layout": "vertical",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "33Mmr7",
+                      "ref": "ds:UZOah5",
+                      "name": "Menu/Item",
+                      "descendants": {
+                        "ds:E4qaLC": {
+                          "content": "Playlist"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "uSQgD8",
+                      "ref": "ds:YleZMN",
+                      "name": "Menu/Item Disabled",
+                      "descendants": {
+                        "ds:irLm65": {
+                          "content": "Blend"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jtGCvk",
+                      "ref": "ds:YleZMN",
+                      "name": "Menu/Item Disabled",
+                      "descendants": {
+                        "ds:irLm65": {
+                          "content": "Folder"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "scJe5Z",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "bgAJFb",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/library (?create=playlist) — Saved collection: tabs, filter, sort; inline create form."
+    },
+    {
+      "type": "frame",
+      "id": "XLkbZd",
+      "name": "Library / Empty / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "MkfGCX",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "kR5q39",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "FZkyqA",
+                  "name": "Row",
+                  "gap": 12,
+                  "alignItems": "end",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "x7DiHN",
+                      "name": "Column",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "nUsa2P",
+                          "ref": "ds:yjiPHo",
+                          "name": "Text/Eyebrow",
+                          "content": "YOUR LIBRARY"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "WmXGdL",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Library"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "7nErxo",
+                      "ref": "ds:exjwf",
+                      "name": "Button / Create playlist",
+                      "descendants": {
+                        "ds:E23bq6": {
+                          "content": "Create playlist"
+                        },
+                        "ds:k0WCtI": {
+                          "icon": "plus"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "EQ2zWV",
+                  "name": "Tabs",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "2uHPqK",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Playlists",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Playlists"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5qikYK",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Liked tracks",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Liked tracks"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "2jsoBa",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Albums",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Albums"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "QaN6ZT",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / History",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "History"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "AXCuJv",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "5DEj7w",
+                      "ref": "ds:UacIqy",
+                      "name": "State / Nothing here yet.",
+                      "descendants": {
+                        "ds:QTS6fY": {
+                          "icon": "library-big"
+                        },
+                        "ds:LaYbWr": {
+                          "content": "Nothing here yet."
+                        },
+                        "ds:IowS15": {
+                          "content": "Playlists you create and albums you save will show up here."
+                        },
+                        "ds:PKR600/ds:NVe7y": {
+                          "content": "Create playlist"
+                        },
+                        "ds:Sk1EVh": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 9170,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/library (?create=playlist) — Saved collection: tabs, filter, sort; inline create form."
+    },
+    {
+      "type": "frame",
+      "id": "Wo5Zgq",
+      "name": "Library / Empty / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "DPcmnZ",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "yoJUiT",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Your Library"
+            },
+            "ds:B4rkef": {
+              "enabled": false
+            },
+            "ds:zbRXzZ": {
+              "icon": "search"
+            },
+            "ds:kI4p9F": {
+              "icon": "plus"
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "LokmHV",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "PbyQEP",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "qA4CFS",
+                  "ref": "ds:UacIqy",
+                  "name": "State / Nothing here yet.",
+                  "descendants": {
+                    "ds:QTS6fY": {
+                      "icon": "library-big"
+                    },
+                    "ds:LaYbWr": {
+                      "content": "Nothing here yet."
+                    },
+                    "ds:IowS15": {
+                      "content": "Playlists you create and albums you save will show up here."
+                    },
+                    "ds:PKR600/ds:NVe7y": {
+                      "content": "Create playlist"
+                    },
+                    "ds:Sk1EVh": {
+                      "enabled": false
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "QaLVy2",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "XWHFKe",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 10710,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/library (?create=playlist) — Saved collection: tabs, filter, sort; inline create form."
+    },
+    {
+      "type": "frame",
+      "id": "mrkLWd",
+      "name": "Library / Loading / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "AE8gFg",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "Uo2spX",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "auS6i3",
+                  "name": "Loading",
+                  "layout": "vertical",
+                  "gap": 24,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "DKEdCP",
+                      "ref": "ds:Jjegi",
+                      "name": "Skeleton",
+                      "width": 220,
+                      "height": 28
+                    },
+                    {
+                      "type": "frame",
+                      "id": "y77Mia",
+                      "name": "Skeleton Grid",
+                      "layout": "vertical",
+                      "gap": 24,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "u7XaVx",
+                          "name": "Skeleton Cards",
+                          "gap": 20,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "N6YHmN",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "zkrpWb",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "C4rFSo",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "Ztp2cP",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "9pVtQq",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "hAnYTz",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "2pTumP",
+                          "name": "Skeleton Cards",
+                          "gap": 20,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "Uqjyfm",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "fGskkh",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "o67vmC",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "gc3Ztz",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "g5dSHx",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "WDcC5Q",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "8pbeRM",
+                          "name": "Skeleton Cards",
+                          "gap": 20,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "a9MgiX",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "RowkMD",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "dadCe2",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "PnufZb",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "xYfKAK",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "ekDwGT",
+                              "ref": "ds:9IeC1M",
+                              "name": "Skeleton/Card"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 11200,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/library (?create=playlist) — Saved collection: tabs, filter, sort; inline create form."
+    },
+    {
+      "type": "frame",
+      "id": "53QDN4",
+      "name": "Library / Loading / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "rQsC4J",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "wDjheA",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Your Library"
+            },
+            "ds:B4rkef": {
+              "enabled": false
+            },
+            "ds:zbRXzZ": {
+              "icon": "search"
+            },
+            "ds:kI4p9F": {
+              "icon": "plus"
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "EdySFV",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "NFjqQd",
+              "name": "Loading",
+              "layout": "vertical",
+              "gap": 24,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Hwgde7",
+                  "ref": "ds:Jjegi",
+                  "name": "Skeleton",
+                  "width": 140,
+                  "height": 28
+                },
+                {
+                  "type": "frame",
+                  "id": "c6n6rc",
+                  "name": "Skeleton Grid",
+                  "layout": "vertical",
+                  "gap": 24,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "BCmf3F",
+                      "name": "Skeleton Cards",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "zJkLet",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "yxJAQZ",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ktoVyZ",
+                      "name": "Skeleton Cards",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "DauLr9",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "MLaRDU",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "fmtQRv",
+                      "name": "Skeleton Cards",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "AQ4Rm4",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "TwZmYV",
+                          "ref": "ds:9IeC1M",
+                          "name": "Skeleton/Card"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "BkRdV9",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "b6N6XM",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 12740,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/library (?create=playlist) — Saved collection: tabs, filter, sort; inline create form."
+    },
+    {
+      "type": "frame",
+      "id": "7moFQU",
+      "name": "Library / Error / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Ube3qZ",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "RFfB3w",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "GauQ4f",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "i7qWMr",
+                      "ref": "ds:LQ8GwL",
+                      "name": "State / Your library could not be loaded",
+                      "descendants": {
+                        "ds:zG3uZd": {
+                          "icon": "triangle-alert"
+                        },
+                        "ds:ATKZVK": {
+                          "content": "Your library could not be loaded"
+                        },
+                        "ds:h7OAoY": {
+                          "content": "Something went wrong on our side. Try again."
+                        },
+                        "ds:ydkfG5/ds:NVe7y": {
+                          "content": "Try again"
+                        },
+                        "ds:voqjVU/ds:i6a4e": {
+                          "content": "Back to home"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": false
+            },
+            "ds:z5MVM": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "x": 13230,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/library (?create=playlist) — Saved collection: tabs, filter, sort; inline create form."
+    },
+    {
+      "type": "frame",
+      "id": "Rsv8zt",
+      "name": "Library / Error / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "VGTagq",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "aVkJ5J",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Your Library"
+            },
+            "ds:B4rkef": {
+              "enabled": false
+            },
+            "ds:zbRXzZ": {
+              "icon": "search"
+            },
+            "ds:kI4p9F": {
+              "icon": "plus"
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "vopLqn",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "stFhKW",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "yxK3NV",
+                  "ref": "ds:LQ8GwL",
+                  "name": "State / Your library could not be loaded",
+                  "descendants": {
+                    "ds:zG3uZd": {
+                      "icon": "triangle-alert"
+                    },
+                    "ds:ATKZVK": {
+                      "content": "Your library could not be loaded"
+                    },
+                    "ds:h7OAoY": {
+                      "content": "Something went wrong on our side. Try again."
+                    },
+                    "ds:ydkfG5/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:voqjVU/ds:i6a4e": {
+                      "content": "Back to home"
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "3fgFN3",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "6uYQMh",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:YMvBMe": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:kcysNs": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 14770,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/main/library (?create=playlist) — Saved collection: tabs, filter, sort; inline create form."
+    }
+  ]
+}

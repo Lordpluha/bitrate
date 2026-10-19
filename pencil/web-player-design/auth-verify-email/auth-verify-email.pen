@@ -1,0 +1,1247 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "v2kLoD",
+      "name": "Verify email / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "ev4T5H",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "wY553W",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": 440,
+              "gap": 20,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "Dss874",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 20,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "STfKGq",
+                      "ref": "ds:J95vY0",
+                      "name": "Logo/Lockup"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "SQsP5F",
+                      "name": "Heading",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "7b7Px7",
+                          "ref": "ds:RoXXJv",
+                          "name": "Text/H2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Verify your email"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "SbtGu7",
+                          "ref": "ds:XDvNAD",
+                          "name": "Text/Paragraph",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Confirm the email address connected to your account."
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "peLcaM",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Verify email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Verify email"
+                        },
+                        "ds:ksrFi": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "NAQq9Z",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Email address",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Email address"
+                        },
+                        "ds:iI0CE": {
+                          "content": "maya@example.com"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "J56CqT",
+                      "ref": "ds:q9t60e",
+                      "name": "Button / Resend verification email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:KOjgg": {
+                          "content": "Resend verification email"
+                        },
+                        "ds:X8D8m": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "KWvdAp",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Back to login"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ZtL9bS",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "CYuT6f",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/verify-email?email= — Confirm the account email or resend the link."
+    },
+    {
+      "type": "frame",
+      "id": "T5QMUp",
+      "name": "Verify email / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "KBJ7RT",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "srKajX",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": 440,
+              "gap": 20,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "vvKKgY",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 20,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "VXULHB",
+                      "ref": "ds:J95vY0",
+                      "name": "Logo/Lockup"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Tok6B4",
+                      "name": "Heading",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "mUXyc3",
+                          "ref": "ds:RoXXJv",
+                          "name": "Text/H2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Verify your email"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "kaW9Sr",
+                          "ref": "ds:XDvNAD",
+                          "name": "Text/Paragraph",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Confirm the email address connected to your account."
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "TMtVfF",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Verify email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Verify email"
+                        },
+                        "ds:ksrFi": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "zy68Qb",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Email address",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Email address"
+                        },
+                        "ds:iI0CE": {
+                          "content": "maya@example.com"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "xNEgXE",
+                      "ref": "ds:q9t60e",
+                      "name": "Button / Resend verification email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:KOjgg": {
+                          "content": "Resend verification email"
+                        },
+                        "ds:X8D8m": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jBddGg",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Back to login"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "FsDwHE",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "wrs3F5",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "/verify-email?email= — Confirm the account email or resend the link."
+    },
+    {
+      "type": "frame",
+      "id": "jsA5e3",
+      "name": "Verify email / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "qPoDR7",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "cK4i6f",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": 440,
+              "gap": 20,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "QzwbUi",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 20,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Sgfphf",
+                      "ref": "ds:J95vY0",
+                      "name": "Logo/Lockup"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "xLxqrV",
+                      "name": "Heading",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "DTac4y",
+                          "ref": "ds:RoXXJv",
+                          "name": "Text/H2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Verify your email"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "VL5rDv",
+                          "ref": "ds:XDvNAD",
+                          "name": "Text/Paragraph",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Confirm the email address connected to your account."
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Pk7gvp",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Verify email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Verify email"
+                        },
+                        "ds:ksrFi": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "yEyQCY",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Email address",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Email address"
+                        },
+                        "ds:iI0CE": {
+                          "content": "maya@example.com"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Fs9pwG",
+                      "ref": "ds:q9t60e",
+                      "name": "Button / Resend verification email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:KOjgg": {
+                          "content": "Resend verification email"
+                        },
+                        "ds:X8D8m": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "uqYN5f",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Back to login"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ATyVwJ",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "jgw6B5",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "/verify-email?email= — Confirm the account email or resend the link."
+    },
+    {
+      "type": "frame",
+      "id": "wRAShv",
+      "name": "Verify email / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "m3Tur6",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "ref",
+              "id": "2GACNw",
+              "ref": "ds:xBZUrc",
+              "name": "Mobile/Status Bar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "rzcn4i",
+              "name": "Form",
+              "layout": "vertical",
+              "gap": 22,
+              "width": "fill_container",
+              "padding": [
+                20,
+                20
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "HFUHwQ",
+                  "ref": "ds:J95vY0",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "frame",
+                  "id": "iJCJh7",
+                  "name": "Heading",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "YMCmzN",
+                      "ref": "ds:RoXXJv",
+                      "name": "Text/H2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Verify your email"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "S5gkL3",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Confirm the email address connected to your account."
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "MizArd",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Verify email",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Verify email"
+                    },
+                    "ds:ksrFi": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "5kaqqz",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "maya@example.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "jtcRLQ",
+                  "ref": "ds:q9t60e",
+                  "name": "Button / Resend verification email",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:KOjgg": {
+                      "content": "Resend verification email"
+                    },
+                    "ds:X8D8m": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "QaHrYc",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Back to login"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "auvpwo",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            16,
+            20,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "RJe3m9",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/verify-email?email= — Confirm the account email or resend the link."
+    },
+    {
+      "type": "frame",
+      "id": "N8r4Je",
+      "name": "Verify email / Verifying / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "CEBQuV",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "dh2B6H",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": 440,
+              "gap": 20,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "eTDcpf",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 20,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "FTkg7S",
+                      "ref": "ds:J95vY0",
+                      "name": "Logo/Lockup"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "SqTVww",
+                      "name": "Heading",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "9V4P8x",
+                          "ref": "ds:RoXXJv",
+                          "name": "Text/H2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Verify your email"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "FyJjTe",
+                          "ref": "ds:XDvNAD",
+                          "name": "Text/Paragraph",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Confirm the email address connected to your account."
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ULcLb3",
+                      "ref": "ds:Y4ylzP",
+                      "name": "Button / Verifying...",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:NVe7y": {
+                          "content": "Verifying..."
+                        },
+                        "ds:ksrFi": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "eNMmFz",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Email address",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Email address"
+                        },
+                        "ds:iI0CE": {
+                          "content": "maya@example.com"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "MiFV8Q",
+                      "ref": "ds:q9t60e",
+                      "name": "Button / Resend verification email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:KOjgg": {
+                          "content": "Resend verification email"
+                        },
+                        "ds:X8D8m": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "4jnd62",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Back to login"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "FJjKAS",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "btJJZY",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/verify-email?email= — Confirm the account email or resend the link."
+    },
+    {
+      "type": "frame",
+      "id": "w6x6Nr",
+      "name": "Verify email / Verifying / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "UseTpu",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "ref",
+              "id": "aN58VH",
+              "ref": "ds:xBZUrc",
+              "name": "Mobile/Status Bar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "7iA27q",
+              "name": "Form",
+              "layout": "vertical",
+              "gap": 22,
+              "width": "fill_container",
+              "padding": [
+                20,
+                20
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "dE4mUU",
+                  "ref": "ds:J95vY0",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "frame",
+                  "id": "JDUFsh",
+                  "name": "Heading",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "fSBhcn",
+                      "ref": "ds:RoXXJv",
+                      "name": "Text/H2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Verify your email"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qD9GsL",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Confirm the email address connected to your account."
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "N3nHa8",
+                  "ref": "ds:Y4ylzP",
+                  "name": "Button / Verifying...",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:NVe7y": {
+                      "content": "Verifying..."
+                    },
+                    "ds:ksrFi": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "2m2j5S",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "maya@example.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "N3YoJP",
+                  "ref": "ds:q9t60e",
+                  "name": "Button / Resend verification email",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:KOjgg": {
+                      "content": "Resend verification email"
+                    },
+                    "ds:X8D8m": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "G6x8uK",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Back to login"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "5KPGPu",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            16,
+            20,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "87owus",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/verify-email?email= — Confirm the account email or resend the link."
+    },
+    {
+      "type": "frame",
+      "id": "aM6f6C",
+      "name": "Verify email / No token / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "PFAuTv",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "8pC3uP",
+              "ref": "ds:x4Fixv",
+              "name": "Surface/Panel",
+              "width": 440,
+              "gap": 20,
+              "descendants": {
+                "ds:xhr0E3": {
+                  "type": "frame",
+                  "id": "jgUCi2",
+                  "name": "Panel Content",
+                  "layout": "vertical",
+                  "gap": 20,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "KQ7sJf",
+                      "ref": "ds:J95vY0",
+                      "name": "Logo/Lockup"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "73nmyR",
+                      "name": "Heading",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "RSPEhg",
+                          "ref": "ds:RoXXJv",
+                          "name": "Text/H2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Verify your email"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "wgtPM6",
+                          "ref": "ds:XDvNAD",
+                          "name": "Text/Paragraph",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Check your inbox or request a new verification link."
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "UJnsHb",
+                      "ref": "ds:j04F4",
+                      "name": "Input / Email address",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:l4agQ": {
+                          "content": "Email address"
+                        },
+                        "ds:iI0CE": {
+                          "content": "maya@example.com"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "NJ6jG7",
+                      "ref": "ds:q9t60e",
+                      "name": "Button / Resend verification email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "ds:KOjgg": {
+                          "content": "Resend verification email"
+                        },
+                        "ds:X8D8m": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "8gNtz3",
+                      "ref": "ds:LSzB6i",
+                      "name": "Text/Link",
+                      "content": "Back to login"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "cpu7SW",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            24,
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "PHfvsZ",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/verify-email?email= — Confirm the account email or resend the link."
+    },
+    {
+      "type": "frame",
+      "id": "HWYWK7",
+      "name": "Verify email / No token / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "fill": "$ds:--background",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "N2ay8j",
+          "name": "Page",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "ref",
+              "id": "wd2ntc",
+              "ref": "ds:xBZUrc",
+              "name": "Mobile/Status Bar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "za5o7n",
+              "name": "Form",
+              "layout": "vertical",
+              "gap": 22,
+              "width": "fill_container",
+              "padding": [
+                20,
+                20
+              ],
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "pxZ6D6",
+                  "ref": "ds:J95vY0",
+                  "name": "Logo/Lockup"
+                },
+                {
+                  "type": "frame",
+                  "id": "LtVDpj",
+                  "name": "Heading",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "FhUtum",
+                      "ref": "ds:RoXXJv",
+                      "name": "Text/H2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Verify your email"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "7wtvJp",
+                      "ref": "ds:XDvNAD",
+                      "name": "Text/Paragraph",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Check your inbox or request a new verification link."
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "PJXzXv",
+                  "ref": "ds:j04F4",
+                  "name": "Input / Email address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:l4agQ": {
+                      "content": "Email address"
+                    },
+                    "ds:iI0CE": {
+                      "content": "maya@example.com"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "TuJAfh",
+                  "ref": "ds:q9t60e",
+                  "name": "Button / Resend verification email",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:KOjgg": {
+                      "content": "Resend verification email"
+                    },
+                    "ds:X8D8m": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "Eo254Z",
+                  "ref": "ds:LSzB6i",
+                  "name": "Text/Link",
+                  "content": "Back to login"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Eaaofj",
+          "name": "Assistant Dock",
+          "gap": 12,
+          "alignItems": "center",
+          "width": "fill_container",
+          "justifyContent": "end",
+          "padding": [
+            0,
+            16,
+            20,
+            0
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "f9UjMV",
+              "ref": "ds:L46Qb3",
+              "name": "Assistant/FAB"
+            }
+          ]
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "/verify-email?email= — Confirm the account email or resend the link."
+    }
+  ]
+}

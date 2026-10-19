@@ -5,11 +5,17 @@ import { useBrowseCategories } from '@/entities/Discovery'
 import { useUsers } from '@/entities/User'
 import { useSearch } from '@/features/Search/api/client'
 import { searchTypes } from '@/features/Search/model/search.constants'
+import type { MediaCardItem } from '@/features/Search/model/types'
 import { BrowseCategoryGrid } from '@/features/Search/ui/BrowseCategoryGrid'
 import { CategoryPage } from '@/features/Search/ui/CategoryPage'
 import { SearchQueryState } from '@/features/Search/ui/SearchQueryState'
 
-export const SearchPage = () => {
+type SearchPageProps = {
+  /** Starts a playable card (album, playlist, track) in place. */
+  onPlayItem?: (item: MediaCardItem) => void
+}
+
+export const SearchPage = ({ onPlayItem }: SearchPageProps) => {
   const searchParams = useSearchParams()
   const query = searchParams.get('q')?.trim() ?? ''
   const categoryTitle = searchParams.get('category')?.trim() ?? ''
@@ -40,20 +46,27 @@ export const SearchPage = () => {
   if (category && !hasQuery) {
     return (
       <div className="h-full overflow-y-auto custom-scrollbar">
-        <CategoryPage category={category} />
+        <CategoryPage category={category} onPlayItem={onPlayItem} />
       </div>
     )
   }
 
   return (
     <div className="h-full overflow-y-auto custom-scrollbar">
-      <div className="px-4 py-6 sm:px-6 sm:py-10 xl:py-14">
-        <div className="mx-auto w-full max-w-300">
+      <div className="px-4 pt-2 pb-3 md:px-8 md:py-6">
+        <div className="flex w-full flex-col">
           {hasQuery ? (
             <SearchQueryState
-              data={{ albums, artists, playlists, tracks }}
+              data={{
+                albums,
+                artists,
+                playlists,
+                topResult: data?.topResult ?? null,
+                tracks,
+              }}
               hasError={searchQuery.isError || usersQuery.isError}
               isFetching={searchQuery.isFetching || usersQuery.isFetching}
+              onPlayItem={onPlayItem}
               onRetry={() => {
                 void Promise.all([searchQuery.refetch(), usersQuery.refetch()])
               }}

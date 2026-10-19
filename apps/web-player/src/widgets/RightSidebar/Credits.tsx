@@ -17,7 +17,7 @@ export const Credits = () => {
   if (!currentTrack?.artistId || !artist) return null
 
   return (
-    <div className="mt-4 overflow-hidden rounded-lg bg-surface p-0">
+    <div className="overflow-hidden rounded-lg bg-surface p-0">
       <div className="px-4 pb-1 pt-3">
         <Typography as="h6" className="text-text" size="heading6">
           Credits

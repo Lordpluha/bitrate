@@ -2,6 +2,8 @@
 
 import type { ArtistEntity } from '@entities/Artist'
 import type { TrackEntity } from '@entities/Track'
+import { StateMessage } from '@shared/ui'
+import { MicVocal, TriangleAlert } from 'lucide-react'
 import type { ArtistContent } from '../model/artist.types'
 import { ArtistAbout } from './ArtistAbout'
 import { ArtistActionBar } from './ArtistActionBar'
@@ -13,10 +15,10 @@ import { RelatedArtistsSection } from './RelatedArtistsSection'
 type ArtistCatalogueProps = {
   artist: ArtistEntity
   content: ArtistContent
-  heroImageUrl: string
   isContextActive: boolean
   isPlaying: boolean
   likedTrackIds: Set<string>
+  onPlayPopular: (track: TrackEntity) => void
   onPlayTrack: (track: TrackEntity, index: number) => void
   onShuffle: () => void
   onTogglePlay: () => void
@@ -26,23 +28,20 @@ type ArtistCatalogueProps = {
 export const ArtistCatalogue = ({
   artist,
   content,
-  heroImageUrl,
   isContextActive,
   isPlaying,
   likedTrackIds,
+  onPlayPopular,
   onPlayTrack,
   onShuffle,
   onTogglePlay,
   statsLabel,
 }: ArtistCatalogueProps) => {
-  const firstTrack = content.tracks[0]
-
   return (
     <>
       <ArtistActionBar
         artistId={artist.id}
         artistName={artist.username}
-        featuredCover={firstTrack?.cover}
         hasTracks={content.tracks.length > 0}
         isPlaying={isPlaying}
         onShuffle={onShuffle}
@@ -50,37 +49,42 @@ export const ArtistCatalogue = ({
       />
 
       {content.tracks.length === 0 && content.albums.length === 0 ? (
-        <p
-          className="px-5 py-10 text-text-subdued sm:px-6 lg:px-8"
-          role="status"
-        >
-          {content.isPending
-            ? 'Loading catalogue…'
-            : content.isError
-              ? 'The catalogue could not be loaded right now.'
-              : 'This artist has no published music yet.'}
-        </p>
+        content.isPending ? (
+          <p className="py-10 text-muted-foreground" role="status">
+            Loading catalogue…
+          </p>
+        ) : content.isError ? (
+          <StateMessage
+            className="min-h-80"
+            description="The catalogue could not be loaded right now."
+            icon={TriangleAlert}
+            title="Music is unavailable"
+            tone="error"
+          />
+        ) : (
+          <StateMessage
+            className="min-h-80"
+            description="Follow them to hear about their first release."
+            icon={MicVocal}
+            title="This artist has no published music yet."
+          />
+        )
       ) : (
         <>
-          <ArtistPopularTracks
-            isPlaybackContextActive={isContextActive}
-            likedTrackIds={likedTrackIds}
-            onPlayTrack={onPlayTrack}
-            tracks={content.tracks}
-          />
-          <ArtistDiscography
-            albums={content.albums}
-            onPlayTrack={onPlayTrack}
-            tracks={content.tracks}
-          />
-          <ArtistFeaturing
-            artistImageUrl={heroImageUrl}
-            artistName={artist.username}
-            onPlayAll={onTogglePlay}
-            onPlayTrack={onPlayTrack}
-            onShuffle={onShuffle}
-            tracks={content.tracks}
-          />
+          <div className="grid gap-7 xl:grid-cols-[minmax(0,1fr)_440px] xl:items-start xl:gap-8">
+            <ArtistPopularTracks
+              isPlaybackContextActive={isContextActive}
+              likedTrackIds={likedTrackIds}
+              onPlayTrack={onPlayPopular}
+              tracks={content.popularTracks}
+            />
+            <ArtistDiscography
+              albums={content.albums}
+              onPlayTrack={onPlayTrack}
+              tracks={content.tracks}
+            />
+          </div>
+          <ArtistFeaturing artistId={artist.id} artistName={artist.username} />
         </>
       )}
 

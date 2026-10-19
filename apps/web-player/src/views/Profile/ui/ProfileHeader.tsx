@@ -1,45 +1,57 @@
-import { UserRound } from 'lucide-react'
-import Image from 'next/image'
+import { MediaImage } from '@shared/ui/MediaImage'
+import type { ReactNode } from 'react'
 
 type ProfileHeaderProps = {
+  /** Edit profile and settings for yourself, Follow for someone else. */
+  action?: ReactNode
   avatarUrl: string | null
   description?: string | null
   username: string
 }
 
+/**
+ * The design's Profile Header: a 180px round avatar beside the label, a 72px name, the bio and
+ * the actions. Phones show an 88px avatar beside the name with the actions underneath.
+ */
 export const ProfileHeader = ({
+  action,
   avatarUrl,
   description,
   username,
 }: ProfileHeaderProps) => (
-  <section className="bg-gradient-to-b from-surface-hover via-surface to-background-tinted px-4 pb-7 pt-8 sm:px-6 sm:pt-10">
-    <div className="flex min-w-0 items-end gap-6 max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-4">
-      <div className="flex h-58 w-58 shrink-0 items-center justify-center overflow-hidden rounded-full bg-surface shadow-2xl max-[900px]:h-36 max-[900px]:w-36 max-[640px]:h-28 max-[640px]:w-28">
-        {avatarUrl ? (
-          <Image
-            alt={username}
-            className="h-full w-full object-cover"
-            height={232}
-            src={avatarUrl}
-            unoptimized
-            width={232}
-          />
-        ) : (
-          <UserRound className="text-text-subdued" size={86} />
-        )}
-      </div>
-
-      <div className="min-w-0 pb-3 max-[640px]:w-full">
-        <p className="text-sm text-text">Profile</p>
-        <h1 className="break-words text-7xl font-black tracking-normal text-text max-[1100px]:text-5xl max-[640px]:text-4xl">
+  <section className="flex min-w-0 flex-col gap-3.5 md:py-7">
+    <div className="flex min-w-0 items-center gap-4 md:items-end md:gap-7">
+      <MediaImage
+        alt=""
+        className="size-22 shrink-0 rounded-full object-cover shadow-2xl md:size-45"
+        fallback="user"
+        height={180}
+        priority
+        src={avatarUrl}
+        unoptimized
+        width={180}
+      />
+      <div className="flex min-w-0 flex-col gap-1 md:gap-2">
+        <p className="text-xs text-muted-foreground md:text-[13px] md:font-semibold md:text-foreground">
+          Profile
+        </p>
+        <h1 className="truncate text-2xl leading-[1.25] font-semibold md:text-[72px] md:leading-none md:font-bold">
           {username}
         </h1>
-        {description && (
-          <p className="mt-5 max-w-150 text-sm text-text-subdued">
+        {description ? (
+          <p className="line-clamp-2 max-w-150 text-[13px] text-muted-foreground">
             {description}
           </p>
-        )}
+        ) : null}
+        {action ? (
+          <div className="hidden items-center gap-2.5 pt-1 md:flex">
+            {action}
+          </div>
+        ) : null}
       </div>
     </div>
+    {action ? (
+      <div className="flex items-center gap-2.5 md:hidden">{action}</div>
+    ) : null}
   </section>
 )

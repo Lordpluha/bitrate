@@ -59,6 +59,9 @@ export const DATA_OWNERS = {
   userFollowedArtist: ['artists'],
   userLikedArtist: ['artists'],
   userFollow: ['users'],
+  /** Requests and friendships change only through the friends service. */
+  friendRequest: ['friends'],
+  friendship: ['friends'],
 
   /** The genre catalogue is curated by staff only; no public module edits it. */
   genre: ['admin/genres'],
@@ -69,7 +72,8 @@ export const DATA_OWNERS = {
 
   listeningHistory: ['history'],
   searchHistory: ['search'],
-  notification: ['me'],
+  /** `notifications` creates rows from queued domain events; `me` marks them read. */
+  notification: ['me', 'notifications'],
   playerDevice: ['me'],
   playerQueueItem: ['me'],
   playerState: ['me'],

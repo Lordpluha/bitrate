@@ -37,7 +37,7 @@ export class NcsImportSeeder {
         backgroundImage: faker.image.url({ width: 1920, height: 1080 }),
         emailVerifiedAt: new Date(),
         verified: faker.datatype.boolean({ probability: 0.35 }),
-        monthlyListeners: faker.number.int({ min: 10_000, max: 2_000_000 }),
+        /* monthlyListeners stays 0: the listening-stats job derives it from ListeningHistory */
       },
     })
   }

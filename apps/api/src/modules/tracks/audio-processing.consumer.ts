@@ -10,6 +10,7 @@ import {
 } from '@infra/queues/audio-processing.queue'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
+import { NotificationsProducer } from '@modules/notifications'
 import { InjectQueue, OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq'
 import { Inject, Logger, type OnModuleInit } from '@nestjs/common'
 import * as Sentry from '@sentry/nestjs'
@@ -45,6 +46,8 @@ export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit 
     private readonly deadLetterQueue: Queue<ConvertAudioJob | UnrecognisedAudioJob>,
     @Inject(ProcessingAttemptRecorder)
     private readonly recorder: ProcessingAttemptRecorder,
+    @Inject(NotificationsProducer)
+    private readonly notifications: NotificationsProducer,
   ) {
     super()
   }
@@ -172,6 +175,16 @@ export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit 
       this.logger.log(
         `Audio conversion + storage upload completed for track ${trackId}, job ${job.id}`,
       )
+      /* a first upload is a new release for the artist's followers; best effort, never fails the job */
+      if (trigger === 'UPLOAD') {
+        try {
+          await this.notifications.trackPublished({ trackId })
+        } catch (error) {
+          this.logger.warn(
+            `Could not queue the release notification for track ${trackId}: ${errorMessageOf(error)}`,
+          )
+        }
+      }
     } catch (error) {
       if (error instanceof StaleAudioJobError) {
         await this.storage.deletePrefix(getAudioGenerationRoot(trackId, sourceFileName))

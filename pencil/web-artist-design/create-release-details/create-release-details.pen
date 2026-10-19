@@ -1,0 +1,4618 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../../web-player-design/design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "GdJtS7",
+      "name": "Artist / Create release / 3 Details / Desktop / Dark",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "Bra5Lg",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6bAVSI": {
+              "type": "ref",
+              "id": "pmP74t",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "disc-3"
+                },
+                "ds:GZQzF3": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Music / New release"
+            },
+            "ds:YLdi4o": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "sUg9BN",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "SNo4zX",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Create a release"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Add the public details listeners will see."
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "UgUrWE",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "izwAQC",
+                          "ref": "ds:DTwJb",
+                          "name": "Button / Save & exit",
+                          "descendants": {
+                            "ds:GyGLK": {
+                              "content": "Save & exit"
+                            },
+                            "ds:uRXDu": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "CPwmrp",
+                  "name": "Stepper",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "WRaJNs",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "content": "Audio"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "z4UrJQ",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "VaZrEm",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "content": "Artwork"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "6TdvLe",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "9usKes",
+                      "ref": "ds:CQEGOU",
+                      "name": "Stepper/Step Current",
+                      "descendants": {
+                        "ds:FZP3Tq": {
+                          "content": "Details"
+                        },
+                        "ds:CV0khF": {
+                          "content": "3"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "RPoVvZ",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Z8pHhj",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "content": "Contributors"
+                        },
+                        "ds:1dymUo": {
+                          "content": "4"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "BYVt2z",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "k295zW",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "content": "Review"
+                        },
+                        "ds:1dymUo": {
+                          "content": "5"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "25hjf7",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "V64t2w",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "A6fh8R",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "y2wcjC",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "mv7gnm",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "bjMNzf",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Release and track details"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "jJnRoh",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Required fields are marked with an asterisk."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "cUE66e",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Release title *",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Release title *"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Afterglow"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "H3JmA6",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Track title *",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Track title *"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Night Signal"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "fa2Enn",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Version",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Version"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Optional · e.g. Original Mix"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "YCPPkh",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Explicit content *"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "c7b3Um",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "U6G3mB",
+                                      "ref": "ds:8Ffcuk",
+                                      "name": "Option Card/Selected",
+                                      "descendants": {
+                                        "ds:T5zLer": {
+                                          "content": "Clean"
+                                        },
+                                        "ds:nIHs9M": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "Qp8oJj",
+                                      "ref": "ds:8QxyNQ",
+                                      "name": "Option Card",
+                                      "descendants": {
+                                        "ds:xHFeRf": {
+                                          "content": "Explicit"
+                                        },
+                                        "ds:VvnZDS": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "KMsgu7",
+                                  "ref": "ds:Kfq8t",
+                                  "name": "Select / Primary genre *",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:PLkpD": {
+                                      "content": "Primary genre *"
+                                    },
+                                    "ds:USlYG": {
+                                      "content": "Electronic"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "FYUfcG",
+                                  "ref": "ds:Kfq8t",
+                                  "name": "Select / Secondary genre",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:PLkpD": {
+                                      "content": "Secondary genre"
+                                    },
+                                    "ds:USlYG": {
+                                      "content": "Ambient"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "DTxGWy",
+                                  "ref": "ds:ye2ZlZ",
+                                  "name": "Checklist Row/Done",
+                                  "descendants": {
+                                    "ds:BWmC54": {
+                                      "content": "Required details complete"
+                                    },
+                                    "ds:ui1TFi": {
+                                      "content": "Optional fields can remain empty and will not block the next step."
+                                    },
+                                    "ds:4QtRy2": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "CRvYXf",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 340,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "fTzsXd",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "CZr5zU",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "BZLsEQ",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "YGTUZf",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Draft summary"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "MMGKHU",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Release type"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "9bSH2C",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "EydXxd",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Single"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "SxQfjj",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Tracks"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "DaNPyG",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "r6RbbE",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "1"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "SCLr54",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Details"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "nZ65dX",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "gfpn5x",
+                                          "ref": "ds:xtDM73",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:HSv7ty": {
+                                              "content": "Ready"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "5xdrim",
+                                  "ref": "ds:RlxQk",
+                                  "name": "Divider",
+                                  "width": "fill_container"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "5BSUvG",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Save draft",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Save draft"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "S47b66",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Continue to contributors",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Continue to contributors"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "nbNvtq",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Required details are complete."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "uGSTjV",
+                  "ref": "ds:PiqhAO",
+                  "name": "Text/Caption",
+                  "content": "Demo draft · Static design"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/music/new (step 3) — Public titles, version, explicit status and genres."
+    },
+    {
+      "type": "frame",
+      "id": "5hcZnz",
+      "name": "Artist / Create release / 3 Details / Desktop / Light",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "n8cKvs",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6bAVSI": {
+              "type": "ref",
+              "id": "cmpMzw",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "disc-3"
+                },
+                "ds:GZQzF3": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Music / New release"
+            },
+            "ds:YLdi4o": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "SewLXR",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "jCfxxT",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Create a release"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Add the public details listeners will see."
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "f7ZXWU",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "L4Wvax",
+                          "ref": "ds:DTwJb",
+                          "name": "Button / Save & exit",
+                          "descendants": {
+                            "ds:GyGLK": {
+                              "content": "Save & exit"
+                            },
+                            "ds:uRXDu": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "5WF6vf",
+                  "name": "Stepper",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "tPk8Ug",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "content": "Audio"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "uu2F8J",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "KtjjSN",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "content": "Artwork"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Jj9ouK",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "v6taVV",
+                      "ref": "ds:CQEGOU",
+                      "name": "Stepper/Step Current",
+                      "descendants": {
+                        "ds:FZP3Tq": {
+                          "content": "Details"
+                        },
+                        "ds:CV0khF": {
+                          "content": "3"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "TcnJi8",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "zdMJw9",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "content": "Contributors"
+                        },
+                        "ds:1dymUo": {
+                          "content": "4"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "yua7T8",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "AudxG2",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "content": "Review"
+                        },
+                        "ds:1dymUo": {
+                          "content": "5"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "584Lx9",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "tfq7y9",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "NhHBJ9",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "o7UDSG",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "sEVWaG",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "wtEapa",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Release and track details"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ftaVST",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Required fields are marked with an asterisk."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "e2hTGD",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Release title *",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Release title *"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Afterglow"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Gmkt6M",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Track title *",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Track title *"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Night Signal"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "EGTDy4",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Version",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Version"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Optional · e.g. Original Mix"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "d3MADt",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Explicit content *"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "aWgREL",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "yvZJkH",
+                                      "ref": "ds:8Ffcuk",
+                                      "name": "Option Card/Selected",
+                                      "descendants": {
+                                        "ds:T5zLer": {
+                                          "content": "Clean"
+                                        },
+                                        "ds:nIHs9M": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "FrkVgo",
+                                      "ref": "ds:8QxyNQ",
+                                      "name": "Option Card",
+                                      "descendants": {
+                                        "ds:xHFeRf": {
+                                          "content": "Explicit"
+                                        },
+                                        "ds:VvnZDS": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "v3YPHX",
+                                  "ref": "ds:Kfq8t",
+                                  "name": "Select / Primary genre *",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:PLkpD": {
+                                      "content": "Primary genre *"
+                                    },
+                                    "ds:USlYG": {
+                                      "content": "Electronic"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "WhKHpd",
+                                  "ref": "ds:Kfq8t",
+                                  "name": "Select / Secondary genre",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:PLkpD": {
+                                      "content": "Secondary genre"
+                                    },
+                                    "ds:USlYG": {
+                                      "content": "Ambient"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "5LMZxo",
+                                  "ref": "ds:ye2ZlZ",
+                                  "name": "Checklist Row/Done",
+                                  "descendants": {
+                                    "ds:BWmC54": {
+                                      "content": "Required details complete"
+                                    },
+                                    "ds:ui1TFi": {
+                                      "content": "Optional fields can remain empty and will not block the next step."
+                                    },
+                                    "ds:4QtRy2": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "AUPr5N",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 340,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "au7dF7",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "uCtAHq",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "XMQvXW",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "4e76TD",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Draft summary"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Wab4Qz",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Release type"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "FUQT4q",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "mC7wiC",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Single"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "7dRN2Q",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Tracks"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "dP86ak",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "pAZpz3",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "1"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "NcRSCL",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Details"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "5bAWw6",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "ahToZ7",
+                                          "ref": "ds:xtDM73",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:HSv7ty": {
+                                              "content": "Ready"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "siFVbY",
+                                  "ref": "ds:RlxQk",
+                                  "name": "Divider",
+                                  "width": "fill_container"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "EQhjcy",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Save draft",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Save draft"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "GryALt",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Continue to contributors",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Continue to contributors"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "k4Gtas",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Required details are complete."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "wXcizX",
+                  "ref": "ds:PiqhAO",
+                  "name": "Text/Caption",
+                  "content": "Demo draft · Static design"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "designed — /dashboard/music/new (step 3) — Public titles, version, explicit status and genres."
+    },
+    {
+      "type": "frame",
+      "id": "bua2hr",
+      "name": "Artist / Create release / 3 Details / Desktop / Dim",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "hq7iEQ",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6bAVSI": {
+              "type": "ref",
+              "id": "gaMC4J",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "disc-3"
+                },
+                "ds:GZQzF3": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Music / New release"
+            },
+            "ds:YLdi4o": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "zTidrJ",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "wwztST",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Create a release"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Add the public details listeners will see."
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "ZyHgyq",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "vRaepL",
+                          "ref": "ds:DTwJb",
+                          "name": "Button / Save & exit",
+                          "descendants": {
+                            "ds:GyGLK": {
+                              "content": "Save & exit"
+                            },
+                            "ds:uRXDu": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "aD5eQQ",
+                  "name": "Stepper",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Ut7Yge",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "content": "Audio"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Yp2x7z",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "NGCPc6",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "content": "Artwork"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "VchhT6",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "AdSVDK",
+                      "ref": "ds:CQEGOU",
+                      "name": "Stepper/Step Current",
+                      "descendants": {
+                        "ds:FZP3Tq": {
+                          "content": "Details"
+                        },
+                        "ds:CV0khF": {
+                          "content": "3"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "wSQR4V",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "MzcsBX",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "content": "Contributors"
+                        },
+                        "ds:1dymUo": {
+                          "content": "4"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "hhwz3R",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "FN3pgY",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "content": "Review"
+                        },
+                        "ds:1dymUo": {
+                          "content": "5"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "SpRpT2",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "mDqXWF",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "kEe9Qh",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "7mfoJw",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "aooDGV",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "VqdiYX",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Release and track details"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "J4eCKd",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Required fields are marked with an asterisk."
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "CpVyQB",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Release title *",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Release title *"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Afterglow"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "HaWoYg",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Track title *",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Track title *"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Night Signal"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "eSXNMY",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Version",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Version"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Optional · e.g. Original Mix"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "gJu7QW",
+                                  "ref": "ds:SOt7Oe",
+                                  "name": "Text/Body Strong",
+                                  "content": "Explicit content *"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "upUMxf",
+                                  "name": "Row",
+                                  "gap": 10,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "6mnAyQ",
+                                      "ref": "ds:8Ffcuk",
+                                      "name": "Option Card/Selected",
+                                      "descendants": {
+                                        "ds:T5zLer": {
+                                          "content": "Clean"
+                                        },
+                                        "ds:nIHs9M": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "type": "ref",
+                                      "id": "59o3cF",
+                                      "ref": "ds:8QxyNQ",
+                                      "name": "Option Card",
+                                      "descendants": {
+                                        "ds:xHFeRf": {
+                                          "content": "Explicit"
+                                        },
+                                        "ds:VvnZDS": {
+                                          "enabled": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "oKQVVP",
+                                  "ref": "ds:Kfq8t",
+                                  "name": "Select / Primary genre *",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:PLkpD": {
+                                      "content": "Primary genre *"
+                                    },
+                                    "ds:USlYG": {
+                                      "content": "Electronic"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Pv5E87",
+                                  "ref": "ds:Kfq8t",
+                                  "name": "Select / Secondary genre",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:PLkpD": {
+                                      "content": "Secondary genre"
+                                    },
+                                    "ds:USlYG": {
+                                      "content": "Ambient"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "H8gsJ9",
+                                  "ref": "ds:ye2ZlZ",
+                                  "name": "Checklist Row/Done",
+                                  "descendants": {
+                                    "ds:BWmC54": {
+                                      "content": "Required details complete"
+                                    },
+                                    "ds:ui1TFi": {
+                                      "content": "Optional fields can remain empty and will not block the next step."
+                                    },
+                                    "ds:4QtRy2": {
+                                      "enabled": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "64TVQR",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 340,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Ae9Nwv",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "kuHQBc",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "4cWhyR",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "w6mBwF",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Draft summary"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ozXjEX",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Release type"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "GPpmnJ",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "fG9hFY",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Single"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "SEMkPB",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Tracks"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "esCWKx",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "vcdVL9",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "1"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "CLTSDR",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Details"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "Q62WxW",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "Kzx9Fp",
+                                          "ref": "ds:xtDM73",
+                                          "name": "Status/Success",
+                                          "descendants": {
+                                            "ds:HSv7ty": {
+                                              "content": "Ready"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "n6SbJU",
+                                  "ref": "ds:RlxQk",
+                                  "name": "Divider",
+                                  "width": "fill_container"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "Hgaevr",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Save draft",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Save draft"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "3hbBc8",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Continue to contributors",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Continue to contributors"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ustuTz",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Required details are complete."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "fFxUqA",
+                  "ref": "ds:PiqhAO",
+                  "name": "Text/Caption",
+                  "content": "Demo draft · Static design"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "designed — /dashboard/music/new (step 3) — Public titles, version, explicit status and genres."
+    },
+    {
+      "type": "frame",
+      "id": "m9xycn",
+      "name": "Artist / Create release / 3 Details / Mobile / Dark",
+      "width": 390,
+      "height": 1800,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "6vshYV",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1800,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "6cDiXS",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "BVFSY8",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Create a release"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Add the public details listeners will see."
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "EJmnyj",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "aaijU4",
+                  "name": "Stepper",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Ci2U37",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qJsrVf",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "wsaAT3",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "dkGMCd",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "6HvykG",
+                      "ref": "ds:CQEGOU",
+                      "name": "Stepper/Step Current",
+                      "descendants": {
+                        "ds:FZP3Tq": {
+                          "content": "Details"
+                        },
+                        "ds:CV0khF": {
+                          "content": "3"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "8tXbpr",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "oishgs",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "enabled": false
+                        },
+                        "ds:1dymUo": {
+                          "content": "4"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5M45P7",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "4Kz86B",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "enabled": false
+                        },
+                        "ds:1dymUo": {
+                          "content": "5"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "tSGfVR",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "wAGoAi",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "HF7cdA",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "k2v95X",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Release and track details"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "KPn4f8",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "Required fields are marked with an asterisk."
+                        },
+                        {
+                          "type": "ref",
+                          "id": "2e5r4u",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Release title *",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Release title *"
+                            },
+                            "ds:iI0CE": {
+                              "content": "Afterglow"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Whrj2k",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Track title *",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Track title *"
+                            },
+                            "ds:iI0CE": {
+                              "content": "Night Signal"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "5ZG7pg",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Version",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Version"
+                            },
+                            "ds:iI0CE": {
+                              "content": "Optional · e.g. Original Mix"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "sv3FDe",
+                          "ref": "ds:SOt7Oe",
+                          "name": "Text/Body Strong",
+                          "content": "Explicit content *"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "ME8o3C",
+                          "name": "Row",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "ZcFBKh",
+                              "ref": "ds:8Ffcuk",
+                              "name": "Option Card/Selected",
+                              "descendants": {
+                                "ds:T5zLer": {
+                                  "content": "Clean"
+                                },
+                                "ds:nIHs9M": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "svdL6k",
+                              "ref": "ds:8QxyNQ",
+                              "name": "Option Card",
+                              "descendants": {
+                                "ds:xHFeRf": {
+                                  "content": "Explicit"
+                                },
+                                "ds:VvnZDS": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "U8LfVn",
+                          "ref": "ds:Kfq8t",
+                          "name": "Select / Primary genre *",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:PLkpD": {
+                              "content": "Primary genre *"
+                            },
+                            "ds:USlYG": {
+                              "content": "Electronic"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "fcwgQT",
+                          "ref": "ds:Kfq8t",
+                          "name": "Select / Secondary genre",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:PLkpD": {
+                              "content": "Secondary genre"
+                            },
+                            "ds:USlYG": {
+                              "content": "Ambient"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "6xrJXr",
+                          "ref": "ds:ye2ZlZ",
+                          "name": "Checklist Row/Done",
+                          "descendants": {
+                            "ds:BWmC54": {
+                              "content": "Required details complete"
+                            },
+                            "ds:ui1TFi": {
+                              "content": "Optional fields can remain empty and will not block the next step."
+                            },
+                            "ds:4QtRy2": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "2SHYYM",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "5wk4Gd",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "JXxSBG",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "Dn8D4W",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Draft summary"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Q6yvZN",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Release type"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "XSmEuN",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "6W6pKt",
+                                  "ref": "ds:LUaCU2",
+                                  "name": "Status/Neutral",
+                                  "descendants": {
+                                    "ds:jPj56V": {
+                                      "content": "Single"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ZGaqBY",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Tracks"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "FcUHi8",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "cwDB39",
+                                  "ref": "ds:LUaCU2",
+                                  "name": "Status/Neutral",
+                                  "descendants": {
+                                    "ds:jPj56V": {
+                                      "content": "1"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Bf4diX",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Details"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "dN8z9m",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "tDk9K9",
+                                  "ref": "ds:xtDM73",
+                                  "name": "Status/Success",
+                                  "descendants": {
+                                    "ds:HSv7ty": {
+                                      "content": "Ready"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "CDmkhQ",
+                          "ref": "ds:RlxQk",
+                          "name": "Divider",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Gyq5Mp",
+                          "ref": "ds:G5tJp",
+                          "name": "Button / Save draft",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:d2zCI": {
+                              "content": "Save draft"
+                            },
+                            "ds:zDiHG": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ZnaHb9",
+                          "ref": "ds:exjwf",
+                          "name": "Button / Continue to contributors",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:E23bq6": {
+                              "content": "Continue to contributors"
+                            },
+                            "ds:o7NXW": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "fjGoKc",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "Required details are complete."
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "EkFn4P",
+                  "ref": "ds:PiqhAO",
+                  "name": "Text/Caption",
+                  "content": "Demo draft · Static design"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/music/new (step 3) — Public titles, version, explicit status and genres."
+    },
+    {
+      "type": "frame",
+      "id": "mQybwt",
+      "name": "Artist / Create release / 3 Details / Required error / Desktop",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "7sbaf6",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6bAVSI": {
+              "type": "ref",
+              "id": "Gqi9SE",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "disc-3"
+                },
+                "ds:GZQzF3": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Music / New release"
+            },
+            "ds:YLdi4o": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "TZ3opF",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "vvpJZk",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Create a release"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Add the public details listeners will see."
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "2TsBNg",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "sDQ9yM",
+                          "ref": "ds:DTwJb",
+                          "name": "Button / Save & exit",
+                          "descendants": {
+                            "ds:GyGLK": {
+                              "content": "Save & exit"
+                            },
+                            "ds:uRXDu": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "Fy7n3m",
+                  "name": "Stepper",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "B499ji",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "content": "Audio"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "B6xRLf",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "fJTe6M",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "content": "Artwork"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "a8JBGd",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pvaP3Z",
+                      "ref": "ds:CQEGOU",
+                      "name": "Stepper/Step Current",
+                      "descendants": {
+                        "ds:FZP3Tq": {
+                          "content": "Details"
+                        },
+                        "ds:CV0khF": {
+                          "content": "3"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "kbsGyf",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "6JPUXg",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "content": "Contributors"
+                        },
+                        "ds:1dymUo": {
+                          "content": "4"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "fMfyZ2",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "cLDEna",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "content": "Review"
+                        },
+                        "ds:1dymUo": {
+                          "content": "5"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Taxdix",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ppd2E4",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "SNeWKx",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "kbGhno",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "b9Vm2d",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "kpj7Fu",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Release and track details"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "jnSrcj",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Release title *",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Release title *"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Enter release title"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "vP83qg",
+                                  "ref": "ds:IqJK6E",
+                                  "name": "Form/Field Error",
+                                  "descendants": {
+                                    "ds:brmWkY": {
+                                      "content": "Enter a release title."
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "GyBc5p",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Track title *",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Track title *"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Night Signal"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "3JkpMP",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 340,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "U9JoSQ",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "dCrhw2",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "uxioRe",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "9FYdhA",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Draft summary"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "GzCWgR",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Details"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "vsZuVc",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "2rPLAL",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Incomplete"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "3W8Sg7",
+                                  "ref": "ds:RlxQk",
+                                  "name": "Divider",
+                                  "width": "fill_container"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "8KPnzJ",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Save draft",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Save draft"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "yzUP2f",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Continue to contributors",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Continue to contributors"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "DeY2VG",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "1 required field missing · Enter a release title to continue."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "LY8q8N",
+                  "ref": "ds:PiqhAO",
+                  "name": "Text/Caption",
+                  "content": "Demo draft · Static design"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/music/new (step 3) — Public titles, version, explicit status and genres."
+    },
+    {
+      "type": "frame",
+      "id": "a3s3mT",
+      "name": "Artist / Create release / 3 Details / Required error / Mobile",
+      "width": 390,
+      "height": 1100,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "jjAGy6",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1100,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "7wCmr2",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "nGWXyQ",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Create a release"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Add the public details listeners will see."
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "dohoKt",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "KEX7FT",
+                  "name": "Stepper",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "5fRKDz",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5oJMbg",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "VpPkw6",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Nmth3U",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "9Go6yF",
+                      "ref": "ds:CQEGOU",
+                      "name": "Stepper/Step Current",
+                      "descendants": {
+                        "ds:FZP3Tq": {
+                          "content": "Details"
+                        },
+                        "ds:CV0khF": {
+                          "content": "3"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Q2dnXX",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "H5agkH",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "enabled": false
+                        },
+                        "ds:1dymUo": {
+                          "content": "4"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ZdDZCm",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "SC9Qcm",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "enabled": false
+                        },
+                        "ds:1dymUo": {
+                          "content": "5"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "Q3NfpY",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "CfmGWZ",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "HAqvUx",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "T4etMM",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Release and track details"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "55Hekp",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Release title *",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Release title *"
+                            },
+                            "ds:iI0CE": {
+                              "content": "Enter release title"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "vxHB9h",
+                          "ref": "ds:IqJK6E",
+                          "name": "Form/Field Error",
+                          "descendants": {
+                            "ds:brmWkY": {
+                              "content": "Enter a release title."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "kbrWZH",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Track title *",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Track title *"
+                            },
+                            "ds:iI0CE": {
+                              "content": "Night Signal"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "ppRiu8",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "paViYM",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Lkmcgg",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "ujeJNT",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Draft summary"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "gWwJZF",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Details"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "DNuGDX",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "NAkUc6",
+                                  "ref": "ds:LUaCU2",
+                                  "name": "Status/Neutral",
+                                  "descendants": {
+                                    "ds:jPj56V": {
+                                      "content": "Incomplete"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "rMVMy5",
+                          "ref": "ds:RlxQk",
+                          "name": "Divider",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "CoJRUu",
+                          "ref": "ds:G5tJp",
+                          "name": "Button / Save draft",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:d2zCI": {
+                              "content": "Save draft"
+                            },
+                            "ds:zDiHG": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "hfxjpN",
+                          "ref": "ds:exjwf",
+                          "name": "Button / Continue to contributors",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:E23bq6": {
+                              "content": "Continue to contributors"
+                            },
+                            "ds:o7NXW": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "qQRY9w",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "1 required field missing · Enter a release title to continue."
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "sicuxw",
+                  "ref": "ds:PiqhAO",
+                  "name": "Text/Caption",
+                  "content": "Demo draft · Static design"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/music/new (step 3) — Public titles, version, explicit status and genres."
+    },
+    {
+      "type": "frame",
+      "id": "pwPLt7",
+      "name": "Artist / Create release / 3 Details / Saving / Desktop",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "s89E78",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6bAVSI": {
+              "type": "ref",
+              "id": "rhwgCX",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "disc-3"
+                },
+                "ds:GZQzF3": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Music / New release"
+            },
+            "ds:YLdi4o": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "ydxuat",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "ap2QMs",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Create a release"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Add the public details listeners will see."
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "T7Qe2J",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "2sGAfQ",
+                          "ref": "ds:DTwJb",
+                          "name": "Button / Save & exit",
+                          "descendants": {
+                            "ds:GyGLK": {
+                              "content": "Save & exit"
+                            },
+                            "ds:uRXDu": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "uybEaB",
+                  "name": "Stepper",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "64np5U",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "content": "Audio"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "CYq7zQ",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Qsfxyq",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "content": "Artwork"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "JQhUzf",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "oZb89b",
+                      "ref": "ds:CQEGOU",
+                      "name": "Stepper/Step Current",
+                      "descendants": {
+                        "ds:FZP3Tq": {
+                          "content": "Details"
+                        },
+                        "ds:CV0khF": {
+                          "content": "3"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5vdWjx",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "HNHA4U",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "content": "Contributors"
+                        },
+                        "ds:1dymUo": {
+                          "content": "4"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "F3Keku",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "iQbY6N",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "content": "Review"
+                        },
+                        "ds:1dymUo": {
+                          "content": "5"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "V66wCK",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "MUBTre",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "CzE6mF",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "KQgrsa",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "25HvSG",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "n8U6rQ",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Release and track details"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "2euK5U",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Release title *",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Release title *"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Afterglow"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "nDccHd",
+                                  "ref": "ds:C5Ih8u",
+                                  "name": "Text/Muted",
+                                  "content": "Saving…"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "HaPmdo",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 340,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ABe4kY",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "w2TDsu",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "CHvyix",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "mKsAWm",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Draft summary"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "nNV3SK",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Draft"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "HPxn3E",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "VTFAej",
+                                          "ref": "ds:LUaCU2",
+                                          "name": "Status/Neutral",
+                                          "descendants": {
+                                            "ds:jPj56V": {
+                                              "content": "Pending"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "ybFrTX",
+                                  "ref": "ds:RlxQk",
+                                  "name": "Divider",
+                                  "width": "fill_container"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "JLpERP",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Save draft",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Save draft"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "KaiULg",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Continue to contributors",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Continue to contributors"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "374vK4",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Saving…"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "bvWP8o",
+                  "ref": "ds:PiqhAO",
+                  "name": "Text/Caption",
+                  "content": "Demo draft · Static design"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/music/new (step 3) — Public titles, version, explicit status and genres."
+    },
+    {
+      "type": "frame",
+      "id": "4ZAMrC",
+      "name": "Artist / Create release / 3 Details / Saving / Mobile",
+      "width": 390,
+      "height": 1100,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "sSxWXJ",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1100,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "eogmVs",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "j7vZgC",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Create a release"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Add the public details listeners will see."
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "bmT75P",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "bUNFiR",
+                  "name": "Stepper",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "arCSET",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "VN4LpZ",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Bg4s4P",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "nWJ6sS",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "3g2Mop",
+                      "ref": "ds:CQEGOU",
+                      "name": "Stepper/Step Current",
+                      "descendants": {
+                        "ds:FZP3Tq": {
+                          "content": "Details"
+                        },
+                        "ds:CV0khF": {
+                          "content": "3"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "QT59Sh",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5ct4H2",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "enabled": false
+                        },
+                        "ds:1dymUo": {
+                          "content": "4"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "HsBXqt",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qJ5cnN",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "enabled": false
+                        },
+                        "ds:1dymUo": {
+                          "content": "5"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "NmQMnF",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "AUJqwU",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "trexXg",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "f9oMkX",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Release and track details"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "v5jdhw",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Release title *",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Release title *"
+                            },
+                            "ds:iI0CE": {
+                              "content": "Afterglow"
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "FQn2Gj",
+                          "ref": "ds:C5Ih8u",
+                          "name": "Text/Muted",
+                          "content": "Saving…"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "peMHks",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "Ac6hsF",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "4zDkm4",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "xCtqxc",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Draft summary"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "SJA83K",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Draft"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "qrPR82",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "RbwBPe",
+                                  "ref": "ds:LUaCU2",
+                                  "name": "Status/Neutral",
+                                  "descendants": {
+                                    "ds:jPj56V": {
+                                      "content": "Pending"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "cdFYB3",
+                          "ref": "ds:RlxQk",
+                          "name": "Divider",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "HJGEYt",
+                          "ref": "ds:G5tJp",
+                          "name": "Button / Save draft",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:d2zCI": {
+                              "content": "Save draft"
+                            },
+                            "ds:zDiHG": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "v4GK29",
+                          "ref": "ds:exjwf",
+                          "name": "Button / Continue to contributors",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:E23bq6": {
+                              "content": "Continue to contributors"
+                            },
+                            "ds:o7NXW": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "oNqvLp",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "Saving…"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "29qV8L",
+                  "ref": "ds:PiqhAO",
+                  "name": "Text/Caption",
+                  "content": "Demo draft · Static design"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/music/new (step 3) — Public titles, version, explicit status and genres."
+    },
+    {
+      "type": "frame",
+      "id": "VQzWER",
+      "name": "Artist / Create release / 3 Details / Save failed / Desktop",
+      "width": 1440,
+      "height": 1040,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "N8HbRA",
+          "ref": "ds:Rn6HB6",
+          "name": "Artist Shell/Desktop",
+          "width": 1440,
+          "height": 1040,
+          "descendants": {
+            "ds:6bAVSI": {
+              "type": "ref",
+              "id": "3Dmdqa",
+              "ref": "ds:9ZM5u5",
+              "name": "Nav / Music",
+              "descendants": {
+                "ds:D2aLpc": {
+                  "icon": "disc-3"
+                },
+                "ds:GZQzF3": {
+                  "content": "Music"
+                }
+              }
+            },
+            "ds:4RTEpp": {
+              "content": "Workspace / Music / New release"
+            },
+            "ds:YLdi4o": {
+              "enabled": false
+            },
+            "ds:ttgy7g": {
+              "type": "frame",
+              "id": "Jd6Ubw",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                28,
+                32
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "8pEWGM",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Create a release"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Add the public details listeners will see."
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "iVgf5g",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "28xKDt",
+                          "ref": "ds:DTwJb",
+                          "name": "Button / Save & exit",
+                          "descendants": {
+                            "ds:GyGLK": {
+                              "content": "Save & exit"
+                            },
+                            "ds:uRXDu": {
+                              "enabled": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "NoS4mA",
+                  "name": "Stepper",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "66cYne",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "content": "Audio"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "rSW8iX",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "GdyPJM",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "content": "Artwork"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "p7rPKJ",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jjbNSm",
+                      "ref": "ds:CQEGOU",
+                      "name": "Stepper/Step Current",
+                      "descendants": {
+                        "ds:FZP3Tq": {
+                          "content": "Details"
+                        },
+                        "ds:CV0khF": {
+                          "content": "3"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "TQZ6Rn",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "QRGPJi",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "content": "Contributors"
+                        },
+                        "ds:1dymUo": {
+                          "content": "4"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "iKaUE8",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jnsLL4",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "content": "Review"
+                        },
+                        "ds:1dymUo": {
+                          "content": "5"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "idtTwE",
+                  "name": "Columns",
+                  "gap": 24,
+                  "alignItems": "start",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ujqTGa",
+                      "name": "Main Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "Zn3p66",
+                          "ref": "ds:ogW5t",
+                          "name": "Alert / Draft could not be saved. Your changes are still here.",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:L7SHNm": {
+                              "content": "Draft could not be saved. Your changes are still here."
+                            },
+                            "ds:F9kE6W": {
+                              "content": "Check the connection and try again."
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ndn9BG",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "YZamwE",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "NDZqtf",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "6dTZnt",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Release and track details"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "sZQBdP",
+                                  "ref": "ds:j04F4",
+                                  "name": "Input / Release title *",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:l4agQ": {
+                                      "content": "Release title *"
+                                    },
+                                    "ds:iI0CE": {
+                                      "content": "Afterglow"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "VL2QER",
+                      "name": "Side Column",
+                      "layout": "vertical",
+                      "gap": 20,
+                      "width": 340,
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "ghHh4R",
+                          "ref": "ds:x4Fixv",
+                          "name": "Surface/Panel",
+                          "descendants": {
+                            "ds:xhr0E3": {
+                              "type": "frame",
+                              "id": "M2tRB4",
+                              "name": "Panel Content",
+                              "layout": "vertical",
+                              "gap": 14,
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "LkdvCK",
+                                  "name": "Row",
+                                  "gap": 12,
+                                  "alignItems": "center",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "ref",
+                                      "id": "ntSByC",
+                                      "ref": "ds:fLuqjC",
+                                      "name": "Text/H4",
+                                      "content": "Draft summary"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "5Tx93d",
+                                  "ref": "ds:5X84kK",
+                                  "name": "Key Value Row",
+                                  "descendants": {
+                                    "ds:nLATP4": {
+                                      "content": "Draft"
+                                    },
+                                    "ds:wyEMwN": {
+                                      "type": "frame",
+                                      "id": "o6FGuW",
+                                      "name": "Value",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "ref",
+                                          "id": "VidcEj",
+                                          "ref": "ds:W2sXzc",
+                                          "name": "Status/Error",
+                                          "descendants": {
+                                            "ds:cK1grY": {
+                                              "content": "Save failed"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "BsTeQJ",
+                                  "ref": "ds:RlxQk",
+                                  "name": "Divider",
+                                  "width": "fill_container"
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "UrEheh",
+                                  "ref": "ds:G5tJp",
+                                  "name": "Button / Save draft",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:d2zCI": {
+                                      "content": "Save draft"
+                                    },
+                                    "ds:zDiHG": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "FMh8Cx",
+                                  "ref": "ds:exjwf",
+                                  "name": "Button / Try again",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "ds:E23bq6": {
+                                      "content": "Try again"
+                                    },
+                                    "ds:o7NXW": {
+                                      "enabled": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "bhv4NU",
+                                  "ref": "ds:PiqhAO",
+                                  "name": "Text/Caption",
+                                  "content": "Your entered values are kept."
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "6dzjkH",
+                  "ref": "ds:PiqhAO",
+                  "name": "Text/Caption",
+                  "content": "Demo draft · Static design"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 9170,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/music/new (step 3) — Public titles, version, explicit status and genres."
+    },
+    {
+      "type": "frame",
+      "id": "FLRfPv",
+      "name": "Artist / Create release / 3 Details / Save failed / Mobile",
+      "width": 390,
+      "height": 1100,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "ixoWku",
+          "ref": "ds:duKVtw",
+          "name": "Artist Shell/Mobile",
+          "width": 390,
+          "height": 1100,
+          "descendants": {
+            "ds:ZQncvR": {
+              "type": "frame",
+              "id": "Ef68vv",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                16
+              ],
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "Nujv7a",
+                  "ref": "ds:Bv7WkE",
+                  "name": "Artist/Page Header",
+                  "descendants": {
+                    "ds:55sPOJ": {
+                      "enabled": false
+                    },
+                    "ds:8a3o93": {
+                      "content": "Create a release"
+                    },
+                    "ds:3DjLlD": {
+                      "content": "Add the public details listeners will see."
+                    },
+                    "ds:iYgl1J": {
+                      "type": "frame",
+                      "id": "6pGzBV",
+                      "name": "Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": []
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "NaSYSq",
+                  "name": "Stepper",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "cPZuKR",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qBZ84n",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "tdQA3R",
+                      "ref": "ds:DAB6H9",
+                      "name": "Stepper/Step Done",
+                      "descendants": {
+                        "ds:88pxXk": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "DJgyUd",
+                      "ref": "ds:I3Wq63",
+                      "name": "Stepper/Connector Done"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "fEJiVi",
+                      "ref": "ds:CQEGOU",
+                      "name": "Stepper/Step Current",
+                      "descendants": {
+                        "ds:FZP3Tq": {
+                          "content": "Details"
+                        },
+                        "ds:CV0khF": {
+                          "content": "3"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "n7Se9a",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ZEedzN",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "enabled": false
+                        },
+                        "ds:1dymUo": {
+                          "content": "4"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "47A2xo",
+                      "ref": "ds:ArPPaT",
+                      "name": "Stepper/Connector"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "K9KcC2",
+                      "ref": "ds:L55NCX",
+                      "name": "Stepper/Step Upcoming",
+                      "descendants": {
+                        "ds:0aqWjw": {
+                          "enabled": false
+                        },
+                        "ds:1dymUo": {
+                          "content": "5"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "ref",
+                  "id": "VyrHae",
+                  "ref": "ds:ogW5t",
+                  "name": "Alert / Draft could not be saved. Your changes are still here.",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ds:L7SHNm": {
+                      "content": "Draft could not be saved. Your changes are still here."
+                    },
+                    "ds:F9kE6W": {
+                      "content": "Check the connection and try again."
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "uoKbyF",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "i6TX3g",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "HYBcwL",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "CCBcCZ",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Release and track details"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "pCqpFM",
+                          "ref": "ds:j04F4",
+                          "name": "Input / Release title *",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:l4agQ": {
+                              "content": "Release title *"
+                            },
+                            "ds:iI0CE": {
+                              "content": "Afterglow"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "UV3YDb",
+                  "ref": "ds:x4Fixv",
+                  "name": "Surface/Panel",
+                  "descendants": {
+                    "ds:xhr0E3": {
+                      "type": "frame",
+                      "id": "EgU7Ec",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "wvuf4w",
+                          "name": "Row",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "8ngVsr",
+                              "ref": "ds:fLuqjC",
+                              "name": "Text/H4",
+                              "content": "Draft summary"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Y7SqtU",
+                          "ref": "ds:5X84kK",
+                          "name": "Key Value Row",
+                          "descendants": {
+                            "ds:nLATP4": {
+                              "content": "Draft"
+                            },
+                            "ds:wyEMwN": {
+                              "type": "frame",
+                              "id": "hXwCxw",
+                              "name": "Value",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "fFjbsf",
+                                  "ref": "ds:W2sXzc",
+                                  "name": "Status/Error",
+                                  "descendants": {
+                                    "ds:cK1grY": {
+                                      "content": "Save failed"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Z8pxQ9",
+                          "ref": "ds:RlxQk",
+                          "name": "Divider",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "XryhnU",
+                          "ref": "ds:G5tJp",
+                          "name": "Button / Save draft",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:d2zCI": {
+                              "content": "Save draft"
+                            },
+                            "ds:zDiHG": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "B7ebQv",
+                          "ref": "ds:exjwf",
+                          "name": "Button / Try again",
+                          "width": "fill_container",
+                          "descendants": {
+                            "ds:E23bq6": {
+                              "content": "Try again"
+                            },
+                            "ds:o7NXW": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "ref",
+                          "id": "NVNLMR",
+                          "ref": "ds:PiqhAO",
+                          "name": "Text/Caption",
+                          "content": "Your entered values are kept."
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "jsSxKT",
+                  "ref": "ds:PiqhAO",
+                  "name": "Text/Caption",
+                  "content": "Demo draft · Static design"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 10710,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "designed — /dashboard/music/new (step 3) — Public titles, version, explicit status and genres."
+    }
+  ]
+}

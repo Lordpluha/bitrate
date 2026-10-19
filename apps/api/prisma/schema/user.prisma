@@ -25,29 +25,33 @@ model User {
   legalVersion    String?
   legalAcceptedAt DateTime?
 
-  sessions            UserSession[]
-  passwordResets      UserPasswordReset[]
-  emailVerifications  UserEmailVerification[]
-  oauthAccounts       UserOAuthAccount[]
-  playlists           Playlist[]
-  likedTracks         UserLikedTrack[]
-  likedArtists        UserLikedArtist[]
-  followedArtists     UserFollowedArtist[]
-  likedAlbums         UserLikedAlbum[]
-  likedPlaylists      UserLikedPlaylist[]
-  listeningHistory    ListeningHistory[]
-  playlistTracksAdded PlaylistTrack[]
-  following           UserFollow[]            @relation("UserFollowing")
-  followers           UserFollow[]            @relation("UserFollowers")
-  settings            UserSettings?
-  searchHistory       SearchHistory[]
-  notifications       Notification[]
-  devices             PlayerDevice[]
-  playerState         PlayerState?
-  subscriptions       Subscription[]
-  auditLogs           AuditLog[]
-  moderationReports   ModerationReport[]
-  savedEpisodes       UserSavedEpisode[]
+  sessions               UserSession[]
+  passwordResets         UserPasswordReset[]
+  emailVerifications     UserEmailVerification[]
+  oauthAccounts          UserOAuthAccount[]
+  playlists              Playlist[]
+  likedTracks            UserLikedTrack[]
+  likedArtists           UserLikedArtist[]
+  followedArtists        UserFollowedArtist[]
+  likedAlbums            UserLikedAlbum[]
+  likedPlaylists         UserLikedPlaylist[]
+  listeningHistory       ListeningHistory[]
+  playlistTracksAdded    PlaylistTrack[]
+  following              UserFollow[]            @relation("UserFollowing")
+  followers              UserFollow[]            @relation("UserFollowers")
+  friendRequestsSent     FriendRequest[]         @relation("FriendRequestsSent")
+  friendRequestsReceived FriendRequest[]         @relation("FriendRequestsReceived")
+  friendshipsAsA         Friendship[]            @relation("FriendshipsAsA")
+  friendshipsAsB         Friendship[]            @relation("FriendshipsAsB")
+  settings               UserSettings?
+  searchHistory          SearchHistory[]
+  notifications          Notification[]
+  devices                PlayerDevice[]
+  playerState            PlayerState?
+  subscriptions          Subscription[]
+  auditLogs              AuditLog[]
+  moderationReports      ModerationReport[]
+  savedEpisodes          UserSavedEpisode[]
 
   @@index([email])
   @@index([username])
@@ -117,4 +121,31 @@ model UserFollow {
 
   @@id([followerId, followingId])
   @@index([followingId, createdAt(sort: Desc)])
+}
+
+/// A pending friend request; deleted once it is accepted, declined or cancelled.
+model FriendRequest {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  senderId   String   @db.Uuid
+  receiverId String   @db.Uuid
+  createdAt  DateTime @default(now())
+
+  sender   User @relation("FriendRequestsSent", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("FriendRequestsReceived", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@unique([senderId, receiverId])
+  @@index([receiverId, createdAt(sort: Desc)])
+}
+
+/// Two users who are friends, stored once with `userAId` < `userBId`.
+model Friendship {
+  userAId   String   @db.Uuid
+  userBId   String   @db.Uuid
+  createdAt DateTime @default(now())
+
+  userA User @relation("FriendshipsAsA", fields: [userAId], references: [id], onDelete: Cascade)
+  userB User @relation("FriendshipsAsB", fields: [userBId], references: [id], onDelete: Cascade)
+
+  @@id([userAId, userBId])
+  @@index([userBId])
 }

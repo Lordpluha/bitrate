@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import {
+  GetArtistChartsSwagger,
   GetCategoriesSwagger,
   GetCategoryPlaylistsSwagger,
   GetChartsSwagger,
@@ -21,7 +22,16 @@ import {
   GetTopArtistsSwagger,
   GetTopTracksSwagger,
 } from './decorators'
-import { DiscoveryService } from './discovery.service'
+import { CHART_SCOPES, type ChartScope, DiscoveryService } from './discovery.service'
+
+/** Validates a chart scope; `country` needs a country name. */
+const chartScope = (scope: string, country: string | undefined): ChartScope => {
+  const known = CHART_SCOPES.find((s) => s === scope)
+  if (!known) throw new BadRequestException('Invalid chart scope')
+  if (known === 'country' && !country) throw new BadRequestException('Country is required')
+  return known
+}
+
 import { PersonalTopService, type TimeRange } from './personal-top.service'
 
 @ApiTags('Discovery')
@@ -77,11 +87,20 @@ export class DiscoveryController {
     @Query('country') country?: string,
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+    @Query('genre') genre?: string,
   ) {
-    if (!['global', 'viral', 'country'].includes(scope))
-      throw new BadRequestException('Invalid chart scope')
-    if (scope === 'country' && !country) throw new BadRequestException('Country is required')
-    return this.discovery.getCharts(scope as 'global' | 'viral' | 'country', country, page, limit)
+    return this.discovery.getCharts(chartScope(scope, country), country, page, limit, genre)
+  }
+
+  @GetArtistChartsSwagger()
+  @Get('charts/artists')
+  artistCharts(
+    @Query('scope') scope = 'global',
+    @Query('country') country?: string,
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+  ) {
+    return this.discovery.getArtistCharts(chartScope(scope, country), country, page, limit)
   }
 
   @GetTopTracksSwagger()

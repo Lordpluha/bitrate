@@ -6,8 +6,10 @@ export const en = {
   'common.theme': 'Theme',
   'common.logOut': 'Log out',
   'common.loggingOut': 'Logging out…',
+  'friends.title': 'Friends',
   'profile.updates': 'Your Updates',
   'profile.caughtUp': "You're all caught up",
+  'profile.updatesUnavailable': 'Updates are unavailable right now.',
   'profile.updatesDescription':
     'Watch this space for news on your followers, playlists, events and more.',
   'common.all': 'All',
@@ -28,6 +30,8 @@ export const en = {
   'common.song': 'Song',
   'common.title': 'Title',
   'common.unknown': 'Unknown',
+  'nav.activity': 'Activity',
+  'nav.charts': 'Charts',
   'nav.create': 'Create',
   'nav.home': 'Home',
   'nav.library': 'Library',
@@ -36,8 +40,6 @@ export const en = {
   'settings.account': 'Account',
   'settings.account.edit': 'Edit login methods',
   'settings.audio': 'Audio quality',
-  'settings.audio.normalize':
-    'Normalize volume - Set the same volume level for all songs and podcasts',
   'settings.audio.quality': 'Streaming quality',
   'settings.audio.quality.automatic': 'Automatic',
   'settings.audio.quality.high': 'High',
@@ -52,11 +54,10 @@ export const en = {
   'settings.library.compact': 'Use compact library layout',
   'settings.library.compact.description':
     'Track lists gain a separate artist column and tighter rows.',
-  'settings.playback': 'Playback',
   'settings.privacy.activity': 'Listening activity and insights',
   'settings.privacy.activity.description':
-    'People can see the music you are playing and compare listening activity.',
-  'settings.privacy.activity.label': 'Listening activity on desktop and mobile',
+    'People who follow you can see what you played this week.',
+  'settings.privacy.activity.label': 'Share my listening activity',
   'settings.privacy.followers': 'Followers and following',
   'settings.privacy.followers.description':
     'People can see who is following you and who you are following.',
@@ -87,17 +88,6 @@ export const en = {
   'settings.twoFactor.setup': 'Set up 2FA',
   'settings.twoFactor.setupDescription':
     'Protect your account with an authenticator app.',
-  'settings.video': 'Videos and visuals',
-  'settings.video.canvas': 'Looping visuals',
-  'settings.video.canvas.description':
-    'Short, looping visuals when a song is playing.',
-  'settings.video.info': 'It may take some time for your experience to update.',
-  'settings.video.music': 'Music videos',
-  'settings.video.music.description':
-    'When off, music videos and live performances play as audio-only.',
-  'settings.video.other': 'Other videos',
-  'settings.video.other.description':
-    'Vertically scrolling videos, video podcasts, and videos from creators.',
   'queue.clear': 'Clear queue',
   'queue.empty': 'Your queue is empty',
   'queue.empty.description':
@@ -125,6 +115,9 @@ export const en = {
   'library.albums': 'Albums',
   'library.history': 'History',
   'library.playlists': 'Playlists',
+  'library.sortBy': 'Sort by',
+  'library.sortCreator': 'Creator',
+  'library.sortTitle': 'Alphabetical',
   'library.recents': 'Recents',
   'library.search': 'Search in Your Library',
   'library.sort': 'Sort your library',
@@ -132,9 +125,11 @@ export const en = {
   'library.switchList': 'Switch to list view',
   'library.title': 'Your Library',
   'main.madeFor': 'Made For',
+  'main.greeting.afternoon': 'Good afternoon, {name}',
+  'main.greeting.evening': 'Good evening, {name}',
+  'main.greeting.morning': 'Good morning, {name}',
   'main.newAlbums': 'New albums',
   'main.noAlbums': 'No albums found',
-  'main.noArtists': 'No artists found',
   'main.noPlaylists': 'No playlists found',
   'main.popularArtists': 'Popular artists',
   'main.popularPlaylists': 'Popular playlists',
@@ -157,6 +152,7 @@ export const en = {
   'search.recent': 'Recent searches',
   'search.searching': 'Searching...',
   'search.suggestions': 'Search suggestions',
+  'stats.title': 'Your listening',
   'tracks.album': 'Album',
   'tracks.artist': 'Artist',
   'tracks.dateAdded': 'Date added',

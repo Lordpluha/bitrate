@@ -1,0 +1,3032 @@
+{
+  "version": "2.20",
+  "imports": {
+    "ds": "../design-system/bitrate.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "GFnb5G",
+      "name": "Trending & charts / Desktop / Dark",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "AhLbsv",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "Me3tJq",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "iBwzdo",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "LLkNms",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "MjwtCM",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Trending & charts"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "tZTf52",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "M8WYLK",
+                  "name": "Row",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "VNa8Hr",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Top songs",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Top songs"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Fvy8Ug",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Top artists",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Top artists"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "EmQJuy",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Top albums",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Top albums"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Ekv8b4",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Rising",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Rising"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "KwVwqP",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "wDD8hQ",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "1"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-up"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-afterglow.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Afterglow"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Nova & the Static"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "9.8M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "3:42"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "moLsV4",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "2"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-down"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Night Signal"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Mira Sol"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "9.1M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "3:56"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sJTYCa",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "3"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "minus"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-static-lines.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Static Lines"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Kite Harbor"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "8.4M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "3:47"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "W4NmzG",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "4"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-up"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Echoes in Motion"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Lumen Choir"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "7.7M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "4:21"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qYeJCE",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "5"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-down"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-drift-control.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Drift Control"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Mira Sol"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "7.0M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "3:19"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "cBEqP9",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "6"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "minus"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-afterglow.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Glass Horizon"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Nova & the Static"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "6.3M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "4:28"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "febKG8",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "7"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-up"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-static-lines.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Low Orbit"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Kite Harbor"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "5.6M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "3:05"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "MAiFCn",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "8"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-down"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Late Signal"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Lumen Choir"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "4.9M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "5:02"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — roadmap \"Trending & charts\" — Top tracks, artists and albums. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "pE8m7J",
+      "name": "Trending & charts / Desktop / Light",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "P3qpcD",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "SMcQPc",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "94HLjJ",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "yf6vY7",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "KdZvVR",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Trending & charts"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "H8t7HV",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "rzqU4S",
+                  "name": "Row",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "vqNsXp",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Top songs",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Top songs"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "fmVeYP",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Top artists",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Top artists"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "QCNLAS",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Top albums",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Top albums"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ga89mA",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Rising",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Rising"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "gjynRE",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "LKcnWs",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "1"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-up"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-afterglow.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Afterglow"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Nova & the Static"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "9.8M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "3:42"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "g4spGg",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "2"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-down"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Night Signal"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Mira Sol"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "9.1M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "3:56"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "HNFGd7",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "3"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "minus"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-static-lines.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Static Lines"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Kite Harbor"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "8.4M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "3:47"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ybr5B6",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "4"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-up"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Echoes in Motion"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Lumen Choir"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "7.7M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "4:21"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "JoMTmq",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "5"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-down"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-drift-control.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Drift Control"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Mira Sol"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "7.0M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "3:19"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jTMcM3",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "6"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "minus"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-afterglow.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Glass Horizon"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Nova & the Static"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "6.3M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "4:28"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "qzboJt",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "7"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-up"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-static-lines.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Low Orbit"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Kite Harbor"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "5.6M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "3:05"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "GuAMTb",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "8"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-down"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Late Signal"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Lumen Choir"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "4.9M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "5:02"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Light"
+      },
+      "context": "concept — roadmap \"Trending & charts\" — Top tracks, artists and albums. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "QcUBaZ",
+      "name": "Trending & charts / Desktop / Dim",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "MzZuLp",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "cU2hSY",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "LK6u8p",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "swWnWq",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "YNKQaE",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Trending & charts"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "ex3TAT",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "scZmGL",
+                  "name": "Row",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ZKji5y",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Top songs",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Top songs"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "LDWfZ5",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Top artists",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Top artists"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "SbRpya",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Top albums",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Top albums"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pVEkdS",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Rising",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Rising"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "8PgpAY",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "KfmPK8",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "1"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-up"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-afterglow.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Afterglow"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Nova & the Static"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "9.8M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "3:42"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "3LE8jP",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "2"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-down"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Night Signal"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Mira Sol"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "9.1M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "3:56"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "oS3pRp",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "3"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "minus"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-static-lines.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Static Lines"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Kite Harbor"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "8.4M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "3:47"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "DnTEqu",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "4"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-up"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Echoes in Motion"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Lumen Choir"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "7.7M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "4:21"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "wufqaN",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "5"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-down"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-drift-control.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Drift Control"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Mira Sol"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "7.0M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "3:19"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "SpJURg",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "6"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "minus"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-afterglow.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Glass Horizon"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Nova & the Static"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "6.3M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "4:28"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "6pnJvS",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "7"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-up"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-static-lines.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Low Orbit"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Kite Harbor"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "5.6M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "3:05"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "CjtrbC",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "8"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-down"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Late Signal"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Lumen Choir"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "4.9M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "5:02"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dim"
+      },
+      "context": "concept — roadmap \"Trending & charts\" — Top tracks, artists and albums. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "ijCsp2",
+      "name": "Trending & charts / Mobile / Dark",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "uyZU38",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "JDKzL9",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Charts"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "V8Qig9",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "No2VfF",
+              "name": "Chips",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "uCFdTC",
+                  "ref": "ds:AdNrrb",
+                  "name": "Chip/Active",
+                  "descendants": {
+                    "ds:cUY4Fi": {
+                      "content": "Top songs"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "JyrXP9",
+                  "ref": "ds:LUcTan",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:lXs2ja": {
+                      "content": "Top artists"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "5iXHYf",
+                  "ref": "ds:LUcTan",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:lXs2ja": {
+                      "content": "Rising"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "KcgHSq",
+              "ref": "ds:boira6",
+              "name": "Chart Row",
+              "descendants": {
+                "ds:xhiCc0": {
+                  "content": "1"
+                },
+                "ds:A4Gc1D": {
+                  "icon": "arrow-up"
+                },
+                "ds:hWAZpW": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-afterglow.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:cPTLNb": {
+                  "content": "Afterglow"
+                },
+                "ds:7G5moD": {
+                  "content": "Nova & the Static"
+                },
+                "ds:RtbfeQ": {
+                  "enabled": false
+                },
+                "ds:WiwN5e": {
+                  "content": "3:42"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "3mRGxq",
+              "ref": "ds:boira6",
+              "name": "Chart Row",
+              "descendants": {
+                "ds:xhiCc0": {
+                  "content": "2"
+                },
+                "ds:A4Gc1D": {
+                  "icon": "arrow-down"
+                },
+                "ds:hWAZpW": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-night-signal.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:cPTLNb": {
+                  "content": "Night Signal"
+                },
+                "ds:7G5moD": {
+                  "content": "Mira Sol"
+                },
+                "ds:RtbfeQ": {
+                  "enabled": false
+                },
+                "ds:WiwN5e": {
+                  "content": "3:56"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "7aReKF",
+              "ref": "ds:boira6",
+              "name": "Chart Row",
+              "descendants": {
+                "ds:xhiCc0": {
+                  "content": "3"
+                },
+                "ds:A4Gc1D": {
+                  "icon": "minus"
+                },
+                "ds:hWAZpW": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-static-lines.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:cPTLNb": {
+                  "content": "Static Lines"
+                },
+                "ds:7G5moD": {
+                  "content": "Kite Harbor"
+                },
+                "ds:RtbfeQ": {
+                  "enabled": false
+                },
+                "ds:WiwN5e": {
+                  "content": "3:47"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "cnNXbr",
+              "ref": "ds:boira6",
+              "name": "Chart Row",
+              "descendants": {
+                "ds:xhiCc0": {
+                  "content": "4"
+                },
+                "ds:A4Gc1D": {
+                  "icon": "arrow-up"
+                },
+                "ds:hWAZpW": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:cPTLNb": {
+                  "content": "Echoes in Motion"
+                },
+                "ds:7G5moD": {
+                  "content": "Lumen Choir"
+                },
+                "ds:RtbfeQ": {
+                  "enabled": false
+                },
+                "ds:WiwN5e": {
+                  "content": "4:21"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "MHJdRR",
+              "ref": "ds:boira6",
+              "name": "Chart Row",
+              "descendants": {
+                "ds:xhiCc0": {
+                  "content": "5"
+                },
+                "ds:A4Gc1D": {
+                  "icon": "arrow-down"
+                },
+                "ds:hWAZpW": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-drift-control.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:cPTLNb": {
+                  "content": "Drift Control"
+                },
+                "ds:7G5moD": {
+                  "content": "Mira Sol"
+                },
+                "ds:RtbfeQ": {
+                  "enabled": false
+                },
+                "ds:WiwN5e": {
+                  "content": "3:19"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "nUukVW",
+              "ref": "ds:boira6",
+              "name": "Chart Row",
+              "descendants": {
+                "ds:xhiCc0": {
+                  "content": "6"
+                },
+                "ds:A4Gc1D": {
+                  "icon": "minus"
+                },
+                "ds:hWAZpW": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-afterglow.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:cPTLNb": {
+                  "content": "Glass Horizon"
+                },
+                "ds:7G5moD": {
+                  "content": "Nova & the Static"
+                },
+                "ds:RtbfeQ": {
+                  "enabled": false
+                },
+                "ds:WiwN5e": {
+                  "content": "4:28"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "jjc4Q4",
+              "ref": "ds:boira6",
+              "name": "Chart Row",
+              "descendants": {
+                "ds:xhiCc0": {
+                  "content": "7"
+                },
+                "ds:A4Gc1D": {
+                  "icon": "arrow-up"
+                },
+                "ds:hWAZpW": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-static-lines.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:cPTLNb": {
+                  "content": "Low Orbit"
+                },
+                "ds:7G5moD": {
+                  "content": "Kite Harbor"
+                },
+                "ds:RtbfeQ": {
+                  "enabled": false
+                },
+                "ds:WiwN5e": {
+                  "content": "3:05"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "as5GeR",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "6uwR8N",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:1e7Yju": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:nFyVbQ": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — roadmap \"Trending & charts\" — Top tracks, artists and albums. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "V4aLFK",
+      "name": "Trending & charts / Loading / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "eRtRzT",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "oYmLFB",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "V7Kb3n",
+                  "name": "Loading",
+                  "layout": "vertical",
+                  "gap": 24,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "7DrwXP",
+                      "ref": "ds:Jjegi",
+                      "name": "Skeleton",
+                      "width": 220,
+                      "height": 28
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Srw3Gc",
+                      "name": "Skeleton Rows",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "RAMFP9",
+                          "ref": "ds:FRBY86",
+                          "name": "Skeleton/Chart Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "KZpvtu",
+                          "ref": "ds:FRBY86",
+                          "name": "Skeleton/Chart Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "gVSfcV",
+                          "ref": "ds:FRBY86",
+                          "name": "Skeleton/Chart Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "RfnAHn",
+                          "ref": "ds:FRBY86",
+                          "name": "Skeleton/Chart Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "itdpuK",
+                          "ref": "ds:FRBY86",
+                          "name": "Skeleton/Chart Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Kq6MjE",
+                          "ref": "ds:FRBY86",
+                          "name": "Skeleton/Chart Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "VtSCNh",
+                          "ref": "ds:FRBY86",
+                          "name": "Skeleton/Chart Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "8UWjhC",
+                          "ref": "ds:FRBY86",
+                          "name": "Skeleton/Chart Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Kd47cV",
+                          "ref": "ds:FRBY86",
+                          "name": "Skeleton/Chart Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "Wdq7zs",
+                          "ref": "ds:FRBY86",
+                          "name": "Skeleton/Chart Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "u5q8DB",
+                          "ref": "ds:FRBY86",
+                          "name": "Skeleton/Chart Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "4r2jDN",
+                          "ref": "ds:FRBY86",
+                          "name": "Skeleton/Chart Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "hnpNyn",
+                          "ref": "ds:FRBY86",
+                          "name": "Skeleton/Chart Row",
+                          "width": "fill_container"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "WQ2qg3",
+                          "ref": "ds:FRBY86",
+                          "name": "Skeleton/Chart Row",
+                          "width": "fill_container"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — roadmap \"Trending & charts\" — Top tracks, artists and albums. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "VX6cX7",
+      "name": "Trending & charts / Loading / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "gqenrY",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "G67XrN",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "e8Azkr",
+              "name": "Loading",
+              "layout": "vertical",
+              "gap": 24,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "FfY3hj",
+                  "ref": "ds:Jjegi",
+                  "name": "Skeleton",
+                  "width": 140,
+                  "height": 28
+                },
+                {
+                  "type": "frame",
+                  "id": "JTGEEB",
+                  "name": "Skeleton Rows",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Pomrx9",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "8jDUQA",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Q85od5",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "HYGnvg",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "zH2Lgi",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "yKQbjK",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "t6ne8Y",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "vWZU5T",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "YbXW3u",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "HsUnGa",
+                      "ref": "ds:Gq2CrB",
+                      "name": "Skeleton/Track Row Mobile",
+                      "width": "fill_container"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "fnhNcv",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "CyEmoX",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:1e7Yju": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:nFyVbQ": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — roadmap \"Trending & charts\" — Top tracks, artists and albums. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "moTztN",
+      "name": "Trending & charts / Error / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "6AYwkr",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "eKv3DH",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "xLNBGr",
+                  "name": "State Area",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "uRYcCV",
+                      "ref": "ds:LQ8GwL",
+                      "name": "State / Charts are unavailable",
+                      "descendants": {
+                        "ds:zG3uZd": {
+                          "icon": "triangle-alert"
+                        },
+                        "ds:ATKZVK": {
+                          "content": "Charts are unavailable"
+                        },
+                        "ds:h7OAoY": {
+                          "content": "Try again in a moment."
+                        },
+                        "ds:ydkfG5/ds:NVe7y": {
+                          "content": "Try again"
+                        },
+                        "ds:voqjVU/ds:i6a4e": {
+                          "content": "Back to home"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — roadmap \"Trending & charts\" — Top tracks, artists and albums. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "BDVhnH",
+      "name": "Trending & charts / Error / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "FV5ma2",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "bCMRPd",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "J9fkCD",
+              "name": "State Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "QBqSjf",
+                  "ref": "ds:LQ8GwL",
+                  "name": "State / Charts are unavailable",
+                  "descendants": {
+                    "ds:zG3uZd": {
+                      "icon": "triangle-alert"
+                    },
+                    "ds:ATKZVK": {
+                      "content": "Charts are unavailable"
+                    },
+                    "ds:h7OAoY": {
+                      "content": "Try again in a moment."
+                    },
+                    "ds:ydkfG5/ds:NVe7y": {
+                      "content": "Try again"
+                    },
+                    "ds:voqjVU/ds:i6a4e": {
+                      "content": "Back to home"
+                    }
+                  },
+                  "width": "fill_container"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "437eTV",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "MJcf2P",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:1e7Yju": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:nFyVbQ": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — roadmap \"Trending & charts\" — Top tracks, artists and albums. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "cmG8Bg",
+      "name": "Trending & charts / Loading more / Desktop",
+      "width": 1440,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "WSikoW",
+          "ref": "ds:OPciE",
+          "name": "App Layout",
+          "width": 1440,
+          "height": 900,
+          "descendants": {
+            "ds:xvsK3": {
+              "type": "frame",
+              "id": "VCbjEg",
+              "name": "Main Panel",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "TypDeh",
+                  "name": "Page Title",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "d5VJAt",
+                      "name": "Row",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ref",
+                          "id": "aKWpuF",
+                          "ref": "ds:MgMQ2L",
+                          "name": "Text/H1",
+                          "content": "Trending & charts"
+                        },
+                        {
+                          "type": "ref",
+                          "id": "3qKNQT",
+                          "ref": "ds:FJUa1",
+                          "name": "Badge / Concept",
+                          "descendants": {
+                            "ds:BI0Pd": {
+                              "content": "Concept"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "KaSB4E",
+                  "name": "Row",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "yWYLor",
+                      "ref": "ds:Q9hm3",
+                      "name": "Tab / Top songs",
+                      "descendants": {
+                        "ds:dQjtW": {
+                          "content": "Top songs"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "K28PNF",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Top artists",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Top artists"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Kt7yen",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Top albums",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Top albums"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "chp3hy",
+                      "ref": "ds:Y8XV8",
+                      "name": "Tab / Rising",
+                      "descendants": {
+                        "ds:iQiil": {
+                          "content": "Rising"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "cBuzrB",
+                  "name": "Column",
+                  "layout": "vertical",
+                  "gap": 0,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "3tVXE5",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "1"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-up"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-afterglow.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Afterglow"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Nova & the Static"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "9.8M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "3:42"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "9nUMFS",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "2"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-down"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-night-signal.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Night Signal"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Mira Sol"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "9.1M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "3:56"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "6nXa7q",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "3"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "minus"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-static-lines.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Static Lines"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Kite Harbor"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "8.4M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "3:47"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "5FtAEi",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "4"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-up"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Echoes in Motion"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Lumen Choir"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "7.7M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "4:21"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "G2Bm9v",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "5"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-down"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-drift-control.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Drift Control"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Mira Sol"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "7.0M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "3:19"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "8mBkfu",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "6"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "minus"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-afterglow.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Glass Horizon"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Nova & the Static"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "6.3M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "4:28"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ShRrjX",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "7"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-up"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-static-lines.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Low Orbit"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Kite Harbor"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "5.6M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "3:05"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "XaVYxw",
+                      "ref": "ds:boira6",
+                      "name": "Chart Row",
+                      "descendants": {
+                        "ds:xhiCc0": {
+                          "content": "8"
+                        },
+                        "ds:A4Gc1D": {
+                          "icon": "arrow-down"
+                        },
+                        "ds:hWAZpW": {
+                          "fill": {
+                            "type": "image",
+                            "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                            "mode": "cover"
+                          }
+                        },
+                        "ds:cPTLNb": {
+                          "content": "Late Signal"
+                        },
+                        "ds:7G5moD": {
+                          "content": "Lumen Choir"
+                        },
+                        "ds:RtbfeQ": {
+                          "content": "4.9M plays"
+                        },
+                        "ds:WiwN5e": {
+                          "content": "5:02"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "hLfrcn",
+                  "name": "Loading More",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "QwaBpM",
+                      "ref": "ds:FRBY86",
+                      "name": "Skeleton/Chart Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "YFcqmk",
+                      "ref": "ds:FRBY86",
+                      "name": "Skeleton/Chart Row",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "NEHD4z",
+                      "ref": "ds:Nk6cmg",
+                      "name": "List/Load More",
+                      "descendants": {
+                        "ds:Z1ZCZ2": {
+                          "content": "50 of 100"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "ds:Nn2KW": {
+              "enabled": false
+            },
+            "ds:VZD6U": {
+              "enabled": true
+            },
+            "ds:z5MVM": {
+              "enabled": false
+            }
+          }
+        }
+      ],
+      "x": 9170,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — roadmap \"Trending & charts\" — Top tracks, artists and albums. Concept."
+    },
+    {
+      "type": "frame",
+      "id": "iKzVfk",
+      "name": "Trending & charts / Loading more / Mobile",
+      "width": 390,
+      "height": 844,
+      "clip": true,
+      "layout": "vertical",
+      "fill": "$ds:--background",
+      "children": [
+        {
+          "type": "ref",
+          "id": "CdjCBz",
+          "ref": "ds:xBZUrc",
+          "name": "Mobile/Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "ref",
+          "id": "9XuDWF",
+          "ref": "ds:pmBZPg",
+          "name": "Mobile/Header",
+          "width": "fill_container",
+          "descendants": {
+            "ds:AfZgNi": {
+              "content": "Charts"
+            },
+            "ds:Du8iEf": {
+              "enabled": false
+            },
+            "ds:GvquLa": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "FuK3VT",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "clip": true,
+          "children": [
+            {
+              "type": "frame",
+              "id": "2FvRR4",
+              "name": "Chips",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "zcCi4U",
+                  "ref": "ds:AdNrrb",
+                  "name": "Chip/Active",
+                  "descendants": {
+                    "ds:cUY4Fi": {
+                      "content": "Top songs"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "RoxRva",
+                  "ref": "ds:LUcTan",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:lXs2ja": {
+                      "content": "Top artists"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "UyvNDb",
+                  "ref": "ds:LUcTan",
+                  "name": "Chip/Default",
+                  "descendants": {
+                    "ds:lXs2ja": {
+                      "content": "Rising"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ref",
+              "id": "BSFnGG",
+              "ref": "ds:boira6",
+              "name": "Chart Row",
+              "descendants": {
+                "ds:xhiCc0": {
+                  "content": "1"
+                },
+                "ds:A4Gc1D": {
+                  "icon": "arrow-up"
+                },
+                "ds:hWAZpW": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-afterglow.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:cPTLNb": {
+                  "content": "Afterglow"
+                },
+                "ds:7G5moD": {
+                  "content": "Nova & the Static"
+                },
+                "ds:RtbfeQ": {
+                  "enabled": false
+                },
+                "ds:WiwN5e": {
+                  "content": "3:42"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "5oVnmJ",
+              "ref": "ds:boira6",
+              "name": "Chart Row",
+              "descendants": {
+                "ds:xhiCc0": {
+                  "content": "2"
+                },
+                "ds:A4Gc1D": {
+                  "icon": "arrow-down"
+                },
+                "ds:hWAZpW": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-night-signal.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:cPTLNb": {
+                  "content": "Night Signal"
+                },
+                "ds:7G5moD": {
+                  "content": "Mira Sol"
+                },
+                "ds:RtbfeQ": {
+                  "enabled": false
+                },
+                "ds:WiwN5e": {
+                  "content": "3:56"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "BuQti4",
+              "ref": "ds:boira6",
+              "name": "Chart Row",
+              "descendants": {
+                "ds:xhiCc0": {
+                  "content": "3"
+                },
+                "ds:A4Gc1D": {
+                  "icon": "minus"
+                },
+                "ds:hWAZpW": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-static-lines.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:cPTLNb": {
+                  "content": "Static Lines"
+                },
+                "ds:7G5moD": {
+                  "content": "Kite Harbor"
+                },
+                "ds:RtbfeQ": {
+                  "enabled": false
+                },
+                "ds:WiwN5e": {
+                  "content": "3:47"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "kVDWJ9",
+              "ref": "ds:boira6",
+              "name": "Chart Row",
+              "descendants": {
+                "ds:xhiCc0": {
+                  "content": "4"
+                },
+                "ds:A4Gc1D": {
+                  "icon": "arrow-up"
+                },
+                "ds:hWAZpW": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-echoes-in-motion.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:cPTLNb": {
+                  "content": "Echoes in Motion"
+                },
+                "ds:7G5moD": {
+                  "content": "Lumen Choir"
+                },
+                "ds:RtbfeQ": {
+                  "enabled": false
+                },
+                "ds:WiwN5e": {
+                  "content": "4:21"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "QuCvSS",
+              "ref": "ds:boira6",
+              "name": "Chart Row",
+              "descendants": {
+                "ds:xhiCc0": {
+                  "content": "5"
+                },
+                "ds:A4Gc1D": {
+                  "icon": "arrow-down"
+                },
+                "ds:hWAZpW": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-drift-control.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:cPTLNb": {
+                  "content": "Drift Control"
+                },
+                "ds:7G5moD": {
+                  "content": "Mira Sol"
+                },
+                "ds:RtbfeQ": {
+                  "enabled": false
+                },
+                "ds:WiwN5e": {
+                  "content": "3:19"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "9hcQqD",
+              "ref": "ds:boira6",
+              "name": "Chart Row",
+              "descendants": {
+                "ds:xhiCc0": {
+                  "content": "6"
+                },
+                "ds:A4Gc1D": {
+                  "icon": "minus"
+                },
+                "ds:hWAZpW": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-afterglow.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:cPTLNb": {
+                  "content": "Glass Horizon"
+                },
+                "ds:7G5moD": {
+                  "content": "Nova & the Static"
+                },
+                "ds:RtbfeQ": {
+                  "enabled": false
+                },
+                "ds:WiwN5e": {
+                  "content": "4:28"
+                }
+              }
+            },
+            {
+              "type": "ref",
+              "id": "xYSwG5",
+              "ref": "ds:boira6",
+              "name": "Chart Row",
+              "descendants": {
+                "ds:xhiCc0": {
+                  "content": "7"
+                },
+                "ds:A4Gc1D": {
+                  "icon": "arrow-up"
+                },
+                "ds:hWAZpW": {
+                  "fill": {
+                    "type": "image",
+                    "url": "../design-system/assets/albums/album-static-lines.webp",
+                    "mode": "cover"
+                  }
+                },
+                "ds:cPTLNb": {
+                  "content": "Low Orbit"
+                },
+                "ds:7G5moD": {
+                  "content": "Kite Harbor"
+                },
+                "ds:RtbfeQ": {
+                  "enabled": false
+                },
+                "ds:WiwN5e": {
+                  "content": "3:05"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "BLUUGB",
+              "name": "Loading More",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "aeHq3X",
+                  "ref": "ds:Gq2CrB",
+                  "name": "Skeleton/Track Row Mobile",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "Txr9ME",
+                  "ref": "ds:Gq2CrB",
+                  "name": "Skeleton/Track Row Mobile",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "KpUGkv",
+                  "ref": "ds:Gq2CrB",
+                  "name": "Skeleton/Track Row Mobile",
+                  "width": "fill_container"
+                },
+                {
+                  "type": "ref",
+                  "id": "xRnXLv",
+                  "ref": "ds:Nk6cmg",
+                  "name": "List/Load More",
+                  "descendants": {
+                    "ds:Z1ZCZ2": {
+                      "content": "50 of 100"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "7ERwtA",
+          "name": "Island Slot",
+          "width": "fill_container",
+          "padding": [
+            8,
+            16,
+            18,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "sPxQwT",
+              "ref": "ds:DrlRuW",
+              "name": "Mobile/Island",
+              "width": "fill_container",
+              "descendants": {
+                "ds:1e7Yju": {
+                  "fill": "$ds:--secondary"
+                },
+                "ds:nFyVbQ": {
+                  "fill": "$ds:--foreground"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 10710,
+      "y": 0,
+      "theme": {
+        "ds:Mode": "Dark"
+      },
+      "context": "concept — roadmap \"Trending & charts\" — Top tracks, artists and albums. Concept."
+    }
+  ]
+}

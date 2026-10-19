@@ -74,7 +74,7 @@ anything to replace them.
 | Capability | What it is |
 |---|---|
 | Timestamp Comments | Comments anchored to a specific point in a track |
-| Listening Rooms | Shared rooms with one synchronised queue |
+| Jam | Listening together with one synchronised queue |
 | Friend Profiles | Richer profiles showing musical activity and taste history |
 | Artist Community | Listeners interacting with artists directly |
 | Track Versions | Demo, original, remix, remaster and master grouped as one track entity |

@@ -1,14 +1,20 @@
 model UserSettings {
-  userId           String   @id @db.Uuid
-  language         String   @default("en")
-  streamingQuality String   @default("automatic")
-  normalizeVolume  Boolean  @default(true)
-  compactLibrary   Boolean  @default(false)
-  showNowPlaying   Boolean  @default(true)
-  autoplay         Boolean  @default(true)
-  explicitContent  Boolean  @default(true)
-  privateSession   Boolean  @default(false)
-  updatedAt        DateTime @default(now()) @updatedAt
+  userId                   String   @id @db.Uuid
+  language                 String   @default("en")
+  streamingQuality         String   @default("automatic")
+  normalizeVolume          Boolean  @default(true)
+  compactLibrary           Boolean  @default(false)
+  showNowPlaying           Boolean  @default(true)
+  autoplay                 Boolean  @default(true)
+  explicitContent          Boolean  @default(true)
+  privateSession           Boolean  @default(false)
+  /// Followers see what the user is playing (friend activity).
+  showListeningActivity    Boolean  @default(true)
+  /// Other people can list who follows the user and whom the user follows.
+  followersVisible         Boolean  @default(true)
+  /// The user's public playlists are listed on their profile.
+  publicPlaylistsOnProfile Boolean  @default(true)
+  updatedAt                DateTime @default(now()) @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -18,6 +24,8 @@ enum NotificationType {
   PLAYLIST_UPDATE
   FOLLOW
   SYSTEM
+  FRIEND_REQUEST
+  FRIEND_ACCEPTED
 }
 
 model Notification {

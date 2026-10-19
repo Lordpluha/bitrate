@@ -1,7 +1,7 @@
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
-import { UserAuthGuard } from '@modules/users-auth/users-auth.guard'
+import { OptionalUserAuthGuard, UserAuthGuard } from '@modules/users-auth/users-auth.guard'
 import type { INestApplication } from '@nestjs/common'
 import { Test, type TestingModule } from '@nestjs/testing'
 import request from 'supertest'
@@ -16,6 +16,9 @@ const makeServiceMock = () =>
     getByUsername: jest.fn(),
     updateById: jest.fn(),
     uploadAvatar: jest.fn(),
+    listFollows: jest.fn(),
+    getFollowingActivity: jest.fn(),
+    getFollowing: jest.fn(),
   }) as unknown as jest.Mocked<UsersService>
 
 describe('UsersController (int)', () => {
@@ -38,6 +41,15 @@ describe('UsersController (int)', () => {
         { provide: STORAGE_SERVICE, useValue: storage },
       ],
     })
+      .overrideGuard(OptionalUserAuthGuard)
+      .useValue({
+        canActivate: (ctx: {
+          switchToHttp: () => { getRequest: () => Record<string, unknown> }
+        }) => {
+          ctx.switchToHttp().getRequest().user = user
+          return true
+        },
+      })
       .overrideGuard(UserAuthGuard)
       .useValue({
         canActivate: (ctx: {
@@ -58,6 +70,9 @@ describe('UsersController (int)', () => {
   beforeEach(() => {
     service.findAll.mockReset()
     service.findById.mockReset()
+    service.listFollows.mockReset()
+    service.getFollowingActivity.mockReset()
+    service.getFollowing.mockReset()
     service.getByUsername.mockReset()
     service.updateById.mockReset()
     service.uploadAvatar.mockReset()
@@ -157,5 +172,51 @@ describe('UsersController (int)', () => {
     expect(res.status).toBe(400)
     expect(storage.upload).not.toHaveBeenCalled()
     expect(service.uploadAvatar).not.toHaveBeenCalled()
+  })
+
+  const friendId = '0199d0c1-6c2a-7b3e-9a4f-1c2d3e4f5a6b'
+
+  it('GET /users/me/following/activity should return the caller friend activity', async () => {
+    service.getFollowingActivity.mockResolvedValue([] as never)
+
+    const res = await request(app.getHttpServer())
+      .get('/users/me/following/activity')
+      .query({ limit: 5 })
+
+    expect(res.status).toBe(200)
+    expect(service.getFollowingActivity).toHaveBeenCalledWith(user.id, 5)
+    expect(service.listFollows).not.toHaveBeenCalled()
+  })
+
+  it('GET /users/me/following should still list the caller follows, not parse me as an id', async () => {
+    service.getFollowing.mockResolvedValue({ data: [], total: 0, page: 1, limit: 20 } as never)
+
+    const res = await request(app.getHttpServer()).get('/users/me/following')
+
+    expect(res.status).toBe(200)
+    expect(service.getFollowing).toHaveBeenCalled()
+    expect(service.listFollows).not.toHaveBeenCalled()
+  })
+
+  it('GET /users/:id/followers should pass the viewer through', async () => {
+    service.listFollows.mockResolvedValue({ data: [], total: 0, page: 1, limit: 20 } as never)
+
+    const res = await request(app.getHttpServer()).get(`/users/${friendId}/followers`)
+
+    expect(res.status).toBe(200)
+    expect(service.listFollows).toHaveBeenCalledWith(
+      'followers',
+      friendId,
+      user.id,
+      undefined,
+      undefined,
+    )
+  })
+
+  it('GET /users/:id/following should reject an id that is not a UUID', async () => {
+    const res = await request(app.getHttpServer()).get('/users/nope/following')
+
+    expect(res.status).toBe(400)
+    expect(service.listFollows).not.toHaveBeenCalled()
   })
 })

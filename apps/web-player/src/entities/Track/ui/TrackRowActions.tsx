@@ -18,18 +18,11 @@ export const TrackRowActions = ({
   track,
 }: TrackRowActionsProps) => (
   <>
-    <div className="grid grid-cols-[24px_24px_44px_24px] items-center justify-end gap-2 text-sm text-text-subdued max-[1024px]:hidden">
-      <div className="flex justify-center opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
-        <AddToQueueButton track={track} />
-      </div>
-      <div className="flex justify-center">
-        <LikeTrackButton
-          initialLiked={isLiked}
-          trackId={track.id}
-          trackTitle={track.title}
-        />
-      </div>
-      <span className="text-right">{formatDuration(track.duration ?? 0)}</span>
+    <div className="flex items-center justify-end gap-2.5 text-[13px] text-muted-foreground tabular-nums max-[1024px]:hidden">
+      <AddToQueueButton
+        className="opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+        track={track}
+      />
       {removable && (
         <button
           aria-label={`Remove ${track.title} from playlist`}
@@ -40,9 +33,17 @@ export const TrackRowActions = ({
           <X aria-hidden="true" size={16} />
         </button>
       )}
+      <LikeTrackButton
+        initialLiked={isLiked}
+        trackId={track.id}
+        trackTitle={track.title}
+      />
+      <span className="min-w-8 text-right">
+        {formatDuration(track.duration ?? 0)}
+      </span>
     </div>
 
-    <div className="hidden shrink-0 grid-cols-[24px_auto] items-center justify-end gap-2 text-xs text-text-subdued max-[1024px]:grid">
+    <div className="hidden shrink-0 grid-cols-[24px_auto] items-center justify-end gap-2 text-[13px] text-muted-foreground tabular-nums max-[1024px]:grid">
       <LikeTrackButton
         initialLiked={isLiked}
         trackId={track.id}
