@@ -154,6 +154,7 @@ export const uk = {
   'search.recent': 'Нещодавні пошуки',
   'search.searching': 'Пошук...',
   'search.suggestions': 'Пошукові підказки',
+  'stats.title': 'Ваше прослуховування',
   'tracks.album': 'Альбом',
   'tracks.artist': 'Виконавець',
   'tracks.dateAdded': 'Дата додавання',

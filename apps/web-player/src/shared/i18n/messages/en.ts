@@ -151,6 +151,7 @@ export const en = {
   'search.recent': 'Recent searches',
   'search.searching': 'Searching...',
   'search.suggestions': 'Search suggestions',
+  'stats.title': 'Your listening',
   'tracks.album': 'Album',
   'tracks.artist': 'Artist',
   'tracks.dateAdded': 'Date added',

@@ -38,6 +38,7 @@ describe('ProfileMenuContent', () => {
     ).toEqual([
       { href: ROUTES.profile, label: 'Profile' },
       { href: ROUTES.recents, label: 'Recents' },
+      { href: ROUTES.stats, label: 'Your listening' },
       { href: ROUTES.settings, label: 'Settings' },
     ])
     expect(screen.queryByText('Support')).not.toBeInTheDocument()
