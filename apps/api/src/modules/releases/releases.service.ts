@@ -32,12 +32,6 @@ import {
   releaseReadinessSelect,
 } from './releases.select'
 
-interface ReleaseTrackIdentifier {
-  id: string
-  title: string
-  isrc: string | null
-}
-
 /** A credit change invalidates both rights confirmations. */
 const CLEARED_CONFIRMATIONS = {
   writersConfirmedAt: null,
@@ -420,7 +414,7 @@ export class ReleasesService {
   updateTrack(ownerArtistId: string, id: string, trackId: string, input: UpdateReleaseTrackDto) {
     return this.prisma.$transaction(async (tx) => {
       const release = await lockOwnedDraft(tx, ownerArtistId, id, input.expectedUpdatedAt)
-      const [track] = await this.uniqueIdentifier<ReleaseTrackIdentifier[]>(
+      const [track] = await this.uniqueIdentifier(
         'This ISRC is already used by another recording',
         () =>
           tx.artistTrackDraft.updateManyAndReturn({

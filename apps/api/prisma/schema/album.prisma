@@ -1,0 +1,79 @@
+enum AlbumType {
+  ALBUM
+  SINGLE
+  EP
+  COMPILATION
+}
+
+model Album {
+  id          String  @id @default(uuid(7)) @db.Uuid
+  title       String
+  cover       String?
+  artistId    String  @db.Uuid
+  description String? @db.Text
+
+  releaseDate DateTime?
+  type        AlbumType @default(ALBUM)
+  label       String?
+  totalTracks Int       @default(0)
+  copyright   String?
+  deletedAt   DateTime?
+
+  /// Revision of the Artist Agreement the artist confirmed their rights under at creation, and when.
+  /// Null for albums created before the confirmation was recorded.
+  rightsConfirmedVersion String?
+  rightsConfirmedAt      DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  tracks AlbumTrack[]
+  genres AlbumGenre[]
+
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  likedBy UserLikedAlbum[]
+
+  @@index([artistId])
+  @@index([title])
+  @@index([releaseDate])
+  @@index([deletedAt])
+}
+
+model AlbumTrack {
+  id          String @id @default(uuid(7)) @db.Uuid
+  albumId     String @db.Uuid
+  trackId     String @db.Uuid
+  trackNumber Int
+  discNumber  Int    @default(1)
+
+  album Album @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  track Track @relation(fields: [trackId], references: [id], onDelete: Cascade)
+
+  @@unique([albumId, trackId])
+  @@unique([albumId, discNumber, trackNumber])
+  @@index([trackId])
+}
+
+model UserLikedAlbum {
+  userId    String   @db.Uuid
+  albumId   String   @db.Uuid
+  createdAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  album Album @relation(fields: [albumId], references: [id], onDelete: Cascade)
+
+  @@id([userId, albumId])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([albumId])
+}
+
+model AlbumGenre {
+  albumId String @db.Uuid
+  genreId String @db.Uuid
+  album   Album  @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  genre   Genre  @relation(fields: [genreId], references: [id], onDelete: Cascade)
+
+  @@id([albumId, genreId])
+  @@index([genreId])
+}
