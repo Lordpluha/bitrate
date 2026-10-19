@@ -135,4 +135,76 @@ describe('NotificationsService', () => {
       expect(prisma.notification.createMany).not.toHaveBeenCalled()
     })
   })
+
+  describe('friends', () => {
+    it('tells the receiver who sent a pending friend request', async () => {
+      prisma.friendRequest.findFirst.mockResolvedValue({
+        receiverId: 'b',
+        sender: { id: 'a', username: 'ana' },
+      } as never)
+      prisma.notification.findFirst.mockResolvedValue(null)
+
+      await service.notifyFriendRequest({ requestId: 'r1' })
+
+      expect(prisma.notification.create).toHaveBeenCalledWith({
+        data: {
+          userId: 'b',
+          type: 'FRIEND_REQUEST',
+          title: 'Friend request',
+          body: 'ana wants to be friends',
+          payload: { actorId: 'a', actorUsername: 'ana', requestId: 'r1' },
+        },
+      })
+    })
+
+    it('skips a request that was answered or cancelled before the job ran', async () => {
+      prisma.friendRequest.findFirst.mockResolvedValue(null)
+
+      await service.notifyFriendRequest({ requestId: 'r1' })
+
+      expect(prisma.notification.create).not.toHaveBeenCalled()
+    })
+
+    it('notifies about one request only once', async () => {
+      prisma.friendRequest.findFirst.mockResolvedValue({
+        receiverId: 'b',
+        sender: { id: 'a', username: 'ana' },
+      } as never)
+      prisma.notification.findFirst.mockResolvedValue({ id: 'n1' } as never)
+
+      await service.notifyFriendRequest({ requestId: 'r1' })
+
+      expect(prisma.notification.create).not.toHaveBeenCalled()
+    })
+
+    it('tells the requester their request was accepted, looking the pair up in order', async () => {
+      prisma.friendship.findUnique.mockResolvedValue({ userAId: 'a' } as never)
+      prisma.user.findFirst.mockResolvedValue({ id: 'b', username: 'bo' } as never)
+      prisma.notification.findFirst.mockResolvedValue(null)
+
+      await service.notifyFriendAccepted({ accepterId: 'b', requesterId: 'a' })
+
+      expect(prisma.friendship.findUnique).toHaveBeenCalledWith({
+        where: { userAId_userBId: { userAId: 'a', userBId: 'b' } },
+        select: { userAId: true },
+      })
+      expect(prisma.notification.create).toHaveBeenCalledWith({
+        data: {
+          userId: 'a',
+          type: 'FRIEND_ACCEPTED',
+          title: 'Friend request accepted',
+          body: 'bo accepted your friend request',
+          payload: { actorId: 'b', actorUsername: 'bo' },
+        },
+      })
+    })
+
+    it('skips an acceptance when the friendship is already gone', async () => {
+      prisma.friendship.findUnique.mockResolvedValue(null)
+
+      await service.notifyFriendAccepted({ accepterId: 'b', requesterId: 'a' })
+
+      expect(prisma.notification.create).not.toHaveBeenCalled()
+    })
+  })
 })

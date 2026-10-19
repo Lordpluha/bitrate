@@ -27,4 +27,15 @@ describe('NotificationsProducer', () => {
       expect.objectContaining({ jobId: 'new-release-t1' }),
     )
   })
+
+  it('enqueues one friend request job per request', async () => {
+    const queue = makeQueue()
+    await new NotificationsProducer(queue).friendRequested({ requestId: 'r1' })
+
+    expect(queue.add).toHaveBeenCalledWith(
+      NOTIFICATION_JOBS.FRIEND_REQUEST,
+      { requestId: 'r1' },
+      expect.objectContaining({ jobId: 'friend-request-r1' }),
+    )
+  })
 })

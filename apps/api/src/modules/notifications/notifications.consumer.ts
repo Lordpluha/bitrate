@@ -5,11 +5,13 @@ import {
   NOTIFICATION_JOBS,
   NOTIFICATIONS_QUEUE,
   parseFollowJob,
+  parseFriendAcceptedJob,
+  parseFriendRequestJob,
   parseNewReleaseJob,
 } from './notifications.queue'
 import { NotificationsService } from './notifications.service'
 
-/** Turns follow and release events into notification rows (the work itself is idempotent). */
+/** Turns follow, friend and release events into notification rows (the work itself is idempotent). */
 @Injectable()
 @Processor(NOTIFICATIONS_QUEUE)
 export class NotificationsConsumer extends WorkerHost {
@@ -34,6 +36,18 @@ export class NotificationsConsumer extends WorkerHost {
         const parsed = parseNewReleaseJob(job.data)
         if (!parsed.success) throw new UnrecoverableError(`Malformed ${job.name} job ${job.id}`)
         await this.notifications.notifyNewRelease(parsed.data)
+        return
+      }
+      case NOTIFICATION_JOBS.FRIEND_REQUEST: {
+        const parsed = parseFriendRequestJob(job.data)
+        if (!parsed.success) throw new UnrecoverableError(`Malformed ${job.name} job ${job.id}`)
+        await this.notifications.notifyFriendRequest(parsed.data)
+        return
+      }
+      case NOTIFICATION_JOBS.FRIEND_ACCEPTED: {
+        const parsed = parseFriendAcceptedJob(job.data)
+        if (!parsed.success) throw new UnrecoverableError(`Malformed ${job.name} job ${job.id}`)
+        await this.notifications.notifyFriendAccepted(parsed.data)
         return
       }
       default:

@@ -9,6 +9,8 @@ const makeService = () =>
   ({
     notifyFollow: jest.fn(async () => undefined),
     notifyNewRelease: jest.fn(async () => undefined),
+    notifyFriendRequest: jest.fn(async () => undefined),
+    notifyFriendAccepted: jest.fn(async () => undefined),
   }) as unknown as jest.Mocked<NotificationsService>
 
 describe('NotificationsConsumer', () => {
@@ -30,6 +32,25 @@ describe('NotificationsConsumer', () => {
     } as Job)
 
     expect(service.notifyNewRelease).toHaveBeenCalledWith({ trackId: ids.a })
+  })
+
+  it('routes friend request and acceptance jobs', async () => {
+    const service = makeService()
+    const consumer = new NotificationsConsumer(service)
+    await consumer.process({
+      name: NOTIFICATION_JOBS.FRIEND_REQUEST,
+      data: { requestId: ids.a },
+    } as Job)
+    await consumer.process({
+      name: NOTIFICATION_JOBS.FRIEND_ACCEPTED,
+      data: { accepterId: ids.b, requesterId: ids.a },
+    } as Job)
+
+    expect(service.notifyFriendRequest).toHaveBeenCalledWith({ requestId: ids.a })
+    expect(service.notifyFriendAccepted).toHaveBeenCalledWith({
+      accepterId: ids.b,
+      requesterId: ids.a,
+    })
   })
 
   it('stops retrying a malformed payload', async () => {
