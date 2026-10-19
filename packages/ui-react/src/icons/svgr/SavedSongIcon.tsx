@@ -4,7 +4,7 @@ interface SavedSongIconProps extends SVGProps<SVGSVGElement> {
   primaryColor?: string
 }
 
-export const SavedSongIcon = ({ primaryColor = '#1ed760', ...props }: SavedSongIconProps) => (
+export const SavedSongIcon = ({ primaryColor = '#7c3aed', ...props }: SavedSongIconProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"

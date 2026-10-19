@@ -23,7 +23,4 @@ export const ROUTES = {
   community: '/legal/community',
   complaints: '/legal/complaints',
   copyright: '/legal/copyright',
-  download: '#download',
-  plans: '#plans',
-  forStudents: '#for-students',
 } as const

@@ -6,8 +6,8 @@ interface PlayIconProps extends SVGProps<SVGSVGElement> {
 }
 
 export const PlayIcon = ({
-  primaryColor = '#1ed760',
-  secondaryColor = '#000000',
+  primaryColor = '#7c3aed',
+  secondaryColor = '#ffffff',
   ...props
 }: PlayIconProps) => (
   <svg
