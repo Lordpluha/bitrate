@@ -1,6 +1,11 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
-import type { FollowNotificationJob, NewReleaseNotificationJob } from './notifications.queue'
+import type {
+  FollowNotificationJob,
+  FriendAcceptedNotificationJob,
+  FriendRequestNotificationJob,
+  NewReleaseNotificationJob,
+} from './notifications.queue'
 
 /** Rows per insert when a release fans out to many followers. */
 const FAN_OUT_CHUNK = 1_000
@@ -42,6 +47,73 @@ export class NotificationsService {
         type: 'FOLLOW',
         title: 'New follower',
         body: `${actor.username} started following you`,
+        payload: { actorId: actor.id, actorUsername: actor.username },
+      },
+    })
+  }
+
+  /** "X wants to be friends" — only while the request is still pending, once per request. */
+  async notifyFriendRequest({ requestId }: FriendRequestNotificationJob) {
+    const request = await this.prisma.friendRequest.findFirst({
+      where: { id: requestId, sender: { deletedAt: null }, receiver: { deletedAt: null } },
+      select: { receiverId: true, sender: { select: { id: true, username: true } } },
+    })
+    if (!request) return
+    const already = await this.prisma.notification.findFirst({
+      where: {
+        userId: request.receiverId,
+        type: 'FRIEND_REQUEST',
+        payload: { path: ['requestId'], equals: requestId },
+      },
+      select: { id: true },
+    })
+    if (already) return
+    await this.prisma.notification.create({
+      data: {
+        userId: request.receiverId,
+        type: 'FRIEND_REQUEST',
+        title: 'Friend request',
+        body: `${request.sender.username} wants to be friends`,
+        payload: {
+          actorId: request.sender.id,
+          actorUsername: request.sender.username,
+          requestId,
+        },
+      },
+    })
+  }
+
+  /** "X accepted your friend request" — only while they are still friends, once per unread. */
+  async notifyFriendAccepted({ accepterId, requesterId }: FriendAcceptedNotificationJob) {
+    /* friendships are stored with the smaller id first */
+    const [userAId, userBId] =
+      accepterId < requesterId ? [accepterId, requesterId] : [requesterId, accepterId]
+    const friendship = await this.prisma.friendship.findUnique({
+      where: { userAId_userBId: { userAId, userBId } },
+      select: { userAId: true },
+    })
+    if (!friendship) return
+    const actor = await this.prisma.user.findFirst({
+      where: { id: accepterId, deletedAt: null },
+      select: { id: true, username: true },
+    })
+    if (!actor) return
+    const unread = await this.prisma.notification.findFirst({
+      where: {
+        userId: requesterId,
+        type: 'FRIEND_ACCEPTED',
+        readAt: null,
+        payload: { path: ['actorId'], equals: accepterId },
+      },
+      select: { id: true },
+    })
+    if (unread) return
+    await this.prisma.notification.create({
+      data: {
+        userId: requesterId,
+        type: 'FRIEND_ACCEPTED',
+        title: 'Friend request accepted',
+        body: `${actor.username} accepted your friend request`,
         payload: { actorId: actor.id, actorUsername: actor.username },
       },
     })

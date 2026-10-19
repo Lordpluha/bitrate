@@ -212,6 +212,14 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
   get userFollow() {
     return this.prisma.userFollow
   }
+  /** Gets pending friend requests. */
+  get friendRequest() {
+    return this.prisma.friendRequest
+  }
+  /** Gets friendships, each pair stored once. */
+  get friendship() {
+    return this.prisma.friendship
+  }
   /** Gets track artist credits. */
   get trackArtist() {
     return this.prisma.trackArtist

@@ -33,29 +33,33 @@ model User {
   legalVersion    String?
   legalAcceptedAt DateTime?
 
-  sessions            UserSession[]
-  passwordResets      UserPasswordReset[]
-  emailVerifications  UserEmailVerification[]
-  oauthAccounts       UserOAuthAccount[]
-  playlists           Playlist[]
-  likedTracks         UserLikedTrack[]
-  likedArtists        UserLikedArtist[]
-  followedArtists     UserFollowedArtist[]
-  likedAlbums         UserLikedAlbum[]
-  likedPlaylists      UserLikedPlaylist[]
-  listeningHistory    ListeningHistory[]
-  playlistTracksAdded PlaylistTrack[]
-  following           UserFollow[]            @relation("UserFollowing")
-  followers           UserFollow[]            @relation("UserFollowers")
-  settings            UserSettings?
-  searchHistory       SearchHistory[]
-  notifications       Notification[]
-  devices             PlayerDevice[]
-  playerState         PlayerState?
-  subscriptions       Subscription[]
-  auditLogs           AuditLog[]
-  moderationReports   ModerationReport[]
-  savedEpisodes       UserSavedEpisode[]
+  sessions               UserSession[]
+  passwordResets         UserPasswordReset[]
+  emailVerifications     UserEmailVerification[]
+  oauthAccounts          UserOAuthAccount[]
+  playlists              Playlist[]
+  likedTracks            UserLikedTrack[]
+  likedArtists           UserLikedArtist[]
+  followedArtists        UserFollowedArtist[]
+  likedAlbums            UserLikedAlbum[]
+  likedPlaylists         UserLikedPlaylist[]
+  listeningHistory       ListeningHistory[]
+  playlistTracksAdded    PlaylistTrack[]
+  following              UserFollow[]            @relation("UserFollowing")
+  followers              UserFollow[]            @relation("UserFollowers")
+  friendRequestsSent     FriendRequest[]         @relation("FriendRequestsSent")
+  friendRequestsReceived FriendRequest[]         @relation("FriendRequestsReceived")
+  friendshipsAsA         Friendship[]            @relation("FriendshipsAsA")
+  friendshipsAsB         Friendship[]            @relation("FriendshipsAsB")
+  settings               UserSettings?
+  searchHistory          SearchHistory[]
+  notifications          Notification[]
+  devices                PlayerDevice[]
+  playerState            PlayerState?
+  subscriptions          Subscription[]
+  auditLogs              AuditLog[]
+  moderationReports      ModerationReport[]
+  savedEpisodes          UserSavedEpisode[]
 
   @@index([email])
   @@index([username])
@@ -166,9 +170,9 @@ model Staff {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  role      Role           @relation(fields: [roleId], references: [id])
-  sessions  StaffSession[]
-  auditLogs AuditLog[]
+  role           Role            @relation(fields: [roleId], references: [id])
+  sessions       StaffSession[]
+  auditLogs      AuditLog[]
   releaseReviews ReleaseReview[]
 
   @@index([email])
@@ -277,17 +281,17 @@ model Track {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  audioFiles           TrackFile[]
+  audioFiles            TrackFile[]
   processingAttemptsLog TrackProcessingAttempt[]
-  albums           AlbumTrack[]
-  releases         ReleaseTrack[]
-  playlists        PlaylistTrack[]
-  likedBy          UserLikedTrack[]
-  artists          TrackArtist[]
-  genres           TrackGenre[]
-  listeningHistory ListeningHistory[]
-  playerStates     PlayerState[]
-  queueEntries     PlayerQueueItem[]
+  albums                AlbumTrack[]
+  releases              ReleaseTrack[]
+  playlists             PlaylistTrack[]
+  likedBy               UserLikedTrack[]
+  artists               TrackArtist[]
+  genres                TrackGenre[]
+  listeningHistory      ListeningHistory[]
+  playerStates          PlayerState[]
+  queueEntries          PlayerQueueItem[]
 
   artist Artist @relation("PrimaryArtist", fields: [artistId], references: [id], onDelete: Restrict)
 
@@ -329,8 +333,8 @@ model TrackFile {
 // failures carry the redacted step/error detail the operator panel needs. Retention is
 // pruned on write to the newest 25 rows per track — see ADR-0040.
 model TrackProcessingAttempt {
-  id             String  @id @default(uuid(7)) @db.Uuid
-  trackId        String  @db.Uuid
+  id             String                 @id @default(uuid(7)) @db.Uuid
+  trackId        String                 @db.Uuid
   sourceFileName String // the generation this attempt encoded
   jobId          String
   attempt        Int // 1-based, = job.attemptsMade + 1 at start
@@ -338,7 +342,7 @@ model TrackProcessingAttempt {
   trigger        TrackProcessingTrigger
 
   status          TrackProcessingAttemptStatus @default(RUNNING)
-  willRetry       Boolean                       @default(false) // FAILED and BullMQ will try again
+  willRetry       Boolean                      @default(false) // FAILED and BullMQ will try again
   deadLetterJobId String? // set on the exhausted attempt
 
   startedAt    DateTime  @default(now())
@@ -351,11 +355,11 @@ model TrackProcessingAttempt {
 
   errorCode      TrackProcessingErrorCode?
   errorName      String? // constructor name
-  errorMessage   String?                    @db.Text // redacted, <= 2 KB
-  errorStack     String?                    @db.Text // redacted, <= 8 KB
+  errorMessage   String?                   @db.Text // redacted, <= 2 KB
+  errorStack     String?                   @db.Text // redacted, <= 8 KB
   retryable      Boolean?
-  commandSummary String?                    @db.Text // ffmpeg argv, paths redacted, <= 2 KB
-  stderrTail     String?                    @db.Text // redacted, <= 16 KB (last bytes)
+  commandSummary String?                   @db.Text // ffmpeg argv, paths redacted, <= 2 KB
+  stderrTail     String?                   @db.Text // redacted, <= 16 KB (last bytes)
   exitCode       Int?
   signal         String?
 
@@ -412,15 +416,15 @@ model Artist {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  tracks       Track[]       @relation("PrimaryArtist")
-  trackCredits TrackArtist[]
-  albums       Album[]
-  releases     Release[] @relation("ReleaseOwner")
-  notificationState ArtistNotificationState?
+  tracks                 Track[]                       @relation("PrimaryArtist")
+  trackCredits           TrackArtist[]
+  albums                 Album[]
+  releases               Release[]                     @relation("ReleaseOwner")
+  notificationState      ArtistNotificationState?
   notificationPreference ArtistNotificationPreference?
-  trackDrafts  ArtistTrackDraft[]
-  releaseCredits ReleaseContributor[]
-  genres       ArtistGenre[]
+  trackDrafts            ArtistTrackDraft[]
+  releaseCredits         ReleaseContributor[]
+  genres                 ArtistGenre[]
 
   sessions           ArtistSession[]
   oauthAccounts      ArtistOAuthAccount[]
@@ -543,30 +547,30 @@ enum ArtistTrackVersion {
 
 // Private preparation metadata. Public Track/audio publication remains separate.
 model ArtistTrackDraft {
-  id            String @id @default(uuid(7)) @db.Uuid
-  ownerArtistId String @db.Uuid
-  releaseId     String? @db.Uuid
-  title         String
-  version       ArtistTrackVersion @default(ORIGINAL)
-  status        ArtistTrackStatus @default(DRAFT)
-  duration      Int?
-  cover         String?
-  previewUrl    String?
+  id               String             @id @default(uuid(7)) @db.Uuid
+  ownerArtistId    String             @db.Uuid
+  releaseId        String?            @db.Uuid
+  title            String
+  version          ArtistTrackVersion @default(ORIGINAL)
+  status           ArtistTrackStatus  @default(DRAFT)
+  duration         Int?
+  cover            String?
+  previewUrl       String?
   // Compact ISO 3901 form (no hyphens); optional until a distributor assigns one.
-  isrc          String? @unique @db.VarChar(12)
+  isrc             String?            @unique @db.VarChar(12)
   // Private uploaded master in STORAGE_SERVICE; never served publicly.
-  audioKey         String? @unique
+  audioKey         String?            @unique
   audioFileName    String?
   audioContentType String?
   audioSizeBytes   Int?
   /// Zero-based order on its release; new recordings go last.
-  position      Int     @default(0)
-  isDemo        Boolean @default(false)
-  deletedAt     DateTime?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @default(now()) @updatedAt
+  position         Int                @default(0)
+  isDemo           Boolean            @default(false)
+  deletedAt        DateTime?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @default(now()) @updatedAt
 
-  owner   Artist @relation(fields: [ownerArtistId], references: [id], onDelete: Restrict)
+  owner   Artist   @relation(fields: [ownerArtistId], references: [id], onDelete: Restrict)
   release Release? @relation(fields: [releaseId, ownerArtistId], references: [id, ownerArtistId], onDelete: Restrict)
 
   @@index([ownerArtistId, deletedAt, updatedAt(sort: Desc)])
@@ -717,25 +721,25 @@ enum ReleaseRightType {
 }
 
 model Release {
-  id            String        @id @default(uuid(7)) @db.Uuid
-  ownerArtistId String        @db.Uuid
-  title         String
-  cover         String?
-  isDemo        Boolean @default(false)
-  type          AlbumType     @default(SINGLE)
-  status        ReleaseStatus @default(DRAFT)
-  upc           String?       @unique @db.VarChar(13)
-  scheduledAt   DateTime?      @db.Timestamptz(3)
+  id                  String              @id @default(uuid(7)) @db.Uuid
+  ownerArtistId       String              @db.Uuid
+  title               String
+  cover               String?
+  isDemo              Boolean             @default(false)
+  type                AlbumType           @default(SINGLE)
+  status              ReleaseStatus       @default(DRAFT)
+  upc                 String?             @unique @db.VarChar(13)
+  scheduledAt         DateTime?           @db.Timestamptz(3)
   // Rights confirmation. Changing credits clears both confirmations; changing the
   // owner or splits clears accuracy, so a confirmation always describes current data.
   masterOwnerType     ReleaseMasterOwner?
   masterOwnerName     String?
-  writersConfirmedAt  DateTime? @db.Timestamptz(3)
-  accuracyConfirmedAt DateTime? @db.Timestamptz(3)
-  submittedAt         DateTime? @db.Timestamptz(3)
-  deletedAt     DateTime?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @default(now()) @updatedAt
+  writersConfirmedAt  DateTime?           @db.Timestamptz(3)
+  accuracyConfirmedAt DateTime?           @db.Timestamptz(3)
+  submittedAt         DateTime?           @db.Timestamptz(3)
+  deletedAt           DateTime?
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @default(now()) @updatedAt
 
   owner        Artist               @relation("ReleaseOwner", fields: [ownerArtistId], references: [id], onDelete: Restrict)
   tracks       ReleaseTrack[]
@@ -748,8 +752,8 @@ model Release {
   deliveries   ReleaseDelivery[]
   reviews      ReleaseReview[]
 
-  @@index([ownerArtistId, deletedAt, createdAt(sort: Desc)])
   @@unique([id, ownerArtistId])
+  @@index([ownerArtistId, deletedAt, createdAt(sort: Desc)])
   @@index([status, scheduledAt])
 }
 
@@ -943,6 +947,33 @@ model UserFollow {
   @@index([followingId, createdAt(sort: Desc)])
 }
 
+/// A pending friend request; deleted once it is accepted, declined or cancelled.
+model FriendRequest {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  senderId   String   @db.Uuid
+  receiverId String   @db.Uuid
+  createdAt  DateTime @default(now())
+
+  sender   User @relation("FriendRequestsSent", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("FriendRequestsReceived", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@unique([senderId, receiverId])
+  @@index([receiverId, createdAt(sort: Desc)])
+}
+
+/// Two users who are friends, stored once with `userAId` < `userBId`.
+model Friendship {
+  userAId   String   @db.Uuid
+  userBId   String   @db.Uuid
+  createdAt DateTime @default(now())
+
+  userA User @relation("FriendshipsAsA", fields: [userAId], references: [id], onDelete: Cascade)
+  userB User @relation("FriendshipsAsB", fields: [userBId], references: [id], onDelete: Cascade)
+
+  @@id([userAId, userBId])
+  @@index([userBId])
+}
+
 model TrackArtist {
   trackId   String  @db.Uuid
   artistId  String  @db.Uuid
@@ -1017,22 +1048,22 @@ model ListeningHistory {
 }
 
 model UserSettings {
-  userId           String   @id @db.Uuid
-  language         String   @default("en")
-  streamingQuality String   @default("automatic")
-  normalizeVolume  Boolean  @default(true)
-  compactLibrary   Boolean  @default(false)
-  showNowPlaying   Boolean  @default(true)
-  autoplay         Boolean  @default(true)
-  explicitContent  Boolean  @default(true)
-  privateSession   Boolean  @default(false)
+  userId                   String   @id @db.Uuid
+  language                 String   @default("en")
+  streamingQuality         String   @default("automatic")
+  normalizeVolume          Boolean  @default(true)
+  compactLibrary           Boolean  @default(false)
+  showNowPlaying           Boolean  @default(true)
+  autoplay                 Boolean  @default(true)
+  explicitContent          Boolean  @default(true)
+  privateSession           Boolean  @default(false)
   /// Followers see what the user is playing (friend activity).
-  showListeningActivity    Boolean @default(true)
+  showListeningActivity    Boolean  @default(true)
   /// Other people can list who follows the user and whom the user follows.
-  followersVisible         Boolean @default(true)
+  followersVisible         Boolean  @default(true)
   /// The user's public playlists are listed on their profile.
-  publicPlaylistsOnProfile Boolean @default(true)
-  updatedAt        DateTime @default(now()) @updatedAt
+  publicPlaylistsOnProfile Boolean  @default(true)
+  updatedAt                DateTime @default(now()) @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -1055,6 +1086,8 @@ enum NotificationType {
   PLAYLIST_UPDATE
   FOLLOW
   SYSTEM
+  FRIEND_REQUEST
+  FRIEND_ACCEPTED
 }
 
 model Notification {

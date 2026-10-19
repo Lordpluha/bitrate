@@ -14,6 +14,7 @@ import { ArtistProfileModule } from '@modules/artist-profile'
 import { ArtistsModule } from '@modules/artists/artists.module'
 import { ArtistsAuthModule } from '@modules/artists-auth/artists-auth.module'
 import { DiscoveryModule } from '@modules/discovery/discovery.module'
+import { FriendsModule } from '@modules/friends/friends.module'
 import { HistoryModule } from '@modules/history/history.module'
 import { MeModule } from '@modules/me/me.module'
 import { ModerationModule } from '@modules/moderation/moderation.module'
@@ -70,6 +71,7 @@ import { i18nOptions } from './i18n/i18n.config'
     SearchModule,
     HistoryModule,
     NotificationsModule,
+    FriendsModule,
     DiscoveryModule,
     MeModule,
     PodcastsModule,
