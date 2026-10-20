@@ -1,6 +1,11 @@
 import type * as Preset from '@docusaurus/preset-classic'
 import type { Config } from '@docusaurus/types'
-import { themes as prismThemes } from 'prism-react-renderer'
+
+import adrIndexPlugin from './src/plugins/adrIndex'
+import { bitrateTheme } from './src/prism/bitrateTheme'
+
+/** Must match DIM_STORAGE_KEY in src/theme/Navbar/ColorModeToggle. */
+const DIM_STORAGE_KEY = 'bitrate-docs-dim'
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -13,6 +18,16 @@ const config: Config = {
   future: {
     v4: true, // Improve compatibility with the upcoming Docusaurus v4
   },
+  clientModules: ['./src/fonts.ts'],
+  plugins: [adrIndexPlugin],
+  /** Restores the dim variant before first paint, so a dim reader never sees a dark flash. */
+  headTags: [
+    {
+      tagName: 'script',
+      attributes: {},
+      innerHTML: `try{if(localStorage.getItem('${DIM_STORAGE_KEY}')==='1')document.documentElement.dataset.themeVariant='dim'}catch(e){}`,
+    },
+  ],
   themes: [
     '@docusaurus/theme-mermaid',
     [
@@ -100,7 +115,12 @@ const config: Config = {
   themeConfig: {
     image: 'img/bitrate-social-card.png',
     colorMode: {
+      defaultMode: 'dark',
       respectPrefersColorScheme: true,
+    },
+    mermaid: {
+      theme: { light: 'neutral', dark: 'dark' },
+      options: { fontFamily: 'Inter Variable, system-ui, sans-serif' },
     },
     navbar: {
       title: 'Bitrate Docs',
@@ -116,17 +136,18 @@ const config: Config = {
           label: 'Documentation',
         },
         { to: '/blog', label: 'Blog', position: 'left' },
+        /** Placed first on the right so the search box leads the right-hand group. */
+        { type: 'search', position: 'right' },
         {
           href: 'https://github.com/lordpluha/bitrate',
-          label: 'GitHub',
           position: 'right',
+          className: 'header-github-link',
+          'aria-label': 'GitHub repository',
         },
-        /** Placed last so the search box sits at the far right of the navbar. */
-        { type: 'search', position: 'right' },
       ],
     },
     footer: {
-      style: 'dark',
+      style: 'light',
       links: [
         {
           title: 'Documentation',
@@ -179,8 +200,8 @@ const config: Config = {
       copyright: `Copyright © ${new Date().getFullYear()} Lordpluha. Built with Docusaurus.`,
     },
     prism: {
-      theme: prismThemes.github,
-      darkTheme: prismThemes.dracula,
+      theme: bitrateTheme,
+      darkTheme: bitrateTheme,
     },
   } satisfies Preset.ThemeConfig,
 }
