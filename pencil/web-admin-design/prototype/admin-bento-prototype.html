@@ -127,7 +127,7 @@ kbd { font: 600 11px var(--font); padding: 3px 7px; border-radius: 7px; backgrou
 .ibtn .badge { position: absolute; top: 8px; right: 9px; width: 8px; height: 8px; border-radius: 50%; background: var(--magenta); box-shadow: 0 0 0 2px var(--glass-strong); }
 .ibtn.spin svg { animation: spin .9s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.avatar { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 13px; color: #fff; background: linear-gradient(135deg, var(--primary), var(--blue)); }
+.avatar { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 13px; color: #fff; background: linear-gradient(135deg, var(--primary), var(--blue)); }
 /* the island's live pocket: it widens for a status and folds back */
 .pocket { display: flex; align-items: center; gap: 10px; max-width: 0; opacity: 0; white-space: nowrap; overflow: hidden; transition: max-width .55s cubic-bezier(.2,.9,.25,1.1), opacity .3s, padding .3s; font-size: 13px; font-weight: 600; }
 .island.live .pocket { max-width: 360px; opacity: 1; padding: 0 12px 0 4px; }
@@ -403,6 +403,148 @@ kbd { font: 600 11px var(--font); padding: 3px 7px; border-radius: 7px; backgrou
 .head .actions { display: flex; align-items: center; gap: 8px; }
 .head .actions .ibtn { background: var(--glass-strong); border: 1px solid var(--glass-line); }
 
+
+/* ---------- notification settings ---------- */
+.ns-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gap); align-items: start; }
+.ns-grid .w1 { grid-column: span 1; } .ns-grid .w4 { grid-column: 1 / -1; }
+.ns-grid .tile { cursor: default; }
+.ns-grid .tile:hover { transform: none; }
+.ns-grid .tc { overflow: visible; margin-right: 0; padding-right: 0; }
+.ns-err { min-height: 360px; }
+.nacts { display: flex; align-items: center; gap: 10px; }
+.savep { display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 14px; border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--success-text); background: var(--success-surface); transition: background .2s, color .2s; }
+.savep.saving { color: var(--muted-fg); background: color-mix(in srgb, var(--fg) 7%, transparent); }
+.savep.saving svg { animation: spin .9s linear infinite; }
+.banner { flex-direction: row; align-items: center; gap: 14px; border-color: color-mix(in srgb, var(--warning) 45%, var(--glass-line)); }
+.banner .ai { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; flex: none; }
+.banner .tx { flex: 1; } .banner .tx b { display: block; } .banner .tx small { color: var(--muted-fg); }
+.ch-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--glass-line); }
+.ch-row:last-child { border-bottom: 0; }
+.ch-row .ai { width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; flex: none; background: color-mix(in srgb, var(--fg) 7%, transparent); }
+.ch-row .tx { flex: 1; min-width: 0; }
+.ch-row .tx b { display: block; font-weight: 600; }
+.ch-row .tx small { color: var(--muted-fg); font-size: 12px; }
+.delta.warn { background: var(--warning-surface); color: var(--warning-text); }
+.sw { position: relative; width: 42px; height: 24px; border-radius: 12px; flex: none; background: color-mix(in srgb, var(--fg) 16%, transparent); transition: background .2s; }
+.sw i { position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--fg); transition: left .25s cubic-bezier(.2,.9,.25,1.2); }
+.sw.on { background: var(--primary); }
+.sw.on i { left: 21px; background: var(--primary-fg); }
+.sw:disabled, .ck:disabled, .cht:disabled { opacity: .35; cursor: not-allowed; }
+.field { display: flex; flex-direction: column; gap: 8px; padding: 10px 0; }
+.field.row { flex-direction: row; align-items: center; gap: 10px; }
+.field.off { opacity: .45; }
+.field label { font-size: 13px; color: var(--muted-fg); }
+.field .tx { flex: 1; } .field .tx b { display: block; font-weight: 600; font-size: 13px; } .field .tx small { color: var(--muted-fg); font-size: 12px; }
+.field .rl { display: flex; justify-content: space-between; align-items: baseline; }
+.field .rl b { font: 600 18px var(--display); }
+.ns-seg { align-self: flex-start; flex-wrap: wrap; }
+.ns-seg button.on { background: var(--primary); color: var(--primary-fg); }
+input[type="range"] { width: 100%; accent-color: var(--primary); }
+.time { font: 500 14px var(--font); color: var(--fg); padding: 7px 10px; border-radius: 10px; border: 1px solid var(--glass-line); background: color-mix(in srgb, var(--fg) 6%, transparent); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chipt { height: 32px; padding: 0 13px; border-radius: 999px; font-size: 13px; font-weight: 600; border: 1px solid var(--glass-line); transition: background .2s; }
+.chipt.on { background: var(--primary); color: var(--primary-fg); border-color: transparent; }
+/* preview: a push card, the email it sends and where it goes */
+.pv-push { display: flex; gap: 12px; padding: 14px; border-radius: 18px; background: color-mix(in srgb, var(--card) 70%, transparent); border: 1px solid var(--glass-line); box-shadow: 0 16px 40px -20px rgb(0 0 0 / .5); animation: rise .4s cubic-bezier(.2,.8,.2,1); }
+.pv-app { width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; flex: none; background: color-mix(in srgb, var(--fg) 8%, transparent); }
+.pv-app .mark { width: 24px; height: 24px; }
+.pv-tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; font-size: 13px; }
+.pv-tx span { color: var(--muted-fg); }
+.pv-top { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted-fg); }
+.pv-top b { color: var(--fg); font-weight: 600; }
+.pv-mail { margin-top: 10px; padding: 14px; border-radius: 18px; border: 1px dashed var(--glass-line); font-size: 13px; display: flex; flex-direction: column; gap: 6px; }
+.pv-mail small { display: inline-block; width: 64px; color: var(--muted-fg); }
+.pv-mail p { margin: 4px 0 0; color: var(--muted-fg); }
+.pv-route { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 12px; }
+.muted-s { font-size: 12px; color: var(--muted-fg); margin-right: 2px; }
+/* events: a matrix on wide screens, cards with channel chips on phones */
+.mx { width: 100%; border-collapse: collapse; font-size: 13px; }
+.mx th { padding: 10px 8px; font-size: 12px; font-weight: 600; color: var(--muted-fg); text-align: center; white-space: nowrap; }
+.mx th svg { width: 15px; height: 15px; vertical-align: -3px; margin-right: 6px; }
+.mx th:first-child, .mx td:first-child { text-align: left; }
+.mx th.dim { opacity: .4; }
+.mx td { padding: 10px 8px; border-top: 1px solid var(--glass-line); text-align: center; }
+.mx td b { display: block; font-weight: 600; }
+.mx td small { color: var(--muted-fg); font-size: 12px; }
+.mx .grp td { padding: 14px 8px 6px; border-top: 0; font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted-fg); }
+.mx tr.ev { cursor: pointer; transition: background .2s; }
+.mx tr.ev:hover td { background: color-mix(in srgb, var(--fg) 3%, transparent); }
+.mx tr.sel td { background: color-mix(in srgb, var(--primary) 10%, transparent); }
+.mx tr.sel td:first-child { box-shadow: inset 3px 0 0 var(--primary); }
+.ck { width: 26px; height: 26px; border-radius: 8px; display: inline-grid; place-items: center; border: 1.5px solid color-mix(in srgb, var(--fg) 25%, transparent); transition: background .2s, border-color .2s; }
+.ck svg { width: 14px; height: 14px; opacity: 0; transform: scale(.5); transition: opacity .2s, transform .25s cubic-bezier(.2,.9,.25,1.4); }
+.ck.on { background: var(--primary); border-color: var(--primary); color: var(--primary-fg); }
+.ck.on svg { opacity: 1; transform: none; }
+.evcards { display: none; flex-direction: column; gap: 14px; }
+.evg h5 { margin: 4px 0 8px; font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted-fg); }
+.evc { padding: 12px; border-radius: 16px; border: 1px solid var(--glass-line); background: color-mix(in srgb, var(--card) 50%, transparent); display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
+.evc.sel { border-color: color-mix(in srgb, var(--primary) 55%, transparent); }
+.evh { display: flex; align-items: center; gap: 8px; } .evh b { flex: 1; font-weight: 600; font-size: 13px; }
+.evch { display: flex; flex-wrap: wrap; gap: 6px; }
+.cht { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border-radius: 999px; font-size: 12px; font-weight: 600; border: 1px solid var(--glass-line); color: var(--muted-fg); }
+.cht svg { width: 14px; height: 14px; }
+.cht.on { background: color-mix(in srgb, var(--primary) 22%, transparent); border-color: color-mix(in srgb, var(--primary) 50%, transparent); color: var(--fg); }
+
+/* ---------- bell popover and in-app toast ---------- */
+.npop { position: fixed; top: 84px; right: 16px; z-index: 65; width: 380px; max-height: 70vh; border-radius: 22px; background: color-mix(in srgb, var(--card) 90%, transparent); border: 1px solid var(--glass-line); box-shadow: var(--shadow); -webkit-backdrop-filter: blur(24px) saturate(150%); backdrop-filter: blur(24px) saturate(150%); display: none; flex-direction: column; overflow: hidden; }
+.npop.open { display: flex; animation: pop .3s cubic-bezier(.2,.9,.25,1.2); }
+.npop header, .npop footer { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; }
+.npop header { border-bottom: 1px solid var(--glass-line); }
+.npop footer { border-top: 1px solid var(--glass-line); justify-content: center; }
+.npop .nlist { overflow: auto; padding: 6px 8px; }
+.nitem { position: relative; display: flex; gap: 12px; padding: 10px 8px; border-radius: 14px; }
+.nitem:hover { background: color-mix(in srgb, var(--fg) 5%, transparent); }
+.nitem .ai { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; flex: none; }
+.nitem .tx { flex: 1; min-width: 0; display: flex; flex-direction: column; font-size: 13px; }
+.nitem .tx b { font-weight: 600; }
+.nitem .tx small { color: var(--muted-fg); font-size: 12px; }
+.nitem.un::after { content: ""; position: absolute; top: 16px; right: 10px; width: 8px; height: 8px; border-radius: 50%; background: var(--magenta); }
+.toast { position: fixed; top: 86px; right: 24px; z-index: 66; width: 340px; display: flex; gap: 12px; padding: 14px; border-radius: 20px; background: var(--glass-strong); border: 1px solid var(--glass-line); box-shadow: var(--shadow); -webkit-backdrop-filter: blur(22px); backdrop-filter: blur(22px); opacity: 0; transform: translateY(-16px) scale(.97); pointer-events: none; transition: opacity .3s, transform .45s cubic-bezier(.2,.9,.25,1.2); }
+.toast.on { opacity: 1; transform: none; }
+
+/* ---------- prototype dock and the mobile demo stage ---------- */
+.dock .dsep { width: 1px; height: 22px; background: var(--glass-line); margin: 0 4px; }
+.dock [data-device] { display: inline-flex; align-items: center; gap: 6px; }
+.dock [data-device] svg { width: 15px; height: 15px; }
+.embed .dock, .embed .stage { display: none; }
+.stage { display: none; }
+body.device .app, body.device .mtabs, body.device .dock, body.device .topbar { display: none; }
+body.device .stage { position: relative; z-index: 1; min-height: 100vh; display: flex; align-items: center; justify-content: center; gap: 48px; padding: 20px; }
+.phone { flex: none; width: 414px; height: 868px; padding: 12px; border-radius: 62px; background: linear-gradient(145deg, #30333d, #0b0c10); box-shadow: 0 0 0 2px #3b3e49, 0 50px 100px -30px rgb(0 0 0 / .65); transform: scale(var(--s, 1)); transform-origin: center; }
+.screen { position: relative; width: 390px; height: 844px; border-radius: 50px; overflow: hidden; display: flex; flex-direction: column; background: var(--bg); }
+.sbar { position: relative; z-index: 2; flex: none; height: 47px; display: flex; align-items: center; justify-content: space-between; padding: 4px 30px 0 36px; font-size: 15px; font-weight: 600; background: var(--bg); color: var(--fg); }
+.sbar .notch { position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 122px; height: 35px; border-radius: 20px; background: #000; }
+.sbar .icons { display: flex; align-items: center; gap: 6px; }
+.sbar .icons svg { width: 17px; height: 17px; }
+.screen iframe { flex: 1; width: 100%; border: 0; background: var(--bg); }
+.screen .home { position: absolute; bottom: 8px; left: 50%; z-index: 3; width: 134px; height: 5px; border-radius: 3px; transform: translateX(-50%); background: var(--fg); opacity: .55; pointer-events: none; }
+.demo { width: 330px; border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 16px; }
+.demo h3 { margin: 0; font: 600 20px var(--display); }
+.demo p { margin: 0; color: var(--muted-fg); font-size: 13px; }
+.demo .grp small { display: block; margin-bottom: 8px; font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted-fg); }
+.demo .opts { display: flex; flex-wrap: wrap; gap: 6px; }
+.demo .opts button { height: 32px; padding: 0 12px; border-radius: 999px; font-size: 13px; font-weight: 600; background: color-mix(in srgb, var(--fg) 7%, transparent); }
+.demo .opts button.on { background: var(--primary); color: var(--primary-fg); }
+.demo > .pill { align-self: flex-start; }
+@media (max-width: 1000px) { body.device .stage { flex-direction: column; } }
+
+@media (max-width: 860px) {
+  .ns-grid { grid-template-columns: 1fr; }
+  .ns-grid .tile { grid-column: auto; }
+  .ns-grid .w4 { grid-column: auto; }
+  .mx { display: none; }
+  .evcards { display: flex; }
+  .nacts { width: 100%; justify-content: space-between; }
+  .head { flex-wrap: wrap; }
+  .head .nacts { display: flex; }
+  .banner { flex-wrap: wrap; }
+  .npop { top: auto; bottom: 80px; left: 10px; right: 10px; width: auto; max-height: calc(100vh - 170px); border-radius: 26px; z-index: 72; }
+  .toast { top: 76px; left: 12px; right: 12px; width: auto; }
+  .mtop .ibtn .badge { top: 8px; right: 9px; }
+  /* phones use the compact top bar and the range row; the desktop bar and header controls step aside */
+  .topbar, .head .actions:not(.nacts) { display: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
 }
@@ -439,13 +581,14 @@ kbd { font: 600 11px var(--font); padding: 3px 7px; border-radius: 7px; backgrou
     <div class="mtop glass">
       <div class="brand"><svg class="mark" aria-hidden="true"><use href="#bitrate-mark"/></svg><span class="words"><b>Bitrate</b><small data-t="Operators">Operators</small></span></div>
       <button type="button" class="ibtn" data-open="palette" aria-label="Search"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg></button>
+      <button type="button" class="ibtn" id="mbell" aria-label="Notifications"><svg class="i" aria-hidden="true"><use href="#i-bell"/></svg><span class="badge"></span></button>
       <button type="button" class="ibtn" id="menuBtn" aria-label="Menu"><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg></button>
     </div>
 
     <div class="topbar">
       <button type="button" class="search glass" data-open="palette"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><span data-t="Search or jump to…">Search or jump to…</span><kbd>⌘K</kbd></button>
       <div class="island glass" id="island">
-        <div class="crumb"><span class="dot"></span><span data-t="Overview">Overview</span></div>
+        <div class="crumb"><span class="dot"></span><span id="crumb">Overview</span></div>
         <div class="pocket" id="pocket"></div>
         <div class="sep"></div>
         <button type="button" class="ibtn" id="bellBtn" aria-label="Notifications"><svg class="i" aria-hidden="true"><use href="#i-bell"/></svg><span class="badge"></span></button>
@@ -453,37 +596,29 @@ kbd { font: 600 11px var(--font); padding: 3px 7px; border-radius: 7px; backgrou
       </div>
     </div>
 
-    <header class="head">
-      <div>
-        <div class="eyebrow" data-t="OVERVIEW · TUE, OCT 20">OVERVIEW · TUE, OCT 20</div>
-        <h1><span data-t="Good morning,">Good morning,</span> <em>Mara</em></h1>
-        <p data-t="What needs attention across Bitrate today.">What needs attention across Bitrate today.</p>
-      </div>
-      <div class="grow"></div>
-      <div class="actions"><div class="seg glass" id="seg"><span class="thumb"></span></div><button type="button" class="ibtn" id="refreshBtn" aria-label="Refresh"><svg class="i" aria-hidden="true"><use href="#i-refresh"/></svg></button></div>
-    </header>
-    <div class="mrange"><div class="seg" id="mseg"><span class="thumb"></span></div><div class="grow" style="flex:1"></div><button type="button" class="ibtn" id="mrefresh" aria-label="Refresh"><svg class="i" aria-hidden="true"><use href="#i-refresh"/></svg></button></div>
-
-    <section class="bento" id="bento" aria-live="polite"></section>
+    <div id="page"></div>
   </main>
 </div>
 
 <nav class="mtabs" aria-label="Sections">
-  <button type="button" class="on" aria-label="Overview"><svg class="i" aria-hidden="true"><use href="#i-dashboard"/></svg></button>
-  <button type="button" aria-label="Moderation"><svg class="i" aria-hidden="true"><use href="#i-flag"/></svg><span class="badge"></span></button>
-  <button type="button" aria-label="Releases"><svg class="i" aria-hidden="true"><use href="#i-disc"/></svg></button>
-  <button type="button" aria-label="Catalog"><svg class="i" aria-hidden="true"><use href="#i-audio"/></svg></button>
+  <button type="button" data-tab="overview" class="on" aria-label="Overview"><svg class="i" aria-hidden="true"><use href="#i-dashboard"/></svg></button>
+  <button type="button" data-open="palette" aria-label="Search"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg></button>
+  <button type="button" data-tab="alerts" aria-label="Alerts"><svg class="i" aria-hidden="true"><use href="#i-bell"/></svg><span class="badge"></span></button>
+  <button type="button" data-tab="notifications" aria-label="Notification settings"><svg class="i" aria-hidden="true"><use href="#i-sliders"/></svg></button>
   <button type="button" aria-label="Menu" id="menuTab"><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg></button>
 </nav>
 <div class="sheet glass" id="sheet"><div class="grab"></div><nav class="nav" id="snav"></nav><div class="prefs" id="sprefs"></div></div>
 
-<div class="dock glass" role="toolbar" aria-label="Prototype states">
-  <small>State</small>
-  <button type="button" data-view="default" class="on">Default</button>
-  <button type="button" data-view="loading">Loading</button>
-  <button type="button" data-view="empty">Empty</button>
-  <button type="button" data-view="partial">Partial</button>
-  <button type="button" data-view="error">Error</button>
+<div class="dock glass" id="dock" role="toolbar" aria-label="Prototype states"></div>
+<div class="npop" id="npop" role="dialog" aria-label="Notifications"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="stage" id="stage">
+  <div class="phone"><div class="screen">
+    <div class="sbar"><span>9:41</span><span class="notch"></span><span class="icons"><svg class="i" aria-hidden="true"><use href="#i-signal"/></svg><svg class="i" aria-hidden="true"><use href="#i-wifi"/></svg><svg class="i" aria-hidden="true"><use href="#i-battery"/></svg></span></div>
+    <iframe id="frame" title="Bitrate Admin on a phone"></iframe>
+    <i class="home"></i>
+  </div></div>
+  <aside class="demo glass" id="demo" aria-label="Mobile demo controls"></aside>
 </div>
 
 <div class="dover" id="dover"><div class="detail glass" id="detail" role="dialog" aria-modal="true" aria-label="Analysis"><div class="dcontent"></div></div></div>
@@ -531,6 +666,19 @@ kbd { font: 600 11px var(--font); padding: 3px 7px; border-radius: 7px; backgrou
   <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
   <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></symbol>
+  <symbol id="i-hash" viewBox="0 0 24 24"><path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M14.54 21.69a.5.5 0 0 0 .94-.03l6.5-19a.5.5 0 0 0-.64-.64l-19 6.5a.5.5 0 0 0-.03.94l7.93 3.18a2 2 0 0 1 1.11 1.11z"/><path d="m21.85 2.15-10.94 10.94"/></symbol>
+  <symbol id="i-tick" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+  <symbol id="i-signal" viewBox="0 0 24 24"><path d="M2 20h.01M7 20v-4M12 20v-8M17 20V8M22 4v16"/></symbol>
+  <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M12 20h.01M2 8.82a15 15 0 0 1 20 0M5 12.86a10 10 0 0 1 14 0M8.5 16.43a5 5 0 0 1 7 0"/></symbol>
+  <symbol id="i-battery" viewBox="0 0 24 24"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2M6 11v2M10 11v2"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></symbol>
 </svg>
 
@@ -572,15 +720,16 @@ const ico = (id) => `<svg class="i" aria-hidden="true"><use href="#i-${id}"/></s
 
 /* ---------- navigation (mirrors apps/admin) ---------- */
 const NAV = [
-  [null, [['dashboard', 'Overview', 0, true]]],
+  [null, [['dashboard', 'Overview', 0, 'overview']]],
   ['Operations', [['flag', 'Moderation', 16], ['disc', 'Releases', 7], ['audio', 'Catalog', 4], ['album', 'Albums'], ['list', 'Playlists'], ['podcast', 'Podcasts'], ['tags', 'Genres']]],
   ['Accounts', [['mic', 'Artists'], ['users', 'Listeners']]],
   ['System', [['scroll', 'Audit log'], ['shield', 'Roles'], ['id', 'Staff']]],
+  ['Settings', [['bell', 'Notifications', 0, 'notifications']]],
 ]
 let reports = 16
-const navHTML = () => NAV.map(([g, items], gi) => `${g ? `<h6>${t(g)}</h6>` : ''}${gi ? '<hr>' : ''}${items.map(([i, l, c, on]) => {
+const navHTML = () => NAV.map(([g, items], gi) => `${g ? `<h6>${t(g)}</h6>` : ''}${gi ? '<hr>' : ''}${items.map(([i, l, c, page]) => {
   const n = l === 'Moderation' ? reports : c
-  return `<button type="button" class="item${on ? ' on' : ''}${l === 'Moderation' ? ' hot' : ''}" title="${t(l)}">${ico(i)}<span class="lbl">${t(l)}</span>${n ? `<span class="count num">${n}</span>` : ''}</button>`
+  return `<button type="button" class="item${page && page === S.page ? ' on' : ''}${l === 'Moderation' ? ' hot' : ''}" title="${t(l)}" data-page="${page || 'stub'}">${ico(i)}<span class="lbl">${t(l)}</span>${n ? `<span class="count num">${n}</span>` : ''}</button>`
 }).join('')}`).join('')
 
 /* ---------- data per range ---------- */
@@ -685,8 +834,19 @@ function countUp(el) {
   }
   requestAnimationFrame(step)
 }
+function overviewHTML() {
+  return `<header class="head"><div><div class="eyebrow">${t('OVERVIEW · TUE, OCT 20')}</div><h1><span>${t('Good morning,')}</span> <em>Mara</em></h1><p>${t('What needs attention across Bitrate today.')}</p></div><div class="grow"></div>
+    <div class="actions"><div class="seg glass" id="seg"><span class="thumb"></span></div><button type="button" class="ibtn" id="refreshBtn" aria-label="Refresh">${ico('refresh')}</button></div></header>
+    <div class="mrange"><div class="seg" id="mseg"><span class="thumb"></span></div><div class="grow" style="flex:1"></div><button type="button" class="ibtn" id="mrefresh" aria-label="Refresh">${ico('refresh')}</button></div>
+    <section class="bento" id="bento" aria-live="polite">${bentoHTML()}</section>`
+}
 function render() {
-  $('#bento').innerHTML = bentoHTML()
+  $('#page').innerHTML = S.page === 'overview' ? overviewHTML() : notifHTML()
+  seg($('#seg')); seg($('#mseg'))
+  $('#crumb').textContent = t(PAGES[S.page])
+  $$('.mtabs [data-tab]').forEach((x) => { x.classList.toggle('on', x.dataset.tab === S.page) })
+  $('#nav').innerHTML = navHTML(); $('#snav').innerHTML = navHTML()
+  badges()
   requestAnimationFrame(() => requestAnimationFrame(() => {
     $$('.col[data-h]').forEach((c) => { c.style.height = `${c.dataset.h * 100}%` })
     $$('[data-w]').forEach((c) => { c.style.width = `${c.dataset.w}%` })
@@ -694,6 +854,7 @@ function render() {
   }))
 }
 function seg(el) {
+  if (!el) return
   el.innerHTML = '<span class="thumb"></span>' + ['7d', '30d', '90d'].map((r) => `<button data-range="${r}" class="${r === S.range ? 'on' : ''}">${S.lang === 'uk' ? r.replace('d', ' дн') : r}</button>`).join('')
   requestAnimationFrame(() => {
     const on = $('.on', el), th = $('.thumb', el)
@@ -760,7 +921,7 @@ setInterval(() => {
 
 /* ---------- command palette ---------- */
 const COMMANDS = () => [
-  ['Navigation', NAV.flatMap(([, items]) => items).map(([i, l]) => [i, l, () => {}])],
+  ['Navigation', NAV.flatMap(([, items]) => items).map(([i, l, , p]) => [i, l, () => go(p || 'stub')])],
   ['Actions', [
     [THEME_ICON[S.theme], 'Switch theme', cycleTheme],
     ['languages', 'Switch language', toggleLang],
@@ -790,23 +951,27 @@ function toggleCollapse() { S.collapsed = !S.collapsed; chrome(); setTimeout(() 
 document.addEventListener('click', (e) => {
   if (detailClick(e)) return
   const b = e.target.closest('button, [data-open]')
-  if (!b) { if (e.target.id === 'scrim') closePalette(); return }
+  if (!b) { if (e.target.id === 'scrim') closePalette(); if (!e.target.closest('#npop')) closePop(); return }
+  if (!b.closest('#npop') && b.id !== 'bellBtn' && b.id !== 'mbell' && b.dataset.tab !== 'alerts') closePop()
+  if (demoClick(b) || nsClick(b)) return
+  if (b.dataset.page) return go(b.dataset.page)
+  if (b.dataset.tab) return b.dataset.tab === 'alerts' ? togglePop() : go(b.dataset.tab)
+  if ('readall' in b.dataset) { unread = 0; $('#npop').innerHTML = popHTML(); return badges() }
   if (b.id === 'themeBtn' || (b.closest('#sprefs') && b.querySelector('use[href^="#i-moon"], use[href^="#i-sun"], use[href^="#i-contrast"]'))) return cycleTheme()
   if (b.id === 'langBtn' || (b.closest('#sprefs') && b.querySelector('use[href="#i-languages"]'))) return toggleLang()
   if (b.id === 'collapseBtn') return toggleCollapse()
   if (b.id === 'refreshBtn' || b.id === 'mrefresh') return refresh()
-  if (b.id === 'bellBtn') return island(`<span class="pdot">${ico('bell')}</span><span class="num">${reports}</span>&nbsp;${t('Reports to review')}`)
+  if (b.id === 'bellBtn' || b.id === 'mbell') return togglePop()
   if (b.id === 'menuBtn' || b.id === 'menuTab') return $('#sheet').classList.toggle('open')
   if (b.dataset.open === 'palette') return openPalette()
   if (b.dataset.range) { S.range = b.dataset.range; seg($('#seg')); seg($('#mseg')); return render() }
-  if (b.dataset.view) { S.view = b.dataset.view; $$('.dock button').forEach((x) => { x.classList.toggle('on', x === b) }); return render() }
-  if ('retry' in b.dataset) { S.view = 'loading'; render(); setTimeout(() => { S.view = 'default'; $$('.dock button').forEach((x) => { x.classList.toggle('on', x.dataset.view === 'default') }); render() }, 1200); return }
+  if (b.dataset.view) return setView(b.dataset.view)
+  if ('retry' in b.dataset) { S.view = 'loading'; render(); setTimeout(() => { S.view = 'default'; renderDock(); render() }, 1200); return }
   if (b.classList.contains('opt')) { sel = +b.dataset.k; return runSel() }
-  if (b.closest('.mtabs')) $$('.mtabs button').forEach((x) => { x.classList.toggle('on', x === b) })
 })
 document.addEventListener('keydown', (e) => {
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); return $('#scrim').classList.contains('open') ? closePalette() : openPalette() }
-  if (!$('#scrim').classList.contains('open')) { if (e.key === 'Escape') $('#sheet').classList.remove('open'); return }
+  if (!$('#scrim').classList.contains('open')) { if (e.key === 'Escape') { $('#sheet').classList.remove('open'); closePop() } return }
   if (e.key === 'Escape') closePalette()
   else if (e.key === 'ArrowDown') { sel++; paletteList(); e.preventDefault() }
   else if (e.key === 'ArrowUp') { sel = Math.max(0, sel - 1); paletteList(); e.preventDefault() }
@@ -1219,7 +1384,328 @@ document.addEventListener('keydown', (e) => {
   if (tl && e.target === tl && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openDetail(tl) }
 }, true)
 
+
+/* ---------- pages: Overview and Notification settings ---------- */
+Object.assign(UK, {
+  'Notifications': 'Сповіщення', 'Notification settings': 'Налаштування сповіщень', 'SETTINGS · NOTIFICATIONS': 'НАЛАШТУВАННЯ · СПОВІЩЕННЯ',
+  'Choose what reaches you, where and when. Changes save automatically.': 'Оберіть, що, куди й коли до вас надходить. Зміни зберігаються автоматично.',
+  'Saved': 'Збережено', 'Saving…': 'Зберігаю…', 'just now': 'щойно', 'Send test': 'Надіслати тест', 'Test sent': 'Тест надіслано',
+  'Channels': 'Канали', 'Where alerts can reach you': 'Куди можуть надходити сповіщення', 'In-app': 'У застосунку', 'Email': 'Пошта', 'Push': 'Push', 'Slack': 'Slack',
+  'Bell and island in the admin console': 'Дзвіночок і острів у консолі', 'This browser and the mobile app': 'Цей браузер і мобільний застосунок',
+  'Connected': 'Підключено', 'Off': 'Вимкнено', 'Blocked': 'Заблоковано', 'Verified': 'Підтверджено',
+  'Preview': 'Попередній перегляд', 'How the selected event arrives': 'Як надходить обрана подія', 'Delivered to': 'Доставка в', 'Held by quiet hours until': 'Затримано тихими годинами до', 'Nowhere — all channels are off for this event': 'Нікуди — для цієї події всі канали вимкнені',
+  'Events': 'Події', 'Pick channels per event. Click an event to preview it.': 'Оберіть канали для кожної події. Натисніть подію для перегляду.', 'Event': 'Подія', 'Priority': 'Пріоритет',
+  'Critical': 'Критично', 'High': 'Високий', 'Normal': 'Звичайний',
+  'Moderation': 'Модерація', 'Releases': 'Релізи', 'Catalog': 'Каталог', 'Security': 'Безпека',
+  'New report filed': 'Подано нову скаргу', 'Every report entering the queue': 'Кожна скарга, що потрапляє в чергу',
+  'Report escalated': 'Скаргу ескальовано', 'A moderator asked for a second opinion': 'Модератор попросив другу думку',
+  'SLA breach': 'Порушення SLA', 'A report waits longer than the SLA': 'Скарга чекає довше за SLA',
+  'Release submitted for review': 'Реліз подано на перевірку', 'An artist sent a release to review': 'Артист надіслав реліз на перевірку',
+  'Changes resubmitted': 'Зміни подано повторно', 'A release came back after requested changes': 'Реліз повернувся після запитаних змін',
+  'Track processing failed': 'Помилка обробки треку', 'An upload could not be processed': 'Завантаження не вдалося обробити',
+  'Pipeline stuck': 'Конвеєр завис', 'Tracks wait in processing too long': 'Треки надто довго чекають обробки',
+  'Artist verification request': 'Запит на верифікацію артиста', 'An artist asked for the verified badge': 'Артист попросив значок верифікації',
+  'Unusual sign-up spike': 'Незвичний сплеск реєстрацій', 'Sign-ups exceed the usual rate': 'Реєстрацій більше за звичайне',
+  'New staff sign-in': 'Новий вхід персоналу', 'A staff account signed in from a new device': 'Обліковий запис персоналу увійшов з нового пристрою',
+  'Role or permissions changed': 'Змінено роль або дозволи', 'Someone changed staff access': 'Хтось змінив доступ персоналу',
+  'Repeated failed sign-ins': 'Повторні невдалі входи', 'Several failed attempts on a staff account': 'Кілька невдалих спроб входу в обліковий запис персоналу',
+  'Delivery': 'Доставка', 'Digest and quiet hours': 'Дайджест і тихі години', 'Digest': 'Дайджест', 'Instant': 'Одразу', 'Hourly': 'Щогодини', 'Daily': 'Щодня', 'Weekly': 'Щотижня', 'Send at': 'Надсилати о',
+  'Quiet hours': 'Тихі години', 'Pause non-critical alerts overnight': 'Призупиняти некритичні сповіщення вночі', 'From': 'З', 'To': 'До',
+  'Critical alerts bypass quiet hours': 'Критичні сповіщення ігнорують тихі години',
+  'Thresholds': 'Пороги', 'When an alert fires': 'Коли спрацьовує сповіщення', 'SLA breach after': 'Порушення SLA після', 'Failed tracks per hour': 'Невдалих треків за годину', 'Sign-up spike at': 'Сплеск реєстрацій від',
+  'Escalation': 'Ескалація', 'Unacknowledged critical alerts': 'Непідтверджені критичні сповіщення', 'Escalate after': 'Ескалювати через', 'to': 'до',
+  'Super admin': 'Суперадмін', 'Moderator': 'Модератор', 'Operations': 'Операції', 'On-call': 'Черговий',
+  'Browser notifications are blocked': 'Сповіщення браузера заблоковані', 'Allow notifications for this site in the browser settings, then try again.': 'Дозвольте сповіщення для цього сайту в налаштуваннях браузера й спробуйте ще.',
+  'Try again': 'Спробувати ще', 'Couldn’t load your notification settings': 'Не вдалося завантажити налаштування сповіщень', 'Nothing was changed. Try again in a moment.': 'Нічого не змінено. Спробуйте за мить.',
+  'Mark all read': 'Позначити все прочитаним', 'Prototype: this section is not drawn yet': 'Прототип: цей розділ ще не намальовано', 'Search': 'Пошук', 'Alerts': 'Сповіщення', 'Settings': 'Налаштування',
+})
+const PAGES = { overview: 'Overview', notifications: 'Notifications' }
+S.page = location.hash === '#notifications' ? 'notifications' : 'overview'
+S.nview = 'default'
+function go(page) {
+  if (!PAGES[page]) return island(`<span class="pdot">${ico('info')}</span>${t('Prototype: this section is not drawn yet')}`)
+  if (DT.open) closeDetail()
+  S.page = page
+  if (!EMBED) history.replaceState(null, '', page === 'overview' ? location.pathname + location.search : '#notifications')
+  $('#sheet').classList.remove('open')
+  closePop()
+  all()
+  scrollTo({ top: 0, behavior: 'smooth' })
+  report()
+}
+
+/* ---------- notification settings ---------- */
+const CH = [
+  ['inapp', 'bell', 'In-app', 'Bell and island in the admin console'],
+  ['email', 'mail', 'Email', 'mara.ops@bitrate.fm'],
+  ['push', 'phone', 'Push', 'This browser and the mobile app'],
+  ['slack', 'hash', 'Slack', '#mod-alerts'],
+]
+const EVENTS = [
+  ['Moderation', [['report.new', 'New report filed', 'Every report entering the queue', 'Normal'], ['report.escalated', 'Report escalated', 'A moderator asked for a second opinion', 'High'], ['report.sla', 'SLA breach', 'A report waits longer than the SLA', 'Critical']]],
+  ['Releases', [['release.submitted', 'Release submitted for review', 'An artist sent a release to review', 'Normal'], ['release.resubmitted', 'Changes resubmitted', 'A release came back after requested changes', 'Normal']]],
+  ['Catalog', [['track.failed', 'Track processing failed', 'An upload could not be processed', 'High'], ['pipeline.stuck', 'Pipeline stuck', 'Tracks wait in processing too long', 'Critical']]],
+  ['Accounts', [['artist.verify', 'Artist verification request', 'An artist asked for the verified badge', 'Normal'], ['signup.spike', 'Unusual sign-up spike', 'Sign-ups exceed the usual rate', 'High']]],
+  ['Security', [['staff.login', 'New staff sign-in', 'A staff account signed in from a new device', 'High'], ['role.changed', 'Role or permissions changed', 'Someone changed staff access', 'Critical'], ['signin.failed', 'Repeated failed sign-ins', 'Several failed attempts on a staff account', 'Critical']]],
+]
+const EV = Object.fromEntries(EVENTS.flatMap(([g, list]) => list.map(([id, title, desc, prio]) => [id, { g, title, desc, prio }])))
+const SAMPLE = {
+  'report.new': 'Track · Copyright claim · Glass Horizon',
+  'report.escalated': 'leo.mod escalated a report on @driftwave',
+  'report.sla': '3 reports have waited over 6 h',
+  'release.submitted': 'Kite Harbor submitted “Static Lines” (EP)',
+  'release.resubmitted': 'Mira Sol resubmitted “Drift Control”',
+  'track.failed': '“Late Signal” failed: unsupported codec',
+  'pipeline.stuck': '12 tracks waiting for over 30 min',
+  'artist.verify': 'Lumen Choir asked for verification',
+  'signup.spike': 'Sign-ups are 3.4× the usual hourly rate',
+  'staff.login': 'sam.ops signed in from Firefox on Linux',
+  'role.changed': 'root gave leo.mod the Releases permission',
+  'signin.failed': '7 failed sign-ins on mara.ops in 10 min',
+}
+const NS = {
+  ch: { inapp: true, email: true, push: true, slack: false },
+  ev: Object.fromEntries(Object.entries(EV).map(([id, e]) => [id, {
+    inapp: true,
+    email: e.prio !== 'Normal' || id === 'release.submitted',
+    push: e.prio === 'Critical',
+    slack: e.prio === 'Critical',
+  }])),
+  sel: 'report.sla', digest: 'instant', digestAt: '09:00', quiet: true, from: '22:00', to: '07:00', bypass: true,
+  sla: 6, failed: 5, spike: 3, escAfter: 15, escTo: ['Super admin', 'On-call'], savedAt: Date.now(),
+}
+const PRIO = { Critical: 'down', High: 'warn', Normal: 'flat' }
+const sw = (on, path, label, disabled) =>
+  `<button type="button" class="sw${on ? ' on' : ''}" role="switch" aria-checked="${on}" aria-label="${t(label)}" data-ns="${path}"${disabled ? ' disabled' : ''}><i></i></button>`
+const segBtns = (path, opts, cur, fmtO = (o) => t(o)) =>
+  `<div class="seg ns-seg">${opts.map((o) => `<button type="button" data-ns="${path}" data-val="${o}" class="${String(o) === String(cur) ? 'on' : ''}">${fmtO(o)}</button>`).join('')}</div>`
+const blocked = () => S.nview === 'blocked'
+const chOn = (c) => NS.ch[c] && !(c === 'push' && blocked())
+function route(id) {
+  const e = EV[id], sel = NS.ev[id]
+  const chans = CH.filter(([c]) => sel[c] && chOn(c)).map(([, , l]) => t(l))
+  if (!chans.length) return `<span class="delta flat">${t('Nowhere — all channels are off for this event')}</span>`
+  const held = NS.quiet && !(e.prio === 'Critical' && NS.bypass)
+  return `<span class="muted-s">${t(held ? 'Held by quiet hours until' : 'Delivered to')}${held ? ` ${NS.to}` : ''}</span>${chans.map((c) => `<span class="delta up">${c}</span>`).join('')}`
+}
+function previewHTML() {
+  const e = EV[NS.sel]
+  return `<div class="pv-push"><span class="pv-app"><svg class="mark" aria-hidden="true"><use href="#bitrate-mark"/></svg></span>
+      <div class="pv-tx"><div class="pv-top"><b>Bitrate Admin</b><small>${t('now')}</small></div><b>${t(e.title)}</b><span>${SAMPLE[NS.sel]}</span></div></div>
+    <div class="pv-mail"><div><small>${t('From')}</small>Bitrate Admin &lt;alerts@bitrate.fm&gt;</div><div><small>Subject</small><b>[${t(e.prio)}] ${t(e.title)}</b></div><p>${SAMPLE[NS.sel]}. <span class="link">Open in admin →</span></p></div>
+    <div class="pv-route">${route(NS.sel)}</div>`
+}
+function matrixHTML() {
+  const head = `<thead><tr><th>${t('Event')}</th><th>${t('Priority')}</th>${CH.map(([c, i, l]) => `<th class="${chOn(c) ? '' : 'dim'}">${ico(i)}<span>${t(l)}</span></th>`).join('')}</tr></thead>`
+  const body = EVENTS.map(([g, list]) => `<tr class="grp"><td colspan="${2 + CH.length}">${t(g)}</td></tr>${list
+    .map(([id, title, desc, prio]) => `<tr class="ev${NS.sel === id ? ' sel' : ''}" data-sel="${id}"><td><b>${t(title)}</b><small>${t(desc)}</small></td><td><span class="delta ${PRIO[prio]}">${t(prio)}</span></td>${CH.map(([c]) => `<td><button type="button" class="ck${NS.ev[id][c] ? ' on' : ''}" role="checkbox" aria-checked="${NS.ev[id][c]}" aria-label="${t(title)} · ${t(c === 'inapp' ? 'In-app' : c[0].toUpperCase() + c.slice(1))}" data-ev="${id}" data-ch="${c}"${chOn(c) ? '' : ' disabled'}>${ico('tick')}</button></td>`).join('')}</tr>`)
+    .join('')}`).join('')
+  const cards = EVENTS.map(([g, list]) => `<div class="evg"><h5>${t(g)}</h5>${list
+    .map(([id, title, , prio]) => `<div class="evc${NS.sel === id ? ' sel' : ''}" data-sel="${id}"><div class="evh"><b>${t(title)}</b><span class="delta ${PRIO[prio]}">${t(prio)}</span></div><div class="evch">${CH.map(([c, i, l]) => `<button type="button" class="cht${NS.ev[id][c] ? ' on' : ''}" aria-pressed="${NS.ev[id][c]}" data-ev="${id}" data-ch="${c}"${chOn(c) ? '' : ' disabled'}>${ico(i)}${t(l)}</button>`).join('')}</div></div>`)
+    .join('')}</div>`).join('')
+  return `<table class="mx">${head}<tbody>${body}</tbody></table><div class="evcards">${cards}</div>`
+}
+const nTile = (cls, i, icon, title, meta, body, extra = '') =>
+  `<article class="tile glass ${cls}" style="--i:${i}"><div class="th"><span class="ico">${ico(icon)}</span><div class="t"><b>${t(title)}</b><small>${t(meta)}</small></div>${extra}</div><div class="tc">${body}</div></article>`
+function notifHTML() {
+  const head = `<header class="head"><div><div class="eyebrow">${t('SETTINGS · NOTIFICATIONS')}</div><h1>${t('Notifications')}</h1><p>${t('Choose what reaches you, where and when. Changes save automatically.')}</p></div><div class="grow"></div>
+    <div class="actions nacts"><span class="savep" id="savep">${ico('check')}<span>${t('Saved')} · ${t('just now')}</span></span><button type="button" class="pill primary" data-test>${ico('send')}${t('Send test')}</button></div></header>`
+  if (S.nview === 'loading')
+    return `${head}<section class="ns-grid">${['w2', 'w2', 'w4', 'w2', 'w2'].map((w, i) => `<article class="tile glass ${w}" style="--i:${i}"><div class="th"><span class="sk" style="width:36px;height:36px;border-radius:12px"></span><div class="t"><div class="sk" style="width:140px;height:12px;margin-bottom:6px"></div><div class="sk" style="width:90px;height:10px"></div></div></div><div class="tc">${skRows(i === 2 ? 7 : 4, i === 2 ? 22 : 14)}</div></article>`).join('')}</section>`
+  if (S.nview === 'error')
+    return `${head}<section class="ns-grid"><article class="tile glass w4 ns-err">${msg('error', 'Couldn’t load your notification settings', 'Nothing was changed. Try again in a moment.', 'Try again')}</article></section>`
+  const banner = blocked()
+    ? `<article class="tile glass w4 banner" style="--i:0"><span class="ai warning">${ico('alert')}</span><div class="tx"><b>${t('Browser notifications are blocked')}</b><small>${t('Allow notifications for this site in the browser settings, then try again.')}</small></div><button type="button" class="pill ghost" data-unblock>${ico('refresh')}${t('Try again')}</button></article>`
+    : ''
+  const channels = CH.map(([c, i, l, d]) => {
+    const isBlocked = c === 'push' && blocked()
+    const status = isBlocked ? ['down', 'Blocked'] : NS.ch[c] ? ['up', c === 'email' ? 'Verified' : 'Connected'] : ['flat', 'Off']
+    return `<div class="ch-row"><span class="ai ${NS.ch[c] && !isBlocked ? 'info' : ''}">${ico(i)}</span><div class="tx"><b>${t(l)}</b><small>${t(d)}</small></div><span class="delta ${status[0]}">${t(status[1])}</span>${sw(NS.ch[c] && !isBlocked, `ch.${c}`, l, isBlocked)}</div>`
+  }).join('')
+  const delivery = `<div class="field"><label>${t('Digest')}</label>${segBtns('digest', ['instant', 'hourly', 'daily', 'weekly'], NS.digest, (o) => t(o[0].toUpperCase() + o.slice(1)))}</div>
+    ${NS.digest === 'daily' || NS.digest === 'weekly' ? `<div class="field row"><label>${t('Send at')}</label><input class="time" type="time" value="${NS.digestAt}" data-ns="digestAt"></div>` : ''}
+    <div class="field row"><div class="tx"><b>${t('Quiet hours')}</b><small>${t('Pause non-critical alerts overnight')}</small></div>${sw(NS.quiet, 'quiet', 'Quiet hours')}</div>
+    <div class="field row${NS.quiet ? '' : ' off'}"><label>${t('From')}</label><input class="time" type="time" value="${NS.from}" data-ns="from"${NS.quiet ? '' : ' disabled'}><label>${t('To')}</label><input class="time" type="time" value="${NS.to}" data-ns="to"${NS.quiet ? '' : ' disabled'}></div>
+    <div class="field row${NS.quiet ? '' : ' off'}"><div class="tx"><b>${t('Critical alerts bypass quiet hours')}</b></div>${sw(NS.bypass, 'bypass', 'Critical alerts bypass quiet hours', !NS.quiet)}</div>`
+  const range = (path, label, min, max, step, unit) =>
+    `<div class="field"><div class="rl"><label>${t(label)}</label><b class="num" data-out="${path}">${NS[path]}${unit}</b></div><input type="range" min="${min}" max="${max}" step="${step}" value="${NS[path]}" data-ns="${path}" data-unit="${unit}" aria-label="${t(label)}"></div>`
+  const thresholds = range('sla', 'SLA breach after', 1, 24, 1, ` ${t('h')}`) + range('failed', 'Failed tracks per hour', 1, 50, 1, '') + range('spike', 'Sign-up spike at', 1.5, 10, 0.5, '×')
+  const escalation = `<div class="field"><label>${t('Escalate after')}</label>${segBtns('escAfter', [5, 15, 30, 60], NS.escAfter, (o) => `${o} ${t('min')}`)}</div>
+    <div class="field"><label>${t('to')}</label><div class="chips">${['Super admin', 'Moderator', 'Operations', 'On-call'].map((r) => `<button type="button" class="chipt${NS.escTo.includes(r) ? ' on' : ''}" aria-pressed="${NS.escTo.includes(r)}" data-role="${r}">${t(r)}</button>`).join('')}</div></div>`
+  return `${head}<section class="ns-grid">${banner}
+    ${nTile('w2', 1, 'bell', 'Channels', 'Where alerts can reach you', channels)}
+    ${nTile('w2 accent', 2, 'eye', 'Preview', 'How the selected event arrives', `<div id="pv">${previewHTML()}</div>`)}
+    ${nTile('w4 ns-matrix', 3, 'list', 'Events', 'Pick channels per event. Click an event to preview it.', `<div id="mx">${matrixHTML()}</div>`)}
+    ${nTile('w2', 4, 'clock', 'Delivery', 'Digest and quiet hours', delivery)}
+    ${nTile('w1', 5, 'sliders', 'Thresholds', 'When an alert fires', thresholds)}
+    ${nTile('w1', 6, 'shield', 'Escalation', 'Unacknowledged critical alerts', escalation)}
+  </section>`
+}
+let saveTimer
+function saved() {
+  const p = $('#savep')
+  if (p) { p.classList.add('saving'); p.lastElementChild.textContent = t('Saving…') }
+  clearTimeout(saveTimer)
+  saveTimer = setTimeout(() => {
+    NS.savedAt = Date.now()
+    if (p) { p.classList.remove('saving'); p.lastElementChild.textContent = `${t('Saved')} · ${t('just now')}` }
+    island(`<span class="pdot" style="color:var(--success-text);background:var(--success-surface)">${ico('check')}</span>${t('Saved')}`, 1400)
+  }, 450)
+}
+const repaintPreview = () => { const pv = $('#pv'); if (pv) pv.innerHTML = previewHTML() }
+const repaintMatrix = () => { const mx = $('#mx'); if (mx) mx.innerHTML = matrixHTML() }
+function nsClick(b) {
+  if (S.page !== 'notifications') return false
+  if (b.dataset.ns) {
+    const path = b.dataset.ns
+    if ('val' in b.dataset) NS[path] = Number.isNaN(+b.dataset.val) ? b.dataset.val : +b.dataset.val
+    else if (path.startsWith('ch.')) NS.ch[path.slice(3)] = !NS.ch[path.slice(3)]
+    else NS[path] = !NS[path]
+    render(); saved(); return true
+  }
+  if (b.dataset.ev) {
+    const v = NS.ev[b.dataset.ev]
+    v[b.dataset.ch] = !v[b.dataset.ch]
+    NS.sel = b.dataset.ev
+    repaintMatrix(); repaintPreview(); saved(); return true
+  }
+  if (b.dataset.role) {
+    const r = b.dataset.role
+    NS.escTo = NS.escTo.includes(r) ? NS.escTo.filter((x) => x !== r) : [...NS.escTo, r]
+    b.classList.toggle('on'); b.setAttribute('aria-pressed', NS.escTo.includes(r)); saved(); return true
+  }
+  if ('test' in b.dataset) { sendTest(); return true }
+  if ('unblock' in b.dataset) { S.nview = 'default'; renderDock(); render(); return true }
+  if ('retry' in b.dataset) { S.nview = 'loading'; render(); setTimeout(() => { S.nview = 'default'; renderDock(); render() }, 1100); return true }
+  return false
+}
+document.addEventListener('click', (e) => {
+  const row = e.target.closest('[data-sel]')
+  if (row && !e.target.closest('button') && S.page === 'notifications') { NS.sel = row.dataset.sel; repaintMatrix(); repaintPreview() }
+})
+document.addEventListener('input', (e) => {
+  const el = e.target
+  if (!el.dataset?.ns || S.page !== 'notifications') return
+  NS[el.dataset.ns] = el.type === 'range' ? +el.value : el.value
+  const out = $(`[data-out="${el.dataset.ns}"]`)
+  if (out) out.textContent = `${el.value}${el.dataset.unit ?? ''}`
+  if (['from', 'to'].includes(el.dataset.ns)) repaintPreview()
+  saved()
+})
+function sendTest() {
+  const e = EV[NS.sel]
+  const chans = CH.filter(([c]) => NS.ev[NS.sel][c] && chOn(c)).map(([, , l]) => t(l))
+  island(`<span class="pdot">${ico('send')}</span>${t('Test sent')} · ${chans.join(', ') || '—'}`, 2400)
+  toast(t(e.title), SAMPLE[NS.sel])
+}
+function toast(title, body) {
+  const el = $('#toast')
+  el.innerHTML = `<span class="pv-app"><svg class="mark" aria-hidden="true"><use href="#bitrate-mark"/></svg></span><div class="pv-tx"><div class="pv-top"><b>Bitrate Admin</b><small>${t('now')}</small></div><b>${title}</b><span>${body}</span></div>`
+  el.classList.remove('on'); void el.offsetWidth; el.classList.add('on')
+  clearTimeout(toast.tm)
+  toast.tm = setTimeout(() => el.classList.remove('on'), 4200)
+}
+
+/* ---------- bell: recent notifications ---------- */
+let unread = 3
+const RECENT = [
+  ['flag', 'warning', 'New report filed', 'Track · Copyright claim · Glass Horizon', '2 min', true],
+  ['alert', 'error', 'SLA breach', '3 reports have waited over 6 h', '18 min', true],
+  ['disc', 'info', 'Release submitted for review', 'Kite Harbor submitted “Static Lines” (EP)', '1 h', true],
+  ['shield', 'success', 'New staff sign-in', 'sam.ops signed in from Firefox on Linux', '3 h', false],
+  ['audio', 'error', 'Track processing failed', '“Late Signal” failed: unsupported codec', '5 h', false],
+]
+function popHTML() {
+  return `<header><b>${t('Notifications')}</b><button type="button" class="link" data-readall>${t('Mark all read')}</button></header>
+    <div class="nlist">${RECENT.map(([i, tone, title, body, ago, un], k) => `<div class="nitem${un && k < unread ? ' un' : ''}"><span class="ai ${tone}">${ico(i)}</span><div class="tx"><b>${t(title)}</b><small>${body}</small><small>${ago}</small></div></div>`).join('')}</div>
+    <footer><button type="button" class="pill ghost" data-page="notifications">${ico('sliders')}${t('Notification settings')}</button></footer>`
+}
+function togglePop() {
+  const p = $('#npop')
+  if (p.classList.contains('open')) return closePop()
+  p.innerHTML = popHTML()
+  p.classList.add('open')
+}
+function closePop() { $('#npop')?.classList.remove('open') }
+function badges() { $$('.ibtn .badge, .mtabs .badge').forEach((b) => { b.hidden = unread === 0 }) }
+
+/* ---------- prototype dock: states per page, desktop ⇄ mobile ---------- */
+const VIEWS = { overview: ['default', 'loading', 'empty', 'partial', 'error'], notifications: ['default', 'loading', 'error', 'blocked'] }
+const VIEW_LABEL = { default: 'Default', loading: 'Loading', empty: 'Empty', partial: 'Partial', error: 'Error', blocked: 'Push blocked' }
+const curView = () => (S.page === 'overview' ? S.view : S.nview)
+function setView(v) {
+  if (S.page === 'overview') S.view = v
+  else S.nview = v
+  renderDock(); render(); report()
+}
+function renderDock() {
+  const d = $('#dock')
+  if (!d) return
+  d.innerHTML = `<small>State</small>${VIEWS[S.page].map((v) => `<button type="button" data-view="${v}" class="${v === curView() ? 'on' : ''}">${VIEW_LABEL[v]}</button>`).join('')}
+    <span class="dsep"></span><button type="button" data-device="mobile">${ico('phone')}Mobile</button>`
+}
+
+/* ---------- the mobile demo: the same prototype inside a phone ---------- */
+const EMBED = new URLSearchParams(location.search).has('embed')
+if (EMBED) document.documentElement.classList.add('embed')
+const report = () => { if (EMBED) parent.postMessage({ type: 'state', page: S.page, view: curView() }, '*') }
+const frame = () => $('#frame')
+const send = (msg) => frame()?.contentWindow?.postMessage({ type: 'demo', ...msg }, '*')
+let demo = { page: 'overview', view: 'default' }
+function demoHTML() {
+  const g = (label, key, opts, cur, fmtO = (o) => o) =>
+    `<div class="grp"><small>${label}</small><div class="opts">${opts.map((o) => `<button type="button" data-demo="${key}" data-val="${o}" class="${o === cur ? 'on' : ''}">${fmtO(o)}</button>`).join('')}</div></div>`
+  return `<h3>Mobile demo</h3><p>The same prototype at 390 × 844. Tap inside the phone, or drive it from here.</p>
+    ${g('Page', 'page', ['overview', 'notifications'], demo.page, (o) => PAGES[o])}
+    ${g('State', 'view', VIEWS[demo.page], demo.view, (o) => VIEW_LABEL[o])}
+    ${g('Theme', 'theme', THEMES, S.theme, (o) => o[0].toUpperCase() + o.slice(1))}
+    ${g('Language', 'lang', ['en', 'uk'], S.lang, (o) => (o === 'en' ? 'English' : 'Українська'))}
+    <div class="grp"><small>Try</small><div class="opts">${[['detail', 'Open an analysis'], ['menu', 'Open the menu'], ['alerts', 'Open notifications'], ['search', 'Search'], ['test', 'Send a test alert']].map(([a, l]) => `<button type="button" data-demo="action" data-val="${a}">${l}</button>`).join('')}</div></div>
+    <button type="button" class="pill ghost" data-device="desktop">${ico('monitor')}Back to desktop</button>`
+}
+function fitPhone() { document.documentElement.style.setProperty('--s', Math.min(1, (innerHeight - 40) / 868).toFixed(3)) }
+function device(mode) {
+  document.body.classList.toggle('device', mode === 'mobile')
+  if (mode !== 'mobile') { $('#frame').src = 'about:blank'; return }
+  demo = { page: S.page, view: curView() }
+  $('#demo').innerHTML = demoHTML()
+  fitPhone()
+  const base = location.href.split('#')[0].split('?')[0]
+  frame().onload = () => send({ page: demo.page, view: demo.view, theme: S.theme, lang: S.lang })
+  frame().src = `${base}?embed=1`
+}
+addEventListener('resize', fitPhone)
+addEventListener('message', (e) => {
+  const m = e.data || {}
+  if (m.type === 'state' && !EMBED) { demo = { page: m.page, view: m.view }; $('#demo').innerHTML = demoHTML() }
+  if (m.type !== 'demo' || !EMBED) return
+  if (m.theme) S.theme = m.theme
+  if (m.lang) S.lang = m.lang
+  if (m.page && m.page !== S.page) { S.page = m.page; closePop(); $('#sheet').classList.remove('open') }
+  if (m.view) { if (S.page === 'overview') S.view = m.view; else S.nview = m.view }
+  if (m.theme || m.lang || m.page || m.view) { all(); renderDock() }
+  if (m.action === 'detail') { if (S.page !== 'overview') go('overview'); setTimeout(() => { const tl = $('[data-detail="listens"]'); if (tl) openDetail(tl) }, 250) }
+  if (m.action === 'menu') $('#sheet').classList.toggle('open')
+  if (m.action === 'alerts') togglePop()
+  if (m.action === 'search') openPalette()
+  if (m.action === 'test') { if (S.page !== 'notifications') go('notifications'); setTimeout(sendTest, 300) }
+  report()
+})
+function demoClick(b) {
+  if (b.dataset.device) { device(b.dataset.device); return true }
+  if (!b.dataset.demo) return false
+  const k = b.dataset.demo, v = b.dataset.val
+  if (k === 'theme') { S.theme = v; chrome() }
+  if (k === 'lang') { S.lang = v; all() }
+  if (k === 'page') demo = { page: v, view: 'default' }
+  if (k === 'view') demo.view = v
+  send(k === 'action' ? { action: v } : k === 'page' ? { page: v, view: 'default' } : { [k]: v })
+  $('#demo').innerHTML = demoHTML()
+  return true
+}
+
 all()
+renderDock()
 </script>
 </body>
 </html>
