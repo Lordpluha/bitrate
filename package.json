@@ -38,7 +38,7 @@
     "design:tokens": "node scripts/sync-pen-tokens.mjs",
     "design:bind-colors": "node scripts/bind-pen-colors.mjs",
     "check:pen-tokens": "node scripts/sync-pen-tokens.mjs --check",
-    "design:pages": "node scripts/pencil-pages/blocks.mjs pencil/web-player-design/design-system/bitrate.lib.pen scripts/pencil-pages/registry.json && node scripts/pencil-pages/run.mjs pencil/web-player-design && node scripts/pencil-pages/run-artist.mjs pencil/web-artist-design && node scripts/pencil-pages/run-admin.mjs pencil/web-admin-design",
+    "design:pages": "node scripts/pencil-pages/blocks.mjs pencil/web-player-design/design-system/bitrate.lib.pen scripts/pencil-pages/registry.json && node scripts/pencil-pages/run.mjs pencil/web-player-design && node scripts/pencil-pages/run-artist.mjs pencil/web-artist-design && node scripts/pencil-pages/admin-lib.mjs pencil/web-player-design/design-system/bitrate.lib.pen scripts/pencil-pages/registry-admin.json && node scripts/pencil-pages/run-admin.mjs pencil/web-admin-design",
     "clean:dist": "rimraf --glob \"apps/*/dist\" \"packages/*/dist\"",
     "clean:cache": "rimraf --glob \"apps/*/.next/dev/cache\" \"apps/*/.next/cache\" \".turbo/cache\""
   },

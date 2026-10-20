@@ -1,19 +1,138 @@
-// Admin console (apps/admin) — Overview as a bento of independent tiles. Library instances only.
-import { id, C } from './kit.mjs'
+// Admin console (apps/admin) — Overview as a bento of independent tiles. Library instances only: the admin
+// design system ("00F • Admin", registry-admin.json) and the rest of the Bitrate library.
+import { readFileSync } from 'node:fs'
+import { C, id, Ref } from './kit.mjs'
 import {
-  R,
-  L,
-  Row,
-  Col,
-  Tx,
   Button,
   Chips,
-  IconBtn,
+  Col,
   Divider,
   ErrorState,
   fitStates,
+  IconBtn,
+  L,
+  R,
+  Row,
   state,
+  Tx,
 } from './ui.mjs'
+
+const areg = JSON.parse(readFileSync(new URL('./registry-admin.json', import.meta.url), 'utf8'))
+/** Instance of an admin block (the library's "00F • Admin" page) by name; `parts` overrides its named parts. */
+const A = (name, o = {}, parts = {}) => {
+  const c = areg[name]
+  if (!c) throw new Error(`no admin block "${name}"`)
+  const desc = {}
+  for (const [p, v] of Object.entries(parts)) {
+    if (v === undefined) continue
+    const pid = c.parts[p]
+    if (!pid) throw new Error(`admin block "${name}" has no part "${p}"`)
+    if (pid === c.id) Object.assign(o, v)
+    else desc[pid] = v
+  }
+  return Ref(c.id, { name: o.name ?? name, ...o }, Object.keys(desc).length ? desc : undefined)
+}
+
+/* ---------- language: English by default, Українська after the switch ---------- */
+const UK = {
+  Overview: 'Огляд',
+  Moderation: 'Модерація',
+  Releases: 'Релізи',
+  Catalog: 'Каталог',
+  Albums: 'Альбоми',
+  Playlists: 'Плейлисти',
+  Podcasts: 'Подкасти',
+  Genres: 'Жанри',
+  Artists: 'Артисти',
+  Listeners: 'Слухачі',
+  'Audit log': 'Журнал аудиту',
+  Roles: 'Ролі',
+  Staff: 'Персонал',
+  OPERATIONS: 'ОПЕРАЦІЇ',
+  ACCOUNTS: 'АКАУНТИ',
+  SYSTEM: 'СИСТЕМА',
+  Dark: 'Темна',
+  Light: 'Світла',
+  Dim: 'Приглушена',
+  Collapse: 'Згорнути',
+  'Search tracks, artists, reports': 'Пошук треків, артистів, скарг',
+  'Admin / Overview': 'Адмінка / Огляд',
+  'Super admin': 'Суперадмін',
+  'OVERVIEW · TUE, OCT 20': 'ОГЛЯД · ВТ, 20 ЖОВТ.',
+  'Good morning, Mara': 'Доброго ранку, Mara',
+  'What needs attention across Bitrate today.': 'Що сьогодні потребує уваги в Bitrate.',
+  '7d': '7 дн',
+  '30d': '30 дн',
+  '90d': '90 дн',
+  'Needs action': 'Потребує дій',
+  '27 items across three queues · oldest 2 days':
+    '27 елементів у трьох чергах · найдавнішому 2 дні',
+  'Open moderation': 'Відкрити модерацію',
+  'Reports to review': 'Скарги на розгляд',
+  '12 open · 4 in review · oldest 6 h': '12 відкритих · 4 на розгляді · найдавнішій 6 год',
+  'Releases awaiting review': 'Релізи чекають перевірки',
+  'Oldest submitted 2 days ago': 'Найдавніший надіслано 2 дні тому',
+  'Tracks failed processing': 'Треки з помилкою обробки',
+  '3 failed · 1 stuck for 42 min': '3 з помилкою · 1 завис на 42 хв',
+  'LATEST REPORTS': 'ОСТАННІ СКАРГИ',
+  'Track · Copyright claim · Glass Horizon': 'Трек · Авторські права · Glass Horizon',
+  'Nova & the Static · 12 min ago': 'Nova & the Static · 12 хв тому',
+  'User · Spam in playlist titles · @driftwave': 'Слухач · Спам у назвах плейлистів · @driftwave',
+  'Listener · 38 min ago': 'Слухач · 38 хв тому',
+  'Episode · Hate speech · Late Signal Radio #41':
+    'Епізод · Мова ворожнечі · Late Signal Radio #41',
+  'Lumen Choir · 1 h ago': 'Lumen Choir · 1 год тому',
+  '412 new this week': '412 нових цього тижня',
+  '38 waiting for verification': '38 чекають верифікації',
+  'Listens per day': 'Прослуховування за день',
+  '1.84M listens · +12% vs previous 7 days': '1,84 млн прослуховувань · +12% до попередніх 7 днів',
+  Mon: 'Пн',
+  Tue: 'Вт',
+  Wed: 'Ср',
+  Thu: 'Чт',
+  Fri: 'Пт',
+  Sat: 'Сб',
+  Sun: 'Нд',
+  M: 'П',
+  T: 'В',
+  W: 'С',
+  F: 'П',
+  S: 'С',
+  'Track pipeline': 'Обробка треків',
+  'Last 24 h · 1,335 tracks': 'За 24 год · 1 335 треків',
+  Ready: 'Готові',
+  Processing: 'Обробляються',
+  'Stuck > 30 min': 'Зависли > 30 хв',
+  Failed: 'Помилка',
+  'Open catalog': 'Відкрити каталог',
+  'Reports by type': 'Скарги за типом',
+  'Filed in the last 2 days · 38': 'Подано за 2 дні · 38',
+  Tracks: 'Треки',
+  Episodes: 'Епізоди',
+  Accounts: 'Акаунти',
+  'New accounts & uploads · last 7 days': 'Нові акаунти й завантаження · 7 днів',
+  'New accounts': 'Нові акаунти',
+  Uploads: 'Завантаження',
+  Deactivated: 'Деактивовано',
+  'Latest staff actions': 'Останні дії персоналу',
+  'mara.ops approved release Afterglow': 'mara.ops: схвалено реліз Afterglow',
+  'leo.mod dismissed a report on Low Orbit': 'leo.mod: відхилено скаргу на Low Orbit',
+  'mara.ops verified artist Kite Harbor': 'mara.ops: верифіковано артиста Kite Harbor',
+  '4 min ago': '4 хв тому',
+  '18 min ago': '18 хв тому',
+  '1 h ago': '1 год тому',
+  'Open audit log': 'Відкрити журнал аудиту',
+}
+/** Every `content` the dictionary knows is swapped for its Ukrainian text, inside overrides too. */
+const ukrainian = (nodes) => {
+  const walk = (n) => {
+    if (!n || typeof n !== 'object') return
+    if (typeof n.content === 'string' && UK[n.content]) n.content = UK[n.content]
+    for (const v of Object.values(n)) if (v && typeof v === 'object') walk(v)
+  }
+  walk(nodes)
+  return nodes
+}
 
 /* ---------- shell ---------- */
 const frame = (name, w, h, child) => ({
@@ -27,84 +146,121 @@ const frame = (name, w, h, child) => ({
   fill: C.background,
   children: [child],
 })
+const THEME = { Dark: 'moon', Light: 'sun', Dim: 'contrast' }
 const ROLE = { 'Super admin': 'mara.ops', Moderator: 'leo.mod' }
-/** Desktop admin page: sidebar (Overview active), header with the operator, content slot. */
-const Shell = (name, content, { height = 1200, role = 'Super admin', hide = [] } = {}) =>
-  frame(
-    name,
-    1440,
-    height,
-    R(
-      'Admin Shell/Desktop',
-      { width: 1440, height },
-      {
-        nav_overview: R(
-          'Admin/Nav Item Active',
-          { name: 'Nav / Overview' },
-          {
-            icon: { icon: 'layout-dashboard' },
-            label: { content: 'Overview' },
-            count: { enabled: false },
-          },
+const NAV_LABEL = {
+  moderation: 'Moderation',
+  releases: 'Releases',
+  catalog: 'Catalog',
+  albums: 'Albums',
+  playlists: 'Playlists',
+  podcasts: 'Podcasts',
+  genres: 'Genres',
+  artists: 'Artists',
+  users: 'Listeners',
+  audit: 'Audit log',
+  roles: 'Roles',
+  staff: 'Staff',
+}
+/** Panel overrides shared by the desktop sidebar and the phone menu: active Overview, theme, language.
+ *  The library holds English defaults, so Ukrainian restates each label for the dictionary to swap. */
+const panel = ({ theme = 'Dark', uk = false, rail = false, hide = [] } = {}) => ({
+  nav_overview: rail
+    ? A(
+        'Admin/Rail Item Active',
+        { name: 'Nav / Overview' },
+        { icon: { icon: 'layout-dashboard' } },
+      )
+    : A(
+        'Admin/Nav Item Active',
+        { name: 'Nav / Overview' },
+        {
+          icon: { icon: 'layout-dashboard' },
+          label: { content: 'Overview' },
+          count: { enabled: false },
+        },
+      ),
+  'pref_theme.icon': { icon: THEME[theme] },
+  ...(rail ? {} : { 'pref_theme.label': { content: theme } }),
+  ...(uk && !rail
+    ? {
+        'pref_language.label': { content: 'Українська' },
+        'pref_collapse.label': { content: 'Collapse' },
+        groupText_operations: { content: 'OPERATIONS' },
+        groupText_accounts: { content: 'ACCOUNTS' },
+        groupText_system: { content: 'SYSTEM' },
+        ...Object.fromEntries(
+          Object.entries(NAV_LABEL).map(([k, v]) => [`nav_${k}.label`, { content: v }]),
         ),
-        ...Object.fromEntries(hide.map((k) => [k, { enabled: false }])),
-        breadcrumb: { content: 'Admin / Overview' },
-        operator: { content: ROLE[role] },
-        role: { content: role },
-        content: L(
-          {
-            name: 'Content',
-            layout: 'vertical',
-            gap: 20,
-            padding: [28, 32],
-            clip: true,
-            width: 'fill_container',
-            height: 'fill_container',
-          },
-          fitStates(content, false),
-        ),
-      },
-    ),
+      }
+    : {}),
+  ...Object.fromEntries(hide.map((k) => [k, { enabled: false }])),
+})
+const content = (nodes, mobile) =>
+  L(
+    {
+      name: 'Content',
+      layout: 'vertical',
+      gap: mobile ? 16 : 20,
+      padding: mobile ? [20, 16] : [28, 32],
+      clip: true,
+      width: 'fill_container',
+      height: 'fill_container',
+    },
+    fitStates(nodes, mobile),
   )
-const MShell = (name, content, height = 2600) =>
+/** Desktop admin page: sidebar (expanded, or the collapsed rail), header with the operator, content. */
+const Shell = (
+  name,
+  nodes,
+  {
+    height = 1200,
+    role = 'Super admin',
+    hide = [],
+    theme = 'Dark',
+    collapsed = false,
+    uk = false,
+  } = {},
+) => {
+  const shell = A(
+    collapsed ? 'Admin/Shell/Desktop Collapsed' : 'Admin/Shell/Desktop',
+    { width: 1440, height },
+    {
+      ...panel({ theme, uk, rail: collapsed, hide }),
+      operator: { content: ROLE[role] },
+      role: { content: role },
+      ...(uk
+        ? {
+            breadcrumb: { content: 'Admin / Overview' },
+            search: { content: 'Search tracks, artists, reports' },
+          }
+        : {}),
+      content: content(nodes, false),
+    },
+  )
+  return frame(name, 1440, height, uk ? ukrainian(shell) : shell)
+}
+const MShell = (name, nodes, height = 2600) =>
   frame(
     name,
     390,
     height,
-    R(
-      'Admin Shell/Mobile',
-      { width: 390, height },
-      {
-        content: L(
-          {
-            name: 'Content',
-            layout: 'vertical',
-            gap: 16,
-            padding: [20, 16],
-            clip: true,
-            width: 'fill_container',
-            height: 'fill_container',
-          },
-          fitStates(content, true),
-        ),
-      },
-    ),
+    A('Admin/Shell/Mobile', { width: 390, height }, { content: content(nodes, true) }),
   )
 
 /* ---------- tiles ---------- */
 const FILL = { width: 'fill_container', height: 'fill_container' }
-/** A bento tile: `kind` is '', 'Accent' or 'Editing'; `actions` replaces the ⋯ button. */
-const Tile = (title, meta, icon, content, { kind = '', actions, size, o = {} } = {}) =>
-  R(
-    `Bento/Tile${kind ? ` ${kind}` : ''}`,
-    { name: `Tile / ${title}`, ...FILL, ...o },
+/** A bento tile; `actions` replaces its default "open section" button. */
+const Tile = (title, meta, icon, nodes, { accent, actions } = {}) =>
+  A(
+    accent ? 'Admin/Bento/Tile Accent' : 'Admin/Bento/Tile',
+    { name: `Tile / ${title}`, ...FILL },
     {
-      icon: kind === 'Editing' ? undefined : { icon },
+      icon: { icon },
       title: { content: title },
       meta: { content: meta },
       actions: actions ? L({ name: 'Actions', gap: 6, alignItems: 'center' }, actions) : undefined,
-      size: size ? { content: size } : undefined,
-      content: L({ name: 'Tile Content', layout: 'vertical', gap: 14, ...FILL }, content.flat()),
+      content: L({ name: 'Tile Content', layout: 'vertical', gap: 14, ...FILL }, nodes.flat()),
     },
   )
 const SPARK = {
@@ -112,10 +268,10 @@ const SPARK = {
   artists: [18, 18, 19, 20, 19, 21, 22, 22, 23, 23, 24, 25],
   zero: Array(12).fill(2),
 }
-const Kpi = ({ tone = 'Positive', icon, label, value, delta, sub, spark = 'listeners', o = {} }) =>
-  R(
-    `Bento/KPI/${tone}`,
-    { name: `KPI / ${label}`, ...FILL, ...o },
+const Kpi = ({ tone = 'Positive', icon, label, value, delta, sub, spark = 'listeners' }) =>
+  A(
+    `Admin/Bento/KPI/${tone}`,
+    { name: `KPI / ${label}`, ...FILL },
     {
       icon: { icon },
       label: { content: label },
@@ -126,8 +282,8 @@ const Kpi = ({ tone = 'Positive', icon, label, value, delta, sub, spark = 'liste
     },
   )
 const Action = (tone, title, meta, count) =>
-  R(
-    `Bento/Action Row/${tone}`,
+  A(
+    `Admin/Bento/Action Row/${tone}`,
     { name: `Action / ${title}` },
     { title: { content: title }, meta: { content: meta }, count: { content: count } },
   )
@@ -150,22 +306,19 @@ const Bars = (values, labels, highlight = values.length - 1, max = 150) =>
       R(
         i === highlight ? 'Bar Chart/Bar Highlight' : 'Bar Chart/Bar',
         { name: `Bar / ${labels[i]}` },
-        {
-          bar: { height: Math.max(4, Math.round(v * max)) },
-          label: { content: labels[i] },
-        },
+        { bar: { height: Math.max(4, Math.round(v * max)) }, label: { content: labels[i] } },
       ),
     ),
   )
 const Meter = (i, label, value, width) =>
-  R(
-    `Bento/Meter Row/${i}`,
+  A(
+    `Admin/Bento/Meter Row/${i}`,
     { name: `Meter / ${label}` },
     { label: { content: label }, value: { content: value }, bar: { width } },
   )
 const Legend = (tone, label, value) =>
-  R(
-    `Bento/Legend Row/${tone}`,
+  A(
+    `Admin/Bento/Legend Row/${tone}`,
     { name: `Legend / ${label}` },
     { label: { content: label }, value: { content: value } },
   )
@@ -182,8 +335,8 @@ const Audit = (text, meta) =>
     { text: { content: text }, meta: { content: meta } },
   )
 const Message = (kind, title, desc, icon) =>
-  R(
-    `Bento/Tile Message/${kind}`,
+  A(
+    `Admin/Bento/Tile Message/${kind}`,
     { name: `Message / ${kind}`, ...FILL },
     {
       title: title ? { content: title } : undefined,
@@ -191,8 +344,8 @@ const Message = (kind, title, desc, icon) =>
       icon: icon ? { icon } : undefined,
     },
   )
-const Skel = (o = {}) => R('Bento/Tile Skeleton', { ...FILL, ...o })
 const Link = (t) => Tx('Link', t)
+const Updating = () => A('Admin/Loader/Updating', { name: 'Updating' })
 
 /* ---------- data per range ---------- */
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -200,8 +353,7 @@ const RANGE = {
   '7d': {
     idx: 0,
     listens: {
-      total: '1.84M listens',
-      delta: '+12% vs previous 7 days',
+      total: '1.84M listens · +12% vs previous 7 days',
       v: [0.62, 0.58, 0.66, 0.71, 0.84, 0.97, 0.9],
       l: DAYS,
       hi: 5,
@@ -212,13 +364,12 @@ const RANGE = {
       ['Uploads', '2,940'],
       ['Deactivated', '14'],
     ],
-    meta: 'Last 7 days',
+    meta: 'New accounts & uploads · last 7 days',
   },
   '30d': {
     idx: 1,
     listens: {
-      total: '7.42M listens',
-      delta: '+9% vs previous 30 days',
+      total: '7.42M listens · +9% vs previous 30 days',
       v: [0.55, 0.6, 0.58, 0.67, 0.72, 0.7, 0.81, 0.86, 0.79, 0.92],
       l: ['21', '24', '27', '30', '3', '6', '9', '12', '15', '18'],
       hi: 9,
@@ -229,12 +380,12 @@ const RANGE = {
       ['Uploads', '11,306'],
       ['Deactivated', '61'],
     ],
-    meta: 'Last 30 days',
+    meta: 'New accounts & uploads · last 30 days',
   },
 }
 
-/* ---------- tiles of the Overview ---------- */
-const needsAction = ({ clear = false, locked = false } = {}) =>
+/* ---------- the Overview's tiles ---------- */
+const needsAction = ({ clear = false, locked = false, updating = false } = {}) =>
   Tile(
     'Needs action',
     clear ? 'Queues are empty' : '27 items across three queues · oldest 2 days',
@@ -250,8 +401,8 @@ const needsAction = ({ clear = false, locked = false } = {}) =>
       : [
           Action('Warning', 'Reports to review', '12 open · 4 in review · oldest 6 h', '16'),
           locked
-            ? R(
-                'Bento/Tile Message/Locked',
+            ? A(
+                'Admin/Bento/Tile Message/Locked',
                 { name: 'Locked / Releases', width: 'fill_container' },
                 {
                   title: { content: 'Release review is not in your role' },
@@ -269,8 +420,11 @@ const needsAction = ({ clear = false, locked = false } = {}) =>
           Report('Episode', 'Hate speech · Late Signal Radio #41', 'Lumen Choir · 1 h ago'),
         ].filter(Boolean),
     {
-      kind: 'Accent',
-      actions: [Button('Open moderation', 'default', { icon: 'arrow-right' })],
+      accent: true,
+      actions: [
+        updating ? Updating() : null,
+        Button('Open moderation', 'default', { icon: 'arrow-right' }),
+      ].filter(Boolean),
     },
   )
 const kpis = (empty) => [
@@ -293,14 +447,10 @@ const kpis = (empty) => [
     spark: empty ? 'zero' : 'artists',
   }),
 ]
-const listens = (r, { error, empty, menu } = {}) =>
+const listens = (r, { error, empty, updating } = {}) =>
   Tile(
     'Listens per day',
-    error
-      ? 'Series unavailable'
-      : empty
-        ? 'No listens yet'
-        : `${r.listens.total} · ${r.listens.delta}`,
+    error ? 'Series unavailable' : empty ? 'No listens yet' : r.listens.total,
     'audio-waveform',
     error
       ? [
@@ -320,7 +470,7 @@ const listens = (r, { error, empty, menu } = {}) =>
             ),
           ]
         : [Bars(r.listens.v, r.listens.l, r.listens.hi)],
-    menu ? { actions: [R('Button/Icon Outline', {}, { icon: { icon: 'ellipsis' } })] } : {},
+    updating ? { actions: [Updating()] } : {},
   )
 const pipeline = ({ empty, locked } = {}) =>
   Tile(
@@ -339,8 +489,8 @@ const pipeline = ({ empty, locked } = {}) =>
             ),
           ]
         : [
-            R(
-              'Bento/Segment Bar',
+            A(
+              'Admin/Bento/Segment Bar',
               {},
               {
                 ready: { width: 160 },
@@ -383,7 +533,7 @@ const reports = ({ empty } = {}) =>
 const accounts = (r, { error, empty } = {}) =>
   Tile(
     'Accounts',
-    error ? 'Series unavailable' : `New accounts & uploads · ${r.meta.toLowerCase()}`,
+    error ? 'Series unavailable' : r.meta,
     'user-plus',
     error
       ? [Message('Error', 'Couldn’t load the series', 'Try again in a moment.')]
@@ -395,7 +545,7 @@ const accounts = (r, { error, empty } = {}) =>
           empty ? null : Bars(r.accounts.v, r.accounts.l, r.accounts.v.length - 1, 64),
         ].filter(Boolean),
   )
-const audit = ({ empty } = {}) =>
+const audit = ({ empty, updating } = {}) =>
   Tile(
     'Audit log',
     empty ? 'No staff actions yet' : 'Latest staff actions',
@@ -415,10 +565,11 @@ const audit = ({ empty } = {}) =>
           Audit('mara.ops verified artist Kite Harbor', '1 h ago'),
           Link('Open audit log'),
         ],
+    updating ? { actions: [Updating()] } : {},
   )
 
-/* ---------- page header ---------- */
-const header = (m, { range = '7d', title = 'Good morning, Mara', sub, editing } = {}) =>
+/* ---------- page header and range controls ---------- */
+const header = (m, { range = '7d', title = 'Good morning, Mara', sub, updating } = {}) =>
   R(
     'Artist/Page Header',
     { width: 'fill_container' },
@@ -430,29 +581,24 @@ const header = (m, { range = '7d', title = 'Good morning, Mara', sub, editing } 
         { name: 'Actions', gap: 10, alignItems: 'center' },
         m
           ? []
-          : editing
-            ? []
-            : [
-                Chips(['7d', '30d', '90d'], RANGE[range].idx),
-                IconBtn('rotate-cw', false),
-                Button('Customise', 'outline', { icon: 'layout-grid' }),
-              ],
+          : [
+              Chips(['7d', '30d', '90d'], RANGE[range].idx),
+              updating ? Updating() : IconBtn('rotate-cw', false),
+            ],
       ),
     },
   )
-const mControls = (range = '7d') =>
+const mControls = (range = '7d', updating) =>
   Row({ name: 'Controls', width: 'fill_container', gap: 8 }, [
     Chips(['7d', '30d', '90d'], RANGE[range].idx),
     L({ name: 'Spacer', width: 'fill_container', height: 1 }),
-    IconBtn('rotate-cw', false),
-    IconBtn('layout-grid', false),
+    updating ? Updating() : IconBtn('rotate-cw', false),
   ])
 
-/* ---------- the bento grid: 4 columns on desktop, one column on phones ---------- */
+/* ---------- the bento grid: four columns on desktop, one column on phones ---------- */
 const H1 = 590
 const H2 = 380
-/** `t` lets a state swap any tile; keys: action, kpi1, kpi2, listens, pipeline, reports, accounts, audit. */
-const grid = (m, t) =>
+const grid = (m, t, { collapsed } = {}) =>
   m
     ? [
         Col({ name: 'KPI Stack', width: 'fill_container', gap: 16 }, [t.kpi1, t.kpi2]),
@@ -462,8 +608,7 @@ const grid = (m, t) =>
         t.reports,
         t.accounts,
         t.audit,
-        t.add,
-      ].filter(Boolean)
+      ]
     : [
         Row(
           {
@@ -474,9 +619,14 @@ const grid = (m, t) =>
             alignItems: 'start',
           },
           [
-            L({ name: 'Cell 2×2 / Needs action', width: 556, height: 'fill_container' }, [
-              t.action,
-            ]),
+            L(
+              {
+                name: 'Cell 2×2 / Needs action',
+                width: collapsed ? 648 : 556,
+                height: 'fill_container',
+              },
+              [t.action],
+            ),
             Col(
               {
                 name: 'Cell 2×2 / Right',
@@ -494,9 +644,8 @@ const grid = (m, t) =>
                     name: 'Cell 2×1 / Listens',
                     width: 'fill_container',
                     height: 'fill_container',
-                    gap: 12,
                   },
-                  [t.listens, t.menu].filter(Boolean),
+                  [t.listens],
                 ),
               ],
             ),
@@ -510,227 +659,92 @@ const grid = (m, t) =>
             gap: 16,
             alignItems: 'start',
           },
-          [t.pipeline, t.reports, t.accounts, t.audit, t.add]
-            .filter(Boolean)
-            .map((n, i) =>
-              L(
-                { name: `Cell 1×1 / ${i + 1}`, width: 'fill_container', height: 'fill_container' },
-                [n],
-              ),
-            ),
+          [t.pipeline, t.reports, t.accounts, t.audit].map((n, i) =>
+            L({ name: `Cell 1×1 / ${i + 1}`, width: 'fill_container', height: 'fill_container' }, [
+              n,
+            ]),
+          ),
         ),
       ]
-const tiles = (r = RANGE['7d'], o = {}) => ({
+const tiles = (r, o = {}) => ({
   action: needsAction(o),
   kpi1: kpis(o.empty)[0],
   kpi2: kpis(o.empty)[1],
-  listens: listens(r, { error: o.seriesError, empty: o.empty, menu: o.menu }),
+  listens: listens(r, { error: o.seriesError, empty: o.empty, updating: o.updating }),
   pipeline: pipeline(o),
   reports: reports(o),
   accounts: accounts(r, { error: o.seriesError, empty: o.empty }),
   audit: audit(o),
 })
-const overview = (m, { range = '7d', banner, ...o } = {}) =>
+/* loaders: every element has a skeleton of its own shape; on phones each keeps a fixed height */
+const LOADER = {
+  action: ['Admin/Loader/Tile Actions', 470],
+  kpi1: ['Admin/Loader/KPI', 196],
+  kpi2: ['Admin/Loader/KPI', 196],
+  listens: ['Admin/Loader/Tile Chart', 300],
+  pipeline: ['Admin/Loader/Tile Pipeline', 250],
+  reports: ['Admin/Loader/Tile Meters', 300],
+  accounts: ['Admin/Loader/Tile Chart', 260],
+  audit: ['Admin/Loader/Tile List', 240],
+}
+const loader = (key, m) =>
+  A(LOADER[key][0], {
+    name: `Loader / ${key}`,
+    width: 'fill_container',
+    height: m && key !== 'listens' ? LOADER[key][1] : 'fill_container',
+  })
+const withLoaders = (t, keys, m) => {
+  for (const k of keys) t[k] = loader(k, m)
+  return t
+}
+const overview = (m, { range = '7d', banner, loading = [], collapsed, ...o } = {}) =>
   [
-    m ? header(true, o.headerOpts) : header(false, { range, ...o.headerOpts }),
-    m ? mControls(range) : null,
+    m
+      ? header(true, o.headerOpts)
+      : header(false, { range, updating: o.updating, ...o.headerOpts }),
+    m ? mControls(range, o.updating) : null,
     banner,
-    ...grid(m, tiles(RANGE[range], o)),
+    /* phones show one Updating badge in the controls row instead of one per tile */
+    ...grid(m, withLoaders(tiles(RANGE[range], m ? { ...o, updating: false } : o), loading, m), {
+      collapsed,
+    }),
   ].filter(Boolean)
 
-/* ---------- edit mode: bento customisation groundwork ---------- */
-const editTiles = (m) => {
-  const e = (title, meta, icon, content, size) =>
-    Tile(title, meta, icon, content, {
-      kind: 'Editing',
-      ...(m ? { actions: [IconBtn('eye-off')] } : { size }),
-    })
-  return {
-    action: e(
-      'Needs action',
-      '27 items across three queues',
-      'inbox',
-      [
-        Action('Warning', 'Reports to review', '12 open · 4 in review', '16'),
-        Action('Info', 'Releases awaiting review', 'Oldest 2 days', '7'),
-        Action('Error', 'Tracks failed processing', '3 failed · 1 stuck', '4'),
-      ],
-      '2×2',
-    ),
-    kpi1: e('Listeners', '+3.2% this week', 'users-round', [Tx('H2', '48,920')], '1×1'),
-    kpi2: e('Artists', '+1.4% this week', 'mic-vocal', [Tx('H2', '2,316')], '1×1'),
-    listens: e(
-      'Listens per day',
-      '1.84M listens',
-      'audio-waveform',
-      [Bars(RANGE['7d'].listens.v, DAYS, 5, 110)],
-      '2×1',
-    ),
-    pipeline: e(
-      'Track pipeline',
-      '1,335 tracks',
-      'audio-lines',
-      [
-        R(
-          'Bento/Segment Bar',
-          {},
-          {
-            ready: { width: 150 },
-            processing: { width: 30 },
-            stuck: { width: 8 },
-            failed: { width: 10 },
-          },
-        ),
-      ],
-      '1×1',
-    ),
-    reports: e(
-      'Reports by type',
-      '38 in 2 days',
-      'flag',
-      [Meter(1, 'Tracks', '18', 200), Meter(2, 'Listeners', '9', 100)],
-      '1×1',
-    ),
-    accounts: null,
-    audit: e(
-      'Audit log',
-      'Latest staff actions',
-      'scroll-text',
-      [Audit('mara.ops approved release Afterglow', '4 min ago')],
-      '1×1',
-    ),
-    add: R(
-      'Bento/Add Tile',
-      { name: 'Add Tile', ...FILL, ...(m ? { height: 160 } : {}) },
-      {
-        desc: { content: 'Accounts is hidden · 6 more available' },
-      },
-    ),
+/* phones stack tiles in one column: every tile sizes to its content, except the fixed-height Listens cell */
+function fitMobile(nodes) {
+  const walk = (n) => {
+    if (!n || typeof n !== 'object' || n.name === 'Cell / Listens') return
+    if (
+      /^(Tile|KPI|Message) \/ /.test(n.name ?? '') ||
+      n.name === 'Tile Content' ||
+      n.name === 'Bar Chart'
+    )
+      delete n.height
+    ;(n.children ?? []).forEach(walk)
+    if (n.descendants) Object.values(n.descendants).forEach(walk)
   }
+  nodes.forEach(walk)
+  return nodes
 }
-const editing = (m) => [
-  m
-    ? header(true, { title: 'Customise overview' })
-    : header(false, {
-        title: 'Customise overview',
-        sub: 'Your layout is saved for your account only.',
-        editing: true,
-      }),
-  R(
-    'Bento/Edit Bar',
-    { width: 'fill_container' },
-    m ? { desc: { content: 'Drag to reorder, hide what you don’t need.' } } : {},
-  ),
-  ...grid(m, editTiles(m)),
-]
 
 /* ---------- states ---------- */
-const offlineBanner = R(
-  'Alert/Warning',
-  { name: 'Offline', width: 'fill_container' },
-  {
-    text: {
-      content:
-        'You’re offline. Showing figures from 09:42 — the overview refreshes when you reconnect; actions are paused.',
-    },
-  },
-)
-const loadingGrid = (m) =>
-  m
-    ? [
-        Skel({ height: 196 }),
-        Skel({ height: 196 }),
-        ...[360, 240, 260, 260, 220, 260].map((h) => Skel({ height: h })),
-      ]
-    : grid(false, {
-        action: Skel(),
-        kpi1: Skel(),
-        kpi2: Skel(),
-        listens: Skel(),
-        pipeline: Skel(),
-        reports: Skel(),
-        accounts: Skel(),
-        audit: Skel(),
-      })
-const tileMenu = () =>
+const offlineBanner = () =>
   R(
-    'Context Menu',
-    { name: 'Tile Menu' },
+    'Alert/Warning',
+    { name: 'Offline', width: 'fill_container' },
     {
-      items: L({ name: 'Items', layout: 'vertical', width: 240 }, [
-        R('Context Menu/Label', {}, { label: { content: 'Listens per day' } }),
-        R(
-          'Context Menu/Item',
-          {},
-          {
-            label: { content: 'Open listening data' },
-            icon: { icon: 'arrow-up-right' },
-            shortcut: { enabled: false },
-          },
-        ),
-        R(
-          'Context Menu/Item Sub',
-          {},
-          { label: { content: 'Size · 2×1' }, icon: { icon: 'scaling' } },
-        ),
-        R(
-          'Context Menu/Item',
-          {},
-          {
-            label: { content: 'Export CSV' },
-            icon: { icon: 'download' },
-            shortcut: { enabled: false },
-          },
-        ),
-        R('Context Menu/Separator'),
-        R(
-          'Context Menu/Item',
-          {},
-          {
-            label: { content: 'Hide tile' },
-            icon: { icon: 'eye-off' },
-            shortcut: { enabled: false },
-          },
-        ),
-      ]),
+      text: {
+        content:
+          'You’re offline. Showing figures from 09:42 — the overview refreshes when you reconnect; actions are paused.',
+      },
     },
   )
-const tileDrawer = () =>
-  R(
-    'Drawer',
-    { width: 'fill_container' },
-    {
-      content: L({ name: 'Drawer Content', layout: 'vertical', width: 'fill_container' }, [
-        R('Drawer/Title', { width: 'fill_container' }, { title: { content: 'Listens per day' } }),
-        R('Drawer/Separator', { width: 'fill_container' }),
-        R(
-          'Drawer/Item',
-          { width: 'fill_container' },
-          { label: { content: 'Open listening data' }, icon: { icon: 'arrow-up-right' } },
-        ),
-        R(
-          'Drawer/Item',
-          { width: 'fill_container' },
-          { label: { content: 'Export CSV' }, icon: { icon: 'download' } },
-        ),
-        R(
-          'Drawer/Item',
-          { width: 'fill_container' },
-          { label: { content: 'Move down' }, icon: { icon: 'arrow-down' } },
-        ),
-        R('Drawer/Separator', { width: 'fill_container' }),
-        R(
-          'Drawer/Item',
-          { width: 'fill_container' },
-          { label: { content: 'Hide tile' }, icon: { icon: 'eye-off' } },
-        ),
-      ]),
-    },
-  )
-const D = (label, content, opts) => () => Shell(label, content(false), opts)
-const M = (label, content, h) => () => MShell(label, fitMobile(content(true)), h)
-const pair = (label, content, { opts, mh } = {}) =>
-  state(label, D(label, content, opts), M(label, content, mh))
+const ALL = ['action', 'kpi1', 'kpi2', 'listens', 'pipeline', 'reports', 'accounts', 'audit']
+const D = (label, build, opts) => () => Shell(label, build(false), opts)
+const M = (label, build, h, uk) => () =>
+  MShell(label, uk ? ukrainian(fitMobile(build(true))) : fitMobile(build(true)), h)
+const pair = (label, build, { opts, mh, uk } = {}) =>
+  state(label, D(label, build, opts), M(label, build, mh, uk))
 const MODERATOR_HIDE = [
   'nav_releases',
   'nav_catalog',
@@ -747,21 +761,60 @@ export const adminPages = {
     title: 'Admin / Overview',
     route: '/ (requireStaffSession + overview:read)',
     context:
-      'Operations centre for staff: what needs action first (reports, release review, failed tracks), then growth KPIs, pipeline, reports by type and the audit trail. Every tile is independent (1×1, 2×1, 2×2) so operators can later reorder, resize and hide tiles. Not-found is not drawn: unknown admin routes redirect to /. Login and /no-access are separate routes without the shell.',
-    desktop: () => Shell('Overview', overview(false)),
+      'Operations centre for staff: what needs action first (reports, release review, failed tracks), then KPIs, listens, the track pipeline, reports by type, accounts and the audit trail, each in its own bento tile. The sidebar footer switches the language (English ↔ Українська), cycles the theme (Dark → Light → Dim) and collapses the panel to a rail. Not-found is not drawn: unknown admin routes redirect to /. Login and /no-access are separate routes without the shell.',
+    desktop: (theme) => Shell('Overview', overview(false), { theme }),
     mobile: () => MShell('Overview', fitMobile(overview(true)), 2930),
     states: [
+      state(
+        'Sidebar collapsed',
+        () => Shell('Sidebar collapsed', overview(false, { collapsed: true }), { collapsed: true }),
+        null,
+        'phones have no side panel; the menu button opens it as a sheet (see Menu open)',
+      ),
+      state(
+        'Menu open',
+        null,
+        () =>
+          MShell(
+            'Menu open',
+            [
+              A(
+                'Admin/Mobile Menu',
+                { name: 'Menu', width: 'fill_container', height: 'fill_container' },
+                panel(),
+              ),
+            ],
+            940,
+          ),
+        'the desktop panel is always on screen; it collapses to a rail instead (see Sidebar collapsed)',
+      ),
+      pair('Українська', (m) => ukrainian(overview(m)), { opts: { uk: true }, uk: true, mh: 3070 }),
       pair(
         'Loading',
         (m) =>
-          [
-            m
-              ? header(true, { title: 'Loading overview…' })
-              : header(false, { title: 'Loading overview…', sub: 'Fetching queues and figures.' }),
-            m ? mControls() : null,
-            ...loadingGrid(m),
-          ].filter(Boolean),
-        { mh: 2440 },
+          overview(m, {
+            loading: ALL,
+            headerOpts: { title: 'Loading overview…', sub: 'Fetching queues and figures.' },
+          }),
+        { mh: 2670 },
+      ),
+      pair(
+        'Loading · per tile',
+        (m) =>
+          overview(m, {
+            loading: ['listens', 'reports', 'accounts'],
+            headerOpts: { sub: 'Queues are ready; figures are still arriving.' },
+          }),
+        { mh: 2910 },
+      ),
+      pair(
+        'Refreshing',
+        (m) =>
+          overview(m, {
+            updating: true,
+            headerOpts: { sub: 'Updating figures. Everything stays usable while it refreshes.' },
+          }),
+        { mh: 2930 },
       ),
       pair(
         'All clear',
@@ -818,52 +871,13 @@ export const adminPages = {
               sub: 'Moderator view: tiles outside your role stay locked.',
             },
           }),
-        {
-          opts: { role: 'Moderator', hide: MODERATOR_HIDE },
-          mh: 2890,
-        },
+        { opts: { role: 'Moderator', hide: MODERATOR_HIDE }, mh: 2890 },
       ),
-      pair('Offline', (m) => overview(m, { banner: offlineBanner }), {
+      pair('Offline', (m) => overview(m, { banner: offlineBanner() }), {
         opts: { height: 1270 },
         mh: 3030,
       }),
       pair('Range 30d', (m) => overview(m, { range: '30d' }), { mh: 2930 }),
-      state(
-        'Tile menu',
-        () => Shell('Tile menu', withMenu(overview(false, { menu: true }))),
-        () => MShell('Tile menu', [...fitMobile(overview(true)).slice(0, 4), tileDrawer()], 1840),
-      ),
-      pair('Customise layout', editing, { opts: { height: 1270 }, mh: 1950 }),
     ],
   },
-}
-/* phones stack tiles in one column: every tile sizes to its content, except the fixed-height Listens cell */
-function fitMobile(nodes) {
-  const walk = (n) => {
-    if (!n || typeof n !== 'object' || n.name === 'Cell / Listens') return
-    if (
-      /^(Tile|KPI|Message) \/ /.test(n.name ?? '') ||
-      n.name === 'Tile Content' ||
-      n.name === 'Bar Chart'
-    )
-      delete n.height
-    ;(n.children ?? []).forEach(walk)
-    if (n.descendants) Object.values(n.descendants).forEach(walk)
-  }
-  nodes.forEach(walk)
-  return nodes
-}
-/* the open ⋯ menu of the Listens tile sits under it in the same cell, aligned to its right edge */
-function withMenu(nodes) {
-  const walk = (n) => {
-    if (!n || typeof n !== 'object') return
-    if (n.name === 'Cell 2×1 / Listens') {
-      n.layout = 'horizontal'
-      n.alignItems = 'start'
-      n.children = [n.children[0], tileMenu()]
-    }
-    ;(n.children ?? []).forEach(walk)
-  }
-  nodes.forEach(walk)
-  return nodes
 }
