@@ -6104,6 +6104,733 @@ add(
   ),
 )
 
+/* ---------- admin console (apps/admin): shell, navigation and bento tiles for the Overview ---------- */
+const adminNavItem = (name, active) =>
+  comp(
+    name,
+    Row(
+      {
+        name: 'Nav Item',
+        width: 'fill_container',
+        height: 36,
+        padding: [0, 10],
+        gap: 10,
+        cornerRadius: 8,
+        ...(active ? { fill: C.sidebarAccent } : {}),
+      },
+      [
+        part(
+          'icon',
+          I('house', { width: 18, height: 18, fill: active ? C.primary : C.mutedForeground }),
+        ),
+        part(
+          'label',
+          T('Item', {
+            fontSize: 14,
+            fontWeight: active ? '600' : '400',
+            fill: active ? C.sidebarAccentForeground : C.mutedForeground,
+            width: 'fill_container',
+            textGrowth: 'fixed-width',
+          }),
+        ),
+        part(
+          'count',
+          Row(
+            {
+              name: 'Count',
+              height: 20,
+              padding: [0, 7],
+              cornerRadius: 10,
+              justifyContent: 'center',
+              fill: active ? C.primary : C.muted,
+            },
+            [
+              part(
+                'countLabel',
+                T('0', {
+                  fontSize: 11,
+                  fontWeight: '600',
+                  fill: active ? C.primaryForeground : C.mutedForeground,
+                }),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  )
+add(adminNavItem('Admin/Nav Item'), adminNavItem('Admin/Nav Item Active', true))
+const ADMIN_NAV = [
+  [null, [['overview', 'layout-dashboard', 'Overview']]],
+  [
+    'Operations',
+    [
+      ['moderation', 'flag', 'Moderation', '16'],
+      ['releases', 'disc-3', 'Releases', '7'],
+      ['catalog', 'audio-lines', 'Catalog', '4'],
+      ['albums', 'disc-album', 'Albums'],
+      ['playlists', 'list-music', 'Playlists'],
+      ['podcasts', 'podcast', 'Podcasts'],
+      ['genres', 'tags', 'Genres'],
+    ],
+  ],
+  [
+    'Accounts',
+    [
+      ['artists', 'mic-vocal', 'Artists'],
+      ['users', 'users-round', 'Listeners'],
+    ],
+  ],
+  [
+    'System',
+    [
+      ['audit', 'scroll-text', 'Audit log'],
+      ['roles', 'shield-check', 'Roles'],
+      ['staff', 'id-card', 'Staff'],
+    ],
+  ],
+]
+const groupLabel = (t) =>
+  T(t.toUpperCase(), {
+    name: `Group / ${t}`,
+    fontSize: 11,
+    fontWeight: '600',
+    letterSpacing: 1.2,
+    fill: C.mutedForeground,
+  })
+const adminNavRef = ([key, icon, label, count]) => {
+  const n = reg['Admin/Nav Item']
+  return part(
+    `nav_${key}`,
+    Ref(
+      n.id,
+      { name: `Nav / ${label}` },
+      {
+        [n.parts.icon]: { icon },
+        [n.parts.label]: { content: label },
+        ...(count
+          ? { [n.parts.countLabel]: { content: count } }
+          : { [n.parts.count]: { enabled: false } }),
+      },
+    ),
+  )
+}
+const adminBrand = () =>
+  Row({ name: 'Brand', gap: 10 }, [
+    Ref(reg['Logo/Lockup'].id, { name: 'Lockup' }),
+    T('ADMIN', { fontSize: 11, fontWeight: '600', letterSpacing: 1, fill: C.accent }),
+  ])
+add(
+  comp(
+    'Admin Shell/Desktop',
+    Row(
+      {
+        name: 'Admin Shell',
+        width: 1440,
+        height: 1040,
+        gap: 0,
+        alignItems: 'start',
+        fill: C.background,
+      },
+      [
+        Col(
+          {
+            name: 'Sidebar',
+            width: 248,
+            height: 'fill_container',
+            padding: [20, 16],
+            gap: 4,
+            fill: C.sidebar,
+            stroke: C.sidebarBorder,
+            strokeWidth: { right: 1 },
+          },
+          [
+            Row({ name: 'Brand Row', width: 'fill_container', padding: [0, 4, 16, 4] }, [
+              adminBrand(),
+            ]),
+            ...ADMIN_NAV.flatMap(([group, items], gi) => [
+              group
+                ? part(
+                    `group_${group.toLowerCase()}`,
+                    Row({ name: 'Group Label', padding: [gi ? 14 : 0, 10, 6, 10] }, [
+                      groupLabel(group),
+                    ]),
+                  )
+                : null,
+              ...items.map(adminNavRef),
+            ]).filter(Boolean),
+            F({ name: 'Spacer', width: 'fill_container', height: 'fill_container' }),
+            Row(
+              {
+                name: 'Preferences',
+                width: 'fill_container',
+                gap: 8,
+                padding: [12, 4, 0, 4],
+                stroke: C.border,
+                strokeWidth: { top: 1 },
+              },
+              [
+                I('sun-moon', { width: 16, height: 16 }),
+                part(
+                  'theme',
+                  muted('Theme · Dark', { width: 'fill_container', textGrowth: 'fixed-width' }),
+                ),
+                I('languages', { width: 16, height: 16 }),
+                muted('EN'),
+              ],
+            ),
+          ],
+        ),
+        Col({ name: 'Main', width: 'fill_container', height: 'fill_container', gap: 0 }, [
+          Row(
+            {
+              name: 'Header',
+              width: 'fill_container',
+              height: 64,
+              padding: [0, 32],
+              gap: 16,
+              stroke: C.border,
+              strokeWidth: { bottom: 1 },
+            },
+            [
+              part(
+                'breadcrumb',
+                T('Admin / Overview', {
+                  fontSize: 13,
+                  fill: C.mutedForeground,
+                  width: 'fill_container',
+                  textGrowth: 'fixed-width',
+                }),
+              ),
+              Row(
+                {
+                  name: 'Search',
+                  width: 280,
+                  height: 36,
+                  padding: [0, 10],
+                  gap: 8,
+                  cornerRadius: 8,
+                  stroke: C.input,
+                  strokeWidth: 1,
+                },
+                [
+                  I('search', { width: 16, height: 16 }),
+                  T('Search tracks, artists, reports', {
+                    fontSize: 13,
+                    fill: C.mutedForeground,
+                    width: 'fill_container',
+                    textGrowth: 'fixed-width',
+                  }),
+                  Ref(reg.Kbd.id, { name: 'Kbd' }),
+                ],
+              ),
+              Row({ name: 'Operator', gap: 10 }, [
+                Ref('jKpf4', { name: 'Avatar' }, { Z9DnE: { content: 'MQ' } }),
+                Col({ gap: 2 }, [
+                  part('operator', T('mara.ops', { fontWeight: '600', fontSize: 13 })),
+                  part('role', T('Super admin', { fontSize: 12, fill: C.mutedForeground })),
+                ]),
+              ]),
+              iconBtn('log-out'),
+            ],
+          ),
+          slot('content', { height: 'fill_container', padding: [28, 32], gap: 24, clip: true }),
+        ]),
+      ],
+    ),
+  ),
+  comp(
+    'Admin Shell/Mobile',
+    Col(
+      {
+        name: 'Admin Shell Mobile',
+        width: 390,
+        height: 844,
+        gap: 0,
+        fill: C.background,
+        clip: true,
+      },
+      [
+        Ref(reg['Mobile/Status Bar'].id, { name: 'Status Bar', width: 'fill_container' }),
+        Row(
+          {
+            name: 'Top Bar',
+            width: 'fill_container',
+            height: 56,
+            padding: [0, 8, 0, 16],
+            justifyContent: 'space_between',
+            stroke: C.border,
+            strokeWidth: { bottom: 1 },
+          },
+          [
+            adminBrand(),
+            Row({ gap: 4 }, [
+              Ref(
+                reg['Button/Icon Ghost'].id,
+                { name: 'Search' },
+                { [reg['Button/Icon Ghost'].parts.icon]: { icon: 'search' } },
+              ),
+              Ref(
+                reg['Button/Icon Ghost'].id,
+                { name: 'Menu' },
+                { [reg['Button/Icon Ghost'].parts.icon]: { icon: 'menu' } },
+              ),
+            ]),
+          ],
+        ),
+        slot('content', { height: 'fill_container', padding: [20, 16], gap: 16, clip: true }),
+      ],
+    ),
+  ),
+)
+/* nav counts and group labels inside the shell instance, so a screen can change or hide them */
+{
+  const s = reg['Admin Shell/Desktop'].parts
+  const n = reg['Admin/Nav Item'].parts
+  for (const [, items] of ADMIN_NAV)
+    for (const [key] of items) {
+      s[`count_${key}`] = `${s[`nav_${key}`]}/${n.count}`
+      s[`countLabel_${key}`] = `${s[`nav_${key}`]}/${n.countLabel}`
+    }
+}
+
+/* bento: one tile anatomy (icon, title, meta, actions, content) in three surfaces; KPI and state tiles */
+const TONES = {
+  Neutral: [C.muted, C.foreground],
+  Primary: [C.primary, C.primaryForeground],
+  Success: [C.successSurface, C.successText],
+  Info: [C.infoSurface, C.infoText],
+  Warning: [C.warningSurface, C.warningText],
+  Error: [C.errorSurface, C.errorText],
+}
+const toneBox = (tone, icon = 'layout-grid', size = 32) =>
+  part(
+    'iconBox',
+    F(
+      {
+        name: 'Icon Box',
+        width: size,
+        height: size,
+        cornerRadius: size / 4,
+        justifyContent: 'center',
+        alignItems: 'center',
+        fill: TONES[tone][0],
+      },
+      [part('icon', I(icon, { width: size / 2, height: size / 2, fill: TONES[tone][1] }))],
+    ),
+  )
+const sizeChip = (label = '2×1') =>
+  Row(
+    {
+      name: 'Size',
+      height: 24,
+      padding: [0, 8],
+      gap: 4,
+      cornerRadius: 6,
+      stroke: C.border,
+      strokeWidth: 1,
+    },
+    [
+      I('scaling', { width: 12, height: 12 }),
+      part('size', T(label, { fontSize: 12, fontWeight: '600', fill: C.mutedForeground })),
+    ],
+  )
+const bentoTile = (name, { accent, editing } = {}) =>
+  comp(
+    name,
+    Col(
+      {
+        name: 'Bento Tile',
+        width: 'fill_container',
+        gap: 16,
+        padding: 20,
+        cornerRadius: 16,
+        clip: true,
+        fill: accent ? C.backgroundTinted : C.card,
+        stroke: editing ? C.primary : C.border,
+        strokeWidth: editing ? 2 : 1,
+      },
+      [
+        Row({ name: 'Tile Header', width: 'fill_container', gap: 10 }, [
+          editing ? I('grip-vertical', { name: 'Drag Handle', width: 16, height: 16 }) : null,
+          editing ? null : toneBox(accent ? 'Primary' : 'Neutral'),
+          Col({ name: 'Heading', gap: 2, width: 'fill_container' }, [
+            part(
+              'title',
+              T('Tile', {
+                fontSize: 15,
+                fontWeight: '600',
+                width: 'fill_container',
+                textGrowth: 'fixed-width',
+              }),
+            ),
+            part(
+              'meta',
+              muted('Meta', { fontSize: 12, width: 'fill_container', textGrowth: 'fixed-width' }),
+            ),
+          ]),
+          part(
+            'actions',
+            Row(
+              { name: 'Actions', gap: 6 },
+              editing ? [sizeChip(), iconBtn('eye-off')] : [iconBtn('ellipsis')],
+            ),
+          ),
+        ]),
+        slot('content', { gap: 14 }),
+      ],
+    ),
+  )
+add(
+  bentoTile('Bento/Tile'),
+  bentoTile('Bento/Tile Accent', { accent: true }),
+  bentoTile('Bento/Tile Editing', { editing: true }),
+)
+/* KPI: label, big tabular value, delta pill, 12-bar sparkline; the tone names what the change means */
+const SPARK = [14, 18, 16, 22, 20, 24, 21, 26, 25, 29, 27, 34]
+const kpiTile = (tone, icon) =>
+  comp(
+    `Bento/KPI/${tone}`,
+    Col(
+      {
+        name: 'KPI Tile',
+        width: 'fill_container',
+        gap: 12,
+        padding: 20,
+        cornerRadius: 16,
+        fill: C.card,
+        stroke: C.border,
+        strokeWidth: 1,
+      },
+      [
+        Row({ name: 'Label Row', width: 'fill_container', gap: 8 }, [
+          part('icon', I('users-round', { width: 16, height: 16 })),
+          part('label', muted('Label', { width: 'fill_container', textGrowth: 'fixed-width' })),
+          Row(
+            {
+              name: 'Delta',
+              gap: 4,
+              padding: [3, 8],
+              cornerRadius: 999,
+              fill: TONES[
+                tone === 'Positive' ? 'Success' : tone === 'Negative' ? 'Error' : 'Neutral'
+              ][0],
+            },
+            [
+              part(
+                'deltaIcon',
+                I(icon, {
+                  width: 14,
+                  height: 14,
+                  fill:
+                    tone === 'Positive'
+                      ? C.successText
+                      : tone === 'Negative'
+                        ? C.errorText
+                        : C.mutedForeground,
+                }),
+              ),
+              part(
+                'delta',
+                T('0%', {
+                  fontSize: 12,
+                  fontWeight: '600',
+                  fill:
+                    tone === 'Positive'
+                      ? C.successText
+                      : tone === 'Negative'
+                        ? C.errorText
+                        : C.mutedForeground,
+                }),
+              ),
+            ],
+          ),
+        ]),
+        part('value', H('0', 34, { fontWeight: '700', letterSpacing: -0.8 })),
+        Row(
+          { name: 'Sparkline', width: 'fill_container', height: 36, gap: 3, alignItems: 'end' },
+          SPARK.map((h, i) =>
+            part(
+              `b${i}`,
+              F({
+                name: 'Spark Bar',
+                width: 'fill_container',
+                height: h,
+                cornerRadius: 2,
+                fill: i === SPARK.length - 1 ? C.primary : C.chart2,
+                opacity: i === SPARK.length - 1 ? 1 : 0.45,
+              }),
+            ),
+          ),
+        ),
+        part(
+          'sub',
+          muted('Sub', { fontSize: 12, width: 'fill_container', textGrowth: 'fixed-width' }),
+        ),
+      ],
+    ),
+  )
+add(
+  kpiTile('Positive', 'trending-up'),
+  kpiTile('Negative', 'trending-up'),
+  kpiTile('Neutral', 'minus'),
+)
+/* "Needs action" rows: a toned icon, what waits, how old it is, the count and a way in */
+const actionRow = (tone, icon) =>
+  comp(
+    `Bento/Action Row/${tone}`,
+    Row(
+      {
+        name: 'Action Row',
+        width: 'fill_container',
+        gap: 14,
+        padding: [14, 16],
+        cornerRadius: 12,
+        fill: C.card,
+        stroke: C.border,
+        strokeWidth: 1,
+      },
+      [
+        toneBox(tone, icon, 36),
+        Col({ name: 'Text', gap: 2, width: 'fill_container' }, [
+          part(
+            'title',
+            T('Title', {
+              fontSize: 14,
+              fontWeight: '600',
+              width: 'fill_container',
+              textGrowth: 'fixed-width',
+            }),
+          ),
+          part(
+            'meta',
+            muted('Meta', { fontSize: 12, width: 'fill_container', textGrowth: 'fixed-width' }),
+          ),
+        ]),
+        part('count', H('0', 26, { fontWeight: '700' })),
+        I('chevron-right', { width: 18, height: 18 }),
+      ],
+    ),
+  )
+add(
+  actionRow('Warning', 'flag'),
+  actionRow('Info', 'disc-3'),
+  actionRow('Error', 'triangle-alert'),
+  actionRow('Success', 'circle-check'),
+)
+/* horizontal meter (reports by type) in the five chart colours */
+const meterRow = (i) =>
+  comp(
+    `Bento/Meter Row/${i}`,
+    Col({ name: 'Meter Row', width: 'fill_container', gap: 6 }, [
+      Row({ name: 'Labels', width: 'fill_container', gap: 8 }, [
+        part(
+          'label',
+          T('Label', { fontSize: 13, width: 'fill_container', textGrowth: 'fixed-width' }),
+        ),
+        part('value', T('0', { fontSize: 13, fontWeight: '600' })),
+      ]),
+      Row({ name: 'Track', width: 'fill_container', height: 6, cornerRadius: 3, fill: C.muted }, [
+        part(
+          'bar',
+          F({ name: 'Bar', width: 120, height: 6, cornerRadius: 3, fill: C[`chart${i}`] }),
+        ),
+      ]),
+    ]),
+  )
+add(...[1, 2, 3, 4, 5].map(meterRow))
+/* processing pipeline: one stacked bar (ready · processing · stuck · failed) and its legend */
+const SEGMENTS = [
+  ['ready', C.success, 150],
+  ['processing', C.info, 40],
+  ['stuck', C.warning, 12],
+  ['failed', C.error, 16],
+]
+add(
+  comp(
+    'Bento/Segment Bar',
+    Row(
+      { name: 'Segment Bar', width: 'fill_container', height: 10, gap: 3 },
+      SEGMENTS.map(([k, fill, w]) =>
+        part(k, F({ name: `Segment / ${k}`, width: w, height: 10, cornerRadius: 3, fill })),
+      ),
+    ),
+  ),
+  ...[
+    ['Success', C.success],
+    ['Info', C.info],
+    ['Warning', C.warning],
+    ['Error', C.error],
+  ].map(([tone, fill]) =>
+    comp(
+      `Bento/Legend Row/${tone}`,
+      Row({ name: 'Legend Row', width: 'fill_container', gap: 10 }, [
+        F({ name: 'Dot', width: 8, height: 8, cornerRadius: 4, fill }),
+        part('label', muted('Label', { width: 'fill_container', textGrowth: 'fixed-width' })),
+        part('value', T('0', { fontSize: 13, fontWeight: '600' })),
+      ]),
+    ),
+  ),
+)
+/* tile states: what a single tile shows when its data is missing, failed or not permitted */
+const tileMessage = (kind, tone, icon, title, desc, action) =>
+  comp(
+    `Bento/Tile Message/${kind}`,
+    Col(
+      {
+        name: 'Tile Message',
+        width: 'fill_container',
+        gap: 8,
+        padding: [20, 12],
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      [
+        F(
+          {
+            name: 'Icon Circle',
+            width: 40,
+            height: 40,
+            cornerRadius: 20,
+            justifyContent: 'center',
+            alignItems: 'center',
+            fill: TONES[tone][0],
+          },
+          [part('icon', I(icon, { width: 20, height: 20, fill: TONES[tone][1] }))],
+        ),
+        part('title', T(title, { fontSize: 14, fontWeight: '600', textAlign: 'center' })),
+        part(
+          'desc',
+          muted(desc, {
+            fontSize: 12,
+            textAlign: 'center',
+            width: 'fill_container',
+            textGrowth: 'fixed-width',
+          }),
+        ),
+        action ? part('action', Button(action, 'outline', { icon: 'rotate-cw' })) : null,
+      ].filter(Boolean),
+    ),
+  )
+add(
+  tileMessage(
+    'Error',
+    'Error',
+    'triangle-alert',
+    'Couldn’t load this tile',
+    'The rest of the overview is up to date.',
+    'Retry',
+  ),
+  tileMessage('Locked', 'Neutral', 'lock', 'Not in your role', 'Ask a super admin for access.'),
+  tileMessage(
+    'Empty',
+    'Success',
+    'circle-check',
+    'Nothing here yet',
+    'Data appears as it arrives.',
+  ),
+)
+add(
+  comp(
+    'Bento/Tile Skeleton',
+    Col(
+      {
+        name: 'Tile Skeleton',
+        width: 'fill_container',
+        gap: 16,
+        padding: 20,
+        cornerRadius: 16,
+        fill: C.card,
+        stroke: C.border,
+        strokeWidth: 1,
+        clip: true,
+      },
+      [
+        Row({ name: 'Header', width: 'fill_container', gap: 10 }, [
+          sk(32, 32, { cornerRadius: 8 }),
+          Col({ gap: 6, width: 'fill_container' }, [sk(120, 12), sk(80, 10)]),
+        ]),
+        sk('fill_container', 28, { cornerRadius: 6 }),
+        sk('fill_container', 12),
+        sk(180, 12),
+        part(
+          'more',
+          Col({ name: 'More', gap: 10, width: 'fill_container' }, [
+            sk('fill_container', 12),
+            sk(140, 12),
+          ]),
+        ),
+      ],
+    ),
+  ),
+  comp(
+    'Bento/Add Tile',
+    Col(
+      {
+        name: 'Add Tile',
+        width: 'fill_container',
+        gap: 8,
+        padding: 20,
+        cornerRadius: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+        stroke: C.border,
+        strokeWidth: 1,
+      },
+      [
+        F(
+          {
+            name: 'Plus',
+            width: 40,
+            height: 40,
+            cornerRadius: 20,
+            justifyContent: 'center',
+            alignItems: 'center',
+            fill: C.muted,
+          },
+          [I('plus', { width: 20, height: 20, fill: C.foreground })],
+        ),
+        part('title', T('Add a tile', { fontSize: 14, fontWeight: '600' })),
+        part('desc', muted('3 hidden · 9 available', { fontSize: 12 })),
+      ],
+    ),
+  ),
+  comp(
+    'Bento/Edit Bar',
+    Row(
+      {
+        name: 'Edit Bar',
+        width: 'fill_container',
+        gap: 12,
+        padding: [12, 16],
+        cornerRadius: 12,
+        fill: C.backgroundTinted,
+        stroke: C.primary,
+        strokeWidth: 1,
+      },
+      [
+        I('layout-grid', { width: 18, height: 18, fill: C.primary }),
+        Col({ gap: 2, width: 'fill_container' }, [
+          part('title', T('Editing layout', { fontSize: 14, fontWeight: '600' })),
+          part(
+            'desc',
+            muted(
+              'Drag tiles to reorder, pick a size, hide what you don’t need. Saved for your account.',
+              {
+                fontSize: 12,
+                width: 'fill_container',
+                textGrowth: 'fixed-width',
+              },
+            ),
+          ),
+        ]),
+        part('reset', Button('Reset', 'ghost')),
+        part('done', Button('Done', 'default', { icon: 'check' })),
+      ],
+    ),
+  ),
+)
+
 /* lay the page out. A block whose root width follows its parent (fill_container) gets a cell as wide as it is
    used on screens, so the library shows it at its real size instead of collapsed; rows are packed by width,
    not by a fixed count, so small controls and full-width blocks don't share a ragged row */
