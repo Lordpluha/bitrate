@@ -1,33 +1,22 @@
-// Builds the admin console's design system — the "00F • Admin" page of the Bitrate library — and a
-// registry of its ids and overridable parts (registry-admin.json). It lives in bitrate.lib.pen rather
-// than a file of its own because Pencil does not resolve a library's imports for the files importing it:
-// an admin library built on `ds` would lose every token and primitive in the screens. Separate source,
-// separate registry, one palette: every colour is a library token and every primitive a library instance.
-import { readFileSync, writeFileSync } from 'node:fs'
-import { C, T, H, P, I, F, Row, Col, Ref, Button, id, setMode, reserve } from './kit.mjs'
+// Builds the admin console's own design system, pencil/web-admin-design/design-system/admin.lib.pen,
+// and a registry of its ids and overridable parts (registry-admin.json). It is separate from the player's
+// library: its own primitives (type, buttons, chips, skeleton, logo…) and composites (shell, navigation,
+// bento tiles, loaders). Colours are the code's tokens (apps/admin uses @bitrate/tailwind): this script
+// keeps the file's colour variables and `pnpm design:tokens` writes them from code; fonts are set here.
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { C, T, H, P, I, F, Row, Col, Ref, id, setMode } from './kit.mjs'
 
 setMode('lib')
 const [libF, regF] = process.argv.slice(2)
-const ds = JSON.parse(readFileSync(new URL('./registry.json', import.meta.url), 'utf8'))
-const lib = JSON.parse(readFileSync(libF, 'utf8'))
-const PAGE = '00F • Admin'
-/* every id outside this page stays taken, so the admin page never reuses one of the library's */
-const ids = []
-const collect = (n) => {
-  if (Array.isArray(n)) return n.forEach(collect)
-  if (!n || typeof n !== 'object' || n.name === PAGE) return
-  if (n.id) ids.push(n.id)
-  Object.values(n).forEach(collect)
-}
-collect(lib.children)
-reserve(ids)
+const ROOT = join(dirname(new URL(import.meta.url).pathname), '../..')
 
 const reg = {}
 const part = (p, node) => Object.assign(node, { _part: p })
 /* stable ids hashed from the component name and the node's position, so rebuilding without structural
    changes keeps every id and open designs never point at vanished nodes */
 const ALPHA = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-const taken = new Set(ids)
+const taken = new Set()
 const stable = (key) => {
   for (let salt = 0; ; salt++) {
     let h = 2166136261
@@ -70,35 +59,342 @@ const comp = (name, node) => {
   reg[name] = { id: node.id, parts }
   return node
 }
-/** An instance of one of this library's own components (no alias: it lives in the same file). */
-const LRef = (ref, o = {}, descendants) => ({
-  type: 'ref',
-  id: id(),
-  ref,
-  ...o,
-  ...(descendants ? { descendants } : {}),
-})
+/** An instance of one of this library's components, by name; `parts` overrides its named parts. */
+const use = (name, o = {}, parts = {}) => {
+  const c = reg[name]
+  const desc = {}
+  for (const [p, v] of Object.entries(parts)) if (v !== undefined) desc[c.parts[p]] = v
+  return Ref(c.id, { name, ...o }, Object.keys(desc).length ? desc : undefined)
+}
+const LRef = (ref, o = {}, descendants) => Ref(ref, o, descendants)
 const slot = (p, o = {}) =>
   part(p, F({ name: 'Slot', layout: 'vertical', gap: 12, width: 'fill_container', slot: [], ...o }))
 const muted = (s, o = {}) => T(s, { fontSize: 13, fill: C.mutedForeground, ...o })
-const iconBtn = (icon) =>
-  F(
-    {
-      name: 'Icon Button',
-      width: 36,
-      height: 36,
-      cornerRadius: 8,
-      justifyContent: 'center',
-      alignItems: 'center',
-      stroke: C.border,
-      strokeWidth: 1,
-    },
-    [I(icon, { width: 18, height: 18, fill: C.foreground })],
-  )
-const sk = (w, h = 12, o = {}) => Ref('Jjegi', { name: 'Skeleton', width: w, height: h, ...o })
 
 const blocks = []
 const add = (...n) => blocks.push(...n)
+
+/* ---------- primitives: type, controls, media and feedback of the admin console ---------- */
+const txt = (name, o) => comp(name, part('text', T(name.split('/')[1], o)))
+add(
+  txt('Text/H1', {
+    fontFamily: 'font-heading',
+    fontSize: 32,
+    fontWeight: '700',
+    letterSpacing: -0.6,
+  }),
+  txt('Text/H2', { fontFamily: 'font-heading', fontSize: 24, fontWeight: '600' }),
+  txt('Text/H3', { fontFamily: 'font-heading', fontSize: 18, fontWeight: '600' }),
+  txt('Text/Body', { fontSize: 14 }),
+  txt('Text/Body Strong', { fontSize: 14, fontWeight: '600' }),
+  txt('Text/Muted', { fontSize: 13, fill: C.mutedForeground }),
+  txt('Text/Caption', { fontSize: 12, fill: C.mutedForeground }),
+  txt('Text/Eyebrow', {
+    fontSize: 12,
+    fontWeight: '600',
+    letterSpacing: 1.2,
+    fill: C.mutedForeground,
+  }),
+  txt('Text/Link', { fontSize: 13, fontWeight: '600', fill: C.primary }),
+)
+const BUTTON = {
+  Default: [{ fill: C.primary }, C.primaryForeground],
+  Outline: [{ stroke: C.border, strokeWidth: 1 }, C.foreground],
+  Ghost: [{}, C.foreground],
+}
+for (const [v, [surface, ink]] of Object.entries(BUTTON))
+  add(
+    comp(
+      `Button/${v}`,
+      Row({ name: 'Button', height: 36, padding: [0, 14], gap: 8, cornerRadius: 8, ...surface }, [
+        part('icon', I('plus', { width: 16, height: 16, fill: ink })),
+        part('label', T('Button', { fontSize: 14, fontWeight: '600', fill: ink })),
+      ]),
+    ),
+  )
+for (const [v, surface] of [
+  ['Outline', { stroke: C.border, strokeWidth: 1 }],
+  ['Ghost', {}],
+])
+  add(
+    comp(
+      `Button/Icon ${v}`,
+      Row(
+        {
+          name: 'Icon Button',
+          width: 36,
+          height: 36,
+          cornerRadius: 8,
+          justifyContent: 'center',
+          ...surface,
+        },
+        [part('icon', I('plus', { width: 18, height: 18, fill: C.foreground }))],
+      ),
+    ),
+  )
+add(
+  ...[
+    ['Chip/Default', { stroke: C.border, strokeWidth: 1 }, C.foreground],
+    ['Chip/Active', { fill: C.primary }, C.primaryForeground],
+  ].map(([name, surface, ink]) =>
+    comp(
+      name,
+      Row({ name: 'Chip', height: 32, padding: [0, 14], cornerRadius: 16, ...surface }, [
+        part('label', T('Chip', { fontSize: 13, fontWeight: '600', fill: ink })),
+      ]),
+    ),
+  ),
+  comp('Divider', F({ name: 'Divider', width: 'fill_container', height: 1, fill: C.border })),
+  comp('Skeleton', F({ name: 'Skeleton', width: 120, height: 12, cornerRadius: 6, fill: C.muted })),
+  comp(
+    'Spinner',
+    F({ name: 'Spinner', width: 14, height: 14, layout: 'vertical' }, [
+      {
+        type: 'ellipse',
+        id: id(),
+        name: 'Arc',
+        width: 14,
+        height: 14,
+        fill: C.primary,
+        innerRadius: 0.72,
+        sweepAngle: 270,
+      },
+    ]),
+  ),
+  comp(
+    'Avatar',
+    Row(
+      {
+        name: 'Avatar',
+        width: 32,
+        height: 32,
+        cornerRadius: 16,
+        justifyContent: 'center',
+        fill: C.muted,
+      },
+      [part('initials', T('MQ', { fontSize: 12, fontWeight: '600' }))],
+    ),
+  ),
+  comp(
+    'Kbd',
+    Row(
+      {
+        name: 'Kbd',
+        height: 22,
+        padding: [0, 6],
+        cornerRadius: 4,
+        fill: C.muted,
+        stroke: C.border,
+        strokeWidth: 1,
+      },
+      [part('label', T('Ctrl K', { fontSize: 11, fontWeight: '600', fill: C.mutedForeground }))],
+    ),
+  ),
+)
+/* the mark is apps/admin/public/logo.svg; it keeps the brand gradient in every theme */
+const LOGO = readFileSync(join(ROOT, 'apps/admin/public/logo.svg'), 'utf8')
+const LOGO_BOX = LOGO.match(/viewBox="([^"]+)"/)[1]
+  .split(/\s+/)
+  .map(Number)
+const LOGO_D = [...LOGO.matchAll(/<path[^>]* d="([^"]+)"/g)].map((m) => m[1]).join(' ')
+const brandGradient = {
+  type: 'gradient',
+  gradientType: 'linear',
+  rotation: 270,
+  colors: [
+    { color: C.gradientBrandFrom, position: 0 },
+    { color: C.gradientBrandTo, position: 1 },
+  ],
+}
+add(
+  comp(
+    'Logo/Mark',
+    F({ name: 'Mark', width: 28, height: 28, layout: 'vertical' }, [
+      {
+        type: 'path',
+        id: id(),
+        name: 'Mark Path',
+        width: 28,
+        height: 28,
+        geometry: LOGO_D,
+        viewBox: LOGO_BOX,
+        fill: brandGradient,
+      },
+    ]),
+  ),
+)
+add(
+  comp(
+    'Logo/Lockup',
+    Row({ name: 'Lockup', gap: 10 }, [
+      Ref(reg['Logo/Mark'].id, { name: 'Mark' }),
+      Col({ name: 'Wordmark', gap: 2 }, [
+        T('Bitrate', { fontFamily: 'font-heading', fontSize: 15, fontWeight: '700' }),
+        T('Admin', { fontSize: 11, fill: C.mutedForeground }),
+      ]),
+    ]),
+  ),
+  comp(
+    'Status Bar',
+    Row(
+      {
+        name: 'Status Bar',
+        width: 390,
+        height: 44,
+        padding: [0, 24],
+        justifyContent: 'space_between',
+      },
+      [
+        T('9:41', { fontSize: 15, fontWeight: '600' }),
+        Row({ gap: 6 }, [
+          I('signal', { width: 16, height: 16, fill: C.foreground }),
+          I('wifi', { width: 16, height: 16, fill: C.foreground }),
+          I('battery-full', { width: 20, height: 16, fill: C.foreground }),
+        ]),
+      ],
+    ),
+  ),
+  comp(
+    'Page Header',
+    Row({ name: 'Page Header', width: 'fill_container', gap: 16, alignItems: 'end' }, [
+      Col({ gap: 6, width: 'fill_container' }, [
+        part(
+          'eyebrow',
+          T('EYEBROW', {
+            fontSize: 12,
+            fontWeight: '600',
+            letterSpacing: 1.2,
+            fill: C.mutedForeground,
+          }),
+        ),
+        part(
+          'title',
+          H('Title', 32, { fontWeight: '700', textGrowth: 'fixed-width', width: 'fill_container' }),
+        ),
+        part('subtitle', P('Subtitle', { fontSize: 14 })),
+      ]),
+      slot('actions', { layout: 'horizontal', width: 'fit_content', gap: 10 }),
+    ]),
+  ),
+  comp(
+    'Activity Row',
+    Row({ name: 'Activity Row', width: 'fill_container', gap: 10, alignItems: 'start' }, [
+      Col({ name: 'Dot', padding: [6, 0, 0, 0] }, [
+        F({ name: 'Dot', width: 8, height: 8, cornerRadius: 4, fill: C.primary }),
+      ]),
+      Col({ gap: 2, width: 'fill_container' }, [
+        part(
+          'text',
+          T('Activity', { fontSize: 13, width: 'fill_container', textGrowth: 'fixed-width' }),
+        ),
+        part('meta', muted('Meta', { fontSize: 12 })),
+      ]),
+    ]),
+  ),
+  comp(
+    'Key Value Row',
+    Row(
+      {
+        name: 'Key Value Row',
+        width: 'fill_container',
+        height: 36,
+        justifyContent: 'space_between',
+        stroke: C.border,
+        strokeWidth: { bottom: 1 },
+      },
+      [part('key', muted('Key')), part('value', T('Value', { fontSize: 14, fontWeight: '600' }))],
+    ),
+  ),
+  ...[
+    ['Bar Chart/Bar', C.muted, 100],
+    ['Bar Chart/Bar Highlight', C.primary, 140],
+  ].map(([name, fill, h]) =>
+    comp(
+      name,
+      Col({ name: 'Bar', gap: 8, alignItems: 'center', width: 'fill_container' }, [
+        part('bar', F({ width: 'fill_container', height: h, cornerRadius: 6, fill })),
+        part('label', muted('Mon', { fontSize: 12 })),
+      ]),
+    ),
+  ),
+  comp(
+    'Alert/Warning',
+    Row(
+      {
+        name: 'Alert',
+        width: 'fill_container',
+        gap: 12,
+        padding: [12, 16],
+        cornerRadius: 10,
+        fill: C.warningSurface,
+        stroke: C.warningBorder,
+        strokeWidth: 1,
+      },
+      [
+        I('wifi-off', { width: 18, height: 18, fill: C.warningText }),
+        part(
+          'text',
+          T('Alert', {
+            fontSize: 13,
+            fill: C.warningText,
+            width: 'fill_container',
+            textGrowth: 'fixed-width',
+          }),
+        ),
+      ],
+    ),
+  ),
+)
+const button = (variant, label, icon) =>
+  use(
+    `Button/${variant}`,
+    { name: `Button / ${label}` },
+    { label: { content: label }, icon: icon ? { icon } : { enabled: false } },
+  )
+add(
+  comp(
+    'State Message/Error',
+    Col(
+      {
+        name: 'State Message',
+        width: 480,
+        gap: 12,
+        padding: [48, 0],
+        alignItems: 'center',
+      },
+      [
+        F(
+          {
+            name: 'Icon Circle',
+            width: 56,
+            height: 56,
+            cornerRadius: 28,
+            justifyContent: 'center',
+            alignItems: 'center',
+            fill: C.errorSurface,
+          },
+          [part('icon', I('triangle-alert', { width: 24, height: 24, fill: C.errorText }))],
+        ),
+        part('title', H('Something went wrong', 20, { textAlign: 'center' })),
+        part(
+          'desc',
+          muted('Try again in a moment.', {
+            fontSize: 14,
+            textAlign: 'center',
+            width: 'fill_container',
+            textGrowth: 'fixed-width',
+          }),
+        ),
+        Row({ name: 'Actions', gap: 10 }, [
+          part('primary', button('Default', 'Try again', 'rotate-cw')),
+          part('secondary', button('Outline', 'Back')),
+        ]),
+      ],
+    ),
+  ),
+)
+const iconBtn = (icon) => use('Button/Icon Outline', { name: `Icon / ${icon}` }, { icon: { icon } })
+const sk = (w, h = 12, o = {}) => use('Skeleton', { width: w, height: h, ...o })
 
 /* ---------- admin console (apps/admin): shell, navigation and bento tiles for the Overview ---------- */
 /* mirrors apps/admin/presentation/navigation: brand, captioned sections, then a footer of three rows —
@@ -254,10 +550,7 @@ const groupCaption = (group, first) =>
     ]),
   )
 const adminBrand = () =>
-  Row({ name: 'Brand', gap: 10 }, [
-    Ref(ds['Logo/Lockup'].id, { name: 'Lockup' }),
-    T('ADMIN', { fontSize: 11, fontWeight: '600', letterSpacing: 1, fill: C.accent }),
-  ])
+  Row({ name: 'Brand', gap: 10 }, [Ref(reg['Logo/Lockup'].id, { name: 'Lockup' })])
 /** The full panel (desktop sidebar and the phone menu): captioned sections, then the preference rows. */
 const adminPanel = ({ collapse = true } = {}) => [
   Col({ name: 'Sections', width: 'fill_container', gap: 2, padding: [12, 8] }, [
@@ -350,11 +643,11 @@ const adminHeader = () =>
               textGrowth: 'fixed-width',
             }),
           ),
-          Ref(ds.Kbd.id, { name: 'Kbd' }),
+          Ref(reg.Kbd.id, { name: 'Kbd' }),
         ],
       ),
       Row({ name: 'Operator', gap: 10 }, [
-        Ref('jKpf4', { name: 'Avatar' }, { Z9DnE: { content: 'MQ' } }),
+        Ref(reg.Avatar.id, { name: 'Avatar' }, { [reg.Avatar.parts.initials]: { content: 'MQ' } }),
         Col({ gap: 2 }, [
           part('operator', T('mara.ops', { fontWeight: '600', fontSize: 13 })),
           part('role', T('Super admin', { fontSize: 12, fill: C.mutedForeground })),
@@ -397,11 +690,7 @@ const adminShell = (name, collapsed) =>
                 stroke: C.border,
                 strokeWidth: { bottom: 1 },
               },
-              [
-                collapsed
-                  ? Ref(ds['Logo/Mark Path'].id, { name: 'Mark', width: 28, height: 28 })
-                  : adminBrand(),
-              ],
+              [collapsed ? Ref(reg['Logo/Mark'].id, { name: 'Mark' }) : adminBrand()],
             ),
             ...(collapsed ? adminRail() : adminPanel()),
           ],
@@ -427,7 +716,7 @@ add(
         clip: true,
       },
       [
-        Ref(ds['Mobile/Status Bar'].id, { name: 'Status Bar', width: 'fill_container' }),
+        Ref(reg['Status Bar'].id, { name: 'Status Bar', width: 'fill_container' }),
         Row(
           {
             name: 'Top Bar',
@@ -442,16 +731,16 @@ add(
             adminBrand(),
             Row({ gap: 4 }, [
               Ref(
-                ds['Button/Icon Ghost'].id,
+                reg['Button/Icon Ghost'].id,
                 { name: 'Search' },
-                { [ds['Button/Icon Ghost'].parts.icon]: { icon: 'search' } },
+                { [reg['Button/Icon Ghost'].parts.icon]: { icon: 'search' } },
               ),
               part(
                 'menu',
                 Ref(
-                  ds['Button/Icon Ghost'].id,
+                  reg['Button/Icon Ghost'].id,
                   { name: 'Menu' },
-                  { [ds['Button/Icon Ghost'].parts.icon]: { icon: 'menu' } },
+                  { [reg['Button/Icon Ghost'].parts.icon]: { icon: 'menu' } },
                 ),
               ),
             ]),
@@ -777,7 +1066,7 @@ const tileMessage = (kind, tone, icon, title, desc, action) =>
             textGrowth: 'fixed-width',
           }),
         ),
-        action ? part('action', Button(action, 'outline', { icon: 'rotate-cw' })) : null,
+        action ? part('action', button('Outline', action, 'rotate-cw')) : null,
       ].filter(Boolean),
     ),
   )
@@ -940,7 +1229,7 @@ add(
         fill: C.muted,
       },
       [
-        Ref(ds['Loader/Spinner Small'].id, { name: 'Spinner' }),
+        Ref(reg.Spinner.id, { name: 'Spinner' }),
         part('label', T('Updating…', { fontSize: 12, fontWeight: '600', fill: C.mutedForeground })),
       ],
     ),
@@ -950,7 +1239,7 @@ add(
 /* lay the library out: one flex root, a section per family, each component labelled at its real size */
 const cellWidth = (b) =>
   typeof b.width === 'number'
-    ? b.width
+    ? Math.max(160, b.width)
     : /Row|Bar|Legend|Meter/.test(b.name) && !/Loader/.test(b.name)
       ? 420
       : 320
@@ -981,9 +1270,17 @@ const section = (title, desc, names) => {
     ...rows.map((r, i) => Row({ name: `${title} Row ${i + 1}`, gap: 40, alignItems: 'start' }, r)),
   ])
 }
+/* the error message's button labels sit inside button instances */
+reg['State Message/Error'].parts.primaryLabel =
+  `${reg['State Message/Error'].parts.primary}/${reg['Button/Default'].parts.label}`
+reg['State Message/Error'].parts.secondaryLabel =
+  `${reg['State Message/Error'].parts.secondary}/${reg['Button/Outline'].parts.label}`
+
 const root = F(
   {
-    name: PAGE,
+    name: 'Bitrate Admin Design System',
+    x: 0,
+    y: 0,
     width: 1760,
     layout: 'vertical',
     gap: 72,
@@ -993,8 +1290,18 @@ const root = F(
   [
     H('Bitrate Admin', 44, { fontWeight: '700' }),
     P(
-      'Composites of the admin console (apps/admin). Built only from this library’s components and tokens: one palette, three themes (Light, Dark, Dim). Admin screens use these and the rest of the library — nothing is drawn locally. Source: scripts/pencil-pages/admin-lib.mjs.',
+      'The admin console’s own design system (apps/admin), separate from the player’s library. Colours are the code’s tokens in three themes (Light, Dark, Dim); admin screens import this file as `admin` and use only its components. Source: scripts/pencil-pages/admin-lib.mjs.',
       { width: 760 },
+    ),
+    section(
+      'Foundations',
+      'Type, buttons, chips, divider, skeleton, spinner, avatar, key hint, the logo and the phone status bar.',
+      /^(Text|Button|Chip|Divider|Skeleton|Spinner|Avatar|Kbd|Logo|Status Bar)/,
+    ),
+    section(
+      'Patterns',
+      'Page header, activity and key–value rows, bars, the warning alert and the error message.',
+      /^(Page Header|Activity Row|Key Value Row|Bar Chart|Alert|State Message)/,
     ),
     section(
       'Navigation',
@@ -1018,11 +1325,27 @@ const root = F(
     ),
   ],
 )
-const dsRoot = lib.children.find((c) => c.id === 'dsRoot')
-const row = dsRoot.children.find((c) => c.id === 'dsRowC')
-const at = row.children.findIndex((c) => c.name === PAGE)
-if (at >= 0) row.children[at] = root
-else row.children.splice(row.children.findIndex((c) => c.name === '00E • Page Blocks') + 1, 0, root)
-writeFileSync(libF, JSON.stringify(lib, null, 2))
+/* colour variables are written from code by `pnpm design:tokens`; keep them, set the fonts */
+const previous = existsSync(libF) ? JSON.parse(readFileSync(libF, 'utf8')) : {}
+const variables = Object.fromEntries(
+  Object.entries(previous.variables ?? {}).filter(([, v]) => v.type === 'color'),
+)
+/* code uses the system UI stack; Roboto is the stack's member Pencil can render */
+variables['--font-sans'] = { type: 'string', value: 'Roboto' }
+variables['--font-heading'] = { type: 'string', value: 'Roboto' }
+mkdirSync(dirname(libF), { recursive: true })
+writeFileSync(
+  libF,
+  JSON.stringify(
+    {
+      version: '2.20',
+      themes: { Mode: ['Dark', 'Light', 'Dim'] },
+      variables,
+      children: [root],
+    },
+    null,
+    2,
+  ),
+)
 writeFileSync(regF, JSON.stringify(reg, null, 2))
 console.log('admin components', Object.keys(reg).length)

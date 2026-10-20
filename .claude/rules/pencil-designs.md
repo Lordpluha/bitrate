@@ -7,7 +7,8 @@ paths:
 
 - Every design uses ONE palette and THREE themes: Dark, Light, Dim (neutral). The palette is
   the code's colour tokens (`packages/tailwind/src`), mirrored into
-  `pencil/web-player-design/design-system/bitrate.lib.pen` by `pnpm design:tokens`.
+  `pencil/web-player-design/design-system/bitrate.lib.pen` (and the admin console's own library,
+  below) by `pnpm design:tokens`.
 - A design imports that library as `ds` and paints only with `$ds:--<role>` variables. No
   hardcoded hex (fully transparent `#rrggbb00` gradient stops excepted), no file-local colour
   variables, no extra palettes, alpha-variant families or per-edition colour sets.
@@ -48,11 +49,14 @@ paths:
   holds the desktop page in Dark, Light and Dim, the mobile page, then every state as a
   desktop + mobile pair.
 - The library is one flex root ("Bitrate Design System") with Components, Foundations and
-  Product-pattern rows; page blocks live on "00E • Page Blocks". The admin console's design
-  system (`Admin/*`: shell, navigation, bento tiles, loaders) is its own page, "00F • Admin",
-  built by `scripts/pencil-pages/admin-lib.mjs` with its own `registry-admin.json`. It stays in
-  the library file because Pencil does not resolve a library's imports for the files importing
-  it — a separate admin `.pen` library built on `ds` renders without tokens or primitives.
+  Product-pattern rows; page blocks live on "00E • Page Blocks".
+- The admin console is separate: its designs import only its own design system,
+  `pencil/web-admin-design/design-system/admin.lib.pen`, as `admin` (`$admin:--<role>`,
+  `theme: { "admin:Mode": … }`), and never `bitrate.lib.pen`. It holds its own primitives and the
+  `Admin/*` shell, navigation, bento tiles and loaders, built by
+  `scripts/pencil-pages/admin-lib.mjs` with `registry-admin.json`; `pnpm design:tokens` writes its
+  colours from the same code tokens (apps/admin uses `@bitrate/tailwind`). Do not build it on
+  `ds`: Pencil does not resolve a library's imports for the files importing it.
 - `pnpm design:pages` regenerates the library blocks and every page from
   `scripts/pencil-pages/` (content per route in `pages*.mjs`). Folders named `archive/` hold
   historical references and are skipped by the checks.
