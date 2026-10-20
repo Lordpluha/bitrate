@@ -1,0 +1,50 @@
+.switch {
+  display: flex;
+  gap: 2px;
+  margin: 0;
+  min-width: 0;
+  padding: 2px;
+  border: 1px solid var(--bitrate-border);
+  border-radius: var(--bitrate-radius);
+  background: var(--bitrate-surface);
+}
+
+.option {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 28px;
+  border-radius: 6px;
+  color: var(--bitrate-text-muted);
+  transition:
+    color var(--bitrate-fast) var(--bitrate-ease),
+    background-color var(--bitrate-fast) var(--bitrate-ease);
+}
+
+.option:hover {
+  color: var(--ifm-font-color-base);
+}
+
+.option[aria-pressed="true"] {
+  background: var(--ifm-background-color);
+  color: var(--bitrate-text-strong);
+  box-shadow: 0 0 0 1px var(--bitrate-border);
+}
+
+.option:focus-visible {
+  outline: 2px solid var(--bitrate-ring);
+  outline-offset: 2px;
+}
+
+.switch:disabled .option {
+  cursor: default;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
