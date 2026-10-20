@@ -236,29 +236,6 @@ $DC exec api ping postgres
 
 ## 📦 Volumes
 
-### Backup PostgreSQL
-
-```bash
-docker compose -f infra/docker-compose.preprod.yaml exec -T postgres \
-  pg_dump -U admin bitrate > backups/backup.sql
-
-# Or via task:
-task db:backup
-```
-
-### Restore
-
-```bash
-docker compose -f infra/docker-compose.preprod.yaml exec -T postgres \
-  psql -U admin bitrate < backups/backup.sql
-
-# Or via task (FILE= is required — this task takes no positional argument):
-task db:restore FILE=backups/2026-01-01_120000.sql
-```
-
-Production has no automated backup: the off-host backup workflow was removed. See
-[Deployment § 6](./deployment.md#6-backups).
-
 ### Clear All Data
 
 ```bash
