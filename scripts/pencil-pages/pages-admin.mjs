@@ -1,24 +1,11 @@
-// Admin console (apps/admin) — Overview as a bento of independent tiles. Library instances only: the admin
-// design system ("00F • Admin", registry-admin.json) and the rest of the Bitrate library.
+// Admin console (apps/admin) — Overview as a bento of independent tiles. Instances of the admin design
+// system only (pencil/web-admin-design/design-system/admin.lib.pen, imported as `admin`).
 import { readFileSync } from 'node:fs'
 import { C, id, Ref } from './kit.mjs'
-import {
-  Button,
-  Chips,
-  Col,
-  Divider,
-  ErrorState,
-  fitStates,
-  IconBtn,
-  L,
-  R,
-  Row,
-  state,
-  Tx,
-} from './ui.mjs'
+import { Col, L, Row, state } from './ui.mjs'
 
 const areg = JSON.parse(readFileSync(new URL('./registry-admin.json', import.meta.url), 'utf8'))
-/** Instance of an admin block (the library's "00F • Admin" page) by name; `parts` overrides its named parts. */
+/** Instance of an admin-library component by name; `parts` overrides its named parts. */
 const A = (name, o = {}, parts = {}) => {
   const c = areg[name]
   if (!c) throw new Error(`no admin block "${name}"`)
@@ -32,6 +19,57 @@ const A = (name, o = {}, parts = {}) => {
   }
   return Ref(c.id, { name: o.name ?? name, ...o }, Object.keys(desc).length ? desc : undefined)
 }
+
+const R = (name, o, parts) =>
+  A(
+    { 'Activity Item': 'Activity Row', 'Artist/Page Header': 'Page Header' }[name] ?? name,
+    o,
+    parts,
+  )
+const Tx = (style, content, o = {}) => A(`Text/${style}`, { ...o, content })
+const Button = (label, variant = 'default', { icon } = {}) =>
+  A(
+    `Button/${variant[0].toUpperCase()}${variant.slice(1)}`,
+    { name: `Button / ${label}` },
+    { label: { content: label }, icon: icon ? { icon } : { enabled: false } },
+  )
+const Chips = (labels, active = 0) =>
+  Row(
+    { name: 'Chips', gap: 8 },
+    labels.map((l, i) =>
+      A(
+        i === active ? 'Chip/Active' : 'Chip/Default',
+        { name: `Chip / ${l}` },
+        { label: { content: l } },
+      ),
+    ),
+  )
+const IconBtn = (icon) => A('Button/Icon Outline', { name: `Icon / ${icon}` }, { icon: { icon } })
+const Divider = () => A('Divider', { width: 'fill_container' })
+const ErrorState = (m, title, desc, primary, icon, secondary) =>
+  L(
+    {
+      name: 'State Area',
+      layout: 'vertical',
+      width: 'fill_container',
+      height: 'fill_container',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    [
+      A(
+        'State Message/Error',
+        { width: m ? 'fill_container' : 480 },
+        {
+          icon: { icon },
+          title: { content: title },
+          desc: { content: desc },
+          primaryLabel: { content: primary },
+          secondaryLabel: { content: secondary },
+        },
+      ),
+    ],
+  )
 
 /* ---------- language: English by default, Українська after the switch ---------- */
 const UK = {
@@ -207,7 +245,7 @@ const content = (nodes, mobile) =>
       width: 'fill_container',
       height: 'fill_container',
     },
-    fitStates(nodes, mobile),
+    nodes,
   )
 /** Desktop admin page: sidebar (expanded, or the collapsed rail), header with the operator, content. */
 const Shell = (
@@ -323,11 +361,7 @@ const Legend = (tone, label, value) =>
     { label: { content: label }, value: { content: value } },
   )
 const Kv = (key, value) =>
-  R(
-    'Key Value Row',
-    { name: `KV / ${key}` },
-    { key: { content: key }, value: L({ name: 'Value', gap: 8 }, [Tx('Body Strong', value)]) },
-  )
+  R('Key Value Row', { name: `KV / ${key}` }, { key: { content: key }, value: { content: value } })
 const Audit = (text, meta) =>
   R(
     'Activity Item',
@@ -583,7 +617,7 @@ const header = (m, { range = '7d', title = 'Good morning, Mara', sub, updating }
           ? []
           : [
               Chips(['7d', '30d', '90d'], RANGE[range].idx),
-              updating ? Updating() : IconBtn('rotate-cw', false),
+              updating ? Updating() : IconBtn('rotate-cw'),
             ],
       ),
     },
@@ -592,7 +626,7 @@ const mControls = (range = '7d', updating) =>
   Row({ name: 'Controls', width: 'fill_container', gap: 8 }, [
     Chips(['7d', '30d', '90d'], RANGE[range].idx),
     L({ name: 'Spacer', width: 'fill_container', height: 1 }),
-    updating ? Updating() : IconBtn('rotate-cw', false),
+    updating ? Updating() : IconBtn('rotate-cw'),
   ])
 
 /* ---------- the bento grid: four columns on desktop, one column on phones ---------- */
@@ -843,6 +877,7 @@ export const adminPages = {
         (m) => [
           m ? header(true, { title: 'Overview' }) : header(false, { title: 'Overview' }),
           ErrorState(
+            m,
             'We couldn’t load the overview',
             'The admin API didn’t respond. Queues and actions are unchanged — try again in a moment.',
             'Try again',
