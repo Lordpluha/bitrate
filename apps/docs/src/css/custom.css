@@ -1,155 +1,654 @@
 /**
- * Bitrate Documentation - Custom Styles
- * Mirrors the Bitrate palette in packages/ui-react/src/styles/palette.css.
+ * Bitrate Documentation — theme
+ *
+ * One palette, three themes: dark (default), light and dim, the same roles as
+ * packages/tailwind/src/themes/*. The `--bitrate-*` tokens below are the only place colours are
+ * written; everything after them maps those tokens onto Infima and Docusaurus.
+ *
+ * Contrast notes (WCAG AA, checked against the page background):
+ * - Dark/dim links use purple-400 (#a78bfa, 7.14:1). Bitrate Purple #7c3aed is only 3.41:1 there,
+ *   so it stays a surface colour — buttons — with white text (5.70:1).
+ * - Light links use purple-600 (#6d28d9, 7.1:1).
+ * - Light status tones use the 700 steps for green and amber; the 600s fall under 4.5:1.
  */
 
-/* Bitrate Brand Colors */
+/* ---------- Tokens: light ---------- */
 :root {
-  /* Bitrate Purple */
-  --ifm-color-primary: #7c3aed;
-  --ifm-color-primary-dark: #6d28d9;
-  --ifm-color-primary-darker: #5b21b6;
-  --ifm-color-primary-darkest: #4c1d95;
-  --ifm-color-primary-light: #8b5cf6;
-  --ifm-color-primary-lighter: #a78bfa;
-  --ifm-color-primary-lightest: #c4b5fd;
+  --bitrate-bg: #ffffff;
+  --bitrate-surface: #f8fafc;
+  --bitrate-surface-raised: #f1f5f9;
+  --bitrate-border: #e5e7eb;
+  --bitrate-border-subtle: #e8ebef;
+  --bitrate-text-strong: #0b0d12;
+  --bitrate-text: #2a3038;
+  --bitrate-text-muted: #4b5563;
+  --bitrate-link: #6d28d9;
+  --bitrate-link-hover: #5b21b6;
+  --bitrate-primary: #7c3aed;
+  --bitrate-primary-hover: #6d28d9;
+  --bitrate-on-primary: #ffffff;
+  --bitrate-ring: #7c3aed;
+  --bitrate-active-wash: rgb(124 58 237 / 0.08);
+  --bitrate-highlight: rgb(124 58 237 / 0.16);
+  --bitrate-skeleton: #e5e7eb;
 
-  /* Custom Colors */
-  --bitrate-purple: #7c3aed;
-  --bitrate-black: #0b0d12;
-  --bitrate-white: #ffffff;
-  --bitrate-gray: #9ca3af;
-  --bitrate-dark-gray: #4b5563;
+  --bitrate-info: #2563eb;
+  --bitrate-tip: #047857;
+  --bitrate-warn: #b45309;
+  --bitrate-danger: #dc2626;
+  --bitrate-note: #4b5563;
 
-  --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(124, 58, 237, 0.1);
-  --ifm-font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --ifm-heading-font-weight: 700;
+  --bitrate-code-bg: #f8fafc;
+  --bitrate-code-plain: #2a3038;
+  --bitrate-code-comment: #4b5563;
+  --bitrate-code-keyword: #6d28d9;
+  --bitrate-code-string: #047857;
+  --bitrate-code-number: #b45309;
+  --bitrate-code-function: #1d4ed8;
+  --bitrate-code-deleted: #dc2626;
+
+  --bitrate-font-heading: "Unbounded", "Inter Variable", system-ui, sans-serif;
+  --bitrate-font-sans: "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --bitrate-font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
+  --bitrate-radius-sm: 6px;
+  --bitrate-radius: 8px;
+  --bitrate-radius-lg: 12px;
+  --bitrate-fast: 200ms;
+  --bitrate-ease: cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
-/* Dark mode */
+/* ---------- Tokens: dark ---------- */
 [data-theme="dark"] {
-  --ifm-color-primary: #8b5cf6;
-  --ifm-color-primary-dark: #7c3aed;
-  --ifm-color-primary-darker: #6d28d9;
-  --ifm-color-primary-darkest: #5b21b6;
-  --ifm-color-primary-light: #a78bfa;
-  --ifm-color-primary-lighter: #c4b5fd;
-  --ifm-color-primary-lightest: #ddd6fe;
+  --bitrate-bg: #0b0d12;
+  --bitrate-surface: #151923;
+  --bitrate-surface-raised: #1e232e;
+  --bitrate-border: #2a303c;
+  --bitrate-border-subtle: #1b2029;
+  --bitrate-text-strong: #ffffff;
+  --bitrate-text: #d1d5db;
+  --bitrate-text-muted: #9ca3af;
+  --bitrate-link: #a78bfa;
+  --bitrate-link-hover: #c4b5fd;
+  --bitrate-active-wash: rgb(167 139 250 / 0.1);
+  --bitrate-highlight: rgb(167 139 250 / 0.22);
+  --bitrate-skeleton: #1f2937;
 
-  --ifm-background-color: #0b0d12;
-  --ifm-background-surface-color: #151923;
-  --docusaurus-highlighted-code-line-bg: rgba(139, 92, 246, 0.15);
+  --bitrate-info: #60a5fa;
+  --bitrate-tip: #34d399;
+  --bitrate-warn: #fbbf24;
+  --bitrate-danger: #f87171;
+  --bitrate-note: #9ca3af;
+
+  --bitrate-code-bg: #151923;
+  --bitrate-code-plain: #d1d5db;
+  --bitrate-code-comment: #9ca3af;
+  --bitrate-code-keyword: #a78bfa;
+  --bitrate-code-string: #34d399;
+  --bitrate-code-number: #fbbf24;
+  --bitrate-code-function: #60a5fa;
+  --bitrate-code-deleted: #f87171;
 }
 
-/* Hero section animations */
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+/* ---------- Tokens: dim (a partial layer over dark) ---------- */
+[data-theme="dark"][data-theme-variant="dim"] {
+  --bitrate-bg: #0e1117;
+  --bitrate-surface: #171b24;
+  --bitrate-surface-raised: #1f2633;
+  --bitrate-border: #2b3242;
+  --bitrate-border-subtle: #1c212c;
+  --bitrate-text-strong: #e5e7eb;
+  --bitrate-text: #c9ced8;
+  --bitrate-text-muted: #a1a7b3;
+  --bitrate-code-bg: #171b24;
+  --bitrate-skeleton: #1f2633;
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* ---------- Infima mapping ---------- */
+:root,
+[data-theme="dark"] {
+  --ifm-color-primary: var(--bitrate-link);
+  --ifm-color-primary-dark: var(--bitrate-link-hover);
+  --ifm-color-primary-darker: var(--bitrate-link-hover);
+  --ifm-color-primary-darkest: var(--bitrate-link-hover);
+  --ifm-color-primary-light: var(--bitrate-link-hover);
+  --ifm-color-primary-lighter: var(--bitrate-link-hover);
+  --ifm-color-primary-lightest: var(--bitrate-link-hover);
+  --ifm-link-color: var(--bitrate-link);
+  --ifm-link-hover-color: var(--bitrate-link-hover);
+  --ifm-link-hover-decoration: underline;
+
+  --ifm-background-color: var(--bitrate-bg);
+  --ifm-background-surface-color: var(--bitrate-surface);
+  --ifm-font-color-base: var(--bitrate-text);
+  --ifm-heading-color: var(--bitrate-text-strong);
+  --ifm-color-content: var(--bitrate-text);
+  --ifm-color-content-secondary: var(--bitrate-text-muted);
+  --ifm-hr-border-color: var(--bitrate-border);
+  --ifm-toc-border-color: var(--bitrate-border);
+  --ifm-color-emphasis-200: var(--bitrate-border);
+  --ifm-color-emphasis-300: var(--bitrate-border);
+
+  --ifm-font-family-base: var(--bitrate-font-sans);
+  --ifm-heading-font-family: var(--bitrate-font-heading);
+  --ifm-font-family-monospace: var(--bitrate-font-mono);
+  --ifm-line-height-base: 1.65;
+  --ifm-heading-font-weight: 600;
+  --ifm-h1-font-size: 2rem;
+  --ifm-h2-font-size: 1.5rem;
+  --ifm-h3-font-size: 1.1875rem;
+  --ifm-h4-font-size: 1rem;
+  --ifm-global-radius: var(--bitrate-radius);
+  --ifm-transition-fast: var(--bitrate-fast);
+
+  --ifm-navbar-height: 3.5rem;
+  --ifm-navbar-background-color: var(--bitrate-bg);
+  --ifm-navbar-shadow: none;
+  --ifm-navbar-link-color: var(--bitrate-text-muted);
+  --ifm-navbar-link-hover-color: var(--bitrate-text-strong);
+  --ifm-navbar-link-active-color: var(--bitrate-text-strong);
+
+  --ifm-menu-color: var(--bitrate-text-muted);
+  --ifm-menu-color-active: var(--bitrate-link);
+  --ifm-menu-color-background-active: var(--bitrate-active-wash);
+  --ifm-menu-color-background-hover: var(--bitrate-surface-raised);
+
+  --ifm-code-background: var(--bitrate-surface);
+  --ifm-code-font-size: 0.875em;
+  --ifm-code-border-radius: 5px;
+  --ifm-pre-background: var(--bitrate-code-bg);
+  --ifm-pre-line-height: 1.7;
+  --docusaurus-highlighted-code-line-bg: var(--bitrate-active-wash);
+
+  --ifm-table-border-width: 0;
+  --ifm-table-stripe-background: transparent;
+  --ifm-table-head-background: var(--bitrate-surface);
+  --ifm-table-head-color: var(--bitrate-text-strong);
+  --ifm-table-head-font-weight: 600;
+
+  --ifm-card-background-color: var(--bitrate-surface);
+  --ifm-footer-background-color: var(--bitrate-surface);
+  --ifm-footer-color: var(--bitrate-text-muted);
+  --ifm-footer-link-color: var(--bitrate-text);
+  --ifm-footer-link-hover-color: var(--bitrate-link);
+  --ifm-footer-title-color: var(--bitrate-text-muted);
+
+  --ifm-breadcrumb-item-background-active: var(--bitrate-active-wash);
+  --ifm-breadcrumb-color-active: var(--bitrate-link);
+
+  --search-local-modal-background: var(--bitrate-surface);
+  --search-local-hit-background: var(--bitrate-bg);
+  --search-local-hit-color: var(--bitrate-text);
+  --search-local-hit-active-color: var(--bitrate-on-primary);
+  --search-local-highlight-color: var(--bitrate-link);
+  --search-local-muted-color: var(--bitrate-text-muted);
+  --search-local-input-active-border-color: var(--bitrate-ring);
+  --search-local-hit-shadow: none;
 }
 
-/* Custom hero styles */
-.hero--primary {
-  background: linear-gradient(-45deg, #6d28d9, #7c3aed, #a78bfa, #3b82f6);
-  background-size: 400% 400%;
-  animation: gradient 15s ease infinite;
+/* ---------- Base ---------- */
+body {
+  -webkit-font-smoothing: antialiased;
+  transition:
+    background-color var(--bitrate-fast) var(--bitrate-ease),
+    color var(--bitrate-fast) var(--bitrate-ease);
 }
 
-[data-theme="dark"] .hero--primary {
-  background: linear-gradient(-45deg, #0b0d12, #6d28d9, #151923, #7c3aed);
-  background-size: 400% 400%;
-  animation: gradient 15s ease infinite;
-}
-
-.hero__title {
-  animation: fadeInUp 0.8s ease-out;
-  font-size: 3.5rem;
-  font-weight: 900;
+h1,
+h2,
+h3,
+h4 {
   letter-spacing: -0.02em;
 }
 
-.hero__subtitle {
-  animation: fadeInUp 0.8s ease-out 0.2s backwards;
-  font-size: 1.5rem;
-  font-weight: 400;
-  opacity: 0.9;
+h5,
+h6 {
+  font-family: var(--bitrate-font-sans);
 }
 
-/* Button styles */
+a {
+  text-underline-offset: 3px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--bitrate-ring);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--bitrate-highlight);
+}
+
+hr {
+  height: 1px;
+}
+
+/* ---------- Navbar ---------- */
+.navbar {
+  border-bottom: 1px solid var(--bitrate-border);
+}
+
+.navbar__title {
+  font-family: var(--bitrate-font-heading);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--bitrate-text-strong);
+}
+
+.navbar__logo {
+  height: 1.625rem;
+}
+
+.navbar__link {
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: var(--bitrate-radius-sm);
+  transition:
+    color var(--bitrate-fast) var(--bitrate-ease),
+    background-color var(--bitrate-fast) var(--bitrate-ease);
+}
+
+.navbar__item.navbar__link:hover {
+  background: var(--bitrate-surface);
+}
+
+.navbar__search-input {
+  height: 2.25rem;
+  width: 15rem;
+  padding-left: 2.25rem;
+  border: 1px solid var(--bitrate-border);
+  border-radius: var(--bitrate-radius);
+  background-color: var(--bitrate-surface);
+  color: var(--bitrate-text-strong);
+  font-size: 0.875rem;
+  transition: border-color var(--bitrate-fast) var(--bitrate-ease);
+}
+
+.navbar__search-input::placeholder {
+  color: var(--bitrate-text-muted);
+}
+
+.navbar__search-input:hover {
+  border-color: var(--bitrate-text-muted);
+}
+
+.navbar__search-input:focus {
+  border-color: var(--bitrate-ring);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--bitrate-ring) 25%, transparent);
+}
+
+/* Desktop only: below 997px Infima hides navbar items and the link lives in the footer. */
+@media (min-width: 997px) {
+  .header-github-link {
+    display: flex;
+    align-items: center;
+  }
+}
+
+/* The mark is the whole link; Docusaurus's external-link arrow would sit beside it. */
+.header-github-link svg {
+  display: none;
+}
+
+.header-github-link::before {
+  content: "";
+  display: block;
+  width: 20px;
+  height: 20px;
+  background-color: currentColor;
+  mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.2.8.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1 .9 2.2v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+
+/* The mobile sidebar header renders its own theme switch; the navbar has no room for both. */
+@media (max-width: 996px) {
+  .navbar__items--right .bitrate-theme-switch {
+    display: none;
+  }
+}
+
+/* ---------- Buttons ---------- */
 .button {
-  border-radius: 500px;
-  font-weight: 700;
-  text-transform: none;
-  transition: all 0.3s ease;
+  border-radius: var(--bitrate-radius);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition:
+    background-color var(--bitrate-fast) var(--bitrate-ease),
+    border-color var(--bitrate-fast) var(--bitrate-ease),
+    color var(--bitrate-fast) var(--bitrate-ease);
 }
 
-.button:hover {
-  transform: scale(1.04);
+.button--primary {
+  --ifm-button-background-color: var(--bitrate-primary);
+  --ifm-button-border-color: var(--bitrate-primary);
+  --ifm-button-color: var(--bitrate-on-primary);
+  color: var(--bitrate-on-primary);
+}
+
+.button--primary:hover {
+  --ifm-button-background-color: var(--bitrate-primary-hover);
+  --ifm-button-border-color: var(--bitrate-primary-hover);
+  color: var(--bitrate-on-primary);
 }
 
 .button--secondary {
-  background-color: var(--bitrate-white);
-  color: var(--bitrate-black);
-  border: none;
+  --ifm-button-background-color: transparent;
+  --ifm-button-border-color: var(--bitrate-border);
+  --ifm-button-color: var(--bitrate-text-strong);
+  color: var(--bitrate-text-strong);
 }
 
 .button--secondary:hover {
-  background-color: #f6f6f6;
-  color: var(--bitrate-black);
+  --ifm-button-border-color: var(--bitrate-text-muted);
+  background: transparent;
 }
 
-[data-theme="dark"] .button--secondary {
-  background-color: var(--bitrate-white);
-  color: var(--bitrate-black);
+/* ---------- Docs sidebar ---------- */
+.theme-doc-sidebar-container {
+  background: var(--bitrate-surface);
 }
 
-[data-theme="dark"] .button--secondary:hover {
-  background-color: #b3b3b3;
+.menu {
+  padding: 1.25rem 0.75rem 2.5rem;
+}
+
+.menu__link {
+  font-size: 0.875rem;
+  line-height: 1.45;
+  border-radius: var(--bitrate-radius-sm);
+}
+
+.menu__list .menu__list {
+  padding-left: 0.625rem;
+}
+
+.theme-doc-sidebar-item-category-level-1 > .menu__link,
+.theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible > .menu__link {
+  color: var(--bitrate-text-strong);
+  font-weight: 600;
+}
+
+.menu__link--active:not(.menu__link--sublist) {
+  position: relative;
+  font-weight: 500;
+}
+
+.menu__list .menu__list .menu__link--active:not(.menu__link--sublist)::before {
+  content: "";
+  position: absolute;
+  left: -0.625rem;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--bitrate-link);
+}
+
+/* ---------- Doc content ---------- */
+.theme-doc-markdown,
+.theme-doc-footer,
+.pagination-nav,
+.theme-doc-breadcrumbs {
+  max-width: 48rem;
+}
+
+.markdown h1:first-child {
+  --ifm-h1-font-size: 2rem;
+  line-height: 1.2;
+}
+
+.markdown > h2 {
+  margin-top: 3rem;
+}
+
+.markdown li::marker {
+  color: var(--bitrate-text-muted);
+}
+
+.markdown strong {
+  color: var(--bitrate-text-strong);
+}
+
+.breadcrumbs__link {
+  font-size: 0.8125rem;
+  color: var(--bitrate-text-muted);
+}
+
+:not(pre) > code {
+  padding: 0.125rem 0.375rem;
+  border: 1px solid var(--bitrate-border);
+  color: var(--bitrate-text-strong);
+  vertical-align: baseline;
 }
 
 /* Code blocks */
-pre {
-  border-radius: 8px;
+.theme-code-block {
+  border: 1px solid var(--bitrate-border);
+  box-shadow: none;
 }
 
-/* Links */
-a {
-  color: var(--ifm-color-primary);
-  transition: color 0.2s ease;
+.theme-code-block [class*="codeBlockTitle"] {
+  font-family: var(--bitrate-font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--bitrate-text-muted);
+  border-bottom: 1px solid var(--bitrate-border);
 }
 
-a:hover {
-  color: var(--ifm-color-primary-light);
+.theme-code-block-highlighted-line {
+  box-shadow: inset 2px 0 0 var(--bitrate-link);
+}
+
+.theme-code-block pre {
+  font-size: 0.84375rem;
+}
+
+/* Tables */
+/* Infima renders tables as scrollable blocks; fit-content keeps the frame on the table's edge. */
+.markdown table {
+  width: fit-content;
+  max-width: 100%;
+  border: 1px solid var(--bitrate-border);
+  border-radius: var(--bitrate-radius);
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.875rem;
+}
+
+.markdown th,
+.markdown td {
+  border-bottom: 1px solid var(--bitrate-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.markdown th {
+  font-size: 0.8125rem;
+}
+
+.markdown tr:last-child td {
+  border-bottom: 0;
+}
+
+/* Admonitions — each tone is a status role */
+.theme-admonition {
+  --bitrate-tone: var(--bitrate-note);
+  --ifm-alert-background-color: color-mix(in oklab, var(--bitrate-tone) 8%, transparent);
+  --ifm-alert-background-color-highlight: color-mix(in oklab, var(--bitrate-tone) 14%, transparent);
+  --ifm-alert-border-color: var(--bitrate-tone);
+  --ifm-alert-foreground-color: var(--bitrate-text);
+  --ifm-alert-border-left-width: 3px;
+  border: 1px solid var(--bitrate-border);
+  border-left: 3px solid var(--bitrate-tone);
+  box-shadow: none;
+}
+
+.theme-admonition.alert--info {
+  --bitrate-tone: var(--bitrate-info);
+}
+
+.theme-admonition.alert--success {
+  --bitrate-tone: var(--bitrate-tip);
+}
+
+.theme-admonition.alert--warning {
+  --bitrate-tone: var(--bitrate-warn);
+}
+
+.theme-admonition.alert--danger {
+  --bitrate-tone: var(--bitrate-danger);
+}
+
+.theme-admonition [class*="admonitionHeading"] {
+  color: var(--bitrate-tone);
+  font-family: var(--bitrate-font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+}
+
+.theme-admonition [class*="admonitionIcon"] svg {
+  fill: var(--bitrate-tone);
+}
+
+/* Table of contents */
+.table-of-contents {
+  font-size: 0.8125rem;
+}
+
+.table-of-contents__link {
+  color: var(--bitrate-text-muted);
+}
+
+.table-of-contents__link:hover,
+.table-of-contents__link--active {
   text-decoration: none;
 }
 
-/* Cards and containers */
-.card {
-  border-radius: 12px;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+.table-of-contents__link:hover {
+  color: var(--bitrate-text-strong);
 }
 
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+.table-of-contents__link--active {
+  color: var(--bitrate-link);
+  font-weight: 500;
+}
+
+/* Prev / next */
+.pagination-nav__link {
+  border-color: var(--bitrate-border);
+  border-radius: var(--bitrate-radius);
+  transition: border-color var(--bitrate-fast) var(--bitrate-ease);
+}
+
+.pagination-nav__link:hover {
+  border-color: var(--bitrate-text-muted);
+}
+
+.pagination-nav__sublabel {
+  color: var(--bitrate-text-muted);
+  font-weight: 400;
+}
+
+.pagination-nav__label {
+  color: var(--bitrate-text-strong);
+  font-size: 0.9375rem;
+}
+
+/* Generated category index cards */
+.card {
+  border: 1px solid var(--bitrate-border);
+  border-radius: var(--bitrate-radius-lg);
+  box-shadow: none;
+  transition: border-color var(--bitrate-fast) var(--bitrate-ease);
+}
+
+a.card:hover {
+  border-color: var(--bitrate-text-muted);
+  box-shadow: none;
+}
+
+/* Blog tags */
+.tag {
+  --ifm-tag-background-color: transparent;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  border-top: 1px solid var(--bitrate-border);
+}
+
+.footer__title {
+  font-family: var(--bitrate-font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.footer__link-item {
+  font-size: 0.875rem;
+}
+
+.footer__copyright {
+  font-size: 0.75rem;
+}
+
+/* ---------- Search results page (docusaurus-search-local) ---------- */
+[class*="searchQueryInput"] {
+  border: 1px solid var(--bitrate-border);
+  border-radius: var(--bitrate-radius);
+  background: var(--bitrate-surface);
+  color: var(--bitrate-text-strong);
+}
+
+[class*="searchQueryInput"]:focus {
+  border-color: var(--bitrate-ring);
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--bitrate-ring) 25%, transparent);
+}
+
+[class*="searchResultItem_"] {
+  padding: 1.125rem 0.25rem;
+  border-bottom: 1px solid var(--bitrate-border);
+}
+
+[class*="searchResultItem_"] h2 {
+  margin-bottom: 0.375rem;
+  font-family: var(--bitrate-font-sans);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+[class*="searchResultItemPath"] {
+  font-family: var(--bitrate-font-mono);
+  font-size: 0.75rem;
+  color: var(--bitrate-text-muted);
+}
+
+.main-wrapper [class*="searchResultItemSummary"] {
+  font-size: 0.875rem;
+  font-style: normal;
+  color: var(--bitrate-text);
+}
+
+mark {
+  background: var(--bitrate-highlight);
+  color: var(--bitrate-text-strong);
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    /* biome-ignore lint/complexity/noImportantStyles: Accessibility preferences must override component transitions. */
+    transition-duration: 10ms !important;
+    /* biome-ignore lint/complexity/noImportantStyles: Accessibility preferences must override component animations. */
+    animation-duration: 10ms !important;
+    /* biome-ignore lint/complexity/noImportantStyles: Accessibility preferences must stop looping animations. */
+    animation-iteration-count: 1 !important;
+  }
 }
