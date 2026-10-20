@@ -111,7 +111,6 @@ svg.i { width: 18px; height: 18px; flex: none; stroke: currentColor; fill: none;
 .main { min-width: 0; display: flex; flex-direction: column; gap: 22px; padding-bottom: 96px; }
 
 /* ---------- island navbar ---------- */
-.island-wrap { position: sticky; top: 16px; z-index: 30; display: flex; justify-content: center; pointer-events: none; }
 .island { pointer-events: auto; display: flex; align-items: center; gap: 6px; height: 56px; padding: 0 8px 0 10px; border-radius: 999px; background: var(--glass-strong); transition: width .5s cubic-bezier(.2,.9,.25,1.2), padding .3s; overflow: hidden; position: relative; }
 .island .crumb { display: flex; align-items: center; gap: 8px; padding: 0 10px 0 6px; font-weight: 600; white-space: nowrap; }
 .island .crumb .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 4px color-mix(in srgb, var(--success) 22%, transparent); }
@@ -170,7 +169,9 @@ kbd { font: 600 11px var(--font); padding: 3px 7px; border-radius: 7px; backgrou
 .th .t small { display: block; font-size: 12px; color: var(--muted-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .th .go { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; color: var(--muted-fg); background: color-mix(in srgb, var(--fg) 6%, transparent); transition: transform .3s, color .2s; }
 .tile:hover .th .go { transform: rotate(-45deg); color: var(--fg); }
-.tc { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 10px; }
+.tc { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--fg) 20%, transparent) transparent; margin-right: -8px; padding-right: 8px; }
+.tc::-webkit-scrollbar { width: 6px; }
+.tc::-webkit-scrollbar-thumb { border-radius: 6px; background: color-mix(in srgb, var(--fg) 20%, transparent); }
 
 /* KPI */
 .kpi .label { display: flex; align-items: center; gap: 8px; color: var(--muted-fg); font-size: 13px; }
@@ -202,8 +203,7 @@ kbd { font: 600 11px var(--font); padding: 3px 7px; border-radius: 7px; backgrou
 @keyframes pulse { 50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--warning) 0%, transparent), 0 0 0 0 transparent; } 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--warning) 45%, transparent); } }
 .eyebrow-s { font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted-fg); margin-top: 4px; }
 .feed { display: flex; flex-direction: column; gap: 10px; }
-.tile.accent .tc { overflow: hidden; }
-.tile.accent .feed { flex: 1; min-height: 0; overflow: hidden; -webkit-mask-image: linear-gradient(#000 55%, transparent); mask-image: linear-gradient(#000 55%, transparent); }
+.tile.accent .feed { flex: none; }
 .fi { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; }
 .fi i { width: 8px; height: 8px; margin-top: 6px; border-radius: 50%; background: var(--accent); flex: none; box-shadow: 0 0 10px var(--accent); }
 .fi small { display: block; color: var(--muted-fg); font-size: 12px; }
@@ -271,7 +271,7 @@ kbd { font: 600 11px var(--font); padding: 3px 7px; border-radius: 7px; backgrou
 .mtop, .mtabs, .sheet { display: none; }
 @media (max-width: 860px) {
   .app { grid-template-columns: 1fr; padding: 12px 12px 0; }
-  .side, .island-wrap, .head .actions { display: none; }
+  .side, .topbar, .head .actions { display: none; }
   .mtop { display: flex; align-items: center; gap: 8px; position: sticky; top: 10px; z-index: 30; height: 56px; padding: 0 8px 0 14px; border-radius: 999px; }
   .mtop .brand { height: auto; padding: 0; flex: 1; }
   .bento { grid-template-columns: 1fr; grid-auto-rows: auto; }
@@ -294,6 +294,114 @@ kbd { font: 600 11px var(--font); padding: 3px 7px; border-radius: 7px; backgrou
   @keyframes up { from { transform: translateY(40px); opacity: 0; } }
 }
 .mrange { display: none; align-items: center; gap: 8px; }
+
+
+/* ---------- detail: a tile grows into a full analysis panel ---------- */
+.tile.live { cursor: pointer; }
+.tile.live:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.dover { position: fixed; inset: 0; z-index: 55; display: none; padding: 24px; background: color-mix(in srgb, var(--bg) 55%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.dover.open { display: grid; place-items: center; }
+.detail { width: min(1240px, 100%); height: min(880px, calc(100vh - 48px)); border-radius: 28px; background: var(--glass-strong); overflow: hidden; transform-origin: 0 0; display: flex; flex-direction: column; }
+.dcontent { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.dh { display: flex; align-items: center; gap: 10px; padding: 16px 18px; border-bottom: 1px solid var(--glass-line); flex: none; }
+.dh .ico { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: var(--primary); color: var(--primary-fg); box-shadow: 0 10px 24px -10px var(--primary); flex: none; }
+.dh .dt { flex: 1; min-width: 0; }
+.dh .dt b { display: block; font: 600 20px var(--display); letter-spacing: -.3px; }
+.dh .dt small { color: var(--muted-fg); font-size: 12px; }
+.tg { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: 999px; font-size: 13px; font-weight: 600; background: color-mix(in srgb, var(--fg) 6%, transparent); }
+.tg i { position: relative; width: 28px; height: 16px; border-radius: 8px; background: color-mix(in srgb, var(--fg) 18%, transparent); transition: background .2s; }
+.tg i::after { content: ""; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--fg); transition: left .25s cubic-bezier(.2,.9,.25,1.2); }
+.tg.on i { background: var(--primary); }
+.tg.on i::after { left: 14px; background: var(--primary-fg); }
+.nav2 { display: flex; gap: 2px; }
+.ibtn[disabled] { opacity: .3; cursor: default; }
+.dbody { flex: 1; min-height: 0; overflow: auto; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.stat, .dcard { border-radius: 20px; background: color-mix(in srgb, var(--card) 55%, transparent); border: 1px solid var(--glass-line); }
+.stat { min-width: 0; padding: 16px; display: flex; flex-direction: column; gap: 6px; animation: rise .5s cubic-bezier(.2,.8,.2,1) backwards; }
+.stat:nth-child(2) { animation-delay: 50ms; } .stat:nth-child(3) { animation-delay: 100ms; } .stat:nth-child(4) { animation-delay: 150ms; }
+.stat span { color: var(--muted-fg); font-size: 12px; }
+.stat b { font: 600 24px var(--display); letter-spacing: -.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stat em { font-style: normal; font-size: 12px; font-weight: 600; }
+.stat em.good { color: var(--success-text); }
+.stat em.bad { color: var(--error-text); }
+.stat em small { color: var(--muted-fg); font-weight: 400; }
+.dgrid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 14px; }
+.dcard { padding: 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.dcard h4 { margin: 0; font-size: 14px; font-weight: 600; }
+.dcard.wide:last-child { grid-column: 1 / -1; }
+.legend-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.lgb { display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 12px; border-radius: 999px; font-size: 12px; font-weight: 600; background: color-mix(in srgb, var(--fg) 6%, transparent); transition: opacity .2s; }
+.lgb i { width: 10px; height: 10px; border-radius: 3px; }
+.lgb.off { opacity: .4; text-decoration: line-through; }
+/* line chart: HTML axes over a stretched SVG whose strokes keep their width */
+.lc { position: relative; margin: 10px 0 28px 52px; }
+.lc svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; animation: reveal 1s cubic-bezier(.2,.8,.2,1); }
+@keyframes reveal { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+.lc .ln { fill: none; stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.lc .ln.dash { stroke-dasharray: 6 6; stroke-width: 2; }
+.gl { position: absolute; left: 0; right: 0; height: 0; border-top: 1px dashed var(--glass-line); }
+.gl span { position: absolute; right: 100%; margin-right: 10px; transform: translateY(-50%); font-size: 11px; color: var(--muted-fg); white-space: nowrap; }
+.xl { position: absolute; left: 0; right: 0; top: 100%; height: 22px; }
+.xl span { position: absolute; top: 8px; transform: translateX(-50%); font-size: 11px; color: var(--muted-fg); white-space: nowrap; }
+.xh { position: absolute; top: 0; bottom: 0; width: 1px; background: color-mix(in srgb, var(--fg) 30%, transparent); opacity: 0; pointer-events: none; }
+.pt { position: absolute; width: 10px; height: 10px; border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 0 3px var(--card); opacity: 0; pointer-events: none; }
+.lc.hover .xh, .lc.hover .pt { opacity: 1; }
+/* bar chart */
+.bc { position: relative; display: flex; align-items: flex-end; gap: 3px; margin-bottom: 22px; }
+.bcol { position: relative; flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
+.bcol .stack { width: 100%; max-width: 38px; display: flex; flex-direction: column-reverse; border-radius: 6px 6px 3px 3px; overflow: hidden; transform-origin: bottom; animation: grow .7s cubic-bezier(.2,.8,.2,1) backwards; transition: opacity .2s; }
+.bcol .stack i { display: block; min-height: 0; }
+.bcol small { position: absolute; bottom: -20px; font-size: 11px; color: var(--muted-fg); white-space: nowrap; }
+.bc:hover .bcol .stack { opacity: .45; }
+.bc .bcol.on .stack { opacity: 1; }
+@keyframes grow { from { transform: scaleY(0); } }
+/* donut, heatmap, table */
+.donut { position: relative; width: 180px; height: 180px; margin: 4px auto 8px; }
+.donut svg { width: 100%; height: 100%; animation: spinin .9s cubic-bezier(.2,.8,.2,1); }
+@keyframes spinin { from { transform: rotate(-90deg) scale(.85); opacity: 0; } }
+.donut .dc { position: absolute; inset: 0; display: grid; place-items: center; }
+.donut .dc b { font: 600 26px var(--display); }
+.hm { display: grid; grid-template-columns: 34px repeat(24, minmax(0, 1fr)); gap: 3px; align-items: center; }
+.hm i { aspect-ratio: 1; border-radius: 4px; background: var(--primary); }
+.hm small { font-size: 11px; color: var(--muted-fg); }
+.hm em { grid-row: 8; font-style: normal; font-size: 10px; color: var(--muted-fg); }
+.hm span { grid-row: 8; grid-column: 1; }
+.tb { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tb th { text-align: left; font-size: 12px; font-weight: 600; color: var(--muted-fg); padding: 8px 10px; border-bottom: 1px solid var(--glass-line); }
+.tb td { padding: 10px; border-bottom: 1px solid var(--glass-line); }
+.delta.down { background: var(--error-surface); color: var(--error-text); }
+.ctip { position: fixed; z-index: 80; pointer-events: none; min-width: 170px; padding: 10px 12px; border-radius: 14px; background: var(--glass-strong); font-size: 12px; display: flex; flex-direction: column; gap: 5px; opacity: 0; transition: opacity .15s; }
+.ctip.on { opacity: 1; }
+.ctip div { display: flex; align-items: center; gap: 8px; color: var(--muted-fg); }
+.ctip div i { width: 8px; height: 8px; border-radius: 50%; }
+.ctip div span { margin-left: auto; padding-left: 12px; color: var(--fg); font-weight: 600; }
+@media (max-width: 860px) {
+  .dover { padding: 0; }
+  .dover.open { place-items: end center; }
+  .detail { height: 92vh; border-radius: 28px 28px 0 0; }
+  .dh { flex-wrap: wrap; }
+  .dh .dt { min-width: calc(100% - 110px); }
+  .dh [data-export] { display: none; }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .stat { padding: 12px; }
+  .stat b { font-size: 19px; }
+  .stat em small { display: none; }
+  .dgrid { grid-template-columns: 1fr; }
+  .dcard.wide:last-child { grid-column: auto; }
+  .lc { margin-left: 44px; }
+}
+
+/* ---------- top bar: search centred, the page island with status, notifications and account on the right ---------- */
+.topbar { position: sticky; top: 16px; z-index: 30; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 16px; pointer-events: none; }
+.topbar > * { pointer-events: auto; }
+.topbar .search { grid-column: 2; height: 52px; width: min(480px, 40vw); padding: 0 10px 0 18px; background: var(--glass-strong); transition: width .5s cubic-bezier(.2,.9,.25,1); }
+.topbar .island { grid-column: 3; justify-self: end; min-width: 0; max-width: 100%; }
+/* while the island reports a status, the search yields room instead of being covered */
+.topbar:has(.island.live) .search { width: min(320px, 26vw); }
+.topbar .pocket { min-width: 0; text-overflow: ellipsis; }
+.head .actions { display: flex; align-items: center; gap: 8px; }
+.head .actions .ibtn { background: var(--glass-strong); border: 1px solid var(--glass-line); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
@@ -334,15 +442,12 @@ kbd { font: 600 11px var(--font); padding: 3px 7px; border-radius: 7px; backgrou
       <button type="button" class="ibtn" id="menuBtn" aria-label="Menu"><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg></button>
     </div>
 
-    <div class="island-wrap">
+    <div class="topbar">
+      <button type="button" class="search glass" data-open="palette"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><span data-t="Search or jump to…">Search or jump to…</span><kbd>⌘K</kbd></button>
       <div class="island glass" id="island">
         <div class="crumb"><span class="dot"></span><span data-t="Overview">Overview</span></div>
         <div class="pocket" id="pocket"></div>
         <div class="sep"></div>
-        <div class="seg" id="seg"><span class="thumb"></span></div>
-        <div class="sep"></div>
-        <button type="button" class="search" data-open="palette"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><span data-t="Search or jump to…">Search or jump to…</span><kbd>⌘K</kbd></button>
-        <button type="button" class="ibtn" id="refreshBtn" aria-label="Refresh"><svg class="i" aria-hidden="true"><use href="#i-refresh"/></svg></button>
         <button type="button" class="ibtn" id="bellBtn" aria-label="Notifications"><svg class="i" aria-hidden="true"><use href="#i-bell"/></svg><span class="badge"></span></button>
         <div class="avatar" title="mara.ops · Super admin">MQ</div>
       </div>
@@ -355,7 +460,7 @@ kbd { font: 600 11px var(--font); padding: 3px 7px; border-radius: 7px; backgrou
         <p data-t="What needs attention across Bitrate today.">What needs attention across Bitrate today.</p>
       </div>
       <div class="grow"></div>
-      <div class="actions"><button type="button" class="pill ghost" data-open="palette"><svg class="i" aria-hidden="true"><use href="#i-command"/></svg><span data-t="Commands">Commands</span></button></div>
+      <div class="actions"><div class="seg glass" id="seg"><span class="thumb"></span></div><button type="button" class="ibtn" id="refreshBtn" aria-label="Refresh"><svg class="i" aria-hidden="true"><use href="#i-refresh"/></svg></button></div>
     </header>
     <div class="mrange"><div class="seg" id="mseg"><span class="thumb"></span></div><div class="grow" style="flex:1"></div><button type="button" class="ibtn" id="mrefresh" aria-label="Refresh"><svg class="i" aria-hidden="true"><use href="#i-refresh"/></svg></button></div>
 
@@ -380,6 +485,9 @@ kbd { font: 600 11px var(--font); padding: 3px 7px; border-radius: 7px; backgrou
   <button type="button" data-view="partial">Partial</button>
   <button type="button" data-view="error">Error</button>
 </div>
+
+<div class="dover" id="dover"><div class="detail glass" id="detail" role="dialog" aria-modal="true" aria-label="Analysis"><div class="dcontent"></div></div></div>
+<div class="ctip" id="ctip" aria-hidden="true"></div>
 
 <div class="scrim" id="scrim">
   <div class="palette glass" role="dialog" aria-label="Command palette">
@@ -420,6 +528,9 @@ kbd { font: 600 11px var(--font); padding: 3px 7px; border-radius: 7px; backgrou
   <symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 13a2 2 0 0 0 2-2V7a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0V4a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0v-4a2 2 0 0 1 2-2"/></symbol>
   <symbol id="i-userplus" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></symbol>
   <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4M12 17h.01"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></symbol>
 </svg>
 
@@ -491,7 +602,12 @@ const audit = [
 /* ---------- tiles ---------- */
 const head = (icon, title, meta, extra = `<span class="go">${ico('arrow')}</span>`) =>
   `<div class="th"><span class="ico">${ico(icon)}</span><div class="t"><b>${t(title)}</b><small>${meta}</small></div>${extra}</div>`
-const tile = (cls, i, inner) => `<article class="tile glass ${cls}" style="--i:${i}">${inner}</article>`
+/* a tile with data opens its analysis; loading, failed and empty tiles do not */
+const tile = (cls, i, inner) => {
+  const live = !['loading', 'error', 'empty'].includes(S.view) && !(S.view === 'partial' && (i === 3 || i === 6))
+  const a11y = live ? ` data-detail="${DKEYS[i]}" tabindex="0" role="button" aria-haspopup="dialog"` : ''
+  return `<article class="tile glass ${cls}${live ? ' live' : ''}" style="--i:${i}"${a11y}>${inner}</article>`
+}
 const msg = (kind, title, desc, action, row) => `<div class="msg${row ? ' row' : ''}"><span class="mi ai ${kind}">${ico(kind === 'error' ? 'alert' : 'check')}</span>${row ? '<div>' : ''}<b>${t(title)}</b><small>${t(desc)}</small>${row ? '</div>' : ''}${action ? `<button type="button" class="pill ghost" data-retry>${ico('refresh')}${t(action)}</button>` : ''}</div>`
 const sparkPath = (pts) => {
   const w = 240, h = 44, max = Math.max(...pts), min = Math.min(...pts)
@@ -672,6 +788,7 @@ function toggleLang() { S.lang = S.lang === 'en' ? 'uk' : 'en'; all() }
 function toggleCollapse() { S.collapsed = !S.collapsed; chrome(); setTimeout(() => seg($('#seg')), 460) }
 
 document.addEventListener('click', (e) => {
+  if (detailClick(e)) return
   const b = e.target.closest('button, [data-open]')
   if (!b) { if (e.target.id === 'scrim') closePalette(); return }
   if (b.id === 'themeBtn' || (b.closest('#sprefs') && b.querySelector('use[href^="#i-moon"], use[href^="#i-sun"], use[href^="#i-contrast"]'))) return cycleTheme()
@@ -703,6 +820,405 @@ document.addEventListener('pointermove', (e) => {
   tl.style.setProperty('--mx', `${e.clientX - r.left}px`); tl.style.setProperty('--my', `${e.clientY - r.top}px`)
 })
 window.addEventListener('resize', () => { seg($('#seg')); seg($('#mseg')) })
+
+/* ---------- detail views: each tile opens a full analysis panel ---------- */
+Object.assign(UK, {
+  'vs previous': 'до попереднього', 'Compare': 'Порівняти', 'Export': 'Експорт', 'Close': 'Закрити', 'Previous': 'Попередній', 'Next': 'Наступний',
+  'Total listens': 'Усього прослуховувань', 'Daily average': 'Середнє за день', 'Peak day': 'Піковий день', 'Unique listeners': 'Унікальні слухачі',
+  'Listens': 'Прослуховування', 'Previous period': 'Попередній період', 'By platform': 'За платформою', 'Web': 'Веб', 'Mobile': 'Мобільні', 'Desktop': 'Десктоп',
+  'Listening by hour': 'Прослуховування за годинами', 'Top genres': 'Топ жанрів',
+  'Total listeners': 'Усього слухачів', 'New sign-ups': 'Нові реєстрації', 'Churned': 'Відтік', 'DAU / MAU': 'DAU / MAU', 'Active (DAU)': 'Активні (DAU)',
+  'Retention': 'Утримання', 'Day 1': 'День 1', 'Day 7': 'День 7', 'Day 30': 'День 30', 'Top countries': 'Топ країн',
+  'Total artists': 'Усього артистів', 'New artists': 'Нові артисти', 'Verified': 'Верифіковані', 'Pending verification': 'Чекають верифікації',
+  'Verification funnel': 'Воронка верифікації', 'Submitted': 'Подано', 'In review': 'На розгляді', 'Newest artists': 'Нові артисти',
+  'Open items': 'Відкриті', 'Median time to resolve': 'Медіанний час розгляду', 'Oldest item': 'Найдавніший', 'SLA met': 'SLA дотримано',
+  'Filed': 'Подано', 'Resolved': 'Розглянуто', 'Queue by reason': 'Черга за причиною', 'Copyright': 'Авторські права', 'Spam': 'Спам', 'Hate speech': 'Мова ворожнечі', 'Explicit content': 'Відвертий вміст', 'Other': 'Інше',
+  'Oldest items': 'Найдавніші', 'Item': 'Об’єкт', 'Type': 'Тип', 'Age': 'Вік', 'Status': 'Статус', 'Open': 'Відкрита', 'Review': 'Розгляд', 'Release': 'Реліз',
+  'Processed': 'Оброблено', 'Success rate': 'Успішність', 'p50 time': 'Час p50', 'p95 time': 'Час p95', 'Processing time': 'Час обробки',
+  'Failures by reason': 'Збої за причиною', 'Corrupt audio': 'Пошкоджене аудіо', 'Unsupported codec': 'Непідтримуваний кодек', 'Timeout': 'Тайм-аут', 'Loudness check': 'Перевірка гучності', 'Outcome per day': 'Результат за днями',
+  'Dismissed': 'Відхилено', 'Avg resolution': 'Сер. час розгляду', 'Resolution rate by type': 'Частка розглянутих за типом',
+  'Sign-ups': 'Реєстрації', 'Deactivations': 'Деактивації', 'Listener → artist': 'Слухач → артист', 'Sign-up sources': 'Джерела реєстрацій', 'Deactivation reasons': 'Причини деактивації',
+  'Self-deleted': 'Видалили самі', 'Policy': 'Порушення правил', 'Inactive': 'Неактивні', 'Duplicate': 'Дублікати',
+  'Actions': 'Дії', 'Share by type': 'Частка за типом', 'Active staff': 'Активний персонал', 'Take-downs': 'Зняття', 'Role changes': 'Зміни ролей', 'By action': 'За дією', 'Approvals': 'Схвалення', 'Verifications': 'Верифікації', 'Staff activity': 'Активність персоналу',
+  'min': 'хв', 'h': 'год', 'd': 'д',
+})
+const DKEYS = ['action', 'listeners', 'artists', 'listens', 'pipeline', 'reports', 'accounts', 'audit']
+const loc = () => (S.lang === 'uk' ? 'uk-UA' : 'en-US')
+const compact = (n) => new Intl.NumberFormat(loc(), { notation: 'compact', maximumFractionDigits: 1 }).format(n)
+const pct = (n) => `${new Intl.NumberFormat(loc(), { maximumFractionDigits: 1 }).format(n)}%`
+const N = { '7d': 7, '30d': 30, '90d': 90 }
+/* deterministic data: the same range always draws the same curve */
+const rnd = (seed) => () => {
+  seed = (seed + 0x6d2b79f5) | 0
+  let x = Math.imul(seed ^ (seed >>> 15), 1 | seed)
+  x = (x + Math.imul(x ^ (x >>> 7), 61 | x)) ^ x
+  return ((x ^ (x >>> 14)) >>> 0) / 4294967296
+}
+const gen = (seed, n, base, { trend = 0.1, noise = 0.08, weekly = 0.12 } = {}) => {
+  const r = rnd(seed * 97 + n)
+  return Array.from({ length: n }, (_, i) => {
+    const day = (i + 3) % 7
+    const w = day >= 5 ? 1 + weekly : 1 - weekly / 3
+    return Math.max(0, Math.round(base * (1 + (trend * i) / n) * w * (1 + (r() - 0.5) * noise * 2)))
+  })
+}
+const dates = (n) => {
+  const end = new Date(2026, 9, 20)
+  return Array.from({ length: n }, (_, i) => new Date(end.getTime() - (n - 1 - i) * 864e5))
+}
+const dfmt = (d) => new Intl.DateTimeFormat(loc(), { day: 'numeric', month: 'short' }).format(d)
+const sum = (a) => a.reduce((x, y) => x + y, 0)
+const delta = (cur, prev) => (prev ? ((cur - prev) / prev) * 100 : 0)
+const DT = { open: false, key: null, compare: true, hidden: new Set(), charts: {} }
+
+/* ---------- chart primitives (HTML + non-scaling SVG, crisp at any width) ---------- */
+let chartSeq = 0
+function lineChart({ labels, series, fmt: f = compact, height = 300, y0 = true }) {
+  const id = `c${++chartSeq}`
+  const vis = series.filter((s) => !DT.hidden.has(s.name))
+  const all = vis.flatMap((s) => s.values)
+  const max = Math.max(...all, 1) * 1.08
+  const min = y0 ? 0 : Math.min(...all) * 0.92
+  const n = labels.length
+  const X = (i) => (n === 1 ? 50 : (i / (n - 1)) * 100)
+  const Y = (v) => 100 - ((v - min) / (max - min || 1)) * 100
+  const path = (vals) => vals.map((v, i) => `${i ? 'L' : 'M'}${X(i).toFixed(2)} ${Y(v).toFixed(2)}`).join(' ')
+  DT.charts[id] = { labels, series: vis, f, X, Y }
+  const ticks = [0, 0.25, 0.5, 0.75, 1].map((p) => min + (max - min) * p)
+  const step = Math.ceil(n / 8)
+  return `<div class="lc" id="${id}" style="height:${height}px">
+    ${ticks.map((v) => `<div class="gl" style="top:${Y(v)}%"><span>${f(Math.round(v))}</span></div>`).join('')}
+    <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      <defs>${vis.map((s, k) => `<linearGradient id="${id}g${k}" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${s.color}" stop-opacity=".32"/><stop offset="1" stop-color="${s.color}" stop-opacity="0"/></linearGradient>`).join('')}</defs>
+      ${vis.map((s, k) => (s.area ? `<path class="ar" d="${path(s.values)} L100 100 L0 100 Z" fill="url(#${id}g${k})"/>` : '')).join('')}
+      ${vis.map((s) => `<path class="ln${s.dashed ? ' dash' : ''}" d="${path(s.values)}" stroke="${s.color}" vector-effect="non-scaling-stroke"/>`).join('')}
+    </svg>
+    <div class="xh"></div>${vis.map((s) => `<i class="pt" style="background:${s.color}"></i>`).join('')}
+    <div class="xl">${labels.map((l, i) => ((i === n - 1 || (i % step === 0 && n - 1 - i >= step / 2)) ? `<span style="left:${X(i)}%">${l}</span>` : '')).join('')}</div>
+  </div>`
+}
+function barChart({ labels, stacks, fmt: f = compact, height = 260 }) {
+  const id = `c${++chartSeq}`
+  const vis = stacks.filter((s) => !DT.hidden.has(s.name))
+  const totals = labels.map((_, i) => sum(vis.map((s) => s.values[i])))
+  const max = Math.max(...totals, 1) * 1.1
+  DT.charts[id] = { labels, series: vis, f, bars: true }
+  const step = Math.ceil(labels.length / 8)
+  return `<div class="bc" id="${id}" style="height:${height}px">${labels
+    .map(
+      (l, i) => `<div class="bcol" data-i="${i}"><div class="stack" style="height:${(totals[i] / max) * 100}%">${vis
+        .map((s) => `<i style="flex:${s.values[i]};background:${s.color}"></i>`)
+        .join('')}</div><small>${(i === labels.length - 1 || (i % step === 0 && labels.length - 1 - i >= step / 2)) ? l : ''}</small></div>`,
+    )
+    .join('')}</div>`
+}
+const legend = (series) =>
+  `<div class="legend-row">${series
+    .map((s) => `<button type="button" class="lgb${DT.hidden.has(s.name) ? ' off' : ''}" data-series="${s.name}"><i style="background:${s.color}${s.dashed ? ';opacity:.5' : ''}"></i>${t(s.name)}</button>`)
+    .join('')}</div>`
+const donut = (parts, centre) => {
+  const total = sum(parts.map((p) => p[1]))
+  let acc = 0
+  return `<div class="donut"><svg viewBox="0 0 42 42" aria-hidden="true"><circle cx="21" cy="21" r="15.915" fill="none" stroke="var(--glass-line)" stroke-width="5"/>${parts
+    .map(([, v, c]) => {
+      const len = (v / total) * 100
+      const seg = `<circle cx="21" cy="21" r="15.915" fill="none" stroke="${c}" stroke-width="5" stroke-dasharray="${len} ${100 - len}" stroke-dashoffset="${25 - acc}"/>`
+      acc += len
+      return seg
+    })
+    .join('')}</svg><div class="dc"><b class="num">${centre ?? compact(total)}</b></div></div><div class="legend">${parts
+    .map(([l, v, c]) => `<div class="lg"><i style="background:${c}"></i>${t(l)}<b class="num">${pct((v / total) * 100)}</b></div>`)
+    .join('')}</div>`
+}
+const meters = (rows, fmtV = (v) => pct(v)) =>
+  rows
+    .map(([l, v, c, max = 100], k) => `<div class="meter"><div class="row"><span>${t(l)}</span><b class="num">${fmtV(v)}</b></div><div class="track"><i style="--k:${k};background:${c}" data-w="${(v / max) * 100}"></i></div></div>`)
+    .join('')
+const heatmap = () => {
+  const r = rnd(42)
+  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  return `<div class="hm">${days
+    .map((d, di) => `<small>${t(d)}</small>${Array.from({ length: 24 }, (_, h) => {
+      const v = Math.min(1, (0.15 + 0.85 * Math.exp(-((h - (di >= 5 ? 22 : 20)) ** 2) / 18) + 0.25 * Math.exp(-((h - 8) ** 2) / 6)) * (0.8 + r() * 0.35))
+      return `<i title="${t(d)} ${h}:00" style="opacity:${(0.12 + v * 0.88).toFixed(2)}"></i>`
+    }).join('')}`)
+    .join('')}<span></span>${[0, 6, 12, 18, 23].map((h) => `<em style="grid-column:${h + 2}">${h}</em>`).join('')}</div>`
+}
+const table = (cols, rows) =>
+  `<table class="tb"><thead><tr>${cols.map((c) => `<th>${t(c)}</th>`).join('')}</tr></thead><tbody>${rows
+    .map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join('')}</tr>`)
+    .join('')}</tbody></table>`
+const chip = (tone, label) => `<span class="delta ${tone}">${t(label)}</span>`
+const stat = (label, value, d, inverse) => {
+  const up = d >= 0
+  const good = inverse ? !up : up
+  return `<div class="stat"><span>${t(label)}</span><b class="num">${value}</b>${d === null ? '' : `<em class="${good ? 'good' : 'bad'}">${up ? '▲' : '▼'} ${pct(Math.abs(d))} <small>${t('vs previous')}</small></em>`}</div>`
+}
+const card = (title, body, cls = '') => `<section class="dcard ${cls}"><h4>${t(title)}</h4>${body}</section>`
+
+/* ---------- the eight analyses ---------- */
+function detail(key) {
+  const n = N[S.range]
+  const ds = dates(n)
+  const labels = ds.map(dfmt)
+  const C = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim()
+  const P = C('--primary'), A = C('--accent'), B = C('--blue'), G = C('--success'), W = C('--warning'), E = C('--error'), M = C('--magenta'), Mu = C('--muted-fg')
+  const prevLine = (vals, name = 'Previous period') => (DT.compare ? [{ name, color: Mu, values: vals, dashed: true }] : [])
+  switch (key) {
+    case 'listens': {
+      const cur = gen(1, n, 240000, { trend: 0.18 }), prev = gen(2, n, 215000, { trend: 0.1 })
+      const peak = cur.indexOf(Math.max(...cur))
+      const series = [{ name: 'Listens', color: P, values: cur, area: true }, ...prevLine(prev)]
+      return {
+        icon: 'wave', title: 'Listens per day', sub: `${compact(sum(cur))} ${t('listens')}`,
+        stats: [stat('Total listens', compact(sum(cur)), delta(sum(cur), sum(prev))), stat('Daily average', compact(sum(cur) / n), delta(sum(cur), sum(prev))), stat('Peak day', `${compact(cur[peak])} · ${labels[peak]}`, null), stat('Unique listeners', compact(31240 * Math.sqrt(n / 7)), 6.4)],
+        main: card('Listens', legend(series) + lineChart({ labels, series })),
+        side: card('By platform', donut([['Web', 46, P], ['Mobile', 41, B], ['Desktop', 13, M]], compact(sum(cur)))),
+        extra: [card('Listening by hour', heatmap(), 'wide'), card('Top genres', meters([['Electronic', 31, P], ['Indie', 24, B], ['Hip-hop', 19, M], ['Ambient', 14, G], ['Jazz', 7, W]], (v) => pct(v)))],
+      }
+    }
+    case 'listeners': {
+      const daily = gen(3, n, 60, { trend: 0.2, noise: 0.25 })
+      let tot = 48920 - sum(daily)
+      const total = daily.map((d) => (tot += d))
+      const dau = total.map((v, i) => Math.round(v * (0.27 + 0.03 * Math.sin(i / 2))))
+      const series = [{ name: 'Total listeners', color: P, values: total, area: true }, { name: 'Active (DAU)', color: B, values: dau }]
+      return {
+        icon: 'users', title: 'Listeners', sub: `${fmt(48920)} · +${fmt(sum(daily))}`,
+        stats: [stat('Total listeners', fmt(48920), 3.2), stat('New sign-ups', fmt(sum(daily)), 8.1), stat('Churned', fmt(Math.round(sum(daily) * 0.18)), -2.4, true), stat('DAU / MAU', pct(31.6), 1.2)],
+        main: card('Total listeners', legend(series) + lineChart({ labels, series, y0: false })),
+        side: card('Retention', meters([['Day 1', 62, P], ['Day 7', 38, B], ['Day 30', 21, M]])),
+        extra: [card('Top countries', meters([['Ukraine', 34, P], ['Poland', 18, B], ['Germany', 14, M], ['USA', 11, G], ['Other', 23, Mu]]), 'wide'), card('New sign-ups', barChart({ labels, stacks: [{ name: 'New sign-ups', color: A, values: daily }], height: 200 }))],
+      }
+    }
+    case 'artists': {
+      const daily = gen(4, n, 6, { trend: 0.3, noise: 0.5 })
+      let tot = 2316 - sum(daily)
+      const total = daily.map((d) => (tot += d))
+      const verified = total.map((v) => Math.round(v * 0.61))
+      const series = [{ name: 'Total artists', color: P, values: total, area: true }, { name: 'Verified', color: G, values: verified }]
+      return {
+        icon: 'mic', title: 'Artists', sub: `${fmt(2316)} · ${pct(61)} ${t('Verified').toLowerCase()}`,
+        stats: [stat('Total artists', fmt(2316), 1.4), stat('New artists', fmt(sum(daily)), 12.5), stat('Verified', pct(61), 2.1), stat('Pending verification', '38', -9.5, true)],
+        main: card('Total artists', legend(series) + lineChart({ labels, series, y0: false })),
+        side: card('Verification funnel', meters([['Submitted', 112, P, 112], ['In review', 74, B, 112], ['Verified', 68, G, 112]], (v) => fmt(v))),
+        extra: [card('Newest artists', table(['Item', 'Status', 'Age'], [['Kite Harbor', chip('up', 'Verified'), `1 ${t('h')}`], ['Lumen Choir', chip('flat', 'In review'), `5 ${t('h')}`], ['Mira Sol', chip('up', 'Verified'), `1 ${t('d')}`], ['Nova & the Static', chip('flat', 'Submitted'), `2 ${t('d')}`]]), 'wide')],
+      }
+    }
+    case 'action': {
+      const filed = gen(5, n, 19, { noise: 0.4 }), resolved = filed.map((v, i) => Math.max(0, v - 2 + ((i * 7) % 5)))
+      const stacks = [{ name: 'Filed', color: W, values: filed }, { name: 'Resolved', color: G, values: resolved }]
+      return {
+        icon: 'inbox', title: 'Needs action', sub: `${reports + 11} ${t('Open items').toLowerCase()}`,
+        stats: [stat('Open items', String(reports + 11), 4.2, true), stat('Median time to resolve', `3.4 ${t('h')}`, -11.8, true), stat('Oldest item', `2 ${t('d')}`, null), stat('SLA met', pct(94.2), 1.6)],
+        main: card('Filed', legend(stacks) + barChart({ labels, stacks })),
+        side: card('Queue by reason', donut([['Copyright', 38, P], ['Spam', 24, B], ['Hate speech', 14, E], ['Explicit content', 12, W], ['Other', 12, Mu]], String(reports + 11))),
+        extra: [card('Oldest items', table(['Item', 'Type', 'Age', 'Status'], [['Afterglow', t('Release'), `2 ${t('d')}`, chip('flat', 'Review')], ['Glass Horizon', 'Track', `6 ${t('h')}`, chip('down', 'Open')], ['@driftwave', t('Listener'), `5 ${t('h')}`, chip('down', 'Open')], ['Late Signal Radio #41', t('Episodes'), `4 ${t('h')}`, chip('flat', 'Review')]]), 'wide')],
+      }
+    }
+    case 'pipeline': {
+      const p50 = gen(6, n, 42, { trend: -0.1, noise: 0.15 }).map((v) => v / 10), p95 = p50.map((v, i) => +(v * (2.6 + 0.4 * Math.sin(i))).toFixed(1))
+      const series = [{ name: 'p95 time', color: W, values: p95 }, { name: 'p50 time', color: P, values: p50, area: true }]
+      const ready = gen(7, n, 180, { noise: 0.2 }), failed = ready.map((v, i) => Math.round(v * (0.006 + 0.004 * ((i * 3) % 4))))
+      return {
+        icon: 'audio', title: 'Track pipeline', sub: `${fmt(sum(ready))} · ${pct(99.4)}`,
+        stats: [stat('Processed', fmt(sum(ready)), 7.3), stat('Success rate', pct(99.4), 0.3), stat('p50 time', `${p50.at(-1).toFixed(1)} ${t('min')}`, -8.2, true), stat('p95 time', `${p95.at(-1).toFixed(1)} ${t('min')}`, -4.1, true)],
+        main: card('Processing time', legend(series) + lineChart({ labels, series, fmt: (v) => `${v} ${t('min')}` })),
+        side: card('Failures by reason', meters([['Corrupt audio', 41, E], ['Unsupported codec', 27, W], ['Timeout', 19, B], ['Loudness check', 13, M]])),
+        extra: [card('Outcome per day', legend([{ name: 'Ready', color: G }, { name: 'Failed', color: E }]) + barChart({ labels, stacks: [{ name: 'Ready', color: G, values: ready }, { name: 'Failed', color: E, values: failed }], height: 200 }), 'wide')],
+      }
+    }
+    case 'reports': {
+      const types = [['Tracks', P, 9], ['Listeners', B, 4.5], ['Playlists', G, 3], ['Episodes', W, 1.5], ['Albums', E, 1]]
+      const stacks = types.map(([name, color, base], k) => ({ name, color, values: gen(10 + k, n, base, { noise: 0.5 }) }))
+      const total = sum(stacks.flatMap((s) => s.values))
+      return {
+        icon: 'flag', title: 'Reports by type', sub: `${fmt(total)} ${t('Filed').toLowerCase()}`,
+        stats: [stat('Filed', fmt(total), 6.8, true), stat('Resolved', fmt(Math.round(total * 0.71)), 9.4), stat('Dismissed', fmt(Math.round(total * 0.22)), -3.1), stat('Avg resolution', `4.1 ${t('h')}`, -12.6, true)],
+        main: card('Reports by type', legend(stacks) + barChart({ labels, stacks })),
+        side: card('Share by type', donut(stacks.map((s) => [s.name, sum(s.values), s.color]))),
+        extra: [card('Resolution rate by type', meters([['Tracks', 78, P], ['Listeners', 69, B], ['Playlists', 74, G], ['Episodes', 61, W], ['Albums', 83, E]]), 'wide')],
+      }
+    }
+    case 'accounts': {
+      const su = gen(20, n, 160, { trend: 0.15 }), up = gen(21, n, 420, { trend: 0.2 }), de = gen(22, n, 2, { noise: 0.8 })
+      const series = [{ name: 'Uploads', color: B, values: up, area: true }, { name: 'Sign-ups', color: P, values: su }, { name: 'Deactivations', color: E, values: de }]
+      return {
+        icon: 'userplus', title: 'Accounts', sub: `${fmt(sum(su))} ${t('Sign-ups').toLowerCase()} · ${fmt(sum(up))} ${t('Uploads').toLowerCase()}`,
+        stats: [stat('Sign-ups', fmt(sum(su)), 11.2), stat('Uploads', fmt(sum(up)), 14.6), stat('Deactivations', fmt(sum(de)), -18.4, true), stat('Listener → artist', pct(2.8), 0.4)],
+        main: card('Accounts', legend(series) + lineChart({ labels, series })),
+        side: card('Sign-up sources', meters([['Email', 44, P], ['Google', 38, B], ['Apple', 18, Mu]])),
+        extra: [card('Deactivation reasons', meters([['Self-deleted', 57, Mu], ['Policy', 21, E], ['Inactive', 14, W], ['Duplicate', 8, B]]), 'wide')],
+      }
+    }
+    default: {
+      const acts = gen(30, n, 46, { noise: 0.35 })
+      return {
+        icon: 'scroll', title: 'Audit log', sub: `${fmt(sum(acts))} ${t('Actions').toLowerCase()}`,
+        stats: [stat('Actions', fmt(sum(acts)), 5.5), stat('Active staff', '9', 12.5), stat('Take-downs', fmt(Math.round(sum(acts) * 0.08)), -6.2, true), stat('Role changes', '3', null)],
+        main: card('Actions', barChart({ labels, stacks: [{ name: 'Actions', color: A, values: acts }] })),
+        side: card('By action', donut([['Approvals', 34, G], ['Verifications', 22, P], ['Take-downs', 8, E], ['Role changes', 2, W], ['Other', 34, Mu]], fmt(sum(acts)))),
+        extra: [card('Staff activity', table(['Item', 'Actions', 'Status'], [['mara.ops', fmt(Math.round(sum(acts) * 0.38)), chip('up', 'Super admin')], ['leo.mod', fmt(Math.round(sum(acts) * 0.27)), chip('flat', 'Moderator')], ['sam.ops', fmt(Math.round(sum(acts) * 0.19)), chip('flat', 'Operations')], ['root', fmt(Math.round(sum(acts) * 0.04)), chip('flat', 'System')]]), 'wide')],
+      }
+    }
+  }
+}
+
+/* ---------- the panel ---------- */
+function detailHTML() {
+  chartSeq = 0
+  DT.charts = {}
+  const d = detail(DT.key)
+  const i = DKEYS.indexOf(DT.key)
+  return `<header class="dh">
+      <span class="ico">${ico(d.icon)}</span>
+      <div class="dt"><b>${t(d.title)}</b><small>${d.sub}</small></div>
+      <div class="seg" id="dseg"><span class="thumb"></span></div>
+      <button type="button" class="tg${DT.compare ? ' on' : ''}" data-compare><i></i>${t('Compare')}</button>
+      <button type="button" class="pill ghost" data-export>${ico('download')}${t('Export')}</button>
+      <div class="nav2"><button type="button" class="ibtn" data-step="-1" aria-label="${t('Previous')}" ${i ? '' : 'disabled'}>${ico('left')}</button><button type="button" class="ibtn" data-step="1" aria-label="${t('Next')}" ${i < DKEYS.length - 1 ? '' : 'disabled'}>${ico('right')}</button></div>
+      <button type="button" class="ibtn" data-close aria-label="${t('Close')}">${ico('x')}</button>
+    </header>
+    <div class="dbody">
+      <div class="stats">${d.stats.join('')}</div>
+      <div class="dgrid">${d.main}${d.side}${d.extra.join('')}</div>
+    </div>`
+}
+function paintDetail() {
+  const body = $('#detail .dcontent')
+  const y = $('#detail .dbody')?.scrollTop ?? 0
+  body.innerHTML = detailHTML()
+  $('#detail .dbody').scrollTop = y
+  dseg()
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    $$('#detail [data-w]').forEach((c) => { c.style.width = `${c.dataset.w}%` })
+  }))
+}
+function dseg() {
+  const el = $('#dseg')
+  el.innerHTML = '<span class="thumb"></span>' + ['7d', '30d', '90d'].map((r) => `<button type="button" data-drange="${r}" class="${r === S.range ? 'on' : ''}">${S.lang === 'uk' ? r.replace('d', ' дн') : r}</button>`).join('')
+  requestAnimationFrame(() => {
+    const on = $('.on', el), th = $('.thumb', el)
+    th.style.left = `${on.offsetLeft}px`; th.style.width = `${on.offsetWidth}px`
+  })
+}
+let fromTile = null
+function openDetail(tl) {
+  if (DT.open) return
+  DT.open = true
+  DT.key = tl.dataset.detail
+  DT.hidden.clear()
+  fromTile = tl
+  const ov = $('#dover'), panel = $('#detail')
+  ov.classList.add('open')
+  document.body.style.overflow = 'hidden'
+  paintDetail()
+  const a = tl.getBoundingClientRect(), b = panel.getBoundingClientRect()
+  tl.style.visibility = 'hidden'
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
+  panel.animate(
+    [{ transform: `translate(${a.left - b.left}px, ${a.top - b.top}px) scale(${a.width / b.width}, ${a.height / b.height})`, borderRadius: '24px' }, { transform: 'none', borderRadius: '28px' }],
+    { duration: reduce ? 1 : 520, easing: 'cubic-bezier(.2,.9,.25,1)' },
+  )
+  $('#detail .dcontent').animate([{ opacity: 0 }, { opacity: 0, offset: 0.35 }, { opacity: 1 }], { duration: reduce ? 1 : 520 })
+  ov.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300 })
+  setTimeout(() => $('#detail [data-close]')?.focus(), 60)
+}
+function closeDetail() {
+  if (!DT.open) return
+  const ov = $('#dover'), panel = $('#detail'), tl = fromTile
+  const done = () => {
+    ov.classList.remove('open')
+    document.body.style.overflow = ''
+    DT.open = false
+    if (tl) { tl.style.visibility = ''; tl.focus({ preventScroll: true }) }
+  }
+  if (!tl || !tl.isConnected) return done()
+  const a = tl.getBoundingClientRect(), b = panel.getBoundingClientRect()
+  $('#detail .dcontent').animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, fill: 'forwards' })
+  ov.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 380, fill: 'forwards' })
+  /* finish on the animation's end, or after a fallback delay when a slow renderer lags behind */
+  let finished = false
+  const finish = () => {
+    if (finished) return
+    finished = true
+    done()
+    $('#detail .dcontent').getAnimations().forEach((x) => { x.cancel() })
+    ov.getAnimations().forEach((x) => { x.cancel() })
+  }
+  panel.animate([{ transform: 'none' }, { transform: `translate(${a.left - b.left}px, ${a.top - b.top}px) scale(${a.width / b.width}, ${a.height / b.height})`, borderRadius: '24px' }], { duration: 420, easing: 'cubic-bezier(.4,0,.2,1)' }).onfinish = finish
+  setTimeout(finish, 700)
+}
+function stepDetail(dir) {
+  const i = DKEYS.indexOf(DT.key) + dir
+  if (i < 0 || i >= DKEYS.length) return
+  if (fromTile) fromTile.style.visibility = ''
+  DT.key = DKEYS[i]
+  DT.hidden.clear()
+  fromTile = $(`[data-detail="${DT.key}"]`)
+  if (fromTile) fromTile.style.visibility = 'hidden'
+  const c = $('#detail .dcontent')
+  c.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: `translateX(${-dir * 24}px)` }], { duration: 140 }).onfinish = () => {
+    paintDetail()
+    $('#detail .dbody').scrollTop = 0
+    c.animate([{ opacity: 0, transform: `translateX(${dir * 24}px)` }, { opacity: 1, transform: 'none' }], { duration: 240, easing: 'cubic-bezier(.2,.9,.25,1)' })
+  }
+}
+/* returns true when the click belonged to the detail feature */
+function detailClick(e) {
+  if (DT.open) {
+    if (e.target.id === 'dover') { closeDetail(); return true }
+    const b = e.target.closest('#detail button')
+    if (!b) return e.target.closest('#detail') !== null
+    if ('close' in b.dataset) closeDetail()
+    else if (b.dataset.step) stepDetail(+b.dataset.step)
+    else if (b.dataset.drange) { S.range = b.dataset.drange; seg($('#seg')); seg($('#mseg')); render(); paintDetail() }
+    else if ('compare' in b.dataset) { DT.compare = !DT.compare; paintDetail() }
+    else if (b.dataset.series) { DT.hidden.has(b.dataset.series) ? DT.hidden.delete(b.dataset.series) : DT.hidden.add(b.dataset.series); paintDetail() }
+    else if ('export' in b.dataset) island(`<span class="pdot">${ico('download')}</span>${t('Export')} · ${t(detail(DT.key).title)}.csv`)
+    return true
+  }
+  const tl = e.target.closest('[data-detail]')
+  if (!tl) return false
+  const b = e.target.closest('button')
+  if (b && !b.classList.contains('act')) return false
+  openDetail(tl)
+  return true
+}
+/* chart hover: crosshair, points and a tooltip that follows the nearest day */
+const tip = () => $('#ctip')
+document.addEventListener('pointermove', (e) => {
+  const lc = e.target.closest?.('#detail .lc, #detail .bc')
+  if (!lc) { tip().classList.remove('on'); $$('#detail .lc').forEach((x) => { x.classList.remove('hover') }); return }
+  const ch = DT.charts[lc.id]
+  const r = lc.getBoundingClientRect()
+  const n = ch.labels.length
+  const i = Math.max(0, Math.min(n - 1, Math.round(((e.clientX - r.left) / r.width) * (n - (ch.bars ? 1 : 1)) - (ch.bars ? 0.5 : 0))))
+  if (!ch.bars) {
+    lc.classList.add('hover')
+    $('.xh', lc).style.left = `${ch.X(i)}%`
+    $$('.pt', lc).forEach((p, k) => { p.style.left = `${ch.X(i)}%`; p.style.top = `${ch.Y(ch.series[k].values[i])}%` })
+  } else {
+    $$('.bcol', lc).forEach((c) => { c.classList.toggle('on', +c.dataset.i === i) })
+  }
+  const tp = tip()
+  tp.innerHTML = `<b>${ch.labels[i]}</b>${ch.series.map((s) => `<div><i style="background:${s.color}"></i>${t(s.name)}<span class="num">${ch.f(s.values[i])}</span></div>`).join('')}`
+  tp.classList.add('on')
+  const w = tp.offsetWidth
+  tp.style.left = `${Math.min(innerWidth - w - 12, e.clientX + 16)}px`
+  tp.style.top = `${e.clientY + 16}px`
+})
+document.addEventListener('keydown', (e) => {
+  if (DT.open) {
+    if (e.key === 'Escape') { e.stopImmediatePropagation(); closeDetail() }
+    else if (e.key === 'ArrowRight') stepDetail(1)
+    else if (e.key === 'ArrowLeft') stepDetail(-1)
+    return
+  }
+  const tl = e.target.closest?.('[data-detail]')
+  if (tl && e.target === tl && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openDetail(tl) }
+}, true)
+
 all()
 </script>
 </body>
