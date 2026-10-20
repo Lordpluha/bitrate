@@ -200,6 +200,10 @@ kbd { font: 600 11px var(--font); padding: 3px 7px; border-radius: 7px; backgrou
 .act .tx small { color: var(--muted-fg); font-size: 12px; }
 .act .n { font: 600 26px var(--display); }
 .act.urgent .ai { animation: pulse 2.4s ease-in-out infinite; }
+.act.locked { cursor: default; }
+.act.locked .ai { background: color-mix(in srgb, var(--fg) 8%, transparent); color: var(--muted-fg); }
+.act.locked:hover { transform: none; }
+.ai.lock { background: color-mix(in srgb, var(--fg) 8%, transparent); color: var(--muted-fg); }
 @keyframes pulse { 50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--warning) 0%, transparent), 0 0 0 0 transparent; } 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--warning) 45%, transparent); } }
 .eyebrow-s { font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted-fg); margin-top: 4px; }
 .feed { display: flex; flex-direction: column; gap: 10px; }
@@ -679,6 +683,8 @@ body.device .stage { position: relative; z-index: 1; min-height: 100vh; display:
   <symbol id="i-signal" viewBox="0 0 24 24"><path d="M2 20h.01M7 20v-4M12 20v-8M17 20V8M22 4v16"/></symbol>
   <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M12 20h.01M2 8.82a15 15 0 0 1 20 0M5 12.86a10 10 0 0 1 14 0M8.5 16.43a5 5 0 0 1 7 0"/></symbol>
   <symbol id="i-battery" viewBox="0 0 24 24"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2M6 11v2M10 11v2"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+  <symbol id="i-wifi-off" viewBox="0 0 24 24"><path d="M12 20h.01M8.5 16.43a5 5 0 0 1 7 0M2 8.82a15 15 0 0 1 4.17-2.65M10.66 5c4.01-.36 8.14.9 11.34 3.76M16.85 11.25a10 10 0 0 1 2.22 1.68M5 12.86a10 10 0 0 1 5.17-2.69M2 2l20 20"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></symbol>
 </svg>
 
@@ -727,7 +733,9 @@ const NAV = [
   ['Settings', [['bell', 'Notifications', 0, 'notifications']]],
 ]
 let reports = 16
-const navHTML = () => NAV.map(([g, items], gi) => `${g ? `<h6>${t(g)}</h6>` : ''}${gi ? '<hr>' : ''}${items.map(([i, l, c, page]) => {
+const MODERATOR_HIDDEN = ['Releases', 'Catalog', 'Albums', 'Playlists', 'Podcasts', 'Genres', 'Roles', 'Staff']
+const restricted = () => S.page === 'overview' && S.view === 'restricted'
+const navHTML = () => NAV.map(([g, items], gi) => `${g ? `<h6>${t(g)}</h6>` : ''}${gi ? '<hr>' : ''}${items.filter(([, l]) => !(restricted() && MODERATOR_HIDDEN.includes(l))).map(([i, l, c, page]) => {
   const n = l === 'Moderation' ? reports : c
   return `<button type="button" class="item${page && page === S.page ? ' on' : ''}${l === 'Moderation' ? ' hot' : ''}" title="${t(l)}" data-page="${page || 'stub'}">${ico(i)}<span class="lbl">${t(l)}</span>${n ? `<span class="count num">${n}</span>` : ''}</button>`
 }).join('')}`).join('')
@@ -757,7 +765,7 @@ const tile = (cls, i, inner) => {
   const a11y = live ? ` data-detail="${DKEYS[i]}" tabindex="0" role="button" aria-haspopup="dialog"` : ''
   return `<article class="tile glass ${cls}${live ? ' live' : ''}" style="--i:${i}"${a11y}>${inner}</article>`
 }
-const msg = (kind, title, desc, action, row) => `<div class="msg${row ? ' row' : ''}"><span class="mi ai ${kind}">${ico(kind === 'error' ? 'alert' : 'check')}</span>${row ? '<div>' : ''}<b>${t(title)}</b><small>${t(desc)}</small>${row ? '</div>' : ''}${action ? `<button type="button" class="pill ghost" data-retry>${ico('refresh')}${t(action)}</button>` : ''}</div>`
+const msg = (kind, title, desc, action, row) => `<div class="msg${row ? ' row' : ''}"><span class="mi ai ${kind}">${ico(kind === 'error' ? 'alert' : kind === 'lock' ? 'lock' : 'check')}</span>${row ? '<div>' : ''}<b>${t(title)}</b><small>${t(desc)}</small>${row ? '</div>' : ''}${action ? `<button type="button" class="pill ghost" data-retry>${ico('refresh')}${t(action)}</button>` : ''}</div>`
 const sparkPath = (pts) => {
   const w = 240, h = 44, max = Math.max(...pts), min = Math.min(...pts)
   const xy = pts.map((p, i) => [i * (w / (pts.length - 1)), h - ((p - min) / (max - min || 1)) * (h - 6) - 3])
@@ -782,13 +790,14 @@ function bentoHTML() {
     skeleton('h2', 4, skRows(5)), skeleton('h2', 5, skRows(5, 8)), skeleton('h2 chart', 6, skRows(4)), skeleton('h2', 7, skRows(4)),
   ].join('')
   const partial = v === 'partial'
+  const locked = v === 'restricted'
   const total = 27 + (reports - 16)
   return [
     tile('w2 h2 accent', 0, `${head('inbox', 'Needs action', empty ? t('All clear') : `<span class="num">${total}</span> ${t('items across three queues')}`, `<button type="button" class="pill primary">${t('Open moderation')} ${ico('right')}</button>`)}
       <div class="tc">${empty ? msg('success', 'All clear', 'No reports, releases or failed tracks are waiting.') : `
         <button type="button" class="act urgent"><span class="ai warning">${ico('flag')}</span><span class="tx"><b>${t('Reports to review')}</b><small>${t('12 open · 4 in review · oldest 6 h')}</small></span><span class="n num" id="repN">${reports}</span>${ico('right')}</button>
-        <button type="button" class="act"><span class="ai info">${ico('disc')}</span><span class="tx"><b>${t('Releases awaiting review')}</b><small>${t('Oldest submitted 2 days ago')}</small></span><span class="n num">7</span>${ico('right')}</button>
-        <button type="button" class="act"><span class="ai error">${ico('alert')}</span><span class="tx"><b>${t('Tracks failed processing')}</b><small>${t('3 failed · 1 stuck for 42 min')}</small></span><span class="n num">4</span>${ico('right')}</button>
+        ${locked ? `<div class="act locked"><span class="ai">${ico('lock')}</span><span class="tx"><b>${t('Release review is not in your role')}</b><small>${t('Needs releases:read. Ask a super admin for access.')}</small></span></div>` : `<button type="button" class="act"><span class="ai info">${ico('disc')}</span><span class="tx"><b>${t('Releases awaiting review')}</b><small>${t('Oldest submitted 2 days ago')}</small></span><span class="n num">7</span>${ico('right')}</button>
+        <button type="button" class="act"><span class="ai error">${ico('alert')}</span><span class="tx"><b>${t('Tracks failed processing')}</b><small>${t('3 failed · 1 stuck for 42 min')}</small></span><span class="n num">4</span>${ico('right')}</button>`}
         <div class="eyebrow-s">${t('Latest reports')}</div>
         <div class="feed" id="repFeed">
           <div class="fi"><i></i><div>${t('Track · Copyright claim · Glass Horizon')}<small>Nova &amp; the Static · 12 ${t('min')}</small></div></div>
@@ -799,8 +808,8 @@ function bentoHTML() {
     tile('w2 chart', 3, partial ? head('wave', 'Listens per day', '—') + msg('error', 'Couldn’t load this tile', 'The rest of the overview is up to date.', 'Retry', true)
       : `${head('wave', 'Listens per day', empty ? t('No data yet') : `<span class="num">${d.listens}M</span> ${t('listens')} · ${d.delta} ${t('vs previous period')}`)}
       ${empty ? msg('success', 'No data yet', 'Figures appear as listeners and uploads arrive.') : `<div class="bars">${d.bars.map((b, k) => `<div class="bar${k === d.hi ? ' hi' : ''}" style="--k:${k}"><div class="col" data-h="${b}"><b class="num">${(b * d.listens / d.bars.length * 4).toFixed(2)}M</b></div><small>${t(d.labels[k])}</small></div>`).join('')}</div>`}`),
-    tile('h2', 4, `${head('audio', 'Track pipeline', empty ? t('No data yet') : `${t('Last 24 h')} · <span class="num">${fmt(1335)}</span> ${t('tracks')}`)}
-      <div class="tc">${empty ? msg('success', 'No data yet', 'Figures appear as listeners and uploads arrive.') : `
+    tile('h2', 4, `${head('audio', 'Track pipeline', locked ? t('Restricted') : empty ? t('No data yet') : `${t('Last 24 h')} · <span class="num">${fmt(1335)}</span> ${t('tracks')}`)}
+      <div class="tc">${locked ? msg('lock', 'Not in your role', 'Needs tracks:read. Ask a super admin for access.') : empty ? msg('success', 'No data yet', 'Figures appear as listeners and uploads arrive.') : `
         <div class="segbar"><span style="background:var(--success)" data-w="72"></span><span style="background:var(--info)" data-w="16"></span><span style="background:var(--warning)" data-w="4"></span><span style="background:var(--error)" data-w="8"></span></div>
         <div class="legend">
           <div class="lg"><i style="background:var(--success)"></i>${t('Ready')}<b class="num">${fmt(1284)}</b></div>
@@ -835,9 +844,10 @@ function countUp(el) {
   requestAnimationFrame(step)
 }
 function overviewHTML() {
-  return `<header class="head"><div><div class="eyebrow">${t('OVERVIEW · TUE, OCT 20')}</div><h1><span>${t('Good morning,')}</span> <em>Mara</em></h1><p>${t('What needs attention across Bitrate today.')}</p></div><div class="grow"></div>
+  return `<header class="head"><div><div class="eyebrow">${t('OVERVIEW · TUE, OCT 20')}</div><h1><span>${t('Good morning,')}</span> <em>${S.view === 'restricted' ? 'Leo' : 'Mara'}</em></h1><p>${t(S.view === 'restricted' ? 'Moderator view: tiles outside your role stay locked.' : 'What needs attention across Bitrate today.')}</p></div><div class="grow"></div>
     <div class="actions"><div class="seg glass" id="seg"><span class="thumb"></span></div><button type="button" class="ibtn" id="refreshBtn" aria-label="Refresh">${ico('refresh')}</button></div></header>
     <div class="mrange"><div class="seg" id="mseg"><span class="thumb"></span></div><div class="grow" style="flex:1"></div><button type="button" class="ibtn" id="mrefresh" aria-label="Refresh">${ico('refresh')}</button></div>
+    ${S.view === 'offline' ? `<article class="tile glass banner"><span class="ai warning">${ico('wifi-off')}</span><div class="tx"><b>${t('You’re offline')}</b><small>${t('Showing figures from 09:42. Actions are paused until you reconnect.')}</small></div><button type="button" class="pill ghost" data-online>${ico('refresh')}${t('Try again')}</button></article>` : ''}
     <section class="bento" id="bento" aria-live="polite">${bentoHTML()}</section>`
 }
 function render() {
@@ -966,6 +976,7 @@ document.addEventListener('click', (e) => {
   if (b.dataset.open === 'palette') return openPalette()
   if (b.dataset.range) { S.range = b.dataset.range; seg($('#seg')); seg($('#mseg')); return render() }
   if (b.dataset.view) return setView(b.dataset.view)
+  if ('online' in b.dataset) return setView('default')
   if ('retry' in b.dataset) { S.view = 'loading'; render(); setTimeout(() => { S.view = 'default'; renderDock(); render() }, 1200); return }
   if (b.classList.contains('opt')) { sel = +b.dataset.k; return runSel() }
 })
@@ -1417,7 +1428,11 @@ Object.assign(UK, {
   'Super admin': 'Суперадмін', 'Moderator': 'Модератор', 'Operations': 'Операції', 'On-call': 'Черговий',
   'Browser notifications are blocked': 'Сповіщення браузера заблоковані', 'Allow notifications for this site in the browser settings, then try again.': 'Дозвольте сповіщення для цього сайту в налаштуваннях браузера й спробуйте ще.',
   'Try again': 'Спробувати ще', 'Couldn’t load your notification settings': 'Не вдалося завантажити налаштування сповіщень', 'Nothing was changed. Try again in a moment.': 'Нічого не змінено. Спробуйте за мить.',
-  'Mark all read': 'Позначити все прочитаним', 'Prototype: this section is not drawn yet': 'Прототип: цей розділ ще не намальовано', 'Search': 'Пошук', 'Alerts': 'Сповіщення', 'Settings': 'Налаштування',
+  'Mark all read': 'Позначити все прочитаним',
+  'Release review is not in your role': 'Перевірка релізів не входить у вашу роль', 'Needs releases:read. Ask a super admin for access.': 'Потрібен дозвіл releases:read. Попросіть суперадміна.',
+  'Restricted': 'Обмежено', 'Not in your role': 'Не у вашій ролі', 'Needs tracks:read. Ask a super admin for access.': 'Потрібен дозвіл tracks:read. Попросіть суперадміна.',
+  'Moderator view: tiles outside your role stay locked.': 'Вигляд модератора: плитки поза вашою роллю заблоковані.',
+  'You’re offline': 'Ви офлайн', 'Showing figures from 09:42. Actions are paused until you reconnect.': 'Показано дані станом на 09:42. Дії призупинено до відновлення зʼєднання.', 'Offline · 09:42': 'Офлайн · 09:42', 'Prototype: this section is not drawn yet': 'Прототип: цей розділ ще не намальовано', 'Search': 'Пошук', 'Alerts': 'Сповіщення', 'Settings': 'Налаштування',
 })
 const PAGES = { overview: 'Overview', notifications: 'Notifications' }
 S.page = location.hash === '#notifications' ? 'notifications' : 'overview'
@@ -1630,13 +1645,14 @@ function closePop() { $('#npop')?.classList.remove('open') }
 function badges() { $$('.ibtn .badge, .mtabs .badge').forEach((b) => { b.hidden = unread === 0 }) }
 
 /* ---------- prototype dock: states per page, desktop ⇄ mobile ---------- */
-const VIEWS = { overview: ['default', 'loading', 'empty', 'partial', 'error'], notifications: ['default', 'loading', 'error', 'blocked'] }
-const VIEW_LABEL = { default: 'Default', loading: 'Loading', empty: 'Empty', partial: 'Partial', error: 'Error', blocked: 'Push blocked' }
+const VIEWS = { overview: ['default', 'loading', 'empty', 'partial', 'error', 'restricted', 'offline'], notifications: ['default', 'loading', 'error', 'blocked'] }
+const VIEW_LABEL = { default: 'Default', loading: 'Loading', empty: 'Empty', partial: 'Partial', error: 'Error', restricted: 'Restricted', offline: 'Offline', blocked: 'Push blocked' }
 const curView = () => (S.page === 'overview' ? S.view : S.nview)
 function setView(v) {
   if (S.page === 'overview') S.view = v
   else S.nview = v
   renderDock(); render(); report()
+  if (v === 'offline') island(`<span class="pdot" style="color:var(--warning-text);background:var(--warning-surface)">${ico('wifi-off')}</span>${t('Offline · 09:42')}`, 3200)
 }
 function renderDock() {
   const d = $('#dock')
