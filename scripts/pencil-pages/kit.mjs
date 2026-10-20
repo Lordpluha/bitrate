@@ -777,10 +777,11 @@ export function writePage(root, dir, spec) {
     frames.push(n)
     x += n.width + 100
   }
-  const d = desktop()
+  /* a desktop that takes the theme draws each edition itself (e.g. a theme switch showing its value) */
+  const d = desktop('Dark')
   place(d, 'Dark', 'Desktop / Dark')
-  place(d, 'Light', 'Desktop / Light')
-  place(d, 'Dim', 'Desktop / Dim')
+  place(desktop.length ? desktop('Light') : d, 'Light', 'Desktop / Light')
+  place(desktop.length ? desktop('Dim') : d, 'Dim', 'Desktop / Dim')
   if (mobile) place(mobile(), 'Dark', 'Mobile / Dark')
   for (const [label, fn, theme = 'Dark'] of extra) place(fn(), theme, label)
   for (const st of states) {
