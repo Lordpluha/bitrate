@@ -321,6 +321,11 @@ function scanDesign(file, libraryNames, refPattern) {
         }
         const ref = value.match(refPattern)
         if (ref && !libraryNames.has(ref[1])) unknown.set(ref[1], (unknown.get(ref[1]) ?? 0) + 1)
+        /* a variable of another library (wrong alias) resolves to nothing in this file */ else if (
+          !ref &&
+          /^\$([a-z]+:)?--[a-z0-9-]+$/.test(value)
+        )
+          unknown.set(value, (unknown.get(value) ?? 0) + 1)
       } else visit(value, frame)
     }
   }
