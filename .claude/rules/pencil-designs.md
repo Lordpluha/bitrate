@@ -43,8 +43,9 @@ paths:
   the badge sits beside the icon, the hole is a child of the artwork. Only the canvas root
   places pages by coordinates, in a tidy non-overlapping grid.
 - Every route has its own file and directory: `pencil/web-player-design/<page>/<page>.pen` for the
-  web player and landing, `pencil/web-artist-design/<page>/<page>.pen` for the artist workspace.
-  Each file holds the desktop page in Dark, Light and Dim, the mobile page, then every state as a
+  web player and landing, `pencil/web-artist-design/<page>/<page>.pen` for the artist workspace,
+  `pencil/web-admin-design/<page>/<page>.pen` for the admin console (`apps/admin`, built from the
+  library's `Admin Shell` and `Bento/*` tiles). Each file holds the desktop page in Dark, Light and Dim, the mobile page, then every state as a
   desktop + mobile pair.
 - The library is one flex root ("Bitrate Design System") with Components, Foundations and
   Product-pattern rows; page blocks live on "00E • Page Blocks".
