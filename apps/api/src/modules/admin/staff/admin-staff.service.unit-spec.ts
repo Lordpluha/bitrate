@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from '@jest/globals'
 import { ProtectedPermissionException, UnknownPermissionException } from '@modules/admin-auth'
 import type { TokenService } from '@modules/tokens/token.service'
-import { NotFoundException } from '@nestjs/common'
-import type { Prisma } from '@prisma/client'
+import { ConflictException, NotFoundException } from '@nestjs/common'
+import { Prisma } from '@prisma/client'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { type DeepMockProxy, mockDeep } from 'jest-mock-extended'
 import { buildRawStaff, buildStaffWithRole } from './__tests__/fixtures/admin-staff.fixtures'
@@ -142,6 +142,24 @@ describe('AdminStaffService', () => {
       })
       expect(JSON.stringify(call)).not.toMatch(/password/i)
       expect(JSON.stringify(call)).not.toContain('hashed-password')
+    })
+
+    it('maps a unique-constraint race on insert to ConflictException, not a 500', async () => {
+      prisma.role.findUnique.mockResolvedValue({
+        id: 'role-moderator',
+        builtIn: false,
+        name: 'Support',
+        permissions: ['tracks:read'],
+      } as never)
+      prisma.staff.findUnique.mockResolvedValue(null)
+      transaction.staff.create.mockRejectedValue(
+        new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+          code: 'P2002',
+          clientVersion: 'test',
+        }),
+      )
+
+      await expect(service.create(dto as never, ACTOR_ID)).rejects.toThrow(ConflictException)
     })
   })
 

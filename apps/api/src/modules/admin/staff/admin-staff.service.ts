@@ -1,5 +1,6 @@
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from '@common/pagination'
 import { buildSortOrderBy, type SortInput } from '@common/sort'
+import { isPrismaP2002 } from '@common/utils/prisma'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { assertGrantable, normalizePermissions, type Permission } from '@modules/admin-auth'
 import { TokenService } from '@modules/tokens/token.service'
@@ -35,6 +36,9 @@ type ResolveGrantedPermissionsInput = {
 type AuditSource = 'creation' | 'assignment' | 'manual'
 
 const BUILT_IN_ADMIN_NAME = 'ADMIN'
+
+/** The 409 message when a concurrent create claimed the email or username first. */
+const EMAIL_OR_USERNAME_TAKEN = 'Email or username is already in use'
 
 /** Handles the operator directory, role assignment, and permission grants. */
 @Injectable()
@@ -76,6 +80,10 @@ export class AdminStaffService {
    * copied onto the operator; with one, the override is validated and used instead. The
    * built-in `ADMIN` role always yields `[]` regardless of any override — its permissions are
    * never consulted, so storing anything else would be misleading.
+   *
+   * The availability checks give a precise message for the common case; two concurrent creates
+   * with the same email or username can both pass them, so the insert's unique violation is
+   * mapped to the same 409 rather than surfacing as a 500.
    */
   async create(dto: CreateStaffDto, actorStaffId: string) {
     const role = await this.prisma.role.findUnique({ where: { id: dto.roleId } })
@@ -93,29 +101,34 @@ export class AdminStaffService {
 
     const hashedPassword = await this.token.hashPassword(dto.password)
 
-    return await this.prisma.$transaction(async (tx) => {
-      const staff = await tx.staff.create({
-        data: {
-          email: dto.email,
-          username: dto.username,
-          password: hashedPassword,
+    try {
+      return await this.prisma.$transaction(async (tx) => {
+        const staff = await tx.staff.create({
+          data: {
+            email: dto.email,
+            username: dto.username,
+            password: hashedPassword,
+            roleId: dto.roleId,
+            permissions,
+          },
+          select: ADMIN_STAFF_SAFE_SELECT,
+        })
+
+        await this.writeAuditRow(tx, {
+          actorStaffId,
+          targetStaffId: staff.id,
+          before: [],
+          after: permissions,
           roleId: dto.roleId,
-          permissions,
-        },
-        select: ADMIN_STAFF_SAFE_SELECT,
-      })
+          source: 'creation',
+        })
 
-      await this.writeAuditRow(tx, {
-        actorStaffId,
-        targetStaffId: staff.id,
-        before: [],
-        after: permissions,
-        roleId: dto.roleId,
-        source: 'creation',
+        return staff
       })
-
-      return staff
-    })
+    } catch (error) {
+      if (isPrismaP2002(error)) throw new ConflictException(EMAIL_OR_USERNAME_TAKEN)
+      throw error
+    }
   }
 
   /**
