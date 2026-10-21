@@ -31,16 +31,6 @@ export const mountParticles2d = ({
       ink: ink ?? 'purple-400',
     }
   })
-  let mx = 0
-  let my = 0
-  window.addEventListener(
-    'pointermove',
-    (e) => {
-      mx = e.clientX / window.innerWidth - 0.5
-      my = e.clientY / window.innerHeight - 0.5
-    },
-    { passive: true, signal: ctx.signal },
-  )
   const size = () => {
     const d = Math.min(window.devicePixelRatio || 1, 1.5)
     canvas.width = window.innerWidth * d
@@ -60,8 +50,8 @@ export const mountParticles2d = ({
     for (const d of dots) {
       const a = d.a + t * 0.02 * d.z
       const rr = d.r * R * (0.92 + 0.08 * Math.sin(t * 0.6 + d.a))
-      const x = w * 0.62 + Math.cos(a) * rr + mx * 40 * d.z
-      const y = h * 0.5 + Math.sin(a) * rr * 0.62 + my * 30 * d.z
+      const x = w * 0.62 + Math.cos(a) * rr + ctx.pointer.nx * 40 * d.z
+      const y = h * 0.5 + Math.sin(a) * rr * 0.62 + ctx.pointer.ny * 30 * d.z
       const tw = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * 1.7 + d.a * 3))
       const fill = fills.get(d.ink) ?? ''
       if (fill !== ink) {
@@ -235,6 +225,11 @@ export const mountPartners2d = (ctx: EngineContext) => {
     for (const b of balls) {
       b.x += b.vx * dt
       b.y += b.vy * dt
+    }
+  }
+  /** Writes the simulated bubbles to the DOM: once per frame, after all sub-steps. */
+  const render = () => {
+    for (const b of balls) {
       const sq = 1 + Math.min(0.12, Math.hypot(b.vx, b.vy) * 0.0004)
       b.el.style.transform = `translate(${b.x - b.r}px, ${b.y - b.r}px) scale(${sq}, ${1 / sq})`
     }
@@ -244,9 +239,11 @@ export const mountPartners2d = (ctx: EngineContext) => {
     const dt = Math.min(0.033, gsap.ticker.deltaRatio() / 60)
     step(dt / 2)
     step(dt / 2)
+    render()
   }
   if (ctx.reduce) {
     for (let i = 0; i < 90; i++) step(1 / 60)
+    render()
     return reset
   }
   gsap.ticker.add(tick)

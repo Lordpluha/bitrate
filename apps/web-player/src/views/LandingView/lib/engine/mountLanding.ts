@@ -1,7 +1,7 @@
 import { gsap } from 'gsap'
 import type { LandingCopy } from '../../model/copy'
 import { createCanvases } from './canvases'
-import { all, BOARD, type EngineContext } from './context'
+import { all, BOARD, createPointerStore, type EngineContext } from './context'
 import { mountCursor } from './cursor'
 import { mountParticles2d, mountPartners2d } from './fallback2d'
 import { mountHeadings } from './headings'
@@ -33,7 +33,8 @@ export const mountLanding = ({
     scenes: all({ root, selector: '.scene', type: HTMLElement }),
     copy,
     reduce: matchMedia('(prefers-reduced-motion: reduce)').matches,
-    state: { index: 0, animating: false, dragging: false },
+    state: { index: 0, animating: false, dragging: false, intro: false },
+    pointer: createPointerStore({ signal: controller.signal }),
     signal: controller.signal,
     onDispose: (fn) => {
       disposers.push(fn)

@@ -295,6 +295,7 @@ export const playIntro = (ctx: EngineContext) =>
       return
     }
     markSeen()
+    ctx.state.intro = true
     const stop = drawLogo({ el: canvas, onDone: () => {} })
     ctx.onDispose(stop)
     gsap.from(intro.querySelectorAll('b, .mono'), {
@@ -313,6 +314,7 @@ export const playIntro = (ctx: EngineContext) =>
       onComplete: () => {
         stop()
         intro.hidden = true
+        ctx.state.intro = false
       },
     })
   })

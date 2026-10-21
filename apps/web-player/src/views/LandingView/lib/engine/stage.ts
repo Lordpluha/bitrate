@@ -182,7 +182,7 @@ export const createStage = async ({
   canvas: HTMLCanvasElement
 }): Promise<Stage> => {
   const THREE = await import('three')
-  const { root, state, signal } = ctx
+  const { root, state, signal, pointer } = ctx
   const renderer = new THREE.WebGLRenderer({
     canvas,
     antialias: true,
@@ -293,6 +293,7 @@ export const createStage = async ({
   const cradle = new THREE.Group()
   const cradleRig = new THREE.Group()
   cradle.add(cradleRig)
+  /** One unit sphere for the cradle balls and the partner spheres. */
   const ballGeo = new THREE.SphereGeometry(1, 40, 28)
   const CR = { len: 4.2, gap: 2.04, depth: 0.9, appear: 0 }
   const cradleBalls: Three.Mesh[] = []
@@ -331,18 +332,19 @@ export const createStage = async ({
   cradle.visible = false
   scene.add(cradle)
   const cradleSlot = must({ root, selector: '#cradleSlot', type: HTMLElement })
+  let cradleRect = cradleSlot.getBoundingClientRect()
   const updateCradle = (t: number) => {
     const sw = Math.sin(t * 3.1)
     const A = 0.6
-    const ang = [
-      Math.min(sw, 0) * A,
-      sw * 0.05 * A,
-      sw * 0.05 * A,
-      sw * 0.05 * A,
-      Math.max(sw, 0) * A,
-    ]
+    /* the end balls swing out on their own side; the middle three only shiver */
+    const end = cradleBalls.length - 1
     cradleBalls.forEach((b, i) => {
-      const a = ang[i] ?? 0
+      const a =
+        i === 0
+          ? Math.min(sw, 0) * A
+          : i === end
+            ? Math.max(sw, 0) * A
+            : sw * 0.05 * A
       b.position.set(
         (i - 2) * CR.gap + Math.sin(a) * CR.len,
         -Math.cos(a) * CR.len,
@@ -359,7 +361,7 @@ export const createStage = async ({
     }
   }
   const placeCradle = () => {
-    const r = cradleSlot.getBoundingClientRect()
+    const r = cradleRect
     const unit = r.width / (CR.gap * 4 + 2.4)
     const [x, y] = toWorld(r.left + r.width / 2, r.top + 8)
     cradle.position.set(x, y, 1.2)
@@ -416,9 +418,8 @@ export const createStage = async ({
   partners.visible = false
   scene.add(partners)
   const PB: Ball[] = []
-  const pGeo = new THREE.SphereGeometry(1, 40, 28)
   for (let i = 0; i < 30; i++) {
-    const m = new THREE.Mesh(pGeo, markMats[i % markMats.length])
+    const m = new THREE.Mesh(ballGeo, markMats[i % markMats.length])
     const r = 0.55 + rnd(i, 40) * 0.45
     m.scale.setScalar(r)
     m.rotation.set(rnd(i, 41) * 6, rnd(i, 42) * 6, 0)
@@ -440,8 +441,19 @@ export const createStage = async ({
   }
   scatterPartners()
   const zone = must({ root, selector: '#partnerZone', type: HTMLElement })
+  let zoneRect = zone.getBoundingClientRect()
+  /** Slot rects are read once per layout change instead of on every frame. */
+  const measure = () => {
+    cradleRect = cradleSlot.getBoundingClientRect()
+    zoneRect = zone.getBoundingClientRect()
+  }
+  const slotWatch = new ResizeObserver(measure)
+  for (const el of [cradleSlot, zone]) {
+    slotWatch.observe(el)
+    if (el.parentElement) slotWatch.observe(el.parentElement)
+  }
   const placePartners = () => {
-    const r = zone.getBoundingClientRect()
+    const r = zoneRect
     PZ.unit = Math.min(r.width, r.height) / 2 / 4.8
     const [x, y] = toWorld(r.left + r.width / 2, r.top + r.height / 2)
     partners.position.set(x, y, 0)
@@ -451,6 +463,8 @@ export const createStage = async ({
   const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0)
   const hit = new THREE.Vector3()
   const ndc = new THREE.Vector2()
+  /** The pointer in the partner group's space; one vector reused for every event. */
+  const local = new THREE.Vector3()
   const pointerLocal = (e: PointerEvent) => {
     ndc.set(
       (e.clientX / window.innerWidth) * 2 - 1,
@@ -459,7 +473,7 @@ export const createStage = async ({
     raycaster.setFromCamera(ndc, camera)
     if (!raycaster.ray.intersectPlane(plane, hit)) return null
     const s = partners.scale.x || 1
-    return new THREE.Vector3(
+    return local.set(
       (hit.x - partners.position.x) / s,
       (hit.y - partners.position.y) / s,
       0,
@@ -584,32 +598,21 @@ export const createStage = async ({
     return { r: c.r, g: c.g, b: c.b }
   }
   const halfH = Math.tan((FOV * Math.PI) / 360) * CAMZ
-  const mouse = { x: 0, y: 0 }
-  window.addEventListener(
-    'pointermove',
-    (e) => {
-      mouse.x = e.clientX / window.innerWidth - 0.5
-      mouse.y = e.clientY / window.innerHeight - 0.5
-    },
-    { passive: true, signal },
-  )
 
   const timer = new THREE.Timer()
-  let running = true
   /** The render loop runs; without it (reduced motion) every change must redraw by itself. */
   let looping = false
   const still = () => renderer.render(scene, camera)
-  let frame = 0
   let last = performance.now()
   let slow = 0
+  /* on the GSAP ticker, which also pauses in background tabs */
   const tick = () => {
-    if (!running) return
     const now = performance.now()
     const frameDt = (now - last) / 1000
     slow = now - last > 28 ? slow + 1 : Math.max(0, slow - 1)
     last = now
     /* the intro's load must not lower the scene for good */
-    if (root.querySelector('.intro:not([hidden])')) slow = 0
+    if (state.intro) slow = 0
     if (slow > 20 && dpr > MIN_DPR) {
       dpr = Math.max(MIN_DPR, dpr - 0.15)
       renderer.setPixelRatio(dpr)
@@ -633,28 +636,17 @@ export const createStage = async ({
       stepPartners(dt * 0.5)
       placePartners()
     }
-    spin.rotation.y = t * 0.16 + mouse.x * 0.5
-    spin.rotation.x = mouse.y * 0.3
-    camera.position.x += (mouse.x * 0.35 - camera.position.x) * 0.04
-    camera.position.y += (-mouse.y * 0.25 - camera.position.y) * 0.04
+    spin.rotation.y = t * 0.16 + pointer.nx * 0.5
+    spin.rotation.x = pointer.ny * 0.3
+    camera.position.x += (pointer.nx * 0.35 - camera.position.x) * 0.04
+    camera.position.y += (-pointer.ny * 0.25 - camera.position.y) * 0.04
     camera.lookAt(camera.position.x * 0.6, camera.position.y * 0.6, 0)
     renderer.render(scene, camera)
-    frame = requestAnimationFrame(tick)
   }
-  document.addEventListener(
-    'visibilitychange',
-    () => {
-      const was = running
-      running = !document.hidden
-      if (running && !was) {
-        last = performance.now()
-        frame = requestAnimationFrame(tick)
-      }
-    },
-    { signal },
-  )
 
   let current = 0
+  /** Scratch buffer for the field frozen mid-morph, reused by every scene change. */
+  const frozen = new Float32Array(FIELD_COUNT * 3)
   const place = (i: number, dur = 1.6) => {
     const L = LOOK[i]
     if (!L) return
@@ -690,6 +682,7 @@ export const createStage = async ({
     const layout = LAYOUTS[i]
     if (!L || !layout) return
     current = i
+    measure()
     place(i, dur)
     if (L.cradle) {
       cradle.visible = true
@@ -734,7 +727,7 @@ export const createStage = async ({
     const from = fromAttr.array
     const to = toAttr.array
     const tt = fieldU.uT.value
-    const cur = new Float32Array(FIELD_COUNT * 3)
+    const cur = frozen
     for (let k = 0; k < FIELD_COUNT; k++) {
       const e = Math.min(Math.max(tt * 1.4 - (seeds[k] ?? 0) * 0.4, 0), 1)
       const s = e * e * (3 - 2 * e)
@@ -776,6 +769,7 @@ export const createStage = async ({
     PX.k = (2 * halfH) / h
     fieldU.uBoard.value.set(PX.ox, PX.oy, s, PX.k)
     fieldU.uView.value.set(w, h)
+    measure()
     /* without the loop, setSize() leaves a blank canvas: place instantly and redraw */
     place(current, looping ? 0.01 : 0)
     if (!looping) still()
@@ -789,12 +783,12 @@ export const createStage = async ({
     retheme,
     start: () => {
       looping = true
-      frame = requestAnimationFrame(tick)
+      gsap.ticker.add(tick)
     },
     still,
     dispose: () => {
-      running = false
-      cancelAnimationFrame(frame)
+      gsap.ticker.remove(tick)
+      slotWatch.disconnect()
       gsap.killTweensOf([
         signalGroup.position,
         signalGroup.scale,

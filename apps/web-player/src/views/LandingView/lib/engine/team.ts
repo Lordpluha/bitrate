@@ -178,6 +178,8 @@ export const mountTeam = (ctx: EngineContext) => {
     gx: number
     gy: number
     hover: Bubble | null
+    /** Height of the open card, measured once per hover instead of per frame. */
+    cardH: number
     hideT: number
     run: boolean
   } = {
@@ -187,6 +189,7 @@ export const mountTeam = (ctx: EngineContext) => {
     gx: 0,
     gy: 0,
     hover: null,
+    cardH: 0,
     hideT: 0,
     run: false,
   }
@@ -244,6 +247,7 @@ export const mountTeam = (ctx: EngineContext) => {
     for (const o of bubbles) o.el.classList.toggle('hot', o === b)
     renderCard(b.d)
     hc.classList.add('open')
+    TP.cardH = hc.offsetHeight
   }
   const hideCard = () => {
     TP.hideT = window.setTimeout(() => {
@@ -352,12 +356,15 @@ export const mountTeam = (ctx: EngineContext) => {
         }
       }
     }
+  }
+  /** Writes the simulated positions to the DOM: once per frame, after all sub-steps. */
+  const render = () => {
     for (const b of bubbles)
       b.el.style.transform = `translate(${b.x - b.r}px, ${b.y - b.r}px)`
     if (TP.hover) {
       const b = TP.hover
-      const above = b.y - b.r - 14 > hc.offsetHeight
-      hc.style.transform = `translate(${Math.max(8, Math.min(TP.w - CARD_WIDTH - 8, b.x - CARD_WIDTH / 2))}px, ${above ? b.y - b.r - 12 - hc.offsetHeight : b.y + b.r + 12}px)`
+      const above = b.y - b.r - 14 > TP.cardH
+      hc.style.transform = `translate(${Math.max(8, Math.min(TP.w - CARD_WIDTH - 8, b.x - CARD_WIDTH / 2))}px, ${above ? b.y - b.r - 12 - TP.cardH : b.y + b.r + 12}px)`
     }
   }
   const tick = () => {
@@ -365,11 +372,13 @@ export const mountTeam = (ctx: EngineContext) => {
     const dt = Math.min(0.033, gsap.ticker.deltaRatio() / 60)
     step(dt * 0.5)
     step(dt * 0.5)
+    render()
   }
   if (ctx.reduce) {
     /* static page: let the bubbles settle once instead of animating the fall */
     reset()
     for (let i = 0; i < 360; i++) step(1 / 60)
+    render()
     return reset
   }
   gsap.ticker.add(tick)
