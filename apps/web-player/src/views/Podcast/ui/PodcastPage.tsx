@@ -1,7 +1,10 @@
 'use client'
 
-import { cn } from '@bitrate/ui-react'
-import { CollectionSkeleton } from '@shared/ui'
+import {
+  CollectionSkeleton,
+  type SegmentedTab,
+  SegmentedTabs,
+} from '@shared/ui'
 import { useState } from 'react'
 import { usePodcast } from '@/entities/Podcast'
 import { useAuth } from '@/shared/hooks'
@@ -16,13 +19,10 @@ type PodcastPageProps = {
 
 type PodcastTab = 'about' | 'episodes'
 
-const tabClassName = (isActive: boolean) =>
-  cn(
-    'h-9 rounded-md px-3 text-sm font-medium transition-colors',
-    isActive
-      ? 'bg-secondary text-foreground'
-      : 'text-muted-foreground hover:bg-surface hover:text-foreground',
-  )
+const TABS: ReadonlyArray<SegmentedTab<PodcastTab>> = [
+  { id: 'episodes', label: 'Episodes' },
+  { id: 'about', label: 'About' },
+]
 
 /**
  * The design's podcast show: cover, title, publisher and facts, then Episodes (Newest / Saved
@@ -60,24 +60,12 @@ export const PodcastPage = ({ podcastId }: PodcastPageProps) => {
       <div className="flex flex-col gap-5 px-4 pt-2 pb-3 md:gap-7 md:px-8 md:py-6">
         <PodcastHeader podcast={podcast} />
 
-        <div
-          aria-label="Podcast sections"
-          className="flex gap-1"
-          role="tablist"
-        >
-          {(['episodes', 'about'] as const).map((id) => (
-            <button
-              aria-selected={tab === id}
-              className={tabClassName(tab === id)}
-              key={id}
-              onClick={() => setTab(id)}
-              role="tab"
-              type="button"
-            >
-              {id === 'episodes' ? 'Episodes' : 'About'}
-            </button>
-          ))}
-        </div>
+        <SegmentedTabs
+          ariaLabel="Podcast sections"
+          onChange={setTab}
+          tabs={TABS}
+          value={tab}
+        />
 
         {tab === 'about' ? <PodcastAbout podcast={podcast} /> : null}
         {/* Hidden, not unmounted, so the chosen filter and search survive a visit to About. */}
