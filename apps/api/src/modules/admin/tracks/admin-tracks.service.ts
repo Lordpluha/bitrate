@@ -94,6 +94,7 @@ const DETAIL_INCLUDE = {
 /** What the state pre-checks read. */
 const DELETED_AT_SELECT = { deletedAt: true } as const satisfies Prisma.TrackSelect
 
+type TrackRowRecord = Prisma.TrackGetPayload<{ select: typeof TRACK_ROW_SELECT }>
 type TrackWithDetail = Prisma.TrackGetPayload<{ include: typeof DETAIL_INCLUDE }>
 
 /**
@@ -144,7 +145,7 @@ export class AdminTracksService {
   }
 
   /**
-   * Runs the find all operation, paginated. Problem-first by default via the raw-SQL `CASE`
+   * Lists tracks, paginated. Problem-first by default via the raw-SQL `CASE`
    * query described above; choosing a `sort` replaces that attention-first ordering with a
    * plain Prisma `orderBy` on the chosen field instead — the two orderings are never merged.
    *
@@ -215,10 +216,6 @@ export class AdminTracksService {
   ): Promise<CsvExport> {
     const where = this.buildWhere({ processingStatus, status, q })
     const total = await this.prisma.track.count({ where })
-    const orderBy = buildSortOrderBy<Prisma.TrackOrderByWithRelationInput>({ sort, order }, [
-      { createdAt: 'desc' },
-      { id: 'desc' },
-    ])
     const rawWhere = this.buildRawWhere({ processingStatus, status, q })
 
     return openCsvExport<AdminTrackRow>({
@@ -229,17 +226,10 @@ export class AdminTracksService {
       auditContext,
       columns: ADMIN_TRACK_EXPORT_COLUMNS,
       total,
-      fetchPage: async (skip, take) => {
-        if (!sort) return this.findAttentionFirstPage(rawWhere, skip, take)
-        const tracks = await this.prisma.track.findMany({
-          where,
-          select: TRACK_ROW_SELECT,
-          orderBy,
-          skip,
-          take,
-        })
-        return tracks.map((track) => this.toRow(track))
-      },
+      fetchPage: (skip, take) =>
+        sort
+          ? this.findSortedPage(where, { sort, order }, skip, take)
+          : this.findAttentionFirstPage(rawWhere, skip, take),
     })
   }
 
@@ -255,23 +245,31 @@ export class AdminTracksService {
     order,
   }: ListTracksInput) {
     const where = this.buildWhere({ processingStatus, status, q })
-    const orderBy = buildSortOrderBy<Prisma.TrackOrderByWithRelationInput>({ sort, order }, [
-      { createdAt: 'desc' },
-      { id: 'desc' },
-    ])
-
-    const [tracks, total] = await Promise.all([
-      this.prisma.track.findMany({
-        where,
-        select: TRACK_ROW_SELECT,
-        orderBy,
-        skip: (page - 1) * limit,
-        take: limit,
-      }),
+    const [data, total] = await Promise.all([
+      this.findSortedPage(where, { sort, order }, (page - 1) * limit, limit),
       this.prisma.track.count({ where }),
     ])
+    return { data, total, page, limit }
+  }
 
-    return { data: tracks.map((track) => this.toRow(track)), total, page, limit }
+  /** One page in the chosen field's order plus the `id` tie-break; the list and export share it. */
+  private async findSortedPage(
+    where: Prisma.TrackWhereInput,
+    sort: SortInput<AdminTracksSortField>,
+    skip: number,
+    take: number,
+  ): Promise<AdminTrackRow[]> {
+    const tracks = await this.prisma.track.findMany({
+      where,
+      select: TRACK_ROW_SELECT,
+      orderBy: buildSortOrderBy<Prisma.TrackOrderByWithRelationInput>(sort, [
+        { createdAt: 'desc' },
+        { id: 'desc' },
+      ]),
+      skip,
+      take,
+    })
+    return tracks.map((track) => this.toRow(track))
   }
 
   /** Fetches full rows for the given ids and restores the id order raw SQL computed. */
@@ -290,22 +288,9 @@ export class AdminTracksService {
     })
   }
 
-  /** Flattens a track (with its artist included) into the operator row shape. */
-  private toRow(track: {
-    id: string
-    title: string
-    artistId: string
-    artist: { username: string }
-    cover: string | null
-    processingStatus: TrackProcessingStatus
-    processingError: string | null
-    processingAttempts: number
-    processingStartedAt: Date | null
-    processingFinishedAt: Date | null
-    deletedAt: Date | null
-    createdAt: Date
-    updatedAt: Date
-  }): AdminTrackRow {
+  /** Flattens a track (with its artist joined) into the operator row shape — explicitly, so a
+   * detail record passed in never leaks its extra columns into the row. */
+  private toRow(track: TrackRowRecord): AdminTrackRow {
     return {
       id: track.id,
       title: track.title,
@@ -346,7 +331,7 @@ export class AdminTracksService {
   }
 
   /**
-   * Runs the find by id operation. Deliberately does not filter `deletedAt` — a soft-deleted
+   * Finds one track by id. Deliberately does not filter `deletedAt` — a soft-deleted
    * track must stay reachable so the operator can review it before deciding to restore it.
    */
   async findById(id: string): Promise<AdminTrackDetail> {
