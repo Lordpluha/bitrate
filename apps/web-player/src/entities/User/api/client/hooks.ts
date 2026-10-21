@@ -14,6 +14,7 @@ import {
   useMutation as useTanStackMutation,
   useQuery as useTanStackQuery,
 } from '@tanstack/react-query'
+import { fetchAllPages } from '@/shared/api/fetchAllPages'
 import {
   followedUsersResponseSchema,
   followingActivityResponseSchema,
@@ -56,19 +57,18 @@ export const useUsers = ({ username, page = 1, limit = 10 }: UseUsersParams) =>
 export const useUserById = (userId?: string) =>
   useTanStackQuery({
     queryKey: apiQueryKeys.users.byId(userId ?? ''),
+    /**
+     * Raw fetch: the generated contract declares no path params for
+     * `GET /users/{id}`, so the typed client cannot fill `{id}`.
+     */
     queryFn: async () => {
-      const { data, response } = await clientFetchClient.GET(
-        '/api/v1/users/{id}',
-        {
-          params: {
-            path: { id: userId ?? '' },
-          },
-        } as never,
+      const response = await fetchWithAuthRefresh(
+        getApiUrl(`/api/v1/users/${encodeURIComponent(userId ?? '')}`),
       )
 
       ensureOkResponse(response, 'Failed to fetch user')
 
-      return publicUserResponseSchema.parse(data)
+      return publicUserResponseSchema.parse(await response.json())
     },
     enabled: !!userId,
   })
@@ -109,17 +109,8 @@ const getFollowedUsersPage = async (page: number) => {
   return followedUsersResponseSchema.parse(data)
 }
 
-export const getAllFollowedUsers = async () => {
-  const firstPage = await getFollowedUsersPage(1)
-  const pageCount = Math.ceil(firstPage.total / firstPage.limit)
-  const remainingPages = await Promise.all(
-    Array.from({ length: Math.max(pageCount - 1, 0) }, (_, index) =>
-      getFollowedUsersPage(index + 2),
-    ),
-  )
-
-  return [firstPage, ...remainingPages].flatMap(({ data }) => data)
-}
+export const getAllFollowedUsers = () =>
+  fetchAllPages({ fetchPage: getFollowedUsersPage })
 
 const useInvalidateFollowedUsers = () => {
   const queryClient = useQueryClient()
