@@ -11,7 +11,7 @@ import {
 } from '@/entities/Friend'
 
 /** Where the actions sit: a Find friends search result, or the Friend requests page. */
-export type FriendRequestActionPlacement = 'requests' | 'search'
+type FriendRequestActionPlacement = 'requests' | 'search'
 
 const actionClassName = 'h-8 gap-1.5 px-3 text-[13px] font-medium'
 

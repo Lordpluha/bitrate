@@ -6,7 +6,7 @@ import { UNAUTHORIZED_ERRORS } from './unauthorized.errors'
  * The raw session token the session guard verified and stored on the request under its cookie
  * name. Only routes behind that guard carry one; a missing token fails closed as unauthorized.
  */
-export function readSessionToken(request: object, kind: TokenRequirement): string {
+function readSessionToken(request: object, kind: TokenRequirement): string {
   const name = kind === 'access' ? process.env.ACCESS_TOKEN_NAME : process.env.REFRESH_TOKEN_NAME
   const token: unknown = name ? Reflect.get(request, name) : undefined
   if (typeof token !== 'string' || !token) {

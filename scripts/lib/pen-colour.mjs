@@ -23,7 +23,7 @@ export function parseHex(hex) {
 }
 
 /** sRGB transfer function: gamma-encoded channel → linear light. */
-export const toLinear = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)
+const toLinear = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)
 
 /** sRGB → OKLab as `[L, a, b]`. */
 export function rgbToOklab({ r, g, b }) {
