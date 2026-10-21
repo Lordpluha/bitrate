@@ -6,6 +6,8 @@ import {
   changeLabel,
   useArtistAnalytics,
 } from '@entities/analytics'
+import { destinationLabels } from '@shared/constants/destinations'
+import { formatDateTimeUtc } from '@shared/lib/date'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
 import { BarChart3, PlugZap } from 'lucide-react'
@@ -16,17 +18,6 @@ const dayFormat = new Intl.DateTimeFormat('en-US', {
   day: 'numeric',
   timeZone: 'UTC',
 })
-const freshnessFormat = new Intl.DateTimeFormat('en-US', {
-  dateStyle: 'medium',
-  timeStyle: 'short',
-  timeZone: 'UTC',
-})
-
-const sourceLabels: Record<string, string> = {
-  SPOTIFY: 'Spotify',
-  APPLE_MUSIC: 'Apple Music',
-  YOUTUBE_MUSIC: 'YouTube Music',
-}
 
 interface AnalyticsViewProps {
   artistId: string
@@ -127,7 +118,7 @@ function AnalyticsBody({ data }: { data: ArtistAnalytics }) {
       <ExternalSources data={data} />
       <p className="text-xs text-text-secondary">
         Source: Bitrate playback by signed-in listeners. Read{' '}
-        {freshnessFormat.format(new Date(data.freshness))} UTC.
+        {formatDateTimeUtc(data.freshness)} UTC.
       </p>
     </div>
   )
@@ -295,7 +286,7 @@ function ExternalSources({ data }: { data: ArtistAnalytics }) {
             className="flex items-center justify-between gap-2 rounded-md border border-border px-3 py-2 text-sm"
             key={item.source}
           >
-            <span>{sourceLabels[item.source] ?? item.source}</span>
+            <span>{destinationLabels[item.source]}</span>
             <span className="flex items-center gap-1 text-xs text-text-secondary">
               <PlugZap aria-hidden="true" className="size-3.5" />
               Not connected
