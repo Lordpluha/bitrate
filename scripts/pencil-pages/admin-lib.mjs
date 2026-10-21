@@ -972,12 +972,25 @@ const tab = (name, on) =>
         height: 48,
         cornerRadius: 24,
         justifyContent: 'center',
+        alignItems: 'start',
+        padding: [14, 0, 0, 0],
         ...(on ? { fill: C.primary, effect: GLOW } : {}),
       },
       [
         part(
           'icon',
           I('house', { width: 20, height: 20, fill: on ? C.primaryForeground : C.mutedForeground }),
+        ),
+        part(
+          'badge',
+          F({
+            name: 'Badge',
+            width: 8,
+            height: 8,
+            cornerRadius: 4,
+            fill: C.magenta500,
+            enabled: false,
+          }),
         ),
       ],
     ),
@@ -987,7 +1000,6 @@ const TABS = [
   ['overview', 'layout-dashboard'],
   ['search', 'search'],
   ['alerts', 'bell'],
-  ['settings', 'sliders-horizontal'],
   ['menu', 'menu'],
 ]
 add(
@@ -998,7 +1010,11 @@ add(
       TABS.map(([k, icon], i) =>
         part(
           `tab_${k}`,
-          use(i ? 'Admin/Tab/Off' : 'Admin/Tab/On', { name: `Tab / ${k}` }, { icon: { icon } }),
+          use(
+            i ? 'Admin/Tab/Off' : 'Admin/Tab/On',
+            { name: `Tab / ${k}` },
+            { icon: { icon }, ...(k === 'alerts' ? { badge: { enabled: true } } : {}) },
+          ),
         ),
       ),
     ),
@@ -1024,9 +1040,7 @@ add(
             Row({ name: 'Brand', width: 'fill_container' }, [
               use('Logo/Lockup', { name: 'Lockup' }),
             ]),
-            iconBtn('search', 'Ghost'),
-            part('bell', use('Admin/Bell', { name: 'Bell' })),
-            iconBtn('menu', 'Ghost'),
+            part('avatar', use('Avatar', { name: 'Avatar' })),
           ],
         ),
       ]),
@@ -1044,7 +1058,6 @@ add(
   ),
 )
 nest('Admin/Shell/Mobile', 'tabs', 'Admin/Tab Bar')
-nest('Admin/Shell/Mobile', 'bell', 'Admin/Bell')
 add(
   comp(
     'Admin/Mobile Menu',

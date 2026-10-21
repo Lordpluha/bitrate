@@ -314,30 +314,30 @@ export function Shell(
   )
   return frame(name, 1440, height, uk ? ukrainian(shell) : shell, scrim)
 }
-/** Phone page: status bar, compact glass top bar, content, the island tab bar. */
+/** Phone page: status bar, glass top bar (logo, avatar), content, the island tab bar. */
 export function MShell(
   name,
   nodes,
   height = 2600,
   { page = 'overview', uk = false, unread = true } = {},
 ) {
-  const tab = page === 'overview' ? 'overview' : 'settings'
+  /* notification settings belong to the alerts tab: the bell's list leads there */
+  const tab = page === 'overview' ? 'overview' : 'alerts'
   const tabs = {}
   for (const [k, icon] of [
     ['overview', 'layout-dashboard'],
-    ['settings', 'sliders-horizontal'],
+    ['alerts', 'bell'],
   ])
     tabs[`tabs.tab_${k}`] = A(
       k === tab ? 'Admin/Tab/On' : 'Admin/Tab/Off',
       { name: `Tab / ${k}` },
-      { icon: { icon } },
+      { icon: { icon }, badge: { enabled: k === 'alerts' && unread } },
     )
   const shell = A(
     'Admin/Shell/Mobile',
     { width: 390, height },
     {
       ...tabs,
-      ...(unread ? {} : { 'bell.badge': { enabled: false } }),
       content: content(nodes, true),
     },
   )
