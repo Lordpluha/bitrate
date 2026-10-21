@@ -287,14 +287,14 @@ export const TONE = {
     return [C.warningSurface, C.warningText]
   },
 }
-const content = (nodes, mobile) =>
+const content = (nodes, mobile, fit) =>
   L(
     {
       name: 'Content',
       layout: 'vertical',
       gap: mobile ? 16 : 22,
       width: 'fill_container',
-      height: 'fill_container',
+      height: fit ? 'fit_content' : 'fill_container',
       /* the override replaces the slot frame, so the phone slot's inset comes along */
       ...(mobile ? { padding: [18, 16, 0, 16], clip: true } : {}),
     },
@@ -314,28 +314,32 @@ export function Shell(
     pocket,
     unread = true,
     scrim = 0,
+    fit = false,
   } = {},
 ) {
+  /* fit: the page grows with its content instead of a fixed height */
   const shell = A(
     collapsed ? 'Admin/Shell/Desktop Collapsed' : 'Admin/Shell/Desktop',
-    { width: 1440, height },
+    { width: 1440, height: fit ? 'fit_content' : height },
     {
+      /* the sidebar stays one screen tall, as the sticky panel in the prototype */
+      ...(fit ? { main: { height: 'fit_content' }, sidebar: { height: 968 } } : {}),
       ...panel({ page, theme, uk, rail: collapsed, hide }),
       ...islandParts(page, pocket, unread),
       /* while the island reports a status, the search yields room instead of being covered */
       ...(pocket ? { search: { width: 260 } } : {}),
       ...(uk ? { 'search.placeholder': { content: 'Search or jump to…' } } : {}),
-      content: content(nodes, false),
+      content: content(nodes, false, fit),
     },
   )
-  return frame(name, 1440, height, uk ? ukrainian(shell) : shell, scrim)
+  return frame(name, 1440, fit ? 'fit_content' : height, uk ? ukrainian(shell) : shell, scrim)
 }
 /** Phone page: status bar, glass top bar (logo, avatar), content, the island tab bar. */
 export function MShell(
   name,
   nodes,
   height = 2600,
-  { page = 'overview', uk = false, unread = true } = {},
+  { page = 'overview', uk = false, unread = true, fit = false } = {},
 ) {
   /* notification settings belong to the alerts tab (the bell's list leads there); sections open from the menu */
   const tab = page === 'overview' ? 'overview' : page === 'notifications' ? 'alerts' : 'menu'
@@ -352,13 +356,13 @@ export function MShell(
     )
   const shell = A(
     'Admin/Shell/Mobile',
-    { width: 390, height },
+    { width: 390, height: fit ? 'fit_content' : height },
     {
       ...tabs,
-      content: content(nodes, true),
+      content: content(nodes, true, fit),
     },
   )
-  return frame(name, 390, height, uk ? ukrainian(shell) : shell)
+  return frame(name, 390, fit ? 'fit_content' : height, uk ? ukrainian(shell) : shell)
 }
 /** The phone menu sheet with the active page. */
 export const Menu = (page = 'overview') =>
