@@ -1,6 +1,7 @@
 'use client'
 
 import { lc } from '../../lib/styles/lc'
+import { DEMO_TRACKS } from '../../model/demoTracks'
 import { useLandingCopy } from '../../model/useLandingCopy'
 
 /** Scene "Discover" — ported from the motion prototype; the landing engine animates it after mount. */
@@ -309,7 +310,7 @@ export const SceneDiscover = () => {
               <span className={lc('cv s cv1')}></span>
               <div className={lc('grow')}>
                 <p className={lc('t-title', '[font-size:12px]')}>
-                  {c('discover.night_signal')}
+                  {DEMO_TRACKS.nightSignal}
                 </p>
                 <p className={lc('t-meta')}>{'3:56'}</p>
               </div>
@@ -363,9 +364,9 @@ export const SceneDiscover = () => {
           className={lc('abs row d-only', 'justify-between')}
           style={{ '--x': '48', '--y': '854', '--w': '1360' }}
         >
-          <span className={lc('sig')}>{c('discover.music_lives_on')}</span>
+          <span className={lc('sig')}>{c('common.music_lives_on')}</span>
           <span className={lc('disc')}>
-            {c('discover.feature_concept_demo_content')}
+            {c('common.feature_concept_demo_content')}
           </span>
         </div>
       </div>

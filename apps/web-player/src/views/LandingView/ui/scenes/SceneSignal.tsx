@@ -3,6 +3,7 @@
 import { ROUTES } from '@shared/routes'
 import Link from 'next/link'
 import { lc } from '../../lib/styles/lc'
+import { DEMO_TRACKS } from '../../model/demoTracks'
 import { useLandingCopy } from '../../model/useLandingCopy'
 import type { SceneProps } from './scene.types'
 
@@ -135,9 +136,9 @@ export const SceneSignal = ({ signedIn }: SceneProps) => {
                         'font-[600] [font-size:22px] leading-[1.1] font-[family-name:var(--font-display)]',
                       )}
                     >
-                      {c('hero.night_signal')}
+                      {DEMO_TRACKS.nightSignal}
                     </p>
-                    <p className={lc('t-meta')}>{c('hero.demo_artist')}</p>
+                    <p className={lc('t-meta')}>{c('common.demo_artist')}</p>
                   </div>
                   <svg aria-hidden="true" className={lc('i', 'text-accent')}>
                     <use href="#i-heart" />
@@ -191,7 +192,7 @@ export const SceneSignal = ({ signedIn }: SceneProps) => {
                   <span className={lc('cv s cv2')}></span>
                   <div className={lc('grow')}>
                     <p className={lc('t-title')}>
-                      {c('hero.echoes_in_motion')}
+                      {DEMO_TRACKS.echoesInMotion}
                     </p>
                     <p className={lc('t-meta')}>{c('hero.lumen_choir')}</p>
                   </div>
@@ -200,7 +201,7 @@ export const SceneSignal = ({ signedIn }: SceneProps) => {
                 <div className={lc('qrow')}>
                   <span className={lc('cv s cv3')}></span>
                   <div className={lc('grow')}>
-                    <p className={lc('t-title')}>{c('hero.static_lines')}</p>
+                    <p className={lc('t-title')}>{DEMO_TRACKS.staticLines}</p>
                     <p className={lc('t-meta')}>{c('hero.kite_harbor')}</p>
                   </div>
                   <span className={lc('mono')}>{'3:47'}</span>
@@ -208,7 +209,7 @@ export const SceneSignal = ({ signedIn }: SceneProps) => {
                 <div className={lc('qrow')}>
                   <span className={lc('cv s cv4')}></span>
                   <div className={lc('grow')}>
-                    <p className={lc('t-title')}>{c('hero.drift_control')}</p>
+                    <p className={lc('t-title')}>{DEMO_TRACKS.driftControl}</p>
                     <p className={lc('t-meta')}>{c('hero.mira_sol')}</p>
                   </div>
                   <span className={lc('mono')}>{'3:12'}</span>
@@ -216,7 +217,7 @@ export const SceneSignal = ({ signedIn }: SceneProps) => {
                 <div className={lc('qrow')}>
                   <span className={lc('cv s cv1')}></span>
                   <div className={lc('grow')}>
-                    <p className={lc('t-title')}>{c('hero.afterglow')}</p>
+                    <p className={lc('t-title')}>{DEMO_TRACKS.afterglow}</p>
                     <p className={lc('t-meta')}>{c('hero.nova_the_static')}</p>
                   </div>
                   <span className={lc('mono')}>{'3:42'}</span>

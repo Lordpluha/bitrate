@@ -1,6 +1,7 @@
 'use client'
 
 import { lc } from '../../lib/styles/lc'
+import { DEMO_TRACKS } from '../../model/demoTracks'
 import { useLandingCopy } from '../../model/useLandingCopy'
 
 /** Scene "Workshop" — ported from the motion prototype; the landing engine animates it after mount. */
@@ -214,7 +215,7 @@ export const SceneWorkshop = () => {
                     <span className={lc('r')}>{'#1'}</span>
                     <span className={lc('cv s cv1')}></span>
                     <div className={lc('grow')}>
-                      <p className={lc('t-title')}>{c('workshop.afterglow')}</p>
+                      <p className={lc('t-title')}>{DEMO_TRACKS.afterglow}</p>
                       <p className={lc('t-meta')}>
                         {c('workshop.nova_the_static_3_42')}
                       </p>
@@ -225,9 +226,7 @@ export const SceneWorkshop = () => {
                     <span className={lc('r')}>{'#2'}</span>
                     <span className={lc('cv s cv2')}></span>
                     <div className={lc('grow')}>
-                      <p className={lc('t-title')}>
-                        {c('workshop.night_signal')}
-                      </p>
+                      <p className={lc('t-title')}>{DEMO_TRACKS.nightSignal}</p>
                       <p className={lc('t-meta')}>
                         {c('workshop.mira_sol_3_56')}
                       </p>
@@ -238,9 +237,7 @@ export const SceneWorkshop = () => {
                     <span className={lc('r')}>{'#3'}</span>
                     <span className={lc('cv s cv3')}></span>
                     <div className={lc('grow')}>
-                      <p className={lc('t-title')}>
-                        {c('workshop.static_lines')}
-                      </p>
+                      <p className={lc('t-title')}>{DEMO_TRACKS.staticLines}</p>
                       <p className={lc('t-meta')}>
                         {c('workshop.kite_harbor_3_47')}
                       </p>
@@ -252,7 +249,7 @@ export const SceneWorkshop = () => {
                     <span className={lc('cv s cv4')}></span>
                     <div className={lc('grow')}>
                       <p className={lc('t-title')}>
-                        {c('workshop.echoes_in_motion')}
+                        {DEMO_TRACKS.echoesInMotion}
                       </p>
                       <p className={lc('t-meta')}>
                         {c('workshop.lumen_choir_4_21')}

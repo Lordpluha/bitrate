@@ -1,6 +1,7 @@
 'use client'
 
 import { lc } from '../../lib/styles/lc'
+import { DEMO_TRACKS } from '../../model/demoTracks'
 import { useLandingCopy } from '../../model/useLandingCopy'
 
 /** Scene "Social" — ported from the motion prototype; the landing engine animates it after mount. */
@@ -157,7 +158,7 @@ export const SceneSocial = () => {
                         'font-[700] [font-size:30px] leading-[1.05] font-[family-name:var(--font-display)] mt-[6px]',
                       )}
                     >
-                      {c('social.night_signal')}
+                      {DEMO_TRACKS.nightSignal}
                     </p>
                     <p className={lc('t-meta')}>
                       {c('social.demo_artist_3_56_24_comments')}
@@ -217,7 +218,7 @@ export const SceneSocial = () => {
                     <div>
                       <p className={lc('t-title')}>
                         <span className={lc('ts')}>{'2:28'}</span>
-                        {c('social.demo_artist')}{' '}
+                        {c('common.demo_artist')}{' '}
                         <span
                           className={lc(
                             'pill acc',
@@ -256,9 +257,9 @@ export const SceneSocial = () => {
           className={lc('abs row d-only', 'justify-between')}
           style={{ '--x': '48', '--y': '854', '--w': '1360' }}
         >
-          <span className={lc('sig')}>{c('social.music_lives_on')}</span>
+          <span className={lc('sig')}>{c('common.music_lives_on')}</span>
           <span className={lc('disc')}>
-            {c('social.feature_concept_demo_content')}
+            {c('common.feature_concept_demo_content')}
           </span>
         </div>
       </div>

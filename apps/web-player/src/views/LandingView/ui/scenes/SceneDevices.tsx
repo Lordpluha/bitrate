@@ -1,6 +1,7 @@
 'use client'
 
 import { lc } from '../../lib/styles/lc'
+import { DEMO_TRACKS } from '../../model/demoTracks'
 import { useLandingCopy } from '../../model/useLandingCopy'
 
 /** Scene "Devices" — ported from the motion prototype; the landing engine animates it after mount. */
@@ -160,9 +161,9 @@ export const SceneDevices = () => {
                         'font-[600] [font-size:24px] leading-[1.1] font-[family-name:var(--font-display)]',
                       )}
                     >
-                      {c('devices.night_signal')}
+                      {DEMO_TRACKS.nightSignal}
                     </p>
-                    <p className={lc('t-meta')}>{c('devices.demo_artist')}</p>
+                    <p className={lc('t-meta')}>{c('common.demo_artist')}</p>
                     <span className={lc('grow')}></span>
                     <div className={lc('prog')}>
                       <i className={lc('sync-bar')}></i>
@@ -180,7 +181,7 @@ export const SceneDevices = () => {
                   <span className={lc('cv s cv2')}></span>
                   <div className={lc('grow')}>
                     <p className={lc('t-title')}>
-                      {c('devices.echoes_in_motion')}
+                      {DEMO_TRACKS.echoesInMotion}
                     </p>
                     <p className={lc('t-meta')}>{c('devices.added_by_maya')}</p>
                   </div>
@@ -189,7 +190,7 @@ export const SceneDevices = () => {
                 <div className={lc('qrow')}>
                   <span className={lc('cv s cv3')}></span>
                   <div className={lc('grow')}>
-                    <p className={lc('t-title')}>{c('devices.static_lines')}</p>
+                    <p className={lc('t-title')}>{DEMO_TRACKS.staticLines}</p>
                     <p className={lc('t-meta')}>
                       {c('devices.added_by_jonah')}
                     </p>
@@ -241,9 +242,9 @@ export const SceneDevices = () => {
                 'font-[600] [font-size:18px] leading-[1.1] font-[family-name:var(--font-display)] mt-[16px]',
               )}
             >
-              {c('devices.night_signal')}
+              {DEMO_TRACKS.nightSignal}
             </p>
-            <p className={lc('t-meta')}>{c('devices.demo_artist')}</p>
+            <p className={lc('t-meta')}>{c('common.demo_artist')}</p>
             <div className={lc('prog', 'mt-[16px]')}>
               <i className={lc('sync-bar')}></i>
             </div>
@@ -321,9 +322,9 @@ export const SceneDevices = () => {
           className={lc('abs row d-only', 'justify-between')}
           style={{ '--x': '48', '--y': '854', '--w': '1360' }}
         >
-          <span className={lc('sig')}>{c('devices.music_lives_on')}</span>
+          <span className={lc('sig')}>{c('common.music_lives_on')}</span>
           <span className={lc('disc')}>
-            {c('devices.feature_concept_demo_content')}
+            {c('common.feature_concept_demo_content')}
           </span>
         </div>
       </div>
