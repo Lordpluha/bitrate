@@ -1,30 +1,24 @@
-import { beforeEach, describe, expect, it, jest } from '@jest/globals'
+import { beforeEach, describe, expect, it } from '@jest/globals'
 import { CSV_BOM } from '@modules/admin/shared'
 import { readCsvExport } from '@modules/admin/shared/__tests__/read-csv-export'
-import type { TrackUploadService } from '@modules/tracks'
 import type { Prisma } from '@prisma/client'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 
-/** `TrackUploadService` pulls in `music-metadata`, which cannot be resolved under Jest. */
-jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
-
 import { buildTrackWithArtist } from './__tests__/fixtures/admin-tracks.fixtures'
-import { AdminTracksService } from './admin-tracks.service'
+import { AdminTrackListService } from './admin-track-list.service'
 
 const STAFF_ID = 'staff-1'
 const HEADER =
   'id,title,artistId,artistUsername,processingStatus,processingError,processingAttempts,processingFinishedAt,deletedAt,createdAt\r\n'
 
-describe('AdminTracksService.exportCsv', () => {
-  let service: AdminTracksService
+describe('AdminTrackListService.exportCsv', () => {
+  let service: AdminTrackListService
   let prisma: PrismaMock
 
   beforeEach(() => {
     resetPrismaMock()
     prisma = prismaMock
-    service = new AdminTracksService(prisma, {
-      reprocess: jest.fn(),
-    } as unknown as TrackUploadService)
+    service = new AdminTrackListService(prisma)
   })
 
   it('writes the approved header and the artist username from the join', async () => {
