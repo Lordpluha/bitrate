@@ -15,6 +15,7 @@ import {
   isTrackStuck,
   type TrackDetail,
 } from '@domain/track'
+import { ResourceNotFoundError } from '@domain/shared'
 import { ConfirmAction, TrackAudioPlayer } from '@presentation/components'
 import {
   isStaleStateError,
@@ -159,8 +160,9 @@ export class TrackDetailPage {
     try {
       this.track.set(await this.getTrack.execute(this.trackId))
       this.notFound.set(false)
-    } catch {
-      this.notFound.set(true)
+    } catch (error) {
+      if (error instanceof ResourceNotFoundError) this.notFound.set(true)
+      else this.failure.set('Could not load this track.')
     } finally {
       this.loading.set(false)
     }

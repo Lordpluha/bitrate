@@ -8,6 +8,7 @@ import {
   type ModerationSubject,
   type ReportDetail,
 } from '@domain/moderation'
+import { ResourceNotFoundError } from '@domain/shared'
 import { LocalizedDatePipe } from '@presentation/pipes'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
@@ -88,8 +89,9 @@ export class ReportDetailPage {
     try {
       this.report.set(await this.getReport.execute(this.reportId))
       this.notFound.set(false)
-    } catch {
-      this.notFound.set(true)
+    } catch (error) {
+      if (error instanceof ResourceNotFoundError) this.notFound.set(true)
+      else this.failure.set('Could not load this report.')
     } finally {
       this.loading.set(false)
     }

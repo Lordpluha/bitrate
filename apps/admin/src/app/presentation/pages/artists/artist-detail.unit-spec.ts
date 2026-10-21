@@ -12,6 +12,7 @@ import {
 } from '@application/artists'
 import { SessionStore } from '@application/session'
 import type { ArtistDetail } from '@domain/artist'
+import { ResourceNotFoundError } from '@domain/shared'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ArtistDetailPage } from './artist-detail'
 
@@ -115,8 +116,8 @@ describe('ArtistDetailPage', () => {
     expect(verifyButton).not.toBeUndefined()
   })
 
-  it('shows the not-found message when the load rejects', async () => {
-    getArtist.mockRejectedValue(new Error('404'))
+  it('shows the not-found message when the artist does not exist', async () => {
+    getArtist.mockRejectedValue(new ResourceNotFoundError())
     create()
 
     const fixture = TestBed.createComponent(ArtistDetailPage)
@@ -125,5 +126,17 @@ describe('ArtistDetailPage', () => {
     expect(
       (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent,
     ).toContain('could not be found')
+  })
+
+  it('shows a load failure, not not-found, when the load fails for another reason', async () => {
+    getArtist.mockRejectedValue(new Error('500'))
+    create()
+
+    const fixture = TestBed.createComponent(ArtistDetailPage)
+    await fixture.whenStable()
+
+    const alert = (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')
+    expect(alert?.textContent).toContain('Could not load this artist.')
+    expect(alert?.textContent).not.toContain('could not be found')
   })
 })

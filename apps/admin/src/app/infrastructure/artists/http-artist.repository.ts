@@ -15,6 +15,7 @@ import {
 import type { Page, TakeDownInput } from '@domain/shared'
 import { ADMIN_API } from '../http/api.config'
 import { buildTakeDownBody, revokeSessionsResultDto } from '../http/take-down.dto'
+import { toReadError } from '../http/to-read-error'
 import { toResourceWriteError } from '../http/to-resource-write-error'
 import { fetchPage } from '../http/wire-page'
 import { artistAlbumPageDto, artistTrackPageDto } from './artist-publications.dto'
@@ -40,7 +41,12 @@ export class HttpArtistRepository extends ArtistRepository {
   }
 
   override async getById(id: string): Promise<ArtistDetail> {
-    const response = await firstValueFrom(this.http.get<unknown>(`${this.base}/${id}`))
+    let response: unknown
+    try {
+      response = await firstValueFrom(this.http.get<unknown>(`${this.base}/${id}`))
+    } catch (error) {
+      throw toReadError(error)
+    }
 
     return toArtistDetail(artistDetailDto.parse(response))
   }
