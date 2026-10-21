@@ -14,7 +14,6 @@ import {
   useDeclineFriendRequest,
   useFriendRequests,
 } from '@/entities/Friend'
-import { showApiErrorToast } from '@/shared/api/feedback'
 
 type RequestsTab = 'incoming' | 'outgoing'
 
@@ -38,11 +37,7 @@ const ReceivedActions = ({
         className={actionClassName}
         disabled={accept.isPending || decline.isPending}
         onClick={() =>
-          accept.mutate(request.id, {
-            onError: (error) =>
-              showApiErrorToast(error, 'Unable to accept the request.'),
-            onSuccess: () => onAccepted(name),
-          })
+          accept.mutate(request.id, { onSuccess: () => onAccepted(name) })
         }
         variant="default"
       >
@@ -52,12 +47,7 @@ const ReceivedActions = ({
         aria-label={`Decline ${name}’s request`}
         className={cn(actionClassName, 'max-sm:size-8 max-sm:px-0')}
         disabled={accept.isPending || decline.isPending}
-        onClick={() =>
-          decline.mutate(request.id, {
-            onError: (error) =>
-              showApiErrorToast(error, 'Unable to decline the request.'),
-          })
-        }
+        onClick={() => decline.mutate(request.id)}
         variant="outline"
       >
         <X className="size-4 sm:hidden" />
@@ -74,12 +64,7 @@ const CancelAction = ({ request }: { request: FriendRequest }) => {
     <Button
       className={actionClassName}
       disabled={cancel.isPending}
-      onClick={() =>
-        cancel.mutate(request.id, {
-          onError: (error) =>
-            showApiErrorToast(error, 'Unable to cancel the request.'),
-        })
-      }
+      onClick={() => cancel.mutate(request.id)}
       variant="ghost"
     >
       Cancel request

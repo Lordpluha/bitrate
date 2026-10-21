@@ -35,7 +35,6 @@ import {
   useFriends,
   useRemoveFriend,
 } from '@/entities/Friend'
-import { showApiErrorToast } from '@/shared/api/feedback'
 import { Z_INDEX_CLASS } from '@/shared/constants'
 
 type FriendsTab = 'all' | 'online'
@@ -72,15 +71,7 @@ const FriendActions = ({ friend }: { friend: Friend }) => {
         <Button
           className="h-8 px-3 text-[13px]"
           disabled={removeFriend.isPending}
-          onClick={() =>
-            removeFriend.mutate(friend.user.id, {
-              onError: (error) =>
-                showApiErrorToast(
-                  error,
-                  `Unable to remove ${friend.user.username}.`,
-                ),
-            })
-          }
+          onClick={() => removeFriend.mutate(friend.user.id)}
           variant="destructive"
         >
           Remove friend
