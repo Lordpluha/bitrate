@@ -1,6 +1,7 @@
 'use client'
 
 import { lc } from '../../lib/styles/lc'
+import { DEMO_TRACKS } from '../../model/demoTracks'
 import { useLandingCopy } from '../../model/useLandingCopy'
 
 /** Scene "Library" — ported from the motion prototype; the landing engine animates it after mount. */
@@ -123,14 +124,14 @@ export const SceneLibrary = () => {
                   <span className={lc('mono')}>{'1'}</span>
                   <span className={lc('cv s cv1')}></span>
                   <span>
-                    <b>{c('library.night_signal')}</b>
+                    <b>{DEMO_TRACKS.nightSignal}</b>
                     <br />
                     <span className={lc('t-meta')}>
                       {c('library.mira_sol')}
                     </span>
                   </span>
                   <span className={lc('t-meta')}>
-                    {c('library.night_signal')}
+                    {DEMO_TRACKS.nightSignal}
                   </span>
                   <span className={lc('mono')}>{'3:56'}</span>
                 </div>
@@ -159,7 +160,7 @@ export const SceneLibrary = () => {
                       {c('library.nova_the_static')}
                     </span>
                   </span>
-                  <span className={lc('t-meta')}>{c('library.afterglow')}</span>
+                  <span className={lc('t-meta')}>{DEMO_TRACKS.afterglow}</span>
                   <span className={lc('mono')}>{'3:21'}</span>
                 </div>
                 <div className={lc('lrow lres')}>
@@ -173,7 +174,7 @@ export const SceneLibrary = () => {
                     </span>
                   </span>
                   <span className={lc('t-meta')}>
-                    {c('library.echoes_in_motion')}
+                    {DEMO_TRACKS.echoesInMotion}
                   </span>
                   <span className={lc('mono')}>{'4:48'}</span>
                 </div>
@@ -267,9 +268,9 @@ export const SceneLibrary = () => {
           className={lc('abs row d-only', 'justify-between')}
           style={{ '--x': '48', '--y': '854', '--w': '1360' }}
         >
-          <span className={lc('sig')}>{c('library.music_lives_on')}</span>
+          <span className={lc('sig')}>{c('common.music_lives_on')}</span>
           <span className={lc('disc')}>
-            {c('library.feature_concept_demo_content')}
+            {c('common.feature_concept_demo_content')}
           </span>
         </div>
       </div>

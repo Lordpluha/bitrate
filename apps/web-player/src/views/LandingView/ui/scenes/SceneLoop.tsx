@@ -1,6 +1,7 @@
 'use client'
 
 import { lc } from '../../lib/styles/lc'
+import { DEMO_TRACKS } from '../../model/demoTracks'
 import { useLandingCopy } from '../../model/useLandingCopy'
 
 /** Scene "Loop" — ported from the motion prototype; the landing engine animates it after mount. */
@@ -74,8 +75,8 @@ export const SceneLoop = () => {
                   )}
                 ></span>
                 <div className={lc('grow')}>
-                  <p className={lc('t-title')}>{c('loop.night_signal')}</p>
-                  <p className={lc('t-meta')}>{c('loop.demo_artist')}</p>
+                  <p className={lc('t-title')}>{DEMO_TRACKS.nightSignal}</p>
+                  <p className={lc('t-meta')}>{c('common.demo_artist')}</p>
                 </div>
                 <svg aria-hidden="true" className={lc('i', 'text-accent')}>
                   <use href="#i-heart" />
@@ -166,8 +167,8 @@ export const SceneLoop = () => {
               <div className={lc('qrow')}>
                 <span className={lc('cv s cv1')}></span>
                 <div className={lc('grow')}>
-                  <p className={lc('t-title')}>{c('loop.night_signal')}</p>
-                  <p className={lc('t-meta')}>{c('loop.demo_artist')}</p>
+                  <p className={lc('t-title')}>{DEMO_TRACKS.nightSignal}</p>
+                  <p className={lc('t-meta')}>{c('common.demo_artist')}</p>
                 </div>
                 <svg
                   aria-hidden="true"
@@ -179,7 +180,7 @@ export const SceneLoop = () => {
               <div className={lc('qrow')}>
                 <span className={lc('cv s cv3')}></span>
                 <div className={lc('grow')}>
-                  <p className={lc('t-title')}>{c('loop.static_lines')}</p>
+                  <p className={lc('t-title')}>{DEMO_TRACKS.staticLines}</p>
                   <p className={lc('t-meta')}>{c('loop.kite_harbor')}</p>
                 </div>
                 <svg
@@ -241,7 +242,7 @@ export const SceneLoop = () => {
               <div className={lc('qrow')}>
                 <span className={lc('cv s cv1')}></span>
                 <div className={lc('grow')}>
-                  <p className={lc('t-title')}>{c('loop.night_signal')}</p>
+                  <p className={lc('t-title')}>{DEMO_TRACKS.nightSignal}</p>
                   <p className={lc('t-meta')}>{c('loop.played_3')}</p>
                 </div>
                 <span className={lc('mono')}>{'21:40'}</span>
@@ -249,7 +250,7 @@ export const SceneLoop = () => {
               <div className={lc('qrow')}>
                 <span className={lc('cv s cv4')}></span>
                 <div className={lc('grow')}>
-                  <p className={lc('t-title')}>{c('loop.drift_control')}</p>
+                  <p className={lc('t-title')}>{DEMO_TRACKS.driftControl}</p>
                   <p className={lc('t-meta')}>{c('loop.from_night_drive')}</p>
                 </div>
                 <span className={lc('mono')}>{'20:12'}</span>
@@ -260,7 +261,7 @@ export const SceneLoop = () => {
               <div className={lc('qrow')}>
                 <span className={lc('cv s cv2')}></span>
                 <div className={lc('grow')}>
-                  <p className={lc('t-title')}>{c('loop.echoes_in_motion')}</p>
+                  <p className={lc('t-title')}>{DEMO_TRACKS.echoesInMotion}</p>
                   <p className={lc('t-meta')}>{c('loop.album')}</p>
                 </div>
                 <span className={lc('mono')}>{'23:05'}</span>
@@ -275,7 +276,7 @@ export const SceneLoop = () => {
           <span className={lc('disc')}>
             {c('loop.product_preview_demonstration_library')}
           </span>
-          <span className={lc('sig')}>{c('loop.music_lives_on')}</span>
+          <span className={lc('sig')}>{c('common.music_lives_on')}</span>
         </div>
       </div>
     </section>

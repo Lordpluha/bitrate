@@ -100,7 +100,9 @@ export const SceneStart = ({ signedIn }: SceneProps) => {
                 {c('cta.playback_is_the_product')}
               </span>
             </span>
-            <span className={lc('sig d-only')}>{c('cta.music_lives_on')}</span>
+            <span className={lc('sig d-only')}>
+              {c('common.music_lives_on')}
+            </span>
             <span className={lc('row', 'gap-[24px]')}>
               {!signedIn && (
                 <Link className={lc('ulink')} href={ROUTES.auth.login}>

@@ -2,6 +2,9 @@ import type { LandingCatalog } from './en'
 
 /** Polish landing copy. Keys left out (track, artist and people names) fall back to English. */
 export const pl: LandingCatalog = {
+  'common.music_lives_on': 'MUZYKA TRWA',
+  'common.feature_concept_demo_content': 'Koncepcja funkcji · Treści demo',
+  'common.demo_artist': 'Artysta demo',
   'hero.your_music_already_where_you_are': 'Twoja muzyka już tam, gdzie ty',
   'hero.web_player': 'Odtwarzacz w przeglądarce',
   'hero.your_music': 'Twoja muzyka',
@@ -18,7 +21,6 @@ export const pl: LandingCatalog = {
   'hero.now_playing': 'TERAZ GRA',
   'hero.preview_session': 'SESJA PODGLĄDU',
   'hero.signal_stable': 'SYGNAŁ STABILNY',
-  'hero.demo_artist': 'Artysta demo',
   'hero.up_next': 'NASTĘPNE',
   'hero.clear': 'Wyczyść',
   'hero.source': 'ŹRÓDŁO',
@@ -36,7 +38,6 @@ export const pl: LandingCatalog = {
   'loop.play_without_losing_focus': 'Słuchaj bez utraty skupienia',
   'loop.the_controls_you_need_within_reach':
     'Potrzebne sterowanie zawsze pod ręką.',
-  'loop.demo_artist': 'Artysta demo',
   'loop.save_what_matters': 'Zapisuj to, co ważne',
   'loop.build_a_library_that_sounds_more_like_yo':
     'Zbuduj bibliotekę, która brzmi bardziej jak ty.',
@@ -53,7 +54,6 @@ export const pl: LandingCatalog = {
   'loop.album': 'Album',
   'loop.product_preview_demonstration_library':
     'Podgląd produktu · Biblioteka demonstracyjna',
-  'loop.music_lives_on': 'MUZYKA TRWA',
   'workshop.start_with_a_feeling_finish_with_your_pl':
     'Zacznij od nastroju, skończ na playliście',
   'workshop.more_music_more_you': 'Więcej muzyki. Więcej ciebie.',
@@ -105,13 +105,11 @@ export const pl: LandingCatalog = {
     'Mniej bałaganu. Więcej tego, czego używasz.',
   'rules.change_the_layout_choose_your_tools_find':
     'Zmień układ. Wybierz narzędzia. Znajdź swój rytm.',
-  'rules.music_lives_on': 'MUZYKA TRWA',
   'rules.home': 'Start',
   'rules.library': 'Biblioteka',
   'rules.discover': 'Odkrywaj',
   'rules.search': 'Szukaj…',
   'rules.now_playing': 'TERAZ GRA',
-  'rules.demo_artist': 'Artysta demo',
   'rules.library_2': 'BIBLIOTEKA',
   'rules.liked_songs': 'Polubione utwory',
   'rules.128_tracks': '128 utworów',
@@ -136,7 +134,6 @@ export const pl: LandingCatalog = {
   'rules.saved_to_this_device_reset_any_time':
     'Zapisano na tym urządzeniu. Możesz to zresetować w każdej chwili.',
   'rules.floating_queue_2': 'PŁYWAJĄCA KOLEJKA',
-  'rules.feature_concept_demo_content': 'Koncepcja funkcji · Treści demo',
   'library.a_library_with_a_memory': 'Biblioteka z pamięcią',
   'library.your_collection_connected': 'Twoja kolekcja, połączona',
   'library.a_library_with': 'Biblioteka',
@@ -175,8 +172,6 @@ export const pl: LandingCatalog = {
   'library.restore_this_version': 'Przywróć tę wersję',
   'library.your_current_version_stays_in_history':
     'Bieżąca wersja zostanie w historii.',
-  'library.music_lives_on': 'MUZYKA TRWA',
-  'library.feature_concept_demo_content': 'Koncepcja funkcji · Treści demo',
   'discover.follow_the_sound': 'Podążaj za dźwiękiem',
   'discover.home': 'Start',
   'discover.discover': 'Odkrywaj',
@@ -202,8 +197,6 @@ export const pl: LandingCatalog = {
   'discover.explore_this_artist': 'Poznaj artystę',
   'discover.your_explored_route': 'Twoja trasa',
   'discover.3_steps_follow_the_journey': '3 kroki · Podążaj trasą',
-  'discover.music_lives_on': 'MUZYKA TRWA',
-  'discover.feature_concept_demo_content': 'Koncepcja funkcji · Treści demo',
   'devices.same_queue_new_scene': 'Ta sama kolejka, nowa scena',
   'devices.keep_the_session_going': 'Kontynuuj sesję',
   'devices.same_queue': 'Ta sama kolejka.',
@@ -218,7 +211,6 @@ export const pl: LandingCatalog = {
   'devices.library': 'Biblioteka',
   'devices.jam_after_hours': 'Jam: After hours',
   'devices.now_playing_in_sync': 'TERAZ GRA · W SYNCHRONIZACJI',
-  'devices.demo_artist': 'Artysta demo',
   'devices.up_next_shared_queue': 'NASTĘPNE · WSPÓLNA KOLEJKA',
   'devices.added_by_maya': 'Dodała Maya',
   'devices.added_by_jonah': 'Dodał Jonah',
@@ -226,8 +218,6 @@ export const pl: LandingCatalog = {
   'devices.ready_to_play': 'Gotowy do odtwarzania',
   'devices.desktop_playing': 'Komputer · Odtwarza',
   'devices.move_playback_to_this_phone': 'Przenieś odtwarzanie na ten telefon',
-  'devices.music_lives_on': 'MUZYKA TRWA',
-  'devices.feature_concept_demo_content': 'Koncepcja funkcji · Treści demo',
   'social.beyond_the_play_button': 'Więcej niż przycisk odtwarzania',
   'social.music_is_a_conversation': 'Muzyka to rozmowa',
   'social.beyond_the': 'Więcej niż',
@@ -250,14 +240,11 @@ export const pl: LandingCatalog = {
     'To narastanie syntezatora — właśnie tu wszystko się otwiera.',
   'social.sounds_like_the_whole_city_at_2_am':
     'Brzmi jak całe miasto o 2 w nocy.',
-  'social.demo_artist': 'Artysta demo',
   'social.artist': 'Artysta',
   'social.recorded_that_part_in_one_take_glad_it_l':
     'Nagrałem tę część za jednym podejściem. Cieszę się, że trafia.',
   'social.comment_at_1_38': 'Komentarz w 1:38…',
   'social.post': 'Opublikuj',
-  'social.music_lives_on': 'MUZYKA TRWA',
-  'social.feature_concept_demo_content': 'Koncepcja funkcji · Treści demo',
   'partners.our_partners': 'Nasi partnerzy',
   'partners.partners_who_keep': 'Partnerzy, dzięki którym',
   'partners.the': '',
@@ -266,7 +253,6 @@ export const pl: LandingCatalog = {
     'Wytwórnie, studia i serwisy, z którymi pracujemy. Złap jeden i rzuć — odbije się.',
   'partners.drag_throw_squeeze': 'PRZECIĄGAJ · RZUCAJ · ŚCISKAJ',
   'partners.become_a_partner': 'Zostań partnerem',
-  'partners.music_lives_on': 'MUZYKA TRWA',
   'partners.placeholder_marks_replace_with_real_part':
     'Tymczasowe znaki — zastąp prawdziwymi logo partnerów',
   'team.about_our_team': 'O naszym zespole',
@@ -279,7 +265,6 @@ export const pl: LandingCatalog = {
   'team.palette': 'paleta',
   'team.join_us': 'Dołącz do nas',
   'team.how_we_work': 'Jak pracujemy',
-  'team.music_lives_on': 'MUZYKA TRWA',
   'team.stack_bubbles_show_where_each_technology':
     'Bańki stosu pokazują, gdzie w repozytorium jest każda technologia',
   'cta.pick_up_where_the_last_track_left_off':
@@ -294,15 +279,10 @@ export const pl: LandingCatalog = {
   'cta.energy_carries_on_so_does_your_queue':
     'ENERGIA TRWA. TWOJA KOLEJKA TEŻ.',
   'cta.playback_is_the_product': 'Odtwarzanie to nasz produkt.',
-  'cta.music_lives_on': 'MUZYKA TRWA',
   'cta.log_in': 'Zaloguj się',
   'cta.create_account': 'Załóż konto',
   'cta.player_preview': 'Podgląd odtwarzacza',
   'cta.legal': 'Informacje prawne',
-  'cta.system_status': 'Stan systemu',
-  'cta.operational': 'Działa',
-  'cta.status_page': 'Strona stanu ↗',
-  'cta.all_systems_operational': 'Wszystkie systemy działają',
   'chrome.home': 'Strona główna Bitrate',
   'chrome.nav': 'Główna',
   'chrome.web_player': 'Odtwarzacz w przeglądarce',
@@ -316,7 +296,6 @@ export const pl: LandingCatalog = {
   'chrome.scenes': 'Sceny',
   'chrome.go_to': 'Przejdź do: {scene}',
   'chrome.tuning_in': 'DOSTRAJANIE…',
-  'chrome.menu': 'Menu',
   'status.label': 'Stan systemu',
   'status.checking': 'Sprawdzanie…',
   'status.operational': 'Wszystkie systemy działają',
@@ -328,7 +307,6 @@ export const pl: LandingCatalog = {
   'status.state_checking': 'Sprawdzanie',
   'status.checked': 'Sprawdzono o {time}',
   'status.never': 'Jeszcze nie sprawdzono',
-  'status.page': 'Strona stanu ↗',
   'status.toggle': 'Pokaż stan systemu',
   'assistant.open': 'Otwórz asystenta Bitrate',
   'assistant.close': 'Zamknij asystenta',

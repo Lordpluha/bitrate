@@ -67,7 +67,7 @@ export const ScenePartners = () => {
           className={lc('abs row d-only', 'justify-between')}
           style={{ '--x': '60', '--y': '854', '--w': '1320' }}
         >
-          <span className={lc('sig')}>{c('partners.music_lives_on')}</span>
+          <span className={lc('sig')}>{c('common.music_lives_on')}</span>
           <span className={lc('disc')}>
             {c('partners.placeholder_marks_replace_with_real_part')}
           </span>

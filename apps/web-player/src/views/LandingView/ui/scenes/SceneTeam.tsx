@@ -79,7 +79,7 @@ export const SceneTeam = () => {
           className={lc('abs row d-only', 'justify-between')}
           style={{ '--x': '60', '--y': '854', '--w': '1320' }}
         >
-          <span className={lc('sig')}>{c('team.music_lives_on')}</span>
+          <span className={lc('sig')}>{c('common.music_lives_on')}</span>
           <span className={lc('disc')}>
             {c('team.stack_bubbles_show_where_each_technology')}
           </span>

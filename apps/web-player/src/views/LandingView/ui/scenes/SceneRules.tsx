@@ -1,6 +1,7 @@
 'use client'
 
 import { lc } from '../../lib/styles/lc'
+import { DEMO_TRACKS } from '../../model/demoTracks'
 import { useLandingCopy } from '../../model/useLandingCopy'
 
 /** Scene "Your rules" — ported from the motion prototype; the landing engine animates it after mount. */
@@ -52,7 +53,7 @@ export const SceneRules = () => {
           className={lc('abs sig d-only')}
           style={{ '--x': '72', '--y': '834', '--w': '200' }}
         >
-          {c('rules.music_lives_on')}
+          {c('common.music_lives_on')}
         </span>
         <div
           className={lc(
@@ -114,10 +115,10 @@ export const SceneRules = () => {
                     'font-[600] [font-size:18px] leading-[1] font-[family-name:var(--font-display)]',
                   )}
                 >
-                  {c('rules.night_signal')}
+                  {DEMO_TRACKS.nightSignal}
                 </p>
                 <p className={lc('t-meta', 'mt-[-8px]')}>
-                  {c('rules.demo_artist')}
+                  {c('common.demo_artist')}
                 </p>
                 <div className={lc('prog')}>
                   <i className={lc('anim-prog')}></i>
@@ -320,7 +321,7 @@ export const SceneRules = () => {
                     className={lc('cv s cv2', 'w-[32px]! h-[32px]!')}
                   ></span>
                   <p className={lc('t-title', '[font-size:12px]')}>
-                    {c('rules.echoes_in_motion')}
+                    {DEMO_TRACKS.echoesInMotion}
                   </p>
                 </div>
                 <div className={lc('qrow', 'p-[8px_4px]')}>
@@ -328,7 +329,7 @@ export const SceneRules = () => {
                     className={lc('cv s cv3', 'w-[32px]! h-[32px]!')}
                   ></span>
                   <p className={lc('t-title', '[font-size:12px]')}>
-                    {c('rules.static_lines')}
+                    {DEMO_TRACKS.staticLines}
                   </p>
                 </div>
                 <div className={lc('qrow', 'p-[8px_4px]')}>
@@ -336,7 +337,7 @@ export const SceneRules = () => {
                     className={lc('cv s cv4', 'w-[32px]! h-[32px]!')}
                   ></span>
                   <p className={lc('t-title', '[font-size:12px]')}>
-                    {c('rules.drift_control')}
+                    {DEMO_TRACKS.driftControl}
                   </p>
                 </div>
                 <div className={lc('qrow', 'p-[8px_4px]')}>
@@ -344,7 +345,7 @@ export const SceneRules = () => {
                     className={lc('cv s cv1', 'w-[32px]! h-[32px]!')}
                   ></span>
                   <p className={lc('t-title', '[font-size:12px]')}>
-                    {c('rules.afterglow')}
+                    {DEMO_TRACKS.afterglow}
                   </p>
                 </div>
               </div>
@@ -355,7 +356,7 @@ export const SceneRules = () => {
           className={lc('abs disc d-only', 'text-right')}
           style={{ '--x': '1196', '--y': '844', '--w': '220' }}
         >
-          {c('rules.feature_concept_demo_content')}
+          {c('common.feature_concept_demo_content')}
         </span>
       </div>
     </section>
