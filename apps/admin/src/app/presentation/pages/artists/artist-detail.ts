@@ -15,6 +15,7 @@ import {
   canRevokeArtistSessions,
   type ArtistDetail,
 } from '@domain/artist'
+import { ResourceNotFoundError } from '@domain/shared'
 import { ConfirmAction } from '@presentation/components'
 import {
   isStaleStateError,
@@ -154,8 +155,9 @@ export class ArtistDetailPage {
     try {
       this.artist.set(await this.getArtist.execute(this.artistId))
       this.notFound.set(false)
-    } catch {
-      this.notFound.set(true)
+    } catch (error) {
+      if (error instanceof ResourceNotFoundError) this.notFound.set(true)
+      else this.failure.set('Could not load this artist.')
     } finally {
       this.loading.set(false)
     }

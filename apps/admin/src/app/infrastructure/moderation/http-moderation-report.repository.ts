@@ -11,6 +11,7 @@ import {
 import type { BatchResult, Page } from '@domain/shared'
 import { ADMIN_API } from '../http/api.config'
 import { batchResultDto, buildBatchBody, toBatchResult } from '../http/batch-result.dto'
+import { toReadError } from '../http/to-read-error'
 import { fetchPage } from '../http/wire-page'
 import { reportDetailDto, reportDto, reportPageDto } from './report.dto'
 import {
@@ -38,7 +39,12 @@ export class HttpModerationReportRepository extends ModerationReportRepository {
   }
 
   override async getById(id: string): Promise<ReportDetail> {
-    const response = await firstValueFrom(this.http.get<unknown>(`${this.base}/${id}`))
+    let response: unknown
+    try {
+      response = await firstValueFrom(this.http.get<unknown>(`${this.base}/${id}`))
+    } catch (error) {
+      throw toReadError(error)
+    }
 
     return toReportDetail(reportDetailDto.parse(response))
   }

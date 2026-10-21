@@ -13,6 +13,7 @@ import {
   canRevokeUserSessions,
   type UserDetail,
 } from '@domain/user'
+import { ResourceNotFoundError } from '@domain/shared'
 import { ConfirmAction } from '@presentation/components'
 import {
   isStaleStateError,
@@ -119,8 +120,9 @@ export class UserDetailPage {
     try {
       this.user.set(await this.getUser.execute(this.userId))
       this.notFound.set(false)
-    } catch {
-      this.notFound.set(true)
+    } catch (error) {
+      if (error instanceof ResourceNotFoundError) this.notFound.set(true)
+      else this.failure.set('Could not load this listener.')
     } finally {
       this.loading.set(false)
     }

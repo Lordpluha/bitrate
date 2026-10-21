@@ -16,6 +16,7 @@ import {
 import { ADMIN_API } from '../http/api.config'
 import { batchResultDto, buildBatchBody, toBatchResult } from '../http/batch-result.dto'
 import { buildTakeDownBody } from '../http/take-down.dto'
+import { toReadError } from '../http/to-read-error'
 import { toResourceWriteError } from '../http/to-resource-write-error'
 import { fetchPage } from '../http/wire-page'
 import { processingAttemptPageDto } from './processing-attempt.dto'
@@ -46,7 +47,12 @@ export class HttpTrackRepository extends TrackRepository {
   }
 
   override async getById(id: string): Promise<TrackDetail> {
-    const response = await firstValueFrom(this.http.get<unknown>(`${this.base}/${id}`))
+    let response: unknown
+    try {
+      response = await firstValueFrom(this.http.get<unknown>(`${this.base}/${id}`))
+    } catch (error) {
+      throw toReadError(error)
+    }
 
     return toTrackDetail(trackDetailDto.parse(response))
   }
