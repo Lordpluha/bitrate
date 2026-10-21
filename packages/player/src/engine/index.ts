@@ -134,13 +134,17 @@ export function createPlaybackEngine({
     loadedBitrate = null
   }
 
-  media.addEventListener('timeupdate', handleTimeUpdate)
-  media.addEventListener('durationchange', handleDurationChange)
-  media.addEventListener('volumechange', handleVolumeChange)
-  media.addEventListener('play', handlePlay)
-  media.addEventListener('pause', handlePause)
-  media.addEventListener('ended', handleEnded)
-  media.addEventListener('error', handleError)
+  /** Media events the engine mirrors into its state; attached here, detached in `destroy()`. */
+  const mediaHandlers: ReadonlyArray<readonly [keyof HTMLMediaElementEventMap, () => void]> = [
+    ['timeupdate', handleTimeUpdate],
+    ['durationchange', handleDurationChange],
+    ['volumechange', handleVolumeChange],
+    ['play', handlePlay],
+    ['pause', handlePause],
+    ['ended', handleEnded],
+    ['error', handleError],
+  ]
+  for (const [event, handler] of mediaHandlers) media.addEventListener(event, handler)
 
   async function play(bitrate: number | null): Promise<void> {
     if (destroyed) return
@@ -211,13 +215,7 @@ export function createPlaybackEngine({
     media.removeAttribute('src')
     media.load()
 
-    media.removeEventListener('timeupdate', handleTimeUpdate)
-    media.removeEventListener('durationchange', handleDurationChange)
-    media.removeEventListener('volumechange', handleVolumeChange)
-    media.removeEventListener('play', handlePlay)
-    media.removeEventListener('pause', handlePause)
-    media.removeEventListener('ended', handleEnded)
-    media.removeEventListener('error', handleError)
+    for (const [event, handler] of mediaHandlers) media.removeEventListener(event, handler)
 
     listeners.clear()
   }
