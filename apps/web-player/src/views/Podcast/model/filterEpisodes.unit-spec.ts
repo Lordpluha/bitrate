@@ -1,14 +1,16 @@
 import { describe, expect, it } from 'vitest'
-import { filterEpisodes } from './filterEpisodes'
+import { filterSavedEpisodes } from './filterEpisodes'
 
 const episode = (
   id: string,
   title: string,
   releaseDate: string | null,
   description: string | null = null,
+  podcastId = 'show',
 ) => ({
   description,
   id,
+  podcastId,
   releaseDate,
   title,
 })
@@ -23,57 +25,43 @@ const episodes = [
   ),
   episode('e2', 'Ep. 11 — The second album', '2026-09-01'),
   episode('e0', 'Bonus — Live set', null),
+  episode('x1', 'Another show’s album', '2026-11-01', null, 'other-show'),
 ]
 
-describe('filterEpisodes', () => {
-  it('lists the newest episode first, undated ones last', () => {
-    const ids = filterEpisodes({
+describe('filterSavedEpisodes', () => {
+  it('keeps only this show’s episodes, the newest first and undated ones last', () => {
+    const ids = filterSavedEpisodes({
       episodes,
-      filter: 'newest',
+      podcastId: 'show',
       query: '',
-      savedIds: new Set(),
     }).map((item) => item.id)
 
     expect(ids).toEqual(['e3', 'e2', 'e1', 'e0'])
   })
 
-  it('keeps only saved episodes on the Saved filter', () => {
-    const ids = filterEpisodes({
-      episodes,
-      filter: 'saved',
-      query: '',
-      savedIds: new Set(['e1', 'e0']),
-    }).map((item) => item.id)
-
-    expect(ids).toEqual(['e1', 'e0'])
-  })
-
   it('matches the search in the title or the description, ignoring case', () => {
     expect(
-      filterEpisodes({
+      filterSavedEpisodes({
         episodes,
-        filter: 'newest',
+        podcastId: 'show',
         query: 'MIXING',
-        savedIds: new Set(),
       }).map((item) => item.id),
     ).toEqual(['e3'])
     expect(
-      filterEpisodes({
+      filterSavedEpisodes({
         episodes,
-        filter: 'newest',
+        podcastId: 'show',
         query: 'earbuds',
-        savedIds: new Set(),
       }).map((item) => item.id),
     ).toEqual(['e3'])
   })
 
   it('ignores surrounding spaces in the search', () => {
     expect(
-      filterEpisodes({
+      filterSavedEpisodes({
         episodes,
-        filter: 'newest',
+        podcastId: 'show',
         query: '  album ',
-        savedIds: new Set(),
       }),
     ).toHaveLength(2)
   })

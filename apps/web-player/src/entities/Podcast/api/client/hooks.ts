@@ -1,6 +1,12 @@
 'use client'
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import {
+  keepPreviousData,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 import { clientFetchClient } from '@/shared/api/client'
 import { ensureOkResponse } from '@/shared/api/errors'
 import { apiQueryKeys } from '@/shared/api/queryKeys'
@@ -51,6 +57,53 @@ export const usePodcast = (id: string, page = 1, limit = 20) =>
       return podcastDetailSchema.parse(data)
     },
     enabled: id.length > 0,
+    staleTime: 5 * 60 * 1000,
+  })
+
+const PODCAST_EPISODES_PAGE_SIZE = 20
+
+type UsePodcastEpisodesInput = {
+  podcastId: string
+  /** Trimmed server-side title/description search; empty lists every episode. */
+  query: string
+}
+
+/**
+ * A podcast's episodes, newest release first, one server page at a time. The previous search's
+ * pages stay on screen while the next one loads.
+ */
+export const usePodcastEpisodes = ({
+  podcastId,
+  query,
+}: UsePodcastEpisodesInput) =>
+  useInfiniteQuery({
+    queryKey: [
+      ...apiQueryKeys.podcasts.all,
+      'episodes',
+      { podcastId, query, limit: PODCAST_EPISODES_PAGE_SIZE },
+    ] as const,
+    queryFn: async ({ pageParam }) => {
+      const { data, response } = await clientFetchClient.GET(
+        '/api/v1/podcasts/{id}',
+        {
+          params: {
+            path: { id: podcastId },
+            query: {
+              limit: PODCAST_EPISODES_PAGE_SIZE,
+              page: pageParam,
+              q: query || undefined,
+            },
+          },
+        },
+      )
+      ensureOkResponse(response, 'Failed to load episodes')
+      return podcastDetailSchema.parse(data).episodes
+    },
+    initialPageParam: 1,
+    getNextPageParam: ({ limit, page, total }) =>
+      page * limit < total ? page + 1 : undefined,
+    enabled: podcastId.length > 0,
+    placeholderData: keepPreviousData,
     staleTime: 5 * 60 * 1000,
   })
 
