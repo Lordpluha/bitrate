@@ -1,3 +1,4 @@
+import { pipeline } from 'node:stream'
 import { SkipAudit } from '@infra/observability/skip-audit.decorator'
 import {
   AuditContext,
@@ -19,6 +20,7 @@ import {
   Head,
   HttpCode,
   HttpStatus,
+  Logger,
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
@@ -57,6 +59,8 @@ import {
 
 /** No CDN sits in front of this route — it is a review surface, not a distribution path. */
 const AUDIO_CACHE_CONTROL = 'private, no-store'
+
+const logger = new Logger('AdminTracksController')
 
 /** Operator-facing track processing pipeline. */
 @ApiTags('Admin Tracks')
@@ -159,7 +163,14 @@ export class AdminTracksController {
         : {}),
     })
 
-    audio.stream.pipe(res)
+    // `pipeline`, not `.pipe`: a storage error mid-transfer tears the response down instead of
+    // leaving it hanging, and a client that goes away releases the storage stream. Headers are
+    // already sent by then, so there is nothing left to answer — the failure is only logged.
+    pipeline(audio.stream, res, (error) => {
+      if (error && error.code !== 'ERR_STREAM_PREMATURE_CLOSE') {
+        logger.warn(`Audio stream for track ${id} failed: ${error.message}`)
+      }
+    })
   }
 
   /** Runs the list processing attempts operation. */
