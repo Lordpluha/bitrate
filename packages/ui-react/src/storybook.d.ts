@@ -1,24 +1,13 @@
 import type { Meta as DefaultMeta } from '@storybook/react-vite'
 import type { ComponentProps, ComponentType } from 'react'
 
-type UnionToIntersection<T> = (T extends unknown ? (arg: T) => void : never) extends (
-  arg: infer I,
-) => void
-  ? I
-  : never
-
-type LastOfUnion<T> =
-  UnionToIntersection<T extends unknown ? (arg: T) => void : never> extends (arg: infer L) => void
-    ? L
-    : never
-
-type UnionToTuple<T, R extends unknown[] = []> = [T] extends [never]
-  ? R
-  : UnionToTuple<Exclude<T, LastOfUnion<T>>, [LastOfUnion<T>, ...R]>
-
 declare module '@storybook/react-vite' {
   /**
-   * Strict typed Storybook Meta type that infers argTypes options from component props.
+   * Strict typed Storybook Meta type that limits argTypes options to the component prop's values.
+   *
+   * Options are checked as an array of allowed values rather than a tuple of the whole union:
+   * a union-to-tuple conversion follows TypeScript's internal union order, which shifts whenever
+   * an unrelated file changes, and then rejects stories nobody touched.
    */
   export type StrictMeta<TComponent extends ComponentType> = Omit<
     DefaultMeta<TComponent>,
@@ -29,7 +18,7 @@ declare module '@storybook/react-vite' {
         DefaultMeta<TComponent>['argTypes'][PropName],
         'options'
       > & {
-        options?: UnionToTuple<NonNullable<ComponentProps<TComponent>[PropName]>>
+        options?: readonly NonNullable<ComponentProps<TComponent>[PropName]>[]
       }
     }
   }
