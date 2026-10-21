@@ -1,4 +1,5 @@
 export * from './account-auth.core'
+export * from './account-auth.types'
 export * from './auth-http'
 export * from './oauth-provider.client'
 export * from './session-auth.guard'
