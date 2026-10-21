@@ -3722,6 +3722,28 @@ add(
   ),
 )
 
+/* ---------- 404: the address the operator opened ---------- */
+add(
+  comp(
+    'Admin/Path',
+    Row(
+      {
+        name: 'Path',
+        padding: [8, 14],
+        gap: 8,
+        cornerRadius: 12,
+        fill: soft(0.05),
+        stroke: C.border,
+        strokeWidth: 1,
+      },
+      [
+        I('search', { width: 15, height: 15, fill: C.mutedForeground }),
+        part('label', muted('You opened')),
+        part('path', T('/moderation/R-0000', { fontSize: 13, fontWeight: '600' })),
+      ],
+    ),
+  ),
+)
 /* ---------- the library page: one flex root, a section per family ---------- */
 const cellWidth = (b) =>
   typeof b.width === 'number'
@@ -3806,7 +3828,7 @@ const SECTIONS = [
   [
     'Resource pages',
     'Lists and detail pages for every section: metric tiles, the table panel with its toolbar, filters, the selection bar and pager, record cards on phones, the detail header with back link and status, quote, media, checks and chips, confirm dialogs (sheets on phones), the change request field and their loaders.',
-    /^Admin\/(Metric|Loader\/(Metric|Table|Cards)|Panel|Key Pill|Input|Swatch|Form Error|Perm|Select|Form Note|Auth Card|Search Field|Filter|Toolbar|Bulk Bar|Table\/Row Selected|Sort|Cell|Pager|Record Card|Back|Detail Header|Quote|Media|Check Row|Chips|Textarea|Dialog|Sheet|Tile Message\/Search)/,
+    /^Admin\/(Metric|Loader\/(Metric|Table|Cards)|Panel|Key Pill|Input|Swatch|Form Error|Perm|Select|Form Note|Auth Card|Path|Search Field|Filter|Toolbar|Bulk Bar|Table\/Row Selected|Sort|Cell|Pager|Record Card|Back|Detail Header|Quote|Media|Check Row|Chips|Textarea|Dialog|Sheet|Tile Message\/Search)/,
   ],
   [
     'Overlays',

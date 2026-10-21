@@ -704,6 +704,23 @@ span.ck { cursor: default; }
 .rsel select option { color: initial; }
 .rsel svg { width: 16px; height: 16px; color: var(--muted-fg); pointer-events: none; }
 .rlist tbody tr.still, .rcard.still { cursor: default; }
+.rlost { align-items: center; text-align: center; gap: 12px; padding: 48px 24px 40px; cursor: default; }
+.rlost:hover { transform: none; }
+.rlost .code { font: 700 clamp(84px, 12vw, 132px)/1 var(--display); letter-spacing: -4px; background: linear-gradient(90deg, var(--accent), var(--blue)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.rlost h1 { margin: 6px 0 0; font: 600 clamp(24px, 3vw, 32px)/1.15 var(--display); letter-spacing: -.6px; }
+.rlost p { margin: 0; max-width: 460px; color: var(--muted-fg); }
+.rpath { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; padding: 8px 14px; border-radius: 12px; font-size: 13px; color: var(--muted-fg); background: color-mix(in srgb, var(--fg) 5%, transparent); border: 1px solid var(--glass-line); }
+.rpath svg { width: 15px; height: 15px; flex: none; }
+.rpath code { font: 600 13px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--fg); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rlost .racts { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 8px; }
+.rlinks { gap: 12px; cursor: default; }
+.rlinks:hover { transform: none; }
+.rlink-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.rlink-grid .act small { display: block; color: var(--muted-fg); font-size: 12px; }
+@media (max-width: 860px) {
+  .rlost { padding: 36px 18px 28px; }
+  .rlink-grid { grid-template-columns: 1fr; }
+}
 body.bare .side, body.bare .topbar, body.bare .mtop, body.bare .mtabs { display: none; }
 body.bare .app { grid-template-columns: minmax(0, 1fr); }
 .rauth { min-height: calc(100vh - 32px); display: grid; place-items: center; padding: 24px 0 96px; }
@@ -7049,6 +7066,60 @@ const RESOURCES = {
       "saving",
       "offline"
     ]
+  },
+  "not-found": {
+    "kind": "lost",
+    "route": "** (any unknown address, staff session; replaces the silent redirect to /)",
+    "hash": "not-found",
+    "icon": "search",
+    "code": "404",
+    "title": "This page doesn’t exist",
+    "sub": "The link may be old, or the record was removed. Nothing is wrong with your account.",
+    "path": "/moderation/R-0000",
+    "actions": [
+      {
+        "icon": "dashboard",
+        "label": "Go to Overview",
+        "primary": true,
+        "page": "overview"
+      },
+      {
+        "icon": "search",
+        "label": "Search the console",
+        "palette": true
+      }
+    ],
+    "linksTitle": "Where people usually go",
+    "linksMeta": "Sections in your role",
+    "links": [
+      [
+        "flag",
+        "Moderation",
+        "16 open reports",
+        "moderation"
+      ],
+      [
+        "disc",
+        "Releases",
+        "7 awaiting review",
+        "releases"
+      ],
+      [
+        "audio",
+        "Catalog",
+        "4 tracks need attention",
+        "catalog"
+      ],
+      [
+        "scroll",
+        "Audit log",
+        "Latest staff actions",
+        "audit"
+      ]
+    ],
+    "states": [
+      "offline"
+    ]
   }
 }
 const LIST_STATES = ["loading","empty","noresults","selected","error","restricted","offline"]
@@ -7729,6 +7800,18 @@ const RESOURCES_UK = {
   "No results for": "Нічого не знайдено за запитом",
   "Prototype only": "Лише прототип",
   "Signed in": "Ви увійшли",
+  "This page doesn’t exist": "Такої сторінки немає",
+  "The link may be old, or the record was removed. Nothing is wrong with your account.": "Посилання могло застаріти або запис видалено. З вашим акаунтом усе гаразд.",
+  "You opened": "Ви відкрили",
+  "Go to Overview": "На огляд",
+  "Search the console": "Пошук у консолі",
+  "Where people usually go": "Куди зазвичай переходять",
+  "Sections in your role": "Розділи у вашій ролі",
+  "16 open reports": "16 відкритих скарг",
+  "7 awaiting review": "7 чекають перевірки",
+  "4 tracks need attention": "4 треки потребують уваги",
+  "Latest staff actions": "Останні дії персоналу",
+  "Not found": "Не знайдено",
   "Still no sections": "Розділів досі немає",
   "Play": "Відтворити",
   "All statuses": "Усі статуси",
@@ -7760,7 +7843,7 @@ const pagerText = (s) => s.replace(' of ', ` ${t('of')} `)
 const dialogKeys = (sp) => Object.entries(sp.dialogs ?? {}).flatMap(([k, d]) => (d.field ? [k, 'invalid'] : [k]))
 const resViews = (p) => {
   const sp = RESOURCES[p]
-  if (sp.kind === 'auth') return ['default', ...sp.states]
+  if (sp.kind === 'auth' || sp.kind === 'lost') return ['default', ...sp.states]
   if (sp.kind === 'list') return ['default', ...LIST_STATES.filter((v) => (v !== 'selected' || sp.select) && (v !== 'noresults' || sp.search || sp.filters)), ...dialogKeys(sp)]
   const base = sp.kind === 'form' ? FORM_STATES.filter((v) => !(sp.newOnly && v === 'notfound')) : DETAIL_STATES
   return ['default', ...base.flatMap((s) => (s === 'dialogs' ? dialogKeys(sp) : [s]))]
@@ -7975,8 +8058,21 @@ function authHTML(sp, st) {
     ${sp.footer ? `<small class="rfoot">${t(sp.footer)}</small>` : ''}
   </div></div>`
 }
+/* ---------- 404: inside the shell, with the address and ways back ---------- */
+function lostHTML(sp, st) {
+  const off = st.view === 'offline'
+  const path = st.path || sp.path
+  return `<div class="rpage">${off ? offlineBanner() : ''}<section class="tile glass rlost">
+    <span class="code">${sp.code}</span>
+    <h1>${t(sp.title)}</h1><p>${t(sp.sub)}</p>
+    <div class="rpath">${ico(sp.icon)}<span>${t('You opened')}</span><code>${path}</code></div>
+    <div class="racts">${sp.actions.map((a) => `<button type="button" class="pill ${a.primary ? 'primary' : 'ghost'}"${a.palette ? ' data-open="palette"' : ` data-page="${a.page}"`}>${ico(a.icon)}${t(a.label)}</button>`).join('')}</div>
+  </section>
+  <section class="tile glass rlinks"><div class="th"><span class="ico">${ico('dashboard')}</span><div class="t"><b>${t(sp.linksTitle)}</b><small>${t(sp.linksMeta)}</small></div></div><div class="rlink-grid">${sp.links.map(([i, l, d, p]) => `<button type="button" class="act" data-page="${p}"><span class="ai info">${ico(i)}</span><span class="tx"><b>${t(l)}</b><small>${t(d)}</small></span>${ico('right')}</button>`).join('')}</div></section></div>`
+}
 function resHTML() {
   const sp = RESOURCES[S.page], st = rs()
+  if (sp.kind === 'lost') return lostHTML(sp, st)
   if (sp.kind === 'auth') return authHTML(sp, st)
   return `<div class="rpage">${sp.kind === 'list' ? listHTML(sp, st) : sp.kind === 'form' ? formHTML(sp, st) : detailPageHTML(sp, st)}</div>`
 }
@@ -8114,13 +8210,19 @@ Object.assign(UK, {
   'You’re offline': 'Ви офлайн', 'Showing figures from 09:42. Actions are paused until you reconnect.': 'Показано дані станом на 09:42. Дії призупинено до відновлення зʼєднання.', 'Offline · 09:42': 'Офлайн · 09:42', 'Prototype: this section is not drawn yet': 'Прототип: цей розділ ще не намальовано', 'Search': 'Пошук', 'Alerts': 'Сповіщення', 'Settings': 'Налаштування',
 })
 const PAGES = { overview: 'Overview', notifications: 'Notifications' }
-for (const [k, sp] of Object.entries(RESOURCES)) PAGES[k] = sp.kind === 'detail' ? RESOURCES[sp.parent].title : sp.title
+for (const [k, sp] of Object.entries(RESOURCES)) PAGES[k] = sp.kind === 'detail' ? RESOURCES[sp.parent].title : sp.kind === 'lost' ? 'Not found' : sp.title
 const hashOf = (p) => (p === 'overview' ? '' : `#${RESOURCES[p]?.hash ?? p}`)
-const fromHash = (h) => Object.keys(PAGES).find((p) => hashOf(p) === h) ?? 'overview'
+const fromHash = (h) => {
+  const p = Object.keys(PAGES).find((k) => hashOf(k) === h)
+  if (p) return p
+  if (!h) return 'overview'
+  rs('not-found').path = `/${h.slice(1)}`
+  return 'not-found'
+}
 S.page = fromHash(location.hash)
 S.nview = 'default'
 function go(page) {
-  if (!PAGES[page]) return island(`<span class="pdot">${ico('info')}</span>${t('Prototype: this section is not drawn yet')}`)
+  if (!PAGES[page]) { rs('not-found').path = `/${page}`; page = 'not-found' }
   if (DT.open) closeDetail()
   S.page = page
   if (isRes(page)) { const st = rs(page); st.view = 'default'; st.sel.clear(); st.menu = null }

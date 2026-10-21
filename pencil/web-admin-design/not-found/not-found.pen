@@ -1,0 +1,2541 @@
+{
+  "version": "2.20",
+  "imports": {
+    "admin": "../design-system/admin.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "cHeEqe",
+      "name": "Admin / Not found / Desktop / Dark",
+      "width": 1440,
+      "height": "fit_content",
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "ZtEtWZ",
+          "ref": "admin:6pveax",
+          "name": "Admin/Shell/Desktop",
+          "width": 1440,
+          "height": "fit_content",
+          "descendants": {
+            "admin:zl2c4D": {
+              "height": "fit_content"
+            },
+            "admin:wFn9uy": {
+              "height": 968
+            },
+            "admin:mS2mX7/admin:NzZJdB": {
+              "icon": "moon"
+            },
+            "admin:mS2mX7/admin:Ya7ATG": {
+              "content": "Dark"
+            },
+            "admin:XPquuw/admin:76Yfp4": {
+              "content": "Not found"
+            },
+            "admin:Awzbgj": {
+              "type": "frame",
+              "id": "RjDhwk",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 22,
+              "width": "fill_container",
+              "height": "fit_content",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "quK6ZW",
+                  "ref": "admin:xsQJgc",
+                  "name": "Panel",
+                  "width": "fill_container",
+                  "descendants": {
+                    "admin:dfUnj7": {
+                      "type": "frame",
+                      "id": "tjo8yr",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "ZFHreV",
+                          "name": "Lost",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "padding": [
+                            48,
+                            24,
+                            40,
+                            24
+                          ],
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "PqymY6",
+                              "ref": "admin:NEeFbL",
+                              "name": "Text/Display",
+                              "fontSize": 132,
+                              "letterSpacing": -4,
+                              "fill": {
+                                "type": "gradient",
+                                "gradientType": "linear",
+                                "rotation": 90,
+                                "colors": [
+                                  {
+                                    "color": "$admin:--accent",
+                                    "position": 0
+                                  },
+                                  {
+                                    "color": "$admin:--blue-500",
+                                    "position": 1
+                                  }
+                                ]
+                              },
+                              "content": "404"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "6m67WU",
+                              "ref": "admin:MgMQ2L",
+                              "name": "Text/H1",
+                              "textAlign": "center",
+                              "content": "This page doesn’t exist"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "6KhFPb",
+                              "ref": "admin:C5Ih8u",
+                              "name": "Text/Muted",
+                              "textAlign": "center",
+                              "width": 460,
+                              "textGrowth": "fixed-width",
+                              "content": "The link may be old, or the record was removed. Nothing is wrong with your account."
+                            },
+                            {
+                              "type": "ref",
+                              "id": "j3cVXX",
+                              "ref": "admin:OkEgpu",
+                              "name": "Path",
+                              "descendants": {
+                                "admin:evfeLH": {
+                                  "content": "/moderation/R-0000"
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "kcfeZK",
+                              "name": "Actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "padding": [
+                                8,
+                                0,
+                                0,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "nSYuz8",
+                                  "ref": "admin:TmjZcS",
+                                  "name": "Button / Go to Overview",
+                                  "descendants": {
+                                    "admin:291RGJ": {
+                                      "content": "Go to Overview"
+                                    },
+                                    "admin:ZOwqrS": {
+                                      "icon": "layout-dashboard"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "gaQ2Am",
+                                  "ref": "admin:4HU76n",
+                                  "name": "Button / Search the console",
+                                  "descendants": {
+                                    "admin:DVMBFw": {
+                                      "content": "Search the console"
+                                    },
+                                    "admin:yBvyFS": {
+                                      "icon": "search"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "hrvHmR",
+                  "ref": "admin:r1BU8g",
+                  "name": "Tile / Links",
+                  "width": "fill_container",
+                  "descendants": {
+                    "admin:fP0SL9": {
+                      "icon": "layout-dashboard"
+                    },
+                    "admin:eRRbg8": {
+                      "content": "Where people usually go"
+                    },
+                    "admin:h4iz4o": {
+                      "content": "Sections in your role"
+                    },
+                    "admin:Zkvo0I": {
+                      "enabled": false
+                    },
+                    "admin:GjsX0O": {
+                      "type": "frame",
+                      "id": "isEpGq",
+                      "name": "Links",
+                      "layout": "vertical",
+                      "gap": 10,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "WE5zYz",
+                          "name": "Links 1",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "nCycKY",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Moderation",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "flag"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Moderation"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "16 open reports"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "LgqBVv",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Releases",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "disc-3"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Releases"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "7 awaiting review"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "QGzSYc",
+                          "name": "Links 2",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "csCxZJ",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Catalog",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "audio-lines"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Catalog"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "4 tracks need attention"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "PxVh3h",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Audit log",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "scroll-text"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Audit log"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "Latest staff actions"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "** (any unknown address, staff session; replaces the silent redirect to /) — The link may be old, or the record was removed. Nothing is wrong with your account. Shown for any address the console doesn't know (apps/admin's ** route), inside the shell. Same data as the prototype (#not-found; any unknown hash opens it)."
+    },
+    {
+      "type": "frame",
+      "id": "wSQFje",
+      "name": "Admin / Not found / Desktop / Light",
+      "width": 1440,
+      "height": "fit_content",
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "wHte2C",
+          "ref": "admin:6pveax",
+          "name": "Admin/Shell/Desktop",
+          "width": 1440,
+          "height": "fit_content",
+          "descendants": {
+            "admin:zl2c4D": {
+              "height": "fit_content"
+            },
+            "admin:wFn9uy": {
+              "height": 968
+            },
+            "admin:mS2mX7/admin:NzZJdB": {
+              "icon": "sun"
+            },
+            "admin:mS2mX7/admin:Ya7ATG": {
+              "content": "Light"
+            },
+            "admin:XPquuw/admin:76Yfp4": {
+              "content": "Not found"
+            },
+            "admin:Awzbgj": {
+              "type": "frame",
+              "id": "MQmN6E",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 22,
+              "width": "fill_container",
+              "height": "fit_content",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "awS2fT",
+                  "ref": "admin:xsQJgc",
+                  "name": "Panel",
+                  "width": "fill_container",
+                  "descendants": {
+                    "admin:dfUnj7": {
+                      "type": "frame",
+                      "id": "4FQPec",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "xJdCWU",
+                          "name": "Lost",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "padding": [
+                            48,
+                            24,
+                            40,
+                            24
+                          ],
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "zvMao6",
+                              "ref": "admin:NEeFbL",
+                              "name": "Text/Display",
+                              "fontSize": 132,
+                              "letterSpacing": -4,
+                              "fill": {
+                                "type": "gradient",
+                                "gradientType": "linear",
+                                "rotation": 90,
+                                "colors": [
+                                  {
+                                    "color": "$admin:--accent",
+                                    "position": 0
+                                  },
+                                  {
+                                    "color": "$admin:--blue-500",
+                                    "position": 1
+                                  }
+                                ]
+                              },
+                              "content": "404"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "4vRG47",
+                              "ref": "admin:MgMQ2L",
+                              "name": "Text/H1",
+                              "textAlign": "center",
+                              "content": "This page doesn’t exist"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "hhRDxQ",
+                              "ref": "admin:C5Ih8u",
+                              "name": "Text/Muted",
+                              "textAlign": "center",
+                              "width": 460,
+                              "textGrowth": "fixed-width",
+                              "content": "The link may be old, or the record was removed. Nothing is wrong with your account."
+                            },
+                            {
+                              "type": "ref",
+                              "id": "2WZfY2",
+                              "ref": "admin:OkEgpu",
+                              "name": "Path",
+                              "descendants": {
+                                "admin:evfeLH": {
+                                  "content": "/moderation/R-0000"
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "oouASR",
+                              "name": "Actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "padding": [
+                                8,
+                                0,
+                                0,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "Sfo6jd",
+                                  "ref": "admin:TmjZcS",
+                                  "name": "Button / Go to Overview",
+                                  "descendants": {
+                                    "admin:291RGJ": {
+                                      "content": "Go to Overview"
+                                    },
+                                    "admin:ZOwqrS": {
+                                      "icon": "layout-dashboard"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "YfHwXy",
+                                  "ref": "admin:4HU76n",
+                                  "name": "Button / Search the console",
+                                  "descendants": {
+                                    "admin:DVMBFw": {
+                                      "content": "Search the console"
+                                    },
+                                    "admin:yBvyFS": {
+                                      "icon": "search"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "3fnPwa",
+                  "ref": "admin:r1BU8g",
+                  "name": "Tile / Links",
+                  "width": "fill_container",
+                  "descendants": {
+                    "admin:fP0SL9": {
+                      "icon": "layout-dashboard"
+                    },
+                    "admin:eRRbg8": {
+                      "content": "Where people usually go"
+                    },
+                    "admin:h4iz4o": {
+                      "content": "Sections in your role"
+                    },
+                    "admin:Zkvo0I": {
+                      "enabled": false
+                    },
+                    "admin:GjsX0O": {
+                      "type": "frame",
+                      "id": "jDc4K5",
+                      "name": "Links",
+                      "layout": "vertical",
+                      "gap": 10,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "tLdEoV",
+                          "name": "Links 1",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "rxt3zm",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Moderation",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "flag"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Moderation"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "16 open reports"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "iQTrUu",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Releases",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "disc-3"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Releases"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "7 awaiting review"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "urTKLJ",
+                          "name": "Links 2",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "8f5uBk",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Catalog",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "audio-lines"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Catalog"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "4 tracks need attention"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "DS5Br5",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Audit log",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "scroll-text"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Audit log"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "Latest staff actions"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Light"
+      },
+      "context": "** (any unknown address, staff session; replaces the silent redirect to /) — The link may be old, or the record was removed. Nothing is wrong with your account. Shown for any address the console doesn't know (apps/admin's ** route), inside the shell. Same data as the prototype (#not-found; any unknown hash opens it)."
+    },
+    {
+      "type": "frame",
+      "id": "P8Zfrb",
+      "name": "Admin / Not found / Desktop / Dim",
+      "width": 1440,
+      "height": "fit_content",
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "awNjpc",
+          "ref": "admin:6pveax",
+          "name": "Admin/Shell/Desktop",
+          "width": 1440,
+          "height": "fit_content",
+          "descendants": {
+            "admin:zl2c4D": {
+              "height": "fit_content"
+            },
+            "admin:wFn9uy": {
+              "height": 968
+            },
+            "admin:mS2mX7/admin:NzZJdB": {
+              "icon": "contrast"
+            },
+            "admin:mS2mX7/admin:Ya7ATG": {
+              "content": "Dim"
+            },
+            "admin:XPquuw/admin:76Yfp4": {
+              "content": "Not found"
+            },
+            "admin:Awzbgj": {
+              "type": "frame",
+              "id": "XgPEDp",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 22,
+              "width": "fill_container",
+              "height": "fit_content",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "6wT9Jz",
+                  "ref": "admin:xsQJgc",
+                  "name": "Panel",
+                  "width": "fill_container",
+                  "descendants": {
+                    "admin:dfUnj7": {
+                      "type": "frame",
+                      "id": "G8AJTo",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Zx9AHu",
+                          "name": "Lost",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "padding": [
+                            48,
+                            24,
+                            40,
+                            24
+                          ],
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "GY3H53",
+                              "ref": "admin:NEeFbL",
+                              "name": "Text/Display",
+                              "fontSize": 132,
+                              "letterSpacing": -4,
+                              "fill": {
+                                "type": "gradient",
+                                "gradientType": "linear",
+                                "rotation": 90,
+                                "colors": [
+                                  {
+                                    "color": "$admin:--accent",
+                                    "position": 0
+                                  },
+                                  {
+                                    "color": "$admin:--blue-500",
+                                    "position": 1
+                                  }
+                                ]
+                              },
+                              "content": "404"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "PXKtok",
+                              "ref": "admin:MgMQ2L",
+                              "name": "Text/H1",
+                              "textAlign": "center",
+                              "content": "This page doesn’t exist"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "idzTja",
+                              "ref": "admin:C5Ih8u",
+                              "name": "Text/Muted",
+                              "textAlign": "center",
+                              "width": 460,
+                              "textGrowth": "fixed-width",
+                              "content": "The link may be old, or the record was removed. Nothing is wrong with your account."
+                            },
+                            {
+                              "type": "ref",
+                              "id": "RWxEGR",
+                              "ref": "admin:OkEgpu",
+                              "name": "Path",
+                              "descendants": {
+                                "admin:evfeLH": {
+                                  "content": "/moderation/R-0000"
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Qpw3vK",
+                              "name": "Actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "padding": [
+                                8,
+                                0,
+                                0,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "JLbHAJ",
+                                  "ref": "admin:TmjZcS",
+                                  "name": "Button / Go to Overview",
+                                  "descendants": {
+                                    "admin:291RGJ": {
+                                      "content": "Go to Overview"
+                                    },
+                                    "admin:ZOwqrS": {
+                                      "icon": "layout-dashboard"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "xKCwLC",
+                                  "ref": "admin:4HU76n",
+                                  "name": "Button / Search the console",
+                                  "descendants": {
+                                    "admin:DVMBFw": {
+                                      "content": "Search the console"
+                                    },
+                                    "admin:yBvyFS": {
+                                      "icon": "search"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "qHWs3y",
+                  "ref": "admin:r1BU8g",
+                  "name": "Tile / Links",
+                  "width": "fill_container",
+                  "descendants": {
+                    "admin:fP0SL9": {
+                      "icon": "layout-dashboard"
+                    },
+                    "admin:eRRbg8": {
+                      "content": "Where people usually go"
+                    },
+                    "admin:h4iz4o": {
+                      "content": "Sections in your role"
+                    },
+                    "admin:Zkvo0I": {
+                      "enabled": false
+                    },
+                    "admin:GjsX0O": {
+                      "type": "frame",
+                      "id": "9CSN83",
+                      "name": "Links",
+                      "layout": "vertical",
+                      "gap": 10,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "BWBBea",
+                          "name": "Links 1",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "8JKu9H",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Moderation",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "flag"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Moderation"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "16 open reports"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "k3h3zk",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Releases",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "disc-3"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Releases"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "7 awaiting review"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "7hpMoT",
+                          "name": "Links 2",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "f4DSxM",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Catalog",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "audio-lines"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Catalog"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "4 tracks need attention"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "pyXq3G",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Audit log",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "scroll-text"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Audit log"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "Latest staff actions"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dim"
+      },
+      "context": "** (any unknown address, staff session; replaces the silent redirect to /) — The link may be old, or the record was removed. Nothing is wrong with your account. Shown for any address the console doesn't know (apps/admin's ** route), inside the shell. Same data as the prototype (#not-found; any unknown hash opens it)."
+    },
+    {
+      "type": "frame",
+      "id": "HE9igT",
+      "name": "Admin / Not found / Mobile / Dark",
+      "width": 390,
+      "height": "fit_content",
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "rwBoUq",
+          "ref": "admin:eqee8W",
+          "name": "Admin/Shell/Mobile",
+          "width": 390,
+          "height": "fit_content",
+          "descendants": {
+            "admin:j6PyZU/admin:lLnPY6": {
+              "type": "ref",
+              "id": "uM7hv5",
+              "ref": "admin:CiuO32",
+              "name": "Tab / overview",
+              "descendants": {
+                "admin:yr8ZCx": {
+                  "icon": "layout-dashboard"
+                },
+                "admin:pldZwF": {
+                  "enabled": false
+                }
+              }
+            },
+            "admin:j6PyZU/admin:jFtwgM": {
+              "type": "ref",
+              "id": "byAnCG",
+              "ref": "admin:CiuO32",
+              "name": "Tab / alerts",
+              "descendants": {
+                "admin:yr8ZCx": {
+                  "icon": "bell"
+                },
+                "admin:pldZwF": {
+                  "enabled": true
+                }
+              }
+            },
+            "admin:j6PyZU/admin:mkQ1an": {
+              "type": "ref",
+              "id": "HGFrVL",
+              "ref": "admin:CiuO32",
+              "name": "Tab / menu",
+              "descendants": {
+                "admin:yr8ZCx": {
+                  "icon": "menu"
+                },
+                "admin:pldZwF": {
+                  "enabled": false
+                }
+              }
+            },
+            "admin:gHhjkZ": {
+              "type": "frame",
+              "id": "83LTjs",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "height": "fit_content",
+              "padding": [
+                18,
+                16,
+                0,
+                16
+              ],
+              "clip": true,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "AcVJed",
+                  "ref": "admin:xsQJgc",
+                  "name": "Panel",
+                  "width": "fill_container",
+                  "descendants": {
+                    "admin:dfUnj7": {
+                      "type": "frame",
+                      "id": "EMDyRM",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "X7rwBq",
+                          "name": "Lost",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "padding": [
+                            36,
+                            18,
+                            28,
+                            18
+                          ],
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "5Duwes",
+                              "ref": "admin:NEeFbL",
+                              "name": "Text/Display",
+                              "fontSize": 84,
+                              "letterSpacing": -4,
+                              "fill": {
+                                "type": "gradient",
+                                "gradientType": "linear",
+                                "rotation": 90,
+                                "colors": [
+                                  {
+                                    "color": "$admin:--accent",
+                                    "position": 0
+                                  },
+                                  {
+                                    "color": "$admin:--blue-500",
+                                    "position": 1
+                                  }
+                                ]
+                              },
+                              "content": "404"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "jP3yXG",
+                              "ref": "admin:MgMQ2L",
+                              "name": "Text/H1",
+                              "textAlign": "center",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "This page doesn’t exist"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "HgSyxH",
+                              "ref": "admin:C5Ih8u",
+                              "name": "Text/Muted",
+                              "textAlign": "center",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "The link may be old, or the record was removed. Nothing is wrong with your account."
+                            },
+                            {
+                              "type": "ref",
+                              "id": "LN9WTx",
+                              "ref": "admin:OkEgpu",
+                              "name": "Path",
+                              "descendants": {
+                                "admin:evfeLH": {
+                                  "content": "/moderation/R-0000"
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "SdPoUF",
+                              "name": "Actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "padding": [
+                                8,
+                                0,
+                                0,
+                                0
+                              ],
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "WGY8jD",
+                                  "ref": "admin:TmjZcS",
+                                  "name": "Button / Go to Overview",
+                                  "descendants": {
+                                    "admin:291RGJ": {
+                                      "content": "Go to Overview"
+                                    },
+                                    "admin:ZOwqrS": {
+                                      "icon": "layout-dashboard"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "UbSds8",
+                                  "ref": "admin:4HU76n",
+                                  "name": "Button / Search the console",
+                                  "descendants": {
+                                    "admin:DVMBFw": {
+                                      "content": "Search the console"
+                                    },
+                                    "admin:yBvyFS": {
+                                      "icon": "search"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "JbmiEx",
+                  "ref": "admin:r1BU8g",
+                  "name": "Tile / Links",
+                  "width": "fill_container",
+                  "descendants": {
+                    "admin:fP0SL9": {
+                      "icon": "layout-dashboard"
+                    },
+                    "admin:eRRbg8": {
+                      "content": "Where people usually go"
+                    },
+                    "admin:h4iz4o": {
+                      "content": "Sections in your role"
+                    },
+                    "admin:Zkvo0I": {
+                      "enabled": false
+                    },
+                    "admin:GjsX0O": {
+                      "type": "frame",
+                      "id": "S4SLen",
+                      "name": "Links",
+                      "layout": "vertical",
+                      "gap": 10,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "DmQU3U",
+                          "name": "Links 1",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "gAmTs2",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Moderation",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "flag"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Moderation"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "16 open reports"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "34CXn6",
+                          "name": "Links 2",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "R25j6L",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Releases",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "disc-3"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Releases"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "7 awaiting review"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "qffFkX",
+                          "name": "Links 3",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "wS5ifp",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Catalog",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "audio-lines"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Catalog"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "4 tracks need attention"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "8F7LLQ",
+                          "name": "Links 4",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "wBoDiA",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Audit log",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "scroll-text"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Audit log"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "Latest staff actions"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "** (any unknown address, staff session; replaces the silent redirect to /) — The link may be old, or the record was removed. Nothing is wrong with your account. Shown for any address the console doesn't know (apps/admin's ** route), inside the shell. Same data as the prototype (#not-found; any unknown hash opens it)."
+    },
+    {
+      "type": "frame",
+      "id": "vGi8Du",
+      "name": "Admin / Not found / Offline / Desktop",
+      "width": 1440,
+      "height": "fit_content",
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "ZaLRXP",
+          "ref": "admin:6pveax",
+          "name": "Admin/Shell/Desktop",
+          "width": 1440,
+          "height": "fit_content",
+          "descendants": {
+            "admin:zl2c4D": {
+              "height": "fit_content"
+            },
+            "admin:wFn9uy": {
+              "height": 968
+            },
+            "admin:mS2mX7/admin:NzZJdB": {
+              "icon": "moon"
+            },
+            "admin:mS2mX7/admin:Ya7ATG": {
+              "content": "Dark"
+            },
+            "admin:XPquuw/admin:76Yfp4": {
+              "content": "Not found"
+            },
+            "admin:XPquuw/admin:J9rMh0": {
+              "enabled": true
+            },
+            "admin:XPquuw/admin:PrLRmR": {
+              "icon": "wifi-off",
+              "fill": "$admin:--warning-text"
+            },
+            "admin:XPquuw/admin:0eCc2N": {
+              "content": "Offline · 09:42"
+            },
+            "admin:XPquuw/admin:luuxma": {
+              "enabled": false
+            },
+            "admin:XPquuw/admin:5JztpE": {
+              "fill": "$admin:--warning-surface"
+            },
+            "admin:qXGi6t": {
+              "width": 260
+            },
+            "admin:Awzbgj": {
+              "type": "frame",
+              "id": "zc4ZiD",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 22,
+              "width": "fill_container",
+              "height": "fit_content",
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "TqqHqy",
+                  "ref": "admin:n2GO8k",
+                  "name": "Offline",
+                  "width": "fill_container",
+                  "descendants": {
+                    "admin:bx4A8Y": {
+                      "icon": "wifi-off"
+                    },
+                    "admin:aRvB1C": {
+                      "content": "You’re offline"
+                    },
+                    "admin:dXaBy8": {
+                      "content": "Showing data from 09:42. Actions are paused until you reconnect."
+                    },
+                    "admin:F8YA1K/admin:DVMBFw": {
+                      "content": "Try again"
+                    },
+                    "admin:F8YA1K/admin:yBvyFS": {
+                      "icon": "refresh-cw"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "pipFok",
+                  "ref": "admin:xsQJgc",
+                  "name": "Panel",
+                  "width": "fill_container",
+                  "descendants": {
+                    "admin:dfUnj7": {
+                      "type": "frame",
+                      "id": "ZovFLy",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "A9qZtX",
+                          "name": "Lost",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "padding": [
+                            48,
+                            24,
+                            40,
+                            24
+                          ],
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "DQLpWN",
+                              "ref": "admin:NEeFbL",
+                              "name": "Text/Display",
+                              "fontSize": 132,
+                              "letterSpacing": -4,
+                              "fill": {
+                                "type": "gradient",
+                                "gradientType": "linear",
+                                "rotation": 90,
+                                "colors": [
+                                  {
+                                    "color": "$admin:--accent",
+                                    "position": 0
+                                  },
+                                  {
+                                    "color": "$admin:--blue-500",
+                                    "position": 1
+                                  }
+                                ]
+                              },
+                              "content": "404"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "T36gy5",
+                              "ref": "admin:MgMQ2L",
+                              "name": "Text/H1",
+                              "textAlign": "center",
+                              "content": "This page doesn’t exist"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "CQVKq8",
+                              "ref": "admin:C5Ih8u",
+                              "name": "Text/Muted",
+                              "textAlign": "center",
+                              "width": 460,
+                              "textGrowth": "fixed-width",
+                              "content": "The link may be old, or the record was removed. Nothing is wrong with your account."
+                            },
+                            {
+                              "type": "ref",
+                              "id": "FNUX5V",
+                              "ref": "admin:OkEgpu",
+                              "name": "Path",
+                              "descendants": {
+                                "admin:evfeLH": {
+                                  "content": "/moderation/R-0000"
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "vpxpjS",
+                              "name": "Actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "padding": [
+                                8,
+                                0,
+                                0,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "SUmqEK",
+                                  "ref": "admin:TmjZcS",
+                                  "name": "Button / Go to Overview",
+                                  "descendants": {
+                                    "admin:291RGJ": {
+                                      "content": "Go to Overview"
+                                    },
+                                    "admin:ZOwqrS": {
+                                      "icon": "layout-dashboard"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "DooWKM",
+                                  "ref": "admin:4HU76n",
+                                  "name": "Button / Search the console",
+                                  "descendants": {
+                                    "admin:DVMBFw": {
+                                      "content": "Search the console"
+                                    },
+                                    "admin:yBvyFS": {
+                                      "icon": "search"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "mFefE2",
+                  "ref": "admin:r1BU8g",
+                  "name": "Tile / Links",
+                  "width": "fill_container",
+                  "descendants": {
+                    "admin:fP0SL9": {
+                      "icon": "layout-dashboard"
+                    },
+                    "admin:eRRbg8": {
+                      "content": "Where people usually go"
+                    },
+                    "admin:h4iz4o": {
+                      "content": "Sections in your role"
+                    },
+                    "admin:Zkvo0I": {
+                      "enabled": false
+                    },
+                    "admin:GjsX0O": {
+                      "type": "frame",
+                      "id": "QQxyio",
+                      "name": "Links",
+                      "layout": "vertical",
+                      "gap": 10,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "ydZyhg",
+                          "name": "Links 1",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "7nzXDa",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Moderation",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "flag"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Moderation"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "16 open reports"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "aEeaMn",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Releases",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "disc-3"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Releases"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "7 awaiting review"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Fw6Bnb",
+                          "name": "Links 2",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "gJfFm4",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Catalog",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "audio-lines"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Catalog"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "4 tracks need attention"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "ref",
+                              "id": "eT77gR",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Audit log",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "scroll-text"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Audit log"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "Latest staff actions"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "** (any unknown address, staff session; replaces the silent redirect to /) — The link may be old, or the record was removed. Nothing is wrong with your account. Shown for any address the console doesn't know (apps/admin's ** route), inside the shell. Same data as the prototype (#not-found; any unknown hash opens it)."
+    },
+    {
+      "type": "frame",
+      "id": "mzy55U",
+      "name": "Admin / Not found / Offline / Mobile",
+      "width": 390,
+      "height": "fit_content",
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "TLCWmF",
+          "ref": "admin:eqee8W",
+          "name": "Admin/Shell/Mobile",
+          "width": 390,
+          "height": "fit_content",
+          "descendants": {
+            "admin:j6PyZU/admin:lLnPY6": {
+              "type": "ref",
+              "id": "XNYDZH",
+              "ref": "admin:CiuO32",
+              "name": "Tab / overview",
+              "descendants": {
+                "admin:yr8ZCx": {
+                  "icon": "layout-dashboard"
+                },
+                "admin:pldZwF": {
+                  "enabled": false
+                }
+              }
+            },
+            "admin:j6PyZU/admin:jFtwgM": {
+              "type": "ref",
+              "id": "7WZmzc",
+              "ref": "admin:CiuO32",
+              "name": "Tab / alerts",
+              "descendants": {
+                "admin:yr8ZCx": {
+                  "icon": "bell"
+                },
+                "admin:pldZwF": {
+                  "enabled": true
+                }
+              }
+            },
+            "admin:j6PyZU/admin:mkQ1an": {
+              "type": "ref",
+              "id": "oLUaZQ",
+              "ref": "admin:CiuO32",
+              "name": "Tab / menu",
+              "descendants": {
+                "admin:yr8ZCx": {
+                  "icon": "menu"
+                },
+                "admin:pldZwF": {
+                  "enabled": false
+                }
+              }
+            },
+            "admin:gHhjkZ": {
+              "type": "frame",
+              "id": "hiWBiE",
+              "name": "Content",
+              "layout": "vertical",
+              "gap": 16,
+              "width": "fill_container",
+              "height": "fit_content",
+              "padding": [
+                18,
+                16,
+                0,
+                16
+              ],
+              "clip": true,
+              "children": [
+                {
+                  "type": "ref",
+                  "id": "nBKzJc",
+                  "ref": "admin:n2GO8k",
+                  "name": "Offline",
+                  "width": "fill_container",
+                  "descendants": {
+                    "admin:bx4A8Y": {
+                      "icon": "wifi-off"
+                    },
+                    "admin:aRvB1C": {
+                      "content": "You’re offline"
+                    },
+                    "admin:dXaBy8": {
+                      "content": "Showing data from 09:42. Actions are paused until you reconnect."
+                    },
+                    "admin:F8YA1K/admin:DVMBFw": {
+                      "content": "Try again"
+                    },
+                    "admin:F8YA1K/admin:yBvyFS": {
+                      "icon": "refresh-cw"
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "bMTBMe",
+                  "ref": "admin:xsQJgc",
+                  "name": "Panel",
+                  "width": "fill_container",
+                  "descendants": {
+                    "admin:dfUnj7": {
+                      "type": "frame",
+                      "id": "YaY8nv",
+                      "name": "Panel Content",
+                      "layout": "vertical",
+                      "gap": 0,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "C5R7sA",
+                          "name": "Lost",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "padding": [
+                            36,
+                            18,
+                            28,
+                            18
+                          ],
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "nxE8AB",
+                              "ref": "admin:NEeFbL",
+                              "name": "Text/Display",
+                              "fontSize": 84,
+                              "letterSpacing": -4,
+                              "fill": {
+                                "type": "gradient",
+                                "gradientType": "linear",
+                                "rotation": 90,
+                                "colors": [
+                                  {
+                                    "color": "$admin:--accent",
+                                    "position": 0
+                                  },
+                                  {
+                                    "color": "$admin:--blue-500",
+                                    "position": 1
+                                  }
+                                ]
+                              },
+                              "content": "404"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "dsTwXh",
+                              "ref": "admin:MgMQ2L",
+                              "name": "Text/H1",
+                              "textAlign": "center",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "This page doesn’t exist"
+                            },
+                            {
+                              "type": "ref",
+                              "id": "uzSgCw",
+                              "ref": "admin:C5Ih8u",
+                              "name": "Text/Muted",
+                              "textAlign": "center",
+                              "width": "fill_container",
+                              "textGrowth": "fixed-width",
+                              "content": "The link may be old, or the record was removed. Nothing is wrong with your account."
+                            },
+                            {
+                              "type": "ref",
+                              "id": "wj4cgy",
+                              "ref": "admin:OkEgpu",
+                              "name": "Path",
+                              "descendants": {
+                                "admin:evfeLH": {
+                                  "content": "/moderation/R-0000"
+                                }
+                              }
+                            },
+                            {
+                              "type": "frame",
+                              "id": "sfVoKb",
+                              "name": "Actions",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "padding": [
+                                8,
+                                0,
+                                0,
+                                0
+                              ],
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "ref",
+                                  "id": "4LqaiA",
+                                  "ref": "admin:TmjZcS",
+                                  "name": "Button / Go to Overview",
+                                  "descendants": {
+                                    "admin:291RGJ": {
+                                      "content": "Go to Overview"
+                                    },
+                                    "admin:ZOwqrS": {
+                                      "icon": "layout-dashboard"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "ref",
+                                  "id": "NmCXuP",
+                                  "ref": "admin:4HU76n",
+                                  "name": "Button / Search the console",
+                                  "descendants": {
+                                    "admin:DVMBFw": {
+                                      "content": "Search the console"
+                                    },
+                                    "admin:yBvyFS": {
+                                      "icon": "search"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "ref",
+                  "id": "fXag2q",
+                  "ref": "admin:r1BU8g",
+                  "name": "Tile / Links",
+                  "width": "fill_container",
+                  "descendants": {
+                    "admin:fP0SL9": {
+                      "icon": "layout-dashboard"
+                    },
+                    "admin:eRRbg8": {
+                      "content": "Where people usually go"
+                    },
+                    "admin:h4iz4o": {
+                      "content": "Sections in your role"
+                    },
+                    "admin:Zkvo0I": {
+                      "enabled": false
+                    },
+                    "admin:GjsX0O": {
+                      "type": "frame",
+                      "id": "j9SEp3",
+                      "name": "Links",
+                      "layout": "vertical",
+                      "gap": 10,
+                      "width": "fill_container",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "9Ev7VF",
+                          "name": "Links 1",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "jT5haL",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Moderation",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "flag"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Moderation"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "16 open reports"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "YHdctj",
+                          "name": "Links 2",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "Zqn8CS",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Releases",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "disc-3"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Releases"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "7 awaiting review"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "A52B54",
+                          "name": "Links 3",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "Jyxjf7",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Catalog",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "audio-lines"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Catalog"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "4 tracks need attention"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "XxiW9C",
+                          "name": "Links 4",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "c4jwH2",
+                              "ref": "admin:kPu1hF",
+                              "name": "Link / Audit log",
+                              "width": "fill_container",
+                              "descendants": {
+                                "admin:quZCqc": {
+                                  "icon": "scroll-text"
+                                },
+                                "admin:Pv4SW9": {
+                                  "content": "Audit log"
+                                },
+                                "admin:KLSA3O": {
+                                  "content": "Latest staff actions"
+                                },
+                                "admin:EkYR5F": {
+                                  "enabled": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "** (any unknown address, staff session; replaces the silent redirect to /) — The link may be old, or the record was removed. Nothing is wrong with your account. Shown for any address the console doesn't know (apps/admin's ** route), inside the shell. Same data as the prototype (#not-found; any unknown hash opens it)."
+    }
+  ]
+}
