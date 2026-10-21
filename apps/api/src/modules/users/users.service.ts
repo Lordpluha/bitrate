@@ -26,6 +26,11 @@ import { PUBLIC_USER_SELECT, SELF_USER_SELECT } from './users.select'
 /** Which side of the follow relation a list shows. */
 export type FollowListKind = 'followers' | 'following'
 
+/** A person on a follow list, with when the follow started. */
+type FollowedUser = Prisma.UserGetPayload<{ select: typeof PUBLIC_USER_SELECT }> & {
+  followedAt: Date
+}
+
 const ACTIVITY_WINDOW_DAYS = 7
 const ACTIVITY_DEFAULT = 50
 const ACTIVITY_MAX = 100
@@ -207,25 +212,9 @@ export class UsersService {
     await this.prisma.userFollow.deleteMany({ where: { followerId, followingId } })
   }
 
-  async getFollowing(userId: string, page = 1, limit = 20) {
-    const pagination = normalizePagination(page, limit)
-    const where = { followerId: userId }
-    const [follows, total] = await this.prisma.$transaction([
-      this.prisma.userFollow.findMany({
-        where,
-        orderBy: { createdAt: 'desc' },
-        skip: pagination.skip,
-        take: pagination.limit,
-        include: { following: { select: PUBLIC_USER_SELECT } },
-      }),
-      this.prisma.userFollow.count({ where }),
-    ])
-    return {
-      data: follows.map(({ following, createdAt }) => ({ ...following, followedAt: createdAt })),
-      total,
-      page: pagination.page,
-      limit: pagination.limit,
-    }
+  /** Whom the caller follows, newest first; deleted accounts drop out. */
+  async getFollowing(userId: UserEntity['id'], page = 1, limit = 20) {
+    return await this.followPage('following', userId, page, limit)
   }
 
   /**
@@ -248,43 +237,7 @@ export class UsersService {
       const { followersVisible } = await readUserSettings(this.prisma, targetId)
       if (!followersVisible) throw new ForbiddenException(USER_ERRORS.FOLLOWS_HIDDEN)
     }
-    const pagination = normalizePagination(page, limit)
-    if (kind === 'followers') {
-      const where = { followingId: targetId, follower: { deletedAt: null } }
-      const [rows, total] = await this.prisma.$transaction([
-        this.prisma.userFollow.findMany({
-          where,
-          orderBy: [{ createdAt: 'desc' }, { followerId: 'asc' }],
-          skip: pagination.skip,
-          take: pagination.limit,
-          include: { follower: { select: PUBLIC_USER_SELECT } },
-        }),
-        this.prisma.userFollow.count({ where }),
-      ])
-      return {
-        data: rows.map(({ follower, createdAt }) => ({ ...follower, followedAt: createdAt })),
-        total,
-        page: pagination.page,
-        limit: pagination.limit,
-      }
-    }
-    const where = { followerId: targetId, following: { deletedAt: null } }
-    const [rows, total] = await this.prisma.$transaction([
-      this.prisma.userFollow.findMany({
-        where,
-        orderBy: [{ createdAt: 'desc' }, { followingId: 'asc' }],
-        skip: pagination.skip,
-        take: pagination.limit,
-        include: { following: { select: PUBLIC_USER_SELECT } },
-      }),
-      this.prisma.userFollow.count({ where }),
-    ])
-    return {
-      data: rows.map(({ following, createdAt }) => ({ ...following, followedAt: createdAt })),
-      total,
-      page: pagination.page,
-      limit: pagination.limit,
-    }
+    return await this.followPage(kind, targetId, page, limit)
   }
 
   /**
@@ -337,5 +290,49 @@ export class UsersService {
       const track = trackById.get(trackId)
       return user && track ? [{ user, track, listenedAt }] : []
     })
+  }
+
+  /**
+   * One page of a user's followers or followings, newest follow first, with the other person's
+   * public profile. Soft-deleted accounts are left out of both the page and the total.
+   */
+  private async followPage(
+    kind: FollowListKind,
+    userId: UserEntity['id'],
+    page: number,
+    limit: number,
+  ) {
+    const pagination = normalizePagination(page, limit)
+    const window = { skip: pagination.skip, take: pagination.limit }
+    let data: FollowedUser[]
+    let total: number
+    if (kind === 'followers') {
+      const where = { followingId: userId, follower: { deletedAt: null } }
+      const [rows, count] = await this.prisma.$transaction([
+        this.prisma.userFollow.findMany({
+          where,
+          orderBy: [{ createdAt: 'desc' }, { followerId: 'asc' }],
+          ...window,
+          include: { follower: { select: PUBLIC_USER_SELECT } },
+        }),
+        this.prisma.userFollow.count({ where }),
+      ])
+      data = rows.map(({ follower, createdAt }) => ({ ...follower, followedAt: createdAt }))
+      total = count
+    } else {
+      const where = { followerId: userId, following: { deletedAt: null } }
+      const [rows, count] = await this.prisma.$transaction([
+        this.prisma.userFollow.findMany({
+          where,
+          orderBy: [{ createdAt: 'desc' }, { followingId: 'asc' }],
+          ...window,
+          include: { following: { select: PUBLIC_USER_SELECT } },
+        }),
+        this.prisma.userFollow.count({ where }),
+      ])
+      data = rows.map(({ following, createdAt }) => ({ ...following, followedAt: createdAt }))
+      total = count
+    }
+    return { data, total, page: pagination.page, limit: pagination.limit }
   }
 }
