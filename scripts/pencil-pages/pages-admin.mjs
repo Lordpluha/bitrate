@@ -16,6 +16,7 @@ import {
   ukrainian,
 } from './admin-ui.mjs'
 import { notificationsPage } from './pages-admin-notifications.mjs'
+import { resourcePages } from './admin-resource.mjs'
 import { Col, L, Row, state } from './ui.mjs'
 
 const FILL = { width: 'fill_container', height: 'fill_container' }
@@ -1525,4 +1526,5 @@ export const adminPages = {
     ],
   },
   notifications: notificationsPage,
+  ...resourcePages,
 }

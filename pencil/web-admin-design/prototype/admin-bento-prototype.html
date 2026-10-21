@@ -253,7 +253,8 @@ kbd { font: 600 11px var(--font); padding: 3px 7px; border-radius: 7px; backgrou
 .big-error { grid-column: 1 / -1; grid-row: span 3; }
 
 /* ---------- dock: prototype states ---------- */
-.dock { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 40; display: flex; align-items: center; gap: 4px; padding: 6px; border-radius: 999px; background: var(--glass-strong); }
+.dock { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 40; display: flex; align-items: center; gap: 4px; padding: 6px; border-radius: 999px; background: var(--glass-strong); max-width: calc(100vw - 32px); overflow-x: auto; scrollbar-width: none; }
+.dock button { white-space: nowrap; }
 .dock small { padding: 0 10px 0 12px; color: var(--muted-fg); font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
 .dock button { height: 34px; padding: 0 14px; border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--muted-fg); }
 .dock button.on { background: color-mix(in srgb, var(--fg) 10%, transparent); color: var(--fg); }
@@ -567,6 +568,152 @@ body.device .stage { position: relative; z-index: 1; min-height: 100vh; display:
 @media (max-width: 860px) {
   .pmenu { top: 76px; bottom: auto; max-height: calc(100vh - 180px); }
 }
+/* ---------- resource pages: a KPI strip and one table tile; detail pages as a bento of tiles ---------- */
+.rpage { display: flex; flex-direction: column; gap: var(--gap); }
+.rhead h1 { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.rhead h1 .delta { font: 600 13px var(--font); letter-spacing: 0; height: 28px; padding: 0 12px; }
+.rback { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px 0 8px; margin-bottom: 12px; border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--muted-fg); background: color-mix(in srgb, var(--fg) 6%, transparent); transition: color .2s; }
+.rback:hover { color: var(--fg); }
+.rback svg { width: 16px; height: 16px; }
+.racts { flex-wrap: wrap; justify-content: flex-end; }
+.pill.danger { background: var(--error); color: var(--primary-fg); }
+.pill:disabled { opacity: .45; cursor: not-allowed; }
+.pill.busy { opacity: .8; }
+.pill.busy svg { animation: spin .9s linear infinite; }
+.delta.info { background: var(--info-surface); color: var(--info-text); }
+.rkpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gap); }
+.rkpi { flex-direction: row; align-items: center; gap: 14px; padding: 18px; cursor: default; }
+.rkpi:hover { transform: none; }
+.rkpi .ai { width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center; flex: none; background: color-mix(in srgb, var(--fg) 7%, transparent); }
+.rkpi .tx { display: flex; flex-direction: column; min-width: 0; }
+.rkpi small { color: var(--muted-fg); font-size: 12px; }
+.rkpi b { font: 600 26px/1.2 var(--display); letter-spacing: -.5px; }
+.rkpi span { color: var(--muted-fg); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rtile { padding: 0; gap: 0; cursor: default; overflow: visible; }
+.rtile:hover { transform: none; }
+.rbar, .rbulk { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--glass-line); flex-wrap: wrap; }
+.rbar .grow, .rbulk .grow { flex: 1; }
+.rbulk { background: color-mix(in srgb, var(--primary) 16%, transparent); border-radius: var(--r-tile) var(--r-tile) 0 0; animation: rise .25s cubic-bezier(.2,.8,.2,1); }
+.rbulk b { font-weight: 600; }
+.rsearch { display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 12px; flex: 1 1 240px; max-width: 340px; border-radius: 12px; border: 1px solid var(--glass-line); background: color-mix(in srgb, var(--fg) 5%, transparent); color: var(--muted-fg); }
+.rsearch input { flex: 1; min-width: 0; font: 500 14px var(--font); color: var(--fg); background: none; border: 0; outline: none; }
+.rsearch:focus-within { border-color: color-mix(in srgb, var(--primary) 60%, transparent); }
+.rfwrap { position: relative; }
+.rfilter { display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 10px 0 12px; border-radius: 12px; border: 1px solid var(--glass-line); font-size: 13px; color: var(--muted-fg); white-space: nowrap; }
+.rfilter b { color: var(--fg); font-weight: 600; }
+.rfilter svg { width: 15px; height: 15px; }
+.rfilter.on { border-color: color-mix(in srgb, var(--primary) 55%, transparent); background: color-mix(in srgb, var(--primary) 14%, transparent); }
+.rfilter:disabled { opacity: .45; cursor: default; }
+.rmenu { position: absolute; top: 44px; left: 0; z-index: 25; min-width: 210px; padding: 6px; border-radius: 16px; background: color-mix(in srgb, var(--card) 92%, transparent); border: 1px solid var(--glass-line); box-shadow: var(--shadow); -webkit-backdrop-filter: blur(22px); backdrop-filter: blur(22px); animation: pop .25s cubic-bezier(.2,.9,.25,1.2); }
+.rmenu button { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; height: 36px; padding: 0 10px; border-radius: 10px; font-size: 13px; text-align: left; }
+.rmenu button:hover { background: color-mix(in srgb, var(--fg) 6%, transparent); }
+.rmenu button.on { color: var(--accent); font-weight: 600; }
+.rmenu svg { width: 15px; height: 15px; }
+.rcount { font-size: 13px; color: var(--muted-fg); }
+.rt { width: 100%; border-collapse: collapse; font-size: 13px; }
+.rt th { text-align: left; font-size: 12px; font-weight: 600; color: var(--muted-fg); padding: 10px 12px; border-bottom: 1px solid var(--glass-line); white-space: nowrap; }
+.rt td { padding: 11px 12px; border-bottom: 1px solid var(--glass-line); vertical-align: middle; }
+.rt tbody tr:last-child td { border-bottom: 0; }
+.rt .cx { width: 52px; padding-left: 16px; padding-right: 0; }
+.rt .go { width: 44px; color: var(--muted-fg); text-align: right; padding-right: 16px; }
+.rt .go svg { width: 16px; height: 16px; }
+.rlist tbody tr { cursor: pointer; transition: background .15s; }
+.rlist tbody tr:hover td { background: color-mix(in srgb, var(--fg) 3%, transparent); }
+.rlist tbody tr:hover .go { color: var(--fg); }
+.rlist tbody tr.sel td { background: color-mix(in srgb, var(--primary) 10%, transparent); }
+.rlist tbody tr.sel td:first-child { box-shadow: inset 3px 0 0 var(--primary); }
+.rlist td:nth-child(2), .rlist th:nth-child(2) { padding-left: 12px; }
+.two { display: flex; flex-direction: column; min-width: 0; }
+.two b { font-weight: 600; }
+.two small { color: var(--muted-fg); font-size: 12px; }
+.rsort { display: inline-flex; align-items: center; gap: 4px; font-weight: 600; }
+.rsort svg { width: 13px; height: 13px; opacity: .35; }
+.rsort.on { color: var(--fg); }
+.rsort.on svg { opacity: 1; }
+.rpager { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px 8px 16px; border-top: 1px solid var(--glass-line); font-size: 13px; color: var(--muted-fg); }
+.rmsg { min-height: 340px; display: flex; padding: 20px; }
+.rmsg .msg small { max-width: 320px; }
+.rmsgt { min-height: 380px; }
+.rskel { display: flex; flex-direction: column; }
+.rsk { display: flex; align-items: center; gap: 18px; padding: 16px; border-bottom: 1px solid var(--glass-line); }
+.rcards { display: none; flex-direction: column; gap: 10px; padding: 12px; }
+.rcard { display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 18px; border: 1px solid var(--glass-line); background: color-mix(in srgb, var(--card) 50%, transparent); cursor: pointer; animation: rise .4s cubic-bezier(.2,.8,.2,1) backwards; }
+.rcard.sel { border-color: color-mix(in srgb, var(--primary) 55%, transparent); background: color-mix(in srgb, var(--primary) 10%, transparent); }
+.rcard .top { display: flex; align-items: flex-start; gap: 10px; }
+.rcard .top .two { flex: 1; }
+.rcard .meta { font-size: 12px; color: var(--muted-fg); }
+.rgrid { align-items: stretch; }
+.rgrid .tile { min-height: 0; }
+.rgrid .tc { overflow: visible; }
+.rquote { margin: 6px 0 0; padding: 12px 14px; border-left: 3px solid var(--primary); border-radius: 4px 14px 14px 4px; background: color-mix(in srgb, var(--fg) 4%, transparent); color: var(--muted-fg); font-size: 13px; font-style: italic; }
+.rmedia { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 16px; background: color-mix(in srgb, var(--fg) 5%, transparent); }
+.rmedia .ai { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; flex: none; }
+.rmedia .tx { flex: 1; min-width: 0; }
+.rmedia b { display: block; font-weight: 600; }
+.rmedia small { color: var(--muted-fg); font-size: 12px; }
+.rmedia .ibtn { background: var(--primary); color: var(--primary-fg); }
+.rchecks { display: flex; flex-direction: column; }
+.rck { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--glass-line); }
+.rck:last-child { border-bottom: 0; }
+.rck .ai { width: 28px; height: 28px; border-radius: 9px; display: grid; place-items: center; flex: none; }
+.rck .ai svg { width: 15px; height: 15px; }
+.rck b { display: block; font-weight: 500; font-size: 13px; }
+.rck small { color: var(--warning-text); font-size: 12px; }
+.rchips { display: flex; flex-direction: column; gap: 8px; padding-top: 6px; }
+.rchips small { font-size: 13px; color: var(--muted-fg); }
+.rgrid .link { align-self: flex-start; margin-top: 4px; }
+.rscrim { position: fixed; inset: 0; z-index: 70; display: grid; place-items: center; padding: 16px; background: color-mix(in srgb, var(--bg) 50%, transparent); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.rdialog { width: min(460px, 100%); border-radius: 26px; padding: 24px; display: flex; flex-direction: column; gap: 10px; background: var(--glass-strong); border: 1px solid var(--glass-line); box-shadow: var(--shadow); -webkit-backdrop-filter: blur(24px) saturate(150%); backdrop-filter: blur(24px) saturate(150%); animation: pop .3s cubic-bezier(.2,.9,.25,1.2); }
+.rdialog .ai { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; }
+.rdialog h3 { margin: 6px 0 0; font: 600 20px/1.25 var(--display); letter-spacing: -.3px; }
+.rdialog p { margin: 0; color: var(--muted-fg); }
+.rfield { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; font-size: 13px; }
+.rfield > span { font-weight: 600; }
+.rfield textarea { font: 14px/1.5 var(--font); color: var(--fg); padding: 10px 12px; border-radius: 14px; border: 1px solid var(--glass-line); background: color-mix(in srgb, var(--fg) 5%, transparent); resize: vertical; }
+.rfield textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.rfield small { color: var(--muted-fg); font-size: 12px; }
+.rfield.bad textarea { border-color: var(--error); }
+.rfield .err { display: flex; align-items: center; gap: 6px; color: var(--error-text); }
+.rfield .err svg { width: 14px; height: 14px; }
+.racts2 { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; }
+.rform .tc { gap: 4px; }
+.rstack { grid-column: span 2; display: flex; flex-direction: column; gap: var(--gap); }
+.rerr { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 12px; font-size: 13px; font-weight: 600; color: var(--error-text); background: var(--error-surface); }
+.rerr svg { width: 16px; height: 16px; }
+.rin { display: flex; align-items: center; height: 42px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--glass-line); background: color-mix(in srgb, var(--fg) 5%, transparent); }
+.rin:focus-within { border-color: color-mix(in srgb, var(--primary) 60%, transparent); }
+.rin em { font-style: normal; color: var(--muted-fg); font-size: 14px; white-space: nowrap; }
+.rin input { flex: 1; min-width: 0; font: 500 14px var(--font); color: var(--fg); background: none; border: 0; outline: none; }
+.rfield.bad .rin { border-color: var(--error); }
+.rform .rfield { margin-top: 10px; }
+.rsw { display: flex; flex-wrap: wrap; gap: 10px; padding-top: 2px; }
+.rsw button { width: 30px; height: 30px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 0 var(--bg); transition: box-shadow .2s, transform .2s; }
+.rsw button:hover { transform: scale(1.08); }
+.rsw button.on { box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--c); }
+@media (max-width: 860px) {
+  .rkpis { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .rkpi { padding: 14px; gap: 10px; flex-direction: column; align-items: flex-start; min-height: 0; }
+  .rbulk { flex-wrap: nowrap; gap: 6px; padding: 12px; }
+  .rbulk .grow { display: none; }
+  .rbulk b { flex: 1; }
+  .rbulk .pill { height: 34px; padding: 0 12px; }
+  .rbulk .pill svg { display: none; }
+  .rkpi .ai { width: 34px; height: 34px; border-radius: 11px; }
+  .rkpi b { font-size: 21px; }
+  .rlist { display: none; }
+  .rcards { display: flex; }
+  .rsearch { max-width: none; flex-basis: 100%; }
+  .rcount { display: none; }
+  .head .actions.racts { display: flex; width: 100%; justify-content: flex-start; }
+  .rt .wide { display: none; }
+  .rgrid .tile { grid-column: auto; }
+  .rstack { grid-column: auto; }
+  .rscrim { place-items: end center; padding: 0; }
+  .rdialog { width: 100%; border-radius: 28px 28px 0 0; padding: 22px 20px 34px; }
+  .rmsg { min-height: 260px; }
+  .rsk span:nth-child(3) { display: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
 }
@@ -630,6 +777,7 @@ body.device .stage { position: relative; z-index: 1; min-height: 100vh; display:
 
 <div class="dock glass" id="dock" role="toolbar" aria-label="Prototype states"></div>
 <div class="npop" id="npop" role="dialog" aria-label="Notifications"></div>
+<div id="rdlg"></div>
 <div class="npop pmenu" id="ppop" role="menu" aria-label="Profile"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="stage" id="stage">
@@ -702,6 +850,12 @@ body.device .stage { position: relative; z-index: 1; min-height: 100vh; display:
   <symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
   <symbol id="i-wifi-off" viewBox="0 0 24 24"><path d="M12 20h.01M8.5 16.43a5 5 0 0 1 7 0M2 8.82a15 15 0 0 1 4.17-2.65M10.66 5c4.01-.36 8.14.9 11.34 3.76M16.85 11.25a10 10 0 0 1 2.22 1.68M5 12.86a10 10 0 0 1 5.17-2.69M2 2l20 20"/></symbol>
   <symbol id="i-log-out" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8Z"/></symbol>
+  <symbol id="i-chev-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
+  <symbol id="i-arrow-down" viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></symbol>
 </svg>
 
@@ -744,7 +898,7 @@ const ico = (id) => `<svg class="i" aria-hidden="true"><use href="#i-${id}"/></s
 /* ---------- navigation (mirrors apps/admin) ---------- */
 const NAV = [
   [null, [['dashboard', 'Overview', 0, 'overview']]],
-  ['Operations', [['flag', 'Moderation', 16], ['disc', 'Releases', 7], ['audio', 'Catalog', 4], ['album', 'Albums'], ['list', 'Playlists'], ['podcast', 'Podcasts'], ['tags', 'Genres']]],
+  ['Operations', [['flag', 'Moderation', 16, 'moderation'], ['disc', 'Releases', 7, 'releases'], ['audio', 'Catalog', 4, 'catalog'], ['album', 'Albums', 0, 'albums'], ['list', 'Playlists', 0, 'playlists'], ['podcast', 'Podcasts', 0, 'podcasts'], ['tags', 'Genres', 0, 'genres']]],
   ['Accounts', [['mic', 'Artists'], ['users', 'Listeners']]],
   ['System', [['scroll', 'Audit log'], ['shield', 'Roles'], ['id', 'Staff']]],
   ['Settings', [['bell', 'Notifications', 0, 'notifications']]],
@@ -754,7 +908,7 @@ const MODERATOR_HIDDEN = ['Releases', 'Catalog', 'Albums', 'Playlists', 'Podcast
 const restricted = () => S.page === 'overview' && S.view === 'restricted'
 const navHTML = () => NAV.map(([g, items], gi) => `${g ? `<h6>${t(g)}</h6>` : ''}${gi ? '<hr>' : ''}${items.filter(([, l]) => !(restricted() && MODERATOR_HIDDEN.includes(l))).map(([i, l, c, page]) => {
   const n = l === 'Moderation' ? reports : c
-  return `<button type="button" class="item${page && page === S.page ? ' on' : ''}${l === 'Moderation' ? ' hot' : ''}" title="${t(l)}" data-page="${page || 'stub'}">${ico(i)}<span class="lbl">${t(l)}</span>${n ? `<span class="count num">${n}</span>` : ''}</button>`
+  return `<button type="button" class="item${page && page === navKey(S.page) ? ' on' : ''}${l === 'Moderation' ? ' hot' : ''}" title="${t(l)}" data-page="${page || 'stub'}">${ico(i)}<span class="lbl">${t(l)}</span>${n ? `<span class="count num">${n}</span>` : ''}</button>`
 }).join('')}`).join('')
 
 /* ---------- data per range ---------- */
@@ -868,10 +1022,12 @@ function overviewHTML() {
     <section class="bento" id="bento" aria-live="polite">${bentoHTML()}</section>`
 }
 function render() {
-  $('#page').innerHTML = S.page === 'overview' ? overviewHTML() : notifHTML()
+  $('#page').innerHTML = S.page === 'overview' ? overviewHTML() : S.page === 'notifications' ? notifHTML() : resHTML()
+  $('#rdlg').innerHTML = isRes() ? dialogHTML(RESOURCES[S.page], rs()) : ''
   seg($('#seg')); seg($('#mseg'))
   $('#crumb').textContent = t(PAGES[S.page])
   $$('.mtabs [data-tab]').forEach((x) => { x.classList.toggle('on', x.dataset.tab === S.page || (x.dataset.tab === 'alerts' && S.page === 'notifications')) })
+  $('#menuTab').classList.toggle('on', isRes())
   $('#nav').innerHTML = navHTML(); $('#snav').innerHTML = navHTML()
   badges()
   requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -977,13 +1133,13 @@ function toggleLang() { S.lang = S.lang === 'en' ? 'uk' : 'en'; all() }
 function toggleCollapse() { S.collapsed = !S.collapsed; chrome(); setTimeout(() => seg($('#seg')), 460) }
 
 document.addEventListener('click', (e) => {
-  if (detailClick(e)) return
+  if (detailClick(e) || resClick(e)) return
   const b = e.target.closest('button, [data-open]')
   if (!b) { if (e.target.id === 'scrim') closePalette(); if (!e.target.closest('#npop')) closePop(); if (!e.target.closest('#ppop')) closeProfile(); return }
   if (!('profile' in b.dataset) && (!b.closest('#ppop') || b.dataset.page || 'signout' in b.dataset)) closeProfile()
   if (!b.closest('#npop') && b.id !== 'bellBtn' && b.dataset.tab !== 'alerts') closePop()
   if (demoClick(b) || nsClick(b)) return
-  if (b.dataset.page) return go(b.dataset.page)
+  if (b.dataset.page) { go(b.dataset.page); if (b.dataset.pview) setView(b.dataset.pview); return }
   if (b.dataset.tab) return b.dataset.tab === 'alerts' ? togglePop() : go(b.dataset.tab)
   if ('profile' in b.dataset) return toggleProfile()
   if (b.dataset.pref === 'lang') return toggleLang()
@@ -1000,7 +1156,7 @@ document.addEventListener('click', (e) => {
   if (b.dataset.range) { S.range = b.dataset.range; seg($('#seg')); seg($('#mseg')); return render() }
   if (b.dataset.view) return setView(b.dataset.view)
   if ('online' in b.dataset) return setView('default')
-  if ('retry' in b.dataset) { S.view = 'loading'; render(); setTimeout(() => { S.view = 'default'; renderDock(); render() }, 1200); return }
+  if ('retry' in b.dataset) { putView('loading'); render(); setTimeout(() => { putView('default'); renderDock(); render() }, 1200); return }
   if (b.classList.contains('opt')) { sel = +b.dataset.k; return runSel() }
 })
 document.addEventListener('keydown', (e) => {
@@ -1419,6 +1575,3767 @@ document.addEventListener('keydown', (e) => {
 }, true)
 
 
+/* ---------- resource pages: one list template, one detail template ---------- */
+/* The data between the markers is written by scripts/pencil-pages/run-admin.mjs from admin-resources.mjs —
+   the same specs draw the Pencil pages. Edit the module, not this block. */
+/* @resources:start */
+const RESOURCES = {
+  "moderation": {
+    "kind": "list",
+    "nav": "moderation",
+    "route": "/moderation (reports:read)",
+    "icon": "flag",
+    "eyebrow": "OPERATIONS · MODERATION",
+    "title": "Moderation",
+    "sub": "Reports from listeners and artists. Oldest first, so nothing waits past the SLA.",
+    "actions": [
+      {
+        "icon": "download",
+        "label": "Export CSV"
+      }
+    ],
+    "kpis": [
+      {
+        "icon": "inbox",
+        "tone": "warn",
+        "label": "Open",
+        "value": "12",
+        "sub": "Oldest 6 h"
+      },
+      {
+        "icon": "eye",
+        "tone": "info",
+        "label": "Reviewing",
+        "value": "4",
+        "sub": "2 moderators"
+      },
+      {
+        "icon": "alert",
+        "tone": "down",
+        "label": "SLA breach",
+        "value": "3",
+        "sub": "Waiting over 6 h"
+      },
+      {
+        "icon": "check",
+        "tone": "up",
+        "label": "Resolved today",
+        "value": "27",
+        "sub": "+8 vs yesterday"
+      }
+    ],
+    "filters": [
+      {
+        "key": "status",
+        "label": "Status",
+        "value": "Open & reviewing",
+        "options": [
+          [
+            "Open & reviewing",
+            [
+              "Open",
+              "Reviewing"
+            ]
+          ],
+          [
+            "Open",
+            [
+              "Open"
+            ]
+          ],
+          [
+            "Reviewing",
+            [
+              "Reviewing"
+            ]
+          ],
+          [
+            "Resolved",
+            [
+              "Resolved"
+            ]
+          ],
+          [
+            "Rejected",
+            [
+              "Rejected"
+            ]
+          ],
+          [
+            "All statuses",
+            null
+          ]
+        ]
+      },
+      {
+        "key": "subject",
+        "by": "s",
+        "label": "Type",
+        "value": "All types",
+        "options": [
+          [
+            "All types",
+            null
+          ],
+          [
+            "Track",
+            [
+              "Track"
+            ]
+          ],
+          [
+            "Album",
+            [
+              "Album"
+            ]
+          ],
+          [
+            "Playlist",
+            [
+              "Playlist"
+            ]
+          ],
+          [
+            "Episode",
+            [
+              "Podcast episode"
+            ]
+          ],
+          [
+            "Artist",
+            [
+              "Artist"
+            ]
+          ],
+          [
+            "Listener",
+            [
+              "Listener"
+            ]
+          ]
+        ]
+      }
+    ],
+    "select": true,
+    "bulk": [
+      {
+        "icon": "check",
+        "label": "Resolve"
+      },
+      {
+        "icon": "x",
+        "label": "Dismiss"
+      }
+    ],
+    "cols": [
+      {
+        "k": "subject",
+        "l": "Reported"
+      },
+      {
+        "k": "reason",
+        "l": "Reason",
+        "w": 200
+      },
+      {
+        "k": "status",
+        "l": "Status",
+        "w": 120,
+        "sort": true
+      },
+      {
+        "k": "created",
+        "l": "Created",
+        "w": 110,
+        "sort": "asc"
+      }
+    ],
+    "rows": [
+      {
+        "id": "R-1030",
+        "subject": {
+          "t": "@mono.lith",
+          "s": "Artist"
+        },
+        "reason": "Impersonation",
+        "status": {
+          "tone": "warn",
+          "t": "Open"
+        },
+        "created": "6 h",
+        "late": true
+      },
+      {
+        "id": "R-1033",
+        "subject": {
+          "t": "Episode 41: Signal Path",
+          "s": "Podcast episode · Outer Loop"
+        },
+        "reason": "Hate speech",
+        "status": {
+          "tone": "info",
+          "t": "Reviewing"
+        },
+        "created": "4 h"
+      },
+      {
+        "id": "R-1036",
+        "subject": {
+          "t": "Low Orbit",
+          "s": "Album · Kite Harbor"
+        },
+        "reason": "Wrong artist credited",
+        "status": {
+          "tone": "warn",
+          "t": "Open"
+        },
+        "created": "3 h"
+      },
+      {
+        "id": "R-1038",
+        "subject": {
+          "t": "Glass Horizon",
+          "s": "Track · Nova & the Static"
+        },
+        "reason": "Copyright claim",
+        "status": {
+          "tone": "info",
+          "t": "Reviewing"
+        },
+        "created": "1 h"
+      },
+      {
+        "id": "R-1039",
+        "subject": {
+          "t": "Night Bus Tapes",
+          "s": "Playlist · @kilo"
+        },
+        "reason": "Offensive title",
+        "status": {
+          "tone": "warn",
+          "t": "Open"
+        },
+        "created": "52 min"
+      },
+      {
+        "id": "R-1041",
+        "subject": {
+          "t": "@driftwave",
+          "s": "Listener"
+        },
+        "reason": "Spam in playlist titles",
+        "status": {
+          "tone": "warn",
+          "t": "Open"
+        },
+        "created": "38 min"
+      },
+      {
+        "id": "R-1042",
+        "subject": {
+          "t": "Glass Horizon",
+          "s": "Track · Nova & the Static"
+        },
+        "reason": "Copyright claim",
+        "status": {
+          "tone": "warn",
+          "t": "Open"
+        },
+        "created": "12 min"
+      },
+      {
+        "id": "R-1043",
+        "subject": {
+          "t": "Afterglow",
+          "s": "Track · Lumen"
+        },
+        "reason": "Explicit, not marked",
+        "status": {
+          "tone": "warn",
+          "t": "Open"
+        },
+        "created": "4 min"
+      }
+    ],
+    "card": {
+      "title": "subject",
+      "badge": "status",
+      "meta": [
+        "reason",
+        "created"
+      ]
+    },
+    "selected": [
+      "R-1036",
+      "R-1039",
+      "R-1041"
+    ],
+    "pager": "1–8 of 16",
+    "detail": "moderation-report",
+    "detailRow": "R-1042",
+    "empty": {
+      "title": "The queue is clear",
+      "desc": "No open reports. New ones appear here as they arrive."
+    },
+    "noresults": {
+      "filter": {
+        "label": "Type",
+        "value": "Episode"
+      },
+      "title": "No reports match these filters",
+      "desc": "Nothing open on episodes. Clear the filters to see the whole queue."
+    },
+    "error": {
+      "title": "Couldn’t load the queue",
+      "desc": "The admin API didn’t respond. Nothing was changed."
+    },
+    "perm": "reports:read"
+  },
+  "moderation-report": {
+    "kind": "detail",
+    "nav": "moderation",
+    "route": "/moderation/:id (reports:read)",
+    "parent": "moderation",
+    "hash": "moderation/R-1042",
+    "icon": "flag",
+    "eyebrow": "MODERATION · R-1042",
+    "title": "Glass Horizon",
+    "status": {
+      "tone": "warn",
+      "t": "Open"
+    },
+    "sub": "Copyright claim on a track by Nova & the Static · filed 12 min ago",
+    "actions": [
+      {
+        "icon": "eye",
+        "label": "Start review"
+      },
+      {
+        "icon": "x",
+        "label": "Reject",
+        "dialog": "reject"
+      },
+      {
+        "icon": "check",
+        "label": "Resolve",
+        "primary": true,
+        "dialog": "confirm"
+      }
+    ],
+    "tiles": [
+      {
+        "w": 2,
+        "icon": "flag",
+        "title": "Report",
+        "meta": "Filed by a listener",
+        "blocks": [
+          {
+            "type": "kv",
+            "rows": [
+              [
+                "Reason",
+                "Copyright claim"
+              ],
+              [
+                "Reporter",
+                "@lumen · Listener"
+              ],
+              [
+                "Filed",
+                "Oct 20, 09:30"
+              ],
+              [
+                "Status",
+                {
+                  "tone": "warn",
+                  "t": "Open"
+                }
+              ]
+            ]
+          },
+          {
+            "type": "quote",
+            "t": "“This is the instrumental from my 2023 EP Low Light, uploaded without my permission.”"
+          }
+        ]
+      },
+      {
+        "w": 2,
+        "icon": "audio",
+        "title": "Reported content",
+        "meta": "Track",
+        "blocks": [
+          {
+            "type": "media",
+            "icon": "audio",
+            "t": "Glass Horizon",
+            "s": "Nova & the Static · 3:42"
+          },
+          {
+            "type": "kv",
+            "rows": [
+              [
+                "Album",
+                "Static Bloom"
+              ],
+              [
+                "Uploaded",
+                "Sep 2, 2026"
+              ],
+              [
+                "Plays",
+                "18,204"
+              ],
+              [
+                "State",
+                {
+                  "tone": "up",
+                  "t": "Live"
+                }
+              ]
+            ]
+          }
+        ],
+        "link": "Open in Catalog"
+      },
+      {
+        "w": 2,
+        "icon": "list",
+        "title": "Other reports on this subject",
+        "meta": "2 more",
+        "blocks": [
+          {
+            "type": "table",
+            "cols": [
+              {
+                "l": "Report"
+              },
+              {
+                "l": "Status",
+                "w": 110
+              },
+              {
+                "l": "Filed",
+                "w": 70
+              }
+            ],
+            "rows": [
+              [
+                {
+                  "t": "R-1038",
+                  "s": "Copyright claim"
+                },
+                {
+                  "tone": "info",
+                  "t": "Reviewing"
+                },
+                "1 h"
+              ],
+              [
+                {
+                  "t": "R-1011",
+                  "s": "Explicit, not marked"
+                },
+                {
+                  "tone": "up",
+                  "t": "Resolved"
+                },
+                "5 d"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "w": 2,
+        "icon": "scroll",
+        "title": "History",
+        "meta": "This report",
+        "blocks": [
+          {
+            "type": "feed",
+            "items": [
+              [
+                "@lumen filed the report",
+                "12 min"
+              ],
+              [
+                "Audio match: 82% similar to “Low Light”",
+                "11 min"
+              ],
+              [
+                "Added to the open queue",
+                "11 min"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "dialogs": {
+      "confirm": {
+        "tone": "success",
+        "icon": "check",
+        "title": "Resolve report R-1042?",
+        "desc": "The track stays live unless you take it down in Catalog. @lumen is told the report was resolved.",
+        "action": "Resolve report"
+      },
+      "reject": {
+        "tone": "error",
+        "icon": "x",
+        "title": "Reject report R-1042?",
+        "desc": "Nothing changes on the track. @lumen is told the report was rejected.",
+        "action": "Reject report",
+        "danger": true
+      }
+    },
+    "saving": "Resolving…",
+    "notfound": {
+      "title": "Report not found",
+      "desc": "R-1099 doesn’t exist or was removed. Check the link, or go back to the queue."
+    },
+    "error": {
+      "title": "Couldn’t load this report",
+      "desc": "The admin API didn’t respond. Nothing was changed."
+    },
+    "perm": "reports:read"
+  },
+  "releases": {
+    "kind": "list",
+    "nav": "releases",
+    "route": "/releases (releases:read)",
+    "icon": "disc",
+    "eyebrow": "OPERATIONS · RELEASES",
+    "title": "Releases",
+    "sub": "Releases artists sent for review before they go live.",
+    "kpis": [
+      {
+        "icon": "inbox",
+        "tone": "warn",
+        "label": "Awaiting review",
+        "value": "7",
+        "sub": "Oldest 2 days"
+      },
+      {
+        "icon": "clock",
+        "tone": "info",
+        "label": "Changes requested",
+        "value": "3",
+        "sub": "Waiting on artists"
+      },
+      {
+        "icon": "check",
+        "tone": "up",
+        "label": "Approved this week",
+        "value": "24",
+        "sub": "+6 vs last week"
+      },
+      {
+        "icon": "trend",
+        "tone": "flat",
+        "label": "Median review",
+        "value": "1.4 d",
+        "sub": "Last 30 days"
+      }
+    ],
+    "search": "Search title or artist",
+    "filters": [
+      {
+        "key": "status",
+        "label": "Status",
+        "value": "All statuses",
+        "options": [
+          [
+            "All statuses",
+            null
+          ],
+          [
+            "Awaiting review",
+            [
+              "Submitted",
+              "In review"
+            ]
+          ],
+          [
+            "Changes requested",
+            [
+              "Changes requested"
+            ]
+          ],
+          [
+            "Approved",
+            [
+              "Approved"
+            ]
+          ]
+        ]
+      }
+    ],
+    "cols": [
+      {
+        "k": "release",
+        "l": "Release"
+      },
+      {
+        "k": "type",
+        "l": "Type",
+        "w": 90
+      },
+      {
+        "k": "tracks",
+        "l": "Tracks",
+        "w": 70
+      },
+      {
+        "k": "status",
+        "l": "Status",
+        "w": 160
+      },
+      {
+        "k": "submitted",
+        "l": "Submitted",
+        "w": 110,
+        "sort": "asc"
+      }
+    ],
+    "rows": [
+      {
+        "id": "static-lines",
+        "release": {
+          "t": "Static Lines",
+          "s": "Kite Harbor"
+        },
+        "type": "EP",
+        "tracks": "5",
+        "status": {
+          "tone": "warn",
+          "t": "Submitted"
+        },
+        "submitted": "2 d"
+      },
+      {
+        "id": "night-swim",
+        "release": {
+          "t": "Night Swim",
+          "s": "Ivy Arcade"
+        },
+        "type": "Single",
+        "tracks": "2",
+        "status": {
+          "tone": "down",
+          "t": "Changes requested"
+        },
+        "submitted": "3 d"
+      },
+      {
+        "id": "paper-satellites",
+        "release": {
+          "t": "Paper Satellites",
+          "s": "Nova & the Static"
+        },
+        "type": "Album",
+        "tracks": "11",
+        "status": {
+          "tone": "info",
+          "t": "In review"
+        },
+        "submitted": "20 h"
+      },
+      {
+        "id": "afterglow",
+        "release": {
+          "t": "Afterglow",
+          "s": "Lumen"
+        },
+        "type": "Single",
+        "tracks": "1",
+        "status": {
+          "tone": "warn",
+          "t": "Submitted"
+        },
+        "submitted": "1 d"
+      },
+      {
+        "id": "low-tide-radio",
+        "release": {
+          "t": "Low Tide Radio",
+          "s": "Mono Lith"
+        },
+        "type": "EP",
+        "tracks": "4",
+        "status": {
+          "tone": "warn",
+          "t": "Submitted"
+        },
+        "submitted": "14 h"
+      },
+      {
+        "id": "glass-garden",
+        "release": {
+          "t": "Glass Garden",
+          "s": "Fern Lane"
+        },
+        "type": "Album",
+        "tracks": "9",
+        "status": {
+          "tone": "warn",
+          "t": "Submitted"
+        },
+        "submitted": "9 h"
+      },
+      {
+        "id": "driftwood",
+        "release": {
+          "t": "Driftwood",
+          "s": "Kilo"
+        },
+        "type": "Single",
+        "tracks": "1",
+        "status": {
+          "tone": "up",
+          "t": "Approved"
+        },
+        "submitted": "4 d"
+      }
+    ],
+    "card": {
+      "title": "release",
+      "badge": "status",
+      "meta": [
+        "type",
+        "submitted"
+      ]
+    },
+    "pager": "1–7 of 7",
+    "detail": "release-review",
+    "detailRow": "static-lines",
+    "empty": {
+      "title": "Nothing to review",
+      "desc": "No releases are waiting. New submissions appear here."
+    },
+    "noresults": {
+      "query": "orbit",
+      "title": "No releases match “orbit”",
+      "desc": "Try another title or artist, or clear the status filter."
+    },
+    "error": {
+      "title": "Couldn’t load releases",
+      "desc": "The admin API didn’t respond. Nothing was changed."
+    },
+    "perm": "releases:read"
+  },
+  "release-review": {
+    "kind": "detail",
+    "nav": "releases",
+    "route": "/releases/:id (releases:read; decisions need releases:write)",
+    "parent": "releases",
+    "hash": "releases/static-lines",
+    "icon": "disc",
+    "eyebrow": "RELEASES · REVIEW",
+    "title": "Static Lines",
+    "status": {
+      "tone": "warn",
+      "t": "Submitted"
+    },
+    "sub": "EP by Kite Harbor · 5 recordings · submitted 2 days ago",
+    "actions": [
+      {
+        "icon": "edit",
+        "label": "Request changes",
+        "dialog": "changes"
+      },
+      {
+        "icon": "check",
+        "label": "Approve",
+        "primary": true,
+        "dialog": "confirm"
+      }
+    ],
+    "tiles": [
+      {
+        "w": 2,
+        "icon": "clock",
+        "title": "Release plan",
+        "meta": "Set by the artist",
+        "blocks": [
+          {
+            "type": "kv",
+            "rows": [
+              [
+                "Planned date",
+                "Nov 7, 2026"
+              ],
+              [
+                "Label",
+                "Harbor Tapes"
+              ],
+              [
+                "Genre",
+                "Dream pop"
+              ],
+              [
+                "Explicit",
+                "No"
+              ]
+            ]
+          },
+          {
+            "type": "chips",
+            "label": "Territories",
+            "items": [
+              "Worldwide",
+              "Except CU, IR, KP"
+            ]
+          }
+        ]
+      },
+      {
+        "w": 2,
+        "icon": "shield",
+        "title": "Rights confirmations",
+        "meta": "3 of 4 confirmed",
+        "blocks": [
+          {
+            "type": "checks",
+            "items": [
+              [
+                true,
+                "Owns or controls the master recordings"
+              ],
+              [
+                true,
+                "Composition rights are cleared"
+              ],
+              [
+                true,
+                "Cover art is original or licensed"
+              ],
+              [
+                false,
+                "No uncleared samples",
+                "Track 3 notes a sample from “Blue Hour” (1998)"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "w": 4,
+        "icon": "audio",
+        "title": "Recordings",
+        "meta": "5 recordings · 19:42",
+        "blocks": [
+          {
+            "type": "table",
+            "cols": [
+              {
+                "l": "#",
+                "w": 30
+              },
+              {
+                "l": "Recording"
+              },
+              {
+                "l": "ISRC",
+                "w": 140,
+                "wide": true
+              },
+              {
+                "l": "Length",
+                "w": 70
+              },
+              {
+                "l": "Master",
+                "w": 120
+              }
+            ],
+            "rows": [
+              [
+                "1",
+                "Static Lines",
+                "USX9P2600011",
+                "3:58",
+                {
+                  "tone": "up",
+                  "t": "WAV 24/48"
+                }
+              ],
+              [
+                "2",
+                "Ferry Lights",
+                "USX9P2600012",
+                "4:12",
+                {
+                  "tone": "up",
+                  "t": "WAV 24/48"
+                }
+              ],
+              [
+                "3",
+                "Blue Hour (Reprise)",
+                "USX9P2600013",
+                "3:31",
+                {
+                  "tone": "warn",
+                  "t": "Sample"
+                }
+              ],
+              [
+                "4",
+                "Undertow",
+                "USX9P2600014",
+                "4:05",
+                {
+                  "tone": "up",
+                  "t": "WAV 24/48"
+                }
+              ],
+              [
+                "5",
+                "Coastline",
+                "USX9P2600015",
+                "3:56",
+                {
+                  "tone": "up",
+                  "t": "WAV 24/48"
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "w": 4,
+        "icon": "users",
+        "title": "Contributors",
+        "meta": "Splits add up to 100%",
+        "blocks": [
+          {
+            "type": "table",
+            "cols": [
+              {
+                "l": "Contributor"
+              },
+              {
+                "l": "Roles",
+                "w": 240,
+                "wide": true
+              },
+              {
+                "l": "Share",
+                "w": 70
+              }
+            ],
+            "rows": [
+              [
+                {
+                  "t": "Kite Harbor",
+                  "s": "Primary artist"
+                },
+                "Performer, producer",
+                "60%"
+              ],
+              [
+                {
+                  "t": "Mara Vey",
+                  "s": "Writer"
+                },
+                "Composer, lyricist",
+                "25%"
+              ],
+              [
+                {
+                  "t": "Ode Sun",
+                  "s": "Featured on 4"
+                },
+                "Featured artist",
+                "15%"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "dialogs": {
+      "confirm": {
+        "tone": "success",
+        "icon": "check",
+        "title": "Approve Static Lines?",
+        "desc": "It goes live on Nov 7 in the selected territories. Kite Harbor is notified.",
+        "action": "Approve release"
+      },
+      "changes": {
+        "tone": "warning",
+        "icon": "edit",
+        "title": "Request changes",
+        "desc": "Kite Harbor sees each line as a task and resubmits when done.",
+        "field": {
+          "label": "Required changes",
+          "hint": "One change per line",
+          "value": [
+            "Clear the sample in “Blue Hour (Reprise)” or remove it",
+            "Credit Ode Sun on track 4"
+          ],
+          "error": "Add at least one change"
+        },
+        "action": "Send to artist"
+      }
+    },
+    "saving": "Approving…",
+    "notfound": {
+      "title": "Release not found",
+      "desc": "This release doesn’t exist or the artist withdrew it. Go back to the queue."
+    },
+    "error": {
+      "title": "Couldn’t load this release",
+      "desc": "The admin API didn’t respond. Nothing was changed."
+    },
+    "perm": "releases:read"
+  },
+  "catalog": {
+    "kind": "list",
+    "nav": "catalog",
+    "route": "/catalog (tracks:read)",
+    "icon": "audio",
+    "eyebrow": "OPERATIONS · CATALOG",
+    "title": "Catalog",
+    "sub": "Every uploaded track and where it is in the processing pipeline.",
+    "actions": [
+      {
+        "icon": "download",
+        "label": "Export CSV"
+      }
+    ],
+    "kpis": [
+      {
+        "icon": "check",
+        "tone": "up",
+        "label": "Ready",
+        "value": "1,284",
+        "sub": "Last 24 h"
+      },
+      {
+        "icon": "refresh",
+        "tone": "info",
+        "label": "Processing",
+        "value": "47",
+        "sub": "Median 3 min"
+      },
+      {
+        "icon": "clock",
+        "tone": "warn",
+        "label": "Stuck > 30 min",
+        "value": "1",
+        "sub": "Oldest 42 min"
+      },
+      {
+        "icon": "alert",
+        "tone": "down",
+        "label": "Failed",
+        "value": "3",
+        "sub": "Needs a reprocess"
+      }
+    ],
+    "search": "Search title or artist",
+    "filters": [
+      {
+        "key": "pipeline",
+        "label": "Pipeline",
+        "value": "All",
+        "options": [
+          [
+            "All",
+            null
+          ],
+          [
+            "Failed",
+            [
+              "Failed"
+            ]
+          ],
+          [
+            "Stuck",
+            [
+              "Stuck"
+            ]
+          ],
+          [
+            "Processing",
+            [
+              "Processing"
+            ]
+          ],
+          [
+            "Ready",
+            [
+              "Ready"
+            ]
+          ]
+        ]
+      },
+      {
+        "key": "resource",
+        "label": "Resource",
+        "value": "Any",
+        "options": [
+          [
+            "Any",
+            null
+          ],
+          [
+            "Live",
+            [
+              "Live"
+            ]
+          ],
+          [
+            "Taken down",
+            [
+              "Taken down"
+            ]
+          ]
+        ]
+      }
+    ],
+    "select": true,
+    "bulk": [
+      {
+        "icon": "refresh",
+        "label": "Reprocess"
+      },
+      {
+        "icon": "x",
+        "label": "Take down",
+        "dialog": "bulk"
+      }
+    ],
+    "cols": [
+      {
+        "k": "track",
+        "l": "Title",
+        "sort": "asc"
+      },
+      {
+        "k": "pipeline",
+        "l": "Pipeline",
+        "w": 130
+      },
+      {
+        "k": "resource",
+        "l": "Resource",
+        "w": 120,
+        "wide": true
+      },
+      {
+        "k": "started",
+        "l": "Started",
+        "w": 100
+      },
+      {
+        "k": "attempts",
+        "l": "Attempts",
+        "w": 80,
+        "wide": true
+      }
+    ],
+    "rows": [
+      {
+        "id": "late-signal",
+        "track": {
+          "t": "Late Signal",
+          "s": "Outer Loop"
+        },
+        "pipeline": {
+          "tone": "down",
+          "t": "Failed"
+        },
+        "resource": {
+          "tone": "up",
+          "t": "Live"
+        },
+        "started": "5 h",
+        "attempts": "3"
+      },
+      {
+        "id": "drift-control",
+        "track": {
+          "t": "Drift Control",
+          "s": "Mira Sol"
+        },
+        "pipeline": {
+          "tone": "warn",
+          "t": "Stuck"
+        },
+        "resource": {
+          "tone": "up",
+          "t": "Live"
+        },
+        "started": "42 min",
+        "attempts": "1"
+      },
+      {
+        "id": "glass-horizon",
+        "track": {
+          "t": "Glass Horizon",
+          "s": "Nova & the Static"
+        },
+        "pipeline": {
+          "tone": "up",
+          "t": "Ready"
+        },
+        "resource": {
+          "tone": "up",
+          "t": "Live"
+        },
+        "started": "Sep 2",
+        "attempts": "1"
+      },
+      {
+        "id": "ferry-lights",
+        "track": {
+          "t": "Ferry Lights",
+          "s": "Kite Harbor"
+        },
+        "pipeline": {
+          "tone": "info",
+          "t": "Processing"
+        },
+        "resource": {
+          "tone": "up",
+          "t": "Live"
+        },
+        "started": "3 min",
+        "attempts": "1"
+      },
+      {
+        "id": "undertow",
+        "track": {
+          "t": "Undertow",
+          "s": "Kite Harbor"
+        },
+        "pipeline": {
+          "tone": "info",
+          "t": "Processing"
+        },
+        "resource": {
+          "tone": "up",
+          "t": "Live"
+        },
+        "started": "2 min",
+        "attempts": "1"
+      },
+      {
+        "id": "paper-moon",
+        "track": {
+          "t": "Paper Moon",
+          "s": "Fern Lane"
+        },
+        "pipeline": {
+          "tone": "down",
+          "t": "Failed"
+        },
+        "resource": {
+          "tone": "up",
+          "t": "Live"
+        },
+        "started": "1 h",
+        "attempts": "2"
+      },
+      {
+        "id": "cold-open",
+        "track": {
+          "t": "Cold Open",
+          "s": "Lumen"
+        },
+        "pipeline": {
+          "tone": "up",
+          "t": "Ready"
+        },
+        "resource": {
+          "tone": "flat",
+          "t": "Taken down"
+        },
+        "started": "Aug 14",
+        "attempts": "1"
+      },
+      {
+        "id": "static-bloom",
+        "track": {
+          "t": "Static Bloom",
+          "s": "Nova & the Static"
+        },
+        "pipeline": {
+          "tone": "up",
+          "t": "Ready"
+        },
+        "resource": {
+          "tone": "up",
+          "t": "Live"
+        },
+        "started": "Sep 2",
+        "attempts": "1"
+      }
+    ],
+    "card": {
+      "title": "track",
+      "badge": "pipeline",
+      "meta": [
+        "resource",
+        "started"
+      ]
+    },
+    "selected": [
+      "late-signal",
+      "paper-moon"
+    ],
+    "pager": "1–8 of 1,335",
+    "detail": "catalog-track",
+    "dialogs": {
+      "bulk": {
+        "tone": "error",
+        "icon": "x",
+        "title": "Take down 2 tracks?",
+        "desc": "Listeners lose access right away. Artists are told why; you can restore the tracks later.",
+        "action": "Take down 2 tracks",
+        "titleOne": "Take down 1 track?",
+        "actionOne": "Take down 1 track",
+        "danger": true
+      }
+    },
+    "saving": "Taking down…",
+    "empty": {
+      "title": "No tracks yet",
+      "desc": "Uploads appear here as artists send them."
+    },
+    "noresults": {
+      "filter": {
+        "label": "Pipeline",
+        "value": "Stuck"
+      },
+      "query": "harbor",
+      "title": "No stuck tracks match “harbor”",
+      "desc": "Try another title or artist, or clear the filters."
+    },
+    "error": {
+      "title": "Couldn’t load the catalog",
+      "desc": "The admin API didn’t respond. Nothing was changed."
+    },
+    "perm": "tracks:read"
+  },
+  "catalog-track": {
+    "kind": "detail",
+    "nav": "catalog",
+    "route": "/catalog/:id (tracks:read; actions need tracks:write)",
+    "parent": "catalog",
+    "hash": "catalog/late-signal",
+    "icon": "audio",
+    "eyebrow": "CATALOG · TRACK",
+    "title": "Late Signal",
+    "status": {
+      "tone": "down",
+      "t": "Failed"
+    },
+    "sub": "Outer Loop · from Signal Path · uploaded Oct 20, 04:12",
+    "actions": [
+      {
+        "icon": "x",
+        "label": "Take down",
+        "dialog": "takedown"
+      },
+      {
+        "icon": "refresh",
+        "label": "Reprocess",
+        "primary": true,
+        "dialog": "confirm"
+      }
+    ],
+    "tiles": [
+      {
+        "w": 2,
+        "icon": "audio",
+        "title": "Track",
+        "meta": "As the artist sent it",
+        "blocks": [
+          {
+            "type": "media",
+            "icon": "audio",
+            "t": "Late Signal",
+            "s": "Outer Loop · 4:51 · original upload"
+          },
+          {
+            "type": "kv",
+            "rows": [
+              [
+                "Album",
+                "Signal Path"
+              ],
+              [
+                "ISRC",
+                "GBX7L2600104"
+              ],
+              [
+                "Genres",
+                "Ambient, Downtempo"
+              ],
+              [
+                "Resource",
+                {
+                  "tone": "up",
+                  "t": "Live"
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "w": 2,
+        "icon": "alert",
+        "title": "Last error",
+        "meta": "Attempt 3 · transcode",
+        "blocks": [
+          {
+            "type": "quote",
+            "t": "ffmpeg: unsupported codec \"alac\" in stream 0:0 — the upload is an M4A with Apple Lossless audio."
+          },
+          {
+            "type": "kv",
+            "rows": [
+              [
+                "Worker",
+                "media-worker-2"
+              ],
+              [
+                "Failed at",
+                "Oct 20, 09:12"
+              ],
+              [
+                "Next step",
+                "Ask for a WAV or FLAC"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "w": 4,
+        "icon": "list",
+        "title": "Processing history",
+        "meta": "3 attempts",
+        "blocks": [
+          {
+            "type": "table",
+            "cols": [
+              {
+                "l": "#",
+                "w": 30
+              },
+              {
+                "l": "Step"
+              },
+              {
+                "l": "Status",
+                "w": 110
+              },
+              {
+                "l": "Trigger",
+                "w": 110,
+                "wide": true
+              },
+              {
+                "l": "Worker",
+                "w": 140,
+                "wide": true
+              },
+              {
+                "l": "Duration",
+                "w": 80
+              }
+            ],
+            "rows": [
+              [
+                "3",
+                "Transcode",
+                {
+                  "tone": "down",
+                  "t": "Failed"
+                },
+                "Reprocess",
+                "media-worker-2",
+                "0:14"
+              ],
+              [
+                "2",
+                "Transcode",
+                {
+                  "tone": "down",
+                  "t": "Failed"
+                },
+                "Retry",
+                "media-worker-1",
+                "0:12"
+              ],
+              [
+                "1",
+                "Transcode",
+                {
+                  "tone": "down",
+                  "t": "Failed"
+                },
+                "Upload",
+                "media-worker-2",
+                "0:13"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "w": 2,
+        "icon": "disc",
+        "title": "Renditions",
+        "meta": "None ready",
+        "blocks": [
+          {
+            "type": "table",
+            "cols": [
+              {
+                "l": "Format"
+              },
+              {
+                "l": "Bitrate",
+                "w": 96
+              },
+              {
+                "l": "State",
+                "w": 100
+              }
+            ],
+            "rows": [
+              [
+                "AAC",
+                "256 kbps",
+                {
+                  "tone": "flat",
+                  "t": "Waiting"
+                }
+              ],
+              [
+                "Opus",
+                "160 kbps",
+                {
+                  "tone": "flat",
+                  "t": "Waiting"
+                }
+              ],
+              [
+                "FLAC",
+                "Lossless",
+                {
+                  "tone": "flat",
+                  "t": "Waiting"
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "w": 2,
+        "icon": "users",
+        "title": "Credits",
+        "meta": "2 people",
+        "blocks": [
+          {
+            "type": "kv",
+            "rows": [
+              [
+                "Performer",
+                "Outer Loop"
+              ],
+              [
+                "Producer",
+                "Ode Sun"
+              ],
+              [
+                "Open reports",
+                "None"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "dialogs": {
+      "confirm": {
+        "tone": "success",
+        "icon": "refresh",
+        "title": "Reprocess Late Signal?",
+        "desc": "It runs the pipeline again from the original upload. The same codec will fail unless the artist replaces the file.",
+        "action": "Reprocess"
+      },
+      "takedown": {
+        "tone": "error",
+        "icon": "x",
+        "title": "Take down Late Signal?",
+        "desc": "Listeners lose access right away. Outer Loop is told why; you can restore it later.",
+        "action": "Take down track",
+        "danger": true
+      }
+    },
+    "saving": "Queuing…",
+    "notfound": {
+      "title": "Track not found",
+      "desc": "This track doesn’t exist or was deleted. Go back to the catalog."
+    },
+    "error": {
+      "title": "Couldn’t load this track",
+      "desc": "The admin API didn’t respond. Nothing was changed."
+    },
+    "perm": "tracks:read"
+  },
+  "albums": {
+    "kind": "list",
+    "nav": "albums",
+    "route": "/albums (albums:read)",
+    "icon": "album",
+    "eyebrow": "OPERATIONS · ALBUMS",
+    "title": "Albums",
+    "sub": "Albums, EPs and singles as listeners see them.",
+    "kpis": [
+      {
+        "icon": "album",
+        "tone": "up",
+        "label": "Live",
+        "value": "18,402",
+        "sub": "Across 2,316 artists"
+      },
+      {
+        "icon": "trend",
+        "tone": "info",
+        "label": "Released this week",
+        "value": "312",
+        "sub": "+18 vs last week"
+      },
+      {
+        "icon": "flag",
+        "tone": "warn",
+        "label": "Reported",
+        "value": "2",
+        "sub": "Open reports"
+      },
+      {
+        "icon": "x",
+        "tone": "flat",
+        "label": "Taken down",
+        "value": "27",
+        "sub": "All time"
+      }
+    ],
+    "search": "Search title or artist",
+    "filters": [
+      {
+        "key": "state",
+        "label": "Status",
+        "value": "Live",
+        "options": [
+          [
+            "Live",
+            [
+              "Live"
+            ]
+          ],
+          [
+            "Taken down",
+            [
+              "Taken down"
+            ]
+          ],
+          [
+            "All",
+            null
+          ]
+        ]
+      }
+    ],
+    "cols": [
+      {
+        "k": "album",
+        "l": "Title"
+      },
+      {
+        "k": "type",
+        "l": "Type",
+        "w": 90
+      },
+      {
+        "k": "tracks",
+        "l": "Tracks",
+        "w": 70
+      },
+      {
+        "k": "released",
+        "l": "Release date",
+        "w": 130,
+        "sort": "desc"
+      },
+      {
+        "k": "state",
+        "l": "Status",
+        "w": 120,
+        "wide": true
+      }
+    ],
+    "rows": [
+      {
+        "id": "signal-path",
+        "album": {
+          "t": "Signal Path",
+          "s": "Outer Loop"
+        },
+        "type": "Album",
+        "tracks": "10",
+        "released": "Oct 18, 2026",
+        "state": {
+          "tone": "up",
+          "t": "Live"
+        }
+      },
+      {
+        "id": "low-orbit",
+        "album": {
+          "t": "Low Orbit",
+          "s": "Kite Harbor"
+        },
+        "type": "EP",
+        "tracks": "5",
+        "released": "Oct 9, 2026",
+        "state": {
+          "tone": "up",
+          "t": "Live"
+        }
+      },
+      {
+        "id": "static-bloom",
+        "album": {
+          "t": "Static Bloom",
+          "s": "Nova & the Static"
+        },
+        "type": "Album",
+        "tracks": "12",
+        "released": "Sep 2, 2026",
+        "state": {
+          "tone": "up",
+          "t": "Live"
+        }
+      },
+      {
+        "id": "afterglow",
+        "album": {
+          "t": "Afterglow",
+          "s": "Lumen"
+        },
+        "type": "Single",
+        "tracks": "1",
+        "released": "Aug 30, 2026",
+        "state": {
+          "tone": "up",
+          "t": "Live"
+        }
+      },
+      {
+        "id": "night-shift",
+        "album": {
+          "t": "Night Shift",
+          "s": "Ivy Arcade"
+        },
+        "type": "EP",
+        "tracks": "4",
+        "released": "Aug 21, 2026",
+        "state": {
+          "tone": "up",
+          "t": "Live"
+        }
+      },
+      {
+        "id": "fern-lane",
+        "album": {
+          "t": "Fern Lane",
+          "s": "Fern Lane"
+        },
+        "type": "Album",
+        "tracks": "9",
+        "released": "Jul 12, 2026",
+        "state": {
+          "tone": "up",
+          "t": "Live"
+        }
+      }
+    ],
+    "card": {
+      "title": "album",
+      "badge": "state",
+      "meta": [
+        "type",
+        "released"
+      ]
+    },
+    "pager": "1–6 of 18,402",
+    "detail": "album",
+    "empty": {
+      "title": "No albums yet",
+      "desc": "Albums appear here once their releases are approved."
+    },
+    "noresults": {
+      "query": "harbour",
+      "title": "No albums match “harbour”",
+      "desc": "Try another title or artist, or clear the status filter."
+    },
+    "error": {
+      "title": "Couldn’t load albums",
+      "desc": "The admin API didn’t respond. Nothing was changed."
+    },
+    "perm": "albums:read"
+  },
+  "album": {
+    "kind": "detail",
+    "nav": "albums",
+    "route": "/albums/:id (albums:read; take-down needs albums:write)",
+    "parent": "albums",
+    "hash": "albums/low-orbit",
+    "icon": "album",
+    "eyebrow": "ALBUMS · EP",
+    "title": "Low Orbit",
+    "status": {
+      "tone": "up",
+      "t": "Live"
+    },
+    "sub": "EP by Kite Harbor · 5 tracks · released Oct 9, 2026",
+    "actions": [
+      {
+        "icon": "x",
+        "label": "Take down",
+        "primary": true,
+        "danger": true,
+        "dialog": "takedown"
+      }
+    ],
+    "tiles": [
+      {
+        "w": 2,
+        "icon": "album",
+        "title": "Details",
+        "meta": "From the release",
+        "blocks": [
+          {
+            "type": "kv",
+            "rows": [
+              [
+                "Label",
+                "Harbor Tapes"
+              ],
+              [
+                "Copyright",
+                "℗ 2026 Harbor Tapes"
+              ],
+              [
+                "Released",
+                "Oct 9, 2026"
+              ],
+              [
+                "UPC",
+                "196925301144"
+              ],
+              [
+                "Open reports",
+                "1"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "w": 2,
+        "icon": "trend",
+        "title": "Listening",
+        "meta": "Since release",
+        "blocks": [
+          {
+            "type": "kv",
+            "rows": [
+              [
+                "Plays",
+                "84,210"
+              ],
+              [
+                "Listeners",
+                "12,904"
+              ],
+              [
+                "Saves",
+                "2,311"
+              ],
+              [
+                "In playlists",
+                "418"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "w": 4,
+        "icon": "list",
+        "title": "Tracks",
+        "meta": "5 tracks · 19:20",
+        "blocks": [
+          {
+            "type": "table",
+            "cols": [
+              {
+                "l": "#",
+                "w": 30
+              },
+              {
+                "l": "Disc",
+                "w": 50,
+                "wide": true
+              },
+              {
+                "l": "Track"
+              },
+              {
+                "l": "Length",
+                "w": 70
+              },
+              {
+                "l": "State",
+                "w": 120
+              }
+            ],
+            "rows": [
+              [
+                "1",
+                "1",
+                "Low Orbit",
+                "3:48",
+                {
+                  "tone": "up",
+                  "t": "Live"
+                }
+              ],
+              [
+                "2",
+                "1",
+                "Weather Balloon",
+                "4:02",
+                {
+                  "tone": "up",
+                  "t": "Live"
+                }
+              ],
+              [
+                "3",
+                "1",
+                "Apogee",
+                "3:31",
+                {
+                  "tone": "up",
+                  "t": "Live"
+                }
+              ],
+              [
+                "4",
+                "1",
+                "Night Side",
+                "4:10",
+                {
+                  "tone": "up",
+                  "t": "Live"
+                }
+              ],
+              [
+                "5",
+                "1",
+                "Re-entry",
+                "3:49",
+                {
+                  "tone": "up",
+                  "t": "Live"
+                }
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "dialogs": {
+      "takedown": {
+        "tone": "error",
+        "icon": "x",
+        "title": "Take down Low Orbit?",
+        "desc": "All 5 tracks leave search, playlists and libraries. Kite Harbor is told why; you can restore it later.",
+        "action": "Take down album",
+        "danger": true
+      }
+    },
+    "saving": "Taking down…",
+    "notfound": {
+      "title": "Album not found",
+      "desc": "This album doesn’t exist or was deleted. Go back to albums."
+    },
+    "error": {
+      "title": "Couldn’t load this album",
+      "desc": "The admin API didn’t respond. Nothing was changed."
+    },
+    "perm": "albums:read"
+  },
+  "playlists": {
+    "kind": "list",
+    "nav": "playlists",
+    "route": "/playlists (playlists:read)",
+    "icon": "list",
+    "eyebrow": "OPERATIONS · PLAYLISTS",
+    "title": "Playlists",
+    "sub": "Listener playlists, with who made them and how far they reach.",
+    "kpis": [
+      {
+        "icon": "list",
+        "tone": "up",
+        "label": "Public",
+        "value": "92,418",
+        "sub": "61% of all playlists"
+      },
+      {
+        "icon": "trend",
+        "tone": "info",
+        "label": "Created this week",
+        "value": "1,206",
+        "sub": "+4% vs last week"
+      },
+      {
+        "icon": "users",
+        "tone": "flat",
+        "label": "Collaborative",
+        "value": "8,931",
+        "sub": "2+ editors"
+      },
+      {
+        "icon": "flag",
+        "tone": "warn",
+        "label": "Reported",
+        "value": "1",
+        "sub": "Open report"
+      }
+    ],
+    "search": "Search title or owner",
+    "filters": [
+      {
+        "key": "visibility",
+        "label": "Visibility",
+        "value": "All",
+        "options": [
+          [
+            "All",
+            null
+          ],
+          [
+            "Public",
+            [
+              "Public"
+            ]
+          ],
+          [
+            "Private",
+            [
+              "Private"
+            ]
+          ],
+          [
+            "Taken down",
+            [
+              "Taken down"
+            ]
+          ]
+        ]
+      }
+    ],
+    "cols": [
+      {
+        "k": "playlist",
+        "l": "Title"
+      },
+      {
+        "k": "tracks",
+        "l": "Tracks",
+        "w": 70
+      },
+      {
+        "k": "followers",
+        "l": "Followers",
+        "w": 100,
+        "sort": "desc"
+      },
+      {
+        "k": "visibility",
+        "l": "Visibility",
+        "w": 120
+      },
+      {
+        "k": "created",
+        "l": "Created",
+        "w": 110,
+        "wide": true
+      }
+    ],
+    "rows": [
+      {
+        "id": "night-bus-tapes",
+        "playlist": {
+          "t": "Night Bus Tapes",
+          "s": "@kilo"
+        },
+        "tracks": "48",
+        "followers": "12,480",
+        "visibility": {
+          "tone": "up",
+          "t": "Public"
+        },
+        "created": "Mar 2, 2026"
+      },
+      {
+        "id": "rainy-focus",
+        "playlist": {
+          "t": "Rainy Focus",
+          "s": "@lumen"
+        },
+        "tracks": "112",
+        "followers": "9,214",
+        "visibility": {
+          "tone": "up",
+          "t": "Public"
+        },
+        "created": "Jan 18, 2026"
+      },
+      {
+        "id": "sunday-reset",
+        "playlist": {
+          "t": "Sunday Reset",
+          "s": "@ivy.arcade"
+        },
+        "tracks": "36",
+        "followers": "4,902",
+        "visibility": {
+          "tone": "up",
+          "t": "Public"
+        },
+        "created": "May 9, 2026"
+      },
+      {
+        "id": "road-trip",
+        "playlist": {
+          "t": "Road Trip ’26",
+          "s": "@driftwave"
+        },
+        "tracks": "74",
+        "followers": "1,108",
+        "visibility": {
+          "tone": "up",
+          "t": "Public"
+        },
+        "created": "Jun 30, 2026"
+      },
+      {
+        "id": "demo-drafts",
+        "playlist": {
+          "t": "Demo drafts",
+          "s": "@mono.lith"
+        },
+        "tracks": "9",
+        "followers": "0",
+        "visibility": {
+          "tone": "flat",
+          "t": "Private"
+        },
+        "created": "Oct 1, 2026"
+      }
+    ],
+    "card": {
+      "title": "playlist",
+      "badge": "visibility",
+      "meta": [
+        "tracks",
+        "followers"
+      ]
+    },
+    "pager": "1–5 of 151,206",
+    "detail": "playlist",
+    "empty": {
+      "title": "No playlists yet",
+      "desc": "Listener playlists appear here as they are made."
+    },
+    "noresults": {
+      "query": "orbit",
+      "title": "No playlists match “orbit”",
+      "desc": "Try another title or owner, or clear the filter."
+    },
+    "error": {
+      "title": "Couldn’t load playlists",
+      "desc": "The admin API didn’t respond. Nothing was changed."
+    },
+    "perm": "playlists:read"
+  },
+  "playlist": {
+    "kind": "detail",
+    "nav": "playlists",
+    "route": "/playlists/:id (playlists:read; changes need playlists:write)",
+    "parent": "playlists",
+    "hash": "playlists/night-bus-tapes",
+    "icon": "list",
+    "eyebrow": "PLAYLISTS · REPORTED",
+    "title": "Night Bus Tapes",
+    "status": {
+      "tone": "up",
+      "t": "Public"
+    },
+    "sub": "By @kilo · 48 tracks · 12,480 followers",
+    "actions": [
+      {
+        "icon": "eye",
+        "label": "Make private",
+        "dialog": "private"
+      },
+      {
+        "icon": "x",
+        "label": "Take down",
+        "primary": true,
+        "danger": true,
+        "dialog": "takedown"
+      }
+    ],
+    "tiles": [
+      {
+        "w": 2,
+        "icon": "list",
+        "title": "Details",
+        "meta": "Set by the owner",
+        "blocks": [
+          {
+            "type": "kv",
+            "rows": [
+              [
+                "Owner",
+                "@kilo · Listener"
+              ],
+              [
+                "Collaborative",
+                "Yes · 3 editors"
+              ],
+              [
+                "Created",
+                "Mar 2, 2026"
+              ],
+              [
+                "Visibility",
+                {
+                  "tone": "up",
+                  "t": "Public"
+                }
+              ]
+            ]
+          },
+          {
+            "type": "quote",
+            "t": "“Late-night rides across the city. No skips after 2 am.”"
+          }
+        ]
+      },
+      {
+        "w": 2,
+        "icon": "flag",
+        "title": "Open report",
+        "meta": "R-1039 · 52 min",
+        "blocks": [
+          {
+            "type": "kv",
+            "rows": [
+              [
+                "Reason",
+                "Offensive title"
+              ],
+              [
+                "Reporter",
+                "@sable · Listener"
+              ],
+              [
+                "Status",
+                {
+                  "tone": "warn",
+                  "t": "Open"
+                }
+              ]
+            ]
+          }
+        ],
+        "link": "Open in Moderation"
+      },
+      {
+        "w": 4,
+        "icon": "audio",
+        "title": "Tracks",
+        "meta": "48 tracks · 3 h 12 min",
+        "blocks": [
+          {
+            "type": "table",
+            "cols": [
+              {
+                "l": "#",
+                "w": 30
+              },
+              {
+                "l": "Track"
+              },
+              {
+                "l": "Added by",
+                "w": 130,
+                "wide": true
+              },
+              {
+                "l": "Added",
+                "w": 110
+              }
+            ],
+            "rows": [
+              [
+                "1",
+                {
+                  "t": "Glass Horizon",
+                  "s": "Nova & the Static"
+                },
+                "@kilo",
+                "Mar 2"
+              ],
+              [
+                "2",
+                {
+                  "t": "Night Side",
+                  "s": "Kite Harbor"
+                },
+                "@sable",
+                "Oct 11"
+              ],
+              [
+                "3",
+                {
+                  "t": "Late Signal",
+                  "s": "Outer Loop"
+                },
+                "@kilo",
+                "Oct 20"
+              ],
+              [
+                "4",
+                {
+                  "t": "Drift Control",
+                  "s": "Mira Sol"
+                },
+                "@juno",
+                "Sep 3"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "dialogs": {
+      "private": {
+        "tone": "warning",
+        "icon": "eye",
+        "title": "Make Night Bus Tapes private?",
+        "desc": "Only @kilo and its editors will see it. 12,480 followers keep it in their library but can’t share it.",
+        "action": "Make private"
+      },
+      "takedown": {
+        "tone": "error",
+        "icon": "x",
+        "title": "Take down Night Bus Tapes?",
+        "desc": "It disappears for everyone, including @kilo. You can restore it later.",
+        "action": "Take down playlist",
+        "danger": true
+      }
+    },
+    "saving": "Saving…",
+    "notfound": {
+      "title": "Playlist not found",
+      "desc": "This playlist doesn’t exist or its owner deleted it. Go back to playlists."
+    },
+    "error": {
+      "title": "Couldn’t load this playlist",
+      "desc": "The admin API didn’t respond. Nothing was changed."
+    },
+    "perm": "playlists:read"
+  },
+  "podcasts": {
+    "kind": "list",
+    "nav": "podcasts",
+    "route": "/podcasts (podcasts:read)",
+    "icon": "podcast",
+    "eyebrow": "OPERATIONS · PODCASTS",
+    "title": "Podcasts",
+    "sub": "Shows and their episodes, by publisher and language.",
+    "kpis": [
+      {
+        "icon": "podcast",
+        "tone": "up",
+        "label": "Shows",
+        "value": "1,248",
+        "sub": "64 new this month"
+      },
+      {
+        "icon": "trend",
+        "tone": "info",
+        "label": "Episodes this week",
+        "value": "386",
+        "sub": "+12% vs last week"
+      },
+      {
+        "icon": "flag",
+        "tone": "warn",
+        "label": "Reported episodes",
+        "value": "3",
+        "sub": "1 in review"
+      },
+      {
+        "icon": "x",
+        "tone": "flat",
+        "label": "Taken down",
+        "value": "6",
+        "sub": "Shows, all time"
+      }
+    ],
+    "search": "Search title or publisher",
+    "filters": [
+      {
+        "key": "state",
+        "label": "Status",
+        "value": "Live",
+        "options": [
+          [
+            "Live",
+            [
+              "Live"
+            ]
+          ],
+          [
+            "Taken down",
+            [
+              "Taken down"
+            ]
+          ],
+          [
+            "All",
+            null
+          ]
+        ]
+      }
+    ],
+    "cols": [
+      {
+        "k": "show",
+        "l": "Title"
+      },
+      {
+        "k": "language",
+        "l": "Language",
+        "w": 110
+      },
+      {
+        "k": "episodes",
+        "l": "Episodes",
+        "w": 90,
+        "sort": "desc"
+      },
+      {
+        "k": "state",
+        "l": "Status",
+        "w": 120,
+        "wide": true
+      }
+    ],
+    "rows": [
+      {
+        "id": "outer-loop",
+        "show": {
+          "t": "Outer Loop",
+          "s": "Late Signal Radio"
+        },
+        "language": "English",
+        "episodes": "41",
+        "state": {
+          "tone": "up",
+          "t": "Live"
+        }
+      },
+      {
+        "id": "tiny-desk",
+        "show": {
+          "t": "Tape Notes",
+          "s": "Harbor Tapes"
+        },
+        "language": "English",
+        "episodes": "128",
+        "state": {
+          "tone": "up",
+          "t": "Live"
+        }
+      },
+      {
+        "id": "hvylia",
+        "show": {
+          "t": "Хвиля",
+          "s": "Radio Kyiv Lab"
+        },
+        "language": "Ukrainian",
+        "episodes": "67",
+        "state": {
+          "tone": "up",
+          "t": "Live"
+        }
+      },
+      {
+        "id": "studio-hours",
+        "show": {
+          "t": "Studio Hours",
+          "s": "Fern Lane"
+        },
+        "language": "English",
+        "episodes": "22",
+        "state": {
+          "tone": "up",
+          "t": "Live"
+        }
+      },
+      {
+        "id": "b-side",
+        "show": {
+          "t": "B-Side Stories",
+          "s": "Mira Sol"
+        },
+        "language": "Spanish",
+        "episodes": "15",
+        "state": {
+          "tone": "up",
+          "t": "Live"
+        }
+      }
+    ],
+    "card": {
+      "title": "show",
+      "badge": "state",
+      "meta": [
+        "language",
+        "episodes"
+      ]
+    },
+    "pager": "1–5 of 1,248",
+    "detail": "podcast",
+    "empty": {
+      "title": "No podcasts yet",
+      "desc": "Shows appear here once publishers add them."
+    },
+    "noresults": {
+      "query": "jazz",
+      "title": "No podcasts match “jazz”",
+      "desc": "Try another title or publisher, or clear the status filter."
+    },
+    "error": {
+      "title": "Couldn’t load podcasts",
+      "desc": "The admin API didn’t respond. Nothing was changed."
+    },
+    "perm": "podcasts:read"
+  },
+  "podcast": {
+    "kind": "detail",
+    "nav": "podcasts",
+    "route": "/podcasts/:id (podcasts:read; take-down needs podcasts:write)",
+    "parent": "podcasts",
+    "hash": "podcasts/outer-loop",
+    "icon": "podcast",
+    "eyebrow": "PODCASTS · SHOW",
+    "title": "Outer Loop",
+    "status": {
+      "tone": "up",
+      "t": "Live"
+    },
+    "sub": "By Late Signal Radio · English · 41 episodes",
+    "actions": [
+      {
+        "icon": "x",
+        "label": "Take down show",
+        "primary": true,
+        "danger": true,
+        "dialog": "takedown"
+      }
+    ],
+    "tiles": [
+      {
+        "w": 2,
+        "icon": "podcast",
+        "title": "Show",
+        "meta": "From the publisher’s feed",
+        "blocks": [
+          {
+            "type": "kv",
+            "rows": [
+              [
+                "Publisher",
+                "Late Signal Radio"
+              ],
+              [
+                "Language",
+                "English"
+              ],
+              [
+                "Category",
+                "Music commentary"
+              ],
+              [
+                "Explicit",
+                "No"
+              ],
+              [
+                "Since",
+                "Feb 2025"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "w": 2,
+        "icon": "flag",
+        "title": "Open report",
+        "meta": "R-1033 · Episode 41",
+        "blocks": [
+          {
+            "type": "kv",
+            "rows": [
+              [
+                "Reason",
+                "Hate speech"
+              ],
+              [
+                "Status",
+                {
+                  "tone": "info",
+                  "t": "Reviewing"
+                }
+              ],
+              [
+                "Moderator",
+                "leo.mod"
+              ]
+            ]
+          },
+          {
+            "type": "quote",
+            "t": "“The guest’s remarks at 31:20 target a nationality.”"
+          }
+        ],
+        "link": "Open in Moderation"
+      },
+      {
+        "w": 4,
+        "icon": "list",
+        "title": "Episodes",
+        "meta": "Newest first",
+        "blocks": [
+          {
+            "type": "table",
+            "cols": [
+              {
+                "l": "Episode"
+              },
+              {
+                "l": "Released",
+                "w": 120
+              },
+              {
+                "l": "Length",
+                "w": 80,
+                "wide": true
+              },
+              {
+                "l": "State",
+                "w": 120
+              }
+            ],
+            "rows": [
+              [
+                {
+                  "t": "41 · Signal Path",
+                  "s": "Has an open report"
+                },
+                "Oct 19, 2026",
+                "58:12",
+                {
+                  "tone": "up",
+                  "t": "Live"
+                }
+              ],
+              [
+                {
+                  "t": "40 · Weather Balloons",
+                  "s": "With Kite Harbor"
+                },
+                "Oct 12, 2026",
+                "49:40",
+                {
+                  "tone": "up",
+                  "t": "Live"
+                }
+              ],
+              [
+                {
+                  "t": "39 · Cold Opens",
+                  "s": "Mailbag"
+                },
+                "Oct 5, 2026",
+                "44:05",
+                {
+                  "tone": "flat",
+                  "t": "Taken down"
+                }
+              ],
+              [
+                {
+                  "t": "38 · Ambient Summer",
+                  "s": "Live set"
+                },
+                "Sep 28, 2026",
+                "61:18",
+                {
+                  "tone": "up",
+                  "t": "Live"
+                }
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "dialogs": {
+      "takedown": {
+        "tone": "error",
+        "icon": "x",
+        "title": "Take down Outer Loop?",
+        "desc": "All 41 episodes leave search and libraries. Late Signal Radio is told why; you can restore it later.",
+        "action": "Take down show",
+        "danger": true
+      }
+    },
+    "saving": "Taking down…",
+    "notfound": {
+      "title": "Podcast not found",
+      "desc": "This show doesn’t exist or was removed. Go back to podcasts."
+    },
+    "error": {
+      "title": "Couldn’t load this podcast",
+      "desc": "The admin API didn’t respond. Nothing was changed."
+    },
+    "perm": "podcasts:read"
+  },
+  "genres": {
+    "kind": "list",
+    "nav": "genres",
+    "route": "/genres (genres:read)",
+    "icon": "tags",
+    "eyebrow": "OPERATIONS · GENRES",
+    "title": "Genres",
+    "sub": "The genres artists tag their music with, and how much is in each.",
+    "actions": [
+      {
+        "icon": "plus",
+        "label": "New genre",
+        "primary": true,
+        "page": "genre-editor"
+      }
+    ],
+    "kpis": [
+      {
+        "icon": "tags",
+        "tone": "info",
+        "label": "Genres",
+        "value": "64",
+        "sub": "2 added this month"
+      },
+      {
+        "icon": "audio",
+        "tone": "up",
+        "label": "Tagged tracks",
+        "value": "1.2M",
+        "sub": "99.7% of the catalog"
+      },
+      {
+        "icon": "alert",
+        "tone": "warn",
+        "label": "Untagged tracks",
+        "value": "3,410",
+        "sub": "Waiting on artists"
+      },
+      {
+        "icon": "trend",
+        "tone": "flat",
+        "label": "Most used",
+        "value": "Indie",
+        "sub": "14% of tracks"
+      }
+    ],
+    "search": "Search genres",
+    "cols": [
+      {
+        "k": "genre",
+        "l": "Name",
+        "sort": "asc"
+      },
+      {
+        "k": "tracks",
+        "l": "Tracks",
+        "w": 100
+      },
+      {
+        "k": "albums",
+        "l": "Albums",
+        "w": 100,
+        "wide": true
+      },
+      {
+        "k": "artists",
+        "l": "Artists",
+        "w": 100
+      }
+    ],
+    "rows": [
+      {
+        "id": "ambient",
+        "genre": {
+          "t": "Ambient",
+          "s": "/genre/ambient"
+        },
+        "tracks": "84,120",
+        "albums": "6,902",
+        "artists": "1,840"
+      },
+      {
+        "id": "downtempo",
+        "genre": {
+          "t": "Downtempo",
+          "s": "/genre/downtempo"
+        },
+        "tracks": "41,377",
+        "albums": "3,118",
+        "artists": "922"
+      },
+      {
+        "id": "dream-pop",
+        "genre": {
+          "t": "Dream pop",
+          "s": "/genre/dream-pop"
+        },
+        "tracks": "52,604",
+        "albums": "4,410",
+        "artists": "1,206"
+      },
+      {
+        "id": "hyperpop",
+        "genre": {
+          "t": "Hyperpop",
+          "s": "/genre/hyperpop"
+        },
+        "tracks": "12,055",
+        "albums": "1,402",
+        "artists": "511"
+      },
+      {
+        "id": "indie",
+        "genre": {
+          "t": "Indie",
+          "s": "/genre/indie"
+        },
+        "tracks": "168,930",
+        "albums": "14,207",
+        "artists": "4,388"
+      },
+      {
+        "id": "lo-fi",
+        "genre": {
+          "t": "Lo-fi",
+          "s": "/genre/lo-fi"
+        },
+        "tracks": "96,210",
+        "albums": "8,804",
+        "artists": "2,960"
+      }
+    ],
+    "card": {
+      "title": "genre",
+      "meta": [
+        "tracks",
+        "artists"
+      ]
+    },
+    "pager": "1–6 of 64",
+    "detail": "genre-editor",
+    "empty": {
+      "title": "No genres yet",
+      "desc": "Add the first genre so artists can tag their releases."
+    },
+    "noresults": {
+      "query": "jazz",
+      "title": "No genres match “jazz”",
+      "desc": "Check the spelling, or add it as a new genre."
+    },
+    "error": {
+      "title": "Couldn’t load genres",
+      "desc": "The admin API didn’t respond. Nothing was changed."
+    },
+    "perm": "genres:read"
+  },
+  "genre-editor": {
+    "kind": "form",
+    "nav": "genres",
+    "route": "/genres/:id and /genres/new (genres:read; saving needs genres:write)",
+    "parent": "genres",
+    "hash": "genres/dream-pop",
+    "icon": "tags",
+    "eyebrow": "GENRES · EDIT",
+    "title": "Dream pop",
+    "newTitle": "New genre",
+    "newEyebrow": "GENRES · NEW",
+    "createLabel": "Create genre",
+    "sub": "Shown to listeners on genre pages and to artists when they tag a release.",
+    "actions": [
+      {
+        "icon": "x",
+        "label": "Delete",
+        "dialog": "delete"
+      },
+      {
+        "icon": "check",
+        "label": "Save changes",
+        "primary": true
+      }
+    ],
+    "form": {
+      "title": "Genre",
+      "meta": "Name, address and colour",
+      "fields": [
+        {
+          "k": "name",
+          "type": "text",
+          "label": "Name",
+          "value": "Dream pop",
+          "placeholder": "e.g. Shoegaze",
+          "error": "Add a name",
+          "badValue": ""
+        },
+        {
+          "k": "slug",
+          "type": "text",
+          "label": "Address",
+          "prefix": "bitrate.fm/genre/",
+          "value": "dream-pop",
+          "placeholder": "shoegaze",
+          "hint": "Made from the name; change it only to fix a typo",
+          "error": "Use lowercase letters, numbers and dashes",
+          "badValue": "Dream pop!"
+        },
+        {
+          "k": "description",
+          "type": "textarea",
+          "label": "Description",
+          "value": "Hazy, reverb-soaked pop with breathy vocals and slow-blooming guitars.",
+          "placeholder": "One or two sentences for the genre page",
+          "hint": "72 of 240 characters"
+        },
+        {
+          "k": "color",
+          "type": "swatches",
+          "label": "Colour",
+          "value": "chart-1",
+          "options": [
+            "chart-1",
+            "chart-2",
+            "chart-3",
+            "chart-4",
+            "chart-5",
+            "magenta",
+            "blue"
+          ]
+        }
+      ]
+    },
+    "tiles": [
+      {
+        "w": 2,
+        "icon": "eye",
+        "title": "Preview",
+        "meta": "On the genre page",
+        "blocks": [
+          {
+            "type": "media",
+            "icon": "tags",
+            "t": "Dream pop",
+            "s": "52,604 tracks · 1,206 artists"
+          },
+          {
+            "type": "chips",
+            "label": "Related",
+            "items": [
+              "Shoegaze",
+              "Ambient",
+              "Indie"
+            ]
+          }
+        ],
+        "newBlocks": [
+          {
+            "type": "media",
+            "icon": "tags",
+            "t": "New genre",
+            "s": "No tracks yet"
+          }
+        ]
+      },
+      {
+        "w": 2,
+        "icon": "list",
+        "existing": true,
+        "title": "Usage",
+        "meta": "Where it is tagged",
+        "blocks": [
+          {
+            "type": "kv",
+            "rows": [
+              [
+                "Tracks",
+                "52,604"
+              ],
+              [
+                "Albums",
+                "4,410"
+              ],
+              [
+                "Artists",
+                "1,206"
+              ],
+              [
+                "Last tagged",
+                "6 min ago"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "dialogs": {
+      "delete": {
+        "tone": "error",
+        "icon": "x",
+        "title": "Delete Dream pop?",
+        "desc": "52,604 tracks lose this genre and fall back to their other genres. This can’t be undone.",
+        "action": "Delete genre",
+        "danger": true
+      }
+    },
+    "saving": "Saving…",
+    "notfound": {
+      "title": "Genre not found",
+      "desc": "This genre doesn’t exist or was deleted. Go back to genres."
+    },
+    "error": {
+      "title": "Couldn’t load this genre",
+      "desc": "The admin API didn’t respond. Nothing was changed."
+    },
+    "perm": "genres:write"
+  }
+}
+const LIST_STATES = ["loading","empty","noresults","selected","error","restricted","offline"]
+const DETAIL_STATES = ["loading","error","notfound","dialogs","saving","restricted","offline"]
+const FORM_STATES = ["new","loading","errors","saving","dialogs","notfound","error","restricted","offline"]
+const STATE_LABEL = {
+  "default": "Default",
+  "loading": "Loading",
+  "empty": "Empty",
+  "noresults": "No results",
+  "selected": "Rows selected",
+  "error": "Error",
+  "restricted": "Restricted",
+  "offline": "Offline",
+  "notfound": "Not found",
+  "confirm": "Confirm",
+  "reject": "Reject",
+  "changes": "Request changes",
+  "invalid": "Request changes · empty",
+  "saving": "Saving",
+  "new": "New",
+  "errors": "Field errors",
+  "bulk": "Confirm bulk action",
+  "takedown": "Take down",
+  "private": "Make private",
+  "delete": "Delete"
+}
+const RESOURCES_UK = {
+  "OPERATIONS · MODERATION": "ОПЕРАЦІЇ · МОДЕРАЦІЯ",
+  "Reports from listeners and artists. Oldest first, so nothing waits past the SLA.": "Скарги слухачів і артистів. Найстаріші вгорі, щоб ніщо не чекало довше за SLA.",
+  "Export CSV": "Експорт CSV",
+  "Open": "Відкрито",
+  "Oldest 6 h": "Найстаріша 6 год",
+  "Reviewing": "На розгляді",
+  "2 moderators": "2 модератори",
+  "Waiting over 6 h": "Чекають понад 6 год",
+  "Resolved today": "Вирішено сьогодні",
+  "+8 vs yesterday": "+8 до вчора",
+  "Status": "Статус",
+  "Open & reviewing": "Відкриті й на розгляді",
+  "Type": "Тип",
+  "All types": "Усі типи",
+  "Resolve": "Вирішити",
+  "Dismiss": "Відхилити",
+  "Reported": "Об’єкт скарги",
+  "Reason": "Причина",
+  "Created": "Створено",
+  "Resolved": "Вирішено",
+  "Rejected": "Відхилено",
+  "Artist": "Артист",
+  "Listener": "Слухач",
+  "Impersonation": "Видавання себе за іншого",
+  "Hate speech": "Мова ворожнечі",
+  "Wrong artist credited": "Вказано не того артиста",
+  "Copyright claim": "Порушення авторських прав",
+  "Offensive title": "Образлива назва",
+  "Spam in playlist titles": "Спам у назвах плейлистів",
+  "Explicit, not marked": "Відвертий вміст без позначки",
+  "The queue is clear": "Черга порожня",
+  "No open reports. New ones appear here as they arrive.": "Відкритих скарг немає. Нові з’являться тут.",
+  "No reports match these filters": "Жодна скарга не відповідає фільтрам",
+  "Nothing open on episodes. Clear the filters to see the whole queue.": "Відкритих скарг на епізоди немає. Скиньте фільтри, щоб побачити всю чергу.",
+  "Episode": "Епізод",
+  "Couldn’t load the queue": "Не вдалося завантажити чергу",
+  "The admin API didn’t respond. Nothing was changed.": "API адмінки не відповів. Нічого не змінено.",
+  "Start review": "Почати розгляд",
+  "Reject": "Відхилити",
+  "Report": "Скарга",
+  "Filed by a listener": "Подав слухач",
+  "Reporter": "Автор скарги",
+  "Filed": "Подано",
+  "Reported content": "Вміст у скарзі",
+  "Track": "Трек",
+  "Album": "Альбом",
+  "Uploaded": "Завантажено",
+  "Plays": "Прослуховування",
+  "State": "Стан",
+  "Live": "Опубліковано",
+  "Open in Catalog": "Відкрити в каталозі",
+  "Other reports on this subject": "Інші скарги на цей об’єкт",
+  "2 more": "Ще 2",
+  "History": "Історія",
+  "This report": "Ця скарга",
+  "@lumen filed the report": "@lumen подав скаргу",
+  "Audio match: 82% similar to “Low Light”": "Аудіозбіг: 82% схожості з «Low Light»",
+  "Added to the open queue": "Додано до відкритої черги",
+  "Resolve report R-1042?": "Вирішити скаргу R-1042?",
+  "The track stays live unless you take it down in Catalog. @lumen is told the report was resolved.": "Трек залишається опублікованим, якщо не зняти його в каталозі. @lumen отримає повідомлення про рішення.",
+  "Resolve report": "Вирішити скаргу",
+  "Reject report R-1042?": "Відхилити скаргу R-1042?",
+  "Nothing changes on the track. @lumen is told the report was rejected.": "З треком нічого не зміниться. @lumen отримає повідомлення про відхилення.",
+  "Reject report": "Відхилити скаргу",
+  "Resolving…": "Вирішую…",
+  "Report not found": "Скаргу не знайдено",
+  "R-1099 doesn’t exist or was removed. Check the link, or go back to the queue.": "R-1099 не існує або її видалено. Перевірте посилання або поверніться до черги.",
+  "Couldn’t load this report": "Не вдалося завантажити скаргу",
+  "OPERATIONS · RELEASES": "ОПЕРАЦІЇ · РЕЛІЗИ",
+  "Releases artists sent for review before they go live.": "Релізи, які артисти надіслали на перевірку перед публікацією.",
+  "Awaiting review": "Чекають перевірки",
+  "Oldest 2 days": "Найстаріший 2 дні",
+  "Changes requested": "Запитано зміни",
+  "Waiting on artists": "Чекають на артистів",
+  "Approved this week": "Схвалено цього тижня",
+  "+6 vs last week": "+6 до минулого тижня",
+  "Median review": "Медіана перевірки",
+  "Last 30 days": "Останні 30 днів",
+  "Search title or artist": "Пошук за назвою або артистом",
+  "Release": "Реліз",
+  "Tracks": "Треки",
+  "Submitted": "Подано",
+  "In review": "На перевірці",
+  "Approved": "Схвалено",
+  "Single": "Сингл",
+  "Nothing to review": "Нічого перевіряти",
+  "No releases are waiting. New submissions appear here.": "Релізів у черзі немає. Нові подання з’являться тут.",
+  "No releases match “orbit”": "Жоден реліз не відповідає «orbit»",
+  "Try another title or artist, or clear the status filter.": "Спробуйте іншу назву чи артиста або скиньте фільтр статусу.",
+  "Couldn’t load releases": "Не вдалося завантажити релізи",
+  "RELEASES · REVIEW": "РЕЛІЗИ · ПЕРЕВІРКА",
+  "Request changes": "Запросити зміни",
+  "Approve": "Схвалити",
+  "Release plan": "План релізу",
+  "Set by the artist": "Задав артист",
+  "Planned date": "Запланована дата",
+  "Label": "Лейбл",
+  "Genre": "Жанр",
+  "Explicit": "Відвертий вміст",
+  "No": "Ні",
+  "Territories": "Території",
+  "Worldwide": "Увесь світ",
+  "Except CU, IR, KP": "Крім CU, IR, KP",
+  "Rights confirmations": "Підтвердження прав",
+  "3 of 4 confirmed": "Підтверджено 3 з 4",
+  "Owns or controls the master recordings": "Володіє майстер-записами або контролює їх",
+  "Composition rights are cleared": "Права на композиції врегульовано",
+  "Cover art is original or licensed": "Обкладинка оригінальна або ліцензована",
+  "No uncleared samples": "Немає неврегульованих семплів",
+  "Track 3 notes a sample from “Blue Hour” (1998)": "Трек 3 містить семпл із «Blue Hour» (1998)",
+  "Recordings": "Записи",
+  "5 recordings · 19:42": "5 записів · 19:42",
+  "Recording": "Запис",
+  "Length": "Тривалість",
+  "Master": "Майстер",
+  "Sample": "Семпл",
+  "Contributors": "Учасники",
+  "Splits add up to 100%": "Частки разом 100%",
+  "Contributor": "Учасник",
+  "Roles": "Ролі",
+  "Share": "Частка",
+  "Primary artist": "Основний артист",
+  "Writer": "Автор",
+  "Featured on 4": "Гість на треку 4",
+  "Performer, producer": "Виконавець, продюсер",
+  "Composer, lyricist": "Композитор, автор текстів",
+  "Featured artist": "Запрошений артист",
+  "Approve Static Lines?": "Схвалити Static Lines?",
+  "It goes live on Nov 7 in the selected territories. Kite Harbor is notified.": "Реліз вийде 7 листопада в обраних територіях. Kite Harbor отримає повідомлення.",
+  "Approve release": "Схвалити реліз",
+  "Kite Harbor sees each line as a task and resubmits when done.": "Kite Harbor побачить кожен рядок як завдання й подасть реліз знову.",
+  "Required changes": "Потрібні зміни",
+  "One change per line": "Одна зміна на рядок",
+  "Add at least one change": "Додайте хоча б одну зміну",
+  "Send to artist": "Надіслати артисту",
+  "Approving…": "Схвалюю…",
+  "Release not found": "Реліз не знайдено",
+  "This release doesn’t exist or the artist withdrew it. Go back to the queue.": "Такого релізу немає або артист його відкликав. Поверніться до черги.",
+  "Couldn’t load this release": "Не вдалося завантажити реліз",
+  "OPERATIONS · CATALOG": "ОПЕРАЦІЇ · КАТАЛОГ",
+  "Every uploaded track and where it is in the processing pipeline.": "Усі завантажені треки та їхній етап обробки.",
+  "Ready": "Готово",
+  "Last 24 h": "Останні 24 год",
+  "Processing": "Обробка",
+  "Median 3 min": "Медіана 3 хв",
+  "Stuck > 30 min": "Завислі > 30 хв",
+  "Oldest 42 min": "Найстаріший 42 хв",
+  "Failed": "Помилка",
+  "Needs a reprocess": "Потрібна повторна обробка",
+  "Pipeline": "Конвеєр",
+  "All": "Усі",
+  "Stuck": "Завис",
+  "Resource": "Ресурс",
+  "Any": "Будь-який",
+  "Taken down": "Знято",
+  "Reprocess": "Обробити знову",
+  "Take down": "Зняти",
+  "Title": "Назва",
+  "Started": "Почато",
+  "Attempts": "Спроби",
+  "Take down 2 tracks?": "Зняти 2 треки?",
+  "Listeners lose access right away. Artists are told why; you can restore the tracks later.": "Слухачі одразу втратять доступ. Артисти дізнаються причину; треки можна відновити пізніше.",
+  "Take down 2 tracks": "Зняти 2 треки",
+  "Take down 1 track?": "Зняти 1 трек?",
+  "Take down 1 track": "Зняти 1 трек",
+  "Taking down…": "Знімаю…",
+  "No tracks yet": "Треків ще немає",
+  "Uploads appear here as artists send them.": "Завантаження з’являтимуться тут, щойно артисти їх надішлють.",
+  "No stuck tracks match “harbor”": "Жоден завислий трек не відповідає «harbor»",
+  "Try another title or artist, or clear the filters.": "Спробуйте іншу назву чи артиста або скиньте фільтри.",
+  "Couldn’t load the catalog": "Не вдалося завантажити каталог",
+  "CATALOG · TRACK": "КАТАЛОГ · ТРЕК",
+  "Outer Loop · from Signal Path · uploaded Oct 20, 04:12": "Outer Loop · з Signal Path · завантажено 20 жовт., 04:12",
+  "As the artist sent it": "Як надіслав артист",
+  "Outer Loop · 4:51 · original upload": "Outer Loop · 4:51 · оригінальне завантаження",
+  "Genres": "Жанри",
+  "Last error": "Остання помилка",
+  "Attempt 3 · transcode": "Спроба 3 · транскодування",
+  "Worker": "Воркер",
+  "Failed at": "Збій о",
+  "Next step": "Наступний крок",
+  "Ask for a WAV or FLAC": "Попросити WAV або FLAC",
+  "Processing history": "Історія обробки",
+  "3 attempts": "3 спроби",
+  "Step": "Крок",
+  "Trigger": "Причина запуску",
+  "Duration": "Тривалість",
+  "Transcode": "Транскодування",
+  "Retry": "Повтор",
+  "Upload": "Завантаження",
+  "Renditions": "Версії",
+  "None ready": "Жодна не готова",
+  "Format": "Формат",
+  "Bitrate": "Бітрейт",
+  "Waiting": "Очікує",
+  "Lossless": "Без втрат",
+  "Credits": "Автори",
+  "2 people": "2 людини",
+  "Performer": "Виконавець",
+  "Producer": "Продюсер",
+  "Open reports": "Відкриті скарги",
+  "None": "Немає",
+  "Reprocess Late Signal?": "Обробити Late Signal знову?",
+  "It runs the pipeline again from the original upload. The same codec will fail unless the artist replaces the file.": "Конвеєр запуститься знову з оригінального файлу. Той самий кодек знову не пройде, доки артист не замінить файл.",
+  "Take down Late Signal?": "Зняти Late Signal?",
+  "Listeners lose access right away. Outer Loop is told why; you can restore it later.": "Слухачі одразу втратять доступ. Outer Loop дізнається причину; трек можна відновити пізніше.",
+  "Take down track": "Зняти трек",
+  "Queuing…": "Ставлю в чергу…",
+  "Track not found": "Трек не знайдено",
+  "This track doesn’t exist or was deleted. Go back to the catalog.": "Такого треку немає або його видалено. Поверніться до каталогу.",
+  "Couldn’t load this track": "Не вдалося завантажити трек",
+  "OPERATIONS · ALBUMS": "ОПЕРАЦІЇ · АЛЬБОМИ",
+  "Albums, EPs and singles as listeners see them.": "Альбоми, EP і сингли такими, як їх бачать слухачі.",
+  "Across 2,316 artists": "Від 2 316 артистів",
+  "Released this week": "Вийшло цього тижня",
+  "+18 vs last week": "+18 до минулого тижня",
+  "All time": "За весь час",
+  "Release date": "Дата виходу",
+  "No albums yet": "Альбомів ще немає",
+  "Albums appear here once their releases are approved.": "Альбоми з’являться тут після схвалення релізів.",
+  "No albums match “harbour”": "Жоден альбом не відповідає «harbour»",
+  "Couldn’t load albums": "Не вдалося завантажити альбоми",
+  "ALBUMS · EP": "АЛЬБОМИ · EP",
+  "EP by Kite Harbor · 5 tracks · released Oct 9, 2026": "EP від Kite Harbor · 5 треків · вийшов 9 жовт. 2026",
+  "Details": "Відомості",
+  "From the release": "З релізу",
+  "Copyright": "Авторське право",
+  "Released": "Вийшов",
+  "Listening": "Прослуховування",
+  "Since release": "Від виходу",
+  "Listeners": "Слухачі",
+  "Saves": "Збереження",
+  "In playlists": "У плейлистах",
+  "5 tracks · 19:20": "5 треків · 19:20",
+  "Disc": "Диск",
+  "Take down Low Orbit?": "Зняти Low Orbit?",
+  "All 5 tracks leave search, playlists and libraries. Kite Harbor is told why; you can restore it later.": "Усі 5 треків зникнуть із пошуку, плейлистів і бібліотек. Kite Harbor дізнається причину; альбом можна відновити.",
+  "Take down album": "Зняти альбом",
+  "Album not found": "Альбом не знайдено",
+  "This album doesn’t exist or was deleted. Go back to albums.": "Такого альбому немає або його видалено. Поверніться до альбомів.",
+  "Couldn’t load this album": "Не вдалося завантажити альбом",
+  "OPERATIONS · PLAYLISTS": "ОПЕРАЦІЇ · ПЛЕЙЛИСТИ",
+  "Listener playlists, with who made them and how far they reach.": "Плейлисти слухачів: хто їх створив і скільки людей вони охоплюють.",
+  "Public": "Публічний",
+  "61% of all playlists": "61% усіх плейлистів",
+  "Created this week": "Створено цього тижня",
+  "+4% vs last week": "+4% до минулого тижня",
+  "Collaborative": "Спільні",
+  "2+ editors": "2+ редактори",
+  "Open report": "Відкрита скарга",
+  "Search title or owner": "Пошук за назвою або власником",
+  "Visibility": "Видимість",
+  "Private": "Приватний",
+  "Followers": "Підписники",
+  "No playlists yet": "Плейлистів ще немає",
+  "Listener playlists appear here as they are made.": "Плейлисти слухачів з’являтимуться тут.",
+  "No playlists match “orbit”": "Жоден плейлист не відповідає «orbit»",
+  "Try another title or owner, or clear the filter.": "Спробуйте іншу назву чи власника або скиньте фільтр.",
+  "Couldn’t load playlists": "Не вдалося завантажити плейлисти",
+  "PLAYLISTS · REPORTED": "ПЛЕЙЛИСТИ · Є СКАРГА",
+  "By @kilo · 48 tracks · 12,480 followers": "Від @kilo · 48 треків · 12 480 підписників",
+  "Make private": "Зробити приватним",
+  "Set by the owner": "Задав власник",
+  "Owner": "Власник",
+  "Yes · 3 editors": "Так · 3 редактори",
+  "R-1039 · 52 min": "R-1039 · 52 хв",
+  "Open in Moderation": "Відкрити в модерації",
+  "48 tracks · 3 h 12 min": "48 треків · 3 год 12 хв",
+  "Added by": "Додав",
+  "Added": "Додано",
+  "Make Night Bus Tapes private?": "Зробити Night Bus Tapes приватним?",
+  "Only @kilo and its editors will see it. 12,480 followers keep it in their library but can’t share it.": "Його бачитимуть лише @kilo та редактори. 12 480 підписників збережуть його в бібліотеці, але не зможуть поширити.",
+  "Take down Night Bus Tapes?": "Зняти Night Bus Tapes?",
+  "It disappears for everyone, including @kilo. You can restore it later.": "Він зникне для всіх, зокрема для @kilo. Його можна відновити пізніше.",
+  "Take down playlist": "Зняти плейлист",
+  "Playlist not found": "Плейлист не знайдено",
+  "This playlist doesn’t exist or its owner deleted it. Go back to playlists.": "Такого плейлиста немає або власник його видалив. Поверніться до плейлистів.",
+  "Couldn’t load this playlist": "Не вдалося завантажити плейлист",
+  "OPERATIONS · PODCASTS": "ОПЕРАЦІЇ · ПОДКАСТИ",
+  "Shows and their episodes, by publisher and language.": "Шоу та їхні епізоди за видавцем і мовою.",
+  "Shows": "Шоу",
+  "64 new this month": "64 нових цього місяця",
+  "Episodes this week": "Епізодів цього тижня",
+  "+12% vs last week": "+12% до минулого тижня",
+  "Reported episodes": "Епізоди зі скаргами",
+  "1 in review": "1 на розгляді",
+  "Shows, all time": "Шоу, за весь час",
+  "Search title or publisher": "Пошук за назвою або видавцем",
+  "Episodes": "Епізоди",
+  "English": "Англійська",
+  "Ukrainian": "Українська",
+  "Spanish": "Іспанська",
+  "No podcasts yet": "Подкастів ще немає",
+  "Shows appear here once publishers add them.": "Шоу з’являться тут, щойно видавці їх додадуть.",
+  "No podcasts match “jazz”": "Жоден подкаст не відповідає «jazz»",
+  "Try another title or publisher, or clear the status filter.": "Спробуйте іншу назву чи видавця або скиньте фільтр статусу.",
+  "Couldn’t load podcasts": "Не вдалося завантажити подкасти",
+  "PODCASTS · SHOW": "ПОДКАСТИ · ШОУ",
+  "By Late Signal Radio · English · 41 episodes": "Від Late Signal Radio · англійська · 41 епізод",
+  "Take down show": "Зняти шоу",
+  "Show": "Шоу",
+  "From the publisher’s feed": "Зі стрічки видавця",
+  "Publisher": "Видавець",
+  "Category": "Категорія",
+  "Since": "З",
+  "R-1033 · Episode 41": "R-1033 · Епізод 41",
+  "Moderator": "Модератор",
+  "Newest first": "Спершу нові",
+  "Has an open report": "Є відкрита скарга",
+  "Take down Outer Loop?": "Зняти Outer Loop?",
+  "All 41 episodes leave search and libraries. Late Signal Radio is told why; you can restore it later.": "Усі 41 епізод зникнуть із пошуку й бібліотек. Late Signal Radio дізнається причину; шоу можна відновити.",
+  "Podcast not found": "Подкаст не знайдено",
+  "This show doesn’t exist or was removed. Go back to podcasts.": "Такого шоу немає або його видалено. Поверніться до подкастів.",
+  "Couldn’t load this podcast": "Не вдалося завантажити подкаст",
+  "OPERATIONS · GENRES": "ОПЕРАЦІЇ · ЖАНРИ",
+  "The genres artists tag their music with, and how much is in each.": "Жанри, якими артисти позначають музику, і скільки її в кожному.",
+  "New genre": "Новий жанр",
+  "2 added this month": "2 додано цього місяця",
+  "Tagged tracks": "Треки з жанром",
+  "99.7% of the catalog": "99,7% каталогу",
+  "Untagged tracks": "Треки без жанру",
+  "Most used": "Найпопулярніший",
+  "14% of tracks": "14% треків",
+  "Search genres": "Пошук жанрів",
+  "Name": "Назва",
+  "Albums": "Альбоми",
+  "Artists": "Артисти",
+  "No genres yet": "Жанрів ще немає",
+  "Add the first genre so artists can tag their releases.": "Додайте перший жанр, щоб артисти могли позначати релізи.",
+  "No genres match “jazz”": "Жоден жанр не відповідає «jazz»",
+  "Check the spelling, or add it as a new genre.": "Перевірте написання або додайте його як новий жанр.",
+  "Couldn’t load genres": "Не вдалося завантажити жанри",
+  "GENRES · EDIT": "ЖАНРИ · РЕДАГУВАННЯ",
+  "GENRES · NEW": "ЖАНРИ · НОВИЙ",
+  "Shown to listeners on genre pages and to artists when they tag a release.": "Бачать слухачі на сторінках жанрів і артисти, коли позначають реліз.",
+  "Delete": "Видалити",
+  "Save changes": "Зберегти зміни",
+  "Name, address and colour": "Назва, адреса й колір",
+  "Add a name": "Додайте назву",
+  "Address": "Адреса",
+  "Made from the name; change it only to fix a typo": "Створюється з назви; змінюйте лише щоб виправити помилку",
+  "Use lowercase letters, numbers and dashes": "Використовуйте малі літери, цифри й дефіси",
+  "Description": "Опис",
+  "One or two sentences for the genre page": "Одне-два речення для сторінки жанру",
+  "72 of 240 characters": "72 з 240 символів",
+  "Colour": "Колір",
+  "On the genre page": "На сторінці жанру",
+  "52,604 tracks · 1,206 artists": "52 604 треки · 1 206 артистів",
+  "Related": "Схожі",
+  "Usage": "Використання",
+  "Where it is tagged": "Де його вказано",
+  "Last tagged": "Востаннє вказано",
+  "6 min ago": "6 хв тому",
+  "Delete Dream pop?": "Видалити Dream pop?",
+  "52,604 tracks lose this genre and fall back to their other genres. This can’t be undone.": "52 604 треки втратять цей жанр і залишаться з іншими жанрами. Це не можна скасувати.",
+  "Delete genre": "Видалити жанр",
+  "Genre not found": "Жанр не знайдено",
+  "This genre doesn’t exist or was deleted. Go back to genres.": "Такого жанру немає або його видалено. Поверніться до жанрів.",
+  "Couldn’t load this genre": "Не вдалося завантажити жанр",
+  "Fix 2 fields to save": "Виправте 2 поля, щоб зберегти",
+  "Saved · just now": "Збережено · щойно",
+  "Create genre": "Створити жанр",
+  "Cancel": "Скасувати",
+  "Clear filters": "Скинути фільтри",
+  "Clear selection": "Зняти виділення",
+  "selected": "вибрано",
+  "Back": "Назад",
+  "Back to the list": "Назад до списку",
+  "Not in your role": "Не у вашій ролі",
+  "Ask a super admin for access.": "Попросіть доступ у суперадміна.",
+  "Needs": "Потрібен дозвіл",
+  "You’re offline": "Ви офлайн",
+  "Showing data from 09:42. Actions are paused until you reconnect.": "Показано дані станом на 09:42. Дії призупинено до відновлення зʼєднання.",
+  "Try again": "Спробувати ще",
+  "of": "з",
+  "Previous": "Назад",
+  "Next": "Далі",
+  "Select": "Вибрати",
+  "No results for": "Нічого не знайдено за запитом",
+  "Prototype only": "Лише прототип",
+  "Play": "Відтворити",
+  "All statuses": "Усі статуси",
+  "Playlist": "Плейлист",
+  "Podcast episode": "Епізод подкасту"
+}
+/* @resources:end */
+Object.assign(UK, RESOURCES_UK)
+const RS = {}
+const rs = (p = S.page) => {
+  if (!RS[p]) {
+    const sp = RESOURCES[p]
+    const sorted = sp.cols?.find((c) => c.sort && c.sort !== true)
+    RS[p] = { view: 'default', q: '', filters: {}, sel: new Set(), menu: null, sort: sorted ? { k: sorted.k, dir: sorted.sort } : null }
+  }
+  return RS[p]
+}
+const isRes = (p = S.page) => !!RESOURCES[p]
+const navKey = (p) => RESOURCES[p]?.nav ?? p
+const AI_TONE = { warn: 'warning', info: 'info', down: 'error', up: 'success', flat: '' }
+const cellText = (c) => (c == null ? '' : typeof c === 'string' ? c : `${c.t} ${c.s ?? ''}`)
+const cell = (c) => {
+  if (c == null) return ''
+  if (typeof c === 'string') return t(c)
+  if (c.tone) return `<span class="delta ${c.tone}">${t(c.t)}</span>`
+  return `<span class="two"><b>${t(c.t)}</b>${c.s ? `<small>${t(c.s)}</small>` : ''}</span>`
+}
+const pagerText = (s) => s.replace(' of ', ` ${t('of')} `)
+const dialogKeys = (sp) => Object.entries(sp.dialogs ?? {}).flatMap(([k, d]) => (d.field ? [k, 'invalid'] : [k]))
+const resViews = (p) => {
+  const sp = RESOURCES[p]
+  if (sp.kind === 'list') return ['default', ...LIST_STATES.filter((v) => v !== 'selected' || sp.select), ...dialogKeys(sp)]
+  return ['default', ...(sp.kind === 'form' ? FORM_STATES : DETAIL_STATES).flatMap((s) => (s === 'dialogs' ? dialogKeys(sp) : [s]))]
+}
+
+/* the header: back link on detail pages, the title with its status, the page's own actions */
+const isNew = (sp, st) => sp.kind === 'form' && (st.view === 'new' || (st.fresh && ['errors', 'saving', 'offline'].includes(st.view)))
+function resHead(sp, st, { actions = true, title } = {}) {
+  const d = sp.kind !== 'list'
+  const fresh = isNew(sp, st)
+  const busy = st.view === 'saving'
+  const off = st.view === 'offline'
+  const list = (sp.actions ?? []).filter((a) => !(fresh && a.dialog))
+  const acts = actions && list.length
+    ? `<div class="actions racts">${list.map((a) => {
+        const saving = busy && a.primary
+        const label = saving ? sp.saving : fresh && a.primary && sp.createLabel ? sp.createLabel : a.label
+        const does = a.dialog ? ` data-dlg="${a.dialog}"` : a.page ? ` data-page="${a.page}" data-pview="new"` : sp.kind === 'form' && a.primary ? ' data-save' : ` data-act="${a.label}"`
+        return `<button type="button" class="pill ${a.danger && a.primary ? 'danger' : a.primary ? 'primary' : 'ghost'}${saving ? ' busy' : ''}"${does}${busy || off ? ' disabled' : ''}>${ico(saving ? 'refresh' : a.icon)}${t(label)}</button>`
+      }).join('')}</div>`
+    : ''
+  const name = title ?? (fresh ? sp.newTitle : sp.title)
+  return `<header class="head rhead"><div>${d ? `<button type="button" class="rback" data-page="${sp.parent}">${ico('left')}${t(RESOURCES[sp.parent].title)}</button>` : ''}<div class="eyebrow">${t(fresh ? sp.newEyebrow : sp.eyebrow)}</div><h1>${t(name)}${d && sp.status && !title ? cell(sp.status) : ''}</h1>${title ? '' : `<p>${t(sp.sub)}</p>`}</div><div class="grow"></div>${acts}</header>`
+}
+const offlineBanner = () => `<article class="tile glass banner"><span class="ai warning">${ico('wifi-off')}</span><div class="tx"><b>${t('You’re offline')}</b><small>${t('Showing data from 09:42. Actions are paused until you reconnect.')}</small></div><button type="button" class="pill ghost" data-online>${ico('refresh')}${t('Try again')}</button></article>`
+const lockMsg = (sp) => msg('lock', 'Not in your role', `${t('Needs')} ${sp.perm}. ${t('Ask a super admin for access.')}`)
+
+/* ---------- list: KPI strip, then one table tile (cards on phones) ---------- */
+function visibleRows(sp, st) {
+  if (st.view === 'empty' || st.view === 'noresults') return []
+  const q = st.q.trim().toLowerCase()
+  let rows = sp.rows.filter((r) => (sp.filters ?? []).every((f, i) => {
+    const opt = f.options.find(([l]) => l === (st.filters[i] ?? f.value))
+    if (!opt?.[1]) return true
+    const c = r[f.key]
+    const v = typeof c === 'string' ? c : f.by === 's' ? c.s : c.t
+    return opt[1].some((x) => v.startsWith(x))
+  }))
+  if (q) rows = rows.filter((r) => sp.cols.some((c) => cellText(r[c.k]).toLowerCase().includes(q)))
+  if (st.sort && st.sort.dir === 'desc') rows = [...rows].reverse()
+  return rows
+}
+function listBody(sp, st) {
+  const v = st.view
+  if (v === 'loading') return `<div class="rskel">${Array.from({ length: 6 }, (_, k) => `<div class="rsk"><span class="sk" style="width:26px;height:26px;border-radius:8px"></span><span class="sk" style="flex:1;max-width:${260 - k * 18}px;height:12px"></span><span class="sk" style="width:110px;height:12px"></span><span class="sk" style="width:90px;height:24px;border-radius:12px"></span></div>`).join('')}</div>`
+  if (v === 'error') return `<div class="rmsg">${msg('error', sp.error.title, sp.error.desc, 'Try again')}</div>`
+  if (v === 'restricted') return `<div class="rmsg">${lockMsg(sp)}</div>`
+  const rows = visibleRows(sp, st)
+  if (v === 'empty') return `<div class="rmsg">${msg('success', sp.empty.title, sp.empty.desc)}</div>`
+  if (!rows.length) {
+    const nr = sp.noresults
+    const title = v === 'noresults' || !st.q ? t(nr.title) : `${t('No results for')} “${st.q}”`
+    return `<div class="rmsg"><div class="msg"><span class="mi ai">${ico('search')}</span><b>${title}</b><small>${t(nr.desc)}</small><button type="button" class="pill ghost" data-clear>${ico('x')}${t('Clear filters')}</button></div></div>`
+  }
+  const allSel = sp.select && rows.every((r) => st.sel.has(r.id))
+  const ck = (on, attr, label) => `<button type="button" class="ck${on ? ' on' : ''}" role="checkbox" aria-checked="${on}" aria-label="${label}" ${attr}>${ico('tick')}</button>`
+  const head = `<tr>${sp.select ? `<th class="cx">${ck(allSel, 'data-selall', 'Select all')}</th>` : ''}${sp.cols.map((c) => {
+    const on = st.sort?.k === c.k
+    const label = c.sort ? `<button type="button" class="rsort${on ? ' on' : ''}" data-sort="${c.k}">${t(c.l)}${ico(on && st.sort.dir === 'desc' ? 'arrow-down' : 'arrow-up')}</button>` : t(c.l)
+    return `<th${c.w ? ` style="width:${c.w}px"` : ''}${c.wide ? ' class="wide"' : ''}>${label}</th>`
+  }).join('')}<th class="go"></th></tr>`
+  const body = rows.map((r) => `<tr class="${st.sel.has(r.id) ? 'sel' : ''}" data-row="${r.id}">${sp.select ? `<td class="cx">${ck(st.sel.has(r.id), `data-sel="${r.id}"`, t('Select'))}</td>` : ''}${sp.cols.map((c) => `<td${c.wide ? ' class="wide"' : ''}>${cell(r[c.k])}</td>`).join('')}<td class="go">${ico('right')}</td></tr>`).join('')
+  const cards = rows.map((r) => {
+    const cd = sp.card
+    return `<article class="rcard${st.sel.has(r.id) ? ' sel' : ''}" data-row="${r.id}"><div class="top">${sp.select && st.sel.size ? ck(st.sel.has(r.id), `data-sel="${r.id}"`, t('Select')) : ''}${cell(r[cd.title])}${cell(r[cd.badge])}</div><div class="meta">${cd.meta.map((k) => t(cellText(r[k]))).join(' · ')}</div></article>`
+  }).join('')
+  return `<table class="rt rlist"><thead>${head}</thead><tbody>${body}</tbody></table><div class="rcards">${cards}</div>
+    <div class="rpager"><span>${pagerText(sp.pager)}</span><div class="nav2"><button type="button" class="ibtn" aria-label="${t('Previous')}" disabled>${ico('left')}</button><button type="button" class="ibtn" aria-label="${t('Next')}">${ico('right')}</button></div></div>`
+}
+function listBar(sp, st) {
+  if (st.sel.size && st.view !== 'loading')
+    return `<div class="rbulk"><b class="num">${st.sel.size} ${t('selected')}</b><span class="grow"></span>${sp.bulk.map((a) => `<button type="button" class="pill ghost"${a.dialog ? ` data-dlg="${a.dialog}"` : ` data-bulk="${a.label}"`}${['offline', 'saving'].includes(st.view) ? ' disabled' : ''}>${ico(a.icon)}${t(a.label)}</button>`).join('')}<button type="button" class="ibtn" data-clearsel aria-label="${t('Clear selection')}">${ico('x')}</button></div>`
+  const locked = ['restricted', 'error', 'loading'].includes(st.view)
+  const filters = (sp.filters ?? []).map((f, i) => {
+    const value = st.view === 'noresults' && sp.noresults.filter?.label === f.label ? sp.noresults.filter.value : st.filters[i] ?? f.value
+    return `<div class="rfwrap"><button type="button" class="rfilter${value !== f.value ? ' on' : ''}" data-filter="${i}" aria-haspopup="listbox" aria-expanded="${st.menu === i}"${locked ? ' disabled' : ''}>${t(f.label)}: <b>${t(value)}</b>${ico('chev-down')}</button>${st.menu === i ? `<div class="rmenu" role="listbox">${f.options.map(([l]) => `<button type="button" role="option" aria-selected="${l === value}" class="${l === value ? 'on' : ''}" data-fopt="${i}|${l}">${t(l)}${l === value ? ico('tick') : ''}</button>`).join('')}</div>` : ''}</div>`
+  }).join('')
+  const q = st.view === 'noresults' && sp.noresults.query ? sp.noresults.query : st.q
+  const search = sp.search ? `<label class="rsearch">${ico('search')}<input type="search" data-rq placeholder="${t(sp.search)}" aria-label="${t(sp.search)}" value="${q}"${locked ? ' disabled' : ''}></label>` : ''
+  return `<div class="rbar">${search}${filters}<span class="grow"></span><span class="rcount">${locked || !visibleRows(sp, st).length ? '' : pagerText(sp.pager)}</span></div>`
+}
+function listHTML(sp, st) {
+  const v = st.view
+  if ((v === 'selected' || sp.dialogs?.[v] || v === 'saving') && sp.select && !st.sel.size) for (const id of sp.selected ?? sp.rows.slice(0, 2).map((r) => r.id)) st.sel.add(id)
+  const kpis = `<section class="rkpis">${sp.kpis.map((k, i) => v === 'loading'
+    ? `<article class="tile glass rkpi" style="--i:${i}"><span class="sk" style="width:42px;height:42px;border-radius:13px"></span><div class="tx" style="gap:8px;flex:1"><span class="sk" style="width:60%;height:10px"></span><span class="sk" style="width:40%;height:22px"></span></div></article>`
+    : `<article class="tile glass rkpi" style="--i:${i}"><span class="ai ${AI_TONE[k.tone]}">${ico(k.icon)}</span><div class="tx"><small>${t(k.label)}</small><b class="num">${['empty', 'error', 'restricted'].includes(v) ? '—' : k.value}</b><span>${['empty', 'error', 'restricted'].includes(v) ? '&nbsp;' : t(k.sub)}</span></div></article>`).join('')}</section>`
+  return `${resHead(sp, st, { actions: !['restricted', 'error', 'loading'].includes(v) })}${v === 'offline' ? offlineBanner() : ''}${kpis}
+    <article class="tile glass rtile" style="--i:4" id="rlist">${listBar(sp, st)}${listBody(sp, st)}</article>`
+}
+
+/* ---------- detail: header with status and decisions, then a bento of tiles ---------- */
+const block = (b) => {
+  if (b.type === 'kv') return b.rows.map(([k, v]) => `<div class="kv"><span>${t(k)}</span><b>${cell(v)}</b></div>`).join('')
+  if (b.type === 'quote') return `<blockquote class="rquote">${t(b.t)}</blockquote>`
+  if (b.type === 'media') return `<div class="rmedia"><span class="ai info">${ico(b.icon)}</span><div class="tx"><b>${t(b.t)}</b><small>${t(b.s)}</small></div><button type="button" class="ibtn" data-act="Play" aria-label="Play">${ico('play')}</button></div>`
+  if (b.type === 'table') return `<table class="tb rt"><thead><tr>${b.cols.map((c) => `<th${c.w ? ` style="width:${c.w}px"` : ''}${c.wide ? ' class="wide"' : ''}>${t(c.l)}</th>`).join('')}</tr></thead><tbody>${b.rows.map((r) => `<tr>${r.map((c, i) => `<td${b.cols[i].wide ? ' class="wide"' : ''}>${cell(c)}</td>`).join('')}</tr>`).join('')}</tbody></table>`
+  if (b.type === 'feed') return `<div class="feed">${b.items.map(([x, m]) => `<div class="fi"><i></i><div>${t(x)}<small>${t(m)}</small></div></div>`).join('')}</div>`
+  if (b.type === 'checks') return `<div class="rchecks">${b.items.map(([ok, x, note]) => `<div class="rck"><span class="ai ${ok ? 'success' : 'warning'}">${ico(ok ? 'check' : 'alert')}</span><div><b>${t(x)}</b>${note ? `<small>${t(note)}</small>` : ''}</div></div>`).join('')}</div>`
+  if (b.type === 'chips') return `<div class="rchips"><small>${t(b.label)}</small><div class="chips">${b.items.map((x) => `<span class="delta flat">${t(x)}</span>`).join('')}</div></div>`
+  return ''
+}
+const dtile = (tl, i) => `<article class="tile glass w${tl.w}" style="--i:${i}"><div class="th"><span class="ico">${ico(tl.icon)}</span><div class="t"><b>${t(tl.title)}</b><small>${t(tl.meta)}</small></div></div><div class="tc">${tl.blocks.map(block).join('')}</div>${tl.link ? `<button type="button" class="link" data-act="${tl.link}">${t(tl.link)} ${ico('arrow')}</button>` : ''}</article>`
+function dialogHTML(sp, st) {
+  const key = st.view === 'invalid' ? Object.keys(sp.dialogs).find((k) => sp.dialogs[k].field) : st.view
+  const d = sp.dialogs?.[key]
+  if (!d) return ''
+  const bad = st.view === 'invalid'
+  const f = d.field
+  /* a bulk dialog names how many rows it acts on */
+  const n = (x) => t(x).replaceAll(String(sp.selected?.length ?? ''), String(st.sel.size || sp.selected?.length || ''))
+  const one = sp.kind === 'list' && st.sel.size === 1 && d.titleOne
+  const each = sp.kind === 'list' ? n : t
+  return `<div class="rscrim" data-dlgclose><div class="rdialog" role="dialog" aria-modal="true" aria-labelledby="dlgT"><span class="ai ${d.tone}">${ico(d.icon)}</span><h3 id="dlgT">${one ? t(d.titleOne) : each(d.title)}</h3><p>${t(d.desc)}</p>
+    ${f ? `<label class="rfield${bad ? ' bad' : ''}"><span>${t(f.label)}</span><textarea rows="4" data-dfield placeholder="${t(f.hint)}"${bad ? ' aria-invalid="true"' : ''}>${bad ? '' : f.value.map(t).join('\n')}</textarea>${bad ? `<small class="err">${ico('alert')}${t(f.error)}</small>` : `<small>${t(f.hint)}</small>`}</label>` : ''}
+    <div class="racts2"><button type="button" class="pill ghost" data-dlgclose>${t('Cancel')}</button><button type="button" class="pill ${d.danger ? 'danger' : 'primary'}" data-dlgok="${key}">${one ? t(d.actionOne) : each(d.action)}</button></div></div></div>`
+}
+function detailPageHTML(sp, st) {
+  const v = st.view
+  if (v === 'loading')
+    return `${resHead(sp, st, { actions: false })}<section class="ns-grid rgrid">${sp.tiles.map((tl, i) => `<article class="tile glass w${tl.w}" style="--i:${i}"><div class="th"><span class="sk" style="width:36px;height:36px;border-radius:12px"></span><div class="t"><div class="sk" style="width:140px;height:12px;margin-bottom:6px"></div><div class="sk" style="width:90px;height:10px"></div></div></div><div class="tc">${skRows(4, 14)}</div></article>`).join('')}</section>`
+  if (v === 'error') return `${resHead(sp, st, { actions: false })}<section class="ns-grid rgrid"><article class="tile glass w4 rmsgt">${msg('error', sp.error.title, sp.error.desc, 'Try again')}</article></section>`
+  if (v === 'restricted') return `${resHead(sp, st, { actions: false })}<section class="ns-grid rgrid"><article class="tile glass w4 rmsgt">${lockMsg(sp)}</article></section>`
+  if (v === 'notfound')
+    return `${resHead(sp, st, { actions: false, title: sp.notfound.title })}<section class="ns-grid rgrid"><article class="tile glass w4 rmsgt"><div class="msg"><span class="mi ai">${ico('search')}</span><b>${t(sp.notfound.title)}</b><small>${t(sp.notfound.desc)}</small><button type="button" class="pill ghost" data-page="${sp.parent}">${ico('left')}${t('Back to the list')}</button></div></article></section>`
+  return `${resHead(sp, st)}${v === 'offline' ? offlineBanner() : ''}<section class="ns-grid rgrid">${sp.tiles.map(dtile).join('')}</section>`
+}
+/* ---------- form: an editor tile beside tiles that preview the result ---------- */
+function formValues(sp, st) {
+  const v = st.view
+  if (v === 'new') st.fresh = true
+  else if (!['errors', 'saving', 'offline'].includes(v)) st.fresh = false
+  if (st.formView === v && st.form) return st.form
+  st.formView = v
+  st.invalid = null
+  const blank = (f) => (f.type === 'swatches' ? f.options[0] : '')
+  st.form = Object.fromEntries(sp.form.fields.map((f) => [f.k, v === 'new' ? blank(f) : v === 'errors' && 'badValue' in f ? f.badValue : st.fresh ? blank(f) : f.value]))
+  return st.form
+}
+/* field errors: what a failed save found, or the drawn example */
+const fieldBad = (f, st) => st.view === 'errors' && (st.invalid ? st.invalid.has(f.k) : !!f.error && 'badValue' in f)
+function fieldHTML(f, st) {
+  const v = st.form[f.k] ?? ''
+  const err = fieldBad(f, st)
+  if (f.type === 'swatches')
+    return `<div class="rfield"><span>${t(f.label)}</span><div class="rsw" role="radiogroup" aria-label="${t(f.label)}">${f.options.map((o) => `<button type="button" class="${v === o ? 'on' : ''}" role="radio" aria-checked="${v === o}" aria-label="${o}" data-swatch="${o}" style="--c:var(--${o})"></button>`).join('')}</div></div>`
+  const input = f.type === 'textarea'
+    ? `<textarea rows="3" data-ff="${f.k}" placeholder="${t(f.placeholder)}">${v}</textarea>`
+    : `<span class="rin">${f.prefix ? `<em>${f.prefix}</em>` : ''}<input data-ff="${f.k}" value="${v}" placeholder="${t(f.placeholder)}"${err ? ' aria-invalid="true"' : ''}></span>`
+  return `<label class="rfield${err ? ' bad' : ''}"><span>${t(f.label)}</span>${input}${err ? `<small class="err">${ico('alert')}${t(f.error)}</small>` : f.hint ? `<small>${t(f.hint)}</small>` : ''}</label>`
+}
+function formHTML(sp, st) {
+  const v = st.view
+  if (['loading', 'error', 'restricted', 'notfound'].includes(v)) return detailPageHTML(sp, st)
+  formValues(sp, st)
+  const fresh = isNew(sp, st)
+  const bad = sp.form.fields.filter((f) => fieldBad(f, st)).length
+  const editor = `<article class="tile glass w2 rform" style="--i:0"><div class="th"><span class="ico">${ico(sp.icon)}</span><div class="t"><b>${t(sp.form.title)}</b><small>${t(sp.form.meta)}</small></div></div>${bad ? `<div class="rerr">${ico('alert')}${t(`Fix ${bad} fields to save`)}</div>` : ''}<div class="tc">${sp.form.fields.map((f) => fieldHTML(f, st)).join('')}</div></article>`
+  const tiles = sp.tiles.filter((tl) => !(fresh && tl.existing)).map((tl, i) => dtile(fresh && tl.newBlocks ? { ...tl, blocks: tl.newBlocks } : tl, i + 1))
+  return `${resHead(sp, st)}${v === 'offline' ? offlineBanner() : ''}<section class="ns-grid rgrid">${editor}<div class="rstack">${tiles.join('')}</div></section>`
+}
+function resHTML() {
+  const sp = RESOURCES[S.page], st = rs()
+  return `<div class="rpage">${sp.kind === 'list' ? listHTML(sp, st) : sp.kind === 'form' ? formHTML(sp, st) : detailPageHTML(sp, st)}</div>`
+}
+function repaintList() {
+  const sp = RESOURCES[S.page], el = $('#rlist')
+  if (!el) return render()
+  el.innerHTML = listBar(sp, rs()) + listBody(sp, rs())
+}
+
+/* ---------- interaction ---------- */
+function resClick(e) {
+  if (!isRes()) return false
+  const sp = RESOURCES[S.page], st = rs()
+  const b = e.target.closest('button')
+  if (st.menu !== null && !e.target.closest('.rfwrap')) { st.menu = null; repaintList() }
+  if (b?.dataset.sel) { st.sel.has(b.dataset.sel) ? st.sel.delete(b.dataset.sel) : st.sel.add(b.dataset.sel); if (st.view === 'selected' && !st.sel.size) st.view = 'default'; repaintList(); return true }
+  if (b && 'selall' in b.dataset) { const rows = visibleRows(sp, st); const all = rows.every((r) => st.sel.has(r.id)); for (const r of rows) all ? st.sel.delete(r.id) : st.sel.add(r.id); repaintList(); return true }
+  if (b && 'clearsel' in b.dataset) { st.sel.clear(); if (st.view === 'selected') st.view = 'default'; renderDock(); repaintList(); return true }
+  if (b?.dataset.bulk) { const n = st.sel.size; st.sel.clear(); if (st.view === 'selected') st.view = 'default'; renderDock(); repaintList(); island(`<span class="pdot" style="color:var(--success-text);background:var(--success-surface)">${ico('check')}</span>${t(b.dataset.bulk)} · ${n}`); return true }
+  if (b?.dataset.sort) { const k = b.dataset.sort; st.sort = st.sort?.k === k ? { k, dir: st.sort.dir === 'asc' ? 'desc' : 'asc' } : { k, dir: 'asc' }; repaintList(); return true }
+  if (b?.dataset.filter) { const i = +b.dataset.filter; st.menu = st.menu === i ? null : i; repaintList(); return true }
+  if (b?.dataset.fopt) { const [i, l] = b.dataset.fopt.split('|'); st.filters[+i] = l; st.menu = null; if (st.view === 'noresults') st.view = 'default'; renderDock(); repaintList(); return true }
+  if (b && 'clear' in b.dataset) { st.filters = {}; st.q = ''; st.view = 'default'; renderDock(); render(); return true }
+  if (b?.dataset.dlg) { st.view = b.dataset.dlg; renderDock(); render(); setTimeout(() => $('.rdialog textarea, .rdialog [data-dlgok]')?.focus(), 30); return true }
+  if (b && 'dlgclose' in b.dataset) { st.view = 'default'; renderDock(); render(); return true }
+  if (!b && e.target.matches?.('.rscrim')) { st.view = 'default'; renderDock(); render(); return true }
+  if (b?.dataset.dlgok) {
+    const d = sp.dialogs[b.dataset.dlgok]
+    if (d.field && !$('[data-dfield]').value.trim()) { st.view = 'invalid'; renderDock(); render(); setTimeout(() => $('[data-dfield]')?.focus(), 30); return true }
+    st.view = 'saving'; renderDock(); render()
+    island(`<span class="pdot">${ico('refresh')}</span>${t(sp.saving)}<span class="bar"><i></i></span>`, 1300, true)
+    setTimeout(() => { st.view = 'default'; renderDock(); render(); island(`<span class="pdot" style="color:var(--success-text);background:var(--success-surface)">${ico('check')}</span>${t(d.action)} · ${t('just now')}`) }, 1300)
+    return true
+  }
+  if (b?.dataset.swatch) { st.form.color = b.dataset.swatch; render(); return true }
+  if (b && 'save' in b.dataset) {
+    const name = $('[data-ff="name"]')?.value.trim() ?? ''
+    const slug = $('[data-ff="slug"]')?.value.trim() ?? ''
+    const invalid = new Set([...(name ? [] : ['name']), ...(/^[a-z0-9-]+$/.test(slug) ? [] : ['slug'])])
+    if (invalid.size) { st.view = 'errors'; st.formView = 'errors'; st.invalid = invalid; renderDock(); render(); return true }
+    st.view = 'saving'; renderDock(); render()
+    island(`<span class="pdot">${ico('refresh')}</span>${t(sp.saving)}<span class="bar"><i></i></span>`, 1100, true)
+    setTimeout(() => { st.view = 'default'; st.fresh = false; renderDock(); render(); island(`<span class="pdot" style="color:var(--success-text);background:var(--success-surface)">${ico('check')}</span>${t('Saved · just now')}`) }, 1100)
+    return true
+  }
+  if (b?.dataset.act) { island(`<span class="pdot">${ico('info')}</span>${t(b.dataset.act)} · ${t('Prototype only')}`); return true }
+  const row = !b && e.target.closest('[data-row]')
+  if (row && sp.detail) { go(sp.detail); return true }
+  return false
+}
+document.addEventListener('input', (e) => {
+  /* form fields keep their values across repaints; a new genre's address follows its name */
+  if (e.target.matches?.('[data-ff]')) {
+    const st = rs()
+    st.form[e.target.dataset.ff] = e.target.value
+    if (e.target.dataset.ff === 'name' && isNew(RESOURCES[S.page], st)) {
+      st.form.slug = e.target.value.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+      const slug = $('[data-ff="slug"]')
+      if (slug) slug.value = st.form.slug
+    }
+    return
+  }
+  if (!e.target.matches?.('[data-rq]')) return
+  const st = rs(), pos = e.target.selectionStart
+  st.q = e.target.value
+  if (st.view === 'noresults') st.view = 'default'
+  const sp = RESOURCES[S.page]
+  const el = $('#rlist')
+  el.querySelectorAll(':scope > :not(.rbar)').forEach((n) => { n.remove() })
+  el.insertAdjacentHTML('beforeend', listBody(sp, st))
+  const input = $('[data-rq]'); input.setSelectionRange(pos, pos)
+})
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape' || !isRes()) return
+  const st = rs()
+  if (st.menu !== null) { st.menu = null; repaintList() }
+  else if (RESOURCES[S.page].dialogs?.[st.view] || st.view === 'invalid') { st.view = 'default'; renderDock(); render() }
+})
+
 /* ---------- pages: Overview and Notification settings ---------- */
 Object.assign(UK, {
   'Notifications': 'Сповіщення', 'Notification settings': 'Налаштування сповіщень', 'SETTINGS · NOTIFICATIONS': 'НАЛАШТУВАННЯ · СПОВІЩЕННЯ',
@@ -1459,13 +5376,18 @@ Object.assign(UK, {
   'You’re offline': 'Ви офлайн', 'Showing figures from 09:42. Actions are paused until you reconnect.': 'Показано дані станом на 09:42. Дії призупинено до відновлення зʼєднання.', 'Offline · 09:42': 'Офлайн · 09:42', 'Prototype: this section is not drawn yet': 'Прототип: цей розділ ще не намальовано', 'Search': 'Пошук', 'Alerts': 'Сповіщення', 'Settings': 'Налаштування',
 })
 const PAGES = { overview: 'Overview', notifications: 'Notifications' }
-S.page = location.hash === '#notifications' ? 'notifications' : 'overview'
+for (const [k, sp] of Object.entries(RESOURCES)) PAGES[k] = sp.kind === 'detail' ? RESOURCES[sp.parent].title : sp.title
+const hashOf = (p) => (p === 'overview' ? '' : `#${RESOURCES[p]?.hash ?? p}`)
+const fromHash = (h) => Object.keys(PAGES).find((p) => hashOf(p) === h) ?? 'overview'
+S.page = fromHash(location.hash)
 S.nview = 'default'
 function go(page) {
   if (!PAGES[page]) return island(`<span class="pdot">${ico('info')}</span>${t('Prototype: this section is not drawn yet')}`)
   if (DT.open) closeDetail()
   S.page = page
-  if (!EMBED) history.replaceState(null, '', page === 'overview' ? location.pathname + location.search : '#notifications')
+  if (isRes(page)) { const st = rs(page); st.view = 'default'; st.sel.clear(); st.menu = null }
+  if (!EMBED) history.replaceState(null, '', page === 'overview' ? location.pathname + location.search : hashOf(page))
+  renderDock()
   $('#sheet').classList.remove('open')
   closePop()
   all()
@@ -1696,17 +5618,23 @@ function badges() { $$('.ibtn .badge, .mtabs .badge').forEach((b) => { b.hidden 
 /* ---------- prototype dock: states per page, desktop ⇄ mobile ---------- */
 const VIEWS = { overview: ['default', 'loading', 'empty', 'partial', 'error', 'restricted', 'offline'], notifications: ['default', 'loading', 'error', 'blocked'] }
 const VIEW_LABEL = { default: 'Default', loading: 'Loading', empty: 'Empty', partial: 'Partial', error: 'Error', restricted: 'Restricted', offline: 'Offline', blocked: 'Push blocked' }
-const curView = () => (S.page === 'overview' ? S.view : S.nview)
-function setView(v) {
+Object.assign(VIEW_LABEL, Object.fromEntries(Object.entries(STATE_LABEL).filter(([k]) => !VIEW_LABEL[k])))
+const viewsOf = (p) => VIEWS[p] ?? resViews(p)
+const curView = () => (S.page === 'overview' ? S.view : S.page === 'notifications' ? S.nview : rs().view)
+function putView(v) {
   if (S.page === 'overview') S.view = v
-  else S.nview = v
+  else if (S.page === 'notifications') S.nview = v
+  else { const st = rs(); st.view = v; st.menu = null; if (v !== 'selected') st.sel.clear() }
+}
+function setView(v) {
+  putView(v)
   renderDock(); render(); report()
   if (v === 'offline') island(`<span class="pdot" style="color:var(--warning-text);background:var(--warning-surface)">${ico('wifi-off')}</span>${t('Offline · 09:42')}`, 3200)
 }
 function renderDock() {
   const d = $('#dock')
   if (!d) return
-  d.innerHTML = `<small>State</small>${VIEWS[S.page].map((v) => `<button type="button" data-view="${v}" class="${v === curView() ? 'on' : ''}">${VIEW_LABEL[v]}</button>`).join('')}
+  d.innerHTML = `<small>State</small>${viewsOf(S.page).map((v) => `<button type="button" data-view="${v}" class="${v === curView() ? 'on' : ''}">${VIEW_LABEL[v]}</button>`).join('')}
     <span class="dsep"></span><button type="button" data-device="mobile">${ico('phone')}Mobile</button>`
 }
 
@@ -1721,8 +5649,8 @@ function demoHTML() {
   const g = (label, key, opts, cur, fmtO = (o) => o) =>
     `<div class="grp"><small>${label}</small><div class="opts">${opts.map((o) => `<button type="button" data-demo="${key}" data-val="${o}" class="${o === cur ? 'on' : ''}">${fmtO(o)}</button>`).join('')}</div></div>`
   return `<h3>Mobile demo</h3><p>The same prototype at 390 × 844. Tap inside the phone, or drive it from here.</p>
-    ${g('Page', 'page', ['overview', 'notifications'], demo.page, (o) => PAGES[o])}
-    ${g('State', 'view', VIEWS[demo.page], demo.view, (o) => VIEW_LABEL[o])}
+    ${g('Page', 'page', Object.keys(PAGES), demo.page, (o) => (RESOURCES[o]?.kind === 'detail' ? `${PAGES[o]} · ${RESOURCES[o].title}` : PAGES[o]))}
+    ${g('State', 'view', viewsOf(demo.page), demo.view, (o) => VIEW_LABEL[o])}
     ${g('Theme', 'theme', THEMES, S.theme, (o) => o[0].toUpperCase() + o.slice(1))}
     ${g('Language', 'lang', ['en', 'uk'], S.lang, (o) => (o === 'en' ? 'English' : 'Українська'))}
     <div class="grp"><small>Try</small><div class="opts">${[['detail', 'Open an analysis'], ['menu', 'Open the menu'], ['alerts', 'Open notifications'], ['search', 'Search'], ['test', 'Send a test alert']].map(([a, l]) => `<button type="button" data-demo="action" data-val="${a}">${l}</button>`).join('')}</div></div>
@@ -1747,7 +5675,7 @@ addEventListener('message', (e) => {
   if (m.theme) S.theme = m.theme
   if (m.lang) S.lang = m.lang
   if (m.page && m.page !== S.page) { S.page = m.page; closePop(); $('#sheet').classList.remove('open') }
-  if (m.view) { if (S.page === 'overview') S.view = m.view; else S.nview = m.view }
+  if (m.view) putView(m.view)
   if (m.theme || m.lang || m.page || m.view) { all(); renderDock() }
   if (m.action === 'detail') { if (S.page !== 'overview') go('overview'); setTimeout(() => { const tl = $('[data-detail="listens"]'); if (tl) openDetail(tl) }, 250) }
   if (m.action === 'menu') $('#sheet').classList.toggle('open')

@@ -210,8 +210,23 @@ const NAV_LABEL = {
   staff: 'Staff',
   notifications: 'Notifications',
 }
-const NAV_ICON = { overview: 'layout-dashboard', notifications: 'bell' }
-const PAGE_LABEL = { overview: 'Overview', notifications: 'Notifications' }
+const NAV_ICON = {
+  overview: 'layout-dashboard',
+  moderation: 'flag',
+  releases: 'disc-3',
+  catalog: 'audio-lines',
+  albums: 'disc-album',
+  playlists: 'list-music',
+  podcasts: 'podcast',
+  genres: 'tags',
+  artists: 'mic-vocal',
+  users: 'users-round',
+  audit: 'scroll-text',
+  roles: 'shield-check',
+  staff: 'id-card',
+  notifications: 'bell',
+}
+const PAGE_LABEL = { overview: 'Overview', ...NAV_LABEL }
 /** Overrides shared by the sidebar and the phone menu: the active page, theme, language, hidden items. */
 const panel = ({ page = 'overview', theme = 'Dark', uk = false, rail = false, hide = [] } = {}) => {
   const active = rail
@@ -322,12 +337,13 @@ export function MShell(
   height = 2600,
   { page = 'overview', uk = false, unread = true } = {},
 ) {
-  /* notification settings belong to the alerts tab: the bell's list leads there */
-  const tab = page === 'overview' ? 'overview' : 'alerts'
+  /* notification settings belong to the alerts tab (the bell's list leads there); sections open from the menu */
+  const tab = page === 'overview' ? 'overview' : page === 'notifications' ? 'alerts' : 'menu'
   const tabs = {}
   for (const [k, icon] of [
     ['overview', 'layout-dashboard'],
     ['alerts', 'bell'],
+    ['menu', 'menu'],
   ])
     tabs[`tabs.tab_${k}`] = A(
       k === tab ? 'Admin/Tab/On' : 'Admin/Tab/Off',

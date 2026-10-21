@@ -67,6 +67,11 @@ paths:
   stack series paths in a clipped plot with a negative gap equal to the path height. Overlays
   (popovers, palette, analysis sheet) sit in flow, and an «Interaction notes» frame describes the
   motion.
+- The admin resource routes (lists, detail pages, editors) come from one data module,
+  `scripts/pencil-pages/admin-resources.mjs`: `admin-resource.mjs` draws the Pencil pages from it and
+  `run-admin.mjs` writes the same specs into the prototype between its `@resources` markers. Change
+  content there, never in the prototype's data block. Frame heights are measured in Pencil into
+  `admin-heights.json`; without a measurement a page falls back to a generous height.
 - `pnpm design:pages` regenerates the library blocks and every page from
   `scripts/pencil-pages/` (content per route in `pages*.mjs`). Folders named `archive/` hold
   historical references and are skipped by the checks.

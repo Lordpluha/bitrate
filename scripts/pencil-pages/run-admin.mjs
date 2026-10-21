@@ -1,3 +1,5 @@
+import { join } from 'node:path'
+import { writePrototypeData } from './admin-proto-data.mjs'
 import { writePage, setLibDir, setLibrary } from './kit.mjs'
 import { adminPages } from './pages-admin.mjs'
 
@@ -11,4 +13,6 @@ for (const [dir, spec] of Object.entries(adminPages)) {
   frames +=
     4 + (spec.states ?? []).reduce((n, s) => n + (s.desktop ? 1 : 0) + (s.mobile ? 1 : 0), 0)
 }
+/* the prototype draws the resource pages from the same specs */
+writePrototypeData(join(root, 'prototype/admin-bento-prototype.html'))
 console.log(Object.keys(adminPages).length, 'admin pages,', frames, 'frames')
