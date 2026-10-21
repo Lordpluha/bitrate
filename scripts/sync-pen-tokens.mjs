@@ -25,8 +25,9 @@
  */
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, relative } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-const ROOT = join(dirname(new URL(import.meta.url).pathname), '..')
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const THEMES_ENTRY = join(ROOT, 'packages/tailwind/src/themes.css')
 const LIBRARY = join(ROOT, 'pencil/web-player-design/design-system/bitrate.lib.pen')
 const DESIGNS = join(ROOT, 'pencil')
@@ -357,10 +358,9 @@ if (designOnly.length) problems.push(`library colours with no code token: ${desi
 
 const libraryNames = new Set(Object.keys(generated).concat(Object.keys(current)))
 for (const name of designOnly) libraryNames.delete(name)
-const designs = [...penFiles(DESIGNS)]
+const designs = [...penFiles(DESIGNS)].filter((path) => !ARCHIVED.test(relative(ROOT, path)))
 for (const path of designs) {
   const file = relative(ROOT, path)
-  if (ARCHIVED.test(file)) continue
   const isLibrary = path === LIBRARY
   const pattern = isLibrary
     ? /^\$(--[a-z0-9-]+)$/

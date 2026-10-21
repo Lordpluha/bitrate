@@ -18,9 +18,10 @@
  * semantic roles preferred over raw palette steps. It is a migration aid: review the result.
  */
 import { readFileSync, writeFileSync } from 'node:fs'
-import { dirname, join, relative } from 'node:path'
+import { dirname, join, relative, resolve as resolvePath } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-const ROOT = join(dirname(new URL(import.meta.url).pathname), '..')
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const LIBRARY = join(ROOT, 'pencil/web-player-design/design-system/bitrate.lib.pen')
 const THEMES = ['Dark', 'Light', 'Dim']
 const BACKGROUND = { Dark: '#0B0D12', Light: '#FFFFFF', Dim: '#0E1117' }
@@ -272,5 +273,4 @@ if (files.length === 0) {
   console.error('usage: node scripts/bind-pen-colors.mjs <file.pen> [...] [--report]')
   process.exit(2)
 }
-for (const f of files)
-  bindFile(join(process.cwd(), f) === LIBRARY ? LIBRARY : join(process.cwd(), f), report)
+for (const f of files) bindFile(resolvePath(f), report)
