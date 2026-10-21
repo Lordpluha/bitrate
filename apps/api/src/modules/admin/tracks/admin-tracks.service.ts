@@ -58,6 +58,23 @@ type AdminTrackDetail = AdminTrackRow & {
   openReportCount: number
 }
 
+/** The columns an {@link AdminTrackRow} is built from — not every `Track` column. */
+const TRACK_ROW_SELECT = {
+  id: true,
+  title: true,
+  artistId: true,
+  artist: { select: { username: true } },
+  cover: true,
+  processingStatus: true,
+  processingError: true,
+  processingAttempts: true,
+  processingStartedAt: true,
+  processingFinishedAt: true,
+  deletedAt: true,
+  createdAt: true,
+  updatedAt: true,
+} as const satisfies Prisma.TrackSelect
+
 /** Prisma's include shape for hydrating an {@link AdminTrackDetail}. */
 const DETAIL_INCLUDE = {
   artist: { select: { username: true } },
@@ -66,6 +83,9 @@ const DETAIL_INCLUDE = {
   genres: { include: { genre: { select: { id: true, name: true, slug: true } } } },
   albums: { include: { album: { select: { id: true, title: true } } } },
 } satisfies Prisma.TrackInclude
+
+/** What the state pre-checks read. */
+const DELETED_AT_SELECT = { deletedAt: true } as const satisfies Prisma.TrackSelect
 
 type TrackWithDetail = Prisma.TrackGetPayload<{ include: typeof DETAIL_INCLUDE }>
 
@@ -77,7 +97,7 @@ type TrackWithDetail = Prisma.TrackGetPayload<{ include: typeof DETAIL_INCLUDE }
  * uploads, not an alphabetical catalog browse. That ordering can't be expressed as a
  * plain Prisma `orderBy`, so it's resolved with a small raw-SQL `CASE` query that
  * only ever selects ids; the actual rows are hydrated back through normal Prisma
- * `findMany` + `include`, keeping the raw-SQL surface (and its blast radius) minimal.
+ * `findMany` + `select`, keeping the raw-SQL surface (and its blast radius) minimal.
  */
 @Injectable()
 export class AdminTracksService {
@@ -210,7 +230,7 @@ export class AdminTracksService {
         if (!sort) return this.findAttentionFirstPage(rawWhere, skip, take)
         const tracks = await this.prisma.track.findMany({
           where,
-          include: { artist: { select: { username: true } } },
+          select: TRACK_ROW_SELECT,
           orderBy: orderBy as unknown as Prisma.TrackOrderByWithRelationInput[],
           skip,
           take,
@@ -237,7 +257,7 @@ export class AdminTracksService {
     const [tracks, total] = await Promise.all([
       this.prisma.track.findMany({
         where,
-        include: { artist: { select: { username: true } } },
+        select: TRACK_ROW_SELECT,
         orderBy: orderBy as unknown as Prisma.TrackOrderByWithRelationInput[],
         skip: (page - 1) * limit,
         take: limit,
@@ -254,7 +274,7 @@ export class AdminTracksService {
 
     const tracks = await this.prisma.track.findMany({
       where: { id: { in: ids } },
-      include: { artist: { select: { username: true } } },
+      select: TRACK_ROW_SELECT,
     })
     const byId = new Map(tracks.map((track) => [track.id, track]))
 
@@ -324,12 +344,13 @@ export class AdminTracksService {
    * track must stay reachable so the operator can review it before deciding to restore it.
    */
   async findById(id: string): Promise<AdminTrackDetail> {
-    const track = await this.prisma.track.findFirst({ where: { id }, include: DETAIL_INCLUDE })
+    const [track, openReportCount] = await Promise.all([
+      this.prisma.track.findFirst({ where: { id }, include: DETAIL_INCLUDE }),
+      this.prisma.moderationReport.count({
+        where: { entityType: 'track', entityId: id, status: 'OPEN' },
+      }),
+    ])
     if (!track) throw new TrackNotFoundException(id)
-
-    const openReportCount = await this.prisma.moderationReport.count({
-      where: { entityType: 'track', entityId: id, status: 'OPEN' },
-    })
 
     return this.toDetail(track, openReportCount)
   }
@@ -343,10 +364,8 @@ export class AdminTracksService {
     id: string,
     { page = DEFAULT_PAGE, limit = DEFAULT_LIMIT }: PaginationInput,
   ) {
-    const track = await this.prisma.track.findFirst({ where: { id } })
-    if (!track) throw new TrackNotFoundException(id)
-
-    const [data, total] = await Promise.all([
+    const [track, data, total] = await Promise.all([
+      this.prisma.track.findFirst({ where: { id }, select: { id: true } }),
       this.prisma.trackProcessingAttempt.findMany({
         where: { trackId: id },
         orderBy: [{ startedAt: 'desc' }, { id: 'desc' }],
@@ -355,6 +374,7 @@ export class AdminTracksService {
       }),
       this.prisma.trackProcessingAttempt.count({ where: { trackId: id } }),
     ])
+    if (!track) throw new TrackNotFoundException(id)
 
     return { data, total, page, limit }
   }
@@ -366,7 +386,7 @@ export class AdminTracksService {
    * (`TrackUploadService.reprocess`) instead of a second queue.
    */
   async reprocess(id: string) {
-    const existing = await this.prisma.track.findFirst({ where: { id } })
+    const existing = await this.prisma.track.findFirst({ where: { id }, select: DELETED_AT_SELECT })
     if (!existing) throw new TrackNotFoundException(id)
     if (existing.deletedAt) throw new TrackAlreadyDeletedException(id)
 
@@ -388,7 +408,7 @@ export class AdminTracksService {
     reason?: string,
     auditContext: AuditContextValue = {},
   ): Promise<AdminTrackRow> {
-    const existing = await this.prisma.track.findFirst({ where: { id } })
+    const existing = await this.prisma.track.findFirst({ where: { id }, select: DELETED_AT_SELECT })
     if (!existing) throw new TrackNotFoundException(id)
     if (existing.deletedAt) throw new TrackAlreadyDeletedException(id)
 
@@ -401,7 +421,7 @@ export class AdminTracksService {
 
       const updated = await tx.track.findFirstOrThrow({
         where: { id },
-        include: { artist: { select: { username: true } } },
+        select: TRACK_ROW_SELECT,
       })
       await writeTakeDownAudit({
         tx,
@@ -434,7 +454,7 @@ export class AdminTracksService {
     reason?: string,
     auditContext: AuditContextValue = {},
   ): Promise<AdminTrackRow> {
-    const existing = await this.prisma.track.findFirst({ where: { id } })
+    const existing = await this.prisma.track.findFirst({ where: { id }, select: DELETED_AT_SELECT })
     if (!existing) throw new TrackNotFoundException(id)
     if (!existing.deletedAt) throw new TrackNotDeletedException(id)
 
@@ -447,7 +467,7 @@ export class AdminTracksService {
 
       const updated = await tx.track.findFirstOrThrow({
         where: { id },
-        include: { artist: { select: { username: true } } },
+        select: TRACK_ROW_SELECT,
       })
       await writeTakeDownAudit({
         tx,
