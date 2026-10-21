@@ -9,6 +9,7 @@ import {
 } from '@tanstack/react-query'
 import { clientFetchClient } from '@/shared/api/client'
 import { ensureOkResponse } from '@/shared/api/errors'
+import { fetchAllPages } from '@/shared/api/fetchAllPages'
 import { apiQueryKeys } from '@/shared/api/queryKeys'
 import {
   podcastDetailSchema,
@@ -77,11 +78,11 @@ export const usePodcastEpisodes = ({
   query,
 }: UsePodcastEpisodesInput) =>
   useInfiniteQuery({
-    queryKey: [
-      ...apiQueryKeys.podcasts.all,
-      'episodes',
-      { podcastId, query, limit: PODCAST_EPISODES_PAGE_SIZE },
-    ] as const,
+    queryKey: apiQueryKeys.podcasts.episodes(
+      podcastId,
+      query,
+      PODCAST_EPISODES_PAGE_SIZE,
+    ),
     queryFn: async ({ pageParam }) => {
       const { data, response } = await clientFetchClient.GET(
         '/api/v1/podcasts/{id}',
@@ -116,19 +117,13 @@ export const useSavedEpisodes = (page = 1, limit = 20, enabled = true) =>
   })
 
 /** Every saved episode: the first page tells the total, the rest load in parallel. */
-export const getAllSavedEpisodes = async () => {
-  const firstPage = await fetchSavedEpisodesPage(1, SAVED_EPISODES_PAGE_SIZE)
-  const pageCount = Math.ceil(firstPage.total / firstPage.limit)
-  const remainingPages = await Promise.all(
-    Array.from({ length: Math.max(pageCount - 1, 0) }, (_, index) =>
-      fetchSavedEpisodesPage(index + 2, SAVED_EPISODES_PAGE_SIZE),
-    ),
+export const getAllSavedEpisodes = async () =>
+  dedupeSavedEpisodes(
+    await fetchAllPages({
+      fetchPage: (page) =>
+        fetchSavedEpisodesPage(page, SAVED_EPISODES_PAGE_SIZE),
+    }),
   )
-
-  return dedupeSavedEpisodes(
-    [firstPage, ...remainingPages].flatMap(({ data }) => data),
-  )
-}
 
 /** Loads every saved-episode page for relationship checks and library merging. */
 export const useAllSavedEpisodes = (enabled = true) =>
@@ -138,9 +133,6 @@ export const useAllSavedEpisodes = (enabled = true) =>
     enabled,
     staleTime: 60 * 1000,
   })
-
-/** Prefix of `apiQueryKeys.podcasts.savedEpisodes(…)` and `savedEpisodesAll`. */
-const SAVED_EPISODES_KEY = ['podcasts', 'saved-episodes'] as const
 
 type SavedEpisodeMutationInput<TVariables> = {
   /** The saved library as it should look once the request succeeds. */
@@ -182,7 +174,9 @@ const useSavedEpisodeMutation = <TVariables>({
       }
     },
     onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: SAVED_EPISODES_KEY }),
+      queryClient.invalidateQueries({
+        queryKey: apiQueryKeys.podcasts.savedEpisodesRoot,
+      }),
   })
 }
 

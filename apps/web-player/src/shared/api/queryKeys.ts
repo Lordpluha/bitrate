@@ -72,10 +72,14 @@ export const apiQueryKeys = {
     all: ['podcasts'] as const,
     detail: (id: string, page: number, limit: number) =>
       ['podcasts', 'detail', { id, page, limit }] as const,
+    episodes: (podcastId: string, query: string, limit: number) =>
+      ['podcasts', 'episodes', { podcastId, query, limit }] as const,
     list: (page: number, limit: number, query?: string) =>
       ['podcasts', 'list', { page, limit, query }] as const,
     savedEpisodes: (page: number, limit: number) =>
       ['podcasts', 'saved-episodes', { page, limit }] as const,
+    /** Prefix of every saved-episode query, paged or full. */
+    savedEpisodesRoot: ['podcasts', 'saved-episodes'] as const,
     savedEpisodesAll: ['podcasts', 'saved-episodes', 'all'] as const,
   },
   search: {
