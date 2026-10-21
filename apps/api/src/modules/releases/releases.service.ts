@@ -113,76 +113,82 @@ export class ReleasesService {
   async workspace(ownerArtistId: string, id: string) {
     const activeDrafts = { ownerArtistId, deletedAt: null }
     const activeTracks = { track: { deletedAt: null } }
-    const release = await this.prisma.release.findFirst({
-      where: { id, ownerArtistId, deletedAt: null },
-      select: {
-        ...RELEASE_SUMMARY_SELECT,
-        cover: true,
-        isDemo: true,
-        masterOwnerType: true,
-        masterOwnerName: true,
-        writersConfirmedAt: true,
-        accuracyConfirmedAt: true,
-        submittedAt: true,
-        owner: { select: { username: true } },
-        reviews: {
-          orderBy: { createdAt: 'desc' },
-          take: 1,
-          select: {
-            decision: true,
-            message: true,
-            requiredChanges: true,
-            recommendations: true,
-            createdAt: true,
+    const owned = { id, ownerArtistId, deletedAt: null }
+    const [release, readinessRecord] = await Promise.all([
+      this.prisma.release.findFirst({
+        where: owned,
+        select: {
+          ...RELEASE_SUMMARY_SELECT,
+          cover: true,
+          isDemo: true,
+          masterOwnerType: true,
+          masterOwnerName: true,
+          writersConfirmedAt: true,
+          accuracyConfirmedAt: true,
+          submittedAt: true,
+          owner: { select: { username: true } },
+          reviews: {
+            orderBy: { createdAt: 'desc' },
+            take: 1,
+            select: {
+              decision: true,
+              message: true,
+              requiredChanges: true,
+              recommendations: true,
+              createdAt: true,
+            },
+          },
+          trackDrafts: {
+            where: activeDrafts,
+            take: 50,
+            orderBy: [{ position: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
+            select: {
+              id: true,
+              title: true,
+              version: true,
+              status: true,
+              duration: true,
+              isDemo: true,
+              isrc: true,
+              audioKey: true,
+              audioFileName: true,
+              audioSizeBytes: true,
+            },
+          },
+          tracks: {
+            where: activeTracks,
+            take: 50,
+            orderBy: { position: 'asc' },
+            select: {
+              position: true,
+              track: { select: { id: true, title: true, duration: true, isrc: true } },
+            },
+          },
+          contributors: {
+            take: 50,
+            orderBy: [{ displayName: 'asc' }, { id: 'asc' }],
+            select: RELEASE_CONTRIBUTOR_SELECT,
+          },
+          splits: {
+            take: 100,
+            orderBy: [{ rightType: 'asc' }, { contributorId: 'asc' }],
+            select: { contributorId: true, rightType: true, shareBasisPoints: true },
+          },
+          _count: {
+            select: {
+              trackDrafts: { where: activeDrafts },
+              tracks: { where: activeTracks },
+              contributors: true,
+            },
           },
         },
-        trackDrafts: {
-          where: activeDrafts,
-          take: 50,
-          orderBy: [{ position: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
-          select: {
-            id: true,
-            title: true,
-            version: true,
-            status: true,
-            duration: true,
-            isDemo: true,
-            isrc: true,
-            audioKey: true,
-            audioFileName: true,
-            audioSizeBytes: true,
-          },
-        },
-        tracks: {
-          where: activeTracks,
-          take: 50,
-          orderBy: { position: 'asc' },
-          select: {
-            position: true,
-            track: { select: { id: true, title: true, duration: true, isrc: true } },
-          },
-        },
-        contributors: {
-          take: 50,
-          orderBy: [{ displayName: 'asc' }, { id: 'asc' }],
-          select: RELEASE_CONTRIBUTOR_SELECT,
-        },
-        splits: {
-          take: 100,
-          orderBy: [{ rightType: 'asc' }, { contributorId: 'asc' }],
-          select: { contributorId: true, rightType: true, shareBasisPoints: true },
-        },
-        _count: {
-          select: {
-            trackDrafts: { where: activeDrafts },
-            tracks: { where: activeTracks },
-            contributors: true,
-          },
-        },
-      },
-    })
-    if (!release) throw new NotFoundException(RELEASE_ERRORS.NOT_FOUND)
-    const readiness = await this.readiness(this.prisma, ownerArtistId, id)
+      }),
+      this.prisma.release.findFirst({
+        where: owned,
+        select: releaseReadinessSelect(ownerArtistId),
+      }),
+    ])
+    if (!(release && readinessRecord)) throw new NotFoundException(RELEASE_ERRORS.NOT_FOUND)
     const {
       owner,
       reviews,
@@ -199,7 +205,7 @@ export class ReleasesService {
     return {
       ...summary,
       rights: { masterOwnerType, masterOwnerName, writersConfirmedAt, accuracyConfirmedAt },
-      readiness: readiness ?? { blockers: [], notices: [] },
+      readiness: releaseReadiness(readinessFromRecord(readinessRecord)),
       artistName: owner.username,
       latestReview: reviews[0] ?? null,
       // The storage key stays server-side; the artist plays audio through the owned route.
@@ -356,18 +362,6 @@ export class ReleasesService {
     if (revised) return revised
     await this.findOne(ownerArtistId, id)
     throw new ConflictException(RELEASE_ERRORS.CHANGED_OR_NOT_REJECTED)
-  }
-
-  private async readiness(
-    client: Pick<Prisma.TransactionClient, 'release'>,
-    ownerArtistId: string,
-    id: string,
-  ) {
-    const record = await client.release.findFirst({
-      where: { id, ownerArtistId, deletedAt: null },
-      select: releaseReadinessSelect(ownerArtistId),
-    })
-    return record ? releaseReadiness(readinessFromRecord(record)) : null
   }
 
   updateRights(ownerArtistId: string, id: string, input: UpdateReleaseRightsDto) {
