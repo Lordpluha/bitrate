@@ -1,5 +1,5 @@
 import { writePage } from './kit.mjs'
-import { pages } from './pages.mjs'
+import { pages } from './pages/player/index.mjs'
 const root = process.argv[2]
 const only = process.argv.slice(3)
 let written = 0

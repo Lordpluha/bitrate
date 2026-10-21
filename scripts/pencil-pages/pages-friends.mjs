@@ -416,6 +416,7 @@ const findD = (name, main, side = [suggested(false), invite()]) =>
 const findM = (name, q, body) => M(name, [search(q), ...body], MHeader('Find friends'))
 
 export const friendsFind = {
+  more: ['people', '4 of 38 people'],
   title: 'Find friends',
   route: 'concept — /friends/find',
   context:
