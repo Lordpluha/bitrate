@@ -18,16 +18,6 @@ const RECENT_ACTIVITY_LIMIT = 10
 /** The trailing window, in days, "signups"/"uploads" counts cover. */
 const LAST_DAYS_WINDOW = 7
 
-/**
- * "Signups" and "uploads" are historical activity counts, not current-state counts: a row counts
- * if it was *created* inside the trailing window, regardless of whether it was soft-deleted
- * afterward. `deactivated` already reports current soft-deleted state separately, so applying a
- * `deletedAt` filter here would double-penalize a row deactivated the same week it was created and
- * make the two sections disagree about what a "count" means. All three of users, artists, and
- * tracks apply this rule identically — none of the three `createdAt` queries below filters on
- * `deletedAt`.
- */
-
 /** A single day's `date_trunc('day', …)::date` bucket, as Postgres returns it via `$queryRaw`. */
 type DayBucket = { day: Date }
 
@@ -39,6 +29,17 @@ type DayCountRow = DayBucket & { count: number }
 
 /** One day of filed reports for one entity type, as Postgres returns it via `$queryRaw`. */
 type DayEntityTypeRow = DayBucket & { entityType: string; count: number }
+
+/**
+ * The tables and timestamp columns the plain per-day series count. Both are compile-time
+ * constants spliced in with `Prisma.raw` — never a caller-supplied value.
+ */
+type DailyCountSource =
+  | { table: 'User' | 'Artist' | 'ModerationReport'; column: 'createdAt' }
+  | { table: 'ListeningHistory'; column: 'listenedAt' }
+
+/** A series window: its UTC calendar days, oldest first, and the instant the oldest one starts. */
+type SeriesWindow = { dates: string[]; oldestDate: string; since: Date }
 
 /** One entry of a zero-filled series keyed only by day. */
 type SeriesPoint<T> = { date: string } & T
@@ -67,6 +68,16 @@ function buildDateSequence(endUtcMidnight: Date, days: number): string[] {
   })
 }
 
+/** The trailing window of `days` UTC calendar days ending today (UTC). */
+function resolveWindow(now: Date, days: number): SeriesWindow {
+  const todayUtc = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
+  const dates = buildDateSequence(todayUtc, days)
+  // `days` is zod-bound to >= 1 before this is ever called, so `dates` is never empty — the
+  // fallback below is unreachable, just satisfying `noUncheckedIndexedAccess`.
+  const oldestDate = dates[0] ?? toDateKey(todayUtc)
+  return { dates, oldestDate, since: new Date(`${oldestDate}T00:00:00.000Z`) }
+}
+
 /** Zero-fills a per-day count series (signups/listens/reports) across every day in the window. */
 function zeroFillCounts(
   rows: readonly DayCountRow[],
@@ -84,7 +95,16 @@ export class AdminOverviewService {
     private readonly audit: AdminAuditService,
   ) {}
 
-  /** Builds the aggregate overview: counts + one small recent-activity list. */
+  /**
+   * Builds the aggregate overview: counts + one small recent-activity list.
+   *
+   * "Signups" and "uploads" are historical activity counts, not current-state counts: a row
+   * counts if it was *created* inside the trailing window, regardless of whether it was
+   * soft-deleted afterward. `deactivated` already reports current soft-deleted state separately,
+   * so a `deletedAt` filter here would double-penalize a row deactivated the same week it was
+   * created and make the two sections disagree about what a "count" means — none of the three
+   * `createdAt` counts below filters on `deletedAt`.
+   */
   async getOverview() {
     const now = new Date()
     const stuckCutoff = new Date(now.getTime() - STUCK_AFTER_MS)
@@ -159,12 +179,7 @@ export class AdminOverviewService {
    */
   async getSeries(days: number = DEFAULT_OVERVIEW_SERIES_DAYS) {
     const now = new Date()
-    const todayUtc = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
-    const dates = buildDateSequence(todayUtc, days)
-    // `days` is zod-bound to >= 1 before this is ever called, so `dates` is never empty — the
-    // fallback below is unreachable, just satisfying `noUncheckedIndexedAccess`.
-    const oldestDate = dates[0] ?? toDateKey(todayUtc)
-    const since = new Date(`${oldestDate}T00:00:00.000Z`)
+    const { dates, oldestDate, since } = resolveWindow(now, days)
     const stuckCutoff = new Date(now.getTime() - STUCK_AFTER_MS)
 
     const [uploadRows, listenerRows, artistRows, listenRows, reportRows, reportsByStatusRaw] =
@@ -184,34 +199,10 @@ export class AdminOverviewService {
           GROUP BY 1
           ORDER BY 1
         `),
-        this.prisma.queryRaw<DayCountRow[]>(Prisma.sql`
-          SELECT date_trunc('day', "createdAt")::date AS day, COUNT(*)::int AS count
-          FROM "User"
-          WHERE "createdAt" >= ${since}
-          GROUP BY 1
-          ORDER BY 1
-        `),
-        this.prisma.queryRaw<DayCountRow[]>(Prisma.sql`
-          SELECT date_trunc('day', "createdAt")::date AS day, COUNT(*)::int AS count
-          FROM "Artist"
-          WHERE "createdAt" >= ${since}
-          GROUP BY 1
-          ORDER BY 1
-        `),
-        this.prisma.queryRaw<DayCountRow[]>(Prisma.sql`
-          SELECT date_trunc('day', "listenedAt")::date AS day, COUNT(*)::int AS count
-          FROM "ListeningHistory"
-          WHERE "listenedAt" >= ${since}
-          GROUP BY 1
-          ORDER BY 1
-        `),
-        this.prisma.queryRaw<DayCountRow[]>(Prisma.sql`
-          SELECT date_trunc('day', "createdAt")::date AS day, COUNT(*)::int AS count
-          FROM "ModerationReport"
-          WHERE "createdAt" >= ${since}
-          GROUP BY 1
-          ORDER BY 1
-        `),
+        this.dailyCounts({ table: 'User', column: 'createdAt' }, since),
+        this.dailyCounts({ table: 'Artist', column: 'createdAt' }, since),
+        this.dailyCounts({ table: 'ListeningHistory', column: 'listenedAt' }, since),
+        this.dailyCounts({ table: 'ModerationReport', column: 'createdAt' }, since),
         this.prisma.moderationReport.groupBy({ by: ['status'], _count: { _all: true } }),
       ])
 
@@ -254,6 +245,18 @@ export class AdminOverviewService {
     }
   }
 
+  /** Rows per UTC day of `source`, from `since` on — days with no rows are absent. */
+  private dailyCounts({ table, column }: DailyCountSource, since: Date): Promise<DayCountRow[]> {
+    const day = Prisma.raw(`"${column}"`)
+    return this.prisma.queryRaw<DayCountRow[]>(Prisma.sql`
+      SELECT date_trunc('day', ${day})::date AS day, COUNT(*)::int AS count
+      FROM ${Prisma.raw(`"${table}"`)}
+      WHERE ${day} >= ${since}
+      GROUP BY 1
+      ORDER BY 1
+    `)
+  }
+
   /**
    * Moderation reports *created* per UTC day over the same trailing window as `getSeries`,
    * broken down by entity type. Counts every report filed in the window regardless of its
@@ -262,11 +265,7 @@ export class AdminOverviewService {
    * type (the column is a free `String`) are ignored.
    */
   async getReportsByType(days: number = DEFAULT_OVERVIEW_SERIES_DAYS) {
-    const now = new Date()
-    const todayUtc = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
-    const dates = buildDateSequence(todayUtc, days)
-    const oldestDate = dates[0] ?? toDateKey(todayUtc)
-    const since = new Date(`${oldestDate}T00:00:00.000Z`)
+    const { dates, oldestDate, since } = resolveWindow(new Date(), days)
 
     const rows = await this.prisma.queryRaw<DayEntityTypeRow[]>(Prisma.sql`
       SELECT
