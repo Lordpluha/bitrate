@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { ActivatedRoute, RouterLink } from '@angular/router'
 import {
   GetPodcastUseCase,
@@ -16,13 +16,14 @@ import {
   type PodcastDetail,
   type PodcastEpisode,
 } from '@domain/podcast'
-import { ResourceNotFoundError, TAKE_DOWN_REASON_MAX_LENGTH } from '@domain/shared'
+import { TAKE_DOWN_REASON_MAX_LENGTH } from '@domain/shared'
 import { formatMinutes } from '@presentation/pages/shared/duration.formatter'
 import {
   isStaleStateError,
   resourceWriteErrorMessage,
 } from '@presentation/pages/shared/resource-write-error.message'
 import { LocalizedDatePipe } from '@presentation/pipes'
+import { type ConfirmedWrite, createConfirmAction, createDetailResource } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmDialogImports } from '@spartan-ng/helm/dialog'
@@ -30,17 +31,11 @@ import { HlmLabelImports } from '@spartan-ng/helm/label'
 import { HlmTableImports } from '@spartan-ng/helm/table'
 import { HlmTabsImports } from '@spartan-ng/helm/tabs'
 
-/** The write the open dialog will perform, and what it targets; `null` while it is closed. */
+/** The write the open dialog will perform, and what it targets. */
 type PendingAction =
   | { kind: 'podcast'; action: 'take-down' | 'restore' }
   | { kind: 'episode'; action: 'take-down' | 'restore'; episode: PodcastEpisode }
-  | null
 
-/**
- * Over 100 lines: load state, the confirm dialog's armed state for two targets (the podcast and
- * one of its episodes) and failure reporting share one operator record — the same justification
- * `album-detail.ts` gives for its own size.
- */
 @Component({
   selector: 'app-podcast-detail',
   imports: [
@@ -72,17 +67,38 @@ export class PodcastDetailPage {
   protected readonly podcastId = this.route.snapshot.paramMap.get('id') ?? ''
   protected readonly reasonMaxLength = TAKE_DOWN_REASON_MAX_LENGTH
 
-  protected readonly podcast = signal<PodcastDetail | null>(null)
-  protected readonly loading = signal(true)
-  protected readonly notFound = signal(false)
-  protected readonly failure = signal<string | null>(null)
-  protected readonly status = signal<string | null>(null)
-  protected readonly pendingAction = signal<PendingAction>(null)
-  protected readonly reason = signal('')
-  protected readonly working = signal(false)
+  private readonly record = createDetailResource({
+    load: () => this.getPodcast.execute(this.podcastId),
+    errorMessage: 'Could not load this podcast.',
+  })
+  private readonly action = createConfirmAction<PendingAction, PodcastDetail>({
+    record: this.record.value,
+    failure: this.record.failure,
+    reload: this.record.reload,
+    isStale: isStaleStateError,
+    perform: (write) => this.perform(write),
+    describe: (error, { pending, record }) =>
+      resourceWriteErrorMessage({
+        error,
+        action: pending.action === 'take-down' ? 'take down' : 'restore',
+        label: `"${titleOf(pending, record)}"`,
+        resource: pending.kind,
+      }),
+  })
+
+  protected readonly podcast = this.record.value
+  protected readonly loading = this.record.loading
+  protected readonly notFound = this.record.notFound
+  protected readonly failure = this.record.failure
+  protected readonly status = this.action.status
+  protected readonly pendingAction = this.action.pending
+  protected readonly reason = this.action.reason
+  protected readonly working = this.action.working
+  protected readonly cancel = this.action.cancel
+  protected readonly confirm = this.action.confirm
 
   constructor() {
-    void this.load()
+    void this.record.reload()
   }
 
   protected podcastTakeDownable(podcast: PodcastDetail): boolean {
@@ -106,101 +122,50 @@ export class PodcastDetailPage {
   }
 
   protected askPodcast(action: 'take-down' | 'restore'): void {
-    this.arm({ kind: 'podcast', action })
+    this.action.arm({ kind: 'podcast', action })
   }
 
   protected askEpisode(episode: PodcastEpisode, action: 'take-down' | 'restore'): void {
-    this.arm({ kind: 'episode', action, episode })
+    this.action.arm({ kind: 'episode', action, episode })
   }
 
   /** What the open dialog is about, for its title and description. */
-  protected targetLabel(pending: NonNullable<PendingAction>): string {
+  protected targetLabel(pending: PendingAction): string {
     return pending.kind === 'podcast' ? 'podcast' : 'episode'
   }
 
-  protected targetTitle(pending: NonNullable<PendingAction>): string {
-    return pending.kind === 'podcast' ? (this.podcast()?.title ?? '') : pending.episode.title
+  protected targetTitle(pending: PendingAction): string {
+    return titleOf(pending, this.podcast())
   }
 
-  /** Closing mid-write is ignored so the dialog cannot vanish under an in-flight request. */
-  protected cancel(): void {
-    if (!this.working()) this.pendingAction.set(null)
-  }
-
-  protected async confirm(): Promise<void> {
-    const current = this.podcast()
-    const pending = this.pendingAction()
-    if (!current || !pending || this.working()) return
-
-    const reason = this.reason().trim() || undefined
-    const label = `"${this.targetTitle(pending)}"`
-    this.working.set(true)
-    this.failure.set(null)
-    try {
-      await this.perform(current, pending, reason)
-      this.status.set(this.successMessage(pending, label))
-      await this.load()
-    } catch (error) {
-      this.failure.set(
-        resourceWriteErrorMessage({
-          error,
-          action: pending.action === 'take-down' ? 'take down' : 'restore',
-          label,
-          resource: pending.kind,
-        }),
-      )
-      if (isStaleStateError(error)) await this.load()
-    } finally {
-      this.working.set(false)
-      this.pendingAction.set(null)
-    }
-  }
-
-  private arm(pending: NonNullable<PendingAction>): void {
-    this.reason.set('')
-    this.failure.set(null)
-    this.status.set(null)
-    this.pendingAction.set(pending)
-  }
-
-  private async perform(
-    current: PodcastDetail,
-    pending: NonNullable<PendingAction>,
-    reason: string | undefined,
-  ): Promise<void> {
+  private async perform({
+    pending,
+    record: podcast,
+    reason,
+  }: ConfirmedWrite<PendingAction, PodcastDetail>): Promise<string> {
     if (pending.kind === 'podcast') {
       if (pending.action === 'take-down') {
-        await this.takeDownPodcast.execute({ podcast: current, reason })
+        await this.takeDownPodcast.execute({ podcast, reason })
       } else {
-        await this.restorePodcast.execute({ podcast: current, reason })
+        await this.restorePodcast.execute({ podcast, reason })
       }
-      return
-    }
-
-    if (pending.action === 'take-down') {
+    } else if (pending.action === 'take-down') {
       await this.takeDownEpisode.execute({ episode: pending.episode, reason })
     } else {
       await this.restoreEpisode.execute({ episode: pending.episode, reason })
     }
+    return successMessage(pending, `"${titleOf(pending, podcast)}"`)
   }
+}
 
-  private successMessage(pending: NonNullable<PendingAction>, label: string): string {
-    if (pending.action === 'restore') return `${label} was restored.`
-    return pending.kind === 'podcast'
-      ? `${label} was taken down. Its episodes were not changed.`
-      : `${label} was taken down. The podcast and its other episodes were not changed.`
-  }
+/** The dialog target's title: the podcast's own, or the armed episode's. */
+function titleOf(pending: PendingAction, podcast: PodcastDetail | null): string {
+  return pending.kind === 'podcast' ? (podcast?.title ?? '') : pending.episode.title
+}
 
-  private async load(): Promise<void> {
-    this.loading.set(true)
-    try {
-      this.podcast.set(await this.getPodcast.execute(this.podcastId))
-      this.notFound.set(false)
-    } catch (error) {
-      if (error instanceof ResourceNotFoundError) this.notFound.set(true)
-      else this.failure.set('Could not load this podcast.')
-    } finally {
-      this.loading.set(false)
-    }
-  }
+function successMessage(pending: PendingAction, label: string): string {
+  if (pending.action === 'restore') return `${label} was restored.`
+  return pending.kind === 'podcast'
+    ? `${label} was taken down. Its episodes were not changed.`
+    : `${label} was taken down. The podcast and its other episodes were not changed.`
 }

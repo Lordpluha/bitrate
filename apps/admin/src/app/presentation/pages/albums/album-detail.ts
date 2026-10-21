@@ -1,27 +1,24 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { ActivatedRoute, RouterLink } from '@angular/router'
 import { GetAlbumUseCase, RestoreAlbumUseCase, TakeDownAlbumUseCase } from '@application/albums'
 import { SessionStore } from '@application/session'
 import { type AlbumDetail, canRestoreAlbum, canTakeDownAlbum } from '@domain/album'
-import { ResourceNotFoundError, TAKE_DOWN_REASON_MAX_LENGTH } from '@domain/shared'
-import { LocalizedDatePipe } from '@presentation/pipes'
+import { TAKE_DOWN_REASON_MAX_LENGTH } from '@domain/shared'
 import {
   isStaleStateError,
   resourceWriteErrorMessage,
 } from '@presentation/pages/shared/resource-write-error.message'
+import { LocalizedDatePipe } from '@presentation/pipes'
+import { type ConfirmedWrite, createConfirmAction, createDetailResource } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmDialogImports } from '@spartan-ng/helm/dialog'
 import { HlmLabelImports } from '@spartan-ng/helm/label'
 import { HlmTableImports } from '@spartan-ng/helm/table'
 
-/** The write the open dialog will perform; `null` while it is closed. */
-type PendingAction = 'take-down' | 'restore' | null
+/** The write the open dialog will perform. */
+type PendingAction = 'take-down' | 'restore'
 
-/**
- * Over 100 lines: load state, the confirm dialog's armed state and failure reporting share one
- * operator record — the same justification `track-detail.ts` gives for its own size.
- */
 @Component({
   selector: 'app-album-detail',
   imports: [
@@ -48,17 +45,39 @@ export class AlbumDetailPage {
   protected readonly albumId = this.route.snapshot.paramMap.get('id') ?? ''
   protected readonly reasonMaxLength = TAKE_DOWN_REASON_MAX_LENGTH
 
-  protected readonly album = signal<AlbumDetail | null>(null)
-  protected readonly loading = signal(true)
-  protected readonly notFound = signal(false)
-  protected readonly failure = signal<string | null>(null)
-  protected readonly status = signal<string | null>(null)
-  protected readonly pendingAction = signal<PendingAction>(null)
-  protected readonly reason = signal('')
-  protected readonly working = signal(false)
+  private readonly record = createDetailResource({
+    load: () => this.getAlbum.execute(this.albumId),
+    errorMessage: 'Could not load this album.',
+  })
+  private readonly action = createConfirmAction<PendingAction, AlbumDetail>({
+    record: this.record.value,
+    failure: this.record.failure,
+    reload: this.record.reload,
+    isStale: isStaleStateError,
+    perform: (write) => this.perform(write),
+    describe: (error, { pending, record }) =>
+      resourceWriteErrorMessage({
+        error,
+        action: pending === 'take-down' ? 'take down' : 'restore',
+        label: `"${record.title}"`,
+        resource: 'album',
+      }),
+  })
+
+  protected readonly album = this.record.value
+  protected readonly loading = this.record.loading
+  protected readonly notFound = this.record.notFound
+  protected readonly failure = this.record.failure
+  protected readonly status = this.action.status
+  protected readonly pendingAction = this.action.pending
+  protected readonly reason = this.action.reason
+  protected readonly working = this.action.working
+  protected readonly ask = this.action.arm
+  protected readonly cancel = this.action.cancel
+  protected readonly confirm = this.action.confirm
 
   constructor() {
-    void this.load()
+    void this.record.reload()
   }
 
   protected takeDownable(album: AlbumDetail): boolean {
@@ -69,61 +88,16 @@ export class AlbumDetailPage {
     return canRestoreAlbum(album).allowed
   }
 
-  protected ask(action: PendingAction): void {
-    this.reason.set('')
-    this.failure.set(null)
-    this.status.set(null)
-    this.pendingAction.set(action)
-  }
-
-  /** Closing mid-write is ignored so the dialog cannot vanish under an in-flight request. */
-  protected cancel(): void {
-    if (!this.working()) this.pendingAction.set(null)
-  }
-
-  protected async confirm(): Promise<void> {
-    const current = this.album()
-    const action = this.pendingAction()
-    if (!current || !action || this.working()) return
-
-    const reason = this.reason().trim() || undefined
-    this.working.set(true)
-    this.failure.set(null)
-    try {
-      if (action === 'take-down') {
-        await this.takeDownAlbum.execute({ album: current, reason })
-        this.status.set(`"${current.title}" was taken down. Its tracks were not changed.`)
-      } else {
-        await this.restoreAlbum.execute({ album: current, reason })
-        this.status.set(`"${current.title}" was restored.`)
-      }
-      await this.load()
-    } catch (error) {
-      this.failure.set(
-        resourceWriteErrorMessage({
-          error,
-          action: action === 'take-down' ? 'take down' : 'restore',
-          label: `"${current.title}"`,
-          resource: 'album',
-        }),
-      )
-      if (isStaleStateError(error)) await this.load()
-    } finally {
-      this.working.set(false)
-      this.pendingAction.set(null)
+  private async perform({
+    pending,
+    record: album,
+    reason,
+  }: ConfirmedWrite<PendingAction, AlbumDetail>): Promise<string> {
+    if (pending === 'take-down') {
+      await this.takeDownAlbum.execute({ album, reason })
+      return `"${album.title}" was taken down. Its tracks were not changed.`
     }
-  }
-
-  private async load(): Promise<void> {
-    this.loading.set(true)
-    try {
-      this.album.set(await this.getAlbum.execute(this.albumId))
-      this.notFound.set(false)
-    } catch (error) {
-      if (error instanceof ResourceNotFoundError) this.notFound.set(true)
-      else this.failure.set('Could not load this album.')
-    } finally {
-      this.loading.set(false)
-    }
+    await this.restoreAlbum.execute({ album, reason })
+    return `"${album.title}" was restored.`
   }
 }

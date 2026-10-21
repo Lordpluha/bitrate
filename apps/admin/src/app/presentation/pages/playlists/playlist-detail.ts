@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { ActivatedRoute, RouterLink } from '@angular/router'
 import {
   GetPlaylistUseCase,
@@ -14,20 +14,21 @@ import {
   canUnhidePlaylist,
   type PlaylistDetail,
 } from '@domain/playlist'
+import { TAKE_DOWN_REASON_MAX_LENGTH } from '@domain/shared'
 import {
   isStaleStateError,
   resourceWriteErrorMessage,
 } from '@presentation/pages/shared/resource-write-error.message'
-import { ResourceNotFoundError, TAKE_DOWN_REASON_MAX_LENGTH } from '@domain/shared'
 import { LocalizedDatePipe } from '@presentation/pipes'
+import { type ConfirmedWrite, createConfirmAction, createDetailResource } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmDialogImports } from '@spartan-ng/helm/dialog'
 import { HlmLabelImports } from '@spartan-ng/helm/label'
 import { HlmTableImports } from '@spartan-ng/helm/table'
 
-/** The write the open dialog will perform; `null` while it is closed. */
-type PendingAction = 'hide' | 'unhide' | 'take-down' | 'restore' | null
+/** The write the open dialog will perform. */
+type PendingAction = 'hide' | 'unhide' | 'take-down' | 'restore'
 
 /** What each confirm dialog says; the action is the only thing the template switches on. */
 const DIALOG_COPY = {
@@ -59,14 +60,10 @@ const DIALOG_COPY = {
       `Restore "${title}"? Its visibility is not changed, so a hidden playlist stays hidden.`,
   },
 } as const satisfies Record<
-  NonNullable<PendingAction>,
+  PendingAction,
   { title: string; confirm: string; destructive: boolean; body: (title: string) => string }
 >
 
-/**
- * Over 100 lines: load state, the confirm dialog's armed state and failure reporting share one
- * operator record — the same justification `album-detail.ts` gives for its own size.
- */
 @Component({
   selector: 'app-playlist-detail',
   imports: [
@@ -96,17 +93,39 @@ export class PlaylistDetailPage {
   protected readonly reasonMaxLength = TAKE_DOWN_REASON_MAX_LENGTH
   protected readonly dialogCopy = DIALOG_COPY
 
-  protected readonly playlist = signal<PlaylistDetail | null>(null)
-  protected readonly loading = signal(true)
-  protected readonly notFound = signal(false)
-  protected readonly failure = signal<string | null>(null)
-  protected readonly status = signal<string | null>(null)
-  protected readonly pendingAction = signal<PendingAction>(null)
-  protected readonly reason = signal('')
-  protected readonly working = signal(false)
+  private readonly record = createDetailResource({
+    load: () => this.getPlaylist.execute(this.playlistId),
+    errorMessage: 'Could not load this playlist.',
+  })
+  private readonly action = createConfirmAction<PendingAction, PlaylistDetail>({
+    record: this.record.value,
+    failure: this.record.failure,
+    reload: this.record.reload,
+    isStale: isStaleStateError,
+    perform: (write) => this.perform(write),
+    describe: (error, { pending, record }) =>
+      resourceWriteErrorMessage({
+        error,
+        action: pending === 'take-down' ? 'take down' : pending,
+        label: `"${record.title}"`,
+        resource: 'playlist',
+      }),
+  })
+
+  protected readonly playlist = this.record.value
+  protected readonly loading = this.record.loading
+  protected readonly notFound = this.record.notFound
+  protected readonly failure = this.record.failure
+  protected readonly status = this.action.status
+  protected readonly pendingAction = this.action.pending
+  protected readonly reason = this.action.reason
+  protected readonly working = this.action.working
+  protected readonly ask = this.action.arm
+  protected readonly cancel = this.action.cancel
+  protected readonly confirm = this.action.confirm
 
   constructor() {
-    void this.load()
+    void this.record.reload()
   }
 
   protected hideable(playlist: PlaylistDetail): boolean {
@@ -125,84 +144,24 @@ export class PlaylistDetailPage {
     return canRestorePlaylist(playlist).allowed
   }
 
-  protected ask(action: PendingAction): void {
-    this.reason.set('')
-    this.failure.set(null)
-    this.status.set(null)
-    this.pendingAction.set(action)
-  }
-
-  /** Closing mid-write is ignored so the dialog cannot vanish under an in-flight request. */
-  protected cancel(): void {
-    if (!this.working()) this.pendingAction.set(null)
-  }
-
-  protected async confirm(): Promise<void> {
-    const current = this.playlist()
-    const action = this.pendingAction()
-    if (!current || !action || this.working()) return
-
-    const reason = this.reason().trim() || undefined
-    this.working.set(true)
-    this.failure.set(null)
-    try {
-      await this.perform({ action, playlist: current, reason })
-      await this.load()
-    } catch (error) {
-      this.failure.set(
-        resourceWriteErrorMessage({
-          error,
-          action: action === 'take-down' ? 'take down' : action,
-          label: `"${current.title}"`,
-          resource: 'playlist',
-        }),
-      )
-      if (isStaleStateError(error)) await this.load()
-    } finally {
-      this.working.set(false)
-      this.pendingAction.set(null)
-    }
-  }
-
   private async perform({
-    action,
-    playlist,
+    pending,
+    record: playlist,
     reason,
-  }: {
-    action: NonNullable<PendingAction>
-    playlist: PlaylistDetail
-    reason: string | undefined
-  }): Promise<void> {
-    switch (action) {
+  }: ConfirmedWrite<PendingAction, PlaylistDetail>): Promise<string> {
+    switch (pending) {
       case 'hide':
         await this.setVisibility.execute({ playlist, isPublic: false, reason })
-        this.status.set(`"${playlist.title}" was hidden. It is private now, not deleted.`)
-        return
+        return `"${playlist.title}" was hidden. It is private now, not deleted.`
       case 'unhide':
         await this.setVisibility.execute({ playlist, isPublic: true, reason })
-        this.status.set(`"${playlist.title}" is public again.`)
-        return
+        return `"${playlist.title}" is public again.`
       case 'take-down':
         await this.takeDownPlaylist.execute({ playlist, reason })
-        this.status.set(`"${playlist.title}" was taken down. Its visibility was not changed.`)
-        return
+        return `"${playlist.title}" was taken down. Its visibility was not changed.`
       case 'restore':
         await this.restorePlaylist.execute({ playlist, reason })
-        this.status.set(`"${playlist.title}" was restored. Its visibility was not changed.`)
-        return
-    }
-  }
-
-  private async load(): Promise<void> {
-    this.loading.set(true)
-    try {
-      this.playlist.set(await this.getPlaylist.execute(this.playlistId))
-      this.notFound.set(false)
-    } catch (error) {
-      if (error instanceof ResourceNotFoundError) this.notFound.set(true)
-      else this.failure.set('Could not load this playlist.')
-    } finally {
-      this.loading.set(false)
+        return `"${playlist.title}" was restored. Its visibility was not changed.`
     }
   }
 }
