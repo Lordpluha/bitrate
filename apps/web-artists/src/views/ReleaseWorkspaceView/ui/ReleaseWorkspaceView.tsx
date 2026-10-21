@@ -29,11 +29,16 @@ import { useState } from 'react'
 
 type TrackDialogKind = 'isrc' | 'track-audio' | 'track-rename' | 'track-remove'
 
+/** Every dialog the workspace can open; only one is open at a time. */
 type WorkspaceDialog =
   | RightsAction
   | { kind: TrackDialogKind; trackId: string }
   | { kind: 'cover' }
   | { kind: 'track-add' }
+  | { kind: 'edit' }
+  | { kind: 'schedule' }
+  | { kind: 'contributor-add' }
+  | { kind: 'contributor-edit'; contributorId: string }
 
 interface ReleaseWorkspaceViewProps {
   artistId: string
@@ -45,25 +50,24 @@ export function ReleaseWorkspaceView({
   releaseId,
 }: ReleaseWorkspaceViewProps) {
   const query = useReleaseWorkspace(artistId, releaseId)
-  const [editing, setEditing] = useState(false)
   const [saved, setSaved] = useState(false)
-  const [scheduling, setScheduling] = useState(false)
-  const [addingContributor, setAddingContributor] = useState(false)
-  const [editingContributor, setEditingContributor] = useState<string | null>(
-    null,
-  )
   const [dialog, setDialog] = useState<WorkspaceDialog | null>(null)
+  /** Opening the next dialog is the next action, so it retires the saved notice. */
+  const openDialog = (next: WorkspaceDialog) => {
+    setSaved(false)
+    setDialog(next)
+  }
   const closeDialog = () => setDialog(null)
   const dialogSaved = () => {
     setDialog(null)
     setSaved(true)
   }
   const trackActions: TrackActions = {
-    onAdd: () => setDialog({ kind: 'track-add' }),
-    onEditIsrc: (trackId) => setDialog({ kind: 'isrc', trackId }),
-    onReplaceAudio: (trackId) => setDialog({ kind: 'track-audio', trackId }),
-    onRename: (trackId) => setDialog({ kind: 'track-rename', trackId }),
-    onRemove: (trackId) => setDialog({ kind: 'track-remove', trackId }),
+    onAdd: () => openDialog({ kind: 'track-add' }),
+    onEditIsrc: (trackId) => openDialog({ kind: 'isrc', trackId }),
+    onReplaceAudio: (trackId) => openDialog({ kind: 'track-audio', trackId }),
+    onRename: (trackId) => openDialog({ kind: 'track-rename', trackId }),
+    onRemove: (trackId) => openDialog({ kind: 'track-remove', trackId }),
   }
   return (
     <div aria-busy={query.isFetching} className="artist-release-workspace">
@@ -101,12 +105,14 @@ export function ReleaseWorkspaceView({
           )}
           <ReleaseWorkspaceContent
             artistId={artistId}
-            onAddContributor={() => setAddingContributor(true)}
-            onCover={() => setDialog({ kind: 'cover' })}
-            onEdit={() => setEditing(true)}
-            onEditContributor={setEditingContributor}
-            onRightsAction={setDialog}
-            onSchedule={() => setScheduling(true)}
+            onAddContributor={() => openDialog({ kind: 'contributor-add' })}
+            onCover={() => openDialog({ kind: 'cover' })}
+            onEdit={() => openDialog({ kind: 'edit' })}
+            onEditContributor={(contributorId) =>
+              openDialog({ kind: 'contributor-edit', contributorId })
+            }
+            onRightsAction={openDialog}
+            onSchedule={() => openDialog({ kind: 'schedule' })}
             release={query.data}
             trackActions={trackActions}
           >
@@ -123,36 +129,27 @@ export function ReleaseWorkspaceView({
           </ReleaseWorkspaceContent>
         </>
       )}
-      {editing && (
+      {dialog?.kind === 'edit' && (
         <EditReleaseDialog
           artistId={artistId}
-          onClose={() => setEditing(false)}
-          onSaved={() => {
-            setEditing(false)
-            setSaved(true)
-          }}
+          onClose={closeDialog}
+          onSaved={dialogSaved}
           releaseId={releaseId}
         />
       )}
-      {scheduling && (
+      {dialog?.kind === 'schedule' && (
         <ScheduleReleaseDialog
           artistId={artistId}
-          onClose={() => setScheduling(false)}
-          onSaved={() => {
-            setScheduling(false)
-            setSaved(true)
-          }}
+          onClose={closeDialog}
+          onSaved={dialogSaved}
           releaseId={releaseId}
         />
       )}
-      {addingContributor && (
+      {dialog?.kind === 'contributor-add' && (
         <AddContributorDialog
           artistId={artistId}
-          onClose={() => setAddingContributor(false)}
-          onSaved={() => {
-            setAddingContributor(false)
-            setSaved(true)
-          }}
+          onClose={closeDialog}
+          onSaved={dialogSaved}
           releaseId={releaseId}
         />
       )}
@@ -226,15 +223,12 @@ export function ReleaseWorkspaceView({
           trackId={dialog.trackId}
         />
       )}
-      {editingContributor && (
+      {dialog?.kind === 'contributor-edit' && (
         <EditContributorDialog
           artistId={artistId}
-          contributorId={editingContributor}
-          onClose={() => setEditingContributor(null)}
-          onSaved={() => {
-            setEditingContributor(null)
-            setSaved(true)
-          }}
+          contributorId={dialog.contributorId}
+          onClose={closeDialog}
+          onSaved={dialogSaved}
           releaseId={releaseId}
         />
       )}
