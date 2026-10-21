@@ -1,32 +1,14 @@
 import { Button } from '@bitrate/ui-react'
-import { trackStatusLabels, trackVersionLabels } from '@entities/music'
-import {
-  formatBytes,
-  formatIsrc,
-  type ReleaseWorkspace,
-  releaseAudioUrl,
-  useReorderTracks,
-} from '@entities/release'
-import { formatDuration } from '@shared/lib/format'
-import { ArrowDown, ArrowUp, CircleAlert, Music2, Upload } from 'lucide-react'
-
-function duration(value: number | null) {
-  return value === null ? 'Duration unavailable' : formatDuration(value)
-}
-
-/** Everything an artist can do with the recordings of a draft. */
-export interface TrackActions {
-  onAdd: () => void
-  onEditIsrc: (trackId: string) => void
-  onReplaceAudio: (trackId: string) => void
-  onRename: (trackId: string) => void
-  onRemove: (trackId: string) => void
-}
+import { type ReleaseWorkspace, useReorderTracks } from '@entities/release'
+import { Music2, Upload } from 'lucide-react'
+import { durationLabel, isrcLabel } from '../lib/trackLabels'
+import type { WorkspaceActionHandler } from '../model/workspaceAction'
+import { DraftTrackRow } from './DraftTrackRow'
 
 interface WorkspaceTracksProps {
   artistId: string
   release: ReleaseWorkspace
-  actions: TrackActions
+  onAction: WorkspaceActionHandler
 }
 
 /** Swaps a recording with its neighbour; the API receives the whole new order. */
@@ -37,34 +19,17 @@ function movedOrder(ids: string[], index: number, step: -1 | 1) {
   return next
 }
 
-const isrcLabel = (isrc: string | null) =>
-  isrc ? `ISRC ${formatIsrc(isrc)}` : 'No ISRC yet'
-
-type TrackDraft = ReleaseWorkspace['trackDrafts'][number]
-
-function audioLabel(track: TrackDraft) {
-  if (!track.hasAudio) return 'No audio uploaded'
-  const size =
-    track.audioSizeBytes === null
-      ? ''
-      : ` · ${formatBytes(track.audioSizeBytes)}`
-  return `${track.audioFileName ?? 'Audio uploaded'}${size}`
-}
-
 export function WorkspaceTracks({
   artistId,
   release,
-  actions,
+  onAction,
 }: WorkspaceTracksProps) {
   const draft = release.status === 'DRAFT'
   const shown = release.trackDrafts.length + release.tracks.length
   const reorder = useReorderTracks(artistId)
   const ids = release.trackDrafts.map((track) => track.id)
   // Partial lists cannot be reordered safely; the API needs every recording.
-  const canReorder =
-    draft &&
-    ids.length > 1 &&
-    release.trackCount === release.trackDrafts.length + release.tracks.length
+  const canReorder = draft && ids.length > 1 && release.trackCount === shown
   const move = (index: number, step: -1 | 1) =>
     reorder.mutate({
       id: release.id,
@@ -81,7 +46,11 @@ export function WorkspaceTracks({
           Tracks <span>({release.trackCount})</span>
         </h2>
         {draft && (
-          <Button onClick={actions.onAdd} size="sm" variant="outline">
+          <Button
+            onClick={() => onAction({ kind: 'track-add' })}
+            size="sm"
+            variant="outline"
+          >
             <Upload aria-hidden="true" className="size-4" />
             Upload track
           </Button>
@@ -108,110 +77,23 @@ export function WorkspaceTracks({
       ) : (
         <ul>
           {release.trackDrafts.map((track, index) => (
-            <li key={track.id}>
-              {canReorder ? (
-                <div className="flex shrink-0 flex-col items-center">
-                  <Button
-                    aria-label={`Move ${track.title} up`}
-                    disabled={reorder.isPending || index === 0}
-                    onClick={() => move(index, -1)}
-                    size="icon"
-                    variant="ghost"
-                  >
-                    <ArrowUp aria-hidden="true" className="size-4" />
-                  </Button>
-                  <span className="text-xs tabular-nums text-text-secondary">
-                    {index + 1}
-                  </span>
-                  <Button
-                    aria-label={`Move ${track.title} down`}
-                    disabled={reorder.isPending || index === ids.length - 1}
-                    onClick={() => move(index, 1)}
-                    size="icon"
-                    variant="ghost"
-                  >
-                    <ArrowDown aria-hidden="true" className="size-4" />
-                  </Button>
-                </div>
-              ) : (
-                <Music2
-                  aria-hidden="true"
-                  className="size-5 shrink-0 text-accent"
-                />
-              )}
-              <div className="min-w-0 flex-1 space-y-1">
-                <h3>{track.title}</h3>
-                <p>
-                  {trackVersionLabels[track.version]} ·{' '}
-                  {duration(track.duration)}
-                  {track.isDemo ? ' · Demo' : ''}
-                </p>
-                <p>{isrcLabel(track.isrc)}</p>
-                <p className="flex items-center gap-1">
-                  {!track.hasAudio && (
-                    <CircleAlert
-                      aria-hidden="true"
-                      className="size-4 shrink-0 text-destructive"
-                    />
-                  )}
-                  <span className="truncate">{audioLabel(track)}</span>
-                </p>
-                {track.hasAudio && (
-                  <audio
-                    aria-label={`Play ${track.title}`}
-                    className="mt-2 w-full max-w-md"
-                    controls
-                    crossOrigin="use-credentials"
-                    preload="none"
-                    src={releaseAudioUrl(release.id, track.id)}
-                  >
-                    <track kind="captions" />
-                  </audio>
-                )}
-              </div>
-              <span
-                className="artist-release-track-status"
-                data-status={track.status}
-              >
-                {trackStatusLabels[track.status]}
-              </span>
-              {draft && (
-                <div className="flex flex-wrap gap-2">
-                  <Button
-                    aria-label={`${track.hasAudio ? 'Replace audio' : 'Upload audio'} for ${track.title}`}
-                    onClick={() => actions.onReplaceAudio(track.id)}
-                    size="sm"
-                    variant="outline"
-                  >
-                    {track.hasAudio ? 'Replace audio' : 'Upload audio'}
-                  </Button>
-                  <Button
-                    aria-label={`Rename ${track.title}`}
-                    onClick={() => actions.onRename(track.id)}
-                    size="sm"
-                    variant="outline"
-                  >
-                    Rename
-                  </Button>
-                  <Button
-                    aria-label={`Edit ISRC for ${track.title}`}
-                    onClick={() => actions.onEditIsrc(track.id)}
-                    size="sm"
-                    variant="outline"
-                  >
-                    ISRC
-                  </Button>
-                  <Button
-                    aria-label={`Remove ${track.title}`}
-                    onClick={() => actions.onRemove(track.id)}
-                    size="sm"
-                    variant="ghost"
-                  >
-                    Remove
-                  </Button>
-                </div>
-              )}
-            </li>
+            <DraftTrackRow
+              count={ids.length}
+              editable={draft}
+              index={index}
+              key={track.id}
+              onAction={onAction}
+              releaseId={release.id}
+              reorder={
+                canReorder
+                  ? {
+                      pending: reorder.isPending,
+                      onMove: (step) => move(index, step),
+                    }
+                  : undefined
+              }
+              track={track}
+            />
           ))}
           {release.tracks.map((track) => (
             <li key={track.id}>
@@ -223,7 +105,7 @@ export function WorkspaceTracks({
                 <h3>
                   {track.position}. {track.title}
                 </h3>
-                <p>Linked recording · {duration(track.duration)}</p>
+                <p>Linked recording · {durationLabel(track.duration)}</p>
                 <p>{isrcLabel(track.isrc)}</p>
               </div>
             </li>

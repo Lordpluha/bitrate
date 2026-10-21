@@ -1,44 +1,15 @@
 import { Button } from '@bitrate/ui-react'
 import { useReleaseWorkspace } from '@entities/release'
-import {
-  AddContributorDialog,
-  EditContributorDialog,
-  EditReleaseDialog,
-  IsrcDialog,
-  RightsDialog,
-  ScheduleReleaseDialog,
-  SplitsDialog,
-  UpcDialog,
-} from '@features/edit-release'
-import {
-  CoverDialog,
-  RemoveTrackDialog,
-  RenameTrackDialog,
-  TrackUploadDialog,
-} from '@features/release-media'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
 import { ReleaseDeliveryPanel } from '@widgets/ReleaseDelivery'
 import { ReleaseTasksPanel } from '@widgets/ReleaseTasks'
 import {
   ReleaseWorkspaceContent,
-  type RightsAction,
-  type TrackActions,
+  type WorkspaceAction,
 } from '@widgets/ReleaseWorkspace'
 import { useState } from 'react'
-
-type TrackDialogKind = 'isrc' | 'track-audio' | 'track-rename' | 'track-remove'
-
-/** Every dialog the workspace can open; only one is open at a time. */
-type WorkspaceDialog =
-  | RightsAction
-  | { kind: TrackDialogKind; trackId: string }
-  | { kind: 'cover' }
-  | { kind: 'track-add' }
-  | { kind: 'edit' }
-  | { kind: 'schedule' }
-  | { kind: 'contributor-add' }
-  | { kind: 'contributor-edit'; contributorId: string }
+import { WorkspaceDialogs } from './WorkspaceDialogs'
 
 interface ReleaseWorkspaceViewProps {
   artistId: string
@@ -51,23 +22,11 @@ export function ReleaseWorkspaceView({
 }: ReleaseWorkspaceViewProps) {
   const query = useReleaseWorkspace(artistId, releaseId)
   const [saved, setSaved] = useState(false)
-  const [dialog, setDialog] = useState<WorkspaceDialog | null>(null)
+  const [dialog, setDialog] = useState<WorkspaceAction | null>(null)
   /** Opening the next dialog is the next action, so it retires the saved notice. */
-  const openDialog = (next: WorkspaceDialog) => {
+  const openDialog = (next: WorkspaceAction) => {
     setSaved(false)
     setDialog(next)
-  }
-  const closeDialog = () => setDialog(null)
-  const dialogSaved = () => {
-    setDialog(null)
-    setSaved(true)
-  }
-  const trackActions: TrackActions = {
-    onAdd: () => openDialog({ kind: 'track-add' }),
-    onEditIsrc: (trackId) => openDialog({ kind: 'isrc', trackId }),
-    onReplaceAudio: (trackId) => openDialog({ kind: 'track-audio', trackId }),
-    onRename: (trackId) => openDialog({ kind: 'track-rename', trackId }),
-    onRemove: (trackId) => openDialog({ kind: 'track-remove', trackId }),
   }
   return (
     <div aria-busy={query.isFetching} className="artist-release-workspace">
@@ -105,16 +64,8 @@ export function ReleaseWorkspaceView({
           )}
           <ReleaseWorkspaceContent
             artistId={artistId}
-            onAddContributor={() => openDialog({ kind: 'contributor-add' })}
-            onCover={() => openDialog({ kind: 'cover' })}
-            onEdit={() => openDialog({ kind: 'edit' })}
-            onEditContributor={(contributorId) =>
-              openDialog({ kind: 'contributor-edit', contributorId })
-            }
-            onRightsAction={openDialog}
-            onSchedule={() => openDialog({ kind: 'schedule' })}
+            onAction={openDialog}
             release={query.data}
-            trackActions={trackActions}
           >
             <ReleaseTasksPanel
               artistId={artistId}
@@ -129,106 +80,16 @@ export function ReleaseWorkspaceView({
           </ReleaseWorkspaceContent>
         </>
       )}
-      {dialog?.kind === 'edit' && (
-        <EditReleaseDialog
+      {dialog && (
+        <WorkspaceDialogs
           artistId={artistId}
-          onClose={closeDialog}
-          onSaved={dialogSaved}
-          releaseId={releaseId}
-        />
-      )}
-      {dialog?.kind === 'schedule' && (
-        <ScheduleReleaseDialog
-          artistId={artistId}
-          onClose={closeDialog}
-          onSaved={dialogSaved}
-          releaseId={releaseId}
-        />
-      )}
-      {dialog?.kind === 'contributor-add' && (
-        <AddContributorDialog
-          artistId={artistId}
-          onClose={closeDialog}
-          onSaved={dialogSaved}
-          releaseId={releaseId}
-        />
-      )}
-      {query.data && dialog?.kind === 'rights' && (
-        <RightsDialog
-          artistId={artistId}
-          onClose={closeDialog}
-          onSaved={dialogSaved}
+          dialog={dialog}
+          onClose={() => setDialog(null)}
+          onSaved={() => {
+            setDialog(null)
+            setSaved(true)
+          }}
           release={query.data}
-        />
-      )}
-      {query.data && dialog?.kind === 'splits' && (
-        <SplitsDialog
-          artistId={artistId}
-          onClose={closeDialog}
-          onSaved={dialogSaved}
-          release={query.data}
-          rightType={dialog.rightType}
-        />
-      )}
-      {query.data && dialog?.kind === 'upc' && (
-        <UpcDialog
-          artistId={artistId}
-          onClose={closeDialog}
-          onSaved={dialogSaved}
-          release={query.data}
-        />
-      )}
-      {query.data && dialog?.kind === 'isrc' && (
-        <IsrcDialog
-          artistId={artistId}
-          onClose={closeDialog}
-          onSaved={dialogSaved}
-          release={query.data}
-          trackId={dialog.trackId}
-        />
-      )}
-      {query.data && dialog?.kind === 'cover' && (
-        <CoverDialog
-          artistId={artistId}
-          onClose={closeDialog}
-          onSaved={dialogSaved}
-          release={query.data}
-        />
-      )}
-      {query.data &&
-        (dialog?.kind === 'track-add' || dialog?.kind === 'track-audio') && (
-          <TrackUploadDialog
-            artistId={artistId}
-            onClose={closeDialog}
-            onSaved={dialogSaved}
-            release={query.data}
-            trackId={dialog.kind === 'track-audio' ? dialog.trackId : undefined}
-          />
-        )}
-      {query.data && dialog?.kind === 'track-rename' && (
-        <RenameTrackDialog
-          artistId={artistId}
-          onClose={closeDialog}
-          onSaved={dialogSaved}
-          release={query.data}
-          trackId={dialog.trackId}
-        />
-      )}
-      {query.data && dialog?.kind === 'track-remove' && (
-        <RemoveTrackDialog
-          artistId={artistId}
-          onClose={closeDialog}
-          onSaved={dialogSaved}
-          release={query.data}
-          trackId={dialog.trackId}
-        />
-      )}
-      {dialog?.kind === 'contributor-edit' && (
-        <EditContributorDialog
-          artistId={artistId}
-          contributorId={dialog.contributorId}
-          onClose={closeDialog}
-          onSaved={dialogSaved}
           releaseId={releaseId}
         />
       )}
