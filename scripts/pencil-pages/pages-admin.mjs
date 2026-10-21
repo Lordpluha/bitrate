@@ -20,6 +20,7 @@ import { Col, L, Row, state } from './ui.mjs'
 
 const FILL = { width: 'fill_container', height: 'fill_container' }
 const W = { width: 'fill_container' }
+const WRAP = { width: 'fill_container', textGrowth: 'fixed-width' }
 
 /* ---------- tiles ---------- */
 const Tile = (title, meta, icon, nodes, { accent, actions, fixed, m } = {}) =>
@@ -236,10 +237,10 @@ function tiles(m, o = {}) {
               W,
               m
                 ? {
-                    ready: { width: 230 },
-                    processing: { width: 50 },
+                    ready: { width: 214 },
+                    processing: { width: 46 },
                     stuck: { width: 10 },
-                    failed: { width: 18 },
+                    failed: { width: 16 },
                   }
                 : {
                     ready: { width: 156 },
@@ -420,7 +421,8 @@ const header = (
   m
     ? [
         A('Admin/Page Header Compact', W, {
-          title: { content: title },
+          /* the title hugs its accent; alone it takes the row and wraps */
+          title: { content: title, ...(accent ? {} : WRAP) },
           accent: accent ? { content: accent } : { enabled: false },
           subtitle: { content: sub },
         }),
@@ -536,6 +538,8 @@ export const popover = (m) =>
       ),
     },
   )
+const profileMenu = (m) =>
+  A('Admin/Profile Menu', { name: 'Profile menu', ...(m ? { width: 'fill_container' } : {}) })
 const palette = () =>
   A(
     'Admin/Palette',
@@ -1340,6 +1344,10 @@ const NOTES = [
     'Tiles are glass over a slow aurora of the brand colours (26–32 s drift); reduced motion stops the drift and every transition.',
   ],
   [
+    'Profile menu',
+    'The avatar (island on desktop, top bar on phones) opens the profile menu under it: who is signed in and their role, notification settings, language and theme with their current values, and sign out. Language and theme change in place while the menu stays open; the bell, Escape or a click outside closes it.',
+  ],
+  [
     'Phone',
     'One column; the top bar shows only the logo and the avatar. Every action lives once, in the bottom island tab bar: Overview, Search, Alerts and Menu. The bell opens notifications above the tab bar; its footer leads to notification settings, where the bell tab stays active.',
   ],
@@ -1348,7 +1356,7 @@ const notesFrame = () =>
   frame(
     'Interaction notes',
     1440,
-    900,
+    1010,
     Col({ name: 'Notes', width: 'fill_container', gap: 16, padding: 64 }, [
       Tx('H1', 'Interaction notes'),
       Tx(
@@ -1376,7 +1384,7 @@ export const adminPages = {
     title: 'Admin / Overview',
     route: '/ (requireStaffSession + overview:read)',
     context:
-      'Operations centre for staff, drawn after the admin prototype: glass bento tiles over the aurora — what needs action first, then KPIs, listens, the track pipeline, reports by type, accounts and the audit trail. Every tile opens its analysis. The sidebar footer switches the language (English ↔ Українська), cycles the theme (Dark → Light → Dim) and collapses the panel to a rail. Not-found is not drawn: unknown admin routes redirect to /. Overlays (bell, command palette, menu) are drawn in the flow under the top bar; the prototype shows them floating.',
+      'Operations centre for staff, drawn after the admin prototype: glass bento tiles over the aurora — what needs action first, then KPIs, listens, the track pipeline, reports by type, accounts and the audit trail. Every tile opens its analysis. The sidebar footer switches the language (English ↔ Українська), cycles the theme (Dark → Light → Dim) and collapses the panel to a rail. Not-found is not drawn: unknown admin routes redirect to /. Overlays (bell, profile menu, command palette, menu) are drawn in the flow under the top bar; the prototype shows them floating.',
     desktop: (theme) => Shell('Overview', overview(false), { theme }),
     mobile: () => MShell('Overview', overview(true), 2915),
     extra: [['Interaction notes', notesFrame]],
@@ -1390,7 +1398,7 @@ export const adminPages = {
       state(
         'Menu open',
         null,
-        () => MShell('Menu open', [Menu('overview')], 1045),
+        () => MShell('Menu open', [Menu('overview')], 1070),
         'the desktop panel is always on screen; it collapses to a rail instead (see Sidebar collapsed)',
       ),
       pair('Українська', (m) => ukrainian(overview(m)), { opts: { uk: true }, mh: 2965 }),
@@ -1467,7 +1475,7 @@ export const adminPages = {
         'Notifications open',
         (m) =>
           m
-            ? [header(true), popover(true)]
+            ? [...header(true), popover(true)]
             : [
                 Row({ name: 'Top', width: 'fill_container', gap: 16, alignItems: 'start' }, [
                   header(false),
@@ -1476,6 +1484,20 @@ export const adminPages = {
                 ...grid(false, tiles(false)),
               ],
         { opts: { height: 1500 }, mh: 1165 },
+      ),
+      pair(
+        'Profile menu',
+        (m) =>
+          m
+            ? [profileMenu(true), ...header(true)]
+            : [
+                Row({ name: 'Top', width: 'fill_container', gap: 16, alignItems: 'start' }, [
+                  header(false),
+                  profileMenu(false),
+                ]),
+                ...grid(false, tiles(false)),
+              ],
+        { opts: { height: 1500 }, mh: 844 },
       ),
       state(
         'Command palette',

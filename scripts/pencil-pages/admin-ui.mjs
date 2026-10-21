@@ -280,7 +280,8 @@ const content = (nodes, mobile) =>
       gap: mobile ? 16 : 22,
       width: 'fill_container',
       height: 'fill_container',
-      ...(mobile ? {} : {}),
+      /* the override replaces the slot frame, so the phone slot's inset comes along */
+      ...(mobile ? { padding: [18, 16, 0, 16], clip: true } : {}),
     },
     nodes.flat().filter(Boolean),
   )
