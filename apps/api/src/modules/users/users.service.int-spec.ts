@@ -1,7 +1,6 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
-import { NotificationsProducer } from '@modules/notifications'
 import { Test, type TestingModule } from '@nestjs/testing'
 import { prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildUser } from './__tests__/fixtures/users.fixtures'
@@ -17,7 +16,6 @@ describe('UsersService (int)', () => {
       providers: [
         UsersService,
         { provide: PrismaService, useValue: prismaMock },
-        { provide: NotificationsProducer, useValue: { followed: jest.fn() } },
         { provide: STORAGE_SERVICE, useValue: { upload: jest.fn(), deleteObject: jest.fn() } },
       ],
     }).compile()

@@ -5,11 +5,12 @@ import { TokensModule } from '@modules/tokens/tokens.module'
 import { UsersPrivateService } from '@modules/users/users.private.service'
 import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
 import { forwardRef, Module } from '@nestjs/common'
+import { UserFollowsService } from './user-follows.service'
 import { UsersController } from './users.controller'
 import { UsersService } from './users.service'
 
 @Module({
-  providers: [UsersService, UsersPrivateService],
+  providers: [UsersService, UserFollowsService, UsersPrivateService],
   controllers: [UsersController],
   exports: [UsersService, UsersPrivateService],
   imports: [

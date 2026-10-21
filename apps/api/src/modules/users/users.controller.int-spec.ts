@@ -4,6 +4,7 @@ import type { INestApplication } from '@nestjs/common'
 import { Test, type TestingModule } from '@nestjs/testing'
 import request from 'supertest'
 import { buildUser } from './__tests__/fixtures/users.fixtures'
+import { UserFollowsService } from './user-follows.service'
 import { UsersController } from './users.controller'
 import { UsersService } from './users.service'
 
@@ -14,22 +15,31 @@ const makeServiceMock = () =>
     getByUsername: jest.fn(),
     updateById: jest.fn(),
     uploadAvatar: jest.fn(),
+  }) as unknown as jest.Mocked<UsersService>
+
+const makeFollowsMock = () =>
+  ({
     listFollows: jest.fn(),
     getFollowingActivity: jest.fn(),
     getFollowing: jest.fn(),
-  }) as unknown as jest.Mocked<UsersService>
+  }) as unknown as jest.Mocked<UserFollowsService>
 
 describe('UsersController (int)', () => {
   let app: INestApplication
   let service: jest.Mocked<UsersService>
+  let follows: jest.Mocked<UserFollowsService>
   const user = buildUser()
 
   beforeAll(async () => {
     service = makeServiceMock()
+    follows = makeFollowsMock()
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
-      providers: [{ provide: UsersService, useValue: service }],
+      providers: [
+        { provide: UsersService, useValue: service },
+        { provide: UserFollowsService, useValue: follows },
+      ],
     })
       .overrideGuard(OptionalUserAuthGuard)
       .useValue({
@@ -60,9 +70,9 @@ describe('UsersController (int)', () => {
   beforeEach(() => {
     service.findAll.mockReset()
     service.findById.mockReset()
-    service.listFollows.mockReset()
-    service.getFollowingActivity.mockReset()
-    service.getFollowing.mockReset()
+    follows.listFollows.mockReset()
+    follows.getFollowingActivity.mockReset()
+    follows.getFollowing.mockReset()
     service.getByUsername.mockReset()
     service.updateById.mockReset()
     service.uploadAvatar.mockReset()
@@ -160,34 +170,34 @@ describe('UsersController (int)', () => {
   const friendId = '0199d0c1-6c2a-7b3e-9a4f-1c2d3e4f5a6b'
 
   it('GET /users/me/following/activity should return the caller friend activity', async () => {
-    service.getFollowingActivity.mockResolvedValue([] as never)
+    follows.getFollowingActivity.mockResolvedValue([] as never)
 
     const res = await request(app.getHttpServer())
       .get('/users/me/following/activity')
       .query({ limit: 5 })
 
     expect(res.status).toBe(200)
-    expect(service.getFollowingActivity).toHaveBeenCalledWith(user.id, 5)
-    expect(service.listFollows).not.toHaveBeenCalled()
+    expect(follows.getFollowingActivity).toHaveBeenCalledWith(user.id, 5)
+    expect(follows.listFollows).not.toHaveBeenCalled()
   })
 
   it('GET /users/me/following should still list the caller follows, not parse me as an id', async () => {
-    service.getFollowing.mockResolvedValue({ data: [], total: 0, page: 1, limit: 20 } as never)
+    follows.getFollowing.mockResolvedValue({ data: [], total: 0, page: 1, limit: 20 } as never)
 
     const res = await request(app.getHttpServer()).get('/users/me/following')
 
     expect(res.status).toBe(200)
-    expect(service.getFollowing).toHaveBeenCalled()
-    expect(service.listFollows).not.toHaveBeenCalled()
+    expect(follows.getFollowing).toHaveBeenCalled()
+    expect(follows.listFollows).not.toHaveBeenCalled()
   })
 
   it('GET /users/:id/followers should pass the viewer through', async () => {
-    service.listFollows.mockResolvedValue({ data: [], total: 0, page: 1, limit: 20 } as never)
+    follows.listFollows.mockResolvedValue({ data: [], total: 0, page: 1, limit: 20 } as never)
 
     const res = await request(app.getHttpServer()).get(`/users/${friendId}/followers`)
 
     expect(res.status).toBe(200)
-    expect(service.listFollows).toHaveBeenCalledWith(
+    expect(follows.listFollows).toHaveBeenCalledWith(
       'followers',
       friendId,
       user.id,
@@ -200,6 +210,6 @@ describe('UsersController (int)', () => {
     const res = await request(app.getHttpServer()).get('/users/nope/following')
 
     expect(res.status).toBe(400)
-    expect(service.listFollows).not.toHaveBeenCalled()
+    expect(follows.listFollows).not.toHaveBeenCalled()
   })
 })

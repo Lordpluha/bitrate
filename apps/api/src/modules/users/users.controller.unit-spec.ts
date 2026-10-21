@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from '@jest/globals'
 import type { Request } from 'express'
 import { type DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended'
 import { buildUser } from './__tests__/fixtures/users.fixtures'
+import type { UserFollowsService } from './user-follows.service'
 import { UsersController } from './users.controller'
 import type { UsersService } from './users.service'
 
@@ -24,7 +25,7 @@ describe('UsersController', () => {
     service = mockDeep<UsersService>()
     mockReset(service)
 
-    controller = new UsersController(service)
+    controller = new UsersController(service, mockDeep<UserFollowsService>())
   })
 
   it('getAll should reject invalid requests when username missing', async () => {
