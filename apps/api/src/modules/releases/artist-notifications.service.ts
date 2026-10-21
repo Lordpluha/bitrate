@@ -4,6 +4,7 @@ import {
   ArtistNotificationCategory,
   type DeliveryDestination,
   DeliveryState,
+  type Prisma,
   ReleaseStatus,
   ReleaseTaskStatus,
 } from '@prisma/client'
@@ -76,6 +77,20 @@ export class ArtistNotificationsService {
     const since = new Date(now.getTime() - UPDATE_WINDOW_MS)
     const owned = { ownerArtistId: artistId, deletedAt: null }
     const release = { select: { id: true, title: true } }
+    // Muted categories are filtered in the query so they never take rows from the limit.
+    const releaseFilters: Prisma.ReleaseWhereInput[] = []
+    if (!muted.has(ArtistNotificationCategory.REVIEW)) {
+      releaseFilters.push(
+        { status: ReleaseStatus.REJECTED },
+        {
+          status: { in: [ReleaseStatus.SUBMITTED, ReleaseStatus.READY] },
+          updatedAt: { gte: since },
+        },
+      )
+    }
+    if (!muted.has(ArtistNotificationCategory.DELIVERY)) {
+      releaseFilters.push({ status: ReleaseStatus.RELEASED, updatedAt: { gte: since } })
+    }
 
     // A switched-off category is not queried at all.
     const [tasks, releases, deliveries] = await Promise.all([
@@ -91,16 +106,10 @@ export class ArtistNotificationsService {
             take: NOTIFICATION_LIMIT,
             select: { id: true, title: true, dueAt: true, release },
           }),
-      muted.has(ArtistNotificationCategory.REVIEW) && muted.has(ArtistNotificationCategory.DELIVERY)
+      releaseFilters.length === 0
         ? none<never>()
         : this.prisma.release.findMany({
-            where: {
-              ...owned,
-              OR: [
-                { status: ReleaseStatus.REJECTED },
-                { status: { not: ReleaseStatus.DRAFT }, updatedAt: { gte: since } },
-              ],
-            },
+            where: { ...owned, OR: releaseFilters },
             orderBy: { updatedAt: 'desc' },
             take: NOTIFICATION_LIMIT,
             select: { id: true, title: true, status: true, submittedAt: true, updatedAt: true },
