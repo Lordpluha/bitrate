@@ -147,25 +147,33 @@ export const useUnfollowUser = () => {
   })
 }
 
-export const useUpdateUser = () => {
+/**
+ * Writes a saved profile into the signed-in user and refetches only that person's
+ * public profile; follow lists and activity show other people, so they stay cached.
+ */
+const useApplyUserUpdate = () => {
   const queryClient = useQueryClient()
 
+  return async (user: PublicUser) => {
+    queryClient.setQueryData(apiQueryKeys.auth.me, (current: unknown) =>
+      mergePublicUserIntoAuthUser(current, user),
+    )
+    await queryClient.invalidateQueries({
+      queryKey: apiQueryKeys.users.byId(user.id),
+    })
+  }
+}
+
+export const useUpdateUser = () => {
+  const applyUserUpdate = useApplyUserUpdate()
+
   return useMutation('put', '/api/v1/users', {
-    onSuccess: async (user) => {
-      const publicUser = publicUserResponseSchema.parse(user)
-      queryClient.setQueryData(apiQueryKeys.auth.me, (current: unknown) =>
-        mergePublicUserIntoAuthUser(current, publicUser),
-      )
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: apiQueryKeys.auth.me }),
-        queryClient.invalidateQueries({ queryKey: apiQueryKeys.users.all }),
-      ])
-    },
+    onSuccess: (user) => applyUserUpdate(publicUserResponseSchema.parse(user)),
   })
 }
 
 export const useUploadUserAvatar = () => {
-  const queryClient = useQueryClient()
+  const applyUserUpdate = useApplyUserUpdate()
 
   return useTanStackMutation({
     mutationFn: async (avatar: File) => {
@@ -184,15 +192,7 @@ export const useUploadUserAvatar = () => {
 
       return publicUserResponseSchema.parse(await response.json())
     },
-    onSuccess: async (user) => {
-      queryClient.setQueryData(apiQueryKeys.auth.me, (current: unknown) =>
-        mergePublicUserIntoAuthUser(current, user),
-      )
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: apiQueryKeys.auth.me }),
-        queryClient.invalidateQueries({ queryKey: apiQueryKeys.users.all }),
-      ])
-    },
+    onSuccess: applyUserUpdate,
   })
 }
 
