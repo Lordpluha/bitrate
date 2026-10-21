@@ -544,7 +544,6 @@ body.device .stage { position: relative; z-index: 1; min-height: 100vh; display:
   .banner { flex-wrap: wrap; }
   .npop { top: auto; bottom: 80px; left: 10px; right: 10px; width: auto; max-height: calc(100vh - 170px); border-radius: 26px; z-index: 72; }
   .toast { top: 76px; left: 12px; right: 12px; width: auto; }
-  .mtop .ibtn .badge { top: 8px; right: 9px; }
   /* phones use the compact top bar and the range row; the desktop bar and header controls step aside */
   .topbar, .head .actions:not(.nacts) { display: none; }
 }
@@ -584,9 +583,7 @@ body.device .stage { position: relative; z-index: 1; min-height: 100vh; display:
   <main class="main">
     <div class="mtop glass">
       <div class="brand"><svg class="mark" aria-hidden="true"><use href="#bitrate-mark"/></svg><span class="words"><b>Bitrate</b><small data-t="Operators">Operators</small></span></div>
-      <button type="button" class="ibtn" data-open="palette" aria-label="Search"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg></button>
-      <button type="button" class="ibtn" id="mbell" aria-label="Notifications"><svg class="i" aria-hidden="true"><use href="#i-bell"/></svg><span class="badge"></span></button>
-      <button type="button" class="ibtn" id="menuBtn" aria-label="Menu"><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg></button>
+      <div class="avatar" title="mara.ops · Super admin">MQ</div>
     </div>
 
     <div class="topbar">
@@ -608,7 +605,6 @@ body.device .stage { position: relative; z-index: 1; min-height: 100vh; display:
   <button type="button" data-tab="overview" class="on" aria-label="Overview"><svg class="i" aria-hidden="true"><use href="#i-dashboard"/></svg></button>
   <button type="button" data-open="palette" aria-label="Search"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg></button>
   <button type="button" data-tab="alerts" aria-label="Alerts"><svg class="i" aria-hidden="true"><use href="#i-bell"/></svg><span class="badge"></span></button>
-  <button type="button" data-tab="notifications" aria-label="Notification settings"><svg class="i" aria-hidden="true"><use href="#i-sliders"/></svg></button>
   <button type="button" aria-label="Menu" id="menuTab"><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg></button>
 </nav>
 <div class="sheet glass" id="sheet"><div class="grab"></div><nav class="nav" id="snav"></nav><div class="prefs" id="sprefs"></div></div>
@@ -854,7 +850,7 @@ function render() {
   $('#page').innerHTML = S.page === 'overview' ? overviewHTML() : notifHTML()
   seg($('#seg')); seg($('#mseg'))
   $('#crumb').textContent = t(PAGES[S.page])
-  $$('.mtabs [data-tab]').forEach((x) => { x.classList.toggle('on', x.dataset.tab === S.page) })
+  $$('.mtabs [data-tab]').forEach((x) => { x.classList.toggle('on', x.dataset.tab === S.page || (x.dataset.tab === 'alerts' && S.page === 'notifications')) })
   $('#nav').innerHTML = navHTML(); $('#snav').innerHTML = navHTML()
   badges()
   requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -962,7 +958,7 @@ document.addEventListener('click', (e) => {
   if (detailClick(e)) return
   const b = e.target.closest('button, [data-open]')
   if (!b) { if (e.target.id === 'scrim') closePalette(); if (!e.target.closest('#npop')) closePop(); return }
-  if (!b.closest('#npop') && b.id !== 'bellBtn' && b.id !== 'mbell' && b.dataset.tab !== 'alerts') closePop()
+  if (!b.closest('#npop') && b.id !== 'bellBtn' && b.dataset.tab !== 'alerts') closePop()
   if (demoClick(b) || nsClick(b)) return
   if (b.dataset.page) return go(b.dataset.page)
   if (b.dataset.tab) return b.dataset.tab === 'alerts' ? togglePop() : go(b.dataset.tab)
@@ -971,8 +967,8 @@ document.addEventListener('click', (e) => {
   if (b.id === 'langBtn' || (b.closest('#sprefs') && b.querySelector('use[href="#i-languages"]'))) return toggleLang()
   if (b.id === 'collapseBtn') return toggleCollapse()
   if (b.id === 'refreshBtn' || b.id === 'mrefresh') return refresh()
-  if (b.id === 'bellBtn' || b.id === 'mbell') return togglePop()
-  if (b.id === 'menuBtn' || b.id === 'menuTab') return $('#sheet').classList.toggle('open')
+  if (b.id === 'bellBtn') return togglePop()
+  if (b.id === 'menuTab') return $('#sheet').classList.toggle('open')
   if (b.dataset.open === 'palette') return openPalette()
   if (b.dataset.range) { S.range = b.dataset.range; seg($('#seg')); seg($('#mseg')); return render() }
   if (b.dataset.view) return setView(b.dataset.view)

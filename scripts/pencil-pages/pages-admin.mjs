@@ -1341,7 +1341,7 @@ const NOTES = [
   ],
   [
     'Phone',
-    'One column; the bottom island tab bar holds Overview, Search, Alerts, Settings and Menu. The bell opens notifications above the tab bar.',
+    'One column; the top bar shows only the logo and the avatar. Every action lives once, in the bottom island tab bar: Overview, Search, Alerts and Menu. The bell opens notifications above the tab bar; its footer leads to notification settings, where the bell tab stays active.',
   ],
 ]
 const notesFrame = () =>
