@@ -46,3 +46,5 @@ export const sendFriendRequestSchema = z.object({
 export type Friend = z.infer<typeof friendsSchema>[number]
 export type FriendPresence = z.infer<typeof friendPresenceSchema>
 export type FriendRequest = z.infer<typeof friendRequestsSchema>[number]
+/** `accepted` when they had already asked, which makes you friends at once. */
+export type SendFriendRequestResult = z.infer<typeof sendFriendRequestSchema>
