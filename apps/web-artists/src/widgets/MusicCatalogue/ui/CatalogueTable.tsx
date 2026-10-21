@@ -81,7 +81,7 @@ export function CatalogueTable({
   return (
     <table className="artist-music-table" data-tab={tab}>
       <caption className="sr-only">Your {tab}</caption>
-      <thead>
+      <thead className="sr-only @min-[900px]:not-sr-only">
         <tr>
           {tab === 'tracks' && (
             <th className="artist-music-play-cell">

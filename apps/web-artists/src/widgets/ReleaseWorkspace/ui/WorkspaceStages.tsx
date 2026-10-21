@@ -1,3 +1,4 @@
+import { cn } from '@bitrate/ui-react'
 import type { ReleaseWorkspace } from '@entities/release'
 
 type Status = ReleaseWorkspace['status']
@@ -21,8 +22,12 @@ export function WorkspaceStages({ status }: { status: Status }) {
       aria-labelledby="release-stages-heading"
       className="artist-release-workspace-panel artist-release-stages"
     >
-      <h2 id="release-stages-heading">Release timeline</h2>
-      <p>Bitrate review is available; delivery is coming soon.</p>
+      <h2 className="lg:sr-only" id="release-stages-heading">
+        Release timeline
+      </h2>
+      <p className="lg:sr-only">
+        Bitrate review is available; delivery is coming soon.
+      </p>
       <ol>
         {STAGES.map((stage, index) => {
           const label = stageLabel(index, status)
@@ -31,7 +36,14 @@ export function WorkspaceStages({ status }: { status: Status }) {
               aria-current={label === 'Current' ? 'step' : undefined}
               key={stage}
             >
-              <span className="artist-release-stage-number">{index + 1}</span>
+              <span
+                className={cn(
+                  'artist-release-stage-number',
+                  label === 'Current' && 'artist-workspace-primary',
+                )}
+              >
+                {index + 1}
+              </span>
               <span>{stage}</span>
               <small>{label}</small>
             </li>
