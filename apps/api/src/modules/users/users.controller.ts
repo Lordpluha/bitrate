@@ -40,14 +40,12 @@ import { UpdateUserDto, UpdateUserSchema } from './dtos'
 import { UserEntity } from './entities'
 import { MAX_AVATAR_BYTES, UsersService } from './users.service'
 
-/** Represents the users controller. */
 @ApiExtraModels(UserEntity, SafeUserEntity)
 @ApiTags('Users')
 @Controller({ path: 'users', version: '1' })
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  /** Runs the get all operation. */
   @GetUsersSwagger()
   @Get('')
   async getAll(
@@ -65,7 +63,6 @@ export class UsersController {
     })
   }
 
-  /** Runs the get by username operation. */
   @GetUserByUsernameSwagger()
   @Get('username/:username')
   async getByUsername(
@@ -75,14 +72,12 @@ export class UsersController {
     return await this.usersService.getByUsername(username)
   }
 
-  /** Runs the get by id operation. */
   @GetUserSwagger()
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: UserEntity['id']) {
     return await this.usersService.findById(id)
   }
 
-  /** Runs the put by id operation. */
   @PutUserSwagger()
   @UserAuth()
   @Put('')
@@ -94,7 +89,6 @@ export class UsersController {
     return await this.usersService.updateById(user.id, userData)
   }
 
-  /** Runs the upload avatar operation. */
   @UploadAvatarSwagger()
   @UserAuth()
   @Post('avatar')

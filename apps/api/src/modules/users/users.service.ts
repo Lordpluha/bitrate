@@ -44,10 +44,8 @@ const AVATAR_FOLDER = 'users/avatars' satisfies PublicImageFolder
 /** The URL prefix of avatars this service stored; anything else is not ours to delete. */
 const AVATAR_PATH_PREFIX = `/static/${AVATAR_FOLDER}/`
 
-/** Represents the users service. */
 @Injectable()
 export class UsersService {
-  /** Creates a new instance. */
   constructor(
     private readonly prisma: PrismaService,
     private readonly notifications: NotificationsProducer,
@@ -110,7 +108,6 @@ export class UsersService {
     })
   }
 
-  /** Runs the find all operation. */
   async findAll({
     username,
     limit = 10,
@@ -138,7 +135,6 @@ export class UsersService {
     return { data, total, page: pagination.page, limit: pagination.limit }
   }
 
-  /** Runs the create operation. */
   async create(data: Prisma.UserUncheckedCreateInput) {
     return await this.prisma.user.create({
       data,
@@ -146,7 +142,6 @@ export class UsersService {
     })
   }
 
-  /** Runs the update by id operation. */
   async updateById(id: UserEntity['id'], userData: Partial<Omit<UserEntity, 'id' | ''>>) {
     return await this.prisma.user.update({
       where: { id },

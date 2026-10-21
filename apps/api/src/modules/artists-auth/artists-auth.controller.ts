@@ -67,7 +67,6 @@ import { ArtistSessionEntity } from './entities'
 import { sessionClient } from './session-client'
 import type { ArtistAuthRequest } from './types'
 
-/** Represents the auth controller. */
 @ApiExtraModels(ArtistSessionEntity)
 @ApiTags('Artists Auth')
 @Throttle(AUTH_ROUTE_THROTTLE)
@@ -80,7 +79,6 @@ export class AuthController {
     private twoFactorService: ArtistTwoFactorService,
   ) {}
 
-  /** Runs the login operation. */
   @AuthLoginSwagger()
   @Post('login')
   async login(
@@ -100,7 +98,6 @@ export class AuthController {
     this.tokenService.setAuthCookies(res, result.access_token, result.refresh_token)
   }
 
-  /** Runs the registration operation. */
   @AuthRegistrationSwagger()
   @Post('registration')
   async registration(
@@ -124,7 +121,6 @@ export class AuthController {
     return await this.artistAuthService.isEmailAvailable(email)
   }
 
-  /** Runs the logout operation. */
   @AuthLogoutSwagger()
   @ArtistAuth()
   @Post('logout')
@@ -133,7 +129,6 @@ export class AuthController {
     this.tokenService.clearAuthCookies(res)
   }
 
-  /** Runs the refresh operation. */
   @AuthRefreshSwagger()
   @ArtistAuth('refresh')
   @Throttle(SESSION_ROUTE_THROTTLE)
@@ -143,7 +138,6 @@ export class AuthController {
     this.tokenService.setAuthCookies(res, tokens.access_token, tokens.refresh_token)
   }
 
-  /** Runs the get me operation. */
   @AuthMeSwagger()
   @ArtistAuth()
   @Throttle(SESSION_ROUTE_THROTTLE)
@@ -152,7 +146,6 @@ export class AuthController {
     return await this.artistService.findById(req.artist.id)
   }
 
-  /** Runs the forgot password operation. */
   @AuthForgotPasswordSwagger()
   @HttpCode(200)
   @Post('forgot-password')
@@ -162,7 +155,6 @@ export class AuthController {
     await this.artistAuthService.forgotPassword(dto.email)
   }
 
-  /** Runs the reset password operation. */
   @AuthResetPasswordSwagger()
   @HttpCode(200)
   @Post('reset-password')
@@ -197,7 +189,6 @@ export class AuthController {
     await this.artistAuthService.verifyEmailCode(dto.email, dto.code)
   }
 
-  /** Runs the two factor setup operation. */
   @TwoFactorSetupSwagger()
   @ArtistAuth()
   @Post('2fa/setup')
@@ -205,7 +196,6 @@ export class AuthController {
     return await this.twoFactorService.setupTwoFactor(req.artist.id)
   }
 
-  /** Runs the two factor enable operation. */
   @TwoFactorEnableSwagger()
   @ArtistAuth()
   @HttpCode(200)
@@ -217,7 +207,6 @@ export class AuthController {
     await this.twoFactorService.enableTwoFactor(req.artist.id, dto.code)
   }
 
-  /** Runs the two factor disable operation. */
   @TwoFactorDisableSwagger()
   @ArtistAuth()
   @HttpCode(200)
@@ -229,7 +218,6 @@ export class AuthController {
     await this.twoFactorService.disableTwoFactor(req.artist.id, dto.code)
   }
 
-  /** Runs the two factor verify login operation. */
   @TwoFactorVerifyLoginSwagger()
   @HttpCode(200)
   @Post('2fa/verify-login')
