@@ -21,7 +21,7 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common'
-import { ArtistTrackStatus, type Prisma } from '@prisma/client'
+import { ArtistTrackStatus, Prisma } from '@prisma/client'
 import type {
   ReleaseDraftVersionDto,
   ReorderReleaseTracksDto,
@@ -187,9 +187,13 @@ export class ReleaseMediaService {
       ) {
         throw new UnprocessableEntityException(RELEASE_ERRORS.TRACK_ORDER_MISMATCH)
       }
-      for (const [position, trackId] of input.trackIds.entries()) {
-        await tx.artistTrackDraft.update({ where: { id: trackId }, data: { position } })
-      }
+      // One statement for the whole order; positions are zero-based, ORDINALITY is one-based.
+      await tx.$executeRaw(Prisma.sql`
+        UPDATE "ArtistTrackDraft" AS draft
+        SET "position" = ordered.ordinality - 1, "updatedAt" = NOW()
+        FROM unnest(${input.trackIds}::uuid[]) WITH ORDINALITY AS ordered(id, ordinality)
+        WHERE draft."id" = ordered.id AND draft."releaseId" = ${id}::uuid
+      `)
       return { release, trackIds: input.trackIds }
     })
   }
