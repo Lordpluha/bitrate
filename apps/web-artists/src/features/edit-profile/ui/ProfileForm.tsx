@@ -8,8 +8,8 @@ import {
   socialLinkLabels,
   useUpdateProfile,
 } from '@entities/artist-account'
-import { countries } from '@entities/delivery'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { countries } from '@shared/constants/countries'
 import { useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
 

@@ -1,13 +1,11 @@
 import { Button, Input } from '@bitrate/ui-react'
+import { type ReleaseDelivery, useSaveDeliveryPlan } from '@entities/delivery'
+import { countries, countryName } from '@shared/constants/countries'
 import {
-  countries,
-  countryName,
   type DeliveryDestination,
   deliveryDestinations,
   destinationLabels,
-  type ReleaseDelivery,
-  useSaveDeliveryPlan,
-} from '@entities/delivery'
+} from '@shared/constants/destinations'
 import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
 import { useId, useState } from 'react'
 

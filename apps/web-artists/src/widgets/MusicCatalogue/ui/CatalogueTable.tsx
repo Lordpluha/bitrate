@@ -10,6 +10,7 @@ import {
   releaseStatusLabels,
   releaseTypeLabels,
 } from '@entities/release'
+import { formatDuration } from '@shared/lib/format'
 import { Circle, Ellipsis, Music2, Pause, Play } from 'lucide-react'
 
 export type CatalogueItem = MusicTrack | MusicRelease
@@ -57,9 +58,7 @@ export function CatalogueStatus({ item }: { item: CatalogueItem }) {
 }
 
 export function trackDuration(seconds: number | null) {
-  return seconds === null
-    ? '—'
-    : `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`
+  return seconds === null ? '—' : formatDuration(seconds)
 }
 
 interface CatalogueTableProps {

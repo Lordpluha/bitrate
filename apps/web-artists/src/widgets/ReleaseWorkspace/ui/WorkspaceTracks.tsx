@@ -7,12 +7,11 @@ import {
   releaseAudioUrl,
   useReorderTracks,
 } from '@entities/release'
+import { formatDuration } from '@shared/lib/format'
 import { ArrowDown, ArrowUp, CircleAlert, Music2, Upload } from 'lucide-react'
 
 function duration(value: number | null) {
-  return value === null
-    ? 'Duration unavailable'
-    : `${Math.floor(value / 60)}:${String(value % 60).padStart(2, '0')}`
+  return value === null ? 'Duration unavailable' : formatDuration(value)
 }
 
 /** Everything an artist can do with the recordings of a draft. */

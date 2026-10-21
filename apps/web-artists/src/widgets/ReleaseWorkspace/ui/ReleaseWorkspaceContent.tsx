@@ -5,6 +5,7 @@ import {
   releaseStatusLabels,
   releaseTypeLabels,
 } from '@entities/release'
+import { formatDateTimeUtc } from '@shared/lib/date'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
 import { Info, Music2 } from 'lucide-react'
@@ -15,13 +16,6 @@ import { WorkspaceReview } from './WorkspaceReview'
 import { type RightsAction, WorkspaceRights } from './WorkspaceRights'
 import { WorkspaceRoadmap } from './WorkspaceRoadmap'
 import { type TrackActions, WorkspaceTracks } from './WorkspaceTracks'
-
-const formatter = new Intl.DateTimeFormat('en-US', {
-  dateStyle: 'medium',
-  timeStyle: 'short',
-  timeZone: 'UTC',
-})
-const date = (value: string) => formatter.format(new Date(value))
 
 type Status = ReleaseWorkspace['status']
 
@@ -113,7 +107,7 @@ export function ReleaseWorkspaceContent({
                 {releaseStatusLabels[release.status]}
               </span>
               <p className="artist-release-updated">
-                Updated {date(release.updatedAt)} UTC
+                Updated {formatDateTimeUtc(release.updatedAt)} UTC
               </p>
             </div>
           </div>
@@ -229,7 +223,7 @@ export function ReleaseWorkspaceContent({
               <dt>Scheduled date</dt>
               <dd>
                 {release.scheduledAt
-                  ? `${date(release.scheduledAt)} UTC`
+                  ? `${formatDateTimeUtc(release.scheduledAt)} UTC`
                   : 'Not scheduled'}
               </dd>
             </div>

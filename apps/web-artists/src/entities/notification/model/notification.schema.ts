@@ -1,23 +1,9 @@
 import type { ApiSchemas } from '@bitrate/contracts'
+import {
+  deliveryDestinations,
+  destinationLabels,
+} from '@shared/constants/destinations'
 import { z } from 'zod'
-
-const destinations = [
-  'SPOTIFY',
-  'APPLE_MUSIC',
-  'YOUTUBE_MUSIC',
-  'AMAZON_MUSIC',
-  'DEEZER',
-  'TIDAL',
-] as const
-
-const destinationLabels: Record<(typeof destinations)[number], string> = {
-  SPOTIFY: 'Spotify',
-  APPLE_MUSIC: 'Apple Music',
-  YOUTUBE_MUSIC: 'YouTube Music',
-  AMAZON_MUSIC: 'Amazon Music',
-  DEEZER: 'Deezer',
-  TIDAL: 'TIDAL',
-}
 
 const notificationSchema = z.object({
   id: z.string(),
@@ -35,7 +21,7 @@ const notificationSchema = z.object({
   releaseId: z.uuid(),
   releaseTitle: z.string(),
   taskTitle: z.string().optional(),
-  destination: z.enum(destinations).optional(),
+  destination: z.enum(deliveryDestinations).optional(),
   at: z.iso.datetime({ offset: true }),
   unread: z.boolean(),
 })
