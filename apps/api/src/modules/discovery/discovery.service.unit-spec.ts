@@ -194,6 +194,16 @@ describe('DiscoveryService public artist projections', () => {
       )
     })
 
+    it('reads preferred genres from a bounded listening window', async () => {
+      stubFeedQueries()
+
+      await service.getFeed('user-1')
+
+      const genreQuery = prisma.queryRaw.mock.calls[0]?.[0] as Prisma.Sql
+      expect(genreQuery.strings.join(' ')).toContain('h."listenedAt" >=')
+      expect(genreQuery.values).toContainEqual(expect.any(Date))
+    })
+
     it('keeps explicit tracks for guests', async () => {
       stubFeedQueries()
 

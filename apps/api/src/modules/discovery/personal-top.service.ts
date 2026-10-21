@@ -72,17 +72,13 @@ export class PersonalTopService {
         LIMIT ${pagination.limit} OFFSET ${pagination.skip}
       `),
       this.prisma.queryRaw<Array<{ total: bigint }>>(Prisma.sql`
-        SELECT COUNT(*)::bigint AS total
-        FROM (
-          SELECT h."trackId"
-          FROM "ListeningHistory" h
-          JOIN "Track" t ON t.id = h."trackId"
-          WHERE h."userId" = ${userId}::uuid
-            AND h."listenedAt" >= ${since}
-            AND t."deletedAt" IS NULL
-            AND t."processingStatus" = 'READY'
-          GROUP BY h."trackId"
-        ) ranked_tracks
+        SELECT COUNT(DISTINCT h."trackId")::bigint AS total
+        FROM "ListeningHistory" h
+        JOIN "Track" t ON t.id = h."trackId"
+        WHERE h."userId" = ${userId}::uuid
+          AND h."listenedAt" >= ${since}
+          AND t."deletedAt" IS NULL
+          AND t."processingStatus" = 'READY'
       `),
     ])
 
@@ -114,19 +110,15 @@ export class PersonalTopService {
         LIMIT ${pagination.limit} OFFSET ${pagination.skip}
       `),
       this.prisma.queryRaw<Array<{ total: bigint }>>(Prisma.sql`
-        SELECT COUNT(*)::bigint AS total
-        FROM (
-          SELECT t."artistId"
-          FROM "ListeningHistory" h
-          JOIN "Track" t ON t.id = h."trackId"
-          JOIN "Artist" a ON a.id = t."artistId"
-          WHERE h."userId" = ${userId}::uuid
-            AND h."listenedAt" >= ${since}
-            AND t."deletedAt" IS NULL
-            AND t."processingStatus" = 'READY'
-            AND a."deletedAt" IS NULL
-          GROUP BY t."artistId"
-        ) ranked_artists
+        SELECT COUNT(DISTINCT t."artistId")::bigint AS total
+        FROM "ListeningHistory" h
+        JOIN "Track" t ON t.id = h."trackId"
+        JOIN "Artist" a ON a.id = t."artistId"
+        WHERE h."userId" = ${userId}::uuid
+          AND h."listenedAt" >= ${since}
+          AND t."deletedAt" IS NULL
+          AND t."processingStatus" = 'READY'
+          AND a."deletedAt" IS NULL
       `),
     ])
 

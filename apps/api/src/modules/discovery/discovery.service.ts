@@ -13,6 +13,11 @@ export type ChartScope = 'global' | 'viral' | 'country'
 /** Chart scopes a request may ask for. */
 export const CHART_SCOPES: readonly ChartScope[] = ['global', 'viral', 'country']
 
+const MS_PER_DAY = 24 * 60 * 60 * 1000
+
+/** Listening history the feed reads to pick preferred genres; bounded so it stays index-backed. */
+const PREFERRED_GENRE_WINDOW_DAYS = 90
+
 @Injectable()
 export class DiscoveryService {
   constructor(
@@ -181,20 +186,16 @@ export class DiscoveryService {
           LIMIT ${pagination.limit} OFFSET ${pagination.skip}
         `),
         this.prisma.queryRaw<Array<{ total: bigint }>>(Prisma.sql`
-          SELECT COUNT(*)::bigint AS total
-          FROM (
-            SELECT h."trackId"
-            FROM "ListeningHistory" h
-            JOIN "Track" t ON t.id = h."trackId"
-            JOIN "Artist" a ON a.id = t."artistId"
-            WHERE h."listenedAt" >= ${since}
-              AND t."deletedAt" IS NULL
-              AND t."processingStatus" = 'READY'
-              AND a."deletedAt" IS NULL
-              ${countryFilter}
+          SELECT COUNT(DISTINCT h."trackId")::bigint AS total
+          FROM "ListeningHistory" h
+          JOIN "Track" t ON t.id = h."trackId"
+          JOIN "Artist" a ON a.id = t."artistId"
+          WHERE h."listenedAt" >= ${since}
+            AND t."deletedAt" IS NULL
+            AND t."processingStatus" = 'READY'
+            AND a."deletedAt" IS NULL
+            ${countryFilter}
             ${genreFilter}
-            GROUP BY h."trackId"
-          ) ranked_tracks
         `),
       ])
       const ids = rows.map(({ trackId }) => trackId)
@@ -284,12 +285,15 @@ export class DiscoveryService {
     return genre.id
   }
 
+  /** The user's most-played genres over the recent listening window. */
   private async getPreferredGenreIds(userId: string) {
+    const since = new Date(Date.now() - PREFERRED_GENRE_WINDOW_DAYS * MS_PER_DAY)
     const rows = await this.prisma.queryRaw<Array<{ genreId: string }>>(Prisma.sql`
       SELECT tg."genreId"
       FROM "ListeningHistory" h
       JOIN "TrackGenre" tg ON tg."trackId" = h."trackId"
       WHERE h."userId" = ${userId}::uuid
+        AND h."listenedAt" >= ${since}
       GROUP BY tg."genreId" ORDER BY COUNT(*) DESC LIMIT 5
     `)
     return rows.map(({ genreId }) => genreId)
@@ -297,6 +301,6 @@ export class DiscoveryService {
 
   private chartRangeStart(scope: ChartScope) {
     const days = scope === 'viral' ? 7 : 28
-    return new Date(Date.now() - days * 24 * 60 * 60 * 1000)
+    return new Date(Date.now() - days * MS_PER_DAY)
   }
 }
