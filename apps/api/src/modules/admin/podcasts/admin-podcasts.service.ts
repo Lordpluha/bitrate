@@ -69,7 +69,6 @@ const PODCAST_DETAIL_SELECT = {
 
 type PodcastRowRecord = Prisma.PodcastGetPayload<{ select: typeof PODCAST_ROW_SELECT }>
 type PodcastDetailRecord = Prisma.PodcastGetPayload<{ select: typeof PODCAST_DETAIL_SELECT }>
-type EpisodeRowRecord = Prisma.EpisodeGetPayload<{ select: typeof EPISODE_ROW_SELECT }>
 
 /** Handles the operator-facing podcast catalog and its podcast- and episode-level take-down. */
 @Injectable()
@@ -89,20 +88,7 @@ export class AdminPodcastsService {
     return { ...podcast, episodeCount: _count.episodes }
   }
 
-  /** Picks the operator-visible episode columns off a record. */
-  private toEpisodeRow(episode: EpisodeRowRecord): AdminPodcastEpisodeEntity {
-    return {
-      id: episode.id,
-      podcastId: episode.podcastId,
-      title: episode.title,
-      duration: episode.duration,
-      releaseDate: episode.releaseDate,
-      explicit: episode.explicit,
-      deletedAt: episode.deletedAt,
-    }
-  }
-
-  /** Runs the find all operation, paginated, newest first by default. */
+  /** Lists podcasts, paginated, newest first by default. */
   async findAll({
     page = DEFAULT_PAGE,
     limit = DEFAULT_LIMIT,
@@ -130,7 +116,7 @@ export class AdminPodcastsService {
   }
 
   /**
-   * Runs the find by id operation, with every episode of the podcast, newest release first.
+   * Finds one podcast by id, with every episode of the podcast, newest release first.
    * Deliberately does not filter `deletedAt` on the podcast or its episodes — taken-down items
    * must stay reachable so the operator can review and restore them. Each episode carries its
    * own `deletedAt`: a podcast's take-down never cascades to them.
@@ -149,7 +135,7 @@ export class AdminPodcastsService {
     return {
       ...this.toRow(podcast),
       description,
-      episodes: episodes.map((episode) => this.toEpisodeRow(episode)),
+      episodes,
     }
   }
 
@@ -248,8 +234,7 @@ export class AdminPodcastsService {
       direction,
       current: () => this.prisma.episode.findFirst({ where, select: { deletedAt: true } }),
       mark: (tx, guard, data) => tx.episode.updateMany({ where: { ...where, ...guard }, data }),
-      load: async (tx) =>
-        this.toEpisodeRow(await tx.episode.findFirstOrThrow({ where, select: EPISODE_ROW_SELECT })),
+      load: (tx) => tx.episode.findFirstOrThrow({ where, select: EPISODE_ROW_SELECT }),
       notFound: () => new EpisodeNotFoundException(episodeId),
       conflict: () =>
         takeDown
