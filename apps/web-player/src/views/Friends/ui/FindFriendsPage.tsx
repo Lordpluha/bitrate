@@ -24,7 +24,6 @@ import {
   useSendFriendRequest,
 } from '@/entities/Friend'
 import { type SafeUser, useUsers } from '@/entities/User'
-import { showApiErrorToast } from '@/shared/api/feedback'
 
 const RESULTS = 20
 const SKELETON_KEYS = Array.from({ length: 4 }, (_, row) => `person-${row}`)
@@ -48,8 +47,6 @@ const PersonResult = ({
   const accept = useAcceptFriendRequest()
   const decline = useDeclineFriendRequest()
   const name = person.username
-  const fail = (action: string) => (error: unknown) =>
-    showApiErrorToast(error, `Unable to ${action}.`)
 
   const meta = {
     friends: 'Friends',
@@ -66,11 +63,7 @@ const PersonResult = ({
         aria-label={`Cancel the friend request to ${name}`}
         className={actionClassName}
         disabled={cancel.isPending}
-        onClick={() =>
-          cancel.mutate(relation.requestId, {
-            onError: fail('cancel the request'),
-          })
-        }
+        onClick={() => cancel.mutate(relation.requestId)}
         title="Cancel request"
         variant="outline"
       >
@@ -84,7 +77,6 @@ const PersonResult = ({
           disabled={accept.isPending}
           onClick={() =>
             accept.mutate(relation.requestId, {
-              onError: fail('accept the request'),
               onSuccess: () =>
                 onNotice({
                   body: 'You can see each other’s online status.',
@@ -99,11 +91,7 @@ const PersonResult = ({
         <Button
           className={actionClassName}
           disabled={decline.isPending}
-          onClick={() =>
-            decline.mutate(relation.requestId, {
-              onError: fail('decline the request'),
-            })
-          }
+          onClick={() => decline.mutate(relation.requestId)}
           variant="ghost"
         >
           Decline
@@ -115,7 +103,6 @@ const PersonResult = ({
         disabled={send.isPending}
         onClick={() =>
           send.mutate(person.id, {
-            onError: fail('send the friend request'),
             onSuccess: ({ status }) =>
               onNotice(
                 status === 'accepted'

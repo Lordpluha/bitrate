@@ -11,7 +11,6 @@ import {
   useNotifications,
   useReadAllNotifications,
 } from '@/entities/Me'
-import { showApiErrorToast } from '@/shared/api/feedback'
 
 /** How many notifications the page loads; older ones wait for paging. */
 const PAGE_SIZE = 100
@@ -45,15 +44,7 @@ export const NotificationsPage = () => {
               <Button
                 className="h-9 px-4 text-sm font-medium"
                 disabled={readAll.isPending}
-                onClick={() =>
-                  readAll.mutate(undefined, {
-                    onError: (error) =>
-                      showApiErrorToast(
-                        error,
-                        'Unable to mark notifications as read.',
-                      ),
-                  })
-                }
+                onClick={() => readAll.mutate(undefined)}
                 variant="ghost"
               >
                 Mark all read
