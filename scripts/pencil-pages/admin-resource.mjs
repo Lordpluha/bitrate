@@ -3,7 +3,6 @@
 // on phones — and one detail template: header with back link, status and decisions, then a bento of
 // tiles. Every state of a page is a desktop + mobile pair; dialogs sit in the flow (Pencil cannot
 // overlap) above the page on desktop and as a sheet under the header on phones.
-import { existsSync, readFileSync } from 'node:fs'
 import {
   DETAIL_STATES,
   FORM_STATES,
@@ -56,11 +55,6 @@ const DIALOG = { success: 'Success', error: 'Error', warning: 'Warning' }
 const chip = (c) => Pill(PILL[c.tone], c.t)
 const text = (c) => (typeof c === 'string' ? c : c.s ? `${c.t} · ${c.s}` : c.t)
 const off = (node) => Object.assign(node, { opacity: 0.45 })
-
-/* measured frame heights (scripts/pencil-pages/admin-heights.json), refreshed after layout changes */
-const HEIGHTS_FILE = new URL('./admin-heights.json', import.meta.url)
-const HEIGHTS = existsSync(HEIGHTS_FILE) ? JSON.parse(readFileSync(HEIGHTS_FILE, 'utf8')) : {}
-const height = (key, label, fallback) => HEIGHTS[`${key} / ${label}`] ?? fallback
 
 /* ---------- cells and blocks ---------- */
 const perms = (groups) =>
@@ -166,13 +160,13 @@ const block = (b, m) => {
     })
   return []
 }
-const tile = (tl, m) =>
+const tile = (tl, m, fill) =>
   A(
     'Admin/Tile',
     {
       name: `Tile / ${tl.title}`,
       width: 'fill_container',
-      ...(m ? {} : { height: 'fill_container' }),
+      ...(fill ? { height: 'fill_container' } : {}),
     },
     {
       icon: { icon: icon(tl.icon) },
@@ -188,6 +182,20 @@ const tile = (tl, m) =>
       ),
     },
   )
+/* roughly how tall a tile's content is, to find the one that sets its row's height */
+/* every row of a kv, feed, checks or perms block is its own child, 10px apart in the tile; a table is one */
+const BLOCK_H = {
+  kv: (b) => b.rows.length * 46,
+  quote: (b) => 54 + Math.ceil(b.t.length / 60) * 20,
+  media: () => 78,
+  table: (b) => 44 + b.rows.length * (b.rows.some((r) => r.some((c) => c?.s)) ? 52 : 42),
+  feed: (b) => b.items.length * 50,
+  checks: (b) => b.items.reduce((h, i) => h + (i[2] ? 68 : 58), 0),
+  chips: () => 72,
+  perms: (b) => b.groups.reduce((h, [, items]) => h + 26 + items.length * 62, 0),
+}
+const estimate = (tl) =>
+  tl.blocks.reduce((h, b) => h + (BLOCK_H[b.type]?.(b) ?? 0), tl.link ? 30 : 0)
 /** Tiles on the four-column grid: a row fills up to four columns, tiles in a row share its height. */
 const grid = (tiles, m, make = tile) => {
   if (m) return tiles.map((tl) => make(tl, m))
@@ -204,10 +212,18 @@ const grid = (tiles, m, make = tile) => {
     used += tl.w
   }
   if (row.length) rows.push(row)
+  /* a shared row is as tall as its fullest tile (content + the tile's 90px of padding and header,
+     with a little room), and every tile fills it; a lone tile just fits its content */
   return rows.map((r, i) =>
     Row(
-      { name: `Tiles ${i + 1}`, width: 'fill_container', gap: 16, alignItems: 'start' },
-      r.map((tl) => make(tl, m)),
+      {
+        name: `Tiles ${i + 1}`,
+        width: 'fill_container',
+        gap: 16,
+        alignItems: 'start',
+        ...(r.length > 1 && make === tile ? { height: Math.max(...r.map(estimate)) + 96 } : {}),
+      },
+      r.map((tl) => make(tl, m, r.length > 1)),
     ),
   )
 }
@@ -269,11 +285,37 @@ const actionButtons = (sp, st) =>
       )
       return (st === 'saving' && !a.primary) || st === 'offline' ? off(b) : b
     })
+/* phone actions wrap onto a second line when they don't fit, like the prototype's flex-wrap */
+const buttonWidth = (b) =>
+  (b.descendants
+    ? (Object.values(b.descendants).find((d) => d?.content)?.content.length ?? 8)
+    : 8) *
+    6.6 +
+  56
+const phoneActions = (buttons) => {
+  const lines = [[]]
+  let used = 0
+  for (const b of buttons) {
+    const w = buttonWidth(b)
+    if (used && used + 8 + w > 358) {
+      lines.push([])
+      used = 0
+    }
+    lines.at(-1).push(b)
+    used += (used ? 8 : 0) + w
+  }
+  return lines.length === 1
+    ? Row({ name: 'Page Actions', width: 'fill_container', gap: 8 }, lines[0])
+    : L(
+        { name: 'Page Actions', layout: 'vertical', gap: 8, width: 'fill_container' },
+        lines.map((l, i) => Row({ name: `Actions ${i + 1}`, gap: 8 }, l)),
+      )
+}
 const pocketFor = (st, sp) =>
   st === 'offline'
     ? { icon: 'wifi-off', text: 'Offline · 09:42', tone: 'warning' }
     : st === 'saving'
-      ? { icon: 'loader-circle', text: sp.saving, bar: true }
+      ? { icon: 'loader-circle', text: sp.saving }
       : undefined
 
 /* ---------- list ---------- */
@@ -451,9 +493,7 @@ const listHeader = (sp, st, m) => {
         accent: { enabled: false },
         subtitle: { content: sp.sub },
       }),
-      buttons.length
-        ? Row({ name: 'Page Actions', width: 'fill_container', gap: 8 }, buttons)
-        : null,
+      buttons.length ? phoneActions(buttons) : null,
     ]
   return A('Admin/Page Header', W, {
     eyebrow: { content: sp.eyebrow },
@@ -490,9 +530,7 @@ const detailHeader = (sp, st, m) => {
   if (m)
     return [
       A('Admin/Detail Header Compact', W, parts),
-      bare
-        ? null
-        : Row({ name: 'Page Actions', width: 'fill_container', gap: 8 }, actionButtons(sp, st)),
+      bare ? null : phoneActions(actionButtons(sp, st)),
     ]
   return A('Admin/Detail Header', W, {
     ...parts,
@@ -847,36 +885,24 @@ function resourcePage(key, sp) {
   const page = sp.nav
   const title = `Admin / ${sp.kind === 'list' ? sp.title : `${RESOURCES[sp.parent].title} · ${sp.title}`}`
   /* frames are named "<state> / Desktop|Mobile"; the defaults "Desktop / <theme>" and "Mobile / Dark" */
-  const D =
-    (label, st, frameLabel = `${label} / Desktop`) =>
-    (theme) =>
-      Shell(label, nodes(sp, st, false), {
-        page,
-        theme: theme ?? 'Dark',
-        height: height(key, frameLabel, 1800),
-        pocket: pocketFor(st, sp),
-      })
-  const M =
-    (label, st, frameLabel = `${label} / Mobile`) =>
-    () =>
-      MShell(
-        label,
-        nodes(sp, st, true),
-        height(
-          key,
-          frameLabel,
-          sp.dialogs?.[st] || st === 'invalid' ? 844 : sp.kind === 'list' ? 2400 : 3600,
-        ),
-        {
-          page,
-        },
-      )
+  const D = (label, st) => (theme) =>
+    Shell(label, nodes(sp, st, false), {
+      page,
+      theme: theme ?? 'Dark',
+      fit: true,
+      pocket: pocketFor(st, sp),
+    })
+  const M = (label, st) => () =>
+    /* a phone dialog is a sheet at the bottom of one screen; other pages grow with their content */
+    sp.dialogs?.[st] || st === 'invalid'
+      ? MShell(label, nodes(sp, st, true), 844, { page })
+      : MShell(label, nodes(sp, st, true), 0, { page, fit: true })
   return {
     title,
     route: sp.route,
     context: `${sp.sub} Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#${sp.hash ?? key}). Dialogs and menus sit in the flow; the prototype shows them floating.`,
-    desktop: (theme) => D('Default', 'default', `Desktop / ${theme}`)(theme),
-    mobile: M('Default', 'default', 'Mobile / Dark'),
+    desktop: (theme) => D('Default', 'default')(theme),
+    mobile: M('Default', 'default'),
     states: statesOf(sp).map((st) => {
       const label = STATE_LABEL[st] ?? st
       return state(label, () => D(label, st)(), M(label, st))

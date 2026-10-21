@@ -6,10 +6,10 @@
   "children": [
     {
       "type": "frame",
-      "id": "QkBZUm",
+      "id": "P2GZHB",
       "name": "Admin / Staff · New operator / Desktop / Dark",
       "width": 1440,
-      "height": 1800,
+      "height": "fit_content",
       "clip": true,
       "layout": "vertical",
       "fill": [
@@ -87,15 +87,21 @@
       "children": [
         {
           "type": "ref",
-          "id": "AZvVvV",
+          "id": "7xbi9S",
           "ref": "admin:6pveax",
           "name": "Admin/Shell/Desktop",
           "width": 1440,
-          "height": 1800,
+          "height": "fit_content",
           "descendants": {
+            "admin:zl2c4D": {
+              "height": "fit_content"
+            },
+            "admin:wFn9uy": {
+              "height": 968
+            },
             "admin:lLbknp": {
               "type": "ref",
-              "id": "tpMHEp",
+              "id": "Li2Gsq",
               "ref": "admin:hjjJvB",
               "name": "Nav / Staff",
               "descendants": {
@@ -121,16 +127,16 @@
             },
             "admin:Awzbgj": {
               "type": "frame",
-              "id": "AeaqZV",
+              "id": "Sfczsm",
               "name": "Content",
               "layout": "vertical",
               "gap": 22,
               "width": "fill_container",
-              "height": "fill_container",
+              "height": "fit_content",
               "children": [
                 {
                   "type": "ref",
-                  "id": "Hg7AGJ",
+                  "id": "kavRAk",
                   "ref": "admin:bC6Hx7",
                   "name": "Admin/Detail Header",
                   "width": "fill_container",
@@ -152,14 +158,14 @@
                     },
                     "admin:WOw9AL": {
                       "type": "frame",
-                      "id": "hbtnLA",
+                      "id": "PwgTUX",
                       "name": "Actions",
                       "gap": 10,
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "ref",
-                          "id": "7SvjnY",
+                          "id": "DkxVtq",
                           "ref": "admin:TmjZcS",
                           "name": "Button / Create operator",
                           "descendants": {
@@ -177,7 +183,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "hDf9SF",
+                  "id": "xZroua",
                   "name": "Form",
                   "gap": 16,
                   "alignItems": "start",
@@ -185,7 +191,7 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "qyYfkA",
+                      "id": "CiBiTH",
                       "ref": "admin:r1BU8g",
                       "name": "Tile / Operator",
                       "width": "fill_container",
@@ -204,7 +210,7 @@
                         },
                         "admin:GjsX0O": {
                           "type": "frame",
-                          "id": "2QTq86",
+                          "id": "Jh39o7",
                           "name": "Tile Content",
                           "layout": "vertical",
                           "gap": 4,
@@ -212,7 +218,7 @@
                           "children": [
                             {
                               "type": "ref",
-                              "id": "4LpXMz",
+                              "id": "CYzbEo",
                               "ref": "admin:hxksjQ",
                               "name": "Field / Email",
                               "width": "fill_container",
@@ -233,7 +239,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "ibhXoS",
+                              "id": "H6kt7n",
                               "ref": "admin:hxksjQ",
                               "name": "Field / Username",
                               "width": "fill_container",
@@ -254,7 +260,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "7DK67f",
+                              "id": "oGDb4J",
                               "ref": "admin:hxksjQ",
                               "name": "Field / Temporary password",
                               "width": "fill_container",
@@ -275,7 +281,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "SYqy9S",
+                              "id": "HjpCvi",
                               "ref": "admin:xH59so",
                               "name": "Field / Role",
                               "width": "fill_container",
@@ -290,7 +296,7 @@
                             },
                             {
                               "type": "frame",
-                              "id": "2YvrhU",
+                              "id": "5EYK3x",
                               "name": "Field / Permissions",
                               "layout": "vertical",
                               "gap": 2,
@@ -304,21 +310,21 @@
                               "children": [
                                 {
                                   "type": "ref",
-                                  "id": "M5vwfv",
+                                  "id": "2mrKMq",
                                   "ref": "admin:SOt7Oe",
                                   "name": "Text/Body Strong",
                                   "content": "Permissions"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "VnSAwM",
+                                  "id": "gbLNJv",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / Moderation",
                                   "content": "MODERATION"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "Vt5Nyr",
+                                  "id": "BqfDiY",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / reports:read",
                                   "width": "fill_container",
@@ -333,7 +339,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "kLbPiu",
+                                  "id": "EtmdJj",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / reports:write",
                                   "width": "fill_container",
@@ -348,14 +354,14 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "sKNGKP",
+                                  "id": "xjrcsd",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / Accounts",
                                   "content": "ACCOUNTS"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "LrF37X",
+                                  "id": "bHvT8a",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / users:read",
                                   "width": "fill_container",
@@ -370,7 +376,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "zvCwNR",
+                                  "id": "SHvyWQ",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / users:write",
                                   "width": "fill_container",
@@ -385,7 +391,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "srVDyu",
+                                  "id": "ycBcZn",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / artists:read",
                                   "width": "fill_container",
@@ -400,7 +406,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "Kd2aNc",
+                                  "id": "aDopq2",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / artists:write",
                                   "width": "fill_container",
@@ -415,14 +421,14 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "eEG7pe",
+                                  "id": "d3JEA3",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / Catalog",
                                   "content": "CATALOG"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "s8AVvG",
+                                  "id": "ZuVH4j",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / tracks:read",
                                   "width": "fill_container",
@@ -437,7 +443,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "tFRcg8",
+                                  "id": "txYYkx",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / releases:read",
                                   "width": "fill_container",
@@ -452,14 +458,14 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "nynKBR",
+                                  "id": "dCnP3m",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / System",
                                   "content": "SYSTEM"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "3oc2dD",
+                                  "id": "kzWXfB",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / audit:read",
                                   "width": "fill_container",
@@ -474,7 +480,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "NBreDC",
+                                  "id": "qpbPAN",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / staff:read",
                                   "width": "fill_container",
@@ -489,7 +495,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "aWzaM5",
+                                  "id": "ZLakNm",
                                   "ref": "admin:PiqhAO",
                                   "name": "Text/Caption",
                                   "content": "From Moderator · 7 of 31"
@@ -502,7 +508,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "wmWaNz",
+                      "id": "d9gn5M",
                       "name": "Side",
                       "layout": "vertical",
                       "gap": 16,
@@ -510,7 +516,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "AptURw",
+                          "id": "88btDX",
                           "ref": "admin:r1BU8g",
                           "name": "Tile / Invitation",
                           "width": "fill_container",
@@ -529,7 +535,7 @@
                             },
                             "admin:GjsX0O": {
                               "type": "frame",
-                              "id": "3Edpjb",
+                              "id": "3d6W6Y",
                               "name": "Tile Content",
                               "layout": "vertical",
                               "gap": 10,
@@ -537,7 +543,7 @@
                               "children": [
                                 {
                                   "type": "ref",
-                                  "id": "Dw33eL",
+                                  "id": "dT6y2f",
                                   "ref": "admin:9JboAk",
                                   "name": "Admin/Quote",
                                   "width": "fill_container",
@@ -549,7 +555,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "52Y2ya",
+                                  "id": "KW6yXQ",
                                   "ref": "admin:p0ZiD8",
                                   "name": "KV / Link expires",
                                   "width": "fill_container",
@@ -564,7 +570,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "UCsBWB",
+                                  "id": "oNX5bn",
                                   "ref": "admin:p0ZiD8",
                                   "name": "KV / Two-step sign-in",
                                   "width": "fill_container",
@@ -599,10 +605,10 @@
     },
     {
       "type": "frame",
-      "id": "tSRPu9",
+      "id": "x8hjfc",
       "name": "Admin / Staff · New operator / Desktop / Light",
       "width": 1440,
-      "height": 1800,
+      "height": "fit_content",
       "clip": true,
       "layout": "vertical",
       "fill": [
@@ -680,15 +686,21 @@
       "children": [
         {
           "type": "ref",
-          "id": "4u4tZ3",
+          "id": "RS4cPH",
           "ref": "admin:6pveax",
           "name": "Admin/Shell/Desktop",
           "width": 1440,
-          "height": 1800,
+          "height": "fit_content",
           "descendants": {
+            "admin:zl2c4D": {
+              "height": "fit_content"
+            },
+            "admin:wFn9uy": {
+              "height": 968
+            },
             "admin:lLbknp": {
               "type": "ref",
-              "id": "8r4b4p",
+              "id": "WyzBeF",
               "ref": "admin:hjjJvB",
               "name": "Nav / Staff",
               "descendants": {
@@ -714,16 +726,16 @@
             },
             "admin:Awzbgj": {
               "type": "frame",
-              "id": "7hgnXj",
+              "id": "ma3y3d",
               "name": "Content",
               "layout": "vertical",
               "gap": 22,
               "width": "fill_container",
-              "height": "fill_container",
+              "height": "fit_content",
               "children": [
                 {
                   "type": "ref",
-                  "id": "SUqa7z",
+                  "id": "Ft6dik",
                   "ref": "admin:bC6Hx7",
                   "name": "Admin/Detail Header",
                   "width": "fill_container",
@@ -745,14 +757,14 @@
                     },
                     "admin:WOw9AL": {
                       "type": "frame",
-                      "id": "xkfNcF",
+                      "id": "nrGWJz",
                       "name": "Actions",
                       "gap": 10,
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "ref",
-                          "id": "atTxmC",
+                          "id": "fhjnub",
                           "ref": "admin:TmjZcS",
                           "name": "Button / Create operator",
                           "descendants": {
@@ -770,7 +782,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "BzxLHL",
+                  "id": "FyhHG7",
                   "name": "Form",
                   "gap": 16,
                   "alignItems": "start",
@@ -778,7 +790,7 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "uz4sQj",
+                      "id": "wt4Jjq",
                       "ref": "admin:r1BU8g",
                       "name": "Tile / Operator",
                       "width": "fill_container",
@@ -797,7 +809,7 @@
                         },
                         "admin:GjsX0O": {
                           "type": "frame",
-                          "id": "xNWLgd",
+                          "id": "2EQyuL",
                           "name": "Tile Content",
                           "layout": "vertical",
                           "gap": 4,
@@ -805,7 +817,7 @@
                           "children": [
                             {
                               "type": "ref",
-                              "id": "yM7JSf",
+                              "id": "G9BJVR",
                               "ref": "admin:hxksjQ",
                               "name": "Field / Email",
                               "width": "fill_container",
@@ -826,7 +838,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "ZwQg9U",
+                              "id": "JQ7rTk",
                               "ref": "admin:hxksjQ",
                               "name": "Field / Username",
                               "width": "fill_container",
@@ -847,7 +859,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "nRePB9",
+                              "id": "udBkUZ",
                               "ref": "admin:hxksjQ",
                               "name": "Field / Temporary password",
                               "width": "fill_container",
@@ -868,7 +880,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "tfTobE",
+                              "id": "wL4B9j",
                               "ref": "admin:xH59so",
                               "name": "Field / Role",
                               "width": "fill_container",
@@ -883,7 +895,7 @@
                             },
                             {
                               "type": "frame",
-                              "id": "actMem",
+                              "id": "R5TSkL",
                               "name": "Field / Permissions",
                               "layout": "vertical",
                               "gap": 2,
@@ -897,21 +909,21 @@
                               "children": [
                                 {
                                   "type": "ref",
-                                  "id": "YFats8",
+                                  "id": "SSm7fY",
                                   "ref": "admin:SOt7Oe",
                                   "name": "Text/Body Strong",
                                   "content": "Permissions"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "v8CG2U",
+                                  "id": "9fergD",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / Moderation",
                                   "content": "MODERATION"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "pZPJHZ",
+                                  "id": "CdYvnq",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / reports:read",
                                   "width": "fill_container",
@@ -926,7 +938,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "mYy6xH",
+                                  "id": "azAJ6G",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / reports:write",
                                   "width": "fill_container",
@@ -941,14 +953,14 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "8VJPWd",
+                                  "id": "MNmvAj",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / Accounts",
                                   "content": "ACCOUNTS"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "J27CD9",
+                                  "id": "W2zXrY",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / users:read",
                                   "width": "fill_container",
@@ -963,7 +975,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "2Nio2B",
+                                  "id": "XDJX6Y",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / users:write",
                                   "width": "fill_container",
@@ -978,7 +990,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "ACnhev",
+                                  "id": "53zn73",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / artists:read",
                                   "width": "fill_container",
@@ -993,7 +1005,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "FVDudb",
+                                  "id": "gfaQ7j",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / artists:write",
                                   "width": "fill_container",
@@ -1008,14 +1020,14 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "46rejE",
+                                  "id": "nt7i2Q",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / Catalog",
                                   "content": "CATALOG"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "5rscad",
+                                  "id": "Yy3WP8",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / tracks:read",
                                   "width": "fill_container",
@@ -1030,7 +1042,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "DZrsyx",
+                                  "id": "e72h9Z",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / releases:read",
                                   "width": "fill_container",
@@ -1045,14 +1057,14 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "YkeQH9",
+                                  "id": "2DDkud",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / System",
                                   "content": "SYSTEM"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "PvX7Yj",
+                                  "id": "45oYQi",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / audit:read",
                                   "width": "fill_container",
@@ -1067,7 +1079,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "cNDjsc",
+                                  "id": "RKmPr6",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / staff:read",
                                   "width": "fill_container",
@@ -1082,7 +1094,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "vJm86h",
+                                  "id": "uuxNKB",
                                   "ref": "admin:PiqhAO",
                                   "name": "Text/Caption",
                                   "content": "From Moderator · 7 of 31"
@@ -1095,7 +1107,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "HrTy6r",
+                      "id": "gWQYH9",
                       "name": "Side",
                       "layout": "vertical",
                       "gap": 16,
@@ -1103,7 +1115,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "kpQN7u",
+                          "id": "bRMRYX",
                           "ref": "admin:r1BU8g",
                           "name": "Tile / Invitation",
                           "width": "fill_container",
@@ -1122,7 +1134,7 @@
                             },
                             "admin:GjsX0O": {
                               "type": "frame",
-                              "id": "apUJ25",
+                              "id": "RRnGro",
                               "name": "Tile Content",
                               "layout": "vertical",
                               "gap": 10,
@@ -1130,7 +1142,7 @@
                               "children": [
                                 {
                                   "type": "ref",
-                                  "id": "TtiUyF",
+                                  "id": "5CXrCf",
                                   "ref": "admin:9JboAk",
                                   "name": "Admin/Quote",
                                   "width": "fill_container",
@@ -1142,7 +1154,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "otSjom",
+                                  "id": "ZiVWEr",
                                   "ref": "admin:p0ZiD8",
                                   "name": "KV / Link expires",
                                   "width": "fill_container",
@@ -1157,7 +1169,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "bofEcc",
+                                  "id": "Jwx6yR",
                                   "ref": "admin:p0ZiD8",
                                   "name": "KV / Two-step sign-in",
                                   "width": "fill_container",
@@ -1192,10 +1204,10 @@
     },
     {
       "type": "frame",
-      "id": "owMdSb",
+      "id": "fjjCvE",
       "name": "Admin / Staff · New operator / Desktop / Dim",
       "width": 1440,
-      "height": 1800,
+      "height": "fit_content",
       "clip": true,
       "layout": "vertical",
       "fill": [
@@ -1273,15 +1285,21 @@
       "children": [
         {
           "type": "ref",
-          "id": "BXwXzN",
+          "id": "aJww3R",
           "ref": "admin:6pveax",
           "name": "Admin/Shell/Desktop",
           "width": 1440,
-          "height": 1800,
+          "height": "fit_content",
           "descendants": {
+            "admin:zl2c4D": {
+              "height": "fit_content"
+            },
+            "admin:wFn9uy": {
+              "height": 968
+            },
             "admin:lLbknp": {
               "type": "ref",
-              "id": "2f7A3V",
+              "id": "6d2dNJ",
               "ref": "admin:hjjJvB",
               "name": "Nav / Staff",
               "descendants": {
@@ -1307,16 +1325,16 @@
             },
             "admin:Awzbgj": {
               "type": "frame",
-              "id": "nFSR8x",
+              "id": "2SZXdK",
               "name": "Content",
               "layout": "vertical",
               "gap": 22,
               "width": "fill_container",
-              "height": "fill_container",
+              "height": "fit_content",
               "children": [
                 {
                   "type": "ref",
-                  "id": "gLGGJ9",
+                  "id": "gf3JnX",
                   "ref": "admin:bC6Hx7",
                   "name": "Admin/Detail Header",
                   "width": "fill_container",
@@ -1338,14 +1356,14 @@
                     },
                     "admin:WOw9AL": {
                       "type": "frame",
-                      "id": "Jt547d",
+                      "id": "NmgDBd",
                       "name": "Actions",
                       "gap": 10,
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "ref",
-                          "id": "Atg8us",
+                          "id": "tHfXdW",
                           "ref": "admin:TmjZcS",
                           "name": "Button / Create operator",
                           "descendants": {
@@ -1363,7 +1381,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "Vzzbjk",
+                  "id": "3Yfuhf",
                   "name": "Form",
                   "gap": 16,
                   "alignItems": "start",
@@ -1371,7 +1389,7 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "Hcb5e8",
+                      "id": "nyBJSK",
                       "ref": "admin:r1BU8g",
                       "name": "Tile / Operator",
                       "width": "fill_container",
@@ -1390,7 +1408,7 @@
                         },
                         "admin:GjsX0O": {
                           "type": "frame",
-                          "id": "ByhAnr",
+                          "id": "xx4vFH",
                           "name": "Tile Content",
                           "layout": "vertical",
                           "gap": 4,
@@ -1398,7 +1416,7 @@
                           "children": [
                             {
                               "type": "ref",
-                              "id": "bcuimw",
+                              "id": "APpisc",
                               "ref": "admin:hxksjQ",
                               "name": "Field / Email",
                               "width": "fill_container",
@@ -1419,7 +1437,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "5pekcW",
+                              "id": "QbuPQE",
                               "ref": "admin:hxksjQ",
                               "name": "Field / Username",
                               "width": "fill_container",
@@ -1440,7 +1458,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "xXeuxa",
+                              "id": "yhgiVs",
                               "ref": "admin:hxksjQ",
                               "name": "Field / Temporary password",
                               "width": "fill_container",
@@ -1461,7 +1479,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "YE39jM",
+                              "id": "G4Gz8e",
                               "ref": "admin:xH59so",
                               "name": "Field / Role",
                               "width": "fill_container",
@@ -1476,7 +1494,7 @@
                             },
                             {
                               "type": "frame",
-                              "id": "zygTEz",
+                              "id": "wzME6y",
                               "name": "Field / Permissions",
                               "layout": "vertical",
                               "gap": 2,
@@ -1490,21 +1508,21 @@
                               "children": [
                                 {
                                   "type": "ref",
-                                  "id": "ag2Tb5",
+                                  "id": "jZpA9K",
                                   "ref": "admin:SOt7Oe",
                                   "name": "Text/Body Strong",
                                   "content": "Permissions"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "NwLXTV",
+                                  "id": "vjUgKT",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / Moderation",
                                   "content": "MODERATION"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "fcNCP2",
+                                  "id": "GWoFZM",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / reports:read",
                                   "width": "fill_container",
@@ -1519,7 +1537,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "yerc8f",
+                                  "id": "aXfDWz",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / reports:write",
                                   "width": "fill_container",
@@ -1534,14 +1552,14 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "CE3Rtp",
+                                  "id": "xg6e7P",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / Accounts",
                                   "content": "ACCOUNTS"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "oXZXSs",
+                                  "id": "xUer5o",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / users:read",
                                   "width": "fill_container",
@@ -1556,7 +1574,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "d34bTa",
+                                  "id": "VKZr3E",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / users:write",
                                   "width": "fill_container",
@@ -1571,7 +1589,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "CyvrJo",
+                                  "id": "sMBB8K",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / artists:read",
                                   "width": "fill_container",
@@ -1586,7 +1604,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "hXwZr2",
+                                  "id": "kU3uBE",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / artists:write",
                                   "width": "fill_container",
@@ -1601,14 +1619,14 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "wbsGbc",
+                                  "id": "Wawdp5",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / Catalog",
                                   "content": "CATALOG"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "yEPS4p",
+                                  "id": "QNPgKt",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / tracks:read",
                                   "width": "fill_container",
@@ -1623,7 +1641,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "4hs9nT",
+                                  "id": "XbR4kq",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / releases:read",
                                   "width": "fill_container",
@@ -1638,14 +1656,14 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "fHQmhY",
+                                  "id": "AyvmSk",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / System",
                                   "content": "SYSTEM"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "qQuDoM",
+                                  "id": "pupBr8",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / audit:read",
                                   "width": "fill_container",
@@ -1660,7 +1678,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "5UpS3F",
+                                  "id": "csFvNu",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / staff:read",
                                   "width": "fill_container",
@@ -1675,7 +1693,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "u6ZGwT",
+                                  "id": "siySZy",
                                   "ref": "admin:PiqhAO",
                                   "name": "Text/Caption",
                                   "content": "From Moderator · 7 of 31"
@@ -1688,7 +1706,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "Qy7RPQ",
+                      "id": "hpjyMc",
                       "name": "Side",
                       "layout": "vertical",
                       "gap": 16,
@@ -1696,7 +1714,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "kprsFs",
+                          "id": "U3FbiK",
                           "ref": "admin:r1BU8g",
                           "name": "Tile / Invitation",
                           "width": "fill_container",
@@ -1715,7 +1733,7 @@
                             },
                             "admin:GjsX0O": {
                               "type": "frame",
-                              "id": "rN9SQN",
+                              "id": "bkcP7q",
                               "name": "Tile Content",
                               "layout": "vertical",
                               "gap": 10,
@@ -1723,7 +1741,7 @@
                               "children": [
                                 {
                                   "type": "ref",
-                                  "id": "AZVoJD",
+                                  "id": "DydNKA",
                                   "ref": "admin:9JboAk",
                                   "name": "Admin/Quote",
                                   "width": "fill_container",
@@ -1735,7 +1753,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "fhZZFH",
+                                  "id": "ehjKQL",
                                   "ref": "admin:p0ZiD8",
                                   "name": "KV / Link expires",
                                   "width": "fill_container",
@@ -1750,7 +1768,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "EzrXn7",
+                                  "id": "j4T8jH",
                                   "ref": "admin:p0ZiD8",
                                   "name": "KV / Two-step sign-in",
                                   "width": "fill_container",
@@ -1785,10 +1803,10 @@
     },
     {
       "type": "frame",
-      "id": "xKtSKN",
+      "id": "xpEdVv",
       "name": "Admin / Staff · New operator / Mobile / Dark",
       "width": 390,
-      "height": 3600,
+      "height": "fit_content",
       "clip": true,
       "layout": "vertical",
       "fill": [
@@ -1866,15 +1884,15 @@
       "children": [
         {
           "type": "ref",
-          "id": "xNENGV",
+          "id": "yhoPbu",
           "ref": "admin:eqee8W",
           "name": "Admin/Shell/Mobile",
           "width": 390,
-          "height": 3600,
+          "height": "fit_content",
           "descendants": {
             "admin:j6PyZU/admin:lLnPY6": {
               "type": "ref",
-              "id": "MYsfnR",
+              "id": "KZruHL",
               "ref": "admin:CiuO32",
               "name": "Tab / overview",
               "descendants": {
@@ -1888,7 +1906,7 @@
             },
             "admin:j6PyZU/admin:jFtwgM": {
               "type": "ref",
-              "id": "A7mQeZ",
+              "id": "XBX6t9",
               "ref": "admin:CiuO32",
               "name": "Tab / alerts",
               "descendants": {
@@ -1902,7 +1920,7 @@
             },
             "admin:j6PyZU/admin:mkQ1an": {
               "type": "ref",
-              "id": "anSXw2",
+              "id": "3otxHW",
               "ref": "admin:82Bxeq",
               "name": "Tab / menu",
               "descendants": {
@@ -1916,12 +1934,12 @@
             },
             "admin:gHhjkZ": {
               "type": "frame",
-              "id": "co2bXV",
+              "id": "XcFonN",
               "name": "Content",
               "layout": "vertical",
               "gap": 16,
               "width": "fill_container",
-              "height": "fill_container",
+              "height": "fit_content",
               "padding": [
                 18,
                 16,
@@ -1932,7 +1950,7 @@
               "children": [
                 {
                   "type": "ref",
-                  "id": "SVqK9P",
+                  "id": "9bBUhK",
                   "ref": "admin:Ohq36Y",
                   "name": "Admin/Detail Header Compact",
                   "width": "fill_container",
@@ -1958,7 +1976,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "SKi9ic",
+                  "id": "uCKuWg",
                   "name": "Page Actions",
                   "gap": 8,
                   "alignItems": "center",
@@ -1966,7 +1984,7 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "t8Xji6",
+                      "id": "KEJSZJ",
                       "ref": "admin:TmjZcS",
                       "name": "Button / Create operator",
                       "descendants": {
@@ -1982,7 +2000,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "PVvJCs",
+                  "id": "r3QSrB",
                   "ref": "admin:r1BU8g",
                   "name": "Tile / Operator",
                   "width": "fill_container",
@@ -2001,7 +2019,7 @@
                     },
                     "admin:GjsX0O": {
                       "type": "frame",
-                      "id": "mmXFAo",
+                      "id": "RQK8mk",
                       "name": "Tile Content",
                       "layout": "vertical",
                       "gap": 4,
@@ -2009,7 +2027,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "uEPw8p",
+                          "id": "upY7Ao",
                           "ref": "admin:hxksjQ",
                           "name": "Field / Email",
                           "width": "fill_container",
@@ -2030,7 +2048,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "GfQotG",
+                          "id": "LddjFN",
                           "ref": "admin:hxksjQ",
                           "name": "Field / Username",
                           "width": "fill_container",
@@ -2051,7 +2069,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "P9MP3a",
+                          "id": "4i4adx",
                           "ref": "admin:hxksjQ",
                           "name": "Field / Temporary password",
                           "width": "fill_container",
@@ -2072,7 +2090,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "VwLV7r",
+                          "id": "GVWXLk",
                           "ref": "admin:xH59so",
                           "name": "Field / Role",
                           "width": "fill_container",
@@ -2087,7 +2105,7 @@
                         },
                         {
                           "type": "frame",
-                          "id": "t4vuUh",
+                          "id": "SCLa6n",
                           "name": "Field / Permissions",
                           "layout": "vertical",
                           "gap": 2,
@@ -2101,21 +2119,21 @@
                           "children": [
                             {
                               "type": "ref",
-                              "id": "tUNbcA",
+                              "id": "BmLcxR",
                               "ref": "admin:SOt7Oe",
                               "name": "Text/Body Strong",
                               "content": "Permissions"
                             },
                             {
                               "type": "ref",
-                              "id": "eEvben",
+                              "id": "ReNDC3",
                               "ref": "admin:yjiPHo",
                               "name": "Group / Moderation",
                               "content": "MODERATION"
                             },
                             {
                               "type": "ref",
-                              "id": "fKsp2C",
+                              "id": "pECM4d",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / reports:read",
                               "width": "fill_container",
@@ -2130,7 +2148,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "LDcAiq",
+                              "id": "qxtEEU",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / reports:write",
                               "width": "fill_container",
@@ -2145,14 +2163,14 @@
                             },
                             {
                               "type": "ref",
-                              "id": "ESvvwi",
+                              "id": "TPfu3y",
                               "ref": "admin:yjiPHo",
                               "name": "Group / Accounts",
                               "content": "ACCOUNTS"
                             },
                             {
                               "type": "ref",
-                              "id": "Gx4eTD",
+                              "id": "Zpwz4i",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / users:read",
                               "width": "fill_container",
@@ -2167,7 +2185,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "7TAjCT",
+                              "id": "xBpfS3",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / users:write",
                               "width": "fill_container",
@@ -2182,7 +2200,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "kRX6HE",
+                              "id": "22ysuY",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / artists:read",
                               "width": "fill_container",
@@ -2197,7 +2215,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "rnonPi",
+                              "id": "cqQ8AS",
                               "ref": "admin:NrivlM",
                               "name": "Permission / artists:write",
                               "width": "fill_container",
@@ -2212,14 +2230,14 @@
                             },
                             {
                               "type": "ref",
-                              "id": "6XA7ox",
+                              "id": "MJ6TBM",
                               "ref": "admin:yjiPHo",
                               "name": "Group / Catalog",
                               "content": "CATALOG"
                             },
                             {
                               "type": "ref",
-                              "id": "RDoK4T",
+                              "id": "gWKkZC",
                               "ref": "admin:NrivlM",
                               "name": "Permission / tracks:read",
                               "width": "fill_container",
@@ -2234,7 +2252,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "fgUSab",
+                              "id": "QvKDLD",
                               "ref": "admin:NrivlM",
                               "name": "Permission / releases:read",
                               "width": "fill_container",
@@ -2249,14 +2267,14 @@
                             },
                             {
                               "type": "ref",
-                              "id": "wo2vvg",
+                              "id": "jgZVFN",
                               "ref": "admin:yjiPHo",
                               "name": "Group / System",
                               "content": "SYSTEM"
                             },
                             {
                               "type": "ref",
-                              "id": "byX9oq",
+                              "id": "vBkAuo",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / audit:read",
                               "width": "fill_container",
@@ -2271,7 +2289,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "ndjDEP",
+                              "id": "L2GwJ2",
                               "ref": "admin:NrivlM",
                               "name": "Permission / staff:read",
                               "width": "fill_container",
@@ -2286,7 +2304,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "Xp3vqn",
+                              "id": "oUWWKX",
                               "ref": "admin:PiqhAO",
                               "name": "Text/Caption",
                               "content": "From Moderator · 7 of 31"
@@ -2299,7 +2317,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "zNGXQv",
+                  "id": "gLKBbD",
                   "ref": "admin:r1BU8g",
                   "name": "Tile / Invitation",
                   "width": "fill_container",
@@ -2318,7 +2336,7 @@
                     },
                     "admin:GjsX0O": {
                       "type": "frame",
-                      "id": "3w8wJx",
+                      "id": "tgb3Km",
                       "name": "Tile Content",
                       "layout": "vertical",
                       "gap": 10,
@@ -2326,7 +2344,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "LvJGGN",
+                          "id": "F64zRC",
                           "ref": "admin:9JboAk",
                           "name": "Admin/Quote",
                           "width": "fill_container",
@@ -2338,7 +2356,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "nrkSRS",
+                          "id": "2TeAJk",
                           "ref": "admin:p0ZiD8",
                           "name": "KV / Link expires",
                           "width": "fill_container",
@@ -2353,7 +2371,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "23Qo6P",
+                          "id": "cWt7PR",
                           "ref": "admin:p0ZiD8",
                           "name": "KV / Two-step sign-in",
                           "width": "fill_container",
@@ -2384,10 +2402,10 @@
     },
     {
       "type": "frame",
-      "id": "An6ybt",
+      "id": "mBNc6q",
       "name": "Admin / Staff · New operator / New / Desktop",
       "width": 1440,
-      "height": 1800,
+      "height": "fit_content",
       "clip": true,
       "layout": "vertical",
       "fill": [
@@ -2465,15 +2483,21 @@
       "children": [
         {
           "type": "ref",
-          "id": "8nTxcr",
+          "id": "o9LWV5",
           "ref": "admin:6pveax",
           "name": "Admin/Shell/Desktop",
           "width": 1440,
-          "height": 1800,
+          "height": "fit_content",
           "descendants": {
+            "admin:zl2c4D": {
+              "height": "fit_content"
+            },
+            "admin:wFn9uy": {
+              "height": 968
+            },
             "admin:lLbknp": {
               "type": "ref",
-              "id": "MbBa8m",
+              "id": "tVSy6E",
               "ref": "admin:hjjJvB",
               "name": "Nav / Staff",
               "descendants": {
@@ -2499,16 +2523,16 @@
             },
             "admin:Awzbgj": {
               "type": "frame",
-              "id": "6ZkvMg",
+              "id": "NZJAaZ",
               "name": "Content",
               "layout": "vertical",
               "gap": 22,
               "width": "fill_container",
-              "height": "fill_container",
+              "height": "fit_content",
               "children": [
                 {
                   "type": "ref",
-                  "id": "jBR2EL",
+                  "id": "Ue2TpN",
                   "ref": "admin:bC6Hx7",
                   "name": "Admin/Detail Header",
                   "width": "fill_container",
@@ -2530,14 +2554,14 @@
                     },
                     "admin:WOw9AL": {
                       "type": "frame",
-                      "id": "rPoeFQ",
+                      "id": "GtzeN6",
                       "name": "Actions",
                       "gap": 10,
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "ref",
-                          "id": "Un3oKR",
+                          "id": "9Tgkpb",
                           "ref": "admin:TmjZcS",
                           "name": "Button / Create operator",
                           "descendants": {
@@ -2555,7 +2579,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "3NtLvr",
+                  "id": "nrBTnj",
                   "name": "Form",
                   "gap": 16,
                   "alignItems": "start",
@@ -2563,7 +2587,7 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "YsEk6G",
+                      "id": "fKvqqG",
                       "ref": "admin:r1BU8g",
                       "name": "Tile / Operator",
                       "width": "fill_container",
@@ -2582,7 +2606,7 @@
                         },
                         "admin:GjsX0O": {
                           "type": "frame",
-                          "id": "Wdr8ZM",
+                          "id": "uuK8jR",
                           "name": "Tile Content",
                           "layout": "vertical",
                           "gap": 4,
@@ -2590,7 +2614,7 @@
                           "children": [
                             {
                               "type": "ref",
-                              "id": "JvXF22",
+                              "id": "EqcS2r",
                               "ref": "admin:hxksjQ",
                               "name": "Field / Email",
                               "width": "fill_container",
@@ -2612,7 +2636,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "QaMwVV",
+                              "id": "qCqRRN",
                               "ref": "admin:hxksjQ",
                               "name": "Field / Username",
                               "width": "fill_container",
@@ -2634,7 +2658,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "7xZEnM",
+                              "id": "ymPnGU",
                               "ref": "admin:hxksjQ",
                               "name": "Field / Temporary password",
                               "width": "fill_container",
@@ -2656,7 +2680,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "59eit2",
+                              "id": "LxESd8",
                               "ref": "admin:xH59so",
                               "name": "Field / Role",
                               "width": "fill_container",
@@ -2671,7 +2695,7 @@
                             },
                             {
                               "type": "frame",
-                              "id": "z4yGNC",
+                              "id": "rRRuYv",
                               "name": "Field / Permissions",
                               "layout": "vertical",
                               "gap": 2,
@@ -2685,21 +2709,21 @@
                               "children": [
                                 {
                                   "type": "ref",
-                                  "id": "spYnQ8",
+                                  "id": "6WcbQo",
                                   "ref": "admin:SOt7Oe",
                                   "name": "Text/Body Strong",
                                   "content": "Permissions"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "Nw3hZ3",
+                                  "id": "qyBrEK",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / Moderation",
                                   "content": "MODERATION"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "dYZ7BN",
+                                  "id": "dxYMAJ",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / reports:read",
                                   "width": "fill_container",
@@ -2714,7 +2738,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "rEbyr6",
+                                  "id": "E7Pfgp",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / reports:write",
                                   "width": "fill_container",
@@ -2729,14 +2753,14 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "6dPRQs",
+                                  "id": "GFQDSG",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / Accounts",
                                   "content": "ACCOUNTS"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "gpRgK4",
+                                  "id": "ESF9e3",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / users:read",
                                   "width": "fill_container",
@@ -2751,7 +2775,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "oYrHbM",
+                                  "id": "6b6QBR",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / users:write",
                                   "width": "fill_container",
@@ -2766,7 +2790,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "VzWwaw",
+                                  "id": "DAvApf",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / artists:read",
                                   "width": "fill_container",
@@ -2781,7 +2805,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "Km8ZbR",
+                                  "id": "WokRxY",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / artists:write",
                                   "width": "fill_container",
@@ -2796,14 +2820,14 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "6LhK9M",
+                                  "id": "Q6YDmt",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / Catalog",
                                   "content": "CATALOG"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "pN57Vp",
+                                  "id": "mSfwyv",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / tracks:read",
                                   "width": "fill_container",
@@ -2818,7 +2842,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "GqEdWZ",
+                                  "id": "DoxJwg",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / releases:read",
                                   "width": "fill_container",
@@ -2833,14 +2857,14 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "M34orM",
+                                  "id": "EPB98B",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / System",
                                   "content": "SYSTEM"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "dqnhtP",
+                                  "id": "WZCusS",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / audit:read",
                                   "width": "fill_container",
@@ -2855,7 +2879,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "f99DP5",
+                                  "id": "dcWnCG",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / staff:read",
                                   "width": "fill_container",
@@ -2870,7 +2894,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "ySYmPJ",
+                                  "id": "bZWRgg",
                                   "ref": "admin:PiqhAO",
                                   "name": "Text/Caption",
                                   "content": "From Moderator · 0 of 31"
@@ -2883,7 +2907,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "u59ABL",
+                      "id": "UuxJyd",
                       "name": "Side",
                       "layout": "vertical",
                       "gap": 16,
@@ -2891,7 +2915,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "hDKAdg",
+                          "id": "snXjpu",
                           "ref": "admin:r1BU8g",
                           "name": "Tile / Invitation",
                           "width": "fill_container",
@@ -2910,7 +2934,7 @@
                             },
                             "admin:GjsX0O": {
                               "type": "frame",
-                              "id": "VYXqbY",
+                              "id": "hZibyD",
                               "name": "Tile Content",
                               "layout": "vertical",
                               "gap": 10,
@@ -2918,7 +2942,7 @@
                               "children": [
                                 {
                                   "type": "ref",
-                                  "id": "3Lufoq",
+                                  "id": "6LU2NG",
                                   "ref": "admin:9JboAk",
                                   "name": "Admin/Quote",
                                   "width": "fill_container",
@@ -2930,7 +2954,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "pZZKfb",
+                                  "id": "5rReHh",
                                   "ref": "admin:p0ZiD8",
                                   "name": "KV / Link expires",
                                   "width": "fill_container",
@@ -2945,7 +2969,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "UGCZHL",
+                                  "id": "RZig3z",
                                   "ref": "admin:p0ZiD8",
                                   "name": "KV / Two-step sign-in",
                                   "width": "fill_container",
@@ -2980,10 +3004,10 @@
     },
     {
       "type": "frame",
-      "id": "VrqWoS",
+      "id": "CreZvv",
       "name": "Admin / Staff · New operator / New / Mobile",
       "width": 390,
-      "height": 3600,
+      "height": "fit_content",
       "clip": true,
       "layout": "vertical",
       "fill": [
@@ -3061,15 +3085,15 @@
       "children": [
         {
           "type": "ref",
-          "id": "voUJza",
+          "id": "3M3XVM",
           "ref": "admin:eqee8W",
           "name": "Admin/Shell/Mobile",
           "width": 390,
-          "height": 3600,
+          "height": "fit_content",
           "descendants": {
             "admin:j6PyZU/admin:lLnPY6": {
               "type": "ref",
-              "id": "FT5uNN",
+              "id": "rmNp2t",
               "ref": "admin:CiuO32",
               "name": "Tab / overview",
               "descendants": {
@@ -3083,7 +3107,7 @@
             },
             "admin:j6PyZU/admin:jFtwgM": {
               "type": "ref",
-              "id": "8EbUWe",
+              "id": "LzJm9M",
               "ref": "admin:CiuO32",
               "name": "Tab / alerts",
               "descendants": {
@@ -3097,7 +3121,7 @@
             },
             "admin:j6PyZU/admin:mkQ1an": {
               "type": "ref",
-              "id": "kaXAqT",
+              "id": "SCYTgx",
               "ref": "admin:82Bxeq",
               "name": "Tab / menu",
               "descendants": {
@@ -3111,12 +3135,12 @@
             },
             "admin:gHhjkZ": {
               "type": "frame",
-              "id": "fWkB4V",
+              "id": "9S7woZ",
               "name": "Content",
               "layout": "vertical",
               "gap": 16,
               "width": "fill_container",
-              "height": "fill_container",
+              "height": "fit_content",
               "padding": [
                 18,
                 16,
@@ -3127,7 +3151,7 @@
               "children": [
                 {
                   "type": "ref",
-                  "id": "FVNk7v",
+                  "id": "bsgQec",
                   "ref": "admin:Ohq36Y",
                   "name": "Admin/Detail Header Compact",
                   "width": "fill_container",
@@ -3153,7 +3177,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "RJkGAN",
+                  "id": "guu3BM",
                   "name": "Page Actions",
                   "gap": 8,
                   "alignItems": "center",
@@ -3161,7 +3185,7 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "fCV5B7",
+                      "id": "Sj3yJv",
                       "ref": "admin:TmjZcS",
                       "name": "Button / Create operator",
                       "descendants": {
@@ -3177,7 +3201,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "U4aqRN",
+                  "id": "xjh3ML",
                   "ref": "admin:r1BU8g",
                   "name": "Tile / Operator",
                   "width": "fill_container",
@@ -3196,7 +3220,7 @@
                     },
                     "admin:GjsX0O": {
                       "type": "frame",
-                      "id": "SAaAxM",
+                      "id": "hn9AyL",
                       "name": "Tile Content",
                       "layout": "vertical",
                       "gap": 4,
@@ -3204,7 +3228,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "prZhbn",
+                          "id": "MQ99cR",
                           "ref": "admin:hxksjQ",
                           "name": "Field / Email",
                           "width": "fill_container",
@@ -3226,7 +3250,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "3Cb4SA",
+                          "id": "Krwv6A",
                           "ref": "admin:hxksjQ",
                           "name": "Field / Username",
                           "width": "fill_container",
@@ -3248,7 +3272,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "6b2pxY",
+                          "id": "jnM77w",
                           "ref": "admin:hxksjQ",
                           "name": "Field / Temporary password",
                           "width": "fill_container",
@@ -3270,7 +3294,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "bBcSXJ",
+                          "id": "TzxW9Q",
                           "ref": "admin:xH59so",
                           "name": "Field / Role",
                           "width": "fill_container",
@@ -3285,7 +3309,7 @@
                         },
                         {
                           "type": "frame",
-                          "id": "Ri6fWT",
+                          "id": "yVSfmb",
                           "name": "Field / Permissions",
                           "layout": "vertical",
                           "gap": 2,
@@ -3299,21 +3323,21 @@
                           "children": [
                             {
                               "type": "ref",
-                              "id": "sbp7dx",
+                              "id": "3eSvk9",
                               "ref": "admin:SOt7Oe",
                               "name": "Text/Body Strong",
                               "content": "Permissions"
                             },
                             {
                               "type": "ref",
-                              "id": "wMqo92",
+                              "id": "gpuUMg",
                               "ref": "admin:yjiPHo",
                               "name": "Group / Moderation",
                               "content": "MODERATION"
                             },
                             {
                               "type": "ref",
-                              "id": "DvTW9U",
+                              "id": "YhVLno",
                               "ref": "admin:NrivlM",
                               "name": "Permission / reports:read",
                               "width": "fill_container",
@@ -3328,7 +3352,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "MYs3EG",
+                              "id": "r7dg5v",
                               "ref": "admin:NrivlM",
                               "name": "Permission / reports:write",
                               "width": "fill_container",
@@ -3343,14 +3367,14 @@
                             },
                             {
                               "type": "ref",
-                              "id": "6RsAwd",
+                              "id": "KRYNk7",
                               "ref": "admin:yjiPHo",
                               "name": "Group / Accounts",
                               "content": "ACCOUNTS"
                             },
                             {
                               "type": "ref",
-                              "id": "cJaA2H",
+                              "id": "MwdiTp",
                               "ref": "admin:NrivlM",
                               "name": "Permission / users:read",
                               "width": "fill_container",
@@ -3365,7 +3389,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "URgPVF",
+                              "id": "7NvxDU",
                               "ref": "admin:NrivlM",
                               "name": "Permission / users:write",
                               "width": "fill_container",
@@ -3380,7 +3404,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "txiJPf",
+                              "id": "oVRhbd",
                               "ref": "admin:NrivlM",
                               "name": "Permission / artists:read",
                               "width": "fill_container",
@@ -3395,7 +3419,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "4SDco5",
+                              "id": "RMnLUa",
                               "ref": "admin:NrivlM",
                               "name": "Permission / artists:write",
                               "width": "fill_container",
@@ -3410,14 +3434,14 @@
                             },
                             {
                               "type": "ref",
-                              "id": "zH8VWL",
+                              "id": "tZvcDe",
                               "ref": "admin:yjiPHo",
                               "name": "Group / Catalog",
                               "content": "CATALOG"
                             },
                             {
                               "type": "ref",
-                              "id": "sNUTGo",
+                              "id": "uijtzq",
                               "ref": "admin:NrivlM",
                               "name": "Permission / tracks:read",
                               "width": "fill_container",
@@ -3432,7 +3456,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "HwEHVb",
+                              "id": "pReuCb",
                               "ref": "admin:NrivlM",
                               "name": "Permission / releases:read",
                               "width": "fill_container",
@@ -3447,14 +3471,14 @@
                             },
                             {
                               "type": "ref",
-                              "id": "bMJbDZ",
+                              "id": "WbGNiR",
                               "ref": "admin:yjiPHo",
                               "name": "Group / System",
                               "content": "SYSTEM"
                             },
                             {
                               "type": "ref",
-                              "id": "Da9Lni",
+                              "id": "EKPKhJ",
                               "ref": "admin:NrivlM",
                               "name": "Permission / audit:read",
                               "width": "fill_container",
@@ -3469,7 +3493,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "NTqBFG",
+                              "id": "LcJMpZ",
                               "ref": "admin:NrivlM",
                               "name": "Permission / staff:read",
                               "width": "fill_container",
@@ -3484,7 +3508,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "qDzKMT",
+                              "id": "5QnihN",
                               "ref": "admin:PiqhAO",
                               "name": "Text/Caption",
                               "content": "From Moderator · 0 of 31"
@@ -3497,7 +3521,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "6LNJ5R",
+                  "id": "jpCpsX",
                   "ref": "admin:r1BU8g",
                   "name": "Tile / Invitation",
                   "width": "fill_container",
@@ -3516,7 +3540,7 @@
                     },
                     "admin:GjsX0O": {
                       "type": "frame",
-                      "id": "qbase6",
+                      "id": "qbDmCg",
                       "name": "Tile Content",
                       "layout": "vertical",
                       "gap": 10,
@@ -3524,7 +3548,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "Ym3KaM",
+                          "id": "ojwe49",
                           "ref": "admin:9JboAk",
                           "name": "Admin/Quote",
                           "width": "fill_container",
@@ -3536,7 +3560,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "RwpTDh",
+                          "id": "5sRzJC",
                           "ref": "admin:p0ZiD8",
                           "name": "KV / Link expires",
                           "width": "fill_container",
@@ -3551,7 +3575,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "BLa66S",
+                          "id": "Bs4mDR",
                           "ref": "admin:p0ZiD8",
                           "name": "KV / Two-step sign-in",
                           "width": "fill_container",
@@ -3582,10 +3606,10 @@
     },
     {
       "type": "frame",
-      "id": "aw45Sz",
+      "id": "BQFcRy",
       "name": "Admin / Staff · New operator / Loading / Desktop",
       "width": 1440,
-      "height": 1800,
+      "height": "fit_content",
       "clip": true,
       "layout": "vertical",
       "fill": [
@@ -3663,15 +3687,21 @@
       "children": [
         {
           "type": "ref",
-          "id": "ADuFv4",
+          "id": "gkep7i",
           "ref": "admin:6pveax",
           "name": "Admin/Shell/Desktop",
           "width": 1440,
-          "height": 1800,
+          "height": "fit_content",
           "descendants": {
+            "admin:zl2c4D": {
+              "height": "fit_content"
+            },
+            "admin:wFn9uy": {
+              "height": 968
+            },
             "admin:lLbknp": {
               "type": "ref",
-              "id": "qjo5B2",
+              "id": "ZDRFxr",
               "ref": "admin:hjjJvB",
               "name": "Nav / Staff",
               "descendants": {
@@ -3697,16 +3727,16 @@
             },
             "admin:Awzbgj": {
               "type": "frame",
-              "id": "cB3vgo",
+              "id": "pJ3pbW",
               "name": "Content",
               "layout": "vertical",
               "gap": 22,
               "width": "fill_container",
-              "height": "fill_container",
+              "height": "fit_content",
               "children": [
                 {
                   "type": "ref",
-                  "id": "JouCx5",
+                  "id": "xJeLWh",
                   "ref": "admin:bC6Hx7",
                   "name": "Admin/Detail Header",
                   "width": "fill_container",
@@ -3728,7 +3758,7 @@
                     },
                     "admin:WOw9AL": {
                       "type": "frame",
-                      "id": "BztpfY",
+                      "id": "q8gZWv",
                       "name": "Actions",
                       "gap": 10,
                       "alignItems": "center",
@@ -3738,7 +3768,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "wa6tUY",
+                  "id": "q54PYk",
                   "name": "Tiles 1",
                   "gap": 16,
                   "alignItems": "start",
@@ -3746,7 +3776,7 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "rmmE7p",
+                      "id": "MaHNyn",
                       "ref": "admin:xGRvWf",
                       "name": "Loader / Invitation",
                       "width": "fill_container"
@@ -3767,10 +3797,10 @@
     },
     {
       "type": "frame",
-      "id": "6ro2zC",
+      "id": "Uxykff",
       "name": "Admin / Staff · New operator / Loading / Mobile",
       "width": 390,
-      "height": 3600,
+      "height": "fit_content",
       "clip": true,
       "layout": "vertical",
       "fill": [
@@ -3848,15 +3878,15 @@
       "children": [
         {
           "type": "ref",
-          "id": "jFT4E5",
+          "id": "CwqPKo",
           "ref": "admin:eqee8W",
           "name": "Admin/Shell/Mobile",
           "width": 390,
-          "height": 3600,
+          "height": "fit_content",
           "descendants": {
             "admin:j6PyZU/admin:lLnPY6": {
               "type": "ref",
-              "id": "mXtBdm",
+              "id": "4TCrFy",
               "ref": "admin:CiuO32",
               "name": "Tab / overview",
               "descendants": {
@@ -3870,7 +3900,7 @@
             },
             "admin:j6PyZU/admin:jFtwgM": {
               "type": "ref",
-              "id": "XfVAzY",
+              "id": "QbuN3Y",
               "ref": "admin:CiuO32",
               "name": "Tab / alerts",
               "descendants": {
@@ -3884,7 +3914,7 @@
             },
             "admin:j6PyZU/admin:mkQ1an": {
               "type": "ref",
-              "id": "HtQG8K",
+              "id": "78jPAw",
               "ref": "admin:82Bxeq",
               "name": "Tab / menu",
               "descendants": {
@@ -3898,12 +3928,12 @@
             },
             "admin:gHhjkZ": {
               "type": "frame",
-              "id": "Mk5NR5",
+              "id": "nb2oBi",
               "name": "Content",
               "layout": "vertical",
               "gap": 16,
               "width": "fill_container",
-              "height": "fill_container",
+              "height": "fit_content",
               "padding": [
                 18,
                 16,
@@ -3914,7 +3944,7 @@
               "children": [
                 {
                   "type": "ref",
-                  "id": "dobuU9",
+                  "id": "L6Gz9o",
                   "ref": "admin:Ohq36Y",
                   "name": "Admin/Detail Header Compact",
                   "width": "fill_container",
@@ -3940,7 +3970,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "KFC2Lr",
+                  "id": "XEX9UJ",
                   "ref": "admin:xGRvWf",
                   "name": "Loader / Invitation",
                   "width": "fill_container"
@@ -3959,10 +3989,10 @@
     },
     {
       "type": "frame",
-      "id": "Qh9Efx",
+      "id": "mkEYfL",
       "name": "Admin / Staff · New operator / Field errors / Desktop",
       "width": 1440,
-      "height": 1800,
+      "height": "fit_content",
       "clip": true,
       "layout": "vertical",
       "fill": [
@@ -4040,15 +4070,21 @@
       "children": [
         {
           "type": "ref",
-          "id": "mUFzwn",
+          "id": "6b6Zib",
           "ref": "admin:6pveax",
           "name": "Admin/Shell/Desktop",
           "width": 1440,
-          "height": 1800,
+          "height": "fit_content",
           "descendants": {
+            "admin:zl2c4D": {
+              "height": "fit_content"
+            },
+            "admin:wFn9uy": {
+              "height": 968
+            },
             "admin:lLbknp": {
               "type": "ref",
-              "id": "NBrA3J",
+              "id": "Be9aVJ",
               "ref": "admin:hjjJvB",
               "name": "Nav / Staff",
               "descendants": {
@@ -4074,16 +4110,16 @@
             },
             "admin:Awzbgj": {
               "type": "frame",
-              "id": "yE7GDA",
+              "id": "pfSMox",
               "name": "Content",
               "layout": "vertical",
               "gap": 22,
               "width": "fill_container",
-              "height": "fill_container",
+              "height": "fit_content",
               "children": [
                 {
                   "type": "ref",
-                  "id": "FKZwvn",
+                  "id": "Leid6x",
                   "ref": "admin:bC6Hx7",
                   "name": "Admin/Detail Header",
                   "width": "fill_container",
@@ -4105,14 +4141,14 @@
                     },
                     "admin:WOw9AL": {
                       "type": "frame",
-                      "id": "PGqo5d",
+                      "id": "VnRbr8",
                       "name": "Actions",
                       "gap": 10,
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "ref",
-                          "id": "dgfW53",
+                          "id": "iz85mi",
                           "ref": "admin:TmjZcS",
                           "name": "Button / Create operator",
                           "descendants": {
@@ -4130,7 +4166,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "SiSRRx",
+                  "id": "7ss4e6",
                   "name": "Form",
                   "gap": 16,
                   "alignItems": "start",
@@ -4138,7 +4174,7 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "cBMKPC",
+                      "id": "mnB4mC",
                       "ref": "admin:r1BU8g",
                       "name": "Tile / Operator",
                       "width": "fill_container",
@@ -4157,7 +4193,7 @@
                         },
                         "admin:GjsX0O": {
                           "type": "frame",
-                          "id": "HeyJPt",
+                          "id": "SeNwwM",
                           "name": "Tile Content",
                           "layout": "vertical",
                           "gap": 4,
@@ -4165,7 +4201,7 @@
                           "children": [
                             {
                               "type": "ref",
-                              "id": "BvgLgc",
+                              "id": "SSR3Bh",
                               "ref": "admin:Fc9x99",
                               "name": "Admin/Form Error",
                               "width": "fill_container",
@@ -4177,7 +4213,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "LTEJy6",
+                              "id": "XH8BTr",
                               "ref": "admin:VbDmgA",
                               "name": "Field / Email",
                               "width": "fill_container",
@@ -4198,7 +4234,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "bTUsZA",
+                              "id": "dTjsiJ",
                               "ref": "admin:VbDmgA",
                               "name": "Field / Username",
                               "width": "fill_container",
@@ -4219,7 +4255,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "NcqPok",
+                              "id": "Twdcxt",
                               "ref": "admin:hxksjQ",
                               "name": "Field / Temporary password",
                               "width": "fill_container",
@@ -4240,7 +4276,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "wDCdyD",
+                              "id": "pqiP7w",
                               "ref": "admin:xH59so",
                               "name": "Field / Role",
                               "width": "fill_container",
@@ -4255,7 +4291,7 @@
                             },
                             {
                               "type": "frame",
-                              "id": "BRic2Z",
+                              "id": "tBRYwk",
                               "name": "Field / Permissions",
                               "layout": "vertical",
                               "gap": 2,
@@ -4269,21 +4305,21 @@
                               "children": [
                                 {
                                   "type": "ref",
-                                  "id": "QsrekY",
+                                  "id": "uRPahy",
                                   "ref": "admin:SOt7Oe",
                                   "name": "Text/Body Strong",
                                   "content": "Permissions"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "MBe764",
+                                  "id": "6zv3h8",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / Moderation",
                                   "content": "MODERATION"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "TeShNE",
+                                  "id": "5CwBow",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / reports:read",
                                   "width": "fill_container",
@@ -4298,7 +4334,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "cKZe7z",
+                                  "id": "FWvoAU",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / reports:write",
                                   "width": "fill_container",
@@ -4313,14 +4349,14 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "TcsXST",
+                                  "id": "gGxZwR",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / Accounts",
                                   "content": "ACCOUNTS"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "UpWcvo",
+                                  "id": "769ztz",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / users:read",
                                   "width": "fill_container",
@@ -4335,7 +4371,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "eaUJhE",
+                                  "id": "4vFotx",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / users:write",
                                   "width": "fill_container",
@@ -4350,7 +4386,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "5Wx7yL",
+                                  "id": "Y3NCK2",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / artists:read",
                                   "width": "fill_container",
@@ -4365,7 +4401,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "Hs6Ukt",
+                                  "id": "U4bsQz",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / artists:write",
                                   "width": "fill_container",
@@ -4380,14 +4416,14 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "yXJrHU",
+                                  "id": "CdX6GW",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / Catalog",
                                   "content": "CATALOG"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "t8KAG3",
+                                  "id": "3EF7QC",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / tracks:read",
                                   "width": "fill_container",
@@ -4402,7 +4438,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "wkf86D",
+                                  "id": "eMUodi",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / releases:read",
                                   "width": "fill_container",
@@ -4417,14 +4453,14 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "UMtcBE",
+                                  "id": "RF4s9u",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / System",
                                   "content": "SYSTEM"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "nokv4w",
+                                  "id": "EKA68m",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / audit:read",
                                   "width": "fill_container",
@@ -4439,7 +4475,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "SYnHTh",
+                                  "id": "5HviT2",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / staff:read",
                                   "width": "fill_container",
@@ -4454,7 +4490,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "RWNFJz",
+                                  "id": "ajoJpQ",
                                   "ref": "admin:PiqhAO",
                                   "name": "Text/Caption",
                                   "content": "From Moderator · 7 of 31"
@@ -4467,7 +4503,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "sNBskq",
+                      "id": "W6Bc6J",
                       "name": "Side",
                       "layout": "vertical",
                       "gap": 16,
@@ -4475,7 +4511,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "JPK2Pg",
+                          "id": "gk2LVs",
                           "ref": "admin:r1BU8g",
                           "name": "Tile / Invitation",
                           "width": "fill_container",
@@ -4494,7 +4530,7 @@
                             },
                             "admin:GjsX0O": {
                               "type": "frame",
-                              "id": "CLgtLi",
+                              "id": "gJTZCy",
                               "name": "Tile Content",
                               "layout": "vertical",
                               "gap": 10,
@@ -4502,7 +4538,7 @@
                               "children": [
                                 {
                                   "type": "ref",
-                                  "id": "h9iwsV",
+                                  "id": "S7xnmk",
                                   "ref": "admin:9JboAk",
                                   "name": "Admin/Quote",
                                   "width": "fill_container",
@@ -4514,7 +4550,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "sbeNiq",
+                                  "id": "H58Abu",
                                   "ref": "admin:p0ZiD8",
                                   "name": "KV / Link expires",
                                   "width": "fill_container",
@@ -4529,7 +4565,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "t6baT8",
+                                  "id": "PPuaAc",
                                   "ref": "admin:p0ZiD8",
                                   "name": "KV / Two-step sign-in",
                                   "width": "fill_container",
@@ -4564,10 +4600,10 @@
     },
     {
       "type": "frame",
-      "id": "4dogDp",
+      "id": "xJcFKD",
       "name": "Admin / Staff · New operator / Field errors / Mobile",
       "width": 390,
-      "height": 3600,
+      "height": "fit_content",
       "clip": true,
       "layout": "vertical",
       "fill": [
@@ -4645,15 +4681,15 @@
       "children": [
         {
           "type": "ref",
-          "id": "GRbPPx",
+          "id": "rm8txm",
           "ref": "admin:eqee8W",
           "name": "Admin/Shell/Mobile",
           "width": 390,
-          "height": 3600,
+          "height": "fit_content",
           "descendants": {
             "admin:j6PyZU/admin:lLnPY6": {
               "type": "ref",
-              "id": "AUJbky",
+              "id": "qnRjRW",
               "ref": "admin:CiuO32",
               "name": "Tab / overview",
               "descendants": {
@@ -4667,7 +4703,7 @@
             },
             "admin:j6PyZU/admin:jFtwgM": {
               "type": "ref",
-              "id": "zJa4Db",
+              "id": "NV5F2q",
               "ref": "admin:CiuO32",
               "name": "Tab / alerts",
               "descendants": {
@@ -4681,7 +4717,7 @@
             },
             "admin:j6PyZU/admin:mkQ1an": {
               "type": "ref",
-              "id": "WSGtzg",
+              "id": "n7Zj86",
               "ref": "admin:82Bxeq",
               "name": "Tab / menu",
               "descendants": {
@@ -4695,12 +4731,12 @@
             },
             "admin:gHhjkZ": {
               "type": "frame",
-              "id": "kNZA8p",
+              "id": "dRua7G",
               "name": "Content",
               "layout": "vertical",
               "gap": 16,
               "width": "fill_container",
-              "height": "fill_container",
+              "height": "fit_content",
               "padding": [
                 18,
                 16,
@@ -4711,7 +4747,7 @@
               "children": [
                 {
                   "type": "ref",
-                  "id": "Hi2oMS",
+                  "id": "zHpjHf",
                   "ref": "admin:Ohq36Y",
                   "name": "Admin/Detail Header Compact",
                   "width": "fill_container",
@@ -4737,7 +4773,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "HjnSic",
+                  "id": "SvCPm2",
                   "name": "Page Actions",
                   "gap": 8,
                   "alignItems": "center",
@@ -4745,7 +4781,7 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "WzAQF5",
+                      "id": "uGvSYW",
                       "ref": "admin:TmjZcS",
                       "name": "Button / Create operator",
                       "descendants": {
@@ -4761,7 +4797,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "6FKYxD",
+                  "id": "VXoqzk",
                   "ref": "admin:r1BU8g",
                   "name": "Tile / Operator",
                   "width": "fill_container",
@@ -4780,7 +4816,7 @@
                     },
                     "admin:GjsX0O": {
                       "type": "frame",
-                      "id": "wyxzhN",
+                      "id": "QVMBUZ",
                       "name": "Tile Content",
                       "layout": "vertical",
                       "gap": 4,
@@ -4788,7 +4824,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "Vq5uKT",
+                          "id": "yAT3Fj",
                           "ref": "admin:Fc9x99",
                           "name": "Admin/Form Error",
                           "width": "fill_container",
@@ -4800,7 +4836,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "sBMTN6",
+                          "id": "CweAXH",
                           "ref": "admin:VbDmgA",
                           "name": "Field / Email",
                           "width": "fill_container",
@@ -4821,7 +4857,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "ynmsqQ",
+                          "id": "zDk3Nt",
                           "ref": "admin:VbDmgA",
                           "name": "Field / Username",
                           "width": "fill_container",
@@ -4842,7 +4878,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "V78v4G",
+                          "id": "5i2n4w",
                           "ref": "admin:hxksjQ",
                           "name": "Field / Temporary password",
                           "width": "fill_container",
@@ -4863,7 +4899,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "5LQxDf",
+                          "id": "Q2RWS2",
                           "ref": "admin:xH59so",
                           "name": "Field / Role",
                           "width": "fill_container",
@@ -4878,7 +4914,7 @@
                         },
                         {
                           "type": "frame",
-                          "id": "WoiQFn",
+                          "id": "LTT9Fd",
                           "name": "Field / Permissions",
                           "layout": "vertical",
                           "gap": 2,
@@ -4892,21 +4928,21 @@
                           "children": [
                             {
                               "type": "ref",
-                              "id": "6s9vgQ",
+                              "id": "i3imN3",
                               "ref": "admin:SOt7Oe",
                               "name": "Text/Body Strong",
                               "content": "Permissions"
                             },
                             {
                               "type": "ref",
-                              "id": "VnCzRo",
+                              "id": "e3yFw2",
                               "ref": "admin:yjiPHo",
                               "name": "Group / Moderation",
                               "content": "MODERATION"
                             },
                             {
                               "type": "ref",
-                              "id": "s6Gf6n",
+                              "id": "cxrDNi",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / reports:read",
                               "width": "fill_container",
@@ -4921,7 +4957,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "CcSiJk",
+                              "id": "48thwe",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / reports:write",
                               "width": "fill_container",
@@ -4936,14 +4972,14 @@
                             },
                             {
                               "type": "ref",
-                              "id": "m6yJeC",
+                              "id": "aWPLMV",
                               "ref": "admin:yjiPHo",
                               "name": "Group / Accounts",
                               "content": "ACCOUNTS"
                             },
                             {
                               "type": "ref",
-                              "id": "BqdWDP",
+                              "id": "b3R3PC",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / users:read",
                               "width": "fill_container",
@@ -4958,7 +4994,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "eZ6PER",
+                              "id": "DsDKen",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / users:write",
                               "width": "fill_container",
@@ -4973,7 +5009,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "seB58a",
+                              "id": "xeeJFs",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / artists:read",
                               "width": "fill_container",
@@ -4988,7 +5024,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "sLyGNc",
+                              "id": "xzwZVz",
                               "ref": "admin:NrivlM",
                               "name": "Permission / artists:write",
                               "width": "fill_container",
@@ -5003,14 +5039,14 @@
                             },
                             {
                               "type": "ref",
-                              "id": "L5g7Fr",
+                              "id": "nJmtyn",
                               "ref": "admin:yjiPHo",
                               "name": "Group / Catalog",
                               "content": "CATALOG"
                             },
                             {
                               "type": "ref",
-                              "id": "QPZGRB",
+                              "id": "cSK657",
                               "ref": "admin:NrivlM",
                               "name": "Permission / tracks:read",
                               "width": "fill_container",
@@ -5025,7 +5061,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "JJb5K8",
+                              "id": "mjDxuP",
                               "ref": "admin:NrivlM",
                               "name": "Permission / releases:read",
                               "width": "fill_container",
@@ -5040,14 +5076,14 @@
                             },
                             {
                               "type": "ref",
-                              "id": "SrDZF3",
+                              "id": "fCY6t6",
                               "ref": "admin:yjiPHo",
                               "name": "Group / System",
                               "content": "SYSTEM"
                             },
                             {
                               "type": "ref",
-                              "id": "gRJtZJ",
+                              "id": "q7kZ8N",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / audit:read",
                               "width": "fill_container",
@@ -5062,7 +5098,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "BdjT4t",
+                              "id": "RT4No8",
                               "ref": "admin:NrivlM",
                               "name": "Permission / staff:read",
                               "width": "fill_container",
@@ -5077,7 +5113,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "2xW4rK",
+                              "id": "kxVFNu",
                               "ref": "admin:PiqhAO",
                               "name": "Text/Caption",
                               "content": "From Moderator · 7 of 31"
@@ -5090,7 +5126,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "M3Uyc8",
+                  "id": "xCmmPh",
                   "ref": "admin:r1BU8g",
                   "name": "Tile / Invitation",
                   "width": "fill_container",
@@ -5109,7 +5145,7 @@
                     },
                     "admin:GjsX0O": {
                       "type": "frame",
-                      "id": "KuvNiv",
+                      "id": "oRPdXi",
                       "name": "Tile Content",
                       "layout": "vertical",
                       "gap": 10,
@@ -5117,7 +5153,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "2GBLmy",
+                          "id": "33QNoJ",
                           "ref": "admin:9JboAk",
                           "name": "Admin/Quote",
                           "width": "fill_container",
@@ -5129,7 +5165,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "rDufnv",
+                          "id": "eaKsbB",
                           "ref": "admin:p0ZiD8",
                           "name": "KV / Link expires",
                           "width": "fill_container",
@@ -5144,7 +5180,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "R26ek5",
+                          "id": "C2mnTZ",
                           "ref": "admin:p0ZiD8",
                           "name": "KV / Two-step sign-in",
                           "width": "fill_container",
@@ -5175,10 +5211,10 @@
     },
     {
       "type": "frame",
-      "id": "wsLgCj",
+      "id": "XkcvUA",
       "name": "Admin / Staff · New operator / Saving / Desktop",
       "width": 1440,
-      "height": 1800,
+      "height": "fit_content",
       "clip": true,
       "layout": "vertical",
       "fill": [
@@ -5256,15 +5292,21 @@
       "children": [
         {
           "type": "ref",
-          "id": "jdyLkE",
+          "id": "DpsZwk",
           "ref": "admin:6pveax",
           "name": "Admin/Shell/Desktop",
           "width": 1440,
-          "height": 1800,
+          "height": "fit_content",
           "descendants": {
+            "admin:zl2c4D": {
+              "height": "fit_content"
+            },
+            "admin:wFn9uy": {
+              "height": 968
+            },
             "admin:lLbknp": {
               "type": "ref",
-              "id": "RWxjTq",
+              "id": "PrAuAc",
               "ref": "admin:hjjJvB",
               "name": "Nav / Staff",
               "descendants": {
@@ -5297,21 +5339,24 @@
             "admin:XPquuw/admin:0eCc2N": {
               "content": "Creating…"
             },
+            "admin:XPquuw/admin:luuxma": {
+              "enabled": false
+            },
             "admin:qXGi6t": {
               "width": 260
             },
             "admin:Awzbgj": {
               "type": "frame",
-              "id": "6udesE",
+              "id": "vCuM2i",
               "name": "Content",
               "layout": "vertical",
               "gap": 22,
               "width": "fill_container",
-              "height": "fill_container",
+              "height": "fit_content",
               "children": [
                 {
                   "type": "ref",
-                  "id": "ze6GfJ",
+                  "id": "WnLAgP",
                   "ref": "admin:bC6Hx7",
                   "name": "Admin/Detail Header",
                   "width": "fill_container",
@@ -5333,14 +5378,14 @@
                     },
                     "admin:WOw9AL": {
                       "type": "frame",
-                      "id": "z4oQGR",
+                      "id": "uMVq7E",
                       "name": "Actions",
                       "gap": 10,
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "ref",
-                          "id": "VXSRFi",
+                          "id": "omcvMT",
                           "ref": "admin:TmjZcS",
                           "name": "Button / Creating…",
                           "descendants": {
@@ -5358,7 +5403,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "XyBv7b",
+                  "id": "jSUBUU",
                   "name": "Form",
                   "gap": 16,
                   "alignItems": "start",
@@ -5366,7 +5411,7 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "kiXc8E",
+                      "id": "fr9ncy",
                       "ref": "admin:r1BU8g",
                       "name": "Tile / Operator",
                       "width": "fill_container",
@@ -5385,7 +5430,7 @@
                         },
                         "admin:GjsX0O": {
                           "type": "frame",
-                          "id": "u8uD66",
+                          "id": "LmXGqg",
                           "name": "Tile Content",
                           "layout": "vertical",
                           "gap": 4,
@@ -5393,7 +5438,7 @@
                           "children": [
                             {
                               "type": "ref",
-                              "id": "HoBBr7",
+                              "id": "Mw3mRe",
                               "ref": "admin:hxksjQ",
                               "name": "Field / Email",
                               "width": "fill_container",
@@ -5414,7 +5459,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "2z88Q7",
+                              "id": "Pv2LQS",
                               "ref": "admin:hxksjQ",
                               "name": "Field / Username",
                               "width": "fill_container",
@@ -5435,7 +5480,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "ReeohN",
+                              "id": "NsWzCt",
                               "ref": "admin:hxksjQ",
                               "name": "Field / Temporary password",
                               "width": "fill_container",
@@ -5456,7 +5501,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "FCwMqo",
+                              "id": "tyGumf",
                               "ref": "admin:xH59so",
                               "name": "Field / Role",
                               "width": "fill_container",
@@ -5471,7 +5516,7 @@
                             },
                             {
                               "type": "frame",
-                              "id": "GdQDWv",
+                              "id": "3ZFMmq",
                               "name": "Field / Permissions",
                               "layout": "vertical",
                               "gap": 2,
@@ -5485,21 +5530,21 @@
                               "children": [
                                 {
                                   "type": "ref",
-                                  "id": "MyJV8d",
+                                  "id": "uBQJau",
                                   "ref": "admin:SOt7Oe",
                                   "name": "Text/Body Strong",
                                   "content": "Permissions"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "b9FMvU",
+                                  "id": "2U58r4",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / Moderation",
                                   "content": "MODERATION"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "si24nk",
+                                  "id": "GEzLYZ",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / reports:read",
                                   "width": "fill_container",
@@ -5514,7 +5559,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "dZMvVR",
+                                  "id": "nTND9h",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / reports:write",
                                   "width": "fill_container",
@@ -5529,14 +5574,14 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "Vs99W4",
+                                  "id": "nQYTX3",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / Accounts",
                                   "content": "ACCOUNTS"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "mwSPPB",
+                                  "id": "S3LQhf",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / users:read",
                                   "width": "fill_container",
@@ -5551,7 +5596,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "UcZ6df",
+                                  "id": "cxUr9i",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / users:write",
                                   "width": "fill_container",
@@ -5566,7 +5611,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "VW2XCE",
+                                  "id": "uUwScc",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / artists:read",
                                   "width": "fill_container",
@@ -5581,7 +5626,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "kQhgRe",
+                                  "id": "NaT4ZW",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / artists:write",
                                   "width": "fill_container",
@@ -5596,14 +5641,14 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "WntmdJ",
+                                  "id": "9xDH6w",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / Catalog",
                                   "content": "CATALOG"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "WKt7oL",
+                                  "id": "w2y7Bx",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / tracks:read",
                                   "width": "fill_container",
@@ -5618,7 +5663,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "boLYeU",
+                                  "id": "5PsZqD",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / releases:read",
                                   "width": "fill_container",
@@ -5633,14 +5678,14 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "tWwohj",
+                                  "id": "5ts7gi",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / System",
                                   "content": "SYSTEM"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "dSrFgp",
+                                  "id": "C5T8QU",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / audit:read",
                                   "width": "fill_container",
@@ -5655,7 +5700,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "RVHUST",
+                                  "id": "7m6ybQ",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / staff:read",
                                   "width": "fill_container",
@@ -5670,7 +5715,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "WpRXY3",
+                                  "id": "X5tcm4",
                                   "ref": "admin:PiqhAO",
                                   "name": "Text/Caption",
                                   "content": "From Moderator · 7 of 31"
@@ -5683,7 +5728,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "WkPzae",
+                      "id": "fdjYs7",
                       "name": "Side",
                       "layout": "vertical",
                       "gap": 16,
@@ -5691,7 +5736,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "bo7sT3",
+                          "id": "FMpvee",
                           "ref": "admin:r1BU8g",
                           "name": "Tile / Invitation",
                           "width": "fill_container",
@@ -5710,7 +5755,7 @@
                             },
                             "admin:GjsX0O": {
                               "type": "frame",
-                              "id": "gh2uf2",
+                              "id": "EpLWPZ",
                               "name": "Tile Content",
                               "layout": "vertical",
                               "gap": 10,
@@ -5718,7 +5763,7 @@
                               "children": [
                                 {
                                   "type": "ref",
-                                  "id": "Yjd26k",
+                                  "id": "TEgokx",
                                   "ref": "admin:9JboAk",
                                   "name": "Admin/Quote",
                                   "width": "fill_container",
@@ -5730,7 +5775,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "fpyDpT",
+                                  "id": "sAwm7T",
                                   "ref": "admin:p0ZiD8",
                                   "name": "KV / Link expires",
                                   "width": "fill_container",
@@ -5745,7 +5790,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "WACCrN",
+                                  "id": "cGWB44",
                                   "ref": "admin:p0ZiD8",
                                   "name": "KV / Two-step sign-in",
                                   "width": "fill_container",
@@ -5780,10 +5825,10 @@
     },
     {
       "type": "frame",
-      "id": "8Mwo5H",
+      "id": "mp6r7u",
       "name": "Admin / Staff · New operator / Saving / Mobile",
       "width": 390,
-      "height": 3600,
+      "height": "fit_content",
       "clip": true,
       "layout": "vertical",
       "fill": [
@@ -5861,15 +5906,15 @@
       "children": [
         {
           "type": "ref",
-          "id": "8Tyfoa",
+          "id": "9KspYR",
           "ref": "admin:eqee8W",
           "name": "Admin/Shell/Mobile",
           "width": 390,
-          "height": 3600,
+          "height": "fit_content",
           "descendants": {
             "admin:j6PyZU/admin:lLnPY6": {
               "type": "ref",
-              "id": "yTiXzW",
+              "id": "HnGeoR",
               "ref": "admin:CiuO32",
               "name": "Tab / overview",
               "descendants": {
@@ -5883,7 +5928,7 @@
             },
             "admin:j6PyZU/admin:jFtwgM": {
               "type": "ref",
-              "id": "6PzXcD",
+              "id": "TU4kuQ",
               "ref": "admin:CiuO32",
               "name": "Tab / alerts",
               "descendants": {
@@ -5897,7 +5942,7 @@
             },
             "admin:j6PyZU/admin:mkQ1an": {
               "type": "ref",
-              "id": "SGrgzx",
+              "id": "jYVtqp",
               "ref": "admin:82Bxeq",
               "name": "Tab / menu",
               "descendants": {
@@ -5911,12 +5956,12 @@
             },
             "admin:gHhjkZ": {
               "type": "frame",
-              "id": "drLC3k",
+              "id": "bWHWkU",
               "name": "Content",
               "layout": "vertical",
               "gap": 16,
               "width": "fill_container",
-              "height": "fill_container",
+              "height": "fit_content",
               "padding": [
                 18,
                 16,
@@ -5927,7 +5972,7 @@
               "children": [
                 {
                   "type": "ref",
-                  "id": "DfU8wQ",
+                  "id": "prJsjT",
                   "ref": "admin:Ohq36Y",
                   "name": "Admin/Detail Header Compact",
                   "width": "fill_container",
@@ -5953,7 +5998,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "EFqJdE",
+                  "id": "muZ2V6",
                   "name": "Page Actions",
                   "gap": 8,
                   "alignItems": "center",
@@ -5961,7 +6006,7 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "LPF2Rf",
+                      "id": "pMiTXE",
                       "ref": "admin:TmjZcS",
                       "name": "Button / Creating…",
                       "descendants": {
@@ -5977,7 +6022,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "iCVPti",
+                  "id": "KYLkEp",
                   "ref": "admin:r1BU8g",
                   "name": "Tile / Operator",
                   "width": "fill_container",
@@ -5996,7 +6041,7 @@
                     },
                     "admin:GjsX0O": {
                       "type": "frame",
-                      "id": "e8t8Dn",
+                      "id": "VZSJqv",
                       "name": "Tile Content",
                       "layout": "vertical",
                       "gap": 4,
@@ -6004,7 +6049,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "NnPmQn",
+                          "id": "avJfWg",
                           "ref": "admin:hxksjQ",
                           "name": "Field / Email",
                           "width": "fill_container",
@@ -6025,7 +6070,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "VJB83z",
+                          "id": "e8JZXb",
                           "ref": "admin:hxksjQ",
                           "name": "Field / Username",
                           "width": "fill_container",
@@ -6046,7 +6091,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "AxKa8e",
+                          "id": "avaPqb",
                           "ref": "admin:hxksjQ",
                           "name": "Field / Temporary password",
                           "width": "fill_container",
@@ -6067,7 +6112,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "Cefdhz",
+                          "id": "k9LYE2",
                           "ref": "admin:xH59so",
                           "name": "Field / Role",
                           "width": "fill_container",
@@ -6082,7 +6127,7 @@
                         },
                         {
                           "type": "frame",
-                          "id": "FdmdEm",
+                          "id": "3tpZE4",
                           "name": "Field / Permissions",
                           "layout": "vertical",
                           "gap": 2,
@@ -6096,21 +6141,21 @@
                           "children": [
                             {
                               "type": "ref",
-                              "id": "RGSiNP",
+                              "id": "6Ss8gh",
                               "ref": "admin:SOt7Oe",
                               "name": "Text/Body Strong",
                               "content": "Permissions"
                             },
                             {
                               "type": "ref",
-                              "id": "eJQJst",
+                              "id": "TAyxuJ",
                               "ref": "admin:yjiPHo",
                               "name": "Group / Moderation",
                               "content": "MODERATION"
                             },
                             {
                               "type": "ref",
-                              "id": "C67utM",
+                              "id": "swEQdf",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / reports:read",
                               "width": "fill_container",
@@ -6125,7 +6170,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "n4vYPY",
+                              "id": "572WiT",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / reports:write",
                               "width": "fill_container",
@@ -6140,14 +6185,14 @@
                             },
                             {
                               "type": "ref",
-                              "id": "zAAwE7",
+                              "id": "kPKK9z",
                               "ref": "admin:yjiPHo",
                               "name": "Group / Accounts",
                               "content": "ACCOUNTS"
                             },
                             {
                               "type": "ref",
-                              "id": "TNanvy",
+                              "id": "x4KwsK",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / users:read",
                               "width": "fill_container",
@@ -6162,7 +6207,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "NbfSg6",
+                              "id": "YU7aVr",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / users:write",
                               "width": "fill_container",
@@ -6177,7 +6222,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "aQSFTx",
+                              "id": "d7HCGk",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / artists:read",
                               "width": "fill_container",
@@ -6192,7 +6237,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "MqsZ3R",
+                              "id": "Te9ZSF",
                               "ref": "admin:NrivlM",
                               "name": "Permission / artists:write",
                               "width": "fill_container",
@@ -6207,14 +6252,14 @@
                             },
                             {
                               "type": "ref",
-                              "id": "eF5Aqj",
+                              "id": "RaJXdc",
                               "ref": "admin:yjiPHo",
                               "name": "Group / Catalog",
                               "content": "CATALOG"
                             },
                             {
                               "type": "ref",
-                              "id": "hXSSkg",
+                              "id": "qxkypA",
                               "ref": "admin:NrivlM",
                               "name": "Permission / tracks:read",
                               "width": "fill_container",
@@ -6229,7 +6274,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "WXn2cG",
+                              "id": "ctuT4x",
                               "ref": "admin:NrivlM",
                               "name": "Permission / releases:read",
                               "width": "fill_container",
@@ -6244,14 +6289,14 @@
                             },
                             {
                               "type": "ref",
-                              "id": "Q7TVvg",
+                              "id": "t5JZUb",
                               "ref": "admin:yjiPHo",
                               "name": "Group / System",
                               "content": "SYSTEM"
                             },
                             {
                               "type": "ref",
-                              "id": "Kmpnad",
+                              "id": "zruB6R",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / audit:read",
                               "width": "fill_container",
@@ -6266,7 +6311,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "fycKGb",
+                              "id": "qo3yBx",
                               "ref": "admin:NrivlM",
                               "name": "Permission / staff:read",
                               "width": "fill_container",
@@ -6281,7 +6326,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "gMidyX",
+                              "id": "NYVX7q",
                               "ref": "admin:PiqhAO",
                               "name": "Text/Caption",
                               "content": "From Moderator · 7 of 31"
@@ -6294,7 +6339,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "JVauqr",
+                  "id": "kB7xxg",
                   "ref": "admin:r1BU8g",
                   "name": "Tile / Invitation",
                   "width": "fill_container",
@@ -6313,7 +6358,7 @@
                     },
                     "admin:GjsX0O": {
                       "type": "frame",
-                      "id": "pKjruv",
+                      "id": "6Aq6tZ",
                       "name": "Tile Content",
                       "layout": "vertical",
                       "gap": 10,
@@ -6321,7 +6366,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "CFGseS",
+                          "id": "FC6tnx",
                           "ref": "admin:9JboAk",
                           "name": "Admin/Quote",
                           "width": "fill_container",
@@ -6333,7 +6378,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "peNZ7X",
+                          "id": "7ikyzo",
                           "ref": "admin:p0ZiD8",
                           "name": "KV / Link expires",
                           "width": "fill_container",
@@ -6348,7 +6393,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "Rrqxzy",
+                          "id": "B3yed5",
                           "ref": "admin:p0ZiD8",
                           "name": "KV / Two-step sign-in",
                           "width": "fill_container",
@@ -6379,10 +6424,10 @@
     },
     {
       "type": "frame",
-      "id": "i7zect",
+      "id": "xWaqC8",
       "name": "Admin / Staff · New operator / Error / Desktop",
       "width": 1440,
-      "height": 1800,
+      "height": "fit_content",
       "clip": true,
       "layout": "vertical",
       "fill": [
@@ -6460,15 +6505,21 @@
       "children": [
         {
           "type": "ref",
-          "id": "fDyYud",
+          "id": "Xeq6WZ",
           "ref": "admin:6pveax",
           "name": "Admin/Shell/Desktop",
           "width": 1440,
-          "height": 1800,
+          "height": "fit_content",
           "descendants": {
+            "admin:zl2c4D": {
+              "height": "fit_content"
+            },
+            "admin:wFn9uy": {
+              "height": 968
+            },
             "admin:lLbknp": {
               "type": "ref",
-              "id": "PXRn2e",
+              "id": "moFTEt",
               "ref": "admin:hjjJvB",
               "name": "Nav / Staff",
               "descendants": {
@@ -6494,16 +6545,16 @@
             },
             "admin:Awzbgj": {
               "type": "frame",
-              "id": "M5cxHt",
+              "id": "zDdCLK",
               "name": "Content",
               "layout": "vertical",
               "gap": 22,
               "width": "fill_container",
-              "height": "fill_container",
+              "height": "fit_content",
               "children": [
                 {
                   "type": "ref",
-                  "id": "ZgbhVY",
+                  "id": "Y5ZyKY",
                   "ref": "admin:bC6Hx7",
                   "name": "Admin/Detail Header",
                   "width": "fill_container",
@@ -6525,7 +6576,7 @@
                     },
                     "admin:WOw9AL": {
                       "type": "frame",
-                      "id": "GF7wWJ",
+                      "id": "VdeiEC",
                       "name": "Actions",
                       "gap": 10,
                       "alignItems": "center",
@@ -6535,14 +6586,14 @@
                 },
                 {
                   "type": "ref",
-                  "id": "KF5iuZ",
+                  "id": "Zucvtk",
                   "ref": "admin:xsQJgc",
                   "name": "Panel",
                   "width": "fill_container",
                   "descendants": {
                     "admin:dfUnj7": {
                       "type": "frame",
-                      "id": "STeeSZ",
+                      "id": "EH4Rkc",
                       "name": "Panel Content",
                       "layout": "vertical",
                       "gap": 0,
@@ -6550,7 +6601,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "8j9Bod",
+                          "id": "r58qev",
                           "ref": "admin:nLmd3e",
                           "name": "Message / Error",
                           "width": "fill_container",
@@ -6588,10 +6639,10 @@
     },
     {
       "type": "frame",
-      "id": "vFzxZb",
+      "id": "vSURM4",
       "name": "Admin / Staff · New operator / Error / Mobile",
       "width": 390,
-      "height": 3600,
+      "height": "fit_content",
       "clip": true,
       "layout": "vertical",
       "fill": [
@@ -6669,15 +6720,15 @@
       "children": [
         {
           "type": "ref",
-          "id": "6Q7rgt",
+          "id": "CMMWgk",
           "ref": "admin:eqee8W",
           "name": "Admin/Shell/Mobile",
           "width": 390,
-          "height": 3600,
+          "height": "fit_content",
           "descendants": {
             "admin:j6PyZU/admin:lLnPY6": {
               "type": "ref",
-              "id": "CHyZGv",
+              "id": "pZsPtq",
               "ref": "admin:CiuO32",
               "name": "Tab / overview",
               "descendants": {
@@ -6691,7 +6742,7 @@
             },
             "admin:j6PyZU/admin:jFtwgM": {
               "type": "ref",
-              "id": "osJPiv",
+              "id": "eUWeLy",
               "ref": "admin:CiuO32",
               "name": "Tab / alerts",
               "descendants": {
@@ -6705,7 +6756,7 @@
             },
             "admin:j6PyZU/admin:mkQ1an": {
               "type": "ref",
-              "id": "4QwuMb",
+              "id": "DSF6Yd",
               "ref": "admin:82Bxeq",
               "name": "Tab / menu",
               "descendants": {
@@ -6719,12 +6770,12 @@
             },
             "admin:gHhjkZ": {
               "type": "frame",
-              "id": "eL6sjN",
+              "id": "Qjmx8q",
               "name": "Content",
               "layout": "vertical",
               "gap": 16,
               "width": "fill_container",
-              "height": "fill_container",
+              "height": "fit_content",
               "padding": [
                 18,
                 16,
@@ -6735,7 +6786,7 @@
               "children": [
                 {
                   "type": "ref",
-                  "id": "qE9X7x",
+                  "id": "ZEL2td",
                   "ref": "admin:Ohq36Y",
                   "name": "Admin/Detail Header Compact",
                   "width": "fill_container",
@@ -6761,14 +6812,14 @@
                 },
                 {
                   "type": "ref",
-                  "id": "fkZyZg",
+                  "id": "UJ6SZL",
                   "ref": "admin:xsQJgc",
                   "name": "Panel",
                   "width": "fill_container",
                   "descendants": {
                     "admin:dfUnj7": {
                       "type": "frame",
-                      "id": "gVddVv",
+                      "id": "JW8sZs",
                       "name": "Panel Content",
                       "layout": "vertical",
                       "gap": 0,
@@ -6776,7 +6827,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "EspJgt",
+                          "id": "H6Wkf4",
                           "ref": "admin:nLmd3e",
                           "name": "Message / Error",
                           "width": "fill_container",
@@ -6814,10 +6865,10 @@
     },
     {
       "type": "frame",
-      "id": "nTfRKe",
+      "id": "AyytZF",
       "name": "Admin / Staff · New operator / Restricted / Desktop",
       "width": 1440,
-      "height": 1800,
+      "height": "fit_content",
       "clip": true,
       "layout": "vertical",
       "fill": [
@@ -6895,15 +6946,21 @@
       "children": [
         {
           "type": "ref",
-          "id": "DzmXWN",
+          "id": "TDYKdf",
           "ref": "admin:6pveax",
           "name": "Admin/Shell/Desktop",
           "width": 1440,
-          "height": 1800,
+          "height": "fit_content",
           "descendants": {
+            "admin:zl2c4D": {
+              "height": "fit_content"
+            },
+            "admin:wFn9uy": {
+              "height": 968
+            },
             "admin:lLbknp": {
               "type": "ref",
-              "id": "Dges3n",
+              "id": "2Zc6qZ",
               "ref": "admin:hjjJvB",
               "name": "Nav / Staff",
               "descendants": {
@@ -6929,16 +6986,16 @@
             },
             "admin:Awzbgj": {
               "type": "frame",
-              "id": "G36M7g",
+              "id": "wpNwP3",
               "name": "Content",
               "layout": "vertical",
               "gap": 22,
               "width": "fill_container",
-              "height": "fill_container",
+              "height": "fit_content",
               "children": [
                 {
                   "type": "ref",
-                  "id": "Vcad5T",
+                  "id": "jpJXki",
                   "ref": "admin:bC6Hx7",
                   "name": "Admin/Detail Header",
                   "width": "fill_container",
@@ -6960,7 +7017,7 @@
                     },
                     "admin:WOw9AL": {
                       "type": "frame",
-                      "id": "9tE5h2",
+                      "id": "nRGc5G",
                       "name": "Actions",
                       "gap": 10,
                       "alignItems": "center",
@@ -6970,14 +7027,14 @@
                 },
                 {
                   "type": "ref",
-                  "id": "WByAg6",
+                  "id": "9t5hHY",
                   "ref": "admin:xsQJgc",
                   "name": "Panel",
                   "width": "fill_container",
                   "descendants": {
                     "admin:dfUnj7": {
                       "type": "frame",
-                      "id": "P52Ei7",
+                      "id": "2wiVJJ",
                       "name": "Panel Content",
                       "layout": "vertical",
                       "gap": 0,
@@ -6985,7 +7042,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "YcFeyC",
+                          "id": "xcwGJM",
                           "ref": "admin:JfGOsj",
                           "name": "Message / Locked",
                           "width": "fill_container",
@@ -7017,10 +7074,10 @@
     },
     {
       "type": "frame",
-      "id": "BjyTDa",
+      "id": "Wuxm2d",
       "name": "Admin / Staff · New operator / Restricted / Mobile",
       "width": 390,
-      "height": 3600,
+      "height": "fit_content",
       "clip": true,
       "layout": "vertical",
       "fill": [
@@ -7098,15 +7155,15 @@
       "children": [
         {
           "type": "ref",
-          "id": "tTp9LY",
+          "id": "bYxTNY",
           "ref": "admin:eqee8W",
           "name": "Admin/Shell/Mobile",
           "width": 390,
-          "height": 3600,
+          "height": "fit_content",
           "descendants": {
             "admin:j6PyZU/admin:lLnPY6": {
               "type": "ref",
-              "id": "FGBof4",
+              "id": "NMXRxz",
               "ref": "admin:CiuO32",
               "name": "Tab / overview",
               "descendants": {
@@ -7120,7 +7177,7 @@
             },
             "admin:j6PyZU/admin:jFtwgM": {
               "type": "ref",
-              "id": "9f9NeC",
+              "id": "5FkPAL",
               "ref": "admin:CiuO32",
               "name": "Tab / alerts",
               "descendants": {
@@ -7134,7 +7191,7 @@
             },
             "admin:j6PyZU/admin:mkQ1an": {
               "type": "ref",
-              "id": "8tWqLh",
+              "id": "zrqoss",
               "ref": "admin:82Bxeq",
               "name": "Tab / menu",
               "descendants": {
@@ -7148,12 +7205,12 @@
             },
             "admin:gHhjkZ": {
               "type": "frame",
-              "id": "CEBqwU",
+              "id": "QgRmFQ",
               "name": "Content",
               "layout": "vertical",
               "gap": 16,
               "width": "fill_container",
-              "height": "fill_container",
+              "height": "fit_content",
               "padding": [
                 18,
                 16,
@@ -7164,7 +7221,7 @@
               "children": [
                 {
                   "type": "ref",
-                  "id": "4o85od",
+                  "id": "eRM6Wf",
                   "ref": "admin:Ohq36Y",
                   "name": "Admin/Detail Header Compact",
                   "width": "fill_container",
@@ -7190,14 +7247,14 @@
                 },
                 {
                   "type": "ref",
-                  "id": "jHmJM7",
+                  "id": "rQvubH",
                   "ref": "admin:xsQJgc",
                   "name": "Panel",
                   "width": "fill_container",
                   "descendants": {
                     "admin:dfUnj7": {
                       "type": "frame",
-                      "id": "QuC73f",
+                      "id": "hRDica",
                       "name": "Panel Content",
                       "layout": "vertical",
                       "gap": 0,
@@ -7205,7 +7262,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "VeEC59",
+                          "id": "tKZwNP",
                           "ref": "admin:JfGOsj",
                           "name": "Message / Locked",
                           "width": "fill_container",
@@ -7237,10 +7294,10 @@
     },
     {
       "type": "frame",
-      "id": "aXrXe4",
+      "id": "XLESht",
       "name": "Admin / Staff · New operator / Offline / Desktop",
       "width": 1440,
-      "height": 1800,
+      "height": "fit_content",
       "clip": true,
       "layout": "vertical",
       "fill": [
@@ -7318,15 +7375,21 @@
       "children": [
         {
           "type": "ref",
-          "id": "h8rvJc",
+          "id": "65kgDu",
           "ref": "admin:6pveax",
           "name": "Admin/Shell/Desktop",
           "width": 1440,
-          "height": 1800,
+          "height": "fit_content",
           "descendants": {
+            "admin:zl2c4D": {
+              "height": "fit_content"
+            },
+            "admin:wFn9uy": {
+              "height": 968
+            },
             "admin:lLbknp": {
               "type": "ref",
-              "id": "hyV4MJ",
+              "id": "Qnjypg",
               "ref": "admin:hjjJvB",
               "name": "Nav / Staff",
               "descendants": {
@@ -7371,16 +7434,16 @@
             },
             "admin:Awzbgj": {
               "type": "frame",
-              "id": "ihWbw3",
+              "id": "5mXSz6",
               "name": "Content",
               "layout": "vertical",
               "gap": 22,
               "width": "fill_container",
-              "height": "fill_container",
+              "height": "fit_content",
               "children": [
                 {
                   "type": "ref",
-                  "id": "bzVPj4",
+                  "id": "ZQ8tUZ",
                   "ref": "admin:bC6Hx7",
                   "name": "Admin/Detail Header",
                   "width": "fill_container",
@@ -7402,14 +7465,14 @@
                     },
                     "admin:WOw9AL": {
                       "type": "frame",
-                      "id": "MXGHdL",
+                      "id": "Popn4W",
                       "name": "Actions",
                       "gap": 10,
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "ref",
-                          "id": "McexXa",
+                          "id": "BPqB8e",
                           "ref": "admin:TmjZcS",
                           "name": "Button / Create operator",
                           "descendants": {
@@ -7428,7 +7491,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "TWo5Wi",
+                  "id": "Ngg3DY",
                   "ref": "admin:n2GO8k",
                   "name": "Offline",
                   "width": "fill_container",
@@ -7452,7 +7515,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "nxAcZK",
+                  "id": "rfAHsV",
                   "name": "Form",
                   "gap": 16,
                   "alignItems": "start",
@@ -7460,7 +7523,7 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "JyWZ3b",
+                      "id": "jQwcAf",
                       "ref": "admin:r1BU8g",
                       "name": "Tile / Operator",
                       "width": "fill_container",
@@ -7479,7 +7542,7 @@
                         },
                         "admin:GjsX0O": {
                           "type": "frame",
-                          "id": "6cPMN6",
+                          "id": "3wCdVP",
                           "name": "Tile Content",
                           "layout": "vertical",
                           "gap": 4,
@@ -7487,7 +7550,7 @@
                           "children": [
                             {
                               "type": "ref",
-                              "id": "UF5dHx",
+                              "id": "7FJHMm",
                               "ref": "admin:hxksjQ",
                               "name": "Field / Email",
                               "width": "fill_container",
@@ -7508,7 +7571,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "Qnkuyx",
+                              "id": "WbgpeN",
                               "ref": "admin:hxksjQ",
                               "name": "Field / Username",
                               "width": "fill_container",
@@ -7529,7 +7592,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "L2a3YL",
+                              "id": "JvhKSx",
                               "ref": "admin:hxksjQ",
                               "name": "Field / Temporary password",
                               "width": "fill_container",
@@ -7550,7 +7613,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "ZiTGRZ",
+                              "id": "NPB2yP",
                               "ref": "admin:xH59so",
                               "name": "Field / Role",
                               "width": "fill_container",
@@ -7565,7 +7628,7 @@
                             },
                             {
                               "type": "frame",
-                              "id": "mpNZyw",
+                              "id": "5hWYsN",
                               "name": "Field / Permissions",
                               "layout": "vertical",
                               "gap": 2,
@@ -7579,21 +7642,21 @@
                               "children": [
                                 {
                                   "type": "ref",
-                                  "id": "RmLhW5",
+                                  "id": "9QLQeY",
                                   "ref": "admin:SOt7Oe",
                                   "name": "Text/Body Strong",
                                   "content": "Permissions"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "M8aW4e",
+                                  "id": "b5rXDD",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / Moderation",
                                   "content": "MODERATION"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "obJhF6",
+                                  "id": "ZV7VUx",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / reports:read",
                                   "width": "fill_container",
@@ -7608,7 +7671,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "gNo9as",
+                                  "id": "XvyFZZ",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / reports:write",
                                   "width": "fill_container",
@@ -7623,14 +7686,14 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "xrBthu",
+                                  "id": "trBpgc",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / Accounts",
                                   "content": "ACCOUNTS"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "jJvrCC",
+                                  "id": "g8GMBh",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / users:read",
                                   "width": "fill_container",
@@ -7645,7 +7708,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "roS7ys",
+                                  "id": "SFsH8h",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / users:write",
                                   "width": "fill_container",
@@ -7660,7 +7723,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "nJ9oJx",
+                                  "id": "HaJYBM",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / artists:read",
                                   "width": "fill_container",
@@ -7675,7 +7738,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "PNHS62",
+                                  "id": "Lo75fN",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / artists:write",
                                   "width": "fill_container",
@@ -7690,14 +7753,14 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "FMuWhW",
+                                  "id": "2uswby",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / Catalog",
                                   "content": "CATALOG"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "odWhAt",
+                                  "id": "cAXozs",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / tracks:read",
                                   "width": "fill_container",
@@ -7712,7 +7775,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "ENHR6G",
+                                  "id": "ErHGZJ",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / releases:read",
                                   "width": "fill_container",
@@ -7727,14 +7790,14 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "TSJPfY",
+                                  "id": "NP7sV9",
                                   "ref": "admin:yjiPHo",
                                   "name": "Group / System",
                                   "content": "SYSTEM"
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "JXTSeC",
+                                  "id": "9juryv",
                                   "ref": "admin:9JwV9B",
                                   "name": "Permission / audit:read",
                                   "width": "fill_container",
@@ -7749,7 +7812,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "uXNhrx",
+                                  "id": "iJQYHM",
                                   "ref": "admin:NrivlM",
                                   "name": "Permission / staff:read",
                                   "width": "fill_container",
@@ -7764,7 +7827,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "NzikiX",
+                                  "id": "XWenJD",
                                   "ref": "admin:PiqhAO",
                                   "name": "Text/Caption",
                                   "content": "From Moderator · 7 of 31"
@@ -7777,7 +7840,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "PWS4ux",
+                      "id": "hauT9e",
                       "name": "Side",
                       "layout": "vertical",
                       "gap": 16,
@@ -7785,7 +7848,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "gZjZoT",
+                          "id": "WS8cTt",
                           "ref": "admin:r1BU8g",
                           "name": "Tile / Invitation",
                           "width": "fill_container",
@@ -7804,7 +7867,7 @@
                             },
                             "admin:GjsX0O": {
                               "type": "frame",
-                              "id": "qJeL5q",
+                              "id": "SvtBDq",
                               "name": "Tile Content",
                               "layout": "vertical",
                               "gap": 10,
@@ -7812,7 +7875,7 @@
                               "children": [
                                 {
                                   "type": "ref",
-                                  "id": "9Crd2f",
+                                  "id": "MhV37R",
                                   "ref": "admin:9JboAk",
                                   "name": "Admin/Quote",
                                   "width": "fill_container",
@@ -7824,7 +7887,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "a2KrsJ",
+                                  "id": "8HUHHH",
                                   "ref": "admin:p0ZiD8",
                                   "name": "KV / Link expires",
                                   "width": "fill_container",
@@ -7839,7 +7902,7 @@
                                 },
                                 {
                                   "type": "ref",
-                                  "id": "D7TAR9",
+                                  "id": "khqm3L",
                                   "ref": "admin:p0ZiD8",
                                   "name": "KV / Two-step sign-in",
                                   "width": "fill_container",
@@ -7874,10 +7937,10 @@
     },
     {
       "type": "frame",
-      "id": "PKoxD6",
+      "id": "JkaUuk",
       "name": "Admin / Staff · New operator / Offline / Mobile",
       "width": 390,
-      "height": 3600,
+      "height": "fit_content",
       "clip": true,
       "layout": "vertical",
       "fill": [
@@ -7955,15 +8018,15 @@
       "children": [
         {
           "type": "ref",
-          "id": "L3fZdQ",
+          "id": "MNPJfo",
           "ref": "admin:eqee8W",
           "name": "Admin/Shell/Mobile",
           "width": 390,
-          "height": 3600,
+          "height": "fit_content",
           "descendants": {
             "admin:j6PyZU/admin:lLnPY6": {
               "type": "ref",
-              "id": "NSz2W5",
+              "id": "quMw24",
               "ref": "admin:CiuO32",
               "name": "Tab / overview",
               "descendants": {
@@ -7977,7 +8040,7 @@
             },
             "admin:j6PyZU/admin:jFtwgM": {
               "type": "ref",
-              "id": "8b42zh",
+              "id": "4UGXCX",
               "ref": "admin:CiuO32",
               "name": "Tab / alerts",
               "descendants": {
@@ -7991,7 +8054,7 @@
             },
             "admin:j6PyZU/admin:mkQ1an": {
               "type": "ref",
-              "id": "yUWrff",
+              "id": "43CFds",
               "ref": "admin:82Bxeq",
               "name": "Tab / menu",
               "descendants": {
@@ -8005,12 +8068,12 @@
             },
             "admin:gHhjkZ": {
               "type": "frame",
-              "id": "8tdGcU",
+              "id": "XmwzcF",
               "name": "Content",
               "layout": "vertical",
               "gap": 16,
               "width": "fill_container",
-              "height": "fill_container",
+              "height": "fit_content",
               "padding": [
                 18,
                 16,
@@ -8021,7 +8084,7 @@
               "children": [
                 {
                   "type": "ref",
-                  "id": "UbVGFP",
+                  "id": "u77sZy",
                   "ref": "admin:Ohq36Y",
                   "name": "Admin/Detail Header Compact",
                   "width": "fill_container",
@@ -8047,7 +8110,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "DSo3SX",
+                  "id": "GbFSTh",
                   "name": "Page Actions",
                   "gap": 8,
                   "alignItems": "center",
@@ -8055,7 +8118,7 @@
                   "children": [
                     {
                       "type": "ref",
-                      "id": "Yi4MCT",
+                      "id": "UBjJXJ",
                       "ref": "admin:TmjZcS",
                       "name": "Button / Create operator",
                       "descendants": {
@@ -8072,7 +8135,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "Wyk9Uu",
+                  "id": "5Z3Ch7",
                   "ref": "admin:n2GO8k",
                   "name": "Offline",
                   "width": "fill_container",
@@ -8096,7 +8159,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "XroRmm",
+                  "id": "7HSREK",
                   "ref": "admin:r1BU8g",
                   "name": "Tile / Operator",
                   "width": "fill_container",
@@ -8115,7 +8178,7 @@
                     },
                     "admin:GjsX0O": {
                       "type": "frame",
-                      "id": "QPTPMs",
+                      "id": "8znfMC",
                       "name": "Tile Content",
                       "layout": "vertical",
                       "gap": 4,
@@ -8123,7 +8186,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "3cYZd7",
+                          "id": "kFyZeP",
                           "ref": "admin:hxksjQ",
                           "name": "Field / Email",
                           "width": "fill_container",
@@ -8144,7 +8207,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "5PoC3s",
+                          "id": "KiBvAM",
                           "ref": "admin:hxksjQ",
                           "name": "Field / Username",
                           "width": "fill_container",
@@ -8165,7 +8228,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "dNMeMG",
+                          "id": "Ub6qCM",
                           "ref": "admin:hxksjQ",
                           "name": "Field / Temporary password",
                           "width": "fill_container",
@@ -8186,7 +8249,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "KivDAR",
+                          "id": "KazjiY",
                           "ref": "admin:xH59so",
                           "name": "Field / Role",
                           "width": "fill_container",
@@ -8201,7 +8264,7 @@
                         },
                         {
                           "type": "frame",
-                          "id": "zfZhTW",
+                          "id": "ZnjCMU",
                           "name": "Field / Permissions",
                           "layout": "vertical",
                           "gap": 2,
@@ -8215,21 +8278,21 @@
                           "children": [
                             {
                               "type": "ref",
-                              "id": "NqACdJ",
+                              "id": "3NvkW3",
                               "ref": "admin:SOt7Oe",
                               "name": "Text/Body Strong",
                               "content": "Permissions"
                             },
                             {
                               "type": "ref",
-                              "id": "gK7igi",
+                              "id": "x9QHs2",
                               "ref": "admin:yjiPHo",
                               "name": "Group / Moderation",
                               "content": "MODERATION"
                             },
                             {
                               "type": "ref",
-                              "id": "RDM8Hy",
+                              "id": "WekZ5U",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / reports:read",
                               "width": "fill_container",
@@ -8244,7 +8307,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "vtJ6AF",
+                              "id": "zF3nJv",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / reports:write",
                               "width": "fill_container",
@@ -8259,14 +8322,14 @@
                             },
                             {
                               "type": "ref",
-                              "id": "asq2sn",
+                              "id": "xY2pC8",
                               "ref": "admin:yjiPHo",
                               "name": "Group / Accounts",
                               "content": "ACCOUNTS"
                             },
                             {
                               "type": "ref",
-                              "id": "YJnYLh",
+                              "id": "SeHRDd",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / users:read",
                               "width": "fill_container",
@@ -8281,7 +8344,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "MzmnCK",
+                              "id": "eUBmGo",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / users:write",
                               "width": "fill_container",
@@ -8296,7 +8359,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "FLhbqu",
+                              "id": "XX7wN9",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / artists:read",
                               "width": "fill_container",
@@ -8311,7 +8374,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "5kGDBC",
+                              "id": "9MUSNz",
                               "ref": "admin:NrivlM",
                               "name": "Permission / artists:write",
                               "width": "fill_container",
@@ -8326,14 +8389,14 @@
                             },
                             {
                               "type": "ref",
-                              "id": "iuzw8Z",
+                              "id": "fyxuXE",
                               "ref": "admin:yjiPHo",
                               "name": "Group / Catalog",
                               "content": "CATALOG"
                             },
                             {
                               "type": "ref",
-                              "id": "NH7g5g",
+                              "id": "392sP5",
                               "ref": "admin:NrivlM",
                               "name": "Permission / tracks:read",
                               "width": "fill_container",
@@ -8348,7 +8411,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "UPppXh",
+                              "id": "cPeCcv",
                               "ref": "admin:NrivlM",
                               "name": "Permission / releases:read",
                               "width": "fill_container",
@@ -8363,14 +8426,14 @@
                             },
                             {
                               "type": "ref",
-                              "id": "B2BZH2",
+                              "id": "wiqovt",
                               "ref": "admin:yjiPHo",
                               "name": "Group / System",
                               "content": "SYSTEM"
                             },
                             {
                               "type": "ref",
-                              "id": "qTi4US",
+                              "id": "F5LETQ",
                               "ref": "admin:9JwV9B",
                               "name": "Permission / audit:read",
                               "width": "fill_container",
@@ -8385,7 +8448,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "WukUuy",
+                              "id": "sdsDNw",
                               "ref": "admin:NrivlM",
                               "name": "Permission / staff:read",
                               "width": "fill_container",
@@ -8400,7 +8463,7 @@
                             },
                             {
                               "type": "ref",
-                              "id": "biHio7",
+                              "id": "PCTutF",
                               "ref": "admin:PiqhAO",
                               "name": "Text/Caption",
                               "content": "From Moderator · 7 of 31"
@@ -8413,7 +8476,7 @@
                 },
                 {
                   "type": "ref",
-                  "id": "ab84oV",
+                  "id": "9Uvwoz",
                   "ref": "admin:r1BU8g",
                   "name": "Tile / Invitation",
                   "width": "fill_container",
@@ -8432,7 +8495,7 @@
                     },
                     "admin:GjsX0O": {
                       "type": "frame",
-                      "id": "FMihek",
+                      "id": "88cVwq",
                       "name": "Tile Content",
                       "layout": "vertical",
                       "gap": 10,
@@ -8440,7 +8503,7 @@
                       "children": [
                         {
                           "type": "ref",
-                          "id": "Np63gT",
+                          "id": "JuV4Q8",
                           "ref": "admin:9JboAk",
                           "name": "Admin/Quote",
                           "width": "fill_container",
@@ -8452,7 +8515,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "zZmg4J",
+                          "id": "ZkvRVZ",
                           "ref": "admin:p0ZiD8",
                           "name": "KV / Link expires",
                           "width": "fill_container",
@@ -8467,7 +8530,7 @@
                         },
                         {
                           "type": "ref",
-                          "id": "Scxvpo",
+                          "id": "zUQwbu",
                           "ref": "admin:p0ZiD8",
                           "name": "KV / Two-step sign-in",
                           "width": "fill_container",

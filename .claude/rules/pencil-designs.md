@@ -70,8 +70,9 @@ paths:
 - The admin resource routes (lists, detail pages, editors) come from one data module,
   `scripts/pencil-pages/admin-resources.mjs`: `admin-resource.mjs` draws the Pencil pages from it and
   `run-admin.mjs` writes the same specs into the prototype between its `@resources` markers. Change
-  content there, never in the prototype's data block. Frame heights are measured in Pencil into
-  `admin-heights.json`; without a measurement a page falls back to a generous height.
+  content there, never in the prototype's data block. Their frames size to their content
+  (`fit_content` shell; the sidebar stays one 968px screen): tiles sharing a row get the row height
+  from `estimate()` in `admin-resource.mjs` and fill it, so new block types need an estimate.
 - `pnpm design:pages` regenerates the library blocks and every page from
   `scripts/pencil-pages/` (content per route in `pages*.mjs`). Folders named `archive/` hold
   historical references and are skipped by the checks.

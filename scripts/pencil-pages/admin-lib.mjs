@@ -834,11 +834,14 @@ const desktopShell = (name, collapsed) =>
     Row(
       { name: 'Admin Shell', width: 1440, height: 1100, padding: 16, gap: 16, alignItems: 'start' },
       [
-        sidebar(collapsed),
-        Col({ name: 'Main', width: 'fill_container', height: 'fill_container', gap: 22 }, [
-          topBar(),
-          slot('content', { height: 'fill_container', gap: 22 }),
-        ]),
+        part('sidebar', sidebar(collapsed)),
+        part(
+          'main',
+          Col({ name: 'Main', width: 'fill_container', height: 'fill_container', gap: 22 }, [
+            topBar(),
+            slot('content', { height: 'fill_container', gap: 22 }),
+          ]),
+        ),
       ],
     ),
   )
@@ -2823,7 +2826,7 @@ add(
       },
       [
         sk(42, 42, { cornerRadius: 13 }),
-        Col({ name: 'Lines', gap: 8, width: 'fill_container' }, [sk(90, 10), sk(56, 22)]),
+        Col({ name: 'Lines', gap: 8, width: 'fill_container' }, [sk(64, 10), sk(48, 22)]),
       ],
     ),
   ),
@@ -3218,7 +3221,14 @@ add(
               textGrowth: 'fixed-width',
             }),
           ),
-          part('sub', muted('Nova & the Static · 3:42', { fontSize: 12 })),
+          part(
+            'sub',
+            muted('Nova & the Static · 3:42', {
+              fontSize: 12,
+              width: 'fill_container',
+              textGrowth: 'fixed-width',
+            }),
+          ),
         ]),
         Row(
           {
@@ -3566,12 +3576,19 @@ add(
         padding: [10, 12],
         cornerRadius: 12,
         fill: C.errorSurface,
+        alignItems: 'start',
       },
       [
         part('icon', I('triangle-alert', { width: 16, height: 16, fill: C.errorText })),
         part(
           'text',
-          T('Fix 2 fields to save', { fontSize: 13, fontWeight: '600', fill: C.errorText }),
+          T('Fix 2 fields to save', {
+            fontSize: 13,
+            fontWeight: '600',
+            fill: C.errorText,
+            width: 'fill_container',
+            textGrowth: 'fixed-width',
+          }),
         ),
       ],
     ),
