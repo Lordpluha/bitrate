@@ -140,11 +140,7 @@ export class ArtistsService {
 
   /** Runs the follow operation. */
   async follow(userId: UserEntity['id'], artistId: ArtistEntity['id']) {
-    const artist = await this.prisma.artist.findFirst({
-      where: { id: artistId, deletedAt: null },
-      select: { id: true },
-    })
-    if (!artist) throw new NotFoundException(ARTIST_ERRORS.NOT_FOUND)
+    await this.requireArtist(artistId)
 
     await this.prisma.userFollowedArtist.upsert({
       where: { userId_artistId: { userId, artistId } },
@@ -162,11 +158,7 @@ export class ArtistsService {
 
   /** Runs the unfollow operation. */
   async unfollow(userId: UserEntity['id'], artistId: ArtistEntity['id']) {
-    const artist = await this.prisma.artist.findFirst({
-      where: { id: artistId, deletedAt: null },
-      select: { id: true },
-    })
-    if (!artist) throw new NotFoundException(ARTIST_ERRORS.NOT_FOUND)
+    await this.requireArtist(artistId)
 
     await this.prisma.userFollowedArtist.deleteMany({ where: { userId, artistId } })
     return await this.prisma.artist.findUniqueOrThrow({
