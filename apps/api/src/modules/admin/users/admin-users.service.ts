@@ -28,6 +28,9 @@ type ListUsersInput = {
   q?: string
 } & SortInput<AdminUsersSortField>
 
+/** What the existence/state pre-checks read — never the credential columns. */
+const EXISTENCE_SELECT = { id: true, deletedAt: true } as const satisfies Prisma.UserSelect
+
 /** Handles the operator-facing user directory. */
 @Injectable()
 export class AdminUsersService {
@@ -155,10 +158,8 @@ export class AdminUsersService {
     id: string,
     { page = DEFAULT_PAGE, limit = DEFAULT_LIMIT }: PaginationInput,
   ) {
-    const existing = await this.prisma.user.findFirst({ where: { id } })
-    if (!existing) throw new UserNotFoundException(id)
-
-    const [rows, total] = await Promise.all([
+    const [existing, rows, total] = await Promise.all([
+      this.prisma.user.findFirst({ where: { id }, select: { id: true } }),
       this.prisma.listeningHistory.findMany({
         where: { userId: id },
         select: {
@@ -172,6 +173,7 @@ export class AdminUsersService {
       }),
       this.prisma.listeningHistory.count({ where: { userId: id } }),
     ])
+    if (!existing) throw new UserNotFoundException(id)
 
     return {
       data: rows.map((row) => ({
@@ -206,7 +208,7 @@ export class AdminUsersService {
     reason?: string,
     auditContext: AuditContextValue = {},
   ) {
-    const existing = await this.prisma.user.findFirst({ where: { id } })
+    const existing = await this.prisma.user.findFirst({ where: { id }, select: EXISTENCE_SELECT })
     if (!existing) throw new UserNotFoundException(id)
     if (existing.deletedAt) throw new UserAlreadyDeletedException(id)
 
@@ -255,7 +257,7 @@ export class AdminUsersService {
     reason?: string,
     auditContext: AuditContextValue = {},
   ) {
-    const existing = await this.prisma.user.findFirst({ where: { id } })
+    const existing = await this.prisma.user.findFirst({ where: { id }, select: EXISTENCE_SELECT })
     if (!existing) throw new UserNotFoundException(id)
     if (!existing.deletedAt) throw new UserNotDeletedException(id)
 
@@ -296,7 +298,7 @@ export class AdminUsersService {
     reason?: string,
     auditContext: AuditContextValue = {},
   ) {
-    const existing = await this.prisma.user.findFirst({ where: { id } })
+    const existing = await this.prisma.user.findFirst({ where: { id }, select: EXISTENCE_SELECT })
     if (!existing) throw new UserNotFoundException(id)
 
     return await this.prisma.$transaction(async (tx) => {

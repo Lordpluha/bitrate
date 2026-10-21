@@ -63,6 +63,9 @@ const PLAYLIST_DETAIL_SELECT = {
   },
 } as const satisfies Prisma.PlaylistSelect
 
+/** What the take-down/restore pre-checks read. */
+const DELETED_AT_SELECT = { deletedAt: true } as const satisfies Prisma.PlaylistSelect
+
 type PlaylistRowRecord = Prisma.PlaylistGetPayload<{ select: typeof PLAYLIST_ROW_SELECT }>
 type PlaylistDetailRecord = Prisma.PlaylistGetPayload<{ select: typeof PLAYLIST_DETAIL_SELECT }>
 
@@ -168,7 +171,10 @@ export class AdminPlaylistsService {
     reason?: string,
     auditContext: AuditContextValue = {},
   ) {
-    const existing = await this.prisma.playlist.findFirst({ where: { id } })
+    const existing = await this.prisma.playlist.findFirst({
+      where: { id },
+      select: { isPublic: true },
+    })
     if (!existing) throw new PlaylistNotFoundException(id)
     if (existing.isPublic === isPublic) throw this.visibilityConflict(id, isPublic)
     if (isPublic && !(await this.wasHiddenByOperator(id))) {
@@ -233,7 +239,10 @@ export class AdminPlaylistsService {
     reason?: string,
     auditContext: AuditContextValue = {},
   ) {
-    const existing = await this.prisma.playlist.findFirst({ where: { id } })
+    const existing = await this.prisma.playlist.findFirst({
+      where: { id },
+      select: DELETED_AT_SELECT,
+    })
     if (!existing) throw new PlaylistNotFoundException(id)
     if (existing.deletedAt) throw new PlaylistAlreadyDeletedException(id)
 
@@ -273,7 +282,10 @@ export class AdminPlaylistsService {
     reason?: string,
     auditContext: AuditContextValue = {},
   ) {
-    const existing = await this.prisma.playlist.findFirst({ where: { id } })
+    const existing = await this.prisma.playlist.findFirst({
+      where: { id },
+      select: DELETED_AT_SELECT,
+    })
     if (!existing) throw new PlaylistNotFoundException(id)
     if (!existing.deletedAt) throw new PlaylistNotDeletedException(id)
 

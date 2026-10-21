@@ -131,7 +131,10 @@ export class AdminModerationService {
    * a concurrent change in between is a 409, never an audit row recording a stale transition.
    */
   async updateStatus(id: string, dto: UpdateReportDto, audit?: ReportAdvanceAudit) {
-    const existing = await this.prisma.moderationReport.findFirst({ where: { id } })
+    const existing = await this.prisma.moderationReport.findFirst({
+      where: { id },
+      select: { status: true },
+    })
     if (!existing) throw new ReportNotFoundException(id)
 
     const data = {
