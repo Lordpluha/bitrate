@@ -137,6 +137,7 @@ export function register(add) {
           }),
         ),
       ]),
+      { cell: 'wide' },
     ),
     comp(
       'Seek Bar/Buffering',
@@ -168,6 +169,7 @@ export function register(add) {
           part('duration', T('3:42', { fontSize: 12, fill: C.mutedForeground })),
         ]),
       ]),
+      { cell: 'medium' },
     ),
     loadPill('Status/Loading', C.muted, C.border, C.mutedForeground, 'loader-circle', 'Loading'),
     loadPill('Status/Syncing', C.infoSurface, C.infoBorder, C.infoText, 'refresh-cw', 'Syncing'),
@@ -195,6 +197,7 @@ export function register(add) {
           part('count', T('50 of 1,240', { fontSize: 12, fill: C.textSubdued })),
         ],
       ),
+      { cell: 'medium' },
     ),
     comp(
       'List/End',
@@ -215,6 +218,7 @@ export function register(add) {
           F({ name: 'Rule', width: 40, height: 1, fill: C.border }),
         ],
       ),
+      { cell: 'medium' },
     ),
     comp(
       'Toast/Progress',
@@ -256,6 +260,7 @@ export function register(add) {
         sk(80, 10),
         sk(36, 10),
       ]),
+      { cell: 'wide' },
     ),
     comp(
       'Skeleton/Track Row Mobile',
@@ -275,6 +280,7 @@ export function register(add) {
         sk(70, 10),
         sk(36, 10),
       ]),
+      { cell: 'wide' },
     ),
     comp(
       'Skeleton/Card',
@@ -299,6 +305,7 @@ export function register(add) {
         Col({ gap: 8, width: 'fill_container' }, [sk(160), sk(110, 10)]),
         sk(88, 32, { cornerRadius: 8 }),
       ]),
+      { cell: 'wide' },
     ),
     comp(
       'Skeleton/Notification Row',
@@ -306,6 +313,7 @@ export function register(add) {
         skCircle(36),
         Col({ gap: 8, width: 'fill_container' }, [sk(320), sk(80, 10)]),
       ]),
+      { cell: 'wide' },
     ),
     comp(
       'Skeleton/Table Row',
@@ -316,6 +324,7 @@ export function register(add) {
         sk(70, 22, { cornerRadius: 11 }),
         sk(60, 10),
       ]),
+      { cell: 'wide' },
     ),
   )
 }

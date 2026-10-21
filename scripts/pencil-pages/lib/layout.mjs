@@ -1,23 +1,16 @@
 // The "00E • Page Blocks" library page: every block in a cell sized like its real use on screens.
 import { C, T, P, H, F, Row, Col } from '../kit.mjs'
-import { stableId } from './engine.mjs'
+import { cellOf, stableId } from './engine.mjs'
 
 /* lay the page out. A block whose root width follows its parent (fill_container) gets a cell as wide as it is
    used on screens, so the library shows it at its real size instead of collapsed; rows are packed by width,
    not by a fixed count, so small controls and full-width blocks don't share a ragged row */
-const WIDE =
-  /^(Collection Header|Section Header|Track Table|Track Row|Table\/|Profile Header|Artist Hero|Artist\/Page Header|Chart Row|Candidate Row(?!\/Compact)|Result Row|Activity Row|Episode Row|Podcast\/(Episode|Chapter|Seek)|Video\/Control Bar|Seek Bar|Transport|Skeleton\/(Track Row|Chart Row|Table Row|Person Row|Notification Row)$|List\/|Landing\/Footer|Health\/Service|Progress\/Route Bar|Equalizer|Upload Progress|Date Row|Key Value Row|People Row|Person Row|Friend Row|Device Row|Command\/Item)/
+const CELL = { medium: 480, wide: 960 }
 const cellWidth = (b) => {
   if (typeof b.width === 'number') return b.width
   if (b.width !== 'fill_container') return 240
   if (/Mobile/.test(b.name)) return 358
-  if (
-    /^(Health\/Service|Friend Row|Device Row|People Row|Person Row|Command\/Item|Seek Bar|Transport|Equalizer|Upload Progress|Date Row|Key Value Row|List\/)/.test(
-      b.name,
-    )
-  )
-    return 480
-  return WIDE.test(b.name) ? 960 : 360
+  return CELL[cellOf(b)] ?? 360
 }
 const ROW_BUDGET = 1800
 /** Packs `blocks` into rows of cells by width and returns the page frame. */

@@ -101,6 +101,7 @@ export function register(add) {
           I('audio-lines', { width: 20, height: 20, fill: C.accent }),
         ],
       ),
+      { cell: 'medium' },
     ),
     comp(
       'Device Row',
@@ -131,6 +132,7 @@ export function register(add) {
           ]),
         ],
       ),
+      { cell: 'medium' },
     ),
     comp(
       'Surface/Sheet',
@@ -182,6 +184,7 @@ export function register(add) {
           part('duration', T('3:42', { fontSize: 12, fill: C.mutedForeground })),
         ]),
       ]),
+      { cell: 'medium' },
     ),
     comp(
       'Transport',
@@ -203,6 +206,7 @@ export function register(add) {
         I('skip-forward', { width: 30, height: 30, fill: C.foreground }),
         part('repeat', I('repeat', { width: 22, height: 22, fill: C.accent })),
       ]),
+      { cell: 'medium' },
     ),
   )
 }

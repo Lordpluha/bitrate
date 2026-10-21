@@ -53,6 +53,7 @@ export function register(add) {
           ),
         ],
       ),
+      { cell: 'wide' },
     ),
     comp(
       'Profile Header',
@@ -77,6 +78,7 @@ export function register(add) {
           ]),
         ],
       ),
+      { cell: 'wide' },
     ),
     comp(
       'Artist Hero',
@@ -101,6 +103,7 @@ export function register(add) {
           part('listeners', T('1,284,503 monthly listeners', { fill: C.white })),
         ],
       ),
+      { cell: 'wide' },
     ),
     comp(
       'Stat Tile',
@@ -221,6 +224,7 @@ export function register(add) {
           part('play', Button('Play', 'secondary', { icon: 'play' })),
         ],
       ),
+      { cell: 'wide' },
     ),
     comp(
       'Chart Row',
@@ -235,6 +239,7 @@ export function register(add) {
         part('plays', muted('0 plays')),
         part('duration', muted('0:00')),
       ]),
+      { cell: 'wide' },
     ),
     comp(
       'Candidate Row',
@@ -261,6 +266,7 @@ export function register(add) {
           iconBtn('x'),
         ],
       ),
+      { cell: 'wide' },
     ),
     comp(
       'Candidate Row/Compact',
@@ -416,6 +422,7 @@ export function register(add) {
           ),
         ],
       ),
+      { cell: 'medium' },
     ),
     comp(
       'Graph Node',
