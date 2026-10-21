@@ -6460,6 +6460,31 @@ restamp('page:10 Context Menu', ctxPage)
 const cAt = prow.children.findIndex((c) => c.name === '10 • Context Menu')
 if (cAt >= 0) prow.children[cAt] = ctxPage
 else prow.children.splice(prow.children.findIndex((c) => c.name === '09 • Toasts') + 1, 0, ctxPage)
+/* stamped last so the ids above never shift: the page's own layout frames (rows, cells, captions;
+   components keep theirs), then nodes swapped into instances (`descendants`), keyed by their owner */
+const stampLayout = (n, path) => {
+  if (!n || typeof n !== 'object' || n.reusable) return
+  if (n.id) n.id = stable(`page:00E Page Blocks/${path}`)
+  ;(n.children ?? []).forEach((c, i) => {
+    stampLayout(c, `${path}.${i}`)
+  })
+}
+stampLayout(page, '0')
+const stampTree = (n, key) => {
+  if (!n || typeof n !== 'object') return
+  if (n.id) n.id = stable(key)
+  ;(n.children ?? []).forEach((c, i) => {
+    stampTree(c, `${key}.${i}`)
+  })
+}
+const stampSwapped = (n) => {
+  if (!n || typeof n !== 'object') return
+  for (const [k, v] of Object.entries(n.descendants ?? {}))
+    if (v?.type) stampTree(v, `${n.id}/d:${k}`)
+  ;(n.children ?? []).forEach(stampSwapped)
+  Object.values(n.descendants ?? {}).forEach(stampSwapped)
+}
+for (const p of [page, toastPage, ctxPage]) stampSwapped(p)
 if (at >= 0) row.children[at] = page
 else row.children.push(page)
 writeFileSync(libF, JSON.stringify(lib, null, 2))
