@@ -268,6 +268,25 @@ describe('TrackUploadService', () => {
       expect(storage.deleteObject).toHaveBeenCalledWith(`masters/${audioFile.filename}`)
     })
 
+    it('removes the stored master when the cover upload fails alongside it', async () => {
+      const audioFile = buildAudioFile()
+      storage.upload.mockRejectedValue(new Error('cover upload failed') as never)
+
+      await expect(
+        service.create(
+          'artist-1',
+          { title: 'Track title' } as CreateTrackDto,
+          audioFile,
+          buildCoverFile(),
+        ),
+      ).rejects.toThrow('cover upload failed')
+
+      expect(storeMasterMock).toHaveBeenCalled()
+      expect(storage.deleteObject).toHaveBeenCalledTimes(1)
+      expect(storage.deleteObject).toHaveBeenCalledWith(`masters/${audioFile.filename}`)
+      expect(prisma.track.create).not.toHaveBeenCalled()
+    })
+
     it('rejects a source bitrate below the converter minimum before creating a track', async () => {
       const audioFile = buildAudioFile()
       parseFileMock.mockResolvedValueOnce({
