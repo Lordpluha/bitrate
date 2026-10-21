@@ -115,53 +115,98 @@ export const useSavedEpisodes = (page = 1, limit = 20, enabled = true) =>
     staleTime: 60 * 1000,
   })
 
+/** Every saved episode: the first page tells the total, the rest load in parallel. */
+export const getAllSavedEpisodes = async () => {
+  const firstPage = await fetchSavedEpisodesPage(1, SAVED_EPISODES_PAGE_SIZE)
+  const pageCount = Math.ceil(firstPage.total / firstPage.limit)
+  const remainingPages = await Promise.all(
+    Array.from({ length: Math.max(pageCount - 1, 0) }, (_, index) =>
+      fetchSavedEpisodesPage(index + 2, SAVED_EPISODES_PAGE_SIZE),
+    ),
+  )
+
+  return dedupeSavedEpisodes(
+    [firstPage, ...remainingPages].flatMap(({ data }) => data),
+  )
+}
+
 /** Loads every saved-episode page for relationship checks and library merging. */
 export const useAllSavedEpisodes = (enabled = true) =>
   useQuery({
     queryKey: apiQueryKeys.podcasts.savedEpisodesAll,
-    queryFn: async () => {
-      const episodes: SavedEpisode[] = []
-      let page = 1
-      let total = 0
-
-      do {
-        const result = await fetchSavedEpisodesPage(
-          page,
-          SAVED_EPISODES_PAGE_SIZE,
-        )
-        episodes.push(...result.data)
-        total = result.total
-
-        if (result.data.length === 0) break
-        page += 1
-      } while ((page - 1) * SAVED_EPISODES_PAGE_SIZE < total)
-
-      return dedupeSavedEpisodes(episodes)
-    },
+    queryFn: getAllSavedEpisodes,
     enabled,
     staleTime: 60 * 1000,
   })
 
-const useEpisodeMutation = (method: 'PUT' | 'DELETE') => {
+/** Prefix of `apiQueryKeys.podcasts.savedEpisodes(…)` and `savedEpisodesAll`. */
+const SAVED_EPISODES_KEY = ['podcasts', 'saved-episodes'] as const
+
+type SavedEpisodeMutationInput<TVariables> = {
+  /** The saved library as it should look once the request succeeds. */
+  applyOptimistic: (
+    episodes: SavedEpisode[],
+    variables: TVariables,
+  ) => SavedEpisode[]
+  request: (variables: TVariables) => Promise<void>
+}
+
+/**
+ * Updates the cached saved library at once, rolls it back if the request fails, and then
+ * refetches only the saved-episode queries.
+ */
+const useSavedEpisodeMutation = <TVariables>({
+  applyOptimistic,
+  request,
+}: SavedEpisodeMutationInput<TVariables>) => {
   const queryClient = useQueryClient()
+  const savedKey = apiQueryKeys.podcasts.savedEpisodesAll
 
   return useMutation({
-    mutationFn: async (episodeId: string) => {
-      const request =
-        method === 'PUT'
-          ? clientFetchClient.PUT('/api/v1/me/episodes/{id}', {
-              params: { path: { id: episodeId } },
-            })
-          : clientFetchClient.DELETE('/api/v1/me/episodes/{id}', {
-              params: { path: { id: episodeId } },
-            })
-      const { response } = await request
-      ensureOkResponse(response, 'Failed to update saved episode')
+    mutationFn: request,
+    onMutate: async (variables) => {
+      await queryClient.cancelQueries({ queryKey: savedKey })
+      const previous = queryClient.getQueryData<SavedEpisode[]>(savedKey)
+      if (previous) {
+        queryClient.setQueryData(savedKey, applyOptimistic(previous, variables))
+      }
+      return { previous }
     },
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: apiQueryKeys.podcasts.all }),
+    onError: (_error, _variables, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(savedKey, context.previous)
+      }
+    },
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: SAVED_EPISODES_KEY }),
   })
 }
 
-export const useSaveEpisode = () => useEpisodeMutation('PUT')
-export const useUnsaveEpisode = () => useEpisodeMutation('DELETE')
+/** Saves an episode; the variable is the library entry to show until the server confirms it. */
+export const useSaveEpisode = () =>
+  useSavedEpisodeMutation<SavedEpisode>({
+    applyOptimistic: (episodes, episode) => [
+      episode,
+      ...episodes.filter(({ id }) => id !== episode.id),
+    ],
+    request: async ({ id }) => {
+      const { response } = await clientFetchClient.PUT(
+        '/api/v1/me/episodes/{id}',
+        { params: { path: { id } } },
+      )
+      ensureOkResponse(response, 'Failed to save episode')
+    },
+  })
+
+export const useUnsaveEpisode = () =>
+  useSavedEpisodeMutation<string>({
+    applyOptimistic: (episodes, episodeId) =>
+      episodes.filter(({ id }) => id !== episodeId),
+    request: async (id) => {
+      const { response } = await clientFetchClient.DELETE(
+        '/api/v1/me/episodes/{id}',
+        { params: { path: { id } } },
+      )
+      ensureOkResponse(response, 'Failed to remove saved episode')
+    },
+  })

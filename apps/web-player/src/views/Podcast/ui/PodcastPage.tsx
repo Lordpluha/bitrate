@@ -7,6 +7,7 @@ import { Info, Podcast, SearchIcon, Share2 } from 'lucide-react'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import {
+  toSavedEpisode,
   useAllSavedEpisodes,
   usePodcast,
   usePodcastEpisodes,
@@ -350,13 +351,16 @@ export const PodcastPage = ({ podcastId }: PodcastPageProps) => {
                                         `Unable to remove ${episode.title}.`,
                                       ),
                                   })
-                                : saveEpisode.mutate(episode.id, {
-                                    onError: (error) =>
-                                      showApiErrorToast(
-                                        error,
-                                        `Unable to save ${episode.title}.`,
-                                      ),
-                                  })
+                                : saveEpisode.mutate(
+                                    toSavedEpisode({ episode, podcast }),
+                                    {
+                                      onError: (error) =>
+                                        showApiErrorToast(
+                                          error,
+                                          `Unable to save ${episode.title}.`,
+                                        ),
+                                    },
+                                  )
                           : undefined
                       }
                     />
