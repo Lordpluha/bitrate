@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto'
-import { rm } from 'node:fs/promises'
+import { rm, stat } from 'node:fs/promises'
 import { extname, join } from 'node:path'
 import { RIGHTS_CONFIRMATION_MESSAGE, rightsConfirmationRecord } from '@common/rights-confirmation'
 import { resolveSafeMulterPath } from '@common/utils/multer-file'
@@ -140,14 +140,15 @@ export class TrackUploadService {
   }
 
   /**
-   * Downloads a stored master to a temporary file just long enough to probe it, then removes it.
-   * Probing needs a file path; the master itself lives only in storage.
+   * Downloads a stored master to a temporary file just long enough to probe it and measure its
+   * size, then removes it. Probing needs a file path; the master itself lives only in storage.
    */
   private async inspectStoredMaster(masterKey: string, sourceFileName: string) {
     const tempPath = join(getUploadTempDir(), `probe-${randomUUID()}${extname(sourceFileName)}`)
     try {
       await downloadObjectToFile(this.storage, masterKey, tempPath)
-      return await inspectAudioFile(tempPath)
+      const [metadata, { size }] = await Promise.all([inspectAudioFile(tempPath), stat(tempPath)])
+      return { metadata, bytes: size }
     } finally {
       await rm(tempPath, { force: true })
     }
@@ -231,6 +232,7 @@ export class TrackUploadService {
     try {
       const existingTrack = await this.prisma.track.findFirst({
         where: { id, artistId, deletedAt: null },
+        select: { audioUrl: true, cover: true },
       })
       if (!existingTrack) {
         throw new NotFoundException('Track not found or does not belong to artist')
@@ -319,6 +321,7 @@ export class TrackUploadService {
   async reprocess(trackId: TrackEntity['id']) {
     const track = await this.prisma.track.findFirst({
       where: { id: trackId, deletedAt: null },
+      select: { id: true, artistId: true, audioUrl: true },
     })
     if (!track) throw new NotFoundException('Track not found')
 
@@ -326,8 +329,7 @@ export class TrackUploadService {
     if (!(await this.storage.exists(masterKey))) {
       throw new NotFoundException('Source audio is missing from storage')
     }
-    const { contentLength } = await this.storage.getObjectMeta(masterKey)
-    const metadata = await this.inspectStoredMaster(masterKey, track.audioUrl)
+    const { metadata, bytes } = await this.inspectStoredMaster(masterKey, track.audioUrl)
     const bitrates = getTargetBitrates(metadata.bitrate)
 
     const updated = await this.prisma.track.update({
@@ -346,7 +348,7 @@ export class TrackUploadService {
       sourceFileName: track.audioUrl,
       bitrates,
       trigger: 'REPROCESS',
-      input: toInputProbe(metadata, contentLength ?? 0),
+      input: toInputProbe(metadata, bytes),
     })
     await this.invalidateTrackCaches()
 
