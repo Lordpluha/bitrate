@@ -2,7 +2,6 @@ import type { StateCreator } from 'zustand'
 import type { PlayerState } from './playerStore.types'
 import {
   createQueuedTrack,
-  getTrackChange,
   getTransitionState,
   initialPlayerState,
   repeatOrder,
@@ -118,8 +117,8 @@ export const createPlayerState: StateCreator<PlayerState, [], []> = (
     if (transition) set(getTransitionState(transition))
   },
   changeTrack: (direction) => {
-    const nextState = getTrackChange(get(), direction)
-    if (nextState) set(nextState)
+    const transition = resolvePlaybackTransition(get(), direction)
+    if (transition) set(getTransitionState(transition))
   },
   reset: () => set(initialPlayerState),
 })
