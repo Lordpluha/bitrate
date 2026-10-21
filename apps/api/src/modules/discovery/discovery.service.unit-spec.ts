@@ -65,8 +65,8 @@ describe('DiscoveryService public artist projections', () => {
     jest.spyOn(Date, 'now').mockReturnValue(now)
     prisma.queryRaw
       .mockResolvedValueOnce([
-        { trackId: 'track-2', plays: 12n },
-        { trackId: 'track-1', plays: 8n },
+        { id: 'track-2', plays: 12n },
+        { id: 'track-1', plays: 8n },
       ] as never)
       .mockResolvedValueOnce([{ total: 18n }] as never)
     prisma.track.findMany.mockResolvedValue([
@@ -144,8 +144,8 @@ describe('DiscoveryService public artist projections', () => {
     jest.spyOn(Date, 'now').mockReturnValue(now)
     prisma.queryRaw
       .mockResolvedValueOnce([
-        { artistId: 'artist-2', listeners: 9n },
-        { artistId: 'artist-1', listeners: 4n },
+        { id: 'artist-2', listeners: 9n },
+        { id: 'artist-1', listeners: 4n },
       ] as never)
       .mockResolvedValueOnce([{ total: 2n }] as never)
     prisma.artist.findMany.mockResolvedValue([
