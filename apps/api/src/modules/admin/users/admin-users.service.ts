@@ -3,13 +3,14 @@ import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { AdminResourceStatus, AuditContextValue, CsvExport } from '@modules/admin/shared'
 import {
+  type AdminRevokeSessionsResultEntity,
   openCsvExport,
+  revokeAccountSessions,
   runBatch,
   runTakeDownTransition,
   statusWhere,
   type TakeDownActor,
   type TakeDownDirection,
-  writeTakeDownAudit,
 } from '@modules/admin/shared'
 import { Injectable } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
@@ -36,9 +37,6 @@ type ListUsersInput = {
   q?: string
 } & SortInput<AdminUsersSortField>
 
-/** What the existence/state pre-checks read — never the credential columns. */
-const EXISTENCE_SELECT = { id: true, deletedAt: true } as const satisfies Prisma.UserSelect
-
 /** A user as the operator sees it — the safe columns only. */
 type AdminUserRow = Prisma.UserGetPayload<{ select: typeof ADMIN_USER_SAFE_SELECT }>
 
@@ -60,7 +58,7 @@ export class AdminUsersService {
     } satisfies Prisma.UserWhereInput
   }
 
-  /** Runs the find all operation, paginated and optionally filtered. */
+  /** Lists users, paginated and optionally filtered. */
   async findAll({
     page = DEFAULT_PAGE,
     limit = DEFAULT_LIMIT,
@@ -125,7 +123,7 @@ export class AdminUsersService {
   }
 
   /**
-   * Runs the find by id operation, with activity counts for the detail page. Deliberately does
+   * Finds one user by id, with activity counts for the detail page. Deliberately does
    * not filter `deletedAt` — a deactivated listener must stay reachable by id so the operator
    * can review the account before deciding to restore it.
    */
@@ -160,7 +158,7 @@ export class AdminUsersService {
   }
 
   /**
-   * Runs the list listening history operation, newest first. Deliberately does not filter
+   * Lists a user's listening history, newest first. Deliberately does not filter
    * `deletedAt` — a deactivated listener's history stays reachable, matching {@link findById}.
    * An empty history is a valid empty page, not a 404; a missing user is.
    */
@@ -240,34 +238,22 @@ export class AdminUsersService {
     return this.transition('restore', id, { staffId, reason, ...auditContext })
   }
 
-  /**
-   * Revokes every active session for a user, signing them out on their next request — an
-   * already-open WebSocket connection is unaffected until it disconnects; see the changeset
-   * for that known limitation.
-   */
-  async revokeSessions(
+  /** Revokes every session of a user — see {@link revokeAccountSessions}. */
+  revokeSessions(
     id: string,
     staffId: string,
     reason?: string,
     auditContext: AuditContextValue = {},
-  ) {
-    const existing = await this.prisma.user.findFirst({ where: { id }, select: EXISTENCE_SELECT })
-    if (!existing) throw new UserNotFoundException(id)
-
-    return await this.prisma.$transaction(async (tx) => {
-      const { count } = await tx.userSession.deleteMany({ where: { userId: id } })
-      await writeTakeDownAudit({
-        tx,
-        entityType: 'admin-users',
-        entityId: id,
-        action: 'admin-users.revoke-sessions',
-        staffId,
-        reason,
-        before: {},
-        after: { sessionsRevoked: count },
-        ...auditContext,
-      })
-      return { revoked: count }
+  ): Promise<AdminRevokeSessionsResultEntity> {
+    return revokeAccountSessions({
+      prisma: this.prisma,
+      exists: async () =>
+        !!(await this.prisma.user.findFirst({ where: { id }, select: { id: true } })),
+      notFound: () => new UserNotFoundException(id),
+      revoke: (tx) => tx.userSession.deleteMany({ where: { userId: id } }),
+      entityType: 'admin-users',
+      entityId: id,
+      actor: { staffId, reason, ...auditContext },
     })
   }
 
