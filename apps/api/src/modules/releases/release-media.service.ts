@@ -59,6 +59,12 @@ const TRACK_DRAFT_SELECT = {
   audioSizeBytes: true,
 } as const satisfies Prisma.ArtistTrackDraftSelect
 
+/** The release summary returned by {@link lockOwnedDraft}. */
+type LockedDraft = Awaited<ReturnType<typeof lockOwnedDraft>>
+
+/** A recording as a workspace shows it. */
+type TrackDraft = Prisma.ArtistTrackDraftGetPayload<{ select: typeof TRACK_DRAFT_SELECT }>
+
 /** A new master: uploaded but not yet attached to a draft row. */
 interface StoredMaster {
   key: string
@@ -96,7 +102,7 @@ export class ReleaseMediaService {
     })
     const cover = `${COVER_PATH_PREFIX}${name}`
     let previous: string | null
-    let release: Awaited<ReturnType<typeof lockOwnedDraft>>
+    let release: LockedDraft
     try {
       ;({ previous, release } = await this.prisma.$transaction(async (tx) => {
         const current = await this.currentCover(tx, ownerArtistId, id)
@@ -197,10 +203,9 @@ export class ReleaseMediaService {
     input: ReleaseDraftVersionDto,
   ) {
     const master = await this.storeMaster(ownerArtistId, file)
-    let previousKey: string | null
-    let result: Awaited<ReturnType<ReleaseMediaService['attachMaster']>>
+    let replaced: { previousKey: string | null; release: LockedDraft; track: TrackDraft }
     try {
-      ;({ previousKey, result } = await this.prisma.$transaction(async (tx) => {
+      replaced = await this.prisma.$transaction(async (tx) => {
         const release = await lockOwnedDraft(tx, ownerArtistId, id, input.expectedUpdatedAt, {
           accuracyConfirmedAt: null,
         })
@@ -209,15 +214,21 @@ export class ReleaseMediaService {
           select: { audioKey: true },
         })
         if (!existing) throw new NotFoundException(RELEASE_ERRORS.RECORDING_NOT_FOUND)
-        const attached = await this.attachMaster(tx, release, trackId, master)
-        return { previousKey: existing.audioKey, result: attached }
-      }))
+        // The draft lock holds the release row, so the recording cannot vanish before this write.
+        const track = await tx.artistTrackDraft.update({
+          where: { id: trackId },
+          data: masterColumns(master),
+          select: TRACK_DRAFT_SELECT,
+        })
+        return { previousKey: existing.audioKey, release, track }
+      })
     } catch (error) {
       await this.deleteObject(master.key)
       throw error
     }
+    const { previousKey, release, track } = replaced
     if (previousKey) await this.deleteObject(previousKey)
-    return result
+    return { release, track: { ...track, hasAudio: true } }
   }
 
   /**
@@ -277,21 +288,6 @@ export class ReleaseMediaService {
       throw new NotFoundException(RELEASE_ERRORS.AUDIO_NOT_FOUND)
     }
     return { ...object, contentType: draft.audioContentType ?? object.contentType }
-  }
-
-  private async attachMaster(
-    tx: Prisma.TransactionClient,
-    release: Awaited<ReturnType<typeof lockOwnedDraft>>,
-    trackId: string,
-    master: StoredMaster,
-  ) {
-    const [track] = await tx.artistTrackDraft.updateManyAndReturn({
-      where: { id: trackId, releaseId: release.id, deletedAt: null },
-      data: masterColumns(master),
-      select: TRACK_DRAFT_SELECT,
-    })
-    if (!track) throw new NotFoundException(RELEASE_ERRORS.RECORDING_NOT_FOUND)
-    return { release, track: { ...track, hasAudio: true } }
   }
 
   /** Moves the temporary upload into private storage; the local file is always removed. */
