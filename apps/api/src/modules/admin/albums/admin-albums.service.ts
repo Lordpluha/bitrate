@@ -83,7 +83,7 @@ export class AdminAlbumsService {
     return { ...album, artistUsername: artist.username }
   }
 
-  /** Runs the find all operation, paginated, newest first by default. */
+  /** Lists albums, paginated, newest first by default. */
   async findAll({
     page = DEFAULT_PAGE,
     limit = DEFAULT_LIMIT,
@@ -112,7 +112,7 @@ export class AdminAlbumsService {
   }
 
   /**
-   * Runs the find by id operation, with the album's tracks ordered by disc then track number.
+   * Finds one album by id, with the album's tracks ordered by disc then track number.
    * Deliberately does not filter `deletedAt` — a taken-down album must stay reachable by id so
    * the operator can review it before deciding to restore it. Each track carries its own
    * `deletedAt`: an album's take-down never cascades to them.

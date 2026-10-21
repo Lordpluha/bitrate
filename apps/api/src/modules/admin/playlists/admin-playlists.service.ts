@@ -95,7 +95,7 @@ export class AdminPlaylistsService {
     return { ...playlist, ownerId: userId, ownerUsername: user.username, trackCount: _count.tracks }
   }
 
-  /** Runs the find all operation, paginated, newest first by default. */
+  /** Lists public playlists, paginated, newest first by default. */
   async findAll({
     page = DEFAULT_PAGE,
     limit = DEFAULT_LIMIT,
@@ -124,7 +124,7 @@ export class AdminPlaylistsService {
   }
 
   /**
-   * Runs the find by id operation. Deliberately filters neither `isPublic` nor `deletedAt` — a
+   * Finds one playlist by id. Deliberately filters neither `isPublic` nor `deletedAt` — a
    * hidden or taken-down playlist must stay reachable by id so the operator can review it and
    * reverse either action.
    */
