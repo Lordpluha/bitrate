@@ -30,6 +30,7 @@ export const useUpdateMeSettings = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
+    meta: { errorMessage: 'Unable to save this preference.' },
     mutationFn: async (settings: UpdateMeSettings) => {
       const body = updateMeSettingsSchema.parse(settings)
       const { data, response } = await clientFetchClient.PUT(
