@@ -1,3 +1,4 @@
+import { pipeToResponse } from '@common/utils/stream'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
 import type { ArtistAuthRequest } from '@modules/artists-auth/types'
 import {
@@ -8,6 +9,7 @@ import {
   Header,
   Headers,
   HttpCode,
+  Logger,
   Param,
   ParseUUIDPipe,
   Post,
@@ -40,6 +42,8 @@ import {
 } from './dtos/release-media.dto'
 import { ReleaseAudioInterceptor, ReleaseCoverInterceptor } from './release-media.interceptors'
 import { ReleaseMediaService } from './release-media.service'
+
+const logger = new Logger('ReleaseMediaController')
 
 /** Artwork and master audio of an owned draft; files stay private until a later delivery stage. */
 @ApiTags('Releases')
@@ -149,7 +153,6 @@ export class ReleaseMediaController {
       'Cache-Control': 'private, no-store',
       'X-Content-Type-Options': 'nosniff',
     })
-    audio.stream.on('error', () => response.destroy())
-    audio.stream.pipe(response)
+    pipeToResponse(audio.stream, response, logger, `Release ${id} audio`)
   }
 }

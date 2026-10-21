@@ -1,3 +1,4 @@
+import { pipeToResponse } from '@common/utils/stream'
 import { AuditContext, type AuditContextValue } from '@modules/admin/shared'
 import type { AuthenticatedStaff } from '@modules/admin-auth'
 import { AdminAuth, CurrentStaff, RequirePermission } from '@modules/admin-auth'
@@ -8,6 +9,7 @@ import {
   Headers,
   HttpCode,
   HttpStatus,
+  Logger,
   Param,
   ParseUUIDPipe,
   Post,
@@ -33,6 +35,8 @@ import {
   type RequestReleaseChangesDto,
   RequestReleaseChangesSchema,
 } from './dtos/release-review.dto'
+
+const logger = new Logger('AdminReleasesController')
 
 /** Operator-facing review of artist release submissions. */
 @ApiTags('Admin Releases')
@@ -76,8 +80,7 @@ export class AdminReleasesController {
       'Cache-Control': 'private, no-store',
       'X-Content-Type-Options': 'nosniff',
     })
-    audio.stream.on('error', () => response.destroy())
-    audio.stream.pipe(response)
+    pipeToResponse(audio.stream, response, logger, `Release ${id} audio`)
   }
 
   @RequirePermission('releases:review')

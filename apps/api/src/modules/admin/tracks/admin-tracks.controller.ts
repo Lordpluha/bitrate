@@ -1,4 +1,4 @@
-import { pipeline } from 'node:stream'
+import { pipeToResponse } from '@common/utils/stream'
 import { SkipAudit } from '@infra/observability/skip-audit.decorator'
 import {
   AuditContext,
@@ -167,14 +167,7 @@ export class AdminTracksController {
         : {}),
     })
 
-    // `pipeline`, not `.pipe`: a storage error mid-transfer tears the response down instead of
-    // leaving it hanging, and a client that goes away releases the storage stream. Headers are
-    // already sent by then, so there is nothing left to answer — the failure is only logged.
-    pipeline(audio.stream, res, (error) => {
-      if (error && error.code !== 'ERR_STREAM_PREMATURE_CLOSE') {
-        logger.warn(`Audio stream for track ${id} failed: ${error.message}`)
-      }
-    })
+    pipeToResponse(audio.stream, res, logger, `Audio for track ${id}`)
   }
 
   /** Runs the list processing attempts operation. */
