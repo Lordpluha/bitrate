@@ -9,7 +9,7 @@ import { enterTeam } from './team'
 import type { SceneEnterRegistry } from './types'
 import { enterWorkshop } from './workshop'
 
-export type { SceneEnter, SceneEnterEnv, SceneEnterRegistry } from './types'
+export type { SceneEnterEnv, SceneEnterRegistry } from './types'
 export { mountWorkshopShuffle } from './workshop'
 
 /** Each scene's own entrance beats, on top of the shared letters/windows entrance. */

@@ -2,7 +2,7 @@ import type * as Three from 'three'
 import type { PaletteToken } from '../palette'
 
 /** The lazily imported Three.js module. */
-export type ThreeModule = typeof Three
+type ThreeModule = typeof Three
 
 /** k: world units per screen pixel; ox/oy/s: where the 1440x900 board sits on screen. */
 export type BoardFit = { k: number; ox: number; oy: number; s: number }

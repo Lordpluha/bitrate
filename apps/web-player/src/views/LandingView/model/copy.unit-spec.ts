@@ -18,7 +18,7 @@ describe('pickLandingCopy', () => {
   })
 
   it('falls back to English for keys a catalog leaves out (track and artist names)', () => {
-    expect(pickLandingCopy('uk')('hero.night_signal')).toBe('Night Signal')
+    expect(pickLandingCopy('uk')('hero.kite_harbor')).toBe('Kite Harbor')
     expect(pickLandingCopy('pl')('library.luma_vale')).toBe('Luma Vale')
   })
 

@@ -49,7 +49,7 @@ const rgbCache = new Map<PaletteToken, Rgb>()
 export const clearTokenCache = () => rgbCache.clear()
 
 /** 0–255 channels of a token; cached once the token resolves (an unstyled DOM is not cached). */
-export const tokenRgb = (name: PaletteToken): Rgb => {
+const tokenRgb = (name: PaletteToken): Rgb => {
   const hit = rgbCache.get(name)
   if (hit) return hit
   const v = readToken(name)
