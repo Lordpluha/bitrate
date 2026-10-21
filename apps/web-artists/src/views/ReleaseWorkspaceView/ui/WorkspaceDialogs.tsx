@@ -10,10 +10,11 @@ import {
   UpcDialog,
 } from '@features/edit-release'
 import {
+  AddTrackDialog,
   CoverDialog,
   RemoveTrackDialog,
   RenameTrackDialog,
-  TrackUploadDialog,
+  ReplaceAudioDialog,
 } from '@features/release-media'
 import type { WorkspaceAction } from '@widgets/ReleaseWorkspace'
 
@@ -67,9 +68,9 @@ export function WorkspaceDialogs({
     case 'cover':
       return <CoverDialog {...props} />
     case 'track-add':
-      return <TrackUploadDialog {...props} />
+      return <AddTrackDialog {...props} />
     case 'track-audio':
-      return <TrackUploadDialog {...props} trackId={dialog.trackId} />
+      return <ReplaceAudioDialog {...props} trackId={dialog.trackId} />
     case 'track-rename':
       return <RenameTrackDialog {...props} trackId={dialog.trackId} />
     case 'track-remove':
