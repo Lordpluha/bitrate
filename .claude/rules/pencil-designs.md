@@ -49,5 +49,7 @@ paths:
 - The library is one flex root ("Bitrate Design System") with Components, Foundations and
   Product-pattern rows; page blocks live on "00E • Page Blocks".
 - `pnpm design:pages` regenerates the library blocks and every page from
-  `scripts/pencil-pages/` (content per route in `pages*.mjs`). Folders named `archive/` hold
+  `scripts/pencil-pages/`: library blocks in `build-lib.mjs` + `lib/blocks/*.mjs`, player
+  routes in `pages/player/*.mjs`, other routes in `pages-*.mjs`. Node ids are stable hashes,
+  so unchanged pages regenerate byte-identically. Folders named `archive/` hold
   historical references and are skipped by the checks.
