@@ -121,8 +121,7 @@ export class AuthController {
       throw new BadRequestException('Email is required')
     }
 
-    const artist = await this.artistService.findByEmail(email.trim().toLowerCase())
-    return { available: !artist }
+    return await this.artistAuthService.isEmailAvailable(email)
   }
 
   /** Runs the logout operation. */

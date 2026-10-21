@@ -81,6 +81,12 @@ export class ArtistsAuthService {
     return { requiresEmailVerification: true as const, delivery }
   }
 
+  /** Whether no live artist account uses the address, compared trimmed and lower-cased. */
+  async isEmailAvailable(email: string) {
+    const artist = await this.artists.findByEmail(email.trim().toLowerCase())
+    return { available: !artist }
+  }
+
   /** Runs the login artist operation. */
   loginArtist(
     email: ArtistEntity['email'],
