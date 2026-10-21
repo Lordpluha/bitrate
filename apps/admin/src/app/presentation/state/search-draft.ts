@@ -4,7 +4,7 @@ import { debounceTime, filter } from 'rxjs'
 import type { QueryState } from './query-state'
 
 /** How long to wait after the last keystroke before a text filter reaches the URL. */
-export const SEARCH_DEBOUNCE_MS = 300
+const SEARCH_DEBOUNCE_MS = 300
 
 type BindSearchDraftInput<T> = {
   query: QueryState<T>

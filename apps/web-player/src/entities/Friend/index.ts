@@ -1,6 +1,5 @@
 export type {
   Friend,
-  FriendRequest,
   SendFriendRequestResult,
 } from './api/client/friends.schemas'
 export * from './api/client/hooks'

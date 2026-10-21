@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser'
 import { type RouterStateSnapshot, TitleStrategy } from '@angular/router'
 
 /** Appended to every route title, so each route declares only its own name. */
-export const TITLE_SUFFIX = ' · Bitrate operators'
+const TITLE_SUFFIX = ' · Bitrate operators'
 
 /** Sets the tab title to the deepest route's `title` plus the panel's suffix. */
 @Injectable()
