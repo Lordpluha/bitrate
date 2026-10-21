@@ -2,6 +2,7 @@ import { gsap } from 'gsap'
 import type { LandingKey } from '../../model/messages/en'
 import { lc } from '../styles/lc'
 import { type EngineContext, must } from './context'
+import { collideBalls, type PhysicsBall } from './physics'
 
 const REPO = 'https://github.com/Lordpluha/bitrate'
 
@@ -133,15 +134,7 @@ const members = ({ copy }: EngineContext): Member[] => [
   ),
 ]
 
-type Bubble = {
-  d: Member
-  el: HTMLDivElement
-  x: number
-  y: number
-  vx: number
-  vy: number
-  r: number
-}
+type Bubble = PhysicsBall & { d: Member; el: HTMLDivElement }
 
 /** Deterministic 0–1 per bubble so the drop looks the same on every visit. */
 const rndf = (i: number) => {
@@ -166,7 +159,13 @@ export const mountTeam = (ctx: EngineContext) => {
     el.textContent = d.label
     el.setAttribute('aria-label', d.name)
     pit.appendChild(el)
-    return { d, el, x: 0, y: 0, vx: 0, vy: 0, r: d.r }
+    return {
+      d,
+      el,
+      r: d.r,
+      p: { x: 0, y: 0, z: 0 },
+      v: { x: 0, y: 0, z: 0 },
+    }
   })
   ctx.onDispose(() => {
     for (const b of bubbles) b.el.remove()
@@ -202,10 +201,10 @@ export const mountTeam = (ctx: EngineContext) => {
     TP.w = pit.offsetWidth
     TP.h = pit.offsetHeight
     bubbles.forEach((b, i) => {
-      b.x = b.r + rndf(i) * (TP.w - b.r * 2)
-      b.y = -b.r - rndf(i + 9) * 600 - (b.d.kind === 'person' ? 700 : 0)
-      b.vx = (rndf(i + 3) - 0.5) * 200
-      b.vy = 0
+      b.p.x = b.r + rndf(i) * (TP.w - b.r * 2)
+      b.p.y = -b.r - rndf(i + 9) * 600 - (b.d.kind === 'person' ? 700 : 0)
+      b.v.x = (rndf(i + 3) - 0.5) * 200
+      b.v.y = 0
     })
     TP.run = true
   }
@@ -303,68 +302,43 @@ export const mountTeam = (ctx: EngineContext) => {
   const step = (dt: number) => {
     for (const b of bubbles) {
       if (TP.grab === b) {
-        b.vx = (TP.gx - b.x) * 16
-        b.vy = (TP.gy - b.y) * 16
-      } else b.vy += GRAVITY * dt
-      b.vx *= 0.996
-      b.x += b.vx * dt
-      b.y += b.vy * dt
-      if (b.x < b.r) {
-        b.x = b.r
-        b.vx = Math.abs(b.vx) * 0.4
+        b.v.x = (TP.gx - b.p.x) * 16
+        b.v.y = (TP.gy - b.p.y) * 16
+      } else b.v.y += GRAVITY * dt
+      b.v.x *= 0.996
+      b.p.x += b.v.x * dt
+      b.p.y += b.v.y * dt
+      if (b.p.x < b.r) {
+        b.p.x = b.r
+        b.v.x = Math.abs(b.v.x) * 0.4
       }
-      if (b.x > TP.w - b.r) {
-        b.x = TP.w - b.r
-        b.vx = -Math.abs(b.vx) * 0.4
+      if (b.p.x > TP.w - b.r) {
+        b.p.x = TP.w - b.r
+        b.v.x = -Math.abs(b.v.x) * 0.4
       }
-      if (b.y > TP.h - b.r) {
-        b.y = TP.h - b.r
-        b.vy = -Math.abs(b.vy) * 0.32
-        b.vx *= 0.94
-      }
-    }
-    for (let it = 0; it < 3; it++) {
-      for (let i = 0; i < bubbles.length; i++) {
-        const a = bubbles[i]
-        if (!a) continue
-        for (let j = i + 1; j < bubbles.length; j++) {
-          const c = bubbles[j]
-          if (!c) continue
-          const dx = c.x - a.x
-          const dy = c.y - a.y
-          const d = Math.hypot(dx, dy) || 1e-3
-          const min = a.r + c.r
-          if (d >= min) continue
-          const nx = dx / d
-          const ny = dy / d
-          const ma = TP.grab === a ? 0 : 1 / a.r
-          const mc = TP.grab === c ? 0 : 1 / c.r
-          const sum = ma + mc || 1
-          const corr = min - d
-          a.x -= nx * corr * (ma / sum)
-          a.y -= ny * corr * (ma / sum)
-          c.x += nx * corr * (mc / sum)
-          c.y += ny * corr * (mc / sum)
-          const rv = (c.vx - a.vx) * nx + (c.vy - a.vy) * ny
-          if (rv < 0) {
-            const imp = (-rv * 1.3) / sum
-            a.vx -= nx * imp * ma
-            a.vy -= ny * imp * ma
-            c.vx += nx * imp * mc
-            c.vy += ny * imp * mc
-          }
-        }
+      if (b.p.y > TP.h - b.r) {
+        b.p.y = TP.h - b.r
+        b.v.y = -Math.abs(b.v.y) * 0.32
+        b.v.x *= 0.94
       }
     }
+    for (let it = 0; it < 3; it++)
+      collideBalls({
+        balls: bubbles,
+        dims: 2,
+        bounce: 1.3,
+        /* the held bubble does not give way */
+        inverseMass: (o) => (TP.grab === o ? 0 : 1 / o.r),
+      })
   }
   /** Writes the simulated positions to the DOM: once per frame, after all sub-steps. */
   const render = () => {
     for (const b of bubbles)
-      b.el.style.transform = `translate(${b.x - b.r}px, ${b.y - b.r}px)`
+      b.el.style.transform = `translate(${b.p.x - b.r}px, ${b.p.y - b.r}px)`
     if (TP.hover) {
       const b = TP.hover
-      const above = b.y - b.r - 14 > TP.cardH
-      hc.style.transform = `translate(${Math.max(8, Math.min(TP.w - CARD_WIDTH - 8, b.x - CARD_WIDTH / 2))}px, ${above ? b.y - b.r - 12 - TP.cardH : b.y + b.r + 12}px)`
+      const above = b.p.y - b.r - 14 > TP.cardH
+      hc.style.transform = `translate(${Math.max(8, Math.min(TP.w - CARD_WIDTH - 8, b.p.x - CARD_WIDTH / 2))}px, ${above ? b.p.y - b.r - 12 - TP.cardH : b.p.y + b.r + 12}px)`
     }
   }
   const tick = () => {

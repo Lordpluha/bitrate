@@ -4,6 +4,7 @@ import { BOARD, type EngineContext, isMobile, must, rnd } from './context'
 import { createLayouts, FIELD_COUNT, LUMA } from './layouts'
 import { PARTNER_MARKS, type PartnerMark } from './marks'
 import { isLightTheme, type PaletteToken, token } from './palette'
+import { collideBalls } from './physics'
 import {
   CHROME_FRAG,
   CHROME_VERT,
@@ -546,41 +547,7 @@ export const createStage = async ({
         }
       }
     }
-    for (let i = 0; i < PB.length; i++) {
-      const a = PB[i]
-      if (!a) continue
-      for (let j = i + 1; j < PB.length; j++) {
-        const b = PB[j]
-        if (!b) continue
-        const dx = b.p.x - a.p.x
-        const dy = b.p.y - a.p.y
-        const dz = b.p.z - a.p.z
-        const d = Math.hypot(dx, dy, dz) || 1e-4
-        const min = a.r + b.r
-        if (d >= min) continue
-        const nx = dx / d
-        const ny = dy / d
-        const nz = dz / d
-        const corr = (min - d) * 0.5
-        a.p.x -= nx * corr
-        a.p.y -= ny * corr
-        a.p.z -= nz * corr
-        b.p.x += nx * corr
-        b.p.y += ny * corr
-        b.p.z += nz * corr
-        const rv =
-          (b.v.x - a.v.x) * nx + (b.v.y - a.v.y) * ny + (b.v.z - a.v.z) * nz
-        if (rv < 0) {
-          const imp = -rv * 0.75
-          a.v.x -= nx * imp
-          a.v.y -= ny * imp
-          a.v.z -= nz * imp
-          b.v.x += nx * imp
-          b.v.y += ny * imp
-          b.v.z += nz * imp
-        }
-      }
-    }
+    collideBalls({ balls: PB, dims: 3, bounce: 1.5 })
     for (const b of PB) {
       b.p.addScaledVector(b.v, dt)
       b.p.z = Math.max(-2.5, Math.min(2.5, b.p.z))
