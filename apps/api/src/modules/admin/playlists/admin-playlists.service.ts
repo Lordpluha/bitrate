@@ -11,6 +11,12 @@ import {
 } from '@modules/admin/shared'
 import { Injectable } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
+import {
+  PLAYLIST_DETAIL_SELECT,
+  PLAYLIST_ROW_SELECT,
+  type PlaylistDetailRecord,
+  type PlaylistRowRecord,
+} from './admin-playlists.select'
 import type { ADMIN_PLAYLISTS_SORT_FIELDS } from './dtos'
 import type { AdminPlaylistEntity, AdminPlaylistTrackEntity } from './entities'
 import {
@@ -38,39 +44,6 @@ type ListPlaylistsInput = {
 const AUDIT_ENTITY_TYPE = 'admin-playlists'
 const HIDE_ACTION = 'admin-playlists.hide'
 const UNHIDE_ACTION = 'admin-playlists.unhide'
-
-/** How many tracks the detail page shows; `trackCount` carries the full total. */
-const DETAIL_TRACK_LIMIT = 50
-
-/** The columns the list, detail and mutation responses share, with owner and track count joined. */
-const PLAYLIST_ROW_SELECT = {
-  id: true,
-  title: true,
-  cover: true,
-  userId: true,
-  user: { select: { username: true } },
-  isPublic: true,
-  followersCount: true,
-  _count: { select: { tracks: true } },
-  deletedAt: true,
-  createdAt: true,
-  updatedAt: true,
-} as const satisfies Prisma.PlaylistSelect
-
-/** The row columns plus the metadata and first tracks only the detail page shows. */
-const PLAYLIST_DETAIL_SELECT = {
-  ...PLAYLIST_ROW_SELECT,
-  description: true,
-  collaborative: true,
-  tracks: {
-    orderBy: { position: 'asc' },
-    take: DETAIL_TRACK_LIMIT,
-    select: { position: true, track: { select: { id: true, title: true } } },
-  },
-} as const satisfies Prisma.PlaylistSelect
-
-type PlaylistRowRecord = Prisma.PlaylistGetPayload<{ select: typeof PLAYLIST_ROW_SELECT }>
-type PlaylistDetailRecord = Prisma.PlaylistGetPayload<{ select: typeof PLAYLIST_DETAIL_SELECT }>
 
 /** Handles the operator-facing public-playlist moderation: hide, take-down and restore. */
 @Injectable()
