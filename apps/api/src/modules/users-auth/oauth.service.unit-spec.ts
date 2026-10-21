@@ -75,6 +75,24 @@ describe('OAuthService', () => {
       expect(prisma.userSession.create).not.toHaveBeenCalled()
     })
 
+    it('loads only the sign-in fields of a linked account, never its password hash', async () => {
+      prisma.userOAuthAccount.findUnique.mockResolvedValue({
+        user: { id: 'user-6', username: 'old', twoFactorEnabled: false, deletedAt: null },
+      } as never)
+      prisma.userSession.create.mockResolvedValue({} as never)
+
+      await call('google', { id: 'google-6', email: 'old@example.com', name: 'Old' })
+
+      expect(prisma.userOAuthAccount.findUnique).toHaveBeenCalledWith({
+        where: {
+          provider_providerAccountId: { provider: 'google', providerAccountId: 'google-6' },
+        },
+        select: {
+          user: { select: { id: true, username: true, twoFactorEnabled: true, deletedAt: true } },
+        },
+      })
+    })
+
     /** A soft-deleted account's email is free to re-register through OAuth, matching every
      * other lookup this module makes — it must not be reused as if it were still active. */
     it('excludes a soft-deleted account when checking for an existing email', async () => {

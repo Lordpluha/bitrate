@@ -57,6 +57,24 @@ describe('ArtistOAuthService', () => {
     expect(prisma.artistSession.create).not.toHaveBeenCalled()
   })
 
+  it('loads only the sign-in fields of a linked artist, never its password hash', async () => {
+    prisma.artistOAuthAccount.findUnique.mockResolvedValue({
+      artist: { id: 'artist-6', username: 'old', twoFactorEnabled: false, deletedAt: null },
+    } as never)
+    prisma.artistSession.create.mockResolvedValue({} as never)
+
+    await findOrCreate('google', { id: 'provider-6', email: 'old@example.com', name: 'Old' })
+
+    expect(prisma.artistOAuthAccount.findUnique).toHaveBeenCalledWith({
+      where: {
+        provider_providerAccountId: { provider: 'google', providerAccountId: 'provider-6' },
+      },
+      select: {
+        artist: { select: { id: true, username: true, twoFactorEnabled: true, deletedAt: true } },
+      },
+    })
+  })
+
   describe('new accounts', () => {
     const profile = { id: 'provider-2', email: 'new@example.com', name: 'New' }
 

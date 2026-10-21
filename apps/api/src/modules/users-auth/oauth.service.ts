@@ -167,7 +167,9 @@ export class OAuthService {
   ) {
     const existing = await this.prisma.userOAuthAccount.findUnique({
       where: { provider_providerAccountId: { provider, providerAccountId: profile.id } },
-      include: { user: true },
+      select: {
+        user: { select: { id: true, username: true, twoFactorEnabled: true, deletedAt: true } },
+      },
     })
 
     if (existing) {

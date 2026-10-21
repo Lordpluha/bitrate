@@ -183,7 +183,9 @@ export class ArtistOAuthService {
   ) {
     const existing = await this.prisma.artistOAuthAccount.findUnique({
       where: { provider_providerAccountId: { provider, providerAccountId: profile.id } },
-      include: { artist: true },
+      select: {
+        artist: { select: { id: true, username: true, twoFactorEnabled: true, deletedAt: true } },
+      },
     })
 
     if (existing) {
