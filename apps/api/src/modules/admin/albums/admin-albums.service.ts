@@ -154,7 +154,10 @@ export class AdminAlbumsService {
     reason?: string,
     auditContext: AuditContextValue = {},
   ) {
-    const existing = await this.prisma.album.findFirst({ where: { id } })
+    const existing = await this.prisma.album.findFirst({
+      where: { id },
+      select: { deletedAt: true },
+    })
     if (!existing) throw new AlbumNotFoundException(id)
     if (existing.deletedAt) throw new AlbumAlreadyDeletedException(id)
 
@@ -194,7 +197,10 @@ export class AdminAlbumsService {
     reason?: string,
     auditContext: AuditContextValue = {},
   ) {
-    const existing = await this.prisma.album.findFirst({ where: { id } })
+    const existing = await this.prisma.album.findFirst({
+      where: { id },
+      select: { deletedAt: true },
+    })
     if (!existing) throw new AlbumNotFoundException(id)
     if (!existing.deletedAt) throw new AlbumNotDeletedException(id)
 

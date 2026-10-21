@@ -163,7 +163,10 @@ export class AdminPodcastsService {
     reason?: string,
     auditContext: AuditContextValue = {},
   ) {
-    const existing = await this.prisma.podcast.findFirst({ where: { id } })
+    const existing = await this.prisma.podcast.findFirst({
+      where: { id },
+      select: { deletedAt: true },
+    })
     if (!existing) throw new PodcastNotFoundException(id)
     if (existing.deletedAt) throw new PodcastAlreadyDeletedException(id)
 
@@ -200,7 +203,10 @@ export class AdminPodcastsService {
     reason?: string,
     auditContext: AuditContextValue = {},
   ) {
-    const existing = await this.prisma.podcast.findFirst({ where: { id } })
+    const existing = await this.prisma.podcast.findFirst({
+      where: { id },
+      select: { deletedAt: true },
+    })
     if (!existing) throw new PodcastNotFoundException(id)
     if (!existing.deletedAt) throw new PodcastNotDeletedException(id)
 
@@ -242,7 +248,10 @@ export class AdminPodcastsService {
     reason?: string,
     auditContext: AuditContextValue = {},
   ) {
-    const existing = await this.prisma.episode.findFirst({ where: { id: episodeId, podcastId } })
+    const existing = await this.prisma.episode.findFirst({
+      where: { id: episodeId, podcastId },
+      select: { deletedAt: true },
+    })
     if (!existing) throw new EpisodeNotFoundException(episodeId)
     if (existing.deletedAt) throw new EpisodeAlreadyDeletedException(episodeId)
 
@@ -280,7 +289,10 @@ export class AdminPodcastsService {
     reason?: string,
     auditContext: AuditContextValue = {},
   ) {
-    const existing = await this.prisma.episode.findFirst({ where: { id: episodeId, podcastId } })
+    const existing = await this.prisma.episode.findFirst({
+      where: { id: episodeId, podcastId },
+      select: { deletedAt: true },
+    })
     if (!existing) throw new EpisodeNotFoundException(episodeId)
     if (!existing.deletedAt) throw new EpisodeNotDeletedException(episodeId)
 

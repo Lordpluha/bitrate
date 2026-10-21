@@ -29,6 +29,9 @@ type ListArtistsInput = {
   q?: string
 } & SortInput<AdminArtistsSortField>
 
+/** What the existence/state pre-checks read — never the credential columns. */
+const EXISTENCE_SELECT = { id: true, deletedAt: true } as const satisfies Prisma.ArtistSelect
+
 /** Handles the operator-facing artist directory. */
 @Injectable()
 export class AdminArtistsService {
@@ -147,7 +150,7 @@ export class AdminArtistsService {
 
   /** Runs the update verification operation. */
   async updateVerification(id: string, dto: UpdateArtistVerificationDto) {
-    const existing = await this.prisma.artist.findFirst({ where: { id } })
+    const existing = await this.prisma.artist.findFirst({ where: { id }, select: EXISTENCE_SELECT })
     if (!existing) throw new ArtistNotFoundException(id)
     if (existing.deletedAt) throw new ArtistAlreadyDeletedException(id)
 
@@ -167,15 +170,13 @@ export class AdminArtistsService {
       status,
     }: PaginationInput & { status?: AdminResourceStatus },
   ) {
-    const existing = await this.prisma.artist.findFirst({ where: { id: artistId } })
-    if (!existing) throw new ArtistNotFoundException(artistId)
-
     const where = {
       artistId,
       ...this.buildStatusWhere(status),
     } satisfies Prisma.TrackWhereInput
 
-    const [data, total] = await Promise.all([
+    const [existing, data, total] = await Promise.all([
+      this.prisma.artist.findFirst({ where: { id: artistId }, select: { id: true } }),
       this.prisma.track.findMany({
         where,
         select: {
@@ -193,6 +194,7 @@ export class AdminArtistsService {
       }),
       this.prisma.track.count({ where }),
     ])
+    if (!existing) throw new ArtistNotFoundException(artistId)
     return { data, total, page, limit }
   }
 
@@ -205,15 +207,13 @@ export class AdminArtistsService {
       status,
     }: PaginationInput & { status?: AdminResourceStatus },
   ) {
-    const existing = await this.prisma.artist.findFirst({ where: { id: artistId } })
-    if (!existing) throw new ArtistNotFoundException(artistId)
-
     const where = {
       artistId,
       ...this.buildStatusWhere(status),
     } satisfies Prisma.AlbumWhereInput
 
-    const [data, total] = await Promise.all([
+    const [existing, data, total] = await Promise.all([
+      this.prisma.artist.findFirst({ where: { id: artistId }, select: { id: true } }),
       this.prisma.album.findMany({
         where,
         select: {
@@ -232,6 +232,7 @@ export class AdminArtistsService {
       }),
       this.prisma.album.count({ where }),
     ])
+    if (!existing) throw new ArtistNotFoundException(artistId)
     return { data, total, page, limit }
   }
 
@@ -254,7 +255,7 @@ export class AdminArtistsService {
     reason?: string,
     auditContext: AuditContextValue = {},
   ) {
-    const existing = await this.prisma.artist.findFirst({ where: { id } })
+    const existing = await this.prisma.artist.findFirst({ where: { id }, select: EXISTENCE_SELECT })
     if (!existing) throw new ArtistNotFoundException(id)
     if (existing.deletedAt) throw new ArtistAlreadyDeletedException(id)
 
@@ -298,7 +299,7 @@ export class AdminArtistsService {
     reason?: string,
     auditContext: AuditContextValue = {},
   ) {
-    const existing = await this.prisma.artist.findFirst({ where: { id } })
+    const existing = await this.prisma.artist.findFirst({ where: { id }, select: EXISTENCE_SELECT })
     if (!existing) throw new ArtistNotFoundException(id)
     if (!existing.deletedAt) throw new ArtistNotDeletedException(id)
 
@@ -339,7 +340,7 @@ export class AdminArtistsService {
     reason?: string,
     auditContext: AuditContextValue = {},
   ) {
-    const existing = await this.prisma.artist.findFirst({ where: { id } })
+    const existing = await this.prisma.artist.findFirst({ where: { id }, select: EXISTENCE_SELECT })
     if (!existing) throw new ArtistNotFoundException(id)
 
     return await this.prisma.$transaction(async (tx) => {

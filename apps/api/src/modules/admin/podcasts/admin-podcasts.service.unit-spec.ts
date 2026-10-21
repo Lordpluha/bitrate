@@ -262,9 +262,9 @@ describe('AdminPodcastsService', () => {
       await expect(service.softDeleteEpisode('podcast-2', 'episode-1', STAFF_ID)).rejects.toThrow(
         EpisodeNotFoundException,
       )
-      expect(prisma.episode.findFirst).toHaveBeenCalledWith({
-        where: { id: 'episode-1', podcastId: 'podcast-2' },
-      })
+      expect(prisma.episode.findFirst).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { id: 'episode-1', podcastId: 'podcast-2' } }),
+      )
     })
 
     it('throws EpisodeAlreadyDeletedException when already taken down', async () => {
