@@ -37,6 +37,14 @@ type AuditSource = 'creation' | 'assignment' | 'manual'
 
 const BUILT_IN_ADMIN_NAME = 'ADMIN'
 
+/** The two role columns that identify the built-in super-admin role. */
+type RoleIdentity = { name: string; builtIn: boolean }
+
+/** Whether `role` is the built-in `ADMIN` — whose `permissions` are never consulted. */
+function isBuiltInAdmin(role: RoleIdentity): boolean {
+  return role.builtIn && role.name === BUILT_IN_ADMIN_NAME
+}
+
 /** The 409 message when a concurrent create claimed the email or username first. */
 const EMAIL_OR_USERNAME_TAKEN = 'Email or username is already in use'
 
@@ -62,7 +70,7 @@ export class AdminStaffService {
     private readonly token: TokenService,
   ) {}
 
-  /** Runs the find all operation, paginated. */
+  /** Lists active operators, paginated. */
   async findAll({ page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, sort, order }: ListStaffInput) {
     const where = { deletedAt: null } satisfies Prisma.StaffWhereInput
     const orderBy = buildSortOrderBy<Prisma.StaffOrderByWithRelationInput>({ sort, order }, [
@@ -82,7 +90,7 @@ export class AdminStaffService {
     return { data, total, page, limit }
   }
 
-  /** Runs the find by id operation. Excludes deactivated operators. */
+  /** Finds one operator by id. Excludes deactivated operators. */
   async findById(id: string) {
     const staff = await this.prisma.staff.findFirst({
       where: { id, deletedAt: null },
@@ -110,7 +118,7 @@ export class AdminStaffService {
     ])
     if (!role) throw new NotFoundException(`Role ${dto.roleId} not found`)
 
-    const isSuperAdmin = role.builtIn && role.name === BUILT_IN_ADMIN_NAME
+    const isSuperAdmin = isBuiltInAdmin(role)
     const permissions = this.resolveGrantedPermissions({
       isSuperAdmin,
       override: dto.permissions,
@@ -172,8 +180,8 @@ export class AdminStaffService {
       })
       if (!newRole) throw new NotFoundException(`Role ${dto.roleId} not found`)
 
-      const wasSuperAdmin = staff.role.builtIn && staff.role.name === BUILT_IN_ADMIN_NAME
-      const isSuperAdmin = newRole.builtIn && newRole.name === BUILT_IN_ADMIN_NAME
+      const wasSuperAdmin = isBuiltInAdmin(staff.role)
+      const isSuperAdmin = isBuiltInAdmin(newRole)
       if (wasSuperAdmin && !isSuperAdmin) {
         await this.assertNotLastActiveAdmin(tx, id)
       }
@@ -218,7 +226,7 @@ export class AdminStaffService {
         select: STAFF_ROLE_CHECK_SELECT,
       })
       if (!staff) throw new StaffNotFoundException(id)
-      if (staff.role.builtIn && staff.role.name === BUILT_IN_ADMIN_NAME) {
+      if (isBuiltInAdmin(staff.role)) {
         throw new SuperAdminPermissionsException(id)
       }
 
@@ -257,8 +265,7 @@ export class AdminStaffService {
       })
       if (!staff) throw new StaffNotFoundException(id)
 
-      const isSuperAdmin = staff.role.builtIn && staff.role.name === BUILT_IN_ADMIN_NAME
-      if (isSuperAdmin) await this.assertNotLastActiveAdmin(tx, id)
+      if (isBuiltInAdmin(staff.role)) await this.assertNotLastActiveAdmin(tx, id)
 
       const updated = await tx.staff.update({
         where: { id },
