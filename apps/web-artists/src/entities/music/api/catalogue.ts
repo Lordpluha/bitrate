@@ -76,6 +76,9 @@ export function useMusicCatalogue(
         ? getTracks(search, signal)
         : getReleases(search, signal),
     enabled: Boolean(artistId),
+    // Keeps the last page while the next loads; another tab has another row shape.
+    placeholderData: (previous, previousQuery) =>
+      previousQuery?.queryKey[3] === tab ? previous : undefined,
     staleTime: 30_000,
   })
 }
