@@ -18,16 +18,13 @@ import {
   isStaleStateError,
   resourceWriteErrorMessage,
 } from '@presentation/pages/shared/resource-write-error.message'
-import { ResourceNotFoundError } from '@domain/shared'
+import { ResourceNotFoundError, TAKE_DOWN_REASON_MAX_LENGTH } from '@domain/shared'
 import { LocalizedDatePipe } from '@presentation/pipes'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmDialogImports } from '@spartan-ng/helm/dialog'
 import { HlmLabelImports } from '@spartan-ng/helm/label'
 import { HlmTableImports } from '@spartan-ng/helm/table'
-
-/** Mirrors the API's `TakeDownReasonSchema` limit. */
-const REASON_MAX_LENGTH = 500
 
 /** The write the open dialog will perform; `null` while it is closed. */
 type PendingAction = 'hide' | 'unhide' | 'take-down' | 'restore' | null
@@ -96,7 +93,7 @@ export class PlaylistDetailPage {
   protected readonly canTakeDown = this.session.can('playlists:delete')
   protected readonly canRestore = this.session.can('playlists:restore')
   protected readonly playlistId = this.route.snapshot.paramMap.get('id') ?? ''
-  protected readonly reasonMaxLength = REASON_MAX_LENGTH
+  protected readonly reasonMaxLength = TAKE_DOWN_REASON_MAX_LENGTH
   protected readonly dialogCopy = DIALOG_COPY
 
   protected readonly playlist = signal<PlaylistDetail | null>(null)

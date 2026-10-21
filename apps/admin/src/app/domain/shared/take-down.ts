@@ -1,3 +1,6 @@
+/** Mirrors the API's `TakeDownReasonSchema` limit on an operator's write reason. */
+export const TAKE_DOWN_REASON_MAX_LENGTH = 500
+
 /**
  * What a deactivate, restore, or revoke-sessions write sends. `reason` is optional and, when
  * present, is already trimmed and non-empty — an empty reason is never sent as an empty string,

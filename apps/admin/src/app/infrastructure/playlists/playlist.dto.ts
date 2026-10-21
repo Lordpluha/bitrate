@@ -1,4 +1,5 @@
 import type { ApiPaths, ApiSchemas } from '@bitrate/contracts'
+import { TAKE_DOWN_REASON_MAX_LENGTH } from '@domain/shared'
 import * as z from 'zod'
 
 /** See `WireArtistSortField` — read from the operation, not an entity field. */
@@ -80,5 +81,5 @@ type ContractSetVisibility = ApiSchemas['SetPlaylistVisibilityDto']
 /** The PATCH body; `reason` is omitted when blank, like every other operator write. */
 export const setPlaylistVisibilityBodyDto = z.object({
   isPublic: z.boolean(),
-  reason: z.string().trim().min(1).max(500).optional(),
+  reason: z.string().trim().min(1).max(TAKE_DOWN_REASON_MAX_LENGTH).optional(),
 }) satisfies z.ZodType<ContractSetVisibility>

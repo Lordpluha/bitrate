@@ -16,7 +16,7 @@ import {
   type PodcastDetail,
   type PodcastEpisode,
 } from '@domain/podcast'
-import { ResourceNotFoundError } from '@domain/shared'
+import { ResourceNotFoundError, TAKE_DOWN_REASON_MAX_LENGTH } from '@domain/shared'
 import { LocalizedDatePipe } from '@presentation/pipes'
 import {
   isStaleStateError,
@@ -28,9 +28,6 @@ import { HlmDialogImports } from '@spartan-ng/helm/dialog'
 import { HlmLabelImports } from '@spartan-ng/helm/label'
 import { HlmTableImports } from '@spartan-ng/helm/table'
 import { HlmTabsImports } from '@spartan-ng/helm/tabs'
-
-/** Mirrors the API's `TakeDownReasonSchema` limit. */
-const REASON_MAX_LENGTH = 500
 
 /** The write the open dialog will perform, and what it targets; `null` while it is closed. */
 type PendingAction =
@@ -72,7 +69,7 @@ export class PodcastDetailPage {
   protected readonly canTakeDown = this.session.can('podcasts:delete')
   protected readonly canRestore = this.session.can('podcasts:restore')
   protected readonly podcastId = this.route.snapshot.paramMap.get('id') ?? ''
-  protected readonly reasonMaxLength = REASON_MAX_LENGTH
+  protected readonly reasonMaxLength = TAKE_DOWN_REASON_MAX_LENGTH
 
   protected readonly podcast = signal<PodcastDetail | null>(null)
   protected readonly loading = signal(true)
