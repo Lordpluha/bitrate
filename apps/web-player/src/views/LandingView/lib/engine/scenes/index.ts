@@ -1,12 +1,17 @@
 import { gsap } from 'gsap'
 import { Observer } from 'gsap/Observer'
-import { all, type EngineContext, isMobile } from './context'
-import { formatSceneNumber, sceneFromHash, targetScene } from './navigation'
-import type { Stage } from './stage'
+import { isSceneId } from '../../../model/scenes'
+import { all, type EngineContext, isMobile } from '../context'
+import { formatSceneNumber, sceneFromHash, targetScene } from '../navigation'
+import type { Stage } from '../stage'
+import {
+  SCENE_ENTER,
+  type SceneEnterEnv,
+  type SceneEnterRegistry,
+} from './enter'
 
 /** Panels that scroll on their own and the physics fields keep their native gestures. */
 const OWN_GESTURES = '.ai-panel, .hpanel, .drag-zone, input, textarea'
-const SHUFFLE_EVERY_MS = 2600
 const GLITCH_EVERY_MS = 3200
 /** Lock after a scene change so one trackpad swipe moves one scene. */
 const SETTLE_S = 0.7
@@ -15,8 +20,8 @@ type SceneDeps = {
   stage: Stage | null
   drawWaves: () => void
   glitch: (el: Element) => void
-  resetTeam: () => void
-  resetPartners: (() => void) | null
+  /** Entrance hooks other engine modules own (physics resets, the workshop re-rank). */
+  onEnter: SceneEnterRegistry
 }
 
 /** Scene changes: enter/leave timelines, wheel/touch/key/dot/hash navigation, the counter and URL hash. */
@@ -30,86 +35,9 @@ export const mountScenes = (ctx: EngineContext, deps: SceneDeps) => {
   const num = root.querySelector('[data-scene-num]')
   const rail = root.querySelector('[data-scene-rail]')
   const sweep = root.querySelector('.sweep')
-  const typed = root.querySelector('#typed')
-  const prompt = typed?.textContent ?? ''
-  const libQ = root.querySelector('#libQ')
-  const query = libQ?.textContent ?? ''
-  const tgQueue = root.querySelector('#tgQueue')
-  const stack = root.querySelector('#stack')
   const loops: gsap.core.Animation[] = []
   const stopLoops = () => {
     while (loops.length) loops.pop()?.kill()
-  }
-  let shuffleTimer = 0
-  ctx.onDispose(() => window.clearInterval(shuffleTimer))
-
-  /* workshop candidates re-rank (FLIP, transforms only) */
-  const shuffle = () => {
-    window.clearInterval(shuffleTimer)
-    if (!stack) return
-    shuffleTimer = window.setInterval(() => {
-      if (scenes[state.index]?.id !== 'workshop') {
-        window.clearInterval(shuffleTimer)
-        return
-      }
-      const items = [...stack.children].filter(
-        (el): el is HTMLElement => el instanceof HTMLElement,
-      )
-      const firstItem = items[0]
-      if (!firstItem) return
-      const first = items.map((el) => el.getBoundingClientRect().top)
-      stack.appendChild(firstItem)
-      ;[...stack.children].forEach((el, k) => {
-        const r = el.querySelector('.r')
-        if (r) r.textContent = `#${k + 1}`
-      })
-      const last = items.map((el) => el.getBoundingClientRect().top)
-      const scale = isMobile()
-        ? 1
-        : Number(getComputedStyle(root).getPropertyValue('--s')) || 1
-      items.forEach((el, k) => {
-        gsap.fromTo(
-          el,
-          { y: ((first[k] ?? 0) - (last[k] ?? 0)) / scale },
-          { y: 0, duration: 0.8, ease: 'expo.inOut' },
-        )
-      })
-    }, SHUFFLE_EVERY_MS)
-  }
-
-  const typeInto = ({
-    tl,
-    el,
-    text,
-    duration,
-    at,
-  }: {
-    tl: gsap.core.Timeline
-    el: Element | null
-    text: string
-    duration: number
-    at: number
-  }) => {
-    if (!el) return
-    el.textContent = ''
-    const o = { n: 0 }
-    let shown = 0
-    tl.to(
-      o,
-      {
-        n: text.length,
-        duration,
-        ease: 'none',
-        /* touch the DOM only when another character appears */
-        onUpdate: () => {
-          const n = Math.round(o.n)
-          if (n === shown) return
-          shown = n
-          el.textContent = text.slice(0, n)
-        },
-      },
-      at,
-    )
   }
 
   const enter = (s: HTMLElement, dir: number) => {
@@ -159,191 +87,19 @@ export const mountScenes = (ctx: EngineContext, deps: SceneDeps) => {
       0.2,
     )
     const id = s.id
-    if (id === 'hero' && !mob) {
-      tl.to(
-        q('#heroWin'),
-        {
-          rotateY: -14,
-          rotateX: 6,
-          rotateZ: -1,
-          duration: 1.4,
-          ease: 'expo.out',
+    if (isSceneId(id)) {
+      const env: SceneEnterEnv = {
+        tl,
+        scene: s,
+        q,
+        mob,
+        copy: ctx.copy,
+        loop: (animation) => {
+          loops.push(animation)
         },
-        0.9,
-      )
-      loops.push(
-        gsap.fromTo(
-          q('#heroProg'),
-          { scaleX: 0.3 },
-          { scaleX: 0.62, duration: 9, ease: 'none', repeat: -1 },
-        ),
-      )
-    }
-    if (id === 'loop') {
-      tl.fromTo(
-        q('.anim-prog'),
-        { scaleX: 0 },
-        { scaleX: 0.42, duration: 1.6, ease: 'power2.out' },
-        0.8,
-      )
-      tl.fromTo(
-        q('.like-pop'),
-        { scale: 0 },
-        { scale: 1, duration: 0.5, ease: 'back.out(4)', stagger: 0.15 },
-        1.1,
-      )
-    }
-    if (id === 'workshop') {
-      typeInto({ tl, el: typed, text: prompt, duration: 2, at: 0.8 })
-      tl.fromTo(
-        q('#wsFill'),
-        { scaleX: 0 },
-        { scaleX: 0.66, duration: 1.2, ease: 'power2.inOut' },
-        0.8,
-      )
-      tl.fromTo(
-        q('.cand'),
-        { x: 40, opacity: 0 },
-        { x: 0, opacity: 1, duration: 0.6, stagger: 0.08 },
-        1.2,
-      )
-      tl.call(shuffle, undefined, 2.6)
-    }
-    if (id === 'rules') {
-      tgQueue?.classList.remove('on')
-      tl.call(() => tgQueue?.classList.add('on'), undefined, 1.2)
-      if (!mob) {
-        loops.push(
-          gsap.fromTo(
-            q('#bands i'),
-            { scaleY: 0.1 },
-            {
-              scaleY: () => 0.25 + Math.random() * 0.75,
-              duration: 0.5,
-              ease: 'sine.inOut',
-              stagger: { each: 0.05, repeat: -1, yoyo: true },
-            },
-          ),
-        )
-        tl.fromTo(
-          q('#floatQ'),
-          { x: -230, y: 140, rotate: 0, opacity: 0 },
-          {
-            x: 0,
-            y: 0,
-            rotate: -5,
-            opacity: 1,
-            duration: 1.4,
-            ease: 'expo.out',
-          },
-          1.3,
-        )
-        loops.push(
-          gsap.to(q('#floatQ'), {
-            y: -10,
-            rotate: -3.5,
-            duration: 2.4,
-            ease: 'sine.inOut',
-            repeat: -1,
-            yoyo: true,
-            delay: 2.8,
-          }),
-        )
       }
-    }
-    if (id === 'library') {
-      typeInto({ tl, el: libQ, text: query, duration: 0.8, at: 0.8 })
-      tl.fromTo(
-        q('.lres'),
-        { y: 14, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.5, stagger: 0.07 },
-        1.3,
-      )
-      tl.fromTo(
-        q('.vrow'),
-        { x: 20, opacity: 0 },
-        { x: 0, opacity: 1, duration: 0.5, stagger: 0.12 },
-        1,
-      )
-    }
-    if (id === 'discover' && !mob) {
-      for (const p of s.querySelectorAll<SVGPathElement>('.graph path')) {
-        const L = p.getTotalLength()
-        tl.fromTo(
-          p,
-          { strokeDasharray: `${L} ${L}`, strokeDashoffset: L },
-          {
-            strokeDashoffset: 0,
-            duration: 1.1,
-            ease: 'power2.inOut',
-            onComplete: () => {
-              gsap.set(p, { clearProps: 'strokeDasharray,strokeDashoffset' })
-            },
-          },
-          0.7 + Math.random() * 0.4,
-        )
-      }
-      tl.fromTo(
-        q('.node'),
-        { scale: 0, opacity: 0 },
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 0.7,
-          ease: 'back.out(2)',
-          stagger: { each: 0.07, from: 'end' },
-        },
-        0.6,
-      )
-      tl.fromTo(
-        q('.tag'),
-        { opacity: 0 },
-        { opacity: 1, duration: 0.4, stagger: 0.06 },
-        1.4,
-      )
-    }
-    if (id === 'devices') {
-      if (!mob) {
-        tl.fromTo(
-          q('#devLink'),
-          { strokeDashoffset: 300 },
-          { strokeDashoffset: 0, duration: 1.4, ease: 'power2.out' },
-          1,
-        )
-        tl.fromTo(
-          q('.phone'),
-          { x: -120 },
-          { x: 0, duration: 1.3, ease: 'expo.out' },
-          0.35,
-        )
-      }
-      loops.push(
-        gsap.fromTo(
-          q('.sync-bar'),
-          { scaleX: 0.3 },
-          { scaleX: 0.7, duration: 8, ease: 'none', repeat: -1 },
-        ),
-      )
-    }
-    if (id === 'partners') deps.resetPartners?.()
-    if (id === 'team') {
-      deps.resetTeam()
-      for (const b of s.querySelectorAll<HTMLElement>('.stats b')) {
-        const o = { v: 0 }
-        const to = Number(b.dataset.v) || 0
-        tl.to(
-          o,
-          {
-            v: to,
-            duration: 1.2,
-            ease: 'power2.out',
-            onUpdate: () => {
-              b.textContent = String(Math.round(o.v))
-            },
-          },
-          0.8,
-        )
-      }
+      SCENE_ENTER[id]?.(env)
+      deps.onEnter[id]?.(env)
     }
     tl.call(
       () => {
@@ -352,20 +108,6 @@ export const mountScenes = (ctx: EngineContext, deps: SceneDeps) => {
       undefined,
       1.25,
     )
-    if (id === 'social' && !mob) {
-      tl.fromTo(
-        q('.cmark'),
-        { scale: 0 },
-        { scale: 1, duration: 0.4, ease: 'back.out(3)', stagger: 0.12 },
-        0.9,
-      )
-      tl.fromTo(
-        q('.cmt'),
-        { y: 16, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.5, stagger: 0.25 },
-        1.2,
-      )
-    }
     return tl
   }
   const leave = (s: HTMLElement, dir: number) =>
