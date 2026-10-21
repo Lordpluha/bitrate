@@ -35,6 +35,7 @@ jest.mock(
 
 jest.mock('node:fs/promises', () => ({
   rm: jest.fn().mockResolvedValue(undefined as never),
+  stat: jest.fn().mockResolvedValue({ size: 9_000 } as never),
 }))
 
 jest.mock('./audio-master', () => ({
@@ -60,7 +61,6 @@ describe('TrackUploadService', () => {
     prisma = prismaMock
     queue = makeQueueMock()
     storage = makeStorageMock()
-    storage.getObjectMeta.mockResolvedValue({ contentLength: 9_000 } as never)
     storage.deleteObject.mockResolvedValue(undefined as never)
     service = new TrackUploadService(prisma, queue, makeCacheMock(), recorder, storage)
   })
@@ -446,7 +446,7 @@ describe('TrackUploadService', () => {
         }),
         expect.objectContaining({ attempts: 5 }),
       )
-      expect(storage.getObjectMeta).toHaveBeenCalledWith(`masters/${track.audioUrl}`)
+      expect(storage.getObjectMeta).not.toHaveBeenCalled()
       expect(downloadMock).toHaveBeenCalledWith(
         storage,
         `masters/${track.audioUrl}`,
