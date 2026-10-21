@@ -8,6 +8,7 @@ import { clientFetchClient, useMutation } from '@shared/api/client'
 import { ensureOkResponse } from '@shared/api/errors'
 import { apiQueryKeys } from '@shared/api/queryKeys'
 import { queryOptions, useQuery, useQueryClient } from '@tanstack/react-query'
+import { fetchAllPages } from '@/shared/api/fetchAllPages'
 
 const ARTIST_ALBUMS_PAGE_SIZE = 100
 
@@ -21,17 +22,8 @@ const getArtistAlbumsPage = async (artistId: string, page: number) => {
   return albumsPaginatedResponseSchema.parse(data)
 }
 
-export const getAllAlbumsByArtist = async (artistId: string) => {
-  const firstPage = await getArtistAlbumsPage(artistId, 1)
-  const pageCount = Math.ceil(firstPage.total / firstPage.limit)
-  const remainingPages = await Promise.all(
-    Array.from({ length: Math.max(pageCount - 1, 0) }, (_, index) =>
-      getArtistAlbumsPage(artistId, index + 2),
-    ),
-  )
-
-  return [firstPage, ...remainingPages].flatMap(({ data }) => data)
-}
+export const getAllAlbumsByArtist = (artistId: string) =>
+  fetchAllPages({ fetchPage: (page) => getArtistAlbumsPage(artistId, page) })
 
 export const useArtistAlbums = (artistId: string) =>
   useQuery({
@@ -52,16 +44,7 @@ const getLikedAlbumsPage = async (page: number) => {
   return albumsPaginatedResponseSchema.parse(data)
 }
 
-const getAllLikedAlbums = async () => {
-  const firstPage = await getLikedAlbumsPage(1)
-  const pageCount = Math.ceil(firstPage.total / firstPage.limit)
-  const remainingPages = await Promise.all(
-    Array.from({ length: Math.max(pageCount - 1, 0) }, (_, index) =>
-      getLikedAlbumsPage(index + 2),
-    ),
-  )
-  return [firstPage, ...remainingPages].flatMap(({ data }) => data)
-}
+const getAllLikedAlbums = () => fetchAllPages({ fetchPage: getLikedAlbumsPage })
 
 /**
  * Every album the signed-in user saved, newest first (`GET /albums/liked`). Lives under
