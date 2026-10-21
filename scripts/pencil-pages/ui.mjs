@@ -13,7 +13,6 @@ import {
   Switch,
   Badge,
   Tab,
-  Otp,
   Progress,
   Alert,
 } from './kit.mjs'
@@ -160,12 +159,6 @@ export const MobileTrack = (title, meta, art) =>
     'Y2h8VV',
     { name: `Track / ${title}`, width: 'fill_container' },
     { fjPYf: { fill: img(ART[art]) }, RJ2go: { content: title }, rFh9q: { content: meta } },
-  )
-const LibraryItem = (title, meta) =>
-  Ref(
-    'ZUzZL',
-    { name: `Library / ${title}` },
-    { lJ0RS: { content: title }, FTmtd: { content: meta } },
   )
 
 /* states — the library's State/Message family, centred in the available space */
