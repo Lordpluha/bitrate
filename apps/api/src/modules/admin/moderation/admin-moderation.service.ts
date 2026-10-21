@@ -13,6 +13,7 @@ import type { ModerationReport, ModerationStatus, Prisma } from '@prisma/client'
 import type { ADMIN_REPORTS_SORT_FIELDS, UpdateReportDto } from './dtos'
 import { ReportNotFoundException, ReportStatusChangedException } from './errors'
 import { ADMIN_REPORT_EXPORT_COLUMNS, ADMIN_REPORT_EXPORT_SELECT } from './report-export.columns'
+import { type ModerationSubject, SUBJECT_RESOLVERS } from './report-subjects'
 
 /** One of the moderation queue's allowed sort fields. */
 type AdminReportsSortField = (typeof ADMIN_REPORTS_SORT_FIELDS)[number]
@@ -24,88 +25,6 @@ type ListReportsInput = {
   status?: ModerationStatus
   entityType?: string
 } & SortInput<AdminReportsSortField>
-
-/** The reported entity, resolved to what the operator needs to link to and judge it. `null`
- * when the entity type is unrecognised or the row no longer exists — never a 500. */
-type ModerationSubject = {
-  kind: string
-  id: string
-  title: string
-  deletedAt: Date | null
-  parentId: string | null
-} | null
-
-/** A reported entity's row, reduced to what the operator needs to link to and judge it. */
-type SubjectRow = { id: string; title: string; deletedAt: Date | null; parentId: string | null }
-
-/** Reads one reportable entity by id; `null` when the row no longer exists. */
-type SubjectResolver = (prisma: PrismaService, id: string) => Promise<SubjectRow | null>
-
-const TITLE_SELECT = { id: true, title: true, deletedAt: true } as const
-const USERNAME_SELECT = { id: true, username: true, deletedAt: true } as const
-
-/** What {@link TITLE_SELECT} reads. */
-type TitledRow = { id: string; title: string; deletedAt: Date | null }
-
-/** What {@link USERNAME_SELECT} reads. */
-type AccountRow = { id: string; username: string; deletedAt: Date | null }
-
-/** A titled entity (track, album, …) with no parent. */
-const titled = (row: TitledRow | null): SubjectRow | null =>
-  row && { id: row.id, title: row.title, deletedAt: row.deletedAt, parentId: null }
-
-/** An account (user, artist), shown by its username. */
-const account = (row: AccountRow | null): SubjectRow | null =>
-  row && { id: row.id, title: row.username, deletedAt: row.deletedAt, parentId: null }
-
-/**
- * How each reportable entity type resolves, keyed by the lower-cased `entityType`. A `Map`, not
- * an object, so a free-text type such as `constructor` can never hit a prototype member.
- */
-const SUBJECT_RESOLVERS = new Map<string, SubjectResolver>([
-  [
-    'track',
-    async (prisma, id) =>
-      titled(await prisma.track.findUnique({ where: { id }, select: TITLE_SELECT })),
-  ],
-  [
-    'album',
-    async (prisma, id) =>
-      titled(await prisma.album.findUnique({ where: { id }, select: TITLE_SELECT })),
-  ],
-  [
-    'playlist',
-    async (prisma, id) =>
-      titled(await prisma.playlist.findUnique({ where: { id }, select: TITLE_SELECT })),
-  ],
-  [
-    'podcast',
-    async (prisma, id) =>
-      titled(await prisma.podcast.findUnique({ where: { id }, select: TITLE_SELECT })),
-  ],
-  [
-    'artist',
-    async (prisma, id) =>
-      account(await prisma.artist.findUnique({ where: { id }, select: USERNAME_SELECT })),
-  ],
-  [
-    'user',
-    async (prisma, id) =>
-      account(await prisma.user.findUnique({ where: { id }, select: USERNAME_SELECT })),
-  ],
-  [
-    'episode',
-    async (prisma, id) => {
-      const row = await prisma.episode.findUnique({
-        where: { id },
-        select: { ...TITLE_SELECT, podcastId: true },
-      })
-      return (
-        row && { id: row.id, title: row.title, deletedAt: row.deletedAt, parentId: row.podcastId }
-      )
-    },
-  ],
-])
 
 /** The queue's `where` clause, shared by the list and its export. */
 function buildWhere({
@@ -122,6 +41,9 @@ const SIBLING_REPORTS_LIMIT = 20
 type ReportAdvanceAudit = { staffId: string } & AuditContextValue
 
 const RESOLVED_STATUSES: ModerationStatus[] = ['RESOLVED', 'REJECTED']
+
+/** A report's new status with the matching `resolvedAt`. */
+type ReportStatusChange = { status: ModerationStatus; resolvedAt: Date | null }
 
 /** Handles the operator-facing moderation report queue. */
 @Injectable()
@@ -217,16 +139,24 @@ export class AdminModerationService {
     })
     if (!existing) throw new ReportNotFoundException(id)
 
-    const data = {
+    const data: ReportStatusChange = {
       status: dto.status,
       resolvedAt: RESOLVED_STATUSES.includes(dto.status) ? new Date() : null,
     }
     if (!audit) return await this.prisma.moderationReport.update({ where: { id }, data })
+    return await this.updateStatusAudited(id, existing.status, data, audit)
+  }
 
-    const { staffId, ...auditContext } = audit
-    return await this.prisma.$transaction(async (tx) => {
+  /** The audited path of {@link updateStatus}: a status-guarded write plus its audit row. */
+  private updateStatusAudited(
+    id: string,
+    before: ModerationStatus,
+    data: ReportStatusChange,
+    { staffId, ...auditContext }: ReportAdvanceAudit,
+  ): Promise<ModerationReport> {
+    return this.prisma.$transaction(async (tx) => {
       const [updated] = await tx.moderationReport.updateManyAndReturn({
-        where: { id, status: existing.status },
+        where: { id, status: before },
         data,
       })
       if (!updated) throw new ReportStatusChangedException()
@@ -236,7 +166,7 @@ export class AdminModerationService {
         entityId: id,
         action: 'admin-moderation.update',
         staffId,
-        before: { status: existing.status },
+        before: { status: before },
         after: { status: updated.status },
         ...auditContext,
       })
