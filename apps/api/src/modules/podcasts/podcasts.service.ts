@@ -1,6 +1,7 @@
 import { normalizePagination } from '@common/pagination'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable, NotFoundException } from '@nestjs/common'
+import type { Prisma } from '@prisma/client'
 
 @Injectable()
 export class PodcastsService {
@@ -25,18 +26,29 @@ export class PodcastsService {
     return { data, total, page: pagination.page, limit: pagination.limit }
   }
 
-  async getById(id: string, page = 1, limit = 20) {
+  /** The podcast with one page of its episodes, optionally narrowed to a title/description search. */
+  async getById(id: string, page = 1, limit = 20, query?: string) {
     const pagination = normalizePagination(page, limit)
     const podcast = await this.prisma.podcast.findFirst({ where: { id, deletedAt: null } })
     if (!podcast) throw new NotFoundException('Podcast not found')
+    const where: Prisma.EpisodeWhereInput = {
+      podcastId: id,
+      deletedAt: null,
+      ...(query && {
+        OR: [
+          { title: { contains: query, mode: 'insensitive' } },
+          { description: { contains: query, mode: 'insensitive' } },
+        ],
+      }),
+    }
     const [episodes, total] = await this.prisma.$transaction([
       this.prisma.episode.findMany({
-        where: { podcastId: id, deletedAt: null },
+        where,
         orderBy: [{ releaseDate: 'desc' }, { createdAt: 'desc' }],
         skip: pagination.skip,
         take: pagination.limit,
       }),
-      this.prisma.episode.count({ where: { podcastId: id, deletedAt: null } }),
+      this.prisma.episode.count({ where }),
     ])
     return {
       ...podcast,
