@@ -41,49 +41,6 @@ const ARCHIVED = /\/archive\//
 const SHAPES = new Set(['text', 'icon', 'rectangle', 'ellipse', 'path', 'polygon', 'line'])
 const VISUAL = ['fill', 'stroke', 'effect', 'cornerRadius']
 
-/** Counts children placed by coordinates instead of flex: free frames, groups, absolute nodes. */
-function absoluteLayout(doc) {
-  let count = 0
-  const visit = (node) => {
-    if (Array.isArray(node)) {
-      for (const n of node) visit(n)
-      return
-    }
-    if (!node || typeof node !== 'object') return
-    if (
-      (node.type === 'frame' && node.layout === 'none' && node.children?.length) ||
-      node.type === 'group'
-    )
-      count++
-    if (node.layoutPosition === 'absolute') count++
-    for (const c of node.children ?? []) visit(c)
-    if (node.type === 'ref')
-      for (const v of Object.values(node.descendants ?? {})) if (v?.type) visit(v)
-  }
-  for (const t of doc.children) visit(t.children ?? [])
-  return count
-}
-
-/** Counts elements a screen draws itself instead of instancing a library component. */
-function localElements(doc) {
-  let count = 0
-  const visit = (node, top) => {
-    if (Array.isArray(node)) {
-      for (const n of node) visit(n, false)
-      return
-    }
-    if (!node || typeof node !== 'object') return
-    if (node.type === 'ref') {
-      for (const v of Object.values(node.descendants ?? {})) if (v?.type) visit(v, false)
-      return
-    }
-    if (SHAPES.has(node.type)) count++
-    else if (!top && VISUAL.some((k) => k in node)) count++
-    for (const c of node.children ?? []) visit(c, false)
-  }
-  for (const t of doc.children) visit(t, true)
-  return count
-}
 const LIBRARY_ALIAS = 'ds'
 const THEMES = ['Dark', 'Light', 'Dim']
 const SELECTORS = { '@theme': 'Dark', ':root.light': 'Light', ':root.dim': 'Dim' }
@@ -290,29 +247,68 @@ function* penFiles(dir) {
   }
 }
 
+/**
+ * Scans one design in a single walk. Every value is checked for hardcoded hex colours, unknown
+ * `$ds:` references and themes on the wrong axis; nodes of the layer tree (reached through
+ * `children` and a ref's `descendants`) are also counted for two layout rules:
+ * - absolute: below a top-level frame, children placed by coordinates instead of flex (free
+ *   frames, groups, absolute nodes);
+ * - local: elements a screen draws itself instead of instancing a library component (refs and
+ *   their own children are instances, but overridden descendants count).
+ */
 function scanDesign(file, libraryNames, refPattern) {
   const doc = JSON.parse(readFileSync(file, 'utf8'))
   const hex = new Map()
   const unknown = new Map()
   let wrongAxis = 0
-  const visit = (node, frame) => {
-    if (Array.isArray(node)) {
-      for (const n of node) visit(n, frame)
+  let local = 0
+  let absolute = 0
+  /**
+   * @param tree `{ top, local, absolute }` when `value` is a layer-tree node, else null.
+   * @param descendants Tree flags for the typed values of `value` (a ref's `descendants` map).
+   */
+  const visit = (value, frame, tree, descendants = null) => {
+    if (Array.isArray(value)) {
+      for (const n of value) visit(n, frame, descendants && n?.type ? descendants : tree)
       return
     }
-    if (!node || typeof node !== 'object') return
+    if (!value || typeof value !== 'object') return
+    const node = value
     if (node.theme && (node.theme.Mode || node.theme.mode)) wrongAxis++
-    for (const [key, value] of Object.entries(node)) {
-      if (typeof value === 'string') {
-        if (key !== 'url' && key !== 'content' && HEX.test(value) && !isTransparent(value)) {
+    if (tree?.absolute) {
+      if (
+        (node.type === 'frame' && node.layout === 'none' && node.children?.length) ||
+        node.type === 'group'
+      )
+        absolute++
+      if (node.layoutPosition === 'absolute') absolute++
+    }
+    if (tree?.local && node.type !== 'ref') {
+      if (SHAPES.has(node.type)) local++
+      else if (!tree.top && VISUAL.some((k) => k in node)) local++
+    }
+    for (const [key, child] of Object.entries(node)) {
+      if (typeof child === 'string') {
+        if (key !== 'url' && key !== 'content' && HEX.test(child) && !isTransparent(child)) {
           hex.set(frame, (hex.get(frame) ?? 0) + 1)
         }
-        const ref = value.match(refPattern)
+        const ref = child.match(refPattern)
         if (ref && !libraryNames.has(ref[1])) unknown.set(ref[1], (unknown.get(ref[1]) ?? 0) + 1)
-      } else visit(value, frame)
+      } else if (descendants) {
+        visit(child, frame, child?.type ? descendants : null)
+      } else if (tree && key === 'children') {
+        visit(child, frame, {
+          top: false,
+          local: tree.local && node.type !== 'ref',
+          absolute: tree.absolute || tree.top,
+        })
+      } else if (tree && key === 'descendants' && node.type === 'ref') {
+        visit(child, frame, null, { top: false, local: tree.local, absolute: tree.absolute })
+      } else visit(child, frame, null)
     }
   }
-  for (const top of doc.children) visit(top, `${top.id} ${top.name ?? ''}`.trim())
+  for (const top of doc.children)
+    visit(top, `${top.id} ${top.name ?? ''}`.trim(), { top: true, local: true, absolute: false })
   const ownColours = Object.entries(doc.variables ?? {}).filter(([, v]) => v.type === 'color')
   return {
     hex,
@@ -320,8 +316,8 @@ function scanDesign(file, libraryNames, refPattern) {
     imports: doc.imports ?? {},
     ownColours: ownColours.length,
     wrongAxis,
-    local: localElements(doc),
-    absolute: absoluteLayout(doc),
+    local,
+    absolute,
   }
 }
 
