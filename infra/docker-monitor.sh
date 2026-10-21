@@ -147,12 +147,26 @@ unhealthy_ids() {
     docker ps -q --filter health=unhealthy "${filters[@]}"
 }
 
+# Polls the given containers until none is still starting (health `starting` or no
+# healthcheck and not yet running), for at most SETTLE_TIMEOUT seconds (default 60).
+wait_until_settled() {
+    local deadline=$((SECONDS + ${SETTLE_TIMEOUT:-60}))
+    while [ "$SECONDS" -lt "$deadline" ]; do
+        docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' "$@" 2>/dev/null \
+            | grep -qE '^(starting|created|restarting)$' || return 0
+        sleep 2
+    done
+    echo -e "  ${YELLOW}Some services are still starting after ${SETTLE_TIMEOUT:-60}s${NC}"
+}
+
 # Quick fix common issues
 quick_fix() {
     print_header "Running Quick Fix"
 
     echo "1. Restarting unhealthy containers..."
-    unhealthy_ids | xargs -r docker restart
+    local restarted
+    restarted="$(unhealthy_ids)"
+    [ -n "$restarted" ] && echo "$restarted" | xargs docker restart
 
     echo "2. Pruning unused networks..."
     docker network prune -f
@@ -162,8 +176,12 @@ quick_fix() {
 
     echo -e "\n${GREEN}Quick fix completed!${NC}"
 
-    echo -e "\nWaiting 10 seconds for services to stabilize..."
-    sleep 10
+    if [ -n "$restarted" ]; then
+        echo -e "\nWaiting for restarted services to stabilize..."
+        local ids
+        read -r -d "" -a ids <<<"$restarted" || true
+        wait_until_settled "${ids[@]}"
+    fi
 
     check_health
 }
