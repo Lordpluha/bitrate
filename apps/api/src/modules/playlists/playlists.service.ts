@@ -1,6 +1,6 @@
 import { normalizePagination, type PaginationInput } from '@common/pagination'
 import { readUserSettings } from '@common/user-settings'
-import { isPrismaP2002, isPrismaP2025 } from '@common/utils/prisma'
+import { isPrismaP2002, isPrismaP2025, isPrismaP2034 } from '@common/utils/prisma'
 import { NS } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
@@ -21,10 +21,6 @@ const MINE_PREVIEW_TRACKS = 4
 
 /** Appends retried after a position race or serialization failure. */
 const ADD_TRACKS_ATTEMPTS = 3
-
-/** Prisma's "transaction failed due to a write conflict or a deadlock" error. */
-const isSerializationFailure = (error: unknown): boolean =>
-  error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2034'
 
 /** Playlist CRUD, likes and track membership. */
 @Injectable()
@@ -300,7 +296,7 @@ export class PlaylistsService {
       } catch (error: unknown) {
         // A track may sit in a playlist more than once, so a unique conflict here is always a
         // concurrent append taking the same positions; like a serialization failure, retry it.
-        if (!(isPrismaP2002(error) || isSerializationFailure(error))) throw error
+        if (!(isPrismaP2002(error) || isPrismaP2034(error))) throw error
         if (attempt === ADD_TRACKS_ATTEMPTS) {
           throw new ConflictException('Playlist was changed concurrently, please retry')
         }
