@@ -3,12 +3,13 @@ import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { AdminResourceStatus, AuditContextValue, CsvExport } from '@modules/admin/shared'
 import {
+  type AdminRevokeSessionsResultEntity,
   openCsvExport,
+  revokeAccountSessions,
   runTakeDownTransition,
   statusWhere,
   type TakeDownActor,
   type TakeDownDirection,
-  writeTakeDownAudit,
 } from '@modules/admin/shared'
 import { Injectable } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
@@ -61,7 +62,7 @@ export class AdminArtistsService {
     } satisfies Prisma.ArtistWhereInput
   }
 
-  /** Runs the find all operation, paginated and optionally filtered. */
+  /** Lists artists, paginated and optionally filtered. */
   async findAll({
     page = DEFAULT_PAGE,
     limit = DEFAULT_LIMIT,
@@ -126,7 +127,7 @@ export class AdminArtistsService {
   }
 
   /**
-   * Runs the find by id operation, with tracks/albums/session summaries for the detail page.
+   * Finds one artist by id, with tracks/albums/session summaries for the detail page.
    * Deliberately does not filter `deletedAt` — a deactivated artist must stay reachable by id
    * so the operator can review the account before deciding to restore it.
    */
@@ -157,7 +158,7 @@ export class AdminArtistsService {
     }
   }
 
-  /** Runs the update verification operation. */
+  /** Sets an artist's verified flag. */
   async updateVerification(id: string, dto: UpdateArtistVerificationDto) {
     const existing = await this.prisma.artist.findFirst({ where: { id }, select: EXISTENCE_SELECT })
     if (!existing) throw new ArtistNotFoundException(id)
@@ -170,7 +171,7 @@ export class AdminArtistsService {
     })
   }
 
-  /** Runs the list artist tracks operation, newest first with a stable `id` tie-break. */
+  /** Lists an artist's tracks, newest first with a stable `id` tie-break. */
   async findTracks(
     artistId: string,
     {
@@ -207,7 +208,7 @@ export class AdminArtistsService {
     return { data, total, page, limit }
   }
 
-  /** Runs the list artist albums operation, newest first with a stable `id` tie-break. */
+  /** Lists an artist's albums, newest first with a stable `id` tie-break. */
   async findAlbums(
     artistId: string,
     {
@@ -281,34 +282,22 @@ export class AdminArtistsService {
     return this.transition('restore', id, { staffId, reason, ...auditContext })
   }
 
-  /**
-   * Revokes every active session for an artist, signing them out on their next request — an
-   * already-open WebSocket connection is unaffected until it disconnects; see the changeset
-   * for that known limitation.
-   */
-  async revokeSessions(
+  /** Revokes every session of an artist — see {@link revokeAccountSessions}. */
+  revokeSessions(
     id: string,
     staffId: string,
     reason?: string,
     auditContext: AuditContextValue = {},
-  ) {
-    const existing = await this.prisma.artist.findFirst({ where: { id }, select: EXISTENCE_SELECT })
-    if (!existing) throw new ArtistNotFoundException(id)
-
-    return await this.prisma.$transaction(async (tx) => {
-      const { count } = await tx.artistSession.deleteMany({ where: { artistId: id } })
-      await writeTakeDownAudit({
-        tx,
-        entityType: 'admin-artists',
-        entityId: id,
-        action: 'admin-artists.revoke-sessions',
-        staffId,
-        reason,
-        before: {},
-        after: { sessionsRevoked: count },
-        ...auditContext,
-      })
-      return { revoked: count }
+  ): Promise<AdminRevokeSessionsResultEntity> {
+    return revokeAccountSessions({
+      prisma: this.prisma,
+      exists: async () =>
+        !!(await this.prisma.artist.findFirst({ where: { id }, select: { id: true } })),
+      notFound: () => new ArtistNotFoundException(id),
+      revoke: (tx) => tx.artistSession.deleteMany({ where: { artistId: id } }),
+      entityType: 'admin-artists',
+      entityId: id,
+      actor: { staffId, reason, ...auditContext },
     })
   }
 
