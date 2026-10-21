@@ -743,10 +743,6 @@ const clone = (n) => {
 const cloneDesc = (d) =>
   Object.fromEntries(Object.entries(d).map(([k, v]) => [k, v?.type ? clone(v) : v]))
 
-/**
- * Writes pencil/web-player-design/<dir>/<dir>.pen: the desktop page in Dark, Light and Dim, the
- * mobile page, then every screen state as a desktop + mobile pair, laid out left to right.
- */
 /* pen.dev opens a document empty when any children array holds a non-node (e.g. a `cond && node`
    left `false` inside a raw slot replacement), so strip them everywhere before writing */
 const prune = (nodes) => {
@@ -760,6 +756,11 @@ const prune = (nodes) => {
   }
   nodes.forEach(visit)
 }
+/**
+ * Writes pencil/web-player-design/<dir>/<dir>.pen: the desktop page in Dark, Light and Dim, the
+ * mobile page, then every screen state as a desktop + mobile pair, laid out left to right.
+ * Returns the written file and the number of frames placed in it.
+ */
 export function writePage(root, dir, spec) {
   const { title, route, context, desktop, mobile, extra = [], states = [] } = spec
   used = new Set()
@@ -810,5 +811,5 @@ export function writePage(root, dir, spec) {
       2,
     ),
   )
-  return file
+  return { file, frames: frames.length }
 }
