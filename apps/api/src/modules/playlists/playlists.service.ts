@@ -16,6 +16,9 @@ import { Prisma } from '@prisma/client'
 import { AddTracksDto, CreatePlaylistDto, UpdatePlaylistDto } from './dtos'
 import { PlaylistEntity } from './entities'
 
+/** Leading tracks listed per owned playlist, enough for a cover mosaic; `_count` has the total. */
+const MINE_PREVIEW_TRACKS = 4
+
 /** Appends retried after a position race or serialization failure. */
 const ADD_TRACKS_ATTEMPTS = 3
 
@@ -227,7 +230,7 @@ export class PlaylistsService {
     }
   }
 
-  /** Runs the get mine operation. */
+  /** The signed-in user's playlists, each with its first few ready tracks as a preview. */
   async getMine(
     userId: UserEntity['id'],
     { page = 1, limit = 20 }: { page?: number; limit?: number } = {},
@@ -241,6 +244,7 @@ export class PlaylistsService {
           tracks: {
             where: { track: { processingStatus: 'READY', deletedAt: null } },
             orderBy: { position: 'asc' },
+            take: MINE_PREVIEW_TRACKS,
             select: { track: { select: { id: true, title: true, cover: true } } },
           },
           _count: { select: { tracks: true } },
