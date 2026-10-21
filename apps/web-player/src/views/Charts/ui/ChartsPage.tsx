@@ -1,21 +1,27 @@
 'use client'
 
-import { cn } from '@bitrate/ui-react'
 import { ArtistName } from '@entities/Artist'
 import { useArtistCharts, useCharts } from '@entities/Discovery'
 import { ROUTES } from '@shared/routes'
-import { PageTitle, StateMessage, TrackRowSkeleton } from '@shared/ui'
+import {
+  PageTitle,
+  RetryState,
+  type SegmentedTab,
+  SegmentedTabs,
+  StateMessage,
+  TrackRowSkeleton,
+} from '@shared/ui'
 import { MediaImage } from '@shared/ui/MediaImage'
 import { formatDuration } from '@shared/utils/apiHelpers'
 import { getArtistAvatarUrl, getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import { TrendingUp, TriangleAlert } from 'lucide-react'
+import { TrendingUp } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 import { usePlayCollection } from '@/features/PlayCollection'
 
 type ChartTab = 'artists' | 'rising' | 'songs'
 
-const TABS: ReadonlyArray<{ id: ChartTab; label: string }> = [
+const TABS: ReadonlyArray<SegmentedTab<ChartTab>> = [
   { id: 'songs', label: 'Top songs' },
   { id: 'artists', label: 'Top artists' },
   { id: 'rising', label: 'Rising' },
@@ -35,13 +41,7 @@ const Rank = ({ place }: { place: number }) => (
 )
 
 const ChartError = ({ onRetry }: { onRetry: () => void }) => (
-  <StateMessage
-    description="Try again in a moment."
-    icon={TriangleAlert}
-    primary={{ label: 'Try again', onClick: onRetry }}
-    title="Charts are unavailable"
-    tone="error"
-  />
+  <RetryState onRetry={onRetry} title="Charts are unavailable" />
 )
 
 const ChartLoading = () => (
@@ -166,29 +166,13 @@ export const ChartsPage = () => {
     <div className="h-full overflow-y-auto custom-scrollbar">
       <div className="flex flex-col gap-5 px-4 pt-2 pb-3 md:gap-7 md:px-8 md:py-6">
         <PageTitle title="Trending & charts" />
-        <div
-          aria-label="Charts"
-          className="-mx-4 flex gap-1 overflow-x-auto px-4 md:mx-0 md:px-0"
-          role="tablist"
-        >
-          {TABS.map(({ id, label }) => (
-            <button
-              aria-selected={tab === id}
-              className={cn(
-                'h-9 shrink-0 rounded-md px-3 text-sm font-medium transition-colors',
-                tab === id
-                  ? 'bg-secondary text-foreground'
-                  : 'text-muted-foreground hover:bg-surface hover:text-foreground',
-              )}
-              key={id}
-              onClick={() => setTab(id)}
-              role="tab"
-              type="button"
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+        <SegmentedTabs
+          ariaLabel="Charts"
+          className="-mx-4 overflow-x-auto px-4 md:mx-0 md:px-0"
+          onChange={setTab}
+          tabs={TABS}
+          value={tab}
+        />
         {tab === 'artists' ? (
           <ArtistsChart />
         ) : (
