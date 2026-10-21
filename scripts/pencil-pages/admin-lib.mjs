@@ -185,6 +185,7 @@ const BUTTON = {
   Default: [{ fill: C.primary, effect: GLOW }, C.primaryForeground],
   Glass: [{ fill: soft(0.08) }, C.foreground],
   Outline: [{ stroke: C.border, strokeWidth: 1 }, C.foreground],
+  Danger: [{ fill: C.error }, C.primaryForeground],
 }
 for (const [v, [surface, ink]] of Object.entries(BUTTON))
   add(
@@ -272,6 +273,7 @@ add(
     ['Down', C.errorSurface, C.errorText],
     ['Warn', C.warningSurface, C.warningText],
     ['Flat', soft(0.08), C.mutedForeground],
+    ['Info', C.infoSurface, C.infoText],
   ].map(([v, bg, ink]) =>
     comp(
       `Pill/${v}`,
@@ -2756,6 +2758,826 @@ add(
 for (const p of ['settings', 'language', 'theme', 'signOut'])
   nest('Admin/Profile Menu', p, 'Admin/Nav Item')
 
+/* ---------- resource pages: lists (metrics, a table panel, cards on phones) and detail pages ---------- */
+const METRIC_TONES = [
+  ['Warning', 'inbox'],
+  ['Info', 'eye'],
+  ['Error', 'triangle-alert'],
+  ['Success', 'check'],
+  ['Neutral', 'trending-up'],
+]
+const metricText = (stack) =>
+  Col({ name: 'Metric Text', gap: 2, width: 'fill_container' }, [
+    part('label', muted('Open', { fontSize: 12 })),
+    part(
+      'value',
+      H('12', stack ? 21 : 26, { letterSpacing: -0.5, fontWeight: '600', lineHeight: 1.2 }),
+    ),
+    part(
+      'sub',
+      muted('Oldest 6 h', { fontSize: 12, width: 'fill_container', textGrowth: 'fixed-width' }),
+    ),
+  ])
+for (const [tone, icon] of METRIC_TONES)
+  add(
+    comp(
+      `Admin/Metric/${tone}`,
+      Row(
+        {
+          name: 'Metric',
+          width: 'fill_container',
+          gap: 14,
+          padding: 18,
+          cornerRadius: 24,
+          ...glass(0.58),
+        },
+        [iconBox(tone, icon, 42), metricText(false)],
+      ),
+    ),
+    comp(
+      `Admin/Metric Stack/${tone}`,
+      Col(
+        {
+          name: 'Metric',
+          width: 'fill_container',
+          gap: 10,
+          padding: 14,
+          cornerRadius: 22,
+          ...glass(0.58),
+        },
+        [iconBox(tone, icon, 34), metricText(true)],
+      ),
+    ),
+  )
+add(
+  comp(
+    'Admin/Loader/Metric',
+    Row(
+      {
+        name: 'Metric Loader',
+        width: 'fill_container',
+        gap: 14,
+        padding: 18,
+        cornerRadius: 24,
+        ...glass(0.58),
+      },
+      [
+        sk(42, 42, { cornerRadius: 13 }),
+        Col({ name: 'Lines', gap: 8, width: 'fill_container' }, [sk(90, 10), sk(56, 22)]),
+      ],
+    ),
+  ),
+  /* the list's glass panel: toolbar, table and pager stack inside it */
+  comp(
+    'Admin/Panel',
+    Col(
+      {
+        name: 'Panel',
+        width: 'fill_container',
+        gap: 0,
+        cornerRadius: 24,
+        clip: true,
+        ...glass(0.58),
+      },
+      [slot('content', { gap: 0 })],
+    ),
+  ),
+  comp(
+    'Admin/Search Field',
+    Row(
+      {
+        name: 'Search Field',
+        width: 300,
+        height: 38,
+        padding: [0, 12],
+        gap: 8,
+        cornerRadius: 12,
+        fill: soft(0.05),
+        stroke: C.border,
+        strokeWidth: 1,
+      },
+      [
+        I('search', { width: 16, height: 16, fill: C.mutedForeground }),
+        part(
+          'text',
+          muted('Search', { fontSize: 14, width: 'fill_container', textGrowth: 'fixed-width' }),
+        ),
+      ],
+    ),
+  ),
+  ...[
+    ['Admin/Filter', { stroke: C.border, strokeWidth: 1 }],
+    [
+      'Admin/Filter On',
+      { fill: tint(C.primary, 0.14), stroke: tint(C.primary, 0.55), strokeWidth: 1 },
+    ],
+  ].map(([name, surface]) =>
+    comp(
+      name,
+      Row(
+        {
+          name: 'Filter',
+          height: 38,
+          padding: [0, 10, 0, 12],
+          gap: 6,
+          cornerRadius: 12,
+          ...surface,
+        },
+        [
+          part('label', muted('Status:', { fontSize: 13 })),
+          part('value', T('All', { fontSize: 13, fontWeight: '600' })),
+          I('chevron-down', { width: 15, height: 15, fill: C.mutedForeground }),
+        ],
+      ),
+    ),
+  ),
+  comp(
+    'Admin/Toolbar',
+    Row(
+      {
+        name: 'Toolbar',
+        width: 'fill_container',
+        gap: 10,
+        padding: [14, 16],
+        stroke: C.border,
+        strokeWidth: { bottom: 1 },
+      },
+      [
+        part('items', Row({ name: 'Items', gap: 10, width: 'fill_container', slot: [] }, [])),
+        part('count', muted('1–8 of 16')),
+      ],
+    ),
+  ),
+  comp(
+    'Admin/Bulk Bar',
+    Row(
+      {
+        name: 'Bulk Bar',
+        width: 'fill_container',
+        gap: 10,
+        padding: [12, 16],
+        fill: tint(C.primary, 0.16),
+        stroke: C.border,
+        strokeWidth: { bottom: 1 },
+      },
+      [
+        part(
+          'count',
+          T('3 selected', {
+            fontWeight: '600',
+            width: 'fill_container',
+            textGrowth: 'fixed-width',
+          }),
+        ),
+        part(
+          'actions',
+          Row({ name: 'Actions', gap: 8, slot: [] }, [button('Glass', 'Resolve', 'check')]),
+        ),
+        part('clear', iconBtn('x', 'Ghost')),
+      ],
+    ),
+  ),
+  comp(
+    'Admin/Table/Row Selected',
+    Row(
+      {
+        name: 'Table Row',
+        width: 'fill_container',
+        gap: 12,
+        padding: [11, 10],
+        fill: tint(C.primary, 0.1),
+        stroke: C.border,
+        strokeWidth: { bottom: 1 },
+      },
+      [
+        part(
+          'cells',
+          Row({ name: 'Cells', width: 'fill_container', gap: 12, slot: [] }, [
+            T('Row', { fontSize: 13 }),
+          ]),
+        ),
+      ],
+    ),
+  ),
+  ...['On', 'Off'].map((v) =>
+    comp(
+      `Admin/Sort/${v}`,
+      Row({ name: 'Sort', gap: 4 }, [
+        part(
+          'label',
+          T('Created', {
+            fontSize: 12,
+            fontWeight: '600',
+            fill: v === 'On' ? C.foreground : C.mutedForeground,
+          }),
+        ),
+        I('arrow-up', {
+          width: 13,
+          height: 13,
+          fill: v === 'On' ? C.foreground : C.mutedForeground,
+          opacity: v === 'On' ? 1 : 0.4,
+        }),
+      ]),
+    ),
+  ),
+  comp(
+    'Admin/Cell/Two',
+    Col({ name: 'Cell', gap: 1, width: 'fill_container' }, [
+      part(
+        'title',
+        T('Glass Horizon', {
+          fontSize: 13,
+          fontWeight: '600',
+          width: 'fill_container',
+          textGrowth: 'fixed-width',
+        }),
+      ),
+      part(
+        'sub',
+        muted('Track · Nova & the Static', {
+          fontSize: 12,
+          width: 'fill_container',
+          textGrowth: 'fixed-width',
+        }),
+      ),
+    ]),
+  ),
+  comp(
+    'Admin/Cell/Chevron',
+    Row({ name: 'Chevron', width: 24, justifyContent: 'end' }, [
+      I('chevron-right', { width: 16, height: 16, fill: C.mutedForeground }),
+    ]),
+  ),
+  comp(
+    'Admin/Pager',
+    Row(
+      {
+        name: 'Pager',
+        width: 'fill_container',
+        gap: 4,
+        padding: [8, 10, 8, 16],
+        stroke: C.border,
+        strokeWidth: { top: 1 },
+      },
+      [
+        part('label', muted('1–8 of 16', { width: 'fill_container', textGrowth: 'fixed-width' })),
+        Row({ name: 'Previous', opacity: 0.35 }, [iconBtn('chevron-left', 'Ghost')]),
+        iconBtn('chevron-right', 'Ghost'),
+      ],
+    ),
+  ),
+  ...[
+    ['Admin/Record Card', { fill: tint(C.card, 0.5), stroke: C.border }, false],
+    [
+      'Admin/Record Card Selected',
+      { fill: tint(C.primary, 0.1), stroke: tint(C.primary, 0.55) },
+      true,
+    ],
+  ].map(([name, surface, on]) =>
+    comp(
+      name,
+      Col(
+        {
+          name: 'Record Card',
+          width: 'fill_container',
+          gap: 8,
+          padding: 14,
+          cornerRadius: 18,
+          strokeWidth: 1,
+          ...surface,
+        },
+        [
+          Row({ name: 'Top', width: 'fill_container', gap: 10, alignItems: 'start' }, [
+            part('check', use(on ? 'Checkbox/On' : 'Checkbox/Off', { name: 'Check', enabled: on })),
+            Col({ name: 'Title', gap: 1, width: 'fill_container' }, [
+              part(
+                'title',
+                T('Glass Horizon', {
+                  fontSize: 13,
+                  fontWeight: '600',
+                  width: 'fill_container',
+                  textGrowth: 'fixed-width',
+                }),
+              ),
+              part(
+                'sub',
+                muted('Track · Nova & the Static', {
+                  fontSize: 12,
+                  width: 'fill_container',
+                  textGrowth: 'fixed-width',
+                }),
+              ),
+            ]),
+            part('badge', Row({ name: 'Badge', slot: [] }, [pill('Warn', 'Open')])),
+          ]),
+          part('meta', muted('Copyright claim · 12 min', { fontSize: 12 })),
+        ],
+      ),
+    ),
+  ),
+  comp(
+    'Admin/Back',
+    Row(
+      {
+        name: 'Back',
+        height: 30,
+        padding: [0, 12, 0, 8],
+        gap: 6,
+        cornerRadius: 15,
+        fill: soft(0.06),
+      },
+      [
+        I('chevron-left', { width: 16, height: 16, fill: C.mutedForeground }),
+        part(
+          'label',
+          T('Moderation', { fontSize: 13, fontWeight: '600', fill: C.mutedForeground }),
+        ),
+      ],
+    ),
+  ),
+)
+/* a detail page's header: back to its list, the record's title and status, its decisions */
+const detailHeader = (compact) =>
+  comp(
+    compact ? 'Admin/Detail Header Compact' : 'Admin/Detail Header',
+    Row(
+      {
+        name: 'Detail Header',
+        width: 'fill_container',
+        gap: 16,
+        alignItems: 'end',
+        padding: compact ? [4, 2, 0, 2] : [4, 4, 0, 4],
+      },
+      [
+        Col({ name: 'Text', gap: compact ? 6 : 6, width: 'fill_container' }, [
+          part('back', use('Admin/Back', { name: 'Back' })),
+          Row({ name: 'Spacer', height: compact ? 2 : 4, width: 1 }, []),
+          part(
+            'eyebrow',
+            T('MODERATION · R-1042', {
+              fontSize: compact ? 11 : 12,
+              fontWeight: '600',
+              letterSpacing: 1.3,
+              fill: C.mutedForeground,
+            }),
+          ),
+          Row({ name: 'Title', gap: 12, width: 'fill_container' }, [
+            part(
+              'title',
+              H('Glass Horizon', compact ? 26 : 38, { letterSpacing: compact ? -0.6 : -0.8 }),
+            ),
+            part('status', Row({ name: 'Status', slot: [] }, [pill('Warn', 'Open')])),
+          ]),
+          part(
+            'subtitle',
+            T('Copyright claim on a track', {
+              fontSize: compact ? 13 : 14,
+              fill: C.mutedForeground,
+              width: 'fill_container',
+              textGrowth: 'fixed-width',
+            }),
+          ),
+        ]),
+        ...(compact
+          ? []
+          : [
+              slot('actions', {
+                layout: 'horizontal',
+                width: 'fit_content',
+                gap: 10,
+                alignItems: 'center',
+              }),
+            ]),
+      ],
+    ),
+  )
+add(detailHeader(false), detailHeader(true))
+nest('Admin/Detail Header', 'back', 'Admin/Back')
+nest('Admin/Detail Header Compact', 'back', 'Admin/Back')
+add(
+  comp(
+    'Admin/Key Pill',
+    Row(
+      {
+        name: 'Key Value',
+        width: 'fill_container',
+        height: 36,
+        justifyContent: 'space_between',
+        stroke: C.border,
+        strokeWidth: { bottom: 1 },
+      },
+      [
+        part('key', muted('Status')),
+        part('value', Row({ name: 'Value', slot: [] }, [pill('Warn', 'Open')])),
+      ],
+    ),
+  ),
+  comp(
+    'Admin/Quote',
+    Row(
+      {
+        name: 'Quote',
+        width: 'fill_container',
+        padding: [12, 14],
+        cornerRadius: [4, 14, 14, 4],
+        fill: soft(0.04),
+        stroke: C.primary,
+        strokeWidth: { left: 3 },
+      },
+      [
+        part(
+          'text',
+          muted('“Quote”', {
+            width: 'fill_container',
+            textGrowth: 'fixed-width',
+            lineHeight: 1.5,
+          }),
+        ),
+      ],
+    ),
+  ),
+  comp(
+    'Admin/Media',
+    Row(
+      {
+        name: 'Media',
+        width: 'fill_container',
+        gap: 12,
+        padding: 12,
+        cornerRadius: 16,
+        fill: soft(0.05),
+      },
+      [
+        iconBox('Info', 'audio-lines', 44),
+        Col({ name: 'Text', gap: 2, width: 'fill_container' }, [
+          part(
+            'title',
+            T('Glass Horizon', {
+              fontWeight: '600',
+              width: 'fill_container',
+              textGrowth: 'fixed-width',
+            }),
+          ),
+          part('sub', muted('Nova & the Static · 3:42', { fontSize: 12 })),
+        ]),
+        Row(
+          {
+            name: 'Play',
+            width: 40,
+            height: 40,
+            cornerRadius: 20,
+            justifyContent: 'center',
+            fill: C.primary,
+            effect: GLOW,
+          },
+          [I('play', { width: 16, height: 16, fill: C.primaryForeground })],
+        ),
+      ],
+    ),
+  ),
+  ...[
+    ['OK', 'Success', 'check'],
+    ['Warn', 'Warning', 'triangle-alert'],
+  ].map(([v, tone, icon]) =>
+    comp(
+      `Admin/Check Row/${v}`,
+      Row(
+        {
+          name: 'Check Row',
+          width: 'fill_container',
+          gap: 12,
+          padding: [10, 0],
+          alignItems: 'start',
+          stroke: C.border,
+          strokeWidth: { bottom: 1 },
+        },
+        [
+          iconBox(tone, icon, 28),
+          Col({ name: 'Text', gap: 2, width: 'fill_container' }, [
+            part(
+              'text',
+              T('Owns the masters', {
+                fontSize: 13,
+                fontWeight: '500',
+                width: 'fill_container',
+                textGrowth: 'fixed-width',
+              }),
+            ),
+            ...(v === 'Warn'
+              ? [
+                  part(
+                    'note',
+                    T('Note', {
+                      fontSize: 12,
+                      fill: C.warningText,
+                      width: 'fill_container',
+                      textGrowth: 'fixed-width',
+                    }),
+                  ),
+                ]
+              : []),
+          ]),
+        ],
+      ),
+    ),
+  ),
+  comp(
+    'Admin/Chips',
+    Col({ name: 'Chips', width: 'fill_container', gap: 8, padding: [6, 0, 0, 0] }, [
+      part('label', muted('Territories')),
+      part('chips', Row({ name: 'Items', gap: 6, slot: [] }, [pill('Flat', 'Worldwide')])),
+    ]),
+  ),
+  ...[
+    ['Admin/Textarea', C.border, false],
+    ['Admin/Textarea Error', C.error, true],
+  ].map(([name, line, bad]) =>
+    comp(
+      name,
+      Col({ name: 'Textarea', width: 'fill_container', gap: 6, padding: [6, 0, 0, 0] }, [
+        part('label', T('Required changes', { fontSize: 13, fontWeight: '600' })),
+        Row(
+          {
+            name: 'Box',
+            width: 'fill_container',
+            height: 104,
+            padding: [10, 12],
+            cornerRadius: 14,
+            alignItems: 'start',
+            fill: soft(0.05),
+            stroke: line,
+            strokeWidth: 1,
+          },
+          [
+            part(
+              'value',
+              T(bad ? 'One change per line' : 'Change', {
+                fontSize: 14,
+                lineHeight: 1.5,
+                ...(bad ? { fill: C.mutedForeground } : {}),
+                width: 'fill_container',
+                textGrowth: 'fixed-width',
+              }),
+            ),
+          ],
+        ),
+        Row({ name: 'Hint', gap: 6 }, [
+          ...(bad ? [I('triangle-alert', { width: 14, height: 14, fill: C.errorText })] : []),
+          part(
+            'hint',
+            T(bad ? 'Add at least one change' : 'One change per line', {
+              fontSize: 12,
+              fill: bad ? C.errorText : C.mutedForeground,
+            }),
+          ),
+        ]),
+      ]),
+    ),
+  ),
+)
+/* confirm dialogs: centred on desktop, a sheet on phones */
+for (const [tone, icon] of [
+  ['Success', 'check'],
+  ['Error', 'x'],
+  ['Warning', 'pencil'],
+])
+  for (const sheet of [false, true])
+    add(
+      comp(
+        `Admin/${sheet ? 'Sheet' : 'Dialog'}/${tone}`,
+        Col(
+          {
+            name: sheet ? 'Sheet' : 'Dialog',
+            width: sheet ? 'fill_container' : 460,
+            gap: 10,
+            padding: sheet ? [22, 20, 26, 20] : 24,
+            cornerRadius: sheet ? [28, 28, 0, 0] : 26,
+            ...glass(0.92),
+          },
+          [
+            iconBox(tone, icon, 44),
+            part(
+              'title',
+              H('Resolve report?', 20, {
+                letterSpacing: -0.3,
+                width: 'fill_container',
+                textGrowth: 'fixed-width',
+                lineHeight: 1.25,
+              }),
+            ),
+            part(
+              'desc',
+              muted('What happens next.', {
+                fontSize: 14,
+                width: 'fill_container',
+                textGrowth: 'fixed-width',
+                lineHeight: 1.45,
+              }),
+            ),
+            slot('body', { gap: 0 }),
+            part(
+              'actions',
+              Row(
+                {
+                  name: 'Actions',
+                  width: 'fill_container',
+                  gap: 8,
+                  justifyContent: 'end',
+                  padding: [10, 0, 0, 0],
+                  slot: [],
+                },
+                [button('Glass', 'Cancel'), button('Default', 'Confirm', 'check')],
+              ),
+            ),
+          ],
+        ),
+      ),
+    )
+add(
+  comp(
+    'Admin/Tile Message/Search',
+    Col(
+      {
+        name: 'Message',
+        width: 'fill_container',
+        gap: 8,
+        padding: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      [
+        Row(
+          {
+            name: 'Icon',
+            width: 48,
+            height: 48,
+            cornerRadius: 24,
+            justifyContent: 'center',
+            fill: soft(0.07),
+          },
+          [part('icon', I('search', { width: 20, height: 20, fill: C.foreground }))],
+        ),
+        part('title', T('No results', { fontWeight: '600', textAlign: 'center' })),
+        part(
+          'desc',
+          muted('Try another search or clear the filters.', {
+            width: 320,
+            textGrowth: 'fixed-width',
+            textAlign: 'center',
+          }),
+        ),
+        part('action', button('Glass', 'Clear filters', 'x')),
+      ],
+    ),
+  ),
+  comp(
+    'Admin/Loader/Table',
+    Col({ name: 'Table Loader', width: 'fill_container', gap: 0 }, [
+      ...[260, 240, 220, 200, 180, 160].map((w, i) =>
+        Row(
+          {
+            name: `Row ${i + 1}`,
+            width: 'fill_container',
+            gap: 18,
+            padding: 16,
+            stroke: C.border,
+            strokeWidth: { bottom: 1 },
+          },
+          [
+            sk(26, 26, { cornerRadius: 8 }),
+            Row({ name: 'Grow', width: 'fill_container' }, [sk(w, 12)]),
+            sk(110, 12),
+            sk(90, 24, { cornerRadius: 12 }),
+          ],
+        ),
+      ),
+    ]),
+  ),
+  comp(
+    'Admin/Loader/Cards',
+    Col({ name: 'Cards Loader', width: 'fill_container', gap: 10, padding: 12 }, [
+      ...[0, 1, 2, 3].map((i) =>
+        Col(
+          {
+            name: `Card ${i + 1}`,
+            width: 'fill_container',
+            gap: 10,
+            padding: 14,
+            cornerRadius: 18,
+            stroke: C.border,
+            strokeWidth: 1,
+          },
+          [
+            Row({ name: 'Top', width: 'fill_container', gap: 10 }, [
+              Row({ name: 'Grow', width: 'fill_container' }, [sk(170 - i * 14, 12)]),
+              sk(64, 22, { cornerRadius: 11 }),
+            ]),
+            sk(140, 10),
+          ],
+        ),
+      ),
+    ]),
+  ),
+)
+for (const p of ['Admin/Bulk Bar']) nest(p, 'clear', 'Button/Icon Ghost')
+nest('Admin/Tile Message/Search', 'action', 'Button/Glass')
+
+/* ---------- forms: inputs, the colour choice and the form's error line ---------- */
+add(
+  ...[
+    ['Admin/Input', C.border, false],
+    ['Admin/Input Error', C.error, true],
+  ].map(([name, line, bad]) =>
+    comp(
+      name,
+      Col({ name: 'Input', width: 'fill_container', gap: 6, padding: [10, 0, 0, 0] }, [
+        part('label', T('Name', { fontSize: 13, fontWeight: '600' })),
+        Row(
+          {
+            name: 'Box',
+            width: 'fill_container',
+            height: 42,
+            padding: [0, 12],
+            gap: 0,
+            cornerRadius: 12,
+            fill: soft(0.05),
+            stroke: line,
+            strokeWidth: 1,
+          },
+          [
+            part('prefix', muted('bitrate.fm/genre/', { fontSize: 14 })),
+            part(
+              'value',
+              T('Dream pop', {
+                fontSize: 14,
+                fontWeight: '500',
+                width: 'fill_container',
+                textGrowth: 'fixed-width',
+              }),
+            ),
+          ],
+        ),
+        Row({ name: 'Hint', gap: 6 }, [
+          ...(bad ? [I('triangle-alert', { width: 14, height: 14, fill: C.errorText })] : []),
+          part(
+            'hint',
+            T(bad ? 'Add a name' : 'Hint', {
+              fontSize: 12,
+              fill: bad ? C.errorText : C.mutedForeground,
+            }),
+          ),
+        ]),
+      ]),
+    ),
+  ),
+  ...['On', 'Off'].map((v) =>
+    comp(
+      `Admin/Swatch/${v}`,
+      Row(
+        {
+          name: 'Swatch',
+          width: 40,
+          height: 40,
+          cornerRadius: 20,
+          justifyContent: 'center',
+          ...(v === 'On' ? { stroke: C.foreground, strokeWidth: 2 } : {}),
+        },
+        [part('dot', F({ name: 'Dot', width: 30, height: 30, cornerRadius: 15, fill: C.chart1 }))],
+      ),
+    ),
+  ),
+  comp(
+    'Admin/Swatches',
+    Col({ name: 'Swatches', width: 'fill_container', gap: 8, padding: [10, 0, 0, 0] }, [
+      part('label', T('Colour', { fontSize: 13, fontWeight: '600' })),
+      part(
+        'items',
+        Row({ name: 'Items', gap: 4, slot: [] }, [use('Admin/Swatch/On', { name: 'Swatch' })]),
+      ),
+    ]),
+  ),
+  comp(
+    'Admin/Form Error',
+    Row(
+      {
+        name: 'Form Error',
+        width: 'fill_container',
+        gap: 8,
+        padding: [10, 12],
+        cornerRadius: 12,
+        fill: C.errorSurface,
+      },
+      [
+        I('triangle-alert', { width: 16, height: 16, fill: C.errorText }),
+        part(
+          'text',
+          T('Fix 2 fields to save', { fontSize: 13, fontWeight: '600', fill: C.errorText }),
+        ),
+      ],
+    ),
+  ),
+)
+
 /* ---------- the library page: one flex root, a section per family ---------- */
 const cellWidth = (b) =>
   typeof b.width === 'number'
@@ -2836,6 +3658,11 @@ const SECTIONS = [
     'Notification settings',
     'Channels, the event × channel matrix (cards on phones), the live preview, delivery fields, thresholds, escalation roles and the save state.',
     /^Admin\/(Channel|Matrix|Event Card|Preview|Route|Field|Time|Slider|Role|Save)/,
+  ],
+  [
+    'Resource pages',
+    'Lists and detail pages for every section: metric tiles, the table panel with its toolbar, filters, the selection bar and pager, record cards on phones, the detail header with back link and status, quote, media, checks and chips, confirm dialogs (sheets on phones), the change request field and their loaders.',
+    /^Admin\/(Metric|Loader\/(Metric|Table|Cards)|Panel|Key Pill|Input|Swatch|Form Error|Search Field|Filter|Toolbar|Bulk Bar|Table\/Row Selected|Sort|Cell|Pager|Record Card|Back|Detail Header|Quote|Media|Check Row|Chips|Textarea|Dialog|Sheet|Tile Message\/Search)/,
   ],
   [
     'Overlays',
