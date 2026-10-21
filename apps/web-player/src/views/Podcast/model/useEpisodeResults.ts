@@ -5,11 +5,11 @@ import {
   useAllSavedEpisodes,
   usePodcastEpisodes,
 } from '@/entities/Podcast'
+import { useDebouncedValue } from '@/shared/hooks'
 import {
   type EpisodeFilter,
   filterSavedEpisodes,
 } from '@/views/Podcast/model/filterEpisodes'
-import { useDebouncedValue } from '@/views/Podcast/model/useDebouncedValue'
 
 const SEARCH_DEBOUNCE_MS = 300
 
