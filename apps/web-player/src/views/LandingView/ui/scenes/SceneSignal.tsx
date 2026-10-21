@@ -82,7 +82,7 @@ export const SceneSignal = ({ signedIn }: SceneProps) => {
                 <i></i>
                 <span
                   className={lc('glitch glitch-auto')}
-                  data-text="NOW PLAYING"
+                  data-text={c('hero.now_playing')}
                 >
                   {c('hero.now_playing')}
                 </span>
@@ -93,7 +93,7 @@ export const SceneSignal = ({ signedIn }: SceneProps) => {
                 <i></i>
                 <span
                   className={lc('glitch glitch-auto')}
-                  data-text="SIGNAL STABLE"
+                  data-text={c('hero.signal_stable')}
                 >
                   {c('hero.signal_stable')}
                 </span>

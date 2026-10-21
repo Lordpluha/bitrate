@@ -75,7 +75,10 @@ export const SceneDevices = () => {
               <span className={lc('grow')}></span>
               <span className={lc('live')}>
                 <i></i>
-                <span className={lc('glitch glitch-auto')} data-text="JAM LIVE">
+                <span
+                  className={lc('glitch glitch-auto')}
+                  data-text={c('devices.jam_live')}
+                >
                   {c('devices.jam_live')}
                 </span>
               </span>
