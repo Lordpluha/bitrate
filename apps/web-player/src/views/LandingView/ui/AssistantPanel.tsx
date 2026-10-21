@@ -7,6 +7,8 @@ import { useLandingCopy } from '../model/useLandingCopy'
 import { AssistantOrb, type OrbState } from './AssistantOrb'
 
 type Message = { id: number; me: boolean; text: string }
+/** Answers being streamed: the words shown so far, by message id. */
+type Streaming = Readonly<Record<number, string>>
 
 /** Demo questions with prepared answers; anything else gets the default demo reply. */
 const PRESETS: readonly { q: LandingKey; a: LandingKey }[] = [
@@ -23,13 +25,15 @@ export const AssistantPanel = () => {
   const c = useLandingCopy()
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([])
+  const [streaming, setStreaming] = useState<Streaming>({})
   const [phase, setPhase] = useState<'idle' | OrbState>('idle')
   const [draft, setDraft] = useState('')
   const panel = useRef<HTMLElement>(null)
   const fab = useRef<HTMLButtonElement>(null)
   const input = useRef<HTMLInputElement>(null)
   const list = useRef<HTMLDivElement>(null)
-  const timers = useRef<number[]>([])
+  /** Pending timeouts and stream intervals, cleared on unmount; each removes itself when done. */
+  const timers = useRef(new Set<number>())
   const nextId = useRef(0)
 
   useEffect(
@@ -60,9 +64,11 @@ export const AssistantPanel = () => {
             ease: 'elastic.out(1, .8)',
           },
         )
-        timers.current.push(
-          window.setTimeout(() => input.current?.focus(), 120),
-        )
+        const focus = window.setTimeout(() => {
+          timers.current.delete(focus)
+          input.current?.focus()
+        }, 120)
+        timers.current.add(focus)
       } else
         gsap.to(el, {
           scale: 0.2,
@@ -77,13 +83,24 @@ export const AssistantPanel = () => {
     }
   }, [open])
 
+  /* keep the newest message in view: scroll only when the list content actually changes */
   useEffect(() => {
     const el = list.current
-    if (el) el.scrollTop = el.scrollHeight
-  })
+    if (!el) return
+    const toBottom = () => {
+      el.scrollTop = el.scrollHeight
+    }
+    const watch = new MutationObserver(toBottom)
+    watch.observe(el, { childList: true, subtree: true, characterData: true })
+    return () => watch.disconnect()
+  }, [])
 
   const later = (fn: () => void, ms: number) => {
-    timers.current.push(window.setTimeout(fn, ms))
+    const id = window.setTimeout(() => {
+      timers.current.delete(id)
+      fn()
+    }, ms)
+    timers.current.add(id)
   }
   const push = (m: Omit<Message, 'id'>) => {
     const id = nextId.current++
@@ -102,22 +119,34 @@ export const AssistantPanel = () => {
       const preset = PRESETS.find(
         (p) => c(p.q).toLowerCase() === question.toLowerCase(),
       )
-      const words = c(preset?.a ?? 'assistant.a_default').split(' ')
-      const id = push({ me: false, text: '' })
+      const text = c(preset?.a ?? 'assistant.a_default')
       const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
-      words.forEach((_, k) => {
-        later(
-          () =>
-            setMessages((all) =>
-              all.map((m) =>
-                m.id === id
-                  ? { ...m, text: words.slice(0, k + 1).join(' ') }
-                  : m,
-              ),
-            ),
-          reduce ? 0 : k * WORD_MS,
-        )
-      })
+      if (reduce) {
+        push({ me: false, text })
+        return
+      }
+      /* stream word by word into its own state; the list gets the answer once, when it is complete */
+      const words = text.split(' ')
+      const id = push({ me: false, text: '' })
+      let shown = 1
+      const show = () =>
+        setStreaming((all) => ({
+          ...all,
+          [id]: words.slice(0, shown).join(' '),
+        }))
+      show()
+      const tick = window.setInterval(() => {
+        shown += 1
+        if (shown < words.length) {
+          show()
+          return
+        }
+        window.clearInterval(tick)
+        timers.current.delete(tick)
+        setMessages((all) => all.map((m) => (m.id === id ? { ...m, text } : m)))
+        setStreaming(({ [id]: _done, ...rest }) => rest)
+      }, WORD_MS)
+      timers.current.add(tick)
     }, ANSWER_MS)
   }
 
@@ -157,7 +186,6 @@ export const AssistantPanel = () => {
         className={lc('ai-panel')}
         id="aiPanel"
         onKeyDown={(e) => {
-          e.stopPropagation()
           if (e.key !== 'Escape') return
           setOpen(false)
           fab.current?.focus()
@@ -211,7 +239,7 @@ export const AssistantPanel = () => {
           )}
           {messages.map((m) => (
             <div className={lc(m.me ? 'ai-b me' : 'ai-b')} key={m.id}>
-              {m.text}
+              {streaming[m.id] ?? m.text}
             </div>
           ))}
           {phase !== 'idle' && (
