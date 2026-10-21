@@ -1,0 +1,1696 @@
+{
+  "version": "2.20",
+  "imports": {
+    "admin": "../design-system/admin.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "zn23c3",
+      "name": "Admin / No access / Desktop / Dark",
+      "width": 1440,
+      "height": 960,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "vdrdHS",
+          "name": "Center",
+          "layout": "vertical",
+          "width": "fill_container",
+          "height": "fill_container",
+          "alignItems": "center",
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "MndyRM",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "No sections yet"
+                },
+                "admin:SkWKSf": {
+                  "content": "You’re signed in as noor.cat, but your account doesn’t include any section of the console yet. A super admin can give you a role."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "wGT3WY",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "keeJnd",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Signed in as",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Signed in as"
+                        },
+                        "admin:guyeB5": {
+                          "content": "noor.cat · noor@bitrate.fm"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "HncDqX",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Role",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Role"
+                        },
+                        "admin:guyeB5": {
+                          "content": "None"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Cffqom",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Super admins",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Super admins"
+                        },
+                        "admin:guyeB5": {
+                          "content": "mara.ops, sam.ops"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "nwWmQT",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Check again",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Check again"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "refresh-cw"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "poTZPE",
+                      "ref": "admin:4HU76n",
+                      "name": "Button / Sign out",
+                      "descendants": {
+                        "admin:DVMBFw": {
+                          "content": "Sign out"
+                        },
+                        "admin:yBvyFS": {
+                          "icon": "log-out"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "/no-access (staff session, no sections) — You’re signed in as noor.cat, but your account doesn’t include any section of the console yet. A super admin can give you a role. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#no-access)."
+    },
+    {
+      "type": "frame",
+      "id": "RNNr3q",
+      "name": "Admin / No access / Desktop / Light",
+      "width": 1440,
+      "height": 960,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "digLAK",
+          "name": "Center",
+          "layout": "vertical",
+          "width": "fill_container",
+          "height": "fill_container",
+          "alignItems": "center",
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "pLoibY",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "No sections yet"
+                },
+                "admin:SkWKSf": {
+                  "content": "You’re signed in as noor.cat, but your account doesn’t include any section of the console yet. A super admin can give you a role."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "h7GsBT",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "5Q4NbM",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Signed in as",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Signed in as"
+                        },
+                        "admin:guyeB5": {
+                          "content": "noor.cat · noor@bitrate.fm"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "UDbRpx",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Role",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Role"
+                        },
+                        "admin:guyeB5": {
+                          "content": "None"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "75ofeP",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Super admins",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Super admins"
+                        },
+                        "admin:guyeB5": {
+                          "content": "mara.ops, sam.ops"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "E4QmZA",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Check again",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Check again"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "refresh-cw"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "f3cDnB",
+                      "ref": "admin:4HU76n",
+                      "name": "Button / Sign out",
+                      "descendants": {
+                        "admin:DVMBFw": {
+                          "content": "Sign out"
+                        },
+                        "admin:yBvyFS": {
+                          "icon": "log-out"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Light"
+      },
+      "context": "/no-access (staff session, no sections) — You’re signed in as noor.cat, but your account doesn’t include any section of the console yet. A super admin can give you a role. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#no-access)."
+    },
+    {
+      "type": "frame",
+      "id": "yRZ7h8",
+      "name": "Admin / No access / Desktop / Dim",
+      "width": 1440,
+      "height": 960,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "RhMXJ9",
+          "name": "Center",
+          "layout": "vertical",
+          "width": "fill_container",
+          "height": "fill_container",
+          "alignItems": "center",
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "eLuRrg",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "No sections yet"
+                },
+                "admin:SkWKSf": {
+                  "content": "You’re signed in as noor.cat, but your account doesn’t include any section of the console yet. A super admin can give you a role."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "6gfVBA",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "faGKWT",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Signed in as",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Signed in as"
+                        },
+                        "admin:guyeB5": {
+                          "content": "noor.cat · noor@bitrate.fm"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "GdzvvU",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Role",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Role"
+                        },
+                        "admin:guyeB5": {
+                          "content": "None"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "TptroF",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Super admins",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Super admins"
+                        },
+                        "admin:guyeB5": {
+                          "content": "mara.ops, sam.ops"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jcsSw7",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Check again",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Check again"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "refresh-cw"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "SWytfv",
+                      "ref": "admin:4HU76n",
+                      "name": "Button / Sign out",
+                      "descendants": {
+                        "admin:DVMBFw": {
+                          "content": "Sign out"
+                        },
+                        "admin:yBvyFS": {
+                          "icon": "log-out"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dim"
+      },
+      "context": "/no-access (staff session, no sections) — You’re signed in as noor.cat, but your account doesn’t include any section of the console yet. A super admin can give you a role. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#no-access)."
+    },
+    {
+      "type": "frame",
+      "id": "XF3Bsc",
+      "name": "Admin / No access / Mobile / Dark",
+      "width": 390,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "kVvmte",
+          "ref": "admin:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "uCizpy",
+          "name": "Content",
+          "layout": "vertical",
+          "width": "fill_container",
+          "padding": [
+            12,
+            16,
+            24,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "D5unCk",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "width": "fill_container",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "No sections yet"
+                },
+                "admin:SkWKSf": {
+                  "content": "You’re signed in as noor.cat, but your account doesn’t include any section of the console yet. A super admin can give you a role."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "C8FgJD",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "qdg85S",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Signed in as",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Signed in as"
+                        },
+                        "admin:guyeB5": {
+                          "content": "noor.cat · noor@bitrate.fm"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "wFrnJp",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Role",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Role"
+                        },
+                        "admin:guyeB5": {
+                          "content": "None"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "7TjRZ5",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Super admins",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Super admins"
+                        },
+                        "admin:guyeB5": {
+                          "content": "mara.ops, sam.ops"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Pw2rz3",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Check again",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Check again"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "refresh-cw"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "2XXdrT",
+                      "ref": "admin:4HU76n",
+                      "name": "Button / Sign out",
+                      "descendants": {
+                        "admin:DVMBFw": {
+                          "content": "Sign out"
+                        },
+                        "admin:yBvyFS": {
+                          "icon": "log-out"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "/no-access (staff session, no sections) — You’re signed in as noor.cat, but your account doesn’t include any section of the console yet. A super admin can give you a role. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#no-access)."
+    },
+    {
+      "type": "frame",
+      "id": "q8UPiz",
+      "name": "Admin / No access / Saving / Desktop",
+      "width": 1440,
+      "height": 960,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "ZbcL65",
+          "name": "Center",
+          "layout": "vertical",
+          "width": "fill_container",
+          "height": "fill_container",
+          "alignItems": "center",
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "YL9TQN",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "No sections yet"
+                },
+                "admin:SkWKSf": {
+                  "content": "You’re signed in as noor.cat, but your account doesn’t include any section of the console yet. A super admin can give you a role."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "KciT3e",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "7QQjYb",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Signed in as",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Signed in as"
+                        },
+                        "admin:guyeB5": {
+                          "content": "noor.cat · noor@bitrate.fm"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "wbcuVM",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Role",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Role"
+                        },
+                        "admin:guyeB5": {
+                          "content": "None"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "3REUFb",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Super admins",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Super admins"
+                        },
+                        "admin:guyeB5": {
+                          "content": "mara.ops, sam.ops"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sgpi2B",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Checking…",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Checking…"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "loader-circle"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "7AhHEX",
+                      "ref": "admin:4HU76n",
+                      "name": "Button / Sign out",
+                      "descendants": {
+                        "admin:DVMBFw": {
+                          "content": "Sign out"
+                        },
+                        "admin:yBvyFS": {
+                          "icon": "log-out"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "/no-access (staff session, no sections) — You’re signed in as noor.cat, but your account doesn’t include any section of the console yet. A super admin can give you a role. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#no-access)."
+    },
+    {
+      "type": "frame",
+      "id": "pfj37p",
+      "name": "Admin / No access / Saving / Mobile",
+      "width": 390,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "TZWkmZ",
+          "ref": "admin:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "y5KjvC",
+          "name": "Content",
+          "layout": "vertical",
+          "width": "fill_container",
+          "padding": [
+            12,
+            16,
+            24,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "XWduVA",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "width": "fill_container",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "No sections yet"
+                },
+                "admin:SkWKSf": {
+                  "content": "You’re signed in as noor.cat, but your account doesn’t include any section of the console yet. A super admin can give you a role."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "ZJPKiP",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "artQww",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Signed in as",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Signed in as"
+                        },
+                        "admin:guyeB5": {
+                          "content": "noor.cat · noor@bitrate.fm"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "CXCtND",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Role",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Role"
+                        },
+                        "admin:guyeB5": {
+                          "content": "None"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Ky92NL",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Super admins",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Super admins"
+                        },
+                        "admin:guyeB5": {
+                          "content": "mara.ops, sam.ops"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ZCgDVD",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Checking…",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Checking…"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "loader-circle"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "MRYDV2",
+                      "ref": "admin:4HU76n",
+                      "name": "Button / Sign out",
+                      "descendants": {
+                        "admin:DVMBFw": {
+                          "content": "Sign out"
+                        },
+                        "admin:yBvyFS": {
+                          "icon": "log-out"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "/no-access (staff session, no sections) — You’re signed in as noor.cat, but your account doesn’t include any section of the console yet. A super admin can give you a role. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#no-access)."
+    },
+    {
+      "type": "frame",
+      "id": "JfyXpS",
+      "name": "Admin / No access / Offline / Desktop",
+      "width": 1440,
+      "height": 960,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "Z7xtpN",
+          "name": "Center",
+          "layout": "vertical",
+          "width": "fill_container",
+          "height": "fill_container",
+          "alignItems": "center",
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "qopLU8",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "No sections yet"
+                },
+                "admin:SkWKSf": {
+                  "content": "You’re signed in as noor.cat, but your account doesn’t include any section of the console yet. A super admin can give you a role."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "vy2SAu",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "w5pkGD",
+                      "ref": "admin:KvNy10",
+                      "name": "Admin/Form Note/Warning",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:9yj9Bv": {
+                          "content": "You’re offline. Reconnect to check your access."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "cLGdX2",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Signed in as",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Signed in as"
+                        },
+                        "admin:guyeB5": {
+                          "content": "noor.cat · noor@bitrate.fm"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sXsR5a",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Role",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Role"
+                        },
+                        "admin:guyeB5": {
+                          "content": "None"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "H6cFZu",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Super admins",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Super admins"
+                        },
+                        "admin:guyeB5": {
+                          "content": "mara.ops, sam.ops"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "mw6Syr",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Check again",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Check again"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "refresh-cw"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center",
+                      "opacity": 0.45
+                    },
+                    {
+                      "type": "ref",
+                      "id": "JSc8GK",
+                      "ref": "admin:4HU76n",
+                      "name": "Button / Sign out",
+                      "descendants": {
+                        "admin:DVMBFw": {
+                          "content": "Sign out"
+                        },
+                        "admin:yBvyFS": {
+                          "icon": "log-out"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "/no-access (staff session, no sections) — You’re signed in as noor.cat, but your account doesn’t include any section of the console yet. A super admin can give you a role. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#no-access)."
+    },
+    {
+      "type": "frame",
+      "id": "pf42A7",
+      "name": "Admin / No access / Offline / Mobile",
+      "width": 390,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "BerXZr",
+          "ref": "admin:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "LyQh4k",
+          "name": "Content",
+          "layout": "vertical",
+          "width": "fill_container",
+          "padding": [
+            12,
+            16,
+            24,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "GJzTzV",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "width": "fill_container",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "No sections yet"
+                },
+                "admin:SkWKSf": {
+                  "content": "You’re signed in as noor.cat, but your account doesn’t include any section of the console yet. A super admin can give you a role."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "R8Ghqp",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "mtfnPV",
+                      "ref": "admin:KvNy10",
+                      "name": "Admin/Form Note/Warning",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:9yj9Bv": {
+                          "content": "You’re offline. Reconnect to check your access."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "vxWcTA",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Signed in as",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Signed in as"
+                        },
+                        "admin:guyeB5": {
+                          "content": "noor.cat · noor@bitrate.fm"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "2N3NCn",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Role",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Role"
+                        },
+                        "admin:guyeB5": {
+                          "content": "None"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "9Lf68g",
+                      "ref": "admin:p0ZiD8",
+                      "name": "KV / Super admins",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:56XZY7": {
+                          "content": "Super admins"
+                        },
+                        "admin:guyeB5": {
+                          "content": "mara.ops, sam.ops"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "JNipF9",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Check again",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Check again"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "refresh-cw"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center",
+                      "opacity": 0.45
+                    },
+                    {
+                      "type": "ref",
+                      "id": "rQ8fwo",
+                      "ref": "admin:4HU76n",
+                      "name": "Button / Sign out",
+                      "descendants": {
+                        "admin:DVMBFw": {
+                          "content": "Sign out"
+                        },
+                        "admin:yBvyFS": {
+                          "icon": "log-out"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "/no-access (staff session, no sections) — You’re signed in as noor.cat, but your account doesn’t include any section of the console yet. A super admin can give you a role. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#no-access)."
+    }
+  ]
+}

@@ -1,0 +1,4190 @@
+{
+  "version": "2.20",
+  "imports": {
+    "admin": "../design-system/admin.lib.pen"
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "UXt3Z6",
+      "name": "Admin / Login / Desktop / Dark",
+      "width": 1440,
+      "height": 960,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "HfDhGm",
+          "name": "Center",
+          "layout": "vertical",
+          "width": "fill_container",
+          "height": "fill_container",
+          "alignItems": "center",
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "k6PBaC",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "Sign in to Bitrate Admin"
+                },
+                "admin:SkWKSf": {
+                  "content": "For Bitrate staff. Use your work account."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "5fW5t7",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "EpPKLY",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Work email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Work email"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "mara.ops@bitrate.fm"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "tSGL2D",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Password"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "••••••••••••"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "iBd6Qx",
+                      "ref": "admin:DkS7Yo",
+                      "name": "Admin/Field",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:d0VAER": {
+                          "content": "Keep me signed in"
+                        },
+                        "admin:mdTtPU": {
+                          "content": "On this device for 30 days"
+                        },
+                        "admin:qWEuJ2": {
+                          "type": "frame",
+                          "id": "KEfhDA",
+                          "name": "Control",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "xB3WZp",
+                              "ref": "admin:vnqaH9",
+                              "name": "Switch"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "JEyvfg",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Sign in",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Sign in"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "chevron-right"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "rrD4Cw",
+                      "ref": "admin:PiqhAO",
+                      "name": "Text/Caption",
+                      "textAlign": "center",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Trouble signing in? Ask a super admin to reset your password."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 0,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "/login (public) — For Bitrate staff. Use your work account. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#login)."
+    },
+    {
+      "type": "frame",
+      "id": "U4gMfp",
+      "name": "Admin / Login / Desktop / Light",
+      "width": 1440,
+      "height": 960,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "o5WVCk",
+          "name": "Center",
+          "layout": "vertical",
+          "width": "fill_container",
+          "height": "fill_container",
+          "alignItems": "center",
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "s4Gw6h",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "Sign in to Bitrate Admin"
+                },
+                "admin:SkWKSf": {
+                  "content": "For Bitrate staff. Use your work account."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "W63TXG",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "RMFWKE",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Work email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Work email"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "mara.ops@bitrate.fm"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "zZk6si",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Password"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "••••••••••••"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "RKJhZk",
+                      "ref": "admin:DkS7Yo",
+                      "name": "Admin/Field",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:d0VAER": {
+                          "content": "Keep me signed in"
+                        },
+                        "admin:mdTtPU": {
+                          "content": "On this device for 30 days"
+                        },
+                        "admin:qWEuJ2": {
+                          "type": "frame",
+                          "id": "sMaKTz",
+                          "name": "Control",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "QNDW7W",
+                              "ref": "admin:vnqaH9",
+                              "name": "Switch"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "7DBDby",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Sign in",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Sign in"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "chevron-right"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "VHFEwr",
+                      "ref": "admin:PiqhAO",
+                      "name": "Text/Caption",
+                      "textAlign": "center",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Trouble signing in? Ask a super admin to reset your password."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 1540,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Light"
+      },
+      "context": "/login (public) — For Bitrate staff. Use your work account. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#login)."
+    },
+    {
+      "type": "frame",
+      "id": "qEbg76",
+      "name": "Admin / Login / Desktop / Dim",
+      "width": 1440,
+      "height": 960,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "pPrkiQ",
+          "name": "Center",
+          "layout": "vertical",
+          "width": "fill_container",
+          "height": "fill_container",
+          "alignItems": "center",
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "fFMVjq",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "Sign in to Bitrate Admin"
+                },
+                "admin:SkWKSf": {
+                  "content": "For Bitrate staff. Use your work account."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "3MaSge",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "ALcRdE",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Work email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Work email"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "mara.ops@bitrate.fm"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "9uSZcH",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Password"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "••••••••••••"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "HvZnPp",
+                      "ref": "admin:DkS7Yo",
+                      "name": "Admin/Field",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:d0VAER": {
+                          "content": "Keep me signed in"
+                        },
+                        "admin:mdTtPU": {
+                          "content": "On this device for 30 days"
+                        },
+                        "admin:qWEuJ2": {
+                          "type": "frame",
+                          "id": "npCm3q",
+                          "name": "Control",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "2ccbAx",
+                              "ref": "admin:vnqaH9",
+                              "name": "Switch"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "xfwWCX",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Sign in",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Sign in"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "chevron-right"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "LF9M5e",
+                      "ref": "admin:PiqhAO",
+                      "name": "Text/Caption",
+                      "textAlign": "center",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Trouble signing in? Ask a super admin to reset your password."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 3080,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dim"
+      },
+      "context": "/login (public) — For Bitrate staff. Use your work account. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#login)."
+    },
+    {
+      "type": "frame",
+      "id": "mwRzGa",
+      "name": "Admin / Login / Mobile / Dark",
+      "width": 390,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "hHUCpv",
+          "ref": "admin:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "5JvZUJ",
+          "name": "Content",
+          "layout": "vertical",
+          "width": "fill_container",
+          "padding": [
+            12,
+            16,
+            24,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "uCTbLu",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "width": "fill_container",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "Sign in to Bitrate Admin"
+                },
+                "admin:SkWKSf": {
+                  "content": "For Bitrate staff. Use your work account."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "oc4EDi",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "3PNqL6",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Work email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Work email"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "mara.ops@bitrate.fm"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "jWn26e",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Password"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "••••••••••••"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Jhzdfj",
+                      "ref": "admin:DkS7Yo",
+                      "name": "Admin/Field",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:d0VAER": {
+                          "content": "Keep me signed in"
+                        },
+                        "admin:mdTtPU": {
+                          "content": "On this device for 30 days"
+                        },
+                        "admin:qWEuJ2": {
+                          "type": "frame",
+                          "id": "Zhdpp9",
+                          "name": "Control",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "SySiyv",
+                              "ref": "admin:vnqaH9",
+                              "name": "Switch"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "bvfr8f",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Sign in",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Sign in"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "chevron-right"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "nfDr6C",
+                      "ref": "admin:PiqhAO",
+                      "name": "Text/Caption",
+                      "textAlign": "center",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Trouble signing in? Ask a super admin to reset your password."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 4620,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "/login (public) — For Bitrate staff. Use your work account. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#login)."
+    },
+    {
+      "type": "frame",
+      "id": "SK6uox",
+      "name": "Admin / Login / Empty / Desktop",
+      "width": 1440,
+      "height": 960,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "VbQ7bv",
+          "name": "Center",
+          "layout": "vertical",
+          "width": "fill_container",
+          "height": "fill_container",
+          "alignItems": "center",
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "yuB6rZ",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "Sign in to Bitrate Admin"
+                },
+                "admin:SkWKSf": {
+                  "content": "For Bitrate staff. Use your work account."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "HHUdTv",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "if2qNK",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Work email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Work email"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "name@bitrate.fm",
+                          "fill": "$admin:--muted-foreground"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "aNjdJy",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Password"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "Your password",
+                          "fill": "$admin:--muted-foreground"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pm4wn6",
+                      "ref": "admin:DkS7Yo",
+                      "name": "Admin/Field",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:d0VAER": {
+                          "content": "Keep me signed in"
+                        },
+                        "admin:mdTtPU": {
+                          "content": "On this device for 30 days"
+                        },
+                        "admin:qWEuJ2": {
+                          "type": "frame",
+                          "id": "moCDCs",
+                          "name": "Control",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "o5xWfn",
+                              "ref": "admin:vnqaH9",
+                              "name": "Switch"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "W7ZqKh",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Sign in",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Sign in"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "chevron-right"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "DseLJn",
+                      "ref": "admin:PiqhAO",
+                      "name": "Text/Caption",
+                      "textAlign": "center",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Trouble signing in? Ask a super admin to reset your password."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 5110,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "/login (public) — For Bitrate staff. Use your work account. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#login)."
+    },
+    {
+      "type": "frame",
+      "id": "sqpudA",
+      "name": "Admin / Login / Empty / Mobile",
+      "width": 390,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "tXvJ6m",
+          "ref": "admin:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "W4kqQK",
+          "name": "Content",
+          "layout": "vertical",
+          "width": "fill_container",
+          "padding": [
+            12,
+            16,
+            24,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "6iZoWn",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "width": "fill_container",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "Sign in to Bitrate Admin"
+                },
+                "admin:SkWKSf": {
+                  "content": "For Bitrate staff. Use your work account."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "cZhJQF",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "st53jZ",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Work email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Work email"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "name@bitrate.fm",
+                          "fill": "$admin:--muted-foreground"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "zoqgtS",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Password"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "Your password",
+                          "fill": "$admin:--muted-foreground"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "95G6nN",
+                      "ref": "admin:DkS7Yo",
+                      "name": "Admin/Field",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:d0VAER": {
+                          "content": "Keep me signed in"
+                        },
+                        "admin:mdTtPU": {
+                          "content": "On this device for 30 days"
+                        },
+                        "admin:qWEuJ2": {
+                          "type": "frame",
+                          "id": "uYCKMy",
+                          "name": "Control",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "bsFBiQ",
+                              "ref": "admin:vnqaH9",
+                              "name": "Switch"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "zBhVVE",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Sign in",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Sign in"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "chevron-right"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "BnEZuM",
+                      "ref": "admin:PiqhAO",
+                      "name": "Text/Caption",
+                      "textAlign": "center",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Trouble signing in? Ask a super admin to reset your password."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 6650,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "/login (public) — For Bitrate staff. Use your work account. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#login)."
+    },
+    {
+      "type": "frame",
+      "id": "Rt3uzB",
+      "name": "Admin / Login / Field errors / Desktop",
+      "width": 1440,
+      "height": 960,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "PuLHYN",
+          "name": "Center",
+          "layout": "vertical",
+          "width": "fill_container",
+          "height": "fill_container",
+          "alignItems": "center",
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "EiThNf",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "Sign in to Bitrate Admin"
+                },
+                "admin:SkWKSf": {
+                  "content": "For Bitrate staff. Use your work account."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "hJFUNJ",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "x42x23",
+                      "ref": "admin:VbDmgA",
+                      "name": "Field / Work email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:T3Jo8m": {
+                          "content": "Work email"
+                        },
+                        "admin:qXgOpD": {
+                          "enabled": false
+                        },
+                        "admin:ndnVt0": {
+                          "content": "mara.ops@"
+                        },
+                        "admin:EFwHxE": {
+                          "content": "Enter your work email"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "BQCGPn",
+                      "ref": "admin:VbDmgA",
+                      "name": "Field / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:T3Jo8m": {
+                          "content": "Password"
+                        },
+                        "admin:qXgOpD": {
+                          "enabled": false
+                        },
+                        "admin:ndnVt0": {
+                          "content": "Your password",
+                          "fill": "$admin:--muted-foreground"
+                        },
+                        "admin:EFwHxE": {
+                          "content": "Enter your password"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "hAKXDs",
+                      "ref": "admin:DkS7Yo",
+                      "name": "Admin/Field",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:d0VAER": {
+                          "content": "Keep me signed in"
+                        },
+                        "admin:mdTtPU": {
+                          "content": "On this device for 30 days"
+                        },
+                        "admin:qWEuJ2": {
+                          "type": "frame",
+                          "id": "JzXrPu",
+                          "name": "Control",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "BzoJRi",
+                              "ref": "admin:vnqaH9",
+                              "name": "Switch"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pkZL3i",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Sign in",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Sign in"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "chevron-right"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "YF9KJK",
+                      "ref": "admin:PiqhAO",
+                      "name": "Text/Caption",
+                      "textAlign": "center",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Trouble signing in? Ask a super admin to reset your password."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 7140,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "/login (public) — For Bitrate staff. Use your work account. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#login)."
+    },
+    {
+      "type": "frame",
+      "id": "udkEw5",
+      "name": "Admin / Login / Field errors / Mobile",
+      "width": 390,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "iVfSxm",
+          "ref": "admin:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "y8do4E",
+          "name": "Content",
+          "layout": "vertical",
+          "width": "fill_container",
+          "padding": [
+            12,
+            16,
+            24,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "e4ayZb",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "width": "fill_container",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "Sign in to Bitrate Admin"
+                },
+                "admin:SkWKSf": {
+                  "content": "For Bitrate staff. Use your work account."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "uHWaY3",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "Paa9oc",
+                      "ref": "admin:VbDmgA",
+                      "name": "Field / Work email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:T3Jo8m": {
+                          "content": "Work email"
+                        },
+                        "admin:qXgOpD": {
+                          "enabled": false
+                        },
+                        "admin:ndnVt0": {
+                          "content": "mara.ops@"
+                        },
+                        "admin:EFwHxE": {
+                          "content": "Enter your work email"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "moetmj",
+                      "ref": "admin:VbDmgA",
+                      "name": "Field / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:T3Jo8m": {
+                          "content": "Password"
+                        },
+                        "admin:qXgOpD": {
+                          "enabled": false
+                        },
+                        "admin:ndnVt0": {
+                          "content": "Your password",
+                          "fill": "$admin:--muted-foreground"
+                        },
+                        "admin:EFwHxE": {
+                          "content": "Enter your password"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "J2nPhX",
+                      "ref": "admin:DkS7Yo",
+                      "name": "Admin/Field",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:d0VAER": {
+                          "content": "Keep me signed in"
+                        },
+                        "admin:mdTtPU": {
+                          "content": "On this device for 30 days"
+                        },
+                        "admin:qWEuJ2": {
+                          "type": "frame",
+                          "id": "FkZQdh",
+                          "name": "Control",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "ZMR52G",
+                              "ref": "admin:vnqaH9",
+                              "name": "Switch"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "7XCbGL",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Sign in",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Sign in"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "chevron-right"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "C2x8gp",
+                      "ref": "admin:PiqhAO",
+                      "name": "Text/Caption",
+                      "textAlign": "center",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Trouble signing in? Ask a super admin to reset your password."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 8680,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "/login (public) — For Bitrate staff. Use your work account. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#login)."
+    },
+    {
+      "type": "frame",
+      "id": "jeTrzt",
+      "name": "Admin / Login / Saving / Desktop",
+      "width": 1440,
+      "height": 960,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "HyhPC6",
+          "name": "Center",
+          "layout": "vertical",
+          "width": "fill_container",
+          "height": "fill_container",
+          "alignItems": "center",
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "YsKK96",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "Sign in to Bitrate Admin"
+                },
+                "admin:SkWKSf": {
+                  "content": "For Bitrate staff. Use your work account."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "p3kPLP",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "umCtDH",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Work email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Work email"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "mara.ops@bitrate.fm"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "DupsLP",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Password"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "••••••••••••"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "8UPyc2",
+                      "ref": "admin:DkS7Yo",
+                      "name": "Admin/Field",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:d0VAER": {
+                          "content": "Keep me signed in"
+                        },
+                        "admin:mdTtPU": {
+                          "content": "On this device for 30 days"
+                        },
+                        "admin:qWEuJ2": {
+                          "type": "frame",
+                          "id": "SivafH",
+                          "name": "Control",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "mJHw6U",
+                              "ref": "admin:vnqaH9",
+                              "name": "Switch"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "WdJTCa",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Signing in…",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Signing in…"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "loader-circle"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "vZUQQW",
+                      "ref": "admin:PiqhAO",
+                      "name": "Text/Caption",
+                      "textAlign": "center",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Trouble signing in? Ask a super admin to reset your password."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 9170,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "/login (public) — For Bitrate staff. Use your work account. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#login)."
+    },
+    {
+      "type": "frame",
+      "id": "qbaNsU",
+      "name": "Admin / Login / Saving / Mobile",
+      "width": 390,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "JzFSdk",
+          "ref": "admin:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "MoK6kt",
+          "name": "Content",
+          "layout": "vertical",
+          "width": "fill_container",
+          "padding": [
+            12,
+            16,
+            24,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "ARgrni",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "width": "fill_container",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "Sign in to Bitrate Admin"
+                },
+                "admin:SkWKSf": {
+                  "content": "For Bitrate staff. Use your work account."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "eQkzxE",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "8nspRR",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Work email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Work email"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "mara.ops@bitrate.fm"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "UUSs5Y",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Password"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "••••••••••••"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "GjyKTd",
+                      "ref": "admin:DkS7Yo",
+                      "name": "Admin/Field",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:d0VAER": {
+                          "content": "Keep me signed in"
+                        },
+                        "admin:mdTtPU": {
+                          "content": "On this device for 30 days"
+                        },
+                        "admin:qWEuJ2": {
+                          "type": "frame",
+                          "id": "VzPAKS",
+                          "name": "Control",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "KBEEij",
+                              "ref": "admin:vnqaH9",
+                              "name": "Switch"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "7cUfuq",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Signing in…",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Signing in…"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "loader-circle"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "cZxYAa",
+                      "ref": "admin:PiqhAO",
+                      "name": "Text/Caption",
+                      "textAlign": "center",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Trouble signing in? Ask a super admin to reset your password."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 10710,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "/login (public) — For Bitrate staff. Use your work account. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#login)."
+    },
+    {
+      "type": "frame",
+      "id": "oRWGpU",
+      "name": "Admin / Login / Wrong password / Desktop",
+      "width": 1440,
+      "height": 960,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "Lx467u",
+          "name": "Center",
+          "layout": "vertical",
+          "width": "fill_container",
+          "height": "fill_container",
+          "alignItems": "center",
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "RNR2pL",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "Sign in to Bitrate Admin"
+                },
+                "admin:SkWKSf": {
+                  "content": "For Bitrate staff. Use your work account."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "nHgY6j",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "wQRUNo",
+                      "ref": "admin:Fc9x99",
+                      "name": "Admin/Form Error",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:W5hpi1": {
+                          "content": "Email or password is wrong. 3 tries left before a 15-minute pause."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Q8p76K",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Work email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Work email"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "mara.ops@bitrate.fm"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "EQahFV",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Password"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "••••••••••••"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sRK6dQ",
+                      "ref": "admin:DkS7Yo",
+                      "name": "Admin/Field",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:d0VAER": {
+                          "content": "Keep me signed in"
+                        },
+                        "admin:mdTtPU": {
+                          "content": "On this device for 30 days"
+                        },
+                        "admin:qWEuJ2": {
+                          "type": "frame",
+                          "id": "sRTbFn",
+                          "name": "Control",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "q6pGFs",
+                              "ref": "admin:vnqaH9",
+                              "name": "Switch"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "koZcah",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Sign in",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Sign in"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "chevron-right"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "oaEeXM",
+                      "ref": "admin:PiqhAO",
+                      "name": "Text/Caption",
+                      "textAlign": "center",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Trouble signing in? Ask a super admin to reset your password."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 11200,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "/login (public) — For Bitrate staff. Use your work account. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#login)."
+    },
+    {
+      "type": "frame",
+      "id": "h4nKsG",
+      "name": "Admin / Login / Wrong password / Mobile",
+      "width": 390,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "hNjJgC",
+          "ref": "admin:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "8CYP4D",
+          "name": "Content",
+          "layout": "vertical",
+          "width": "fill_container",
+          "padding": [
+            12,
+            16,
+            24,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "fDQNzP",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "width": "fill_container",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "Sign in to Bitrate Admin"
+                },
+                "admin:SkWKSf": {
+                  "content": "For Bitrate staff. Use your work account."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "8Yez3y",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "6PvCwc",
+                      "ref": "admin:Fc9x99",
+                      "name": "Admin/Form Error",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:W5hpi1": {
+                          "content": "Email or password is wrong. 3 tries left before a 15-minute pause."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sNAkoP",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Work email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Work email"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "mara.ops@bitrate.fm"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "TSRAzx",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Password"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "••••••••••••"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "DUrTk6",
+                      "ref": "admin:DkS7Yo",
+                      "name": "Admin/Field",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:d0VAER": {
+                          "content": "Keep me signed in"
+                        },
+                        "admin:mdTtPU": {
+                          "content": "On this device for 30 days"
+                        },
+                        "admin:qWEuJ2": {
+                          "type": "frame",
+                          "id": "aSgXUs",
+                          "name": "Control",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "GGkwkx",
+                              "ref": "admin:vnqaH9",
+                              "name": "Switch"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "m5TQPW",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Sign in",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Sign in"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "chevron-right"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "JwHkoM",
+                      "ref": "admin:PiqhAO",
+                      "name": "Text/Caption",
+                      "textAlign": "center",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Trouble signing in? Ask a super admin to reset your password."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 12740,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "/login (public) — For Bitrate staff. Use your work account. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#login)."
+    },
+    {
+      "type": "frame",
+      "id": "j3yS8m",
+      "name": "Admin / Login / Locked out / Desktop",
+      "width": 1440,
+      "height": 960,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "JxvEqs",
+          "name": "Center",
+          "layout": "vertical",
+          "width": "fill_container",
+          "height": "fill_container",
+          "alignItems": "center",
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "vJba5a",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "Sign in to Bitrate Admin"
+                },
+                "admin:SkWKSf": {
+                  "content": "For Bitrate staff. Use your work account."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "gEKMov",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "4jxvVm",
+                      "ref": "admin:Fc9x99",
+                      "name": "Admin/Form Error",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:W5hpi1": {
+                          "content": "Too many attempts. Try again in 15 minutes, or ask a super admin."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "bugWFR",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Work email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Work email"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "mara.ops@bitrate.fm"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "LQFYjz",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Password"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "••••••••••••"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "eTQhsL",
+                      "ref": "admin:DkS7Yo",
+                      "name": "Admin/Field",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:d0VAER": {
+                          "content": "Keep me signed in"
+                        },
+                        "admin:mdTtPU": {
+                          "content": "On this device for 30 days"
+                        },
+                        "admin:qWEuJ2": {
+                          "type": "frame",
+                          "id": "qqqiMu",
+                          "name": "Control",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "rk3rmG",
+                              "ref": "admin:vnqaH9",
+                              "name": "Switch"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "xAGkCW",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Sign in",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Sign in"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "chevron-right"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center",
+                      "opacity": 0.45
+                    },
+                    {
+                      "type": "ref",
+                      "id": "ftNJme",
+                      "ref": "admin:PiqhAO",
+                      "name": "Text/Caption",
+                      "textAlign": "center",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Trouble signing in? Ask a super admin to reset your password."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 13230,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "/login (public) — For Bitrate staff. Use your work account. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#login)."
+    },
+    {
+      "type": "frame",
+      "id": "RFEgPN",
+      "name": "Admin / Login / Locked out / Mobile",
+      "width": 390,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "Lt73Un",
+          "ref": "admin:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "zviwuE",
+          "name": "Content",
+          "layout": "vertical",
+          "width": "fill_container",
+          "padding": [
+            12,
+            16,
+            24,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "opTEhg",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "width": "fill_container",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "Sign in to Bitrate Admin"
+                },
+                "admin:SkWKSf": {
+                  "content": "For Bitrate staff. Use your work account."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "LNdL8d",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "GedYvd",
+                      "ref": "admin:Fc9x99",
+                      "name": "Admin/Form Error",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:W5hpi1": {
+                          "content": "Too many attempts. Try again in 15 minutes, or ask a super admin."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "cuVaWA",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Work email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Work email"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "mara.ops@bitrate.fm"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "MKqaaw",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Password"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "••••••••••••"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "hywHyf",
+                      "ref": "admin:DkS7Yo",
+                      "name": "Admin/Field",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:d0VAER": {
+                          "content": "Keep me signed in"
+                        },
+                        "admin:mdTtPU": {
+                          "content": "On this device for 30 days"
+                        },
+                        "admin:qWEuJ2": {
+                          "type": "frame",
+                          "id": "8ZCEgc",
+                          "name": "Control",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "25M2Ui",
+                              "ref": "admin:vnqaH9",
+                              "name": "Switch"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Gkj5kR",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Sign in",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Sign in"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "chevron-right"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center",
+                      "opacity": 0.45
+                    },
+                    {
+                      "type": "ref",
+                      "id": "pCCyCj",
+                      "ref": "admin:PiqhAO",
+                      "name": "Text/Caption",
+                      "textAlign": "center",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Trouble signing in? Ask a super admin to reset your password."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 14770,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "/login (public) — For Bitrate staff. Use your work account. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#login)."
+    },
+    {
+      "type": "frame",
+      "id": "DZ5ZWw",
+      "name": "Admin / Login / Session expired / Desktop",
+      "width": 1440,
+      "height": 960,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "XEApSC",
+          "name": "Center",
+          "layout": "vertical",
+          "width": "fill_container",
+          "height": "fill_container",
+          "alignItems": "center",
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "U9ow87",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "Sign in to Bitrate Admin"
+                },
+                "admin:SkWKSf": {
+                  "content": "For Bitrate staff. Use your work account."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "XTh7pW",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "KG48V7",
+                      "ref": "admin:gWVArM",
+                      "name": "Admin/Form Note/Info",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:TgXsgD": {
+                          "content": "Your session ended. Sign in again to pick up where you left off."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "fezwfn",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Work email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Work email"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "mara.ops@bitrate.fm"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "dAXJ3t",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Password"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "••••••••••••"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "bpNW4e",
+                      "ref": "admin:DkS7Yo",
+                      "name": "Admin/Field",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:d0VAER": {
+                          "content": "Keep me signed in"
+                        },
+                        "admin:mdTtPU": {
+                          "content": "On this device for 30 days"
+                        },
+                        "admin:qWEuJ2": {
+                          "type": "frame",
+                          "id": "HGoei6",
+                          "name": "Control",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "MGTQGN",
+                              "ref": "admin:vnqaH9",
+                              "name": "Switch"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "PM5jrk",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Sign in",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Sign in"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "chevron-right"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "HDg6rn",
+                      "ref": "admin:PiqhAO",
+                      "name": "Text/Caption",
+                      "textAlign": "center",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Trouble signing in? Ask a super admin to reset your password."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 15260,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "/login (public) — For Bitrate staff. Use your work account. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#login)."
+    },
+    {
+      "type": "frame",
+      "id": "XCWjg2",
+      "name": "Admin / Login / Session expired / Mobile",
+      "width": 390,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "Qy5qzv",
+          "ref": "admin:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "7SH8oj",
+          "name": "Content",
+          "layout": "vertical",
+          "width": "fill_container",
+          "padding": [
+            12,
+            16,
+            24,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "kUJKAK",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "width": "fill_container",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "Sign in to Bitrate Admin"
+                },
+                "admin:SkWKSf": {
+                  "content": "For Bitrate staff. Use your work account."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "PRVdim",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "qyZzYZ",
+                      "ref": "admin:gWVArM",
+                      "name": "Admin/Form Note/Info",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:TgXsgD": {
+                          "content": "Your session ended. Sign in again to pick up where you left off."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "wCMNQK",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Work email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Work email"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "mara.ops@bitrate.fm"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "HCA3X2",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Password"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "••••••••••••"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "u9jAGU",
+                      "ref": "admin:DkS7Yo",
+                      "name": "Admin/Field",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:d0VAER": {
+                          "content": "Keep me signed in"
+                        },
+                        "admin:mdTtPU": {
+                          "content": "On this device for 30 days"
+                        },
+                        "admin:qWEuJ2": {
+                          "type": "frame",
+                          "id": "b8ZiUr",
+                          "name": "Control",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "V6otye",
+                              "ref": "admin:vnqaH9",
+                              "name": "Switch"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "KFncDP",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Sign in",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Sign in"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "chevron-right"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "R5Ruek",
+                      "ref": "admin:PiqhAO",
+                      "name": "Text/Caption",
+                      "textAlign": "center",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Trouble signing in? Ask a super admin to reset your password."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 16800,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "/login (public) — For Bitrate staff. Use your work account. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#login)."
+    },
+    {
+      "type": "frame",
+      "id": "aVQNrh",
+      "name": "Admin / Login / Offline / Desktop",
+      "width": 1440,
+      "height": 960,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "bGJTqK",
+          "name": "Center",
+          "layout": "vertical",
+          "width": "fill_container",
+          "height": "fill_container",
+          "alignItems": "center",
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "ref",
+              "id": "rVHGUs",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "Sign in to Bitrate Admin"
+                },
+                "admin:SkWKSf": {
+                  "content": "For Bitrate staff. Use your work account."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "oJ2saP",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "pdWEtJ",
+                      "ref": "admin:KvNy10",
+                      "name": "Admin/Form Note/Warning",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:9yj9Bv": {
+                          "content": "You’re offline. Sign-in needs a connection."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "59dc5n",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Work email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Work email"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "mara.ops@bitrate.fm"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "CZn2Ma",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Password"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "••••••••••••"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "u6Q36q",
+                      "ref": "admin:DkS7Yo",
+                      "name": "Admin/Field",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:d0VAER": {
+                          "content": "Keep me signed in"
+                        },
+                        "admin:mdTtPU": {
+                          "content": "On this device for 30 days"
+                        },
+                        "admin:qWEuJ2": {
+                          "type": "frame",
+                          "id": "TvtQa6",
+                          "name": "Control",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "iCoCgg",
+                              "ref": "admin:vnqaH9",
+                              "name": "Switch"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "sCitwi",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Sign in",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Sign in"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "chevron-right"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center",
+                      "opacity": 0.45
+                    },
+                    {
+                      "type": "ref",
+                      "id": "CgwSEe",
+                      "ref": "admin:PiqhAO",
+                      "name": "Text/Caption",
+                      "textAlign": "center",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Trouble signing in? Ask a super admin to reset your password."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 17290,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "/login (public) — For Bitrate staff. Use your work account. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#login)."
+    },
+    {
+      "type": "frame",
+      "id": "dTBdEt",
+      "name": "Admin / Login / Offline / Mobile",
+      "width": 390,
+      "height": 900,
+      "clip": true,
+      "layout": "vertical",
+      "fill": [
+        "$admin:--background",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.18,
+            "y": 0.02
+          },
+          "size": {
+            "width": 1,
+            "height": 0.55
+          },
+          "opacity": 0.5,
+          "colors": [
+            {
+              "color": "$admin:--primary",
+              "position": 0
+            },
+            {
+              "color": "#7C3AED00",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.95,
+            "y": 1
+          },
+          "size": {
+            "width": 1.1,
+            "height": 0.75
+          },
+          "opacity": 0.42,
+          "colors": [
+            {
+              "color": "$admin:--blue-500",
+              "position": 0
+            },
+            {
+              "color": "#3B82F600",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "center": {
+            "x": 0.62,
+            "y": 0.5
+          },
+          "size": {
+            "width": 0.6,
+            "height": 0.45
+          },
+          "opacity": 0.28,
+          "colors": [
+            {
+              "color": "$admin:--magenta-500",
+              "position": 0
+            },
+            {
+              "color": "#EC489900",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "type": "ref",
+          "id": "TBxt5F",
+          "ref": "admin:mA2OOT",
+          "name": "Status Bar"
+        },
+        {
+          "type": "frame",
+          "id": "zNNoZx",
+          "name": "Content",
+          "layout": "vertical",
+          "width": "fill_container",
+          "padding": [
+            12,
+            16,
+            24,
+            16
+          ],
+          "children": [
+            {
+              "type": "ref",
+              "id": "hcfQe3",
+              "ref": "admin:bF9BZ4",
+              "name": "Auth Card",
+              "width": "fill_container",
+              "descendants": {
+                "admin:ThX4KD": {
+                  "content": "Sign in to Bitrate Admin"
+                },
+                "admin:SkWKSf": {
+                  "content": "For Bitrate staff. Use your work account."
+                },
+                "admin:Ne4n3Q": {
+                  "type": "frame",
+                  "id": "iF4x2T",
+                  "name": "Body",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "ref",
+                      "id": "nwkbPg",
+                      "ref": "admin:KvNy10",
+                      "name": "Admin/Form Note/Warning",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:9yj9Bv": {
+                          "content": "You’re offline. Sign-in needs a connection."
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "PFrmbv",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Work email",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Work email"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "mara.ops@bitrate.fm"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "wpVPTT",
+                      "ref": "admin:hxksjQ",
+                      "name": "Field / Password",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:nDouD6": {
+                          "content": "Password"
+                        },
+                        "admin:ipbM4d": {
+                          "enabled": false
+                        },
+                        "admin:lNmTwM": {
+                          "content": "••••••••••••"
+                        },
+                        "admin:bFdDil": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "MMUkkB",
+                      "ref": "admin:DkS7Yo",
+                      "name": "Admin/Field",
+                      "width": "fill_container",
+                      "descendants": {
+                        "admin:d0VAER": {
+                          "content": "Keep me signed in"
+                        },
+                        "admin:mdTtPU": {
+                          "content": "On this device for 30 days"
+                        },
+                        "admin:qWEuJ2": {
+                          "type": "frame",
+                          "id": "Bsyg42",
+                          "name": "Control",
+                          "children": [
+                            {
+                              "type": "ref",
+                              "id": "H5wcVG",
+                              "ref": "admin:vnqaH9",
+                              "name": "Switch"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ref",
+                      "id": "CB6MNm",
+                      "ref": "admin:TmjZcS",
+                      "name": "Button / Sign in",
+                      "descendants": {
+                        "admin:291RGJ": {
+                          "content": "Sign in"
+                        },
+                        "admin:ZOwqrS": {
+                          "icon": "chevron-right"
+                        }
+                      },
+                      "width": "fill_container",
+                      "height": 44,
+                      "justifyContent": "center",
+                      "opacity": 0.45
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Q9mUrz",
+                      "ref": "admin:PiqhAO",
+                      "name": "Text/Caption",
+                      "textAlign": "center",
+                      "width": "fill_container",
+                      "textGrowth": "fixed-width",
+                      "content": "Trouble signing in? Ask a super admin to reset your password."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "x": 18830,
+      "y": 0,
+      "theme": {
+        "admin:Mode": "Dark"
+      },
+      "context": "/login (public) — For Bitrate staff. Use your work account. No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#login)."
+    }
+  ]
+}
