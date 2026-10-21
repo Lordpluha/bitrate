@@ -26,31 +26,27 @@ export const LikeTrackButton = ({
     setIsLiked(initialLiked)
   }, [initialLiked])
 
-  const handleToggle = async () => {
+  /** Failures are toasted by the query client's mutation cache. */
+  const handleToggle = () => {
     if (isPending) return
 
+    const variables = { params: { path: { id: trackId } } }
     if (isLiked) {
-      await unlikeTrack.mutateAsync({
-        params: {
-          path: {
-            id: trackId,
-          },
+      unlikeTrack.mutate(variables, {
+        onSuccess: () => {
+          setIsLiked(false)
+          showApiSuccessToast('Removed from Liked Songs')
         },
       })
-      setIsLiked(false)
-      showApiSuccessToast('Removed from Liked Songs')
       return
     }
 
-    await likeTrack.mutateAsync({
-      params: {
-        path: {
-          id: trackId,
-        },
+    likeTrack.mutate(variables, {
+      onSuccess: () => {
+        setIsLiked(true)
+        showApiSuccessToast('Added to Liked Songs')
       },
     })
-    setIsLiked(true)
-    showApiSuccessToast('Added to Liked Songs')
   }
 
   return (
@@ -63,7 +59,7 @@ export const LikeTrackButton = ({
       disabled={isPending}
       onClick={(event) => {
         event.stopPropagation()
-        void handleToggle()
+        handleToggle()
       }}
       type="button"
     >

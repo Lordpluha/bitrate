@@ -148,6 +148,8 @@ type SavedEpisodeMutationInput<TVariables> = {
     episodes: SavedEpisode[],
     variables: TVariables,
   ) => SavedEpisode[]
+  /** Fallback for the mutation cache's error toast. */
+  errorMessage: string
   request: (variables: TVariables) => Promise<void>
 }
 
@@ -157,12 +159,14 @@ type SavedEpisodeMutationInput<TVariables> = {
  */
 const useSavedEpisodeMutation = <TVariables>({
   applyOptimistic,
+  errorMessage,
   request,
 }: SavedEpisodeMutationInput<TVariables>) => {
   const queryClient = useQueryClient()
   const savedKey = apiQueryKeys.podcasts.savedEpisodesAll
 
   return useMutation({
+    meta: { errorMessage },
     mutationFn: request,
     onMutate: async (variables) => {
       await queryClient.cancelQueries({ queryKey: savedKey })
@@ -189,6 +193,7 @@ export const useSaveEpisode = () =>
       episode,
       ...episodes.filter(({ id }) => id !== episode.id),
     ],
+    errorMessage: 'Unable to save the episode.',
     request: async ({ id }) => {
       const { response } = await clientFetchClient.PUT(
         '/api/v1/me/episodes/{id}',
@@ -202,6 +207,7 @@ export const useUnsaveEpisode = () =>
   useSavedEpisodeMutation<string>({
     applyOptimistic: (episodes, episodeId) =>
       episodes.filter(({ id }) => id !== episodeId),
+    errorMessage: 'Unable to remove the episode.',
     request: async (id) => {
       const { response } = await clientFetchClient.DELETE(
         '/api/v1/me/episodes/{id}',

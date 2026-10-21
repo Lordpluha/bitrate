@@ -15,7 +15,8 @@ export const useProfileSettings = () => {
     setDescription(user?.description ?? '')
   }, [user?.description, user?.username])
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  /** Request failures are toasted by the query client's mutation cache. */
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const nextUsername = username.trim()
     const nextDescription = description.trim()
@@ -31,20 +32,18 @@ export const useProfileSettings = () => {
       return
     }
 
-    try {
-      await updateUser.mutateAsync({
+    updateUser.mutate(
+      {
         body: {
           description: nextDescription || undefined,
           username: nextUsername,
         },
-      })
-      showApiSuccessToast('Profile updated')
-    } catch (error) {
-      showApiErrorToast(error, 'Failed to update profile')
-    }
+      },
+      { onSuccess: () => showApiSuccessToast('Profile updated') },
+    )
   }
 
-  const handleAvatarChange = async (file: File | undefined) => {
+  const handleAvatarChange = (file: File | undefined) => {
     if (!file) return
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
       showApiErrorToast(new Error('Upload a PNG, JPEG, or WebP image.'))
@@ -55,12 +54,9 @@ export const useProfileSettings = () => {
       return
     }
 
-    try {
-      await uploadAvatar.mutateAsync(file)
-      showApiSuccessToast('Avatar updated')
-    } catch (error) {
-      showApiErrorToast(error, 'Failed to upload avatar')
-    }
+    uploadAvatar.mutate(file, {
+      onSuccess: () => showApiSuccessToast('Avatar updated'),
+    })
   }
 
   return {

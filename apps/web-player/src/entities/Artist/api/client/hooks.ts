@@ -96,10 +96,14 @@ const useInvalidateArtistFollow = () => {
   }
 }
 
+/** Fallback for the mutation cache's error toast. */
+const FOLLOW_ERROR_MESSAGE = 'Could not update follow state'
+
 export const useFollowArtist = () => {
   const invalidate = useInvalidateArtistFollow()
 
   return useMutation('post', '/api/v1/artists/{id}/follow', {
+    meta: { errorMessage: FOLLOW_ERROR_MESSAGE },
     onSuccess: invalidate,
   })
 }
@@ -108,6 +112,7 @@ export const useUnfollowArtist = () => {
   const invalidate = useInvalidateArtistFollow()
 
   return useMutation('delete', '/api/v1/artists/{id}/follow', {
+    meta: { errorMessage: FOLLOW_ERROR_MESSAGE },
     onSuccess: invalidate,
   })
 }

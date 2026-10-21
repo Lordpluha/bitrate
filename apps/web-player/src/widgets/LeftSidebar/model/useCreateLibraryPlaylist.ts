@@ -1,7 +1,7 @@
 import { useRouter } from 'next/navigation'
 import { useMemo, useRef } from 'react'
 import { useCreatePlaylist, useMyPlaylists } from '@/entities/Playlist'
-import { showApiErrorToast, showApiSuccessToast } from '@/shared/api/feedback'
+import { showApiSuccessToast } from '@/shared/api/feedback'
 import { ROUTES } from '@/shared/routes'
 
 export const useCreateLibraryPlaylist = () => {
@@ -34,8 +34,8 @@ export const useCreateLibraryPlaylist = () => {
       showApiSuccessToast('Added to Your Library.')
       router.push(ROUTES.playlist(playlist.id))
       return true
-    } catch (error) {
-      showApiErrorToast(error, 'Failed to create playlist')
+    } catch {
+      /** The mutation cache already toasted the failure. */
       return false
     } finally {
       isCreatingRef.current = false

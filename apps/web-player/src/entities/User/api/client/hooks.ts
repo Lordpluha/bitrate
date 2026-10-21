@@ -122,10 +122,14 @@ const useInvalidateFollowedUsers = () => {
   }
 }
 
+/** Fallback for the mutation cache's error toast. */
+const FOLLOW_ERROR_MESSAGE = 'Could not update follow state'
+
 export const useFollowUser = () => {
   const invalidate = useInvalidateFollowedUsers()
 
   return useMutation('post', '/api/v1/users/{id}/follow', {
+    meta: { errorMessage: FOLLOW_ERROR_MESSAGE },
     onSuccess: invalidate,
   })
 }
@@ -134,6 +138,7 @@ export const useUnfollowUser = () => {
   const invalidate = useInvalidateFollowedUsers()
 
   return useMutation('delete', '/api/v1/users/{id}/follow', {
+    meta: { errorMessage: FOLLOW_ERROR_MESSAGE },
     onSuccess: invalidate,
   })
 }
@@ -159,6 +164,7 @@ export const useUpdateUser = () => {
   const applyUserUpdate = useApplyUserUpdate()
 
   return useMutation('put', '/api/v1/users', {
+    meta: { errorMessage: 'Failed to update profile' },
     onSuccess: (user) => applyUserUpdate(publicUserResponseSchema.parse(user)),
   })
 }
@@ -167,6 +173,7 @@ export const useUploadUserAvatar = () => {
   const applyUserUpdate = useApplyUserUpdate()
 
   return useTanStackMutation({
+    meta: { errorMessage: 'Failed to upload avatar' },
     mutationFn: async (avatar: File) => {
       const formData = new FormData()
       formData.append('avatar', avatar)
