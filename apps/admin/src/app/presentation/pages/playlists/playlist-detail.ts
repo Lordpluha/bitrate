@@ -18,6 +18,7 @@ import {
   isStaleStateError,
   resourceWriteErrorMessage,
 } from '@presentation/pages/shared/resource-write-error.message'
+import { ResourceNotFoundError } from '@domain/shared'
 import { LocalizedDatePipe } from '@presentation/pipes'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
@@ -200,8 +201,9 @@ export class PlaylistDetailPage {
     try {
       this.playlist.set(await this.getPlaylist.execute(this.playlistId))
       this.notFound.set(false)
-    } catch {
-      this.notFound.set(true)
+    } catch (error) {
+      if (error instanceof ResourceNotFoundError) this.notFound.set(true)
+      else this.failure.set('Could not load this playlist.')
     } finally {
       this.loading.set(false)
     }

@@ -9,7 +9,7 @@ import {
   ReleaseReviewError,
   type ReleaseSubmissionDetail,
 } from '@domain/release-review'
-import { ActionNotAllowedError } from '@domain/shared'
+import { ActionNotAllowedError, ResourceNotFoundError } from '@domain/shared'
 import { LocalizedDatePipe } from '@presentation/pipes'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
@@ -197,8 +197,9 @@ export class ReleaseReviewDetailPage {
     try {
       this.release.set(await this.getRelease.execute(this.releaseId))
       this.notFound.set(false)
-    } catch {
-      this.notFound.set(true)
+    } catch (error) {
+      if (error instanceof ResourceNotFoundError) this.notFound.set(true)
+      else this.failure.set('Could not load this release.')
     } finally {
       this.loading.set(false)
     }

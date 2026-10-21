@@ -16,6 +16,7 @@ import {
   type PodcastDetail,
   type PodcastEpisode,
 } from '@domain/podcast'
+import { ResourceNotFoundError } from '@domain/shared'
 import { LocalizedDatePipe } from '@presentation/pipes'
 import {
   isStaleStateError,
@@ -199,8 +200,9 @@ export class PodcastDetailPage {
     try {
       this.podcast.set(await this.getPodcast.execute(this.podcastId))
       this.notFound.set(false)
-    } catch {
-      this.notFound.set(true)
+    } catch (error) {
+      if (error instanceof ResourceNotFoundError) this.notFound.set(true)
+      else this.failure.set('Could not load this podcast.')
     } finally {
       this.loading.set(false)
     }
