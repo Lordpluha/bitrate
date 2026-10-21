@@ -68,8 +68,10 @@ const resolve = (name, theme) => {
 const PALETTE = /^--(neutral|purple|blue|green|amber|red|grey|magenta|white|black)(-|$)/
 const EXCLUDED = /^--(auth-|brand-|scrollbar|chart-|browse-|sidebar)/
 const TOKENS = {}
+/** Page background per theme, parsed once: every token and every matched hex is composited over it. */
+const BACKGROUND_RGB = Object.fromEntries(THEMES.map((theme) => [theme, parse(BACKGROUND[theme])]))
 for (const theme of THEMES) {
-  const bg = parse(BACKGROUND[theme])
+  const bg = BACKGROUND_RGB[theme]
   TOKENS[theme] = Object.keys(lib)
     .filter((k) => lib[k].type === 'color' && !EXCLUDED.test(k))
     .map((k) => {
@@ -91,7 +93,7 @@ const PALETTE_PENALTY = 0.05
 
 function nearest(hex, pool, theme) {
   const c = parse(hex)
-  const target = oklab(over(c, parse(BACKGROUND[theme])))
+  const target = oklab(over(c, BACKGROUND_RGB[theme]))
   let best = null
   for (const t of TOKENS[theme]) {
     const inPool = POOLS[pool].test(t.name)
@@ -131,12 +133,14 @@ function bindFile(file, report) {
 
   const bindHex = (hex, pool, theme) => {
     if (isTransparent(hex)) return hex
-    const hit = nearest(hex.toUpperCase(), pool, theme)
     const key = `${hex.toUpperCase()} ${pool} ${theme}`
-    const s = stats.get(key) ?? { ...hit, n: 0 }
+    let s = stats.get(key)
+    if (!s) {
+      s = { ...nearest(hex.toUpperCase(), pool, theme), n: 0 }
+      stats.set(key, s)
+    }
     s.n++
-    stats.set(key, s)
-    return `${prefix}${hit.name}`
+    return `${prefix}${s.name}`
   }
 
   /* file-local colour variables → library variables */
