@@ -38,7 +38,10 @@ export type CreatePlaybackEngineInput = {
 }
 
 export type PlaybackEngine = {
-  /** Resolves a source for `bitrate` (skipping resolution if it is already loaded and healthy) and plays it. */
+  /**
+   * Resolves a source for `bitrate` (skipping resolution if it is already loaded and healthy) and plays it.
+   * A call superseded by a later `play()` or by `destroy()` settles without touching the media.
+   */
   play(bitrate: number | null): Promise<void>
   pause(): void
   seek(seconds: number): void
@@ -75,6 +78,8 @@ export function createPlaybackEngine({
   const listeners = new Set<PlaybackEngineListener>()
   let loadedBitrate: number | null = null
   let destroyed = false
+  /** Bumped on every `play()`; a call whose token is no longer current was superseded and must not touch the media. */
+  let latestRequest = 0
 
   function setState(patch: Partial<PlaybackEngineState>): void {
     state = { ...state, ...patch }
@@ -140,6 +145,8 @@ export function createPlaybackEngine({
   async function play(bitrate: number | null): Promise<void> {
     if (destroyed) return
 
+    const request = ++latestRequest
+    const isStale = (): boolean => destroyed || request !== latestRequest
     const needsSource = loadedBitrate !== bitrate
 
     if (needsSource) {
@@ -149,11 +156,13 @@ export function createPlaybackEngine({
       try {
         url = await resolveSource({ bitrate })
       } catch (error) {
+        if (isStale()) return
         const message = errorMessage(error, 'Could not start playback.')
         setState({ status: 'error', error: { code: 'source', message } })
         throw error instanceof Error ? error : new Error(message)
       }
 
+      if (isStale()) return
       media.src = url
       loadedBitrate = bitrate
       setState({ bitrate })
@@ -162,6 +171,7 @@ export function createPlaybackEngine({
     try {
       await media.play()
     } catch (error) {
+      if (isStale()) return
       const message = errorMessage(error, 'Playback was blocked.')
       setState({ status: 'error', error: { code: 'playback', message } })
       throw error instanceof Error ? error : new Error(message)
