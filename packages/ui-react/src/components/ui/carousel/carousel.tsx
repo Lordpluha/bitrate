@@ -26,6 +26,10 @@ export type CarouselProps = {
   orientation?: 'horizontal' | 'vertical'
   showNavigation?: boolean
   setApi?: (api: CarouselApi) => void
+  /**
+   * Only pins `slidesToScroll` to 1; it does not size slides. Set the visible count with a
+   * `basis-*` class on `CarouselItem`.
+   */
   slidesToShow?: number
 }
 
@@ -36,7 +40,6 @@ type CarouselContextProps = {
   scrollNext: () => void
   canScrollPrev: boolean
   canScrollNext: boolean
-  showNavigation?: boolean
 } & CarouselProps
 
 const CarouselContext = createContext<CarouselContextProps | null>(null)
@@ -130,9 +133,9 @@ export const CarouselComponent = ({
     <CarouselContext.Provider
       value={{
         carouselRef,
-        api: api,
+        api,
         opts,
-        orientation: orientation || (opts?.axis === 'y' ? 'vertical' : 'horizontal'),
+        orientation,
         scrollPrev,
         scrollNext,
         canScrollPrev,
@@ -166,10 +169,6 @@ export const CarouselContent = ({ className, ...props }: ComponentProps<'div'>) 
       <div
         // Embla expects a flex container as the track. Use row for horizontal and column for vertical.
         className={cn('flex', orientation === 'horizontal' ? 'flex-row' : 'flex-col', className)}
-        style={{
-          // remove default gaps/margins that could break snap calculations
-          gap: 0,
-        }}
         {...props}
       />
     </div>
