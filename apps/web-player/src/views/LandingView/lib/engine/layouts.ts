@@ -94,7 +94,7 @@ const NODES: readonly (readonly [number, number])[] = [
 ]
 export const LUMA = [672, 534] as const
 
-const TAU = 6.283
+const TAU = Math.PI * 2
 
 /** One particle layout per scene (same order as LANDING_SCENES), in board pixels (x, y, depth). */
 export const createLayouts = (): Float32Array[] => [

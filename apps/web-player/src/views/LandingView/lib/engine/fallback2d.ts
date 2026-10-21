@@ -39,8 +39,8 @@ export const mountParticles2d = ({
     c2.setTransform(d, 0, 0, d, 0, 0)
   }
   size()
+  /* on the GSAP ticker, which already stops in background tabs */
   const draw = (t: number) => {
-    if (document.hidden) return
     const w = window.innerWidth
     const h = window.innerHeight
     c2.clearRect(0, 0, w, h)
