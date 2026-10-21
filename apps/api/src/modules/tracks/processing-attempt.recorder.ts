@@ -2,7 +2,7 @@ import * as os from 'node:os'
 // biome-ignore lint/style/useImportType: constructor-injected — NestJS DI needs the real class reference at runtime, not a type-only import.
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable, Logger } from '@nestjs/common'
-import type { Prisma, TrackProcessingStep } from '@prisma/client'
+import { Prisma, type TrackProcessingStep } from '@prisma/client'
 import * as Sentry from '@sentry/nestjs'
 import type {
   FailProcessingAttemptInput,
@@ -107,22 +107,21 @@ export class ProcessingAttemptRecorder {
     return tx.trackProcessingAttempt.findFirst({
       where: { trackId, jobId, attempt, status: 'RUNNING' },
       orderBy: { startedAt: 'desc' },
+      select: { id: true, startedAt: true },
     })
   }
 
   /** Deletes every row for `trackId` beyond the newest {@link RETAINED_ATTEMPTS_PER_TRACK}. */
   private async pruneOldAttempts(tx: Prisma.TransactionClient, trackId: string): Promise<void> {
-    const stale = await tx.trackProcessingAttempt.findMany({
-      where: { trackId },
-      orderBy: { startedAt: 'desc' },
-      skip: RETAINED_ATTEMPTS_PER_TRACK,
-      select: { id: true },
-    })
-    if (stale.length === 0) return
-
-    await tx.trackProcessingAttempt.deleteMany({
-      where: { id: { in: stale.map((row) => row.id) } },
-    })
+    await tx.$executeRaw(Prisma.sql`
+      DELETE FROM "TrackProcessingAttempt"
+      WHERE "id" IN (
+        SELECT "id" FROM "TrackProcessingAttempt"
+        WHERE "trackId" = ${trackId}::uuid
+        ORDER BY "startedAt" DESC
+        OFFSET ${RETAINED_ATTEMPTS_PER_TRACK}
+      )
+    `)
   }
 
   /** Marks the attempt SUCCEEDED and stamps its duration. */
@@ -250,6 +249,7 @@ export class ProcessingAttemptRecorder {
         const row = await tx.trackProcessingAttempt.findFirst({
           where: { trackId: input.trackId, jobId: input.jobId, attempt: input.attempt },
           orderBy: { startedAt: 'desc' },
+          select: { id: true, finishedAt: true, failedStep: true },
         })
 
         if (row) {
