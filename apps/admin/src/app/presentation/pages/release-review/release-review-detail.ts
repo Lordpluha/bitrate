@@ -10,56 +10,29 @@ import {
   type ReleaseSubmissionDetail,
 } from '@domain/release-review'
 import { ActionNotAllowedError, ResourceNotFoundError } from '@domain/shared'
+import { formatClockDuration } from '@presentation/pages/shared/duration.formatter'
 import { LocalizedDatePipe } from '@presentation/pipes'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmLabelImports } from '@spartan-ng/helm/label'
 import { HlmTableImports } from '@spartan-ng/helm/table'
-import { RELEASE_KIND_LABELS, RELEASE_STATUS_BADGES, RELEASE_STATUS_LABELS } from './release-labels'
+import {
+  RELEASE_BLOCKER_LABELS,
+  RELEASE_DESTINATION_LABELS,
+  RELEASE_KIND_LABELS,
+  RELEASE_NOTICE_LABELS,
+  RELEASE_RIGHT_LABELS,
+  RELEASE_STATUS_BADGES,
+  RELEASE_STATUS_LABELS,
+} from './release-labels'
 
 /** The decision form currently open; `null` while the reviewer is only reading. */
 type DecisionMode = 'approve' | 'changes' | null
-
-const BLOCKER_LABELS: Record<string, string> = {
-  NO_TRACKS: 'No recordings',
-  COVER_MISSING: 'No artwork',
-  TRACK_AUDIO_MISSING: 'A recording has no audio',
-  MASTER_OWNER_MISSING: 'Master owner not set',
-  WRITERS_NOT_CONFIRMED: 'Writers not confirmed',
-  ACCURACY_NOT_CONFIRMED: 'Accuracy not confirmed',
-  CONTRIBUTOR_ROLES_MISSING: 'A contributor has no role',
-  SPLITS_INCOMPLETE: 'Splits do not add up to 100%',
-}
-
-const NOTICE_LABELS: Record<string, string> = {
-  UPC_MISSING: 'No UPC yet',
-  ISRC_MISSING: 'A recording has no ISRC yet',
-}
-
-const DESTINATION_LABELS: Record<string, string> = {
-  SPOTIFY: 'Spotify',
-  APPLE_MUSIC: 'Apple Music',
-  YOUTUBE_MUSIC: 'YouTube Music',
-  AMAZON_MUSIC: 'Amazon Music',
-  DEEZER: 'Deezer',
-  TIDAL: 'TIDAL',
-}
-
-const RIGHT_LABELS: Record<string, string> = {
-  RECORDING: 'Recording (master)',
-  COMPOSITION: 'Composition (publishing)',
-}
 
 const BASIS_POINTS_PER_PERCENT = 100
 
 function lines(value: string): string[] {
   return normalizeReviewItems(value.split('\n'))
-}
-
-function formatDuration(seconds: number | null): string {
-  if (seconds === null) return '—'
-  const minutes = Math.floor(seconds / 60)
-  return `${minutes}:${String(seconds % 60).padStart(2, '0')}`
 }
 
 /**
@@ -91,11 +64,11 @@ export class ReleaseReviewDetailPage {
   protected readonly kindLabels = RELEASE_KIND_LABELS
   protected readonly statusLabels = RELEASE_STATUS_LABELS
   protected readonly statusBadges = RELEASE_STATUS_BADGES
-  protected readonly blockerLabels = BLOCKER_LABELS
-  protected readonly noticeLabels = NOTICE_LABELS
-  protected readonly destinationLabels = DESTINATION_LABELS
-  protected readonly rightLabels = RIGHT_LABELS
-  protected readonly formatDuration = formatDuration
+  protected readonly blockerLabels = RELEASE_BLOCKER_LABELS
+  protected readonly noticeLabels = RELEASE_NOTICE_LABELS
+  protected readonly destinationLabels = RELEASE_DESTINATION_LABELS
+  protected readonly rightLabels = RELEASE_RIGHT_LABELS
+  protected readonly formatDuration = formatClockDuration
 
   protected readonly release = signal<ReleaseSubmissionDetail | null>(null)
   protected readonly loading = signal(true)
