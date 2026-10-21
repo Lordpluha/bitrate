@@ -567,7 +567,6 @@ const ARTISTS = [
 ]
 const artistRow = (n = 5) =>
   CardRow(ARTISTS.slice(0, n).map(([a, art]) => ArtistCard(a, 'Artist', art, 150)))
-const _centerMsg = (stateNode) => [stateNode]
 
 export const pages = {
   landing,
