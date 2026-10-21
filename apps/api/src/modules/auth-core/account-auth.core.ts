@@ -166,17 +166,7 @@ export class AccountAuthCore<Account extends AuthCredentials, Client> {
       const account = await this.store.findForSession(payload.sub)
       if (!account) throw new UnauthorizedException('Invalid refresh token')
 
-      const { audience } = this.options
-      const access_token = await this.token.generateAccessToken(
-        account.id,
-        account.username,
-        audience,
-      )
-      const next_refresh_token = await this.token.generateRefreshToken(
-        account.id,
-        account.username,
-        audience,
-      )
+      const [access_token, next_refresh_token] = await this.signTokenPair(account)
 
       const updatedSessions = await this.store.rotateSession(
         account.id,
@@ -262,17 +252,7 @@ export class AccountAuthCore<Account extends AuthCredentials, Client> {
   }
 
   private async issueSession(account: SessionAccount, client: Client) {
-    const { audience } = this.options
-    const access_token = await this.token.generateAccessToken(
-      account.id,
-      account.username,
-      audience,
-    )
-    const refresh_token = await this.token.generateRefreshToken(
-      account.id,
-      account.username,
-      audience,
-    )
+    const [access_token, refresh_token] = await this.signTokenPair(account)
 
     await this.store.createSession(
       account.id,
@@ -285,6 +265,15 @@ export class AccountAuthCore<Account extends AuthCredentials, Client> {
     )
 
     return { access_token, refresh_token }
+  }
+
+  /** Signs the access and refresh tokens of one session concurrently. */
+  private signTokenPair(account: SessionAccount): Promise<[string, string]> {
+    const { audience } = this.options
+    return Promise.all([
+      this.token.generateAccessToken(account.id, account.username, audience),
+      this.token.generateRefreshToken(account.id, account.username, audience),
+    ])
   }
 
   /**
