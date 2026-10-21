@@ -6,7 +6,7 @@
 # token: never pass one on the command line, never echo one, never write one to a
 # file. If `run_gh auth status` fails, that is the user's to fix — see `verify`.
 #
-# Every subcommand is idempotent. `create` is a no-op when a PR already exists for
+# Every subcommand is idempotent. `create` is a no-op when an open PR already exists for
 # the branch, because a re-run of the pipeline must never open a second PR.
 #
 # Usage:
@@ -68,9 +68,12 @@ check_body_file() {
   esac
 }
 
+# Number of the branch's newest PR in <state> (default: open). create/update/comment must
+# only see an OPEN PR: a reused branch name would otherwise resolve to an old merged/closed
+# PR and the write would land on it.
 pr_number_for() {
-  local branch="${1:?}"
-  run_gh pr list --head "$branch" --state all --limit 1 --json number -q '.[0].number // empty' 2>/dev/null
+  local branch="${1:?}" state="${2:-open}"
+  run_gh pr list --head "$branch" --state "$state" --limit 1 --json number -q '.[0].number // empty' 2>/dev/null
 }
 
 cmd_verify() {
@@ -117,7 +120,7 @@ cmd_state() {
 cmd_notes() {
   need_gh
   local branch="${1:?branch required}" num
-  num="$(pr_number_for "$branch")"
+  num="$(pr_number_for "$branch" all)"
   [[ -n "$num" ]] || { printf 'no PR for %s\n' "$branch"; return 0; }
 
   local repo owner name
@@ -160,7 +163,7 @@ cmd_comment() {
   local branch="${1:?branch required}" file="${2:?body file required}" num
   check_body_file "$file"
   num="$(pr_number_for "$branch")"
-  [[ -n "$num" ]] || die "no PR for $branch"
+  [[ -n "$num" ]] || die "no open PR for $branch"
   run_gh pr comment "$num" --body-file "$file" >/dev/null
   printf 'commented on PR #%s\n' "$num"
 }
@@ -194,7 +197,7 @@ cmd_update() {
   check_body_file "$file"
   local num
   num="$(pr_number_for "$branch")"
-  [[ -n "$num" ]] || die "no PR for $branch — use 'create'"
+  [[ -n "$num" ]] || die "no open PR for $branch — use 'create'"
   run_gh pr edit "$num" --title "$title" --body-file "$file" >/dev/null
   printf 'PR_NUMBER=%s\nPR_URL=%s\nPR_STATE=updated\n' \
     "$num" "$(run_gh pr view "$num" --json url -q .url)"
