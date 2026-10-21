@@ -11,7 +11,7 @@ import {
 import { Injectable } from '@nestjs/common'
 import type { ModerationReport, ModerationStatus, Prisma } from '@prisma/client'
 import type { ADMIN_REPORTS_SORT_FIELDS, UpdateReportDto } from './dtos'
-import { ReportNotFoundException } from './errors'
+import { ReportNotFoundException, ReportStatusChangedException } from './errors'
 import { ADMIN_REPORT_EXPORT_COLUMNS, ADMIN_REPORT_EXPORT_SELECT } from './report-export.columns'
 
 /** One of the moderation queue's allowed sort fields. */
@@ -124,9 +124,11 @@ export class AdminModerationService {
   }
 
   /**
-   * Runs the update status operation. Sets/clears `resolvedAt` to match the new status.
+   * Moves a report to a new status, setting/clearing `resolvedAt` to match.
    * With `audit`, the update and an explicit per-report audit row share one transaction — the
-   * batch route passes it because it opts out of the interceptor's request-level row.
+   * batch route passes it because it opts out of the interceptor's request-level row. That write
+   * is guarded on the status just read, so the audited `before` is the status actually replaced:
+   * a concurrent change in between is a 409, never an audit row recording a stale transition.
    */
   async updateStatus(id: string, dto: UpdateReportDto, audit?: ReportAdvanceAudit) {
     const existing = await this.prisma.moderationReport.findFirst({ where: { id } })
@@ -140,7 +142,11 @@ export class AdminModerationService {
 
     const { staffId, ...auditContext } = audit
     return await this.prisma.$transaction(async (tx) => {
-      const updated = await tx.moderationReport.update({ where: { id }, data })
+      const [updated] = await tx.moderationReport.updateManyAndReturn({
+        where: { id, status: existing.status },
+        data,
+      })
+      if (!updated) throw new ReportStatusChangedException(id)
       await writeTakeDownAudit({
         tx,
         entityType: 'admin-moderation',
