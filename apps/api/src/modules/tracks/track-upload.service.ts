@@ -61,7 +61,6 @@ function toInputProbe(metadata: AudioMetadata, bytes: number): ConvertAudioJobIn
 /** Accepts artist uploads, persists them, and queues the transcoding ladder. */
 @Injectable()
 export class TrackUploadService {
-  /** Creates a new instance. */
   constructor(
     private readonly prisma: PrismaService,
     @InjectQueue(AUDIO_PROCESSING_QUEUE) private readonly audioQueue: Queue,
@@ -70,7 +69,6 @@ export class TrackUploadService {
     @Inject(STORAGE_SERVICE) private readonly storage: StorageService,
   ) {}
 
-  /** The logger value. */
   private readonly logger = new Logger(TrackUploadService.name, { timestamp: true })
 
   /** Queues an audio-conversion job, marking the track FAILED if it cannot be enqueued. */
@@ -180,7 +178,7 @@ export class TrackUploadService {
     await Promise.all([this.cache.invalidate(NS.TRACKS), this.cache.invalidate(NS.SEARCH)])
   }
 
-  /** Runs the create operation. */
+  /** Stores a new upload and queues its conversion. */
   async create(
     artistId: ArtistEntity['id'],
     createTrackDto: CreateTrackDto,
@@ -238,7 +236,7 @@ export class TrackUploadService {
     }
   }
 
-  /** Runs the update operation. */
+  /** Updates the artist's own track, replacing its audio and/or cover when given. */
   async update(
     artistId: ArtistEntity['id'],
     id: TrackEntity['id'],
