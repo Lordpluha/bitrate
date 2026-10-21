@@ -16,6 +16,7 @@ import {
   DISTRIBUTION_ADAPTER,
   NotConnectedDistributionAdapter,
 } from './distribution/distribution-adapter'
+import { ReleaseCoverService } from './release-cover.service'
 import { ReleaseCreditsService } from './release-credits.service'
 import { DistributionController, ReleaseDeliveryController } from './release-delivery.controller'
 import { ReleaseDeliveryService } from './release-delivery.service'
@@ -45,6 +46,7 @@ import { ReleasesService } from './releases.service'
     ReleasesService,
     ReleaseCreditsService,
     ReleaseMediaService,
+    ReleaseCoverService,
     ReleaseTasksService,
     ArtistMusicService,
     ArtistDashboardService,
