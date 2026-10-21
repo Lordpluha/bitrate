@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { Carousel, type CarouselApi } from './carousel'
 
 describe('Carousel integration', () => {
@@ -33,5 +33,21 @@ describe('Carousel integration', () => {
     if (next && !next.disabled) {
       await userEvent.click(next)
     }
+  })
+
+  it('removes its select and reInit listeners on unmount', async () => {
+    let api: CarouselApi | undefined
+    const { unmount } = render(
+      <Carousel setApi={(a) => (api = a)}>
+        <Carousel.Content>
+          <Carousel.Item>Slide 1</Carousel.Item>
+        </Carousel.Content>
+      </Carousel>,
+    )
+    await waitFor(() => expect(api).toBeTruthy())
+    const off = vi.spyOn(api as NonNullable<CarouselApi>, 'off')
+    unmount()
+    const events = off.mock.calls.map(([event]) => event)
+    expect(events).toEqual(expect.arrayContaining(['select', 'reInit']))
   })
 })
