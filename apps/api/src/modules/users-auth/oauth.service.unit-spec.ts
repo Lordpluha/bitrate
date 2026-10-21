@@ -1,23 +1,55 @@
 import type { AppConfig } from '@common/config'
 import { LegalAcceptanceRequiredError } from '@common/legal'
+import type { MailService } from '@infra/mail/mail.service'
 import { beforeEach, describe, expect, it } from '@jest/globals'
 import type { ConfigService } from '@nestjs/config'
+import type { JwtService } from '@nestjs/jwt'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { mockDeep } from 'jest-mock-extended'
 import type { TokenService } from '../tokens/token.service'
+import type { UsersPrivateService } from '../users/users.private.service'
+import type { UsersService } from '../users/users.service'
 import { OAuthService } from './oauth.service'
+import { UserAuthService } from './user-auth.service'
 
 describe('OAuthService', () => {
   let service: OAuthService
   let prisma: PrismaMock
   let token: ReturnType<typeof mockDeep<TokenService>>
 
+  const callFindOrCreate = (
+    provider: string,
+    profile: { id: string; email: string; name: string },
+    acceptance: { acceptLegal: boolean } = { acceptLegal: false },
+  ) =>
+    (
+      Reflect.get(service, 'findOrCreateUserAndLogin') as (
+        provider: string,
+        profile: { id: string; email: string; name: string },
+        acceptance: { acceptLegal: boolean },
+      ) => Promise<unknown>
+    ).call(service, provider, profile, acceptance)
+
   beforeEach(() => {
     resetPrismaMock()
     prisma = prismaMock
     token = mockDeep<TokenService>()
-    service = new OAuthService(prisma, token, mockDeep<ConfigService<AppConfig>>())
+    // The real auth service, so the session and 2FA branch are the ones password login uses.
+    const auth = new UserAuthService(
+      mockDeep<UsersService>(),
+      mockDeep<UsersPrivateService>(),
+      mockDeep<JwtService>(),
+      prisma,
+      token,
+      mockDeep<MailService>(),
+    )
+    service = new OAuthService(prisma, auth, mockDeep<ConfigService<AppConfig>>())
   })
+
+  const linkedAccount = (user: { id: string; twoFactorEnabled: boolean }) =>
+    prisma.userOAuthAccount.findUnique.mockResolvedValue({
+      user: { ...user, username: 'user', deletedAt: null },
+    } as never)
 
   it('persists the refresh-token expiry for OAuth sessions', async () => {
     const expiresAt = new Date('2030-01-01T00:00:00.000Z')
@@ -26,12 +58,13 @@ describe('OAuthService', () => {
     token.hashToken.mockImplementation((value) => `hashed-${value}`)
     token.getRefreshTokenExpiresAt.mockReturnValue(expiresAt)
     prisma.userSession.create.mockResolvedValue({} as never)
-    const createSession = Reflect.get(service, 'createSession') as (user: {
-      id: string
-      username: string
-    }) => Promise<unknown>
+    linkedAccount({ id: 'user-1', twoFactorEnabled: false })
 
-    await createSession.call(service, { id: 'user-1', username: 'user' })
+    const result = await callFindOrCreate('google', {
+      id: 'google-1',
+      email: 'user@example.com',
+      name: 'User',
+    })
 
     expect(prisma.userSession.create).toHaveBeenCalledWith({
       data: {
@@ -41,21 +74,26 @@ describe('OAuthService', () => {
         expiresAt,
       },
     })
+    expect(result).toEqual({ access_token: 'access-token', refresh_token: 'refresh-token' })
+  })
+
+  it('asks a linked account with 2FA for its code instead of opening a session', async () => {
+    token.generateTwoFAPendingToken.mockResolvedValue('pending-token')
+    linkedAccount({ id: 'user-2', twoFactorEnabled: true })
+
+    const result = await callFindOrCreate('google', {
+      id: 'google-2',
+      email: 'user@example.com',
+      name: 'User',
+    })
+
+    expect(result).toEqual({ requires2fa: true, pendingToken: 'pending-token' })
+    expect(token.generateTwoFAPendingToken).toHaveBeenCalledWith('user-2')
+    expect(prisma.userSession.create).not.toHaveBeenCalled()
   })
 
   describe('findOrCreateUserAndLogin', () => {
-    const call = (
-      provider: string,
-      profile: { id: string; email: string; name: string },
-      acceptance: { acceptLegal: boolean } = { acceptLegal: false },
-    ) => {
-      const findOrCreateUserAndLogin = Reflect.get(service, 'findOrCreateUserAndLogin') as (
-        provider: string,
-        profile: { id: string; email: string; name: string },
-        acceptance: { acceptLegal: boolean },
-      ) => Promise<unknown>
-      return findOrCreateUserAndLogin.call(service, provider, profile, acceptance)
-    }
+    const call = callFindOrCreate
 
     /** A linked OAuth account whose user was soft-deleted after the link was created must not
      * be handed a fresh session — the same account state `UserAuthGuard` rejects per request. */

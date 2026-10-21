@@ -7,7 +7,7 @@ import {
   resolveMailLocale,
 } from '@infra/mail/templates/mail-locale'
 import { PrismaService } from '@infra/prisma/prisma.service'
-import { AccountAuthCore } from '@modules/auth-core'
+import { AccountAuthCore, type SignInAccount } from '@modules/auth-core'
 import { UsersPrivateService } from '@modules/users/users.private.service'
 import {
   BadRequestException,
@@ -82,6 +82,11 @@ export class UserAuthService {
   /** Runs the login user operation. */
   loginUser(email: string, password: string): Promise<LoginResult> {
     return this.core.login(email, password, undefined)
+  }
+
+  /** Signs in an account whose identity a social provider proved: 2FA challenge or session. */
+  signInVerified(user: SignInAccount): Promise<LoginResult> {
+    return this.core.issueSessionOrChallenge(user, undefined)
   }
 
   /** Runs the complete two factor login operation. */
