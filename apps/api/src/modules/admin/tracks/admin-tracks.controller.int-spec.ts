@@ -17,6 +17,7 @@ import {
   buildTrackProcessingAttempt,
 } from './__tests__/fixtures/admin-tracks.fixtures'
 import { AdminTrackAudioService } from './admin-track-audio.service'
+import { AdminTrackListService } from './admin-track-list.service'
 import { AdminTracksController } from './admin-tracks.controller'
 import { AdminTracksService } from './admin-tracks.service'
 import {
@@ -26,9 +27,13 @@ import {
   TrackNotFoundException,
 } from './errors'
 
-const makeServiceMock = () =>
+const makeListServiceMock = () =>
   ({
     findAll: jest.fn(),
+  }) as unknown as jest.Mocked<AdminTrackListService>
+
+const makeServiceMock = () =>
+  ({
     findById: jest.fn(),
     findProcessingAttempts: jest.fn(),
     reprocess: jest.fn(),
@@ -43,6 +48,7 @@ const makeAudioServiceMock = () =>
   }) as unknown as jest.Mocked<AdminTrackAudioService>
 
 const buildApp = async (permissions: Permission[]) => {
+  const listService = makeListServiceMock()
   const service = makeServiceMock()
   const audioService = makeAudioServiceMock()
   const reflector = new Reflector()
@@ -50,6 +56,7 @@ const buildApp = async (permissions: Permission[]) => {
   const module: TestingModule = await Test.createTestingModule({
     controllers: [AdminTracksController],
     providers: [
+      { provide: AdminTrackListService, useValue: listService },
       { provide: AdminTracksService, useValue: service },
       { provide: AdminTrackAudioService, useValue: audioService },
     ],
@@ -60,23 +67,24 @@ const buildApp = async (permissions: Permission[]) => {
 
   const app = module.createNestApplication()
   await app.init()
-  return { app, service, audioService }
+  return { app, listService, service, audioService }
 }
 
 describe('AdminTracksController (int)', () => {
   describe('with tracks:read only', () => {
     let app: INestApplication
+    let listService: jest.Mocked<AdminTrackListService>
     let service: jest.Mocked<AdminTracksService>
     let audioService: jest.Mocked<AdminTrackAudioService>
 
     beforeAll(async () => {
-      ;({ app, service, audioService } = await buildApp(['tracks:read']))
+      ;({ app, listService, service, audioService } = await buildApp(['tracks:read']))
     })
 
     afterAll(() => app.close())
 
     beforeEach(() => {
-      service.findAll.mockReset()
+      listService.findAll.mockReset()
       service.findById.mockReset()
       service.findProcessingAttempts.mockReset()
       service.reprocess.mockReset()
@@ -86,7 +94,7 @@ describe('AdminTracksController (int)', () => {
 
     it('GET /admin/tracks returns 200', async () => {
       const row = buildAdminTrackRow({ processingStatus: 'FAILED' })
-      service.findAll.mockResolvedValue({ data: [row], total: 1, page: 1, limit: 20 } as never)
+      listService.findAll.mockResolvedValue({ data: [row], total: 1, page: 1, limit: 20 } as never)
 
       const res = await request(app.getHttpServer()).get('/admin/tracks')
 
@@ -102,14 +110,14 @@ describe('AdminTracksController (int)', () => {
         .query({ sort: 'processingError' })
 
       expect(res.status).toBe(400)
-      expect(service.findAll).not.toHaveBeenCalled()
+      expect(listService.findAll).not.toHaveBeenCalled()
     })
 
     it('GET /admin/tracks returns 400 for an invalid status', async () => {
       const res = await request(app.getHttpServer()).get('/admin/tracks').query({ status: 'bogus' })
 
       expect(res.status).toBe(400)
-      expect(service.findAll).not.toHaveBeenCalled()
+      expect(listService.findAll).not.toHaveBeenCalled()
     })
 
     it('GET /admin/tracks returns 400 for an invalid order', async () => {

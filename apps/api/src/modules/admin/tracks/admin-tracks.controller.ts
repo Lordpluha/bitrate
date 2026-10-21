@@ -35,6 +35,7 @@ import { Throttle } from '@nestjs/throttler'
 import type { Request, Response } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { AdminTrackAudioService } from './admin-track-audio.service'
+import { AdminTrackListService } from './admin-track-list.service'
 import { AdminTracksService } from './admin-tracks.service'
 import {
   DeleteTrackSwagger,
@@ -82,6 +83,7 @@ const logger = new Logger('AdminTracksController')
 @Controller({ path: 'admin/tracks', version: '1' })
 export class AdminTracksController {
   constructor(
+    private readonly trackList: AdminTrackListService,
     private readonly tracks: AdminTracksService,
     private readonly trackAudio: AdminTrackAudioService,
   ) {}
@@ -91,7 +93,7 @@ export class AdminTracksController {
   @ListTracksSwagger()
   @Get('')
   list(@Query(new ZodValidationPipe(ListAdminTracksQuerySchema)) query: ListAdminTracksQueryDto) {
-    return this.tracks.findAll(query)
+    return this.trackList.findAll(query)
   }
 
   /** Runs the CSV export operation. */
@@ -106,7 +108,11 @@ export class AdminTracksController {
     @AuditContext() auditContext: AuditContextValue,
     @Res({ passthrough: true }) res: Response,
   ): Promise<StreamableFile> {
-    return sendCsvExport(res, 'tracks', await this.tracks.exportCsv(query, staff.id, auditContext))
+    return sendCsvExport(
+      res,
+      'tracks',
+      await this.trackList.exportCsv(query, staff.id, auditContext),
+    )
   }
 
   /** Runs the get track operation. */

@@ -6,6 +6,7 @@ import type { Request, Response } from 'express'
 jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
 
 import type { AdminTrackAudioService, TrackAudioStream } from './admin-track-audio.service'
+import type { AdminTrackListService } from './admin-track-list.service'
 import { AdminTracksController } from './admin-tracks.controller'
 import type { AdminTracksService } from './admin-tracks.service'
 
@@ -49,7 +50,11 @@ describe('AdminTracksController.streamAudio', () => {
     const trackAudio = {
       stream: jest.fn(async () => makeAudio(source)),
     } as unknown as AdminTrackAudioService
-    const controller = new AdminTracksController({} as AdminTracksService, trackAudio)
+    const controller = new AdminTracksController(
+      {} as AdminTrackListService,
+      {} as AdminTracksService,
+      trackAudio,
+    )
     const res = makeResponse()
 
     await controller.streamAudio(
@@ -70,7 +75,11 @@ describe('AdminTracksController.streamAudio', () => {
     const trackAudio = {
       stream: jest.fn(async () => makeAudio(source)),
     } as unknown as AdminTrackAudioService
-    const controller = new AdminTracksController({} as AdminTracksService, trackAudio)
+    const controller = new AdminTracksController(
+      {} as AdminTrackListService,
+      {} as AdminTracksService,
+      trackAudio,
+    )
     const res = makeResponse()
 
     await controller.streamAudio(
