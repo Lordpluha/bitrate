@@ -13,18 +13,16 @@ import {
   Button,
   Badge,
   Tab,
+  Tabs,
   Alert,
   ErrorState,
   EmptyState,
   FieldError,
   CheckRow,
   Skeleton,
-  state,
   ART,
 } from './ui.mjs'
 import {
-  Shell,
-  MShell,
   PageHeader,
   Status,
   Kv,
@@ -37,30 +35,12 @@ import {
   Result,
   Stepper,
   two,
+  stat,
+  stats,
+  panel,
+  artistSpecs,
 } from './artist-ui.mjs'
 
-const tabs = (labels, active = 0) =>
-  Row(
-    { name: 'Tabs', gap: 4 },
-    labels.map((l, i) => Tab(l, i === active)),
-  )
-const stat = (label, value, sub) =>
-  R(
-    'Stat Tile',
-    {},
-    { label: { content: label }, value: { content: value }, sub: { content: sub } },
-  )
-const stats = (m, items) =>
-  (m ? Col : Row)(
-    { name: 'Stats', gap: m ? 12 : 16, width: 'fill_container' },
-    items.map((s) => stat(...s)),
-  )
-const panel = (title, children, o = {}) =>
-  Panel([
-    title &&
-      Row({ width: 'fill_container', justifyContent: 'space_between' }, [Tx('H4', title), o.right]),
-    ...children,
-  ])
 const row = (title, desc, ...controls) =>
   R(
     'Setting Row',
@@ -71,18 +51,7 @@ const row = (title, desc, ...controls) =>
       control: L({ gap: 8, alignItems: 'center' }, controls),
     },
   )
-const pair = (name, opts, build, more = []) => ({
-  ...opts,
-  desktop: () => Shell(name, opts.shell, build(false)),
-  mobile: () => MShell(name, build(true), opts.mHeight ?? 1700),
-  states: more,
-})
-const st = (label, shell, build, mh = 1200) =>
-  state(
-    label,
-    () => Shell(label, shell, build(false)),
-    () => MShell(label, build(true), mh),
-  )
+const { pair, st } = artistSpecs({ pageHeight: 1700, stateHeight: 1200 })
 const filtersBar = (m) =>
   Row(
     { name: 'Analytics Filters', gap: 8 },
@@ -119,7 +88,7 @@ const settingsShell = (crumb, action) => ({
   actionIcon: null,
 })
 const settingsTabs = (i) =>
-  tabs(
+  Tabs(
     ['Account', 'Security', 'Notifications', 'Appearance', 'Connected services', 'Team & safety'],
     i,
   )
@@ -152,7 +121,7 @@ export const artistPages2 = {
     (m) => [
       PageHeader('Edit artist profile', 'Public details · Draft changes'),
       profileHead(Status('Published', 'Success')),
-      tabs(['Details', 'Catalog', 'Verification']),
+      Tabs(['Details', 'Catalog', 'Verification']),
       ...two(
         m,
         [
@@ -205,7 +174,7 @@ export const artistPages2 = {
     (m) => [
       PageHeader('Profile catalog', 'Featured release and public layout'),
       profileHead(Status('Draft')),
-      tabs(['Details', 'Catalog', 'Verification'], 1),
+      Tabs(['Details', 'Catalog', 'Verification'], 1),
       ...two(
         m,
         [
@@ -247,7 +216,7 @@ export const artistPages2 = {
     (m) => [
       PageHeader('Profile status', 'Save recovery and verification concept'),
       profileHead(Status('Save failed')),
-      tabs(['Details', 'Catalog', 'Verification'], 2),
+      Tabs(['Details', 'Catalog', 'Verification'], 2),
       ...two(
         m,
         [
@@ -600,7 +569,7 @@ export const artistPages2 = {
     },
     (m) => [
       PageHeader('Promotion', 'Plan, review and learn from release campaigns'),
-      tabs(['Overview', 'Drafts', 'Calendar', 'Reports']),
+      Tabs(['Overview', 'Drafts', 'Calendar', 'Reports']),
       stats(m, [
         ['ACTIVE', '1', 'Artist-controlled'],
         ['SCHEDULED', '1', 'Demo timeline'],
