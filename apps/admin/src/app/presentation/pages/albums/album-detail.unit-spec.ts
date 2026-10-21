@@ -4,7 +4,7 @@ import { provideRouter } from '@angular/router'
 import { GetAlbumUseCase, RestoreAlbumUseCase, TakeDownAlbumUseCase } from '@application/albums'
 import { SessionStore } from '@application/session'
 import type { AlbumDetail } from '@domain/album'
-import { ResourceWriteError } from '@domain/shared'
+import { ResourceNotFoundError, ResourceWriteError } from '@domain/shared'
 import { TranslocoTestingModule } from '@jsverse/transloco'
 import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -116,8 +116,8 @@ describe('AlbumDetailPage', () => {
     expect(rows[1]?.textContent).toContain('taken down')
   })
 
-  it('shows the not-found message when the load rejects', async () => {
-    getAlbum.mockRejectedValue(new Error('404'))
+  it('shows the not-found message when the album does not exist', async () => {
+    getAlbum.mockRejectedValue(new ResourceNotFoundError())
     create()
 
     const fixture = TestBed.createComponent(AlbumDetailPage)
@@ -126,6 +126,18 @@ describe('AlbumDetailPage', () => {
     expect(
       (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent,
     ).toContain('could not be found')
+  })
+
+  it('shows a load failure, not not-found, when the load fails for another reason', async () => {
+    getAlbum.mockRejectedValue(new Error('500'))
+    create()
+
+    const fixture = TestBed.createComponent(AlbumDetailPage)
+    await fixture.whenStable()
+
+    const alert = (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')
+    expect(alert?.textContent).toContain('Could not load this album.')
+    expect(alert?.textContent).not.toContain('could not be found')
   })
 
   it('offers Take down, not Restore, for an active album', async () => {

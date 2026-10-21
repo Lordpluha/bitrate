@@ -3,6 +3,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router'
 import { GetAlbumUseCase, RestoreAlbumUseCase, TakeDownAlbumUseCase } from '@application/albums'
 import { SessionStore } from '@application/session'
 import { type AlbumDetail, canRestoreAlbum, canTakeDownAlbum } from '@domain/album'
+import { ResourceNotFoundError } from '@domain/shared'
 import { LocalizedDatePipe } from '@presentation/pipes'
 import {
   isStaleStateError,
@@ -121,8 +122,9 @@ export class AlbumDetailPage {
     try {
       this.album.set(await this.getAlbum.execute(this.albumId))
       this.notFound.set(false)
-    } catch {
-      this.notFound.set(true)
+    } catch (error) {
+      if (error instanceof ResourceNotFoundError) this.notFound.set(true)
+      else this.failure.set('Could not load this album.')
     } finally {
       this.loading.set(false)
     }
