@@ -28,21 +28,17 @@ import * as TracksServiceModule from './tracks.service'
 /** The payload one WebSocket handler contributes to its success response. */
 type HandlerResult = Record<string, unknown>
 
-/** Represents the audio gateway. */
 @WebSocketGateway(websocketConfig)
 @UseGuards(WsUserAuthGuard)
 export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  /** The server value. */
   @WebSocketServer()
   server: Server
 
-  /** The logger value. */
   private readonly logger = new Logger(AudioGateway.name, { timestamp: true })
 
   /** Connection, playback, and in-flight audio state for every live socket. */
   private readonly sessions = new AudioSessionRegistry()
 
-  /** Creates a new instance. */
   constructor(
     @Inject(TracksServiceModule.TracksService)
     private tracksService: TracksServiceModule.TracksService,
@@ -80,14 +76,12 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.server.to(`user_${userId}`).emit(event, data)
   }
 
-  /** Runs the create ws context operation. */
   private createWsContext(client: AuthenticatedSocket) {
     const context = new ExecutionContextHost([client])
     context.setType('ws')
     return context
   }
 
-  /** Runs the handle connection operation. */
   async handleConnection(client: AuthenticatedSocket) {
     try {
       await this.wsAuthGuard.canActivate(this.createWsContext(client))
@@ -115,7 +109,6 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  /** Runs the handle disconnect operation. */
   handleDisconnect(client: AuthenticatedSocket): void {
     this.sessions.stopStream(client.id)
     if (!client.userId) return
@@ -124,7 +117,6 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.logger.log(`User ${client.userId} disconnected`)
   }
 
-  /** Runs the handle stream track operation. */
   @SubscribeMessage('streamTrack')
   async handleStreamTrack(
     @ConnectedSocket() client: AuthenticatedSocket,
@@ -140,14 +132,12 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     })
   }
 
-  /** Runs the handle stop track stream operation. */
   @SubscribeMessage('stopTrackStream')
   handleStopTrackStream(@ConnectedSocket() client: AuthenticatedSocket): WsResponse {
     const stopped = this.sessions.stopStream(client.id)
     return { event: 'stopTrackStream', data: { success: true, stopped } }
   }
 
-  /** Runs the handle play track operation. */
   @SubscribeMessage('playTrack')
   async handlePlayTrack(
     @ConnectedSocket() client: AuthenticatedSocket,
@@ -176,7 +166,6 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     })
   }
 
-  /** Runs the handle pause track operation. */
   @SubscribeMessage('pauseTrack')
   async handlePauseTrack(
     @ConnectedSocket() client: AuthenticatedSocket,
@@ -196,7 +185,6 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     })
   }
 
-  /** Runs the handle update streaming operation. */
   @SubscribeMessage('updateStreaming')
   async handleUpdateStreaming(
     @ConnectedSocket() client: AuthenticatedSocket,
@@ -223,7 +211,6 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     })
   }
 
-  /** Runs the handle get current state operation. */
   @SubscribeMessage('getCurrentState')
   handleGetCurrentState(@ConnectedSocket() client: AuthenticatedSocket): WsResponse {
     if (!client.userId) {

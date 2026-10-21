@@ -23,13 +23,11 @@ import type { RegistrationDto } from './dtos'
 import type { UserSessionEntity } from './entities'
 import { UserAuthStore, type UserSessionClient } from './user-auth.store'
 
-/** Represents the user auth service. */
 @Injectable()
 export class UserAuthService {
   /** Login, lockout, sessions and recovery tokens, shared with artists. */
   private readonly core: AccountAuthCore<User, UserSessionClient>
 
-  /** Creates a new instance. */
   constructor(
     private users: UsersService,
     private usersPrivate: UsersPrivateService,
@@ -79,7 +77,6 @@ export class UserAuthService {
     return { requiresEmailVerification: true as const }
   }
 
-  /** Runs the login user operation. */
   loginUser(email: string, password: string): Promise<LoginResult> {
     return this.core.login(email, password, undefined)
   }
@@ -89,17 +86,14 @@ export class UserAuthService {
     return this.core.issueSessionOrChallenge(user, undefined)
   }
 
-  /** Runs the complete two factor login operation. */
   completeTwoFactorLogin(userId: string) {
     return this.core.completeTwoFactorLogin(userId, undefined)
   }
 
-  /** Runs the refresh operation. */
   refresh(refresh_token: string) {
     return this.core.refresh(refresh_token, undefined)
   }
 
-  /** Runs the logout operation. */
   logout(userId: UserSessionEntity['userId'], access_token: UserSessionEntity['access_token']) {
     return this.core.logout(userId, access_token)
   }
@@ -117,7 +111,6 @@ export class UserAuthService {
     )
   }
 
-  /** Runs the reset password operation. */
   resetPassword(rawToken: string, newPassword: string) {
     return this.core.resetPassword(rawToken, newPassword)
   }

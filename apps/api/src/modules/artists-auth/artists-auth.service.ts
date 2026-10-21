@@ -29,7 +29,6 @@ import type { ArtistSessionEntity } from './entities'
 import { ARTIST_AUTH_ERRORS } from './errors'
 import type { SessionClient } from './session-client'
 
-/** Represents the artists auth service. */
 @Injectable()
 export class ArtistsAuthService {
   private readonly logger = new Logger(ArtistsAuthService.name)
@@ -38,7 +37,6 @@ export class ArtistsAuthService {
   /** Login, lockout, sessions and recovery tokens, shared with listeners. */
   private readonly core: AccountAuthCore<Artist, SessionClient>
 
-  /** Creates a new instance. */
   constructor(
     private artists: ArtistsService,
     private artistsPrivate: ArtistsPrivateService,
@@ -55,7 +53,6 @@ export class ArtistsAuthService {
     })
   }
 
-  /** Runs the register artist operation. */
   async registerArtist(registrationDto: ArtistRegistrationDto) {
     const artist = await this.artists.findByEmail(registrationDto.email)
 
@@ -87,7 +84,6 @@ export class ArtistsAuthService {
     return { available: !artist }
   }
 
-  /** Runs the login artist operation. */
   loginArtist(
     email: ArtistEntity['email'],
     password: string,
@@ -101,17 +97,14 @@ export class ArtistsAuthService {
     return this.core.issueSessionOrChallenge(artist, client)
   }
 
-  /** Runs the complete two factor login operation. */
   completeTwoFactorLogin(artistId: string, client: SessionClient = {}) {
     return this.core.completeTwoFactorLogin(artistId, client)
   }
 
-  /** Runs the refresh operation. */
   refresh(refresh_token: string, client: SessionClient = {}) {
     return this.core.refresh(refresh_token, client)
   }
 
-  /** Runs the logout operation. */
   logout(artistId: ArtistSession['artistId'], access_token: ArtistSessionEntity['access_token']) {
     return this.core.logout(artistId, access_token)
   }
@@ -129,7 +122,6 @@ export class ArtistsAuthService {
     )
   }
 
-  /** Runs the reset password operation. */
   resetPassword(rawToken: string, newPassword: string) {
     return this.core.resetPassword(rawToken, newPassword)
   }

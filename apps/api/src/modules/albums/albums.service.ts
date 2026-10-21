@@ -42,16 +42,13 @@ const flattenAlbumTrack = ({ track, id: _membershipId, ...membership }: AlbumTra
   ...membership,
 })
 
-/** Represents the albums service. */
 @Injectable()
 export class AlbumsService {
-  /** Creates a new instance. */
   constructor(
     private readonly prisma: PrismaService,
     private readonly cache: CacheService,
   ) {}
 
-  /** Runs the find all operation. */
   async findAll({
     page = 1,
     limit = 10,
@@ -145,7 +142,6 @@ export class AlbumsService {
     }
   }
 
-  /** Runs the get by id operation. */
   async getById(id: AlbumEntity['id']) {
     return await this.cache.wrap(NS.ALBUMS, `id:${id}`, TTL.LONG, () =>
       this.prisma.album
@@ -164,7 +160,6 @@ export class AlbumsService {
     )
   }
 
-  /** Runs the create operation. */
   async create(artistId: ArtistEntity['id'], createDto: CreateAlbumDto) {
     const artist = await this.prisma.artist.findUnique({
       where: { id: artistId },
@@ -202,7 +197,6 @@ export class AlbumsService {
     return deleted
   }
 
-  /** Runs the like operation. */
   async like(userId: UserEntity['id'], albumId: AlbumEntity['id']) {
     const album = await this.prisma.album.findFirst({
       where: { id: albumId, deletedAt: null },
@@ -216,7 +210,6 @@ export class AlbumsService {
     return album
   }
 
-  /** Runs the unlike operation. */
   async unlike(userId: UserEntity['id'], albumId: AlbumEntity['id']) {
     const album = await this.prisma.album.findFirst({
       where: { id: albumId, deletedAt: null },

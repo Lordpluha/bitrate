@@ -22,7 +22,6 @@ const playableTracksOf = (artistId: ArtistEntity['id']) => ({
 /** Service handling public artist CRUD, follow/unfollow, and cache-wrapped lookups. */
 @Injectable()
 export class ArtistsService {
-  /** Creates a new instance. */
   constructor(
     private readonly prisma: PrismaService,
     private readonly cache: CacheService,
@@ -77,7 +76,6 @@ export class ArtistsService {
     )
   }
 
-  /** Runs the find by username operation. */
   async findByUsername(username: ArtistEntity['username']) {
     return await this.cache.wrap(NS.ARTISTS, `public:v2:username:${username}`, TTL.LONG, () =>
       this.prisma.artist.findFirst({
@@ -87,7 +85,6 @@ export class ArtistsService {
     )
   }
 
-  /** Runs the update operation. */
   async update(
     id: ArtistEntity['id'],
     artist: UpdateArtistDto,
@@ -104,7 +101,6 @@ export class ArtistsService {
     return updated
   }
 
-  /** Runs the request delete operation. */
   async requestDelete(id: ArtistEntity['id'], currentArtistId: ArtistEntity['id']) {
     if (id !== currentArtistId) throw new ForbiddenException('Forbidden')
 
@@ -120,7 +116,6 @@ export class ArtistsService {
     return deleted
   }
 
-  /** Runs the find by email operation. */
   async findByEmail(email: ArtistEntity['email']) {
     return await this.prisma.artist.findFirst({
       where: { email, deletedAt: null },
@@ -128,7 +123,6 @@ export class ArtistsService {
     })
   }
 
-  /** Runs the find by id operation. */
   async findById(id: ArtistEntity['id']) {
     return await this.cache.wrap(NS.ARTISTS, `public:v2:id:${id}`, TTL.LONG, () =>
       this.prisma.artist.findFirst({
@@ -138,7 +132,6 @@ export class ArtistsService {
     )
   }
 
-  /** Runs the follow operation. */
   async follow(userId: UserEntity['id'], artistId: ArtistEntity['id']) {
     await this.requireArtist(artistId)
 
@@ -156,7 +149,6 @@ export class ArtistsService {
     })
   }
 
-  /** Runs the unfollow operation. */
   async unfollow(userId: UserEntity['id'], artistId: ArtistEntity['id']) {
     await this.requireArtist(artistId)
 
@@ -170,7 +162,6 @@ export class ArtistsService {
     })
   }
 
-  /** Runs the get following operation. */
   async getFollowing(userId: UserEntity['id'], page = 1, limit = 20) {
     const pagination = normalizePagination(page, limit)
     const where = { userId, artist: { deletedAt: null } }
