@@ -65,13 +65,17 @@ import {
 } from './dtos/update-release-track.dto'
 import { ReleaseEntity } from './entities/release.entity'
 import { ReleaseBlockerEntity } from './entities/release-workspace.entity'
+import { ReleaseCreditsService } from './release-credits.service'
 import { ReleasesService } from './releases.service'
 
 @ApiTags('Releases')
 @ApiExtraModels(ReleaseEntity, ReleaseBlockerEntity)
 @Controller({ path: 'releases', version: '1' })
 export class ReleasesController {
-  constructor(private readonly releases: ReleasesService) {}
+  constructor(
+    private readonly releases: ReleasesService,
+    private readonly credits: ReleaseCreditsService,
+  ) {}
 
   @CreateReleaseSwagger()
   @ArtistAuth()
@@ -132,7 +136,7 @@ export class ReleasesController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(AddReleaseContributorSchema)) input: AddReleaseContributorDto,
   ) {
-    return this.releases.addContributor(request.artist.id, id, input)
+    return this.credits.addContributor(request.artist.id, id, input)
   }
 
   @ReleaseContributorSwagger()
@@ -144,7 +148,7 @@ export class ReleasesController {
     @Param('id', ParseUUIDPipe) id: string,
     @Param('contributorId', ParseUUIDPipe) contributorId: string,
   ) {
-    return this.releases.contributor(request.artist.id, id, contributorId)
+    return this.credits.contributor(request.artist.id, id, contributorId)
   }
 
   @UpdateReleaseContributorSwagger()
@@ -157,7 +161,7 @@ export class ReleasesController {
     @Param('contributorId', ParseUUIDPipe) contributorId: string,
     @Body(new ZodValidationPipe(UpdateReleaseContributorSchema)) input: UpdateReleaseContributorDto,
   ) {
-    return this.releases.updateContributor(request.artist.id, id, contributorId, input)
+    return this.credits.updateContributor(request.artist.id, id, contributorId, input)
   }
 
   @UpdateReleaseRightsSwagger()
@@ -169,7 +173,7 @@ export class ReleasesController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(UpdateReleaseRightsSchema)) input: UpdateReleaseRightsDto,
   ) {
-    return this.releases.updateRights(request.artist.id, id, input)
+    return this.credits.updateRights(request.artist.id, id, input)
   }
 
   @ReplaceReleaseSplitsSwagger()
@@ -181,7 +185,7 @@ export class ReleasesController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(ReplaceReleaseSplitsSchema)) input: ReplaceReleaseSplitsDto,
   ) {
-    return this.releases.replaceSplits(request.artist.id, id, input)
+    return this.credits.replaceSplits(request.artist.id, id, input)
   }
 
   @UpdateReleaseTrackSwagger()
