@@ -81,13 +81,6 @@ export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit 
    */
   private async claimJob(job: Job, data: ConvertAudioJob) {
     const { trackId, sourceFileName } = data
-    const track = await this.prisma.track.findUnique({ where: { id: trackId } })
-
-    if (!track || track.audioUrl !== sourceFileName) {
-      this.logger.warn(`Skipping stale audio conversion job ${job.id} for track ${trackId}`)
-      return false
-    }
-
     const started = await this.prisma.track.updateMany({
       where: { id: trackId, audioUrl: sourceFileName },
       data: {
@@ -106,8 +99,10 @@ export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit 
 
   /** Reports whether this job's source is still the track's current source. */
   private async isStillCurrent(data: ConvertAudioJob) {
-    const track = await this.prisma.track.findUnique({ where: { id: data.trackId } })
-    return Boolean(track && track.audioUrl === data.sourceFileName)
+    const matching = await this.prisma.track.count({
+      where: { id: data.trackId, audioUrl: data.sourceFileName },
+    })
+    return matching > 0
   }
 
   /** Runs the process operation. */
