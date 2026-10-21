@@ -1,4 +1,12 @@
-import { Component, computed, effect, inject, signal, untracked } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+  untracked,
+} from '@angular/core'
 import { RouterLink } from '@angular/router'
 import {
   ListTracksUseCase,
@@ -61,6 +69,7 @@ import { CATALOG_STATUSES, catalogQueryCodec } from './catalog.query'
     HlmInputImports,
     HlmTableImports,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './catalog.html',
 })
 export class CatalogPage {

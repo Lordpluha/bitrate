@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core'
 import { RouterLink } from '@angular/router'
 import { DeleteGenreUseCase, ListGenresUseCase } from '@application/genres'
 import { SessionStore } from '@application/session'
@@ -30,6 +30,7 @@ import { genresQueryCodec } from './genres.query'
     HlmInputImports,
     HlmTableImports,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './genres.html',
 })
 export class GenresPage {

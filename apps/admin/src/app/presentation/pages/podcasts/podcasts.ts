@@ -1,4 +1,4 @@
-import { Component, effect, inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core'
 import { RouterLink } from '@angular/router'
 import { ListPodcastsUseCase } from '@application/podcasts'
 import type { Podcast, PodcastSortField } from '@domain/podcast'
@@ -35,6 +35,7 @@ const STATUS_OPTIONS: readonly { value: ResourceStatus; label: string }[] = [
     HlmInputImports,
     HlmTableImports,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './podcasts.html',
 })
 export class PodcastsPage {
