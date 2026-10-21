@@ -3,9 +3,12 @@ import { clientFetchClient } from '@shared/api/fetchClient'
 import { useQuery } from '@tanstack/react-query'
 import { releaseWorkspaceSchema } from '../model/workspace.schema'
 
+export const releaseWorkspaceKey = (artistId: string, id: string) =>
+  [...artistMusicKeys.artist(artistId), 'workspace', id] as const
+
 export function useReleaseWorkspace(artistId: string, id: string) {
   return useQuery({
-    queryKey: [...artistMusicKeys.artist(artistId), 'workspace', id],
+    queryKey: releaseWorkspaceKey(artistId, id),
     queryFn: ({ signal }) => getReleaseWorkspace(id, signal),
     retry: false,
     gcTime: 0,
