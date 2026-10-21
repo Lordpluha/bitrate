@@ -316,6 +316,7 @@ describe('AdminPlaylistsService', () => {
   describe('softDelete', () => {
     it('throws PlaylistNotFoundException when the playlist does not exist', async () => {
       prisma.playlist.findFirst.mockResolvedValue(null)
+      transaction.playlist.updateMany.mockResolvedValue({ count: 0 })
 
       await expect(service.softDelete('missing', STAFF_ID)).rejects.toThrow(
         PlaylistNotFoundException,
@@ -326,6 +327,7 @@ describe('AdminPlaylistsService', () => {
       prisma.playlist.findFirst.mockResolvedValue(
         buildPlaylistWithOwner({ deletedAt: new Date() }) as never,
       )
+      transaction.playlist.updateMany.mockResolvedValue({ count: 0 })
 
       await expect(service.softDelete('playlist-1', STAFF_ID)).rejects.toThrow(
         PlaylistAlreadyDeletedException,
