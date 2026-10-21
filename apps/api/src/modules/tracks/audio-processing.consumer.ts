@@ -27,7 +27,7 @@ import { PROCESSING_LOG_LIMITS } from './processing-log/limits'
 import { processingLogSuffix } from './processing-log/log-context'
 import { redactProcessingText } from './processing-log/redact'
 
-/** Represents the audio processing consumer. */
+/** BullMQ worker that converts uploaded masters into playable renditions. */
 @Processor(AUDIO_PROCESSING_QUEUE, {
   concurrency: 2,
   lockDuration: 600_000,
@@ -36,7 +36,6 @@ import { redactProcessingText } from './processing-log/redact'
   autorun: isAudioProcessingWorkerAutorunEnabled(),
 })
 export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit {
-  /** Creates a new instance. */
   constructor(
     @Inject(PrismaServiceModule.PrismaService)
     private readonly prisma: PrismaServiceModule.PrismaService,
@@ -52,7 +51,6 @@ export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit 
     super()
   }
 
-  /** The logger value. */
   private readonly logger = new Logger(AudioProcessingConsumer.name, { timestamp: true })
 
   /**
@@ -105,7 +103,7 @@ export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit 
     return matching > 0
   }
 
-  /** Runs the process operation. */
+  /** Converts one claimed upload, recording the attempt either way. */
   async process(job: Job) {
     if (job.name !== 'convert-audio') return
 
@@ -218,7 +216,7 @@ export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit 
     }
   }
 
-  /** Runs the on failed operation. */
+  /** After the final attempt: marks the track FAILED and dead-letters the job. */
   @OnWorkerEvent('failed')
   async onFailed(job: Job<ConvertAudioJob> | undefined, error: Error) {
     if (job?.name !== 'convert-audio') return
@@ -287,7 +285,7 @@ export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit 
     )
   }
 
-  /** Runs the on stalled operation. */
+  /** Closes a stalled job's RUNNING attempt row. */
   @OnWorkerEvent('stalled')
   async onStalled(jobId: string) {
     this.logger.warn(`Audio conversion job ${jobId} stalled and will be recovered by BullMQ`)
@@ -341,7 +339,6 @@ export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit 
     })
   }
 
-  /** Runs the is missing file error operation. */
   private isMissingFileError(error: unknown): error is NodeJS.ErrnoException {
     return error instanceof Error && 'code' in error && error.code === 'ENOENT'
   }

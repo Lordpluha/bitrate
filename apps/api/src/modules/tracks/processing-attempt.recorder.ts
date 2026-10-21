@@ -58,7 +58,6 @@ export class ProcessingAttemptRecorder {
   private readonly workerPid = process.pid
   private readonly workerRelease = process.env.SENTRY_RELEASE || null
 
-  /** Creates a new instance. */
   constructor(private readonly prisma: PrismaService) {}
 
   /**
