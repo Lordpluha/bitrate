@@ -39,7 +39,82 @@ export const releaseReadinessSelect = (ownerArtistId: string) =>
     splits: { select: { rightType: true, shareBasisPoints: true } },
   }) as const satisfies Prisma.ReleaseSelect
 
-type ReadinessRecord = Prisma.ReleaseGetPayload<{
+/** The artist's release workspace: summary, rights, latest review and bounded child lists. */
+export const releaseWorkspaceSelect = (ownerArtistId: string) => {
+  const activeDrafts = { ownerArtistId, deletedAt: null }
+  const activeTracks = { track: { deletedAt: null } }
+  return {
+    ...RELEASE_SUMMARY_SELECT,
+    cover: true,
+    isDemo: true,
+    masterOwnerType: true,
+    masterOwnerName: true,
+    writersConfirmedAt: true,
+    accuracyConfirmedAt: true,
+    submittedAt: true,
+    owner: { select: { username: true } },
+    reviews: {
+      orderBy: { createdAt: 'desc' },
+      take: 1,
+      select: {
+        decision: true,
+        message: true,
+        requiredChanges: true,
+        recommendations: true,
+        createdAt: true,
+      },
+    },
+    trackDrafts: {
+      where: activeDrafts,
+      take: 50,
+      orderBy: [{ position: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
+      select: {
+        id: true,
+        title: true,
+        version: true,
+        status: true,
+        duration: true,
+        isDemo: true,
+        isrc: true,
+        audioKey: true,
+        audioFileName: true,
+        audioSizeBytes: true,
+      },
+    },
+    tracks: {
+      where: activeTracks,
+      take: 50,
+      orderBy: { position: 'asc' },
+      select: {
+        position: true,
+        track: { select: { id: true, title: true, duration: true, isrc: true } },
+      },
+    },
+    contributors: {
+      take: 50,
+      orderBy: [{ displayName: 'asc' }, { id: 'asc' }],
+      select: RELEASE_CONTRIBUTOR_SELECT,
+    },
+    splits: {
+      take: 100,
+      orderBy: [{ rightType: 'asc' }, { contributorId: 'asc' }],
+      select: { contributorId: true, rightType: true, shareBasisPoints: true },
+    },
+    _count: {
+      select: {
+        trackDrafts: { where: activeDrafts },
+        tracks: { where: activeTracks },
+        contributors: true,
+      },
+    },
+  } as const satisfies Prisma.ReleaseSelect
+}
+
+export type ReleaseWorkspaceRecord = Prisma.ReleaseGetPayload<{
+  select: ReturnType<typeof releaseWorkspaceSelect>
+}>
+
+export type ReadinessRecord = Prisma.ReleaseGetPayload<{
   select: ReturnType<typeof releaseReadinessSelect>
 }>
 

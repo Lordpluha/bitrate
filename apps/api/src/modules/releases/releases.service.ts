@@ -7,7 +7,7 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common'
-import { AlbumType, ReleaseStatus } from '@prisma/client'
+import { AlbumType, type Prisma, ReleaseStatus } from '@prisma/client'
 import type { CreateReleaseDto } from './dtos/create-release.dto'
 import type { ListReleasesDto } from './dtos/list-releases.dto'
 import type {
@@ -21,10 +21,12 @@ import { RELEASE_ERRORS } from './errors'
 import { lockOwnedDraft } from './release-draft-lock'
 import { releaseReadiness } from './release-readiness'
 import {
-  RELEASE_CONTRIBUTOR_SELECT,
   RELEASE_SUMMARY_SELECT,
+  type ReadinessRecord,
+  type ReleaseWorkspaceRecord,
   readinessFromRecord,
   releaseReadinessSelect,
+  releaseWorkspaceSelect,
 } from './releases.select'
 
 @Injectable()
@@ -100,77 +102,11 @@ export class ReleasesService {
   }
 
   async workspace(ownerArtistId: string, id: string) {
-    const activeDrafts = { ownerArtistId, deletedAt: null }
-    const activeTracks = { track: { deletedAt: null } }
     const owned = { id, ownerArtistId, deletedAt: null }
     const [release, readinessRecord] = await Promise.all([
       this.prisma.release.findFirst({
         where: owned,
-        select: {
-          ...RELEASE_SUMMARY_SELECT,
-          cover: true,
-          isDemo: true,
-          masterOwnerType: true,
-          masterOwnerName: true,
-          writersConfirmedAt: true,
-          accuracyConfirmedAt: true,
-          submittedAt: true,
-          owner: { select: { username: true } },
-          reviews: {
-            orderBy: { createdAt: 'desc' },
-            take: 1,
-            select: {
-              decision: true,
-              message: true,
-              requiredChanges: true,
-              recommendations: true,
-              createdAt: true,
-            },
-          },
-          trackDrafts: {
-            where: activeDrafts,
-            take: 50,
-            orderBy: [{ position: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
-            select: {
-              id: true,
-              title: true,
-              version: true,
-              status: true,
-              duration: true,
-              isDemo: true,
-              isrc: true,
-              audioKey: true,
-              audioFileName: true,
-              audioSizeBytes: true,
-            },
-          },
-          tracks: {
-            where: activeTracks,
-            take: 50,
-            orderBy: { position: 'asc' },
-            select: {
-              position: true,
-              track: { select: { id: true, title: true, duration: true, isrc: true } },
-            },
-          },
-          contributors: {
-            take: 50,
-            orderBy: [{ displayName: 'asc' }, { id: 'asc' }],
-            select: RELEASE_CONTRIBUTOR_SELECT,
-          },
-          splits: {
-            take: 100,
-            orderBy: [{ rightType: 'asc' }, { contributorId: 'asc' }],
-            select: { contributorId: true, rightType: true, shareBasisPoints: true },
-          },
-          _count: {
-            select: {
-              trackDrafts: { where: activeDrafts },
-              tracks: { where: activeTracks },
-              contributors: true,
-            },
-          },
-        },
+        select: releaseWorkspaceSelect(ownerArtistId),
       }),
       this.prisma.release.findFirst({
         where: owned,
@@ -178,58 +114,13 @@ export class ReleasesService {
       }),
     ])
     if (!(release && readinessRecord)) throw new NotFoundException(RELEASE_ERRORS.NOT_FOUND)
-    const {
-      owner,
-      reviews,
-      contributors,
-      trackDrafts,
-      tracks,
-      _count,
-      masterOwnerType,
-      masterOwnerName,
-      writersConfirmedAt,
-      accuracyConfirmedAt,
-      ...summary
-    } = release
-    return {
-      ...summary,
-      rights: { masterOwnerType, masterOwnerName, writersConfirmedAt, accuracyConfirmedAt },
-      readiness: releaseReadiness(readinessFromRecord(readinessRecord)),
-      artistName: owner.username,
-      latestReview: reviews[0] ?? null,
-      // The storage key stays server-side; the artist plays audio through the owned route.
-      trackDrafts: trackDrafts.map(({ audioKey, ...draft }) => ({
-        ...draft,
-        hasAudio: !!audioKey,
-      })),
-      tracks: tracks.map(({ position, track }) => ({ ...track, position })),
-      participants: contributors,
-      trackCount: _count.trackDrafts + _count.tracks,
-      participantCount: _count.contributors,
-    }
+    return toWorkspaceView(release, readinessRecord)
   }
 
   submit(ownerArtistId: string, id: string, input: SubmitReleaseDto) {
     return this.prisma.$transaction(async (tx) => {
-      const record = await tx.release.findFirst({
-        where: { id, ownerArtistId, deletedAt: null },
-        select: releaseReadinessSelect(ownerArtistId),
-      })
-      if (!record) throw new NotFoundException(RELEASE_ERRORS.NOT_FOUND)
       const expected = new Date(input.expectedUpdatedAt)
-      if (
-        record.status !== ReleaseStatus.DRAFT ||
-        record.updatedAt.getTime() !== expected.getTime()
-      ) {
-        throw new ConflictException(RELEASE_ERRORS.CHANGED_OR_NOT_DRAFT)
-      }
-      const { blockers } = releaseReadiness(readinessFromRecord(record))
-      if (blockers.length > 0) {
-        throw new UnprocessableEntityException({
-          message: RELEASE_ERRORS.BLOCKERS_UNRESOLVED,
-          blockers,
-        })
-      }
+      await assertSubmittable(tx, ownerArtistId, id, expected)
       // The version guard makes the checked state and the status change one atomic step.
       const [submitted] = await tx.release.updateManyAndReturn({
         where: {
@@ -324,5 +215,62 @@ export class ReleasesService {
       if (isPrismaP2002(error)) throw new ConflictException(message)
       throw error
     }
+  }
+}
+
+/** Splits rights out of the summary and hides storage keys behind `hasAudio`. */
+function toWorkspaceView(release: ReleaseWorkspaceRecord, readinessRecord: ReadinessRecord) {
+  const {
+    owner,
+    reviews,
+    contributors,
+    trackDrafts,
+    tracks,
+    _count,
+    masterOwnerType,
+    masterOwnerName,
+    writersConfirmedAt,
+    accuracyConfirmedAt,
+    ...summary
+  } = release
+  return {
+    ...summary,
+    rights: { masterOwnerType, masterOwnerName, writersConfirmedAt, accuracyConfirmedAt },
+    readiness: releaseReadiness(readinessFromRecord(readinessRecord)),
+    artistName: owner.username,
+    latestReview: reviews[0] ?? null,
+    // The storage key stays server-side; the artist plays audio through the owned route.
+    trackDrafts: trackDrafts.map(({ audioKey, ...draft }) => ({
+      ...draft,
+      hasAudio: !!audioKey,
+    })),
+    tracks: tracks.map(({ position, track }) => ({ ...track, position })),
+    participants: contributors,
+    trackCount: _count.trackDrafts + _count.tracks,
+    participantCount: _count.contributors,
+  }
+}
+
+/** Rejects a release that is missing, changed since `expected`, not a draft or still blocked. */
+async function assertSubmittable(
+  tx: Prisma.TransactionClient,
+  ownerArtistId: string,
+  id: string,
+  expected: Date,
+): Promise<void> {
+  const record = await tx.release.findFirst({
+    where: { id, ownerArtistId, deletedAt: null },
+    select: releaseReadinessSelect(ownerArtistId),
+  })
+  if (!record) throw new NotFoundException(RELEASE_ERRORS.NOT_FOUND)
+  if (record.status !== ReleaseStatus.DRAFT || record.updatedAt.getTime() !== expected.getTime()) {
+    throw new ConflictException(RELEASE_ERRORS.CHANGED_OR_NOT_DRAFT)
+  }
+  const { blockers } = releaseReadiness(readinessFromRecord(record))
+  if (blockers.length > 0) {
+    throw new UnprocessableEntityException({
+      message: RELEASE_ERRORS.BLOCKERS_UNRESOLVED,
+      blockers,
+    })
   }
 }
