@@ -1,4 +1,8 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import {
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 import { act, renderHook } from '@testing-library/react'
 import type { PropsWithChildren } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -28,6 +32,7 @@ vi.mock('@entities/Playlist', () => ({
 vi.mock('@entities/Track', () => ({ getTrackById: remote.track }))
 vi.mock('@shared/api/feedback', () => ({ showApiErrorToast: vi.fn() }))
 
+import { showApiErrorToast } from '@shared/api/feedback'
 import { usePlayCollection } from './usePlayCollection'
 
 const wrapper = ({ children }: PropsWithChildren) => (
@@ -94,5 +99,35 @@ describe('usePlayCollection', () => {
     )
 
     expect(player.play).toHaveBeenCalledWith({ id: 't9' })
+  })
+
+  it('leaves a failed album load to the query cache toast instead of toasting twice', async () => {
+    const cacheToast = vi.fn()
+    const client = new QueryClient({
+      queryCache: new QueryCache({ onError: cacheToast }),
+    })
+    remote.album.mockRejectedValue(new Error('offline'))
+    const { result } = renderHook(() => usePlayCollection(), {
+      wrapper: ({ children }: PropsWithChildren) => (
+        <QueryClientProvider client={client}>{children}</QueryClientProvider>
+      ),
+    })
+
+    await act(() => result.current({ id: 'a3', kind: 'album', title: 'Lost' }))
+
+    expect(cacheToast).toHaveBeenCalledTimes(1)
+    expect(showApiErrorToast).not.toHaveBeenCalled()
+    expect(player.playPlaylist).not.toHaveBeenCalled()
+  })
+
+  it('toasts a failed single-track load once', async () => {
+    remote.track.mockRejectedValue(new Error('offline'))
+    const { result } = renderHook(() => usePlayCollection(), { wrapper })
+
+    await act(() =>
+      result.current({ id: 't8', kind: 'track', title: 'Static Lines' }),
+    )
+
+    expect(showApiErrorToast).toHaveBeenCalledTimes(1)
   })
 })

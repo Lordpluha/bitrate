@@ -43,12 +43,17 @@ export const usePlayCollection = () => {
   }
 
   return async (collection: PlayableCollection) => {
-    try {
-      if (collection.kind === 'track') {
+    if (collection.kind === 'track') {
+      try {
         play(await getTrackById(collection.id))
-        return
+      } catch (error) {
+        showApiErrorToast(error, `Unable to play ${collection.title}.`)
       }
+      return
+    }
 
+    /** A failed album or playlist query is already toasted by the query cache. */
+    try {
       const tracks = await loadTracks(collection)
       const [firstTrack] = tracks
       if (!firstTrack) return
@@ -60,8 +65,8 @@ export const usePlayCollection = () => {
         startTrackIndex: 0,
         tracks,
       })
-    } catch (error) {
-      showApiErrorToast(error, `Unable to play ${collection.title}.`)
+    } catch {
+      return
     }
   }
 }
