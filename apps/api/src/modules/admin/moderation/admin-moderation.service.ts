@@ -35,6 +35,86 @@ type ModerationSubject = {
   parentId: string | null
 } | null
 
+/** A reported entity's row, reduced to what the operator needs to link to and judge it. */
+type SubjectRow = { id: string; title: string; deletedAt: Date | null; parentId: string | null }
+
+/** Reads one reportable entity by id; `null` when the row no longer exists. */
+type SubjectResolver = (prisma: PrismaService, id: string) => Promise<SubjectRow | null>
+
+const TITLE_SELECT = { id: true, title: true, deletedAt: true } as const
+const USERNAME_SELECT = { id: true, username: true, deletedAt: true } as const
+
+/** What {@link TITLE_SELECT} reads. */
+type TitledRow = { id: string; title: string; deletedAt: Date | null }
+
+/** What {@link USERNAME_SELECT} reads. */
+type AccountRow = { id: string; username: string; deletedAt: Date | null }
+
+/** A titled entity (track, album, …) with no parent. */
+const titled = (row: TitledRow | null): SubjectRow | null =>
+  row && { id: row.id, title: row.title, deletedAt: row.deletedAt, parentId: null }
+
+/** An account (user, artist), shown by its username. */
+const account = (row: AccountRow | null): SubjectRow | null =>
+  row && { id: row.id, title: row.username, deletedAt: row.deletedAt, parentId: null }
+
+/**
+ * How each reportable entity type resolves, keyed by the lower-cased `entityType`. A `Map`, not
+ * an object, so a free-text type such as `constructor` can never hit a prototype member.
+ */
+const SUBJECT_RESOLVERS = new Map<string, SubjectResolver>([
+  [
+    'track',
+    async (prisma, id) =>
+      titled(await prisma.track.findUnique({ where: { id }, select: TITLE_SELECT })),
+  ],
+  [
+    'album',
+    async (prisma, id) =>
+      titled(await prisma.album.findUnique({ where: { id }, select: TITLE_SELECT })),
+  ],
+  [
+    'playlist',
+    async (prisma, id) =>
+      titled(await prisma.playlist.findUnique({ where: { id }, select: TITLE_SELECT })),
+  ],
+  [
+    'podcast',
+    async (prisma, id) =>
+      titled(await prisma.podcast.findUnique({ where: { id }, select: TITLE_SELECT })),
+  ],
+  [
+    'artist',
+    async (prisma, id) =>
+      account(await prisma.artist.findUnique({ where: { id }, select: USERNAME_SELECT })),
+  ],
+  [
+    'user',
+    async (prisma, id) =>
+      account(await prisma.user.findUnique({ where: { id }, select: USERNAME_SELECT })),
+  ],
+  [
+    'episode',
+    async (prisma, id) => {
+      const row = await prisma.episode.findUnique({
+        where: { id },
+        select: { ...TITLE_SELECT, podcastId: true },
+      })
+      return (
+        row && { id: row.id, title: row.title, deletedAt: row.deletedAt, parentId: row.podcastId }
+      )
+    },
+  ],
+])
+
+/** The queue's `where` clause, shared by the list and its export. */
+function buildWhere({
+  status,
+  entityType,
+}: Pick<ListReportsInput, 'status' | 'entityType'>): Prisma.ModerationReportWhereInput {
+  return { ...(status && { status }), ...(entityType && { entityType }) }
+}
+
 /** How many sibling reports on the same subject the detail response includes. */
 const SIBLING_REPORTS_LIMIT = 20
 
@@ -48,7 +128,7 @@ const RESOLVED_STATUSES: ModerationStatus[] = ['RESOLVED', 'REJECTED']
 export class AdminModerationService {
   constructor(private readonly prisma: PrismaService) {}
 
-  /** Runs the find all operation, paginated and optionally filtered by status/entity type. */
+  /** Lists reports, paginated and optionally filtered by status/entity type. */
   async findAll({
     page = DEFAULT_PAGE,
     limit = DEFAULT_LIMIT,
@@ -57,10 +137,7 @@ export class AdminModerationService {
     sort,
     order,
   }: ListReportsInput) {
-    const where = {
-      ...(status && { status }),
-      ...(entityType && { entityType }),
-    } satisfies Prisma.ModerationReportWhereInput
+    const where = buildWhere({ status, entityType })
     const orderBy = buildSortOrderBy<Prisma.ModerationReportOrderByWithRelationInput>(
       { sort, order },
       [{ createdAt: 'desc' }, { id: 'desc' }],
@@ -87,10 +164,7 @@ export class AdminModerationService {
     staffId: string,
     auditContext: AuditContextValue = {},
   ): Promise<CsvExport> {
-    const where = {
-      ...(status && { status }),
-      ...(entityType && { entityType }),
-    } satisfies Prisma.ModerationReportWhereInput
+    const where = buildWhere({ status, entityType })
     const orderBy = buildSortOrderBy<Prisma.ModerationReportOrderByWithRelationInput>(
       { sort, order },
       [{ createdAt: 'desc' }, { id: 'desc' }],
@@ -116,7 +190,7 @@ export class AdminModerationService {
     })
   }
 
-  /** Runs the find by id operation, resolving the reported subject and its sibling reports. */
+  /** Finds one report, resolving the reported subject and its sibling reports. */
   async findById(id: string) {
     const report = await this.prisma.moderationReport.findFirst({ where: { id } })
     if (!report) throw new ReportNotFoundException(id)
@@ -200,79 +274,7 @@ export class AdminModerationService {
    */
   private async resolveSubject(entityType: string, entityId: string): Promise<ModerationSubject> {
     const kind = entityType.toLowerCase()
-
-    switch (kind) {
-      case 'track': {
-        const row = await this.prisma.track.findUnique({
-          where: { id: entityId },
-          select: { id: true, title: true, deletedAt: true },
-        })
-        return row
-          ? { kind, id: row.id, title: row.title, deletedAt: row.deletedAt, parentId: null }
-          : null
-      }
-      case 'album': {
-        const row = await this.prisma.album.findUnique({
-          where: { id: entityId },
-          select: { id: true, title: true, deletedAt: true },
-        })
-        return row
-          ? { kind, id: row.id, title: row.title, deletedAt: row.deletedAt, parentId: null }
-          : null
-      }
-      case 'playlist': {
-        const row = await this.prisma.playlist.findUnique({
-          where: { id: entityId },
-          select: { id: true, title: true, deletedAt: true },
-        })
-        return row
-          ? { kind, id: row.id, title: row.title, deletedAt: row.deletedAt, parentId: null }
-          : null
-      }
-      case 'artist': {
-        const row = await this.prisma.artist.findUnique({
-          where: { id: entityId },
-          select: { id: true, username: true, deletedAt: true },
-        })
-        return row
-          ? { kind, id: row.id, title: row.username, deletedAt: row.deletedAt, parentId: null }
-          : null
-      }
-      case 'podcast': {
-        const row = await this.prisma.podcast.findUnique({
-          where: { id: entityId },
-          select: { id: true, title: true, deletedAt: true },
-        })
-        return row
-          ? { kind, id: row.id, title: row.title, deletedAt: row.deletedAt, parentId: null }
-          : null
-      }
-      case 'episode': {
-        const row = await this.prisma.episode.findUnique({
-          where: { id: entityId },
-          select: { id: true, title: true, deletedAt: true, podcastId: true },
-        })
-        return row
-          ? {
-              kind,
-              id: row.id,
-              title: row.title,
-              deletedAt: row.deletedAt,
-              parentId: row.podcastId,
-            }
-          : null
-      }
-      case 'user': {
-        const row = await this.prisma.user.findUnique({
-          where: { id: entityId },
-          select: { id: true, username: true, deletedAt: true },
-        })
-        return row
-          ? { kind, id: row.id, title: row.username, deletedAt: row.deletedAt, parentId: null }
-          : null
-      }
-      default:
-        return null
-    }
+    const row = await SUBJECT_RESOLVERS.get(kind)?.(this.prisma, entityId)
+    return row ? { kind, ...row } : null
   }
 }
