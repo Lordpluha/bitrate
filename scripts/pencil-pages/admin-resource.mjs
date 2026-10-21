@@ -11,7 +11,7 @@ import {
   RESOURCES,
   STATE_LABEL,
 } from './admin-resources.mjs'
-import { A, Btn, IconBtn, MShell, Pill, Shell, Tx } from './admin-ui.mjs'
+import { A, Btn, IconBtn, MShell, Pill, Shell, Tx, frame } from './admin-ui.mjs'
 import { C } from './kit.mjs'
 import { L, Row, state } from './ui.mjs'
 
@@ -42,6 +42,12 @@ const ICON = {
   podcast: 'podcast',
   tags: 'tags',
   plus: 'plus',
+  mic: 'mic-vocal',
+  mail: 'mail',
+  'log-out': 'log-out',
+  id: 'id-card',
+  right: 'chevron-right',
+  lock: 'lock',
 }
 const icon = (k) => ICON[k] ?? k
 const PILL = { up: 'Up', down: 'Down', warn: 'Warn', info: 'Info', flat: 'Flat' }
@@ -57,6 +63,21 @@ const HEIGHTS = existsSync(HEIGHTS_FILE) ? JSON.parse(readFileSync(HEIGHTS_FILE,
 const height = (key, label, fallback) => HEIGHTS[`${key} / ${label}`] ?? fallback
 
 /* ---------- cells and blocks ---------- */
+const perms = (groups) =>
+  groups.flatMap(([g, items]) => [
+    Tx('Eyebrow', g.toUpperCase(), { name: `Group / ${g}` }),
+    ...items.map(([k, d, on, note]) =>
+      A(
+        on ? 'Admin/Perm/On' : 'Admin/Perm/Off',
+        { name: `Permission / ${k}`, ...W },
+        {
+          name: { content: k },
+          desc: { content: d },
+          note: note ? L({ name: 'Note' }, [Pill('Warn', note)]) : undefined,
+        },
+      ),
+    ),
+  ])
 const cell = (c, w, m) => {
   const size = w ? { width: w, textGrowth: 'fixed-width' } : WRAP
   if (typeof c === 'string') return Tx('Body', c, size)
@@ -134,6 +155,7 @@ const block = (b, m) => {
         },
       ),
     )
+  if (b.type === 'perms') return perms(b.groups)
   if (b.type === 'chips')
     return A('Admin/Chips', W, {
       label: { content: b.label },
@@ -394,7 +416,7 @@ const listBody = (sp, st, m) => {
             ),
           ])
         }),
-        L({ name: 'Go', width: 24 }),
+        sp.detail ? L({ name: 'Go', width: 24 }) : null,
       ].filter(Boolean),
     ),
   })
@@ -410,7 +432,7 @@ const listBody = (sp, st, m) => {
               ? A(sel.has(r.id) ? 'Checkbox/On' : 'Checkbox/Off', { name: 'Select' })
               : null,
             ...c.map((col) => cell(r[col.k], col.w, m)),
-            A('Admin/Cell/Chevron', { name: 'Open' }),
+            sp.detail ? A('Admin/Cell/Chevron', { name: 'Open' }) : null,
           ].filter(Boolean),
         ),
       },
@@ -447,6 +469,9 @@ const listNodes = (sp, st, m) => {
     st === 'offline' ? banner() : null,
     metrics(sp, st, m),
     panel([toolbar(sp, st, m), listBody(sp, st, m)]),
+    sp.after && !['loading', 'error', 'restricted', 'empty'].includes(st)
+      ? grid(sp.after, m)
+      : null,
   ]
   return sp.dialogs?.[st] ? withDialog(sp, st, m, page, listHeader(sp, st, m)) : page
 }
@@ -496,7 +521,12 @@ const dialog = (sp, key, m) => {
             value: { content: bad ? f.hint : f.value.join('\n') },
             hint: { content: bad ? f.error : f.hint },
           })
-        : { enabled: false },
+        : d.select
+          ? A('Admin/Select', W, {
+              label: { content: d.select.label },
+              value: { content: d.select.value },
+            })
+          : { enabled: false },
       actions: L({ name: 'Actions', gap: 8, justifyContent: 'end', width: 'fill_container' }, [
         Btn('Glass', 'Cancel'),
         Btn(d.danger ? 'Danger' : 'Default', d.action),
@@ -558,7 +588,41 @@ const SWATCH = {
 const field = (fd, st) => {
   const fresh = FRESH.includes(st)
   const bad = (st === 'errors' || st === 'new-errors') && fd.error && 'badValue' in fd
-  const v = bad ? fd.badValue : fresh ? (fd.type === 'swatches' ? fd.options[0] : '') : fd.value
+  const allOff = (groups) => groups.map(([g, items]) => [g, items.map(([k, d]) => [k, d, false])])
+  const blank =
+    fd.type === 'swatches'
+      ? fd.options[0]
+      : fd.type === 'select'
+        ? fd.value
+        : fd.type === 'perms'
+          ? allOff(fd.value)
+          : ''
+  const v = bad ? (fd.type === 'perms' ? allOff(fd.value) : fd.badValue) : fresh ? blank : fd.value
+  if (fd.type === 'perms')
+    return L(
+      {
+        name: `Field / ${fd.label}`,
+        layout: 'vertical',
+        gap: 2,
+        width: 'fill_container',
+        padding: [10, 0, 0, 0],
+      },
+      [
+        Tx('Body Strong', fd.label),
+        ...perms(v),
+        bad
+          ? A('Admin/Form Error', W, { text: { content: fd.error } })
+          : fd.hint
+            ? Tx('Caption', fresh ? fd.hint.replace(/\d+ of/, '0 of') : fd.hint)
+            : null,
+      ].filter(Boolean),
+    )
+  if (fd.type === 'select')
+    return A(
+      'Admin/Select',
+      { name: `Field / ${fd.label}`, ...W },
+      { label: { content: fd.label }, value: { content: v } },
+    )
   if (fd.type === 'swatches')
     return A(
       'Admin/Swatches',
@@ -606,8 +670,8 @@ const formHeader = (sp, st, m) => {
     {
       ...sp,
       status: null,
-      title: fresh ? sp.newTitle : sp.title,
-      eyebrow: fresh ? sp.newEyebrow : sp.eyebrow,
+      title: (fresh && sp.newTitle) || sp.title,
+      eyebrow: (fresh && sp.newEyebrow) || sp.eyebrow,
     },
     st,
     m,
@@ -651,16 +715,134 @@ const formNodes = (sp, st, m) => {
   return sp.dialogs?.[st] ? withDialog(sp, st, m, page, head) : page
 }
 
+/* ---------- sign-in and access: a card over the aurora, no shell ---------- */
+const NOTE = { info: 'Info', warning: 'Warning' }
+const authCard = (sp, st, m) => {
+  const bad = (fd) => st === 'errors' && fd.error && 'badValue' in fd
+  const busy = st === 'saving'
+  const note = sp.notices?.[st]
+  const wide = (b) =>
+    Object.assign(b, { width: 'fill_container', height: 44, justifyContent: 'center' })
+  const primary = wide(
+    Btn(
+      'Default',
+      busy ? sp.saving : sp.action.label,
+      busy ? 'loader-circle' : icon(sp.action.icon),
+    ),
+  )
+  const body = [
+    note
+      ? A(note.tone === 'error' ? 'Admin/Form Error' : `Admin/Form Note/${NOTE[note.tone]}`, W, {
+          text: { content: note.t },
+        })
+      : null,
+    ...(sp.kv ?? []).map(([k, v]) =>
+      A(
+        'Admin/Key Value',
+        { name: `KV / ${k}`, ...W },
+        { key: { content: k }, value: { content: v } },
+      ),
+    ),
+    ...(sp.fields ?? []).map((fd) => {
+      const v = st === 'blank' ? '' : bad(fd) ? fd.badValue : fd.value
+      return A(
+        bad(fd) ? 'Admin/Input Error' : 'Admin/Input',
+        { name: `Field / ${fd.label}`, ...W },
+        {
+          label: { content: fd.label },
+          prefix: { enabled: false },
+          value: v === '' ? { content: fd.placeholder, fill: C.mutedForeground } : { content: v },
+          hint: bad(fd) ? { content: fd.error } : { enabled: false },
+        },
+      )
+    }),
+    sp.remember
+      ? A('Admin/Field', W, {
+          label: { content: sp.remember.label },
+          desc: { content: sp.remember.desc },
+          control: L({ name: 'Control' }, [A('Switch/On', { name: 'Switch' })]),
+        })
+      : null,
+    st === 'offline' || st === 'locked' ? off(primary) : primary,
+    sp.secondary ? wide(Btn('Glass', sp.secondary.label, icon(sp.secondary.icon))) : null,
+    sp.footer ? Tx('Caption', sp.footer, { textAlign: 'center', ...WRAP }) : null,
+  ]
+  return A(
+    'Admin/Auth Card',
+    { name: 'Auth Card', ...(m ? W : {}) },
+    {
+      title: { content: sp.title },
+      sub: { content: sp.sub },
+      body: L(
+        { name: 'Body', layout: 'vertical', gap: 8, width: 'fill_container' },
+        body.filter(Boolean),
+      ),
+    },
+  )
+}
+const authFrame = (label, sp, st, m) =>
+  m
+    ? frame(label, 390, 900, [
+        A('Status Bar', { name: 'Status Bar' }),
+        L(
+          {
+            name: 'Content',
+            layout: 'vertical',
+            width: 'fill_container',
+            padding: [12, 16, 24, 16],
+          },
+          [authCard(sp, st, true)],
+        ),
+      ])
+    : frame(
+        label,
+        1440,
+        960,
+        L(
+          {
+            name: 'Center',
+            layout: 'vertical',
+            width: 'fill_container',
+            height: 'fill_container',
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+          [authCard(sp, st, false)],
+        ),
+      )
+const authPage = (key, sp) => ({
+  title: `Admin / ${key === 'login' ? 'Login' : 'No access'}`,
+  route: sp.route,
+  context: `${sp.sub} No shell: the card stands on the aurora. Drawn from scripts/pencil-pages/admin-resources.mjs, the same data as the prototype (#${sp.hash}).`,
+  desktop: () => authFrame('Default', sp, 'default', false),
+  mobile: () => authFrame('Default', sp, 'default', true),
+  states: sp.states.map((st) => {
+    const label = STATE_LABEL[st] ?? st
+    return state(
+      label,
+      () => authFrame(label, sp, st, false),
+      () => authFrame(label, sp, st, true),
+    )
+  }),
+})
+
 /* ---------- pages ---------- */
 const dialogKeys = (sp) =>
   Object.entries(sp.dialogs ?? {}).flatMap(([k, d]) => (d.field ? [k, 'invalid'] : [k]))
 const statesOf = (sp) =>
   sp.kind === 'list'
-    ? [...LIST_STATES.filter((s) => s !== 'selected' || sp.select), ...dialogKeys(sp)]
-    : (sp.kind === 'form' ? FORM_STATES : DETAIL_STATES).flatMap((s) =>
-        s === 'dialogs' ? dialogKeys(sp) : [s],
-      )
+    ? [
+        ...LIST_STATES.filter(
+          (s) => (s !== 'selected' || sp.select) && (s !== 'noresults' || sp.search || sp.filters),
+        ),
+        ...dialogKeys(sp),
+      ]
+    : (sp.kind === 'form'
+        ? FORM_STATES.filter((s) => !(sp.newOnly && s === 'notfound'))
+        : DETAIL_STATES
+      ).flatMap((s) => (s === 'dialogs' ? dialogKeys(sp) : [s]))
 function resourcePage(key, sp) {
+  if (sp.kind === 'auth') return authPage(key, sp)
   const nodes = sp.kind === 'list' ? listNodes : sp.kind === 'form' ? formNodes : detailNodes
   const page = sp.nav
   const title = `Admin / ${sp.kind === 'list' ? sp.title : `${RESOURCES[sp.parent].title} · ${sp.title}`}`

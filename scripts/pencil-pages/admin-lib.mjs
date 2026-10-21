@@ -3568,13 +3568,140 @@ add(
         fill: C.errorSurface,
       },
       [
-        I('triangle-alert', { width: 16, height: 16, fill: C.errorText }),
+        part('icon', I('triangle-alert', { width: 16, height: 16, fill: C.errorText })),
         part(
           'text',
           T('Fix 2 fields to save', { fontSize: 13, fontWeight: '600', fill: C.errorText }),
         ),
       ],
     ),
+  ),
+)
+
+/* ---------- permissions and selects ---------- */
+add(
+  ...['On', 'Off'].map((v) =>
+    comp(
+      `Admin/Perm/${v}`,
+      Row(
+        {
+          name: 'Permission',
+          width: 'fill_container',
+          gap: 12,
+          padding: [9, 0],
+          stroke: C.border,
+          strokeWidth: { bottom: 1 },
+        },
+        [
+          use(v === 'On' ? 'Checkbox/On' : 'Checkbox/Off', { name: 'Check' }),
+          Col({ name: 'Text', gap: 1, width: 'fill_container' }, [
+            part('name', T('reports:read', { fontSize: 13, fontWeight: '600' })),
+            part(
+              'desc',
+              muted('See reports', {
+                fontSize: 12,
+                width: 'fill_container',
+                textGrowth: 'fixed-width',
+              }),
+            ),
+          ]),
+          part('note', Row({ name: 'Note', slot: [], enabled: false }, [pill('Warn', 'Extra')])),
+        ],
+      ),
+    ),
+  ),
+  comp(
+    'Admin/Select',
+    Col({ name: 'Select', width: 'fill_container', gap: 6, padding: [10, 0, 0, 0] }, [
+      part('label', T('Role', { fontSize: 13, fontWeight: '600' })),
+      Row(
+        {
+          name: 'Box',
+          width: 'fill_container',
+          height: 42,
+          padding: [0, 12],
+          gap: 8,
+          cornerRadius: 12,
+          fill: soft(0.05),
+          stroke: C.border,
+          strokeWidth: 1,
+        },
+        [
+          part(
+            'value',
+            T('Moderator', {
+              fontSize: 14,
+              fontWeight: '500',
+              width: 'fill_container',
+              textGrowth: 'fixed-width',
+            }),
+          ),
+          I('chevron-down', { width: 16, height: 16, fill: C.mutedForeground }),
+        ],
+      ),
+    ]),
+  ),
+)
+
+/* ---------- sign-in: a glass card over the aurora, with its notes ---------- */
+add(
+  ...[
+    ['Info', C.infoSurface, C.infoText, 'info'],
+    ['Warning', C.warningSurface, C.warningText, 'wifi-off'],
+  ].map(([tone, bg, ink, icon]) =>
+    comp(
+      `Admin/Form Note/${tone}`,
+      Row(
+        {
+          name: 'Form Note',
+          width: 'fill_container',
+          gap: 8,
+          padding: [10, 12],
+          cornerRadius: 12,
+          fill: bg,
+          alignItems: 'start',
+        },
+        [
+          part('icon', I(icon, { width: 16, height: 16, fill: ink })),
+          part(
+            'text',
+            T('Note', {
+              fontSize: 13,
+              fontWeight: '600',
+              fill: ink,
+              width: 'fill_container',
+              textGrowth: 'fixed-width',
+            }),
+          ),
+        ],
+      ),
+    ),
+  ),
+  comp(
+    'Admin/Auth Card',
+    Col({ name: 'Auth Card', width: 440, gap: 14, padding: 32, cornerRadius: 28, ...glass(0.78) }, [
+      use('Logo/Lockup', { name: 'Lockup' }),
+      Row({ name: 'Space', width: 1, height: 4 }, []),
+      part(
+        'title',
+        H('Sign in to Bitrate Admin', 26, {
+          letterSpacing: -0.6,
+          width: 'fill_container',
+          textGrowth: 'fixed-width',
+          lineHeight: 1.2,
+        }),
+      ),
+      part(
+        'sub',
+        muted('For Bitrate staff.', {
+          fontSize: 14,
+          width: 'fill_container',
+          textGrowth: 'fixed-width',
+          lineHeight: 1.45,
+        }),
+      ),
+      slot('body', { gap: 6 }),
+    ]),
   ),
 )
 
@@ -3662,7 +3789,7 @@ const SECTIONS = [
   [
     'Resource pages',
     'Lists and detail pages for every section: metric tiles, the table panel with its toolbar, filters, the selection bar and pager, record cards on phones, the detail header with back link and status, quote, media, checks and chips, confirm dialogs (sheets on phones), the change request field and their loaders.',
-    /^Admin\/(Metric|Loader\/(Metric|Table|Cards)|Panel|Key Pill|Input|Swatch|Form Error|Search Field|Filter|Toolbar|Bulk Bar|Table\/Row Selected|Sort|Cell|Pager|Record Card|Back|Detail Header|Quote|Media|Check Row|Chips|Textarea|Dialog|Sheet|Tile Message\/Search)/,
+    /^Admin\/(Metric|Loader\/(Metric|Table|Cards)|Panel|Key Pill|Input|Swatch|Form Error|Perm|Select|Form Note|Auth Card|Search Field|Filter|Toolbar|Bulk Bar|Table\/Row Selected|Sort|Cell|Pager|Record Card|Back|Detail Header|Quote|Media|Check Row|Chips|Textarea|Dialog|Sheet|Tile Message\/Search)/,
   ],
   [
     'Overlays',

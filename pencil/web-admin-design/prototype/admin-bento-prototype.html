@@ -690,6 +690,40 @@ body.device .stage { position: relative; z-index: 1; min-height: 100vh; display:
 .rsw button { width: 30px; height: 30px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 0 var(--bg); transition: box-shadow .2s, transform .2s; }
 .rsw button:hover { transform: scale(1.08); }
 .rsw button.on { box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--c); }
+.rperms { display: flex; flex-direction: column; gap: 12px; }
+.rpg h5 { margin: 4px 0 2px; font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted-fg); }
+.rperm { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--glass-line); }
+.rperm:last-child { border-bottom: 0; }
+.rperm .tx { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.rperm .tx b { font-weight: 600; font-size: 13px; }
+.rperm .tx small { color: var(--muted-fg); font-size: 12px; }
+span.ck { cursor: default; }
+.rfield.bad .rperms .ck { border-color: var(--error); }
+.rsel { position: relative; padding-right: 8px; }
+.rsel select { flex: 1; min-width: 0; appearance: none; font: 500 14px var(--font); color: var(--fg); background: none; border: 0; outline: none; cursor: pointer; }
+.rsel select option { color: initial; }
+.rsel svg { width: 16px; height: 16px; color: var(--muted-fg); pointer-events: none; }
+.rlist tbody tr.still, .rcard.still { cursor: default; }
+body.bare .side, body.bare .topbar, body.bare .mtop, body.bare .mtabs { display: none; }
+body.bare .app { grid-template-columns: minmax(0, 1fr); }
+.rauth { min-height: calc(100vh - 32px); display: grid; place-items: center; padding: 24px 0 96px; }
+.rauth-card { width: min(440px, 100%); border-radius: 28px; padding: 32px; display: flex; flex-direction: column; gap: 12px; background: var(--glass-strong); animation: rise .5s cubic-bezier(.2,.8,.2,1); }
+.rauth-card .brand { height: auto; padding: 0 0 6px; }
+.rauth-card h1 { margin: 4px 0 0; font: 600 26px/1.2 var(--display); letter-spacing: -.6px; }
+.rauth-card p { margin: 0; color: var(--muted-fg); }
+.rauth-card .rfield { margin-top: 4px; }
+.rauth-card .field.row { padding: 6px 0 2px; }
+.rnote { display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; border-radius: 12px; font-size: 13px; font-weight: 600; }
+.rnote svg { width: 16px; height: 16px; flex: none; margin-top: 1px; }
+.rnote.error { color: var(--error-text); background: var(--error-surface); }
+.rnote.info { color: var(--info-text); background: var(--info-surface); }
+.rnote.warning { color: var(--warning-text); background: var(--warning-surface); }
+.pill.rwide { width: 100%; justify-content: center; height: 44px; margin-top: 4px; }
+.rfoot { color: var(--muted-fg); font-size: 12px; text-align: center; margin-top: 4px; }
+@media (max-width: 860px) {
+  .rauth { min-height: calc(100vh - 24px); padding: 12px 0 24px; align-items: start; }
+  .rauth-card { padding: 24px 20px; }
+}
 @media (max-width: 860px) {
   .rkpis { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .rkpi { padding: 14px; gap: 10px; flex-direction: column; align-items: flex-start; min-height: 0; }
@@ -899,8 +933,8 @@ const ico = (id) => `<svg class="i" aria-hidden="true"><use href="#i-${id}"/></s
 const NAV = [
   [null, [['dashboard', 'Overview', 0, 'overview']]],
   ['Operations', [['flag', 'Moderation', 16, 'moderation'], ['disc', 'Releases', 7, 'releases'], ['audio', 'Catalog', 4, 'catalog'], ['album', 'Albums', 0, 'albums'], ['list', 'Playlists', 0, 'playlists'], ['podcast', 'Podcasts', 0, 'podcasts'], ['tags', 'Genres', 0, 'genres']]],
-  ['Accounts', [['mic', 'Artists'], ['users', 'Listeners']]],
-  ['System', [['scroll', 'Audit log'], ['shield', 'Roles'], ['id', 'Staff']]],
+  ['Accounts', [['mic', 'Artists', 0, 'artists'], ['users', 'Listeners', 0, 'users']]],
+  ['System', [['scroll', 'Audit log', 0, 'audit'], ['shield', 'Roles', 0, 'roles'], ['id', 'Staff', 0, 'staff']]],
   ['Settings', [['bell', 'Notifications', 0, 'notifications']]],
 ]
 let reports = 16
@@ -1024,6 +1058,8 @@ function overviewHTML() {
 function render() {
   $('#page').innerHTML = S.page === 'overview' ? overviewHTML() : S.page === 'notifications' ? notifHTML() : resHTML()
   $('#rdlg').innerHTML = isRes() ? dialogHTML(RESOURCES[S.page], rs()) : ''
+  /* sign-in and access pages stand alone: no sidebar, top bar or tab bar */
+  document.body.classList.toggle('bare', isRes() && RESOURCES[S.page].kind === 'auth')
   seg($('#seg')); seg($('#mseg'))
   $('#crumb').textContent = t(PAGES[S.page])
   $$('.mtabs [data-tab]').forEach((x) => { x.classList.toggle('on', x.dataset.tab === S.page || (x.dataset.tab === 'alerts' && S.page === 'notifications')) })
@@ -4541,6 +4577,7 @@ const RESOURCES = {
         },
         {
           "k": "slug",
+          "pattern": "^[a-z0-9-]+$",
           "type": "text",
           "label": "Address",
           "prefix": "bitrate.fm/genre/",
@@ -4658,6 +4695,2360 @@ const RESOURCES = {
       "desc": "The admin API didn’t respond. Nothing was changed."
     },
     "perm": "genres:write"
+  },
+  "artists": {
+    "kind": "list",
+    "nav": "artists",
+    "route": "/artists (artists:read)",
+    "icon": "mic",
+    "eyebrow": "ACCOUNTS · ARTISTS",
+    "title": "Artists",
+    "sub": "Artist accounts, their verification and what they have released.",
+    "actions": [
+      {
+        "icon": "download",
+        "label": "Export CSV"
+      }
+    ],
+    "kpis": [
+      {
+        "icon": "mic",
+        "tone": "up",
+        "label": "Artists",
+        "value": "2,316",
+        "sub": "+1.4% this week"
+      },
+      {
+        "icon": "check",
+        "tone": "info",
+        "label": "Verified",
+        "value": "1,904",
+        "sub": "82% of artists"
+      },
+      {
+        "icon": "clock",
+        "tone": "warn",
+        "label": "Waiting for verification",
+        "value": "38",
+        "sub": "Oldest 5 days"
+      },
+      {
+        "icon": "x",
+        "tone": "flat",
+        "label": "Deactivated",
+        "value": "12",
+        "sub": "All time"
+      }
+    ],
+    "search": "Search name or email",
+    "filters": [
+      {
+        "key": "state",
+        "label": "Status",
+        "value": "Active",
+        "options": [
+          [
+            "Active",
+            [
+              "Active"
+            ]
+          ],
+          [
+            "Deactivated",
+            [
+              "Deactivated"
+            ]
+          ],
+          [
+            "All",
+            null
+          ]
+        ]
+      },
+      {
+        "key": "verified",
+        "label": "Verified",
+        "value": "Any",
+        "options": [
+          [
+            "Any",
+            null
+          ],
+          [
+            "Verified",
+            [
+              "Verified"
+            ]
+          ],
+          [
+            "Waiting",
+            [
+              "Waiting"
+            ]
+          ],
+          [
+            "Not verified",
+            [
+              "Not verified"
+            ]
+          ]
+        ]
+      }
+    ],
+    "cols": [
+      {
+        "k": "artist",
+        "l": "Artist",
+        "sort": "asc"
+      },
+      {
+        "k": "verified",
+        "l": "Verified",
+        "w": 130
+      },
+      {
+        "k": "state",
+        "l": "Status",
+        "w": 120,
+        "wide": true
+      },
+      {
+        "k": "joined",
+        "l": "Joined",
+        "w": 120
+      }
+    ],
+    "rows": [
+      {
+        "id": "ivy-arcade",
+        "artist": {
+          "t": "Ivy Arcade",
+          "s": "hello@ivyarcade.com"
+        },
+        "verified": {
+          "tone": "info",
+          "t": "Verified"
+        },
+        "state": {
+          "tone": "up",
+          "t": "Active"
+        },
+        "joined": "Feb 3, 2025"
+      },
+      {
+        "id": "kite-harbor",
+        "artist": {
+          "t": "Kite Harbor",
+          "s": "kite@harbortapes.fm"
+        },
+        "verified": {
+          "tone": "info",
+          "t": "Verified"
+        },
+        "state": {
+          "tone": "up",
+          "t": "Active"
+        },
+        "joined": "Nov 18, 2024"
+      },
+      {
+        "id": "lumen",
+        "artist": {
+          "t": "Lumen",
+          "s": "lumen.music@proton.me"
+        },
+        "verified": {
+          "tone": "info",
+          "t": "Verified"
+        },
+        "state": {
+          "tone": "up",
+          "t": "Active"
+        },
+        "joined": "Jan 9, 2025"
+      },
+      {
+        "id": "mira-sol",
+        "artist": {
+          "t": "Mira Sol",
+          "s": "mira@solrecords.es"
+        },
+        "verified": {
+          "tone": "warn",
+          "t": "Waiting"
+        },
+        "state": {
+          "tone": "up",
+          "t": "Active"
+        },
+        "joined": "Oct 15, 2026"
+      },
+      {
+        "id": "mono-lith",
+        "artist": {
+          "t": "@mono.lith",
+          "s": "monolith.audio@gmail.com"
+        },
+        "verified": {
+          "tone": "flat",
+          "t": "Not verified"
+        },
+        "state": {
+          "tone": "up",
+          "t": "Active"
+        },
+        "joined": "Oct 2, 2026"
+      },
+      {
+        "id": "nova",
+        "artist": {
+          "t": "Nova & the Static",
+          "s": "band@novastatic.net"
+        },
+        "verified": {
+          "tone": "info",
+          "t": "Verified"
+        },
+        "state": {
+          "tone": "up",
+          "t": "Active"
+        },
+        "joined": "Aug 27, 2024"
+      },
+      {
+        "id": "outer-loop",
+        "artist": {
+          "t": "Outer Loop",
+          "s": "loop@latesignal.fm"
+        },
+        "verified": {
+          "tone": "info",
+          "t": "Verified"
+        },
+        "state": {
+          "tone": "up",
+          "t": "Active"
+        },
+        "joined": "Mar 30, 2025"
+      }
+    ],
+    "card": {
+      "title": "artist",
+      "badge": "verified",
+      "meta": [
+        "state",
+        "joined"
+      ]
+    },
+    "pager": "1–7 of 2,316",
+    "detail": "artist",
+    "empty": {
+      "title": "No artists yet",
+      "desc": "Artist accounts appear here as people sign up."
+    },
+    "noresults": {
+      "query": "harbour",
+      "title": "No artists match “harbour”",
+      "desc": "Try another name or email, or clear the filters."
+    },
+    "error": {
+      "title": "Couldn’t load artists",
+      "desc": "The admin API didn’t respond. Nothing was changed."
+    },
+    "perm": "artists:read"
+  },
+  "artist": {
+    "kind": "detail",
+    "nav": "artists",
+    "route": "/artists/:id (artists:read; changes need artists:write)",
+    "parent": "artists",
+    "hash": "artists/kite-harbor",
+    "icon": "mic",
+    "eyebrow": "ARTISTS · ACCOUNT",
+    "title": "Kite Harbor",
+    "status": {
+      "tone": "info",
+      "t": "Verified"
+    },
+    "sub": "kite@harbortapes.fm · joined Nov 18, 2024 · Lisbon, PT",
+    "actions": [
+      {
+        "icon": "log-out",
+        "label": "Revoke sessions",
+        "dialog": "sessions"
+      },
+      {
+        "icon": "x",
+        "label": "Deactivate",
+        "primary": true,
+        "danger": true,
+        "dialog": "deactivate"
+      }
+    ],
+    "tiles": [
+      {
+        "w": 2,
+        "icon": "mic",
+        "title": "Profile",
+        "meta": "Account and verification",
+        "blocks": [
+          {
+            "type": "kv",
+            "rows": [
+              [
+                "Username",
+                "@kiteharbor"
+              ],
+              [
+                "Email",
+                "kite@harbortapes.fm"
+              ],
+              [
+                "Verified",
+                {
+                  "tone": "info",
+                  "t": "Verified"
+                }
+              ],
+              [
+                "Status",
+                {
+                  "tone": "up",
+                  "t": "Active"
+                }
+              ],
+              [
+                "Two-step sign-in",
+                "On"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "w": 2,
+        "icon": "trend",
+        "title": "Activity",
+        "meta": "Last 30 days",
+        "blocks": [
+          {
+            "type": "kv",
+            "rows": [
+              [
+                "Monthly listeners",
+                "12,904"
+              ],
+              [
+                "Plays",
+                "84,210"
+              ],
+              [
+                "Releases",
+                "4"
+              ],
+              [
+                "Last upload",
+                "2 days ago"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "w": 4,
+        "icon": "audio",
+        "title": "Tracks",
+        "meta": "23 tracks",
+        "blocks": [
+          {
+            "type": "table",
+            "cols": [
+              {
+                "l": "Track"
+              },
+              {
+                "l": "State",
+                "w": 120
+              },
+              {
+                "l": "Plays",
+                "w": 100
+              },
+              {
+                "l": "Uploaded",
+                "w": 120,
+                "wide": true
+              }
+            ],
+            "rows": [
+              [
+                {
+                  "t": "Low Orbit",
+                  "s": "Low Orbit · EP"
+                },
+                {
+                  "tone": "up",
+                  "t": "Ready"
+                },
+                "31,402",
+                "Oct 9, 2026"
+              ],
+              [
+                {
+                  "t": "Night Side",
+                  "s": "Low Orbit · EP"
+                },
+                {
+                  "tone": "up",
+                  "t": "Ready"
+                },
+                "18,770",
+                "Oct 9, 2026"
+              ],
+              [
+                {
+                  "t": "Ferry Lights",
+                  "s": "Static Lines · in review"
+                },
+                {
+                  "tone": "info",
+                  "t": "Processing"
+                },
+                "—",
+                "Oct 18, 2026"
+              ],
+              [
+                {
+                  "t": "Undertow",
+                  "s": "Static Lines · in review"
+                },
+                {
+                  "tone": "info",
+                  "t": "Processing"
+                },
+                "—",
+                "Oct 18, 2026"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "w": 2,
+        "icon": "shield",
+        "title": "Active sessions",
+        "meta": "2 devices",
+        "blocks": [
+          {
+            "type": "table",
+            "cols": [
+              {
+                "l": "Device"
+              },
+              {
+                "l": "Last active",
+                "w": 110
+              }
+            ],
+            "rows": [
+              [
+                {
+                  "t": "Firefox on macOS",
+                  "s": "Lisbon, PT"
+                },
+                "4 min"
+              ],
+              [
+                {
+                  "t": "Bitrate for iOS",
+                  "s": "Porto, PT"
+                },
+                "2 d"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "w": 2,
+        "icon": "flag",
+        "title": "Open reports",
+        "meta": "1 report",
+        "blocks": [
+          {
+            "type": "table",
+            "cols": [
+              {
+                "l": "Report"
+              },
+              {
+                "l": "Status",
+                "w": 110
+              }
+            ],
+            "rows": [
+              [
+                {
+                  "t": "R-1036",
+                  "s": "Wrong artist credited · Low Orbit"
+                },
+                {
+                  "tone": "warn",
+                  "t": "Open"
+                }
+              ]
+            ]
+          }
+        ],
+        "link": "Open in Moderation"
+      }
+    ],
+    "dialogs": {
+      "sessions": {
+        "tone": "warning",
+        "icon": "log-out",
+        "title": "Sign Kite Harbor out everywhere?",
+        "desc": "2 active sessions end now. They can sign in again with their password.",
+        "action": "Revoke sessions"
+      },
+      "deactivate": {
+        "tone": "error",
+        "icon": "x",
+        "title": "Deactivate Kite Harbor?",
+        "desc": "Their profile and releases disappear for listeners and they can’t sign in. You can restore the account later.",
+        "action": "Deactivate",
+        "danger": true
+      }
+    },
+    "saving": "Saving…",
+    "notfound": {
+      "title": "Artist not found",
+      "desc": "This account doesn’t exist or was deleted. Go back to artists."
+    },
+    "error": {
+      "title": "Couldn’t load this artist",
+      "desc": "The admin API didn’t respond. Nothing was changed."
+    },
+    "perm": "artists:read"
+  },
+  "users": {
+    "kind": "list",
+    "nav": "users",
+    "route": "/users (users:read)",
+    "icon": "users",
+    "eyebrow": "ACCOUNTS · LISTENERS",
+    "title": "Listeners",
+    "sub": "Listener accounts: who they are, whether they confirmed their email, how they use Bitrate.",
+    "actions": [
+      {
+        "icon": "download",
+        "label": "Export CSV"
+      }
+    ],
+    "kpis": [
+      {
+        "icon": "users",
+        "tone": "up",
+        "label": "Listeners",
+        "value": "48,920",
+        "sub": "412 new this week"
+      },
+      {
+        "icon": "trend",
+        "tone": "info",
+        "label": "Active this week",
+        "value": "31,402",
+        "sub": "64% of listeners"
+      },
+      {
+        "icon": "mail",
+        "tone": "warn",
+        "label": "Unconfirmed email",
+        "value": "1,038",
+        "sub": "Older than 7 days: 211"
+      },
+      {
+        "icon": "x",
+        "tone": "flat",
+        "label": "Deactivated",
+        "value": "61",
+        "sub": "All time"
+      }
+    ],
+    "search": "Search username or email",
+    "filters": [
+      {
+        "key": "state",
+        "label": "Status",
+        "value": "Active",
+        "options": [
+          [
+            "Active",
+            [
+              "Active"
+            ]
+          ],
+          [
+            "Deactivated",
+            [
+              "Deactivated"
+            ]
+          ],
+          [
+            "All",
+            null
+          ]
+        ]
+      }
+    ],
+    "select": true,
+    "bulk": [
+      {
+        "icon": "x",
+        "label": "Deactivate",
+        "dialog": "bulk"
+      }
+    ],
+    "cols": [
+      {
+        "k": "listener",
+        "l": "Listener",
+        "sort": "asc"
+      },
+      {
+        "k": "email",
+        "l": "Email",
+        "w": 130
+      },
+      {
+        "k": "state",
+        "l": "Status",
+        "w": 120,
+        "wide": true
+      },
+      {
+        "k": "joined",
+        "l": "Joined",
+        "w": 120
+      }
+    ],
+    "rows": [
+      {
+        "id": "driftwave",
+        "listener": {
+          "t": "@driftwave",
+          "s": "drift.wave@gmail.com"
+        },
+        "email": {
+          "tone": "up",
+          "t": "Confirmed"
+        },
+        "state": {
+          "tone": "up",
+          "t": "Active"
+        },
+        "joined": "Jun 2, 2026"
+      },
+      {
+        "id": "juno",
+        "listener": {
+          "t": "@juno",
+          "s": "juno.k@outlook.com"
+        },
+        "email": {
+          "tone": "up",
+          "t": "Confirmed"
+        },
+        "state": {
+          "tone": "up",
+          "t": "Active"
+        },
+        "joined": "Apr 21, 2025"
+      },
+      {
+        "id": "kilo",
+        "listener": {
+          "t": "@kilo",
+          "s": "kilo@fastmail.com"
+        },
+        "email": {
+          "tone": "up",
+          "t": "Confirmed"
+        },
+        "state": {
+          "tone": "up",
+          "t": "Active"
+        },
+        "joined": "Jan 30, 2025"
+      },
+      {
+        "id": "lumen-l",
+        "listener": {
+          "t": "@lumen",
+          "s": "lumen.l@proton.me"
+        },
+        "email": {
+          "tone": "up",
+          "t": "Confirmed"
+        },
+        "state": {
+          "tone": "up",
+          "t": "Active"
+        },
+        "joined": "Sep 12, 2025"
+      },
+      {
+        "id": "promo4u",
+        "listener": {
+          "t": "@promo4u",
+          "s": "promo4u.deals@mail.ru"
+        },
+        "email": {
+          "tone": "warn",
+          "t": "Unconfirmed"
+        },
+        "state": {
+          "tone": "up",
+          "t": "Active"
+        },
+        "joined": "Oct 20, 2026"
+      },
+      {
+        "id": "sable",
+        "listener": {
+          "t": "@sable",
+          "s": "sable.r@gmail.com"
+        },
+        "email": {
+          "tone": "up",
+          "t": "Confirmed"
+        },
+        "state": {
+          "tone": "up",
+          "t": "Active"
+        },
+        "joined": "Jul 7, 2026"
+      }
+    ],
+    "card": {
+      "title": "listener",
+      "badge": "email",
+      "meta": [
+        "state",
+        "joined"
+      ]
+    },
+    "selected": [
+      "promo4u",
+      "driftwave"
+    ],
+    "pager": "1–6 of 48,920",
+    "detail": "user",
+    "dialogs": {
+      "bulk": {
+        "tone": "error",
+        "icon": "x",
+        "title": "Deactivate 2 listeners?",
+        "desc": "They are signed out and can’t sign in. Their playlists turn private. You can restore the accounts later.",
+        "action": "Deactivate 2 listeners",
+        "titleOne": "Deactivate 1 listener?",
+        "actionOne": "Deactivate 1 listener",
+        "danger": true
+      }
+    },
+    "saving": "Deactivating…",
+    "empty": {
+      "title": "No listeners yet",
+      "desc": "Listener accounts appear here as people sign up."
+    },
+    "noresults": {
+      "query": "zz",
+      "title": "No listeners match “zz”",
+      "desc": "Try another username or email, or clear the filter."
+    },
+    "error": {
+      "title": "Couldn’t load listeners",
+      "desc": "The admin API didn’t respond. Nothing was changed."
+    },
+    "perm": "users:read"
+  },
+  "user": {
+    "kind": "detail",
+    "nav": "users",
+    "route": "/users/:id (users:read; changes need users:write)",
+    "parent": "users",
+    "hash": "users/driftwave",
+    "icon": "users",
+    "eyebrow": "LISTENERS · ACCOUNT",
+    "title": "@driftwave",
+    "status": {
+      "tone": "up",
+      "t": "Active"
+    },
+    "sub": "drift.wave@gmail.com · joined Jun 2, 2026 · Berlin, DE",
+    "actions": [
+      {
+        "icon": "log-out",
+        "label": "Revoke sessions",
+        "dialog": "sessions"
+      },
+      {
+        "icon": "x",
+        "label": "Deactivate",
+        "primary": true,
+        "danger": true,
+        "dialog": "deactivate"
+      }
+    ],
+    "tiles": [
+      {
+        "w": 2,
+        "icon": "users",
+        "title": "Activity",
+        "meta": "Since joining",
+        "blocks": [
+          {
+            "type": "kv",
+            "rows": [
+              [
+                "Listening time",
+                "412 h"
+              ],
+              [
+                "Liked tracks",
+                "1,284"
+              ],
+              [
+                "Playlists",
+                "9"
+              ],
+              [
+                "Reports filed",
+                "0"
+              ],
+              [
+                "Reports against",
+                {
+                  "tone": "warn",
+                  "t": "1 open"
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "w": 2,
+        "icon": "shield",
+        "title": "Active sessions",
+        "meta": "3 devices",
+        "blocks": [
+          {
+            "type": "table",
+            "cols": [
+              {
+                "l": "Device"
+              },
+              {
+                "l": "Last active",
+                "w": 110
+              }
+            ],
+            "rows": [
+              [
+                {
+                  "t": "Chrome on Windows",
+                  "s": "Berlin, DE"
+                },
+                "now"
+              ],
+              [
+                {
+                  "t": "Bitrate for Android",
+                  "s": "Berlin, DE"
+                },
+                "3 h"
+              ],
+              [
+                {
+                  "t": "Safari on iPadOS",
+                  "s": "Hamburg, DE"
+                },
+                "6 d"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "w": 4,
+        "icon": "audio",
+        "title": "Listening history",
+        "meta": "Latest first",
+        "blocks": [
+          {
+            "type": "table",
+            "cols": [
+              {
+                "l": "Track"
+              },
+              {
+                "l": "Artist",
+                "w": 180,
+                "wide": true
+              },
+              {
+                "l": "Listened",
+                "w": 110
+              }
+            ],
+            "rows": [
+              [
+                "Glass Horizon",
+                "Nova & the Static",
+                "12 min"
+              ],
+              [
+                "Low Orbit",
+                "Kite Harbor",
+                "18 min"
+              ],
+              [
+                "Late Signal",
+                "Outer Loop",
+                "1 h"
+              ],
+              [
+                "Afterglow",
+                "Lumen",
+                "1 h"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "w": 4,
+        "icon": "list",
+        "title": "Playlists",
+        "meta": "9 playlists · 2 public",
+        "blocks": [
+          {
+            "type": "table",
+            "cols": [
+              {
+                "l": "Playlist"
+              },
+              {
+                "l": "Tracks",
+                "w": 80
+              },
+              {
+                "l": "Visibility",
+                "w": 120
+              }
+            ],
+            "rows": [
+              [
+                {
+                  "t": "Road Trip ’26",
+                  "s": "1,108 followers"
+                },
+                "74",
+                {
+                  "tone": "up",
+                  "t": "Public"
+                }
+              ],
+              [
+                {
+                  "t": "FREE PROMO click bio",
+                  "s": "Reported · R-1041"
+                },
+                "3",
+                {
+                  "tone": "up",
+                  "t": "Public"
+                }
+              ],
+              [
+                {
+                  "t": "Late focus",
+                  "s": "Private"
+                },
+                "52",
+                {
+                  "tone": "flat",
+                  "t": "Private"
+                }
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "dialogs": {
+      "sessions": {
+        "tone": "warning",
+        "icon": "log-out",
+        "title": "Sign @driftwave out everywhere?",
+        "desc": "3 active sessions end now. They can sign in again with their password.",
+        "action": "Revoke sessions"
+      },
+      "deactivate": {
+        "tone": "error",
+        "icon": "x",
+        "title": "Deactivate @driftwave?",
+        "desc": "They are signed out and can’t sign in. Their playlists turn private. You can restore the account later.",
+        "action": "Deactivate",
+        "danger": true
+      }
+    },
+    "saving": "Saving…",
+    "notfound": {
+      "title": "Listener not found",
+      "desc": "This account doesn’t exist or was deleted. Go back to listeners."
+    },
+    "error": {
+      "title": "Couldn’t load this listener",
+      "desc": "The admin API didn’t respond. Nothing was changed."
+    },
+    "perm": "users:read"
+  },
+  "audit": {
+    "kind": "list",
+    "nav": "audit",
+    "route": "/audit (audit:read)",
+    "icon": "scroll",
+    "eyebrow": "SYSTEM · AUDIT LOG",
+    "title": "Audit log",
+    "sub": "Every change staff make, who made it and from where. Entries can’t be edited.",
+    "actions": [
+      {
+        "icon": "download",
+        "label": "Export CSV"
+      }
+    ],
+    "kpis": [
+      {
+        "icon": "scroll",
+        "tone": "info",
+        "label": "Actions today",
+        "value": "184",
+        "sub": "+22 vs yesterday"
+      },
+      {
+        "icon": "users",
+        "tone": "up",
+        "label": "Staff active today",
+        "value": "9",
+        "sub": "of 14 operators"
+      },
+      {
+        "icon": "flag",
+        "tone": "flat",
+        "label": "Moderation decisions",
+        "value": "27",
+        "sub": "Today"
+      },
+      {
+        "icon": "shield",
+        "tone": "warn",
+        "label": "Access changes",
+        "value": "2",
+        "sub": "This week"
+      }
+    ],
+    "search": "Search staff, action or entity",
+    "filters": [
+      {
+        "key": "entity",
+        "label": "Entity",
+        "value": "All",
+        "by": "s",
+        "options": [
+          [
+            "All",
+            null
+          ],
+          [
+            "Report",
+            [
+              "Report"
+            ]
+          ],
+          [
+            "Release",
+            [
+              "Release"
+            ]
+          ],
+          [
+            "Artist",
+            [
+              "Artist"
+            ]
+          ],
+          [
+            "Track",
+            [
+              "Track"
+            ]
+          ],
+          [
+            "Staff",
+            [
+              "Staff"
+            ]
+          ]
+        ]
+      }
+    ],
+    "cols": [
+      {
+        "k": "time",
+        "l": "Time",
+        "w": 110,
+        "sort": "desc"
+      },
+      {
+        "k": "who",
+        "l": "Who",
+        "w": 150
+      },
+      {
+        "k": "action",
+        "l": "Action"
+      },
+      {
+        "k": "entity",
+        "l": "Entity",
+        "w": 200,
+        "wide": true
+      },
+      {
+        "k": "from",
+        "l": "From",
+        "w": 150,
+        "wide": true
+      }
+    ],
+    "rows": [
+      {
+        "id": "a1",
+        "time": "09:41",
+        "who": "mara.ops",
+        "action": "Approved release",
+        "entity": {
+          "t": "Afterglow",
+          "s": "Release"
+        },
+        "from": "10.0.4.12 · Firefox"
+      },
+      {
+        "id": "a2",
+        "time": "09:23",
+        "who": "leo.mod",
+        "action": "Dismissed report",
+        "entity": {
+          "t": "R-1031",
+          "s": "Report · Low Orbit"
+        },
+        "from": "10.0.4.31 · Chrome"
+      },
+      {
+        "id": "a3",
+        "time": "08:40",
+        "who": "mara.ops",
+        "action": "Verified artist",
+        "entity": {
+          "t": "Kite Harbor",
+          "s": "Artist"
+        },
+        "from": "10.0.4.12 · Firefox"
+      },
+      {
+        "id": "a4",
+        "time": "08:12",
+        "who": "sam.ops",
+        "action": "Reprocessed track",
+        "entity": {
+          "t": "Late Signal",
+          "s": "Track"
+        },
+        "from": "10.0.5.7 · Firefox"
+      },
+      {
+        "id": "a5",
+        "time": "07:55",
+        "who": "mara.ops",
+        "action": "Changed role to Moderator",
+        "entity": {
+          "t": "ines.mod",
+          "s": "Staff"
+        },
+        "from": "10.0.4.12 · Firefox"
+      },
+      {
+        "id": "a6",
+        "time": "07:30",
+        "who": "leo.mod",
+        "action": "Resolved report",
+        "entity": {
+          "t": "R-1027",
+          "s": "Report · Afterglow"
+        },
+        "from": "10.0.4.31 · Chrome"
+      }
+    ],
+    "card": {
+      "title": "action",
+      "badge": null,
+      "meta": [
+        "who",
+        "time"
+      ]
+    },
+    "pager": "1–6 of 184 today",
+    "empty": {
+      "title": "Nothing logged yet",
+      "desc": "Staff actions appear here the moment they happen."
+    },
+    "noresults": {
+      "query": "ines",
+      "filter": {
+        "label": "Entity",
+        "value": "Release"
+      },
+      "title": "No release actions by “ines”",
+      "desc": "Try another name, or set Entity back to All."
+    },
+    "error": {
+      "title": "Couldn’t load the audit log",
+      "desc": "The admin API didn’t respond. Nothing was changed."
+    },
+    "perm": "audit:read"
+  },
+  "roles": {
+    "kind": "list",
+    "nav": "roles",
+    "route": "/roles (roles:read)",
+    "icon": "shield",
+    "eyebrow": "SYSTEM · ROLES",
+    "title": "Roles",
+    "sub": "Roles are templates: an operator holds permissions, a role is a starting set.",
+    "actions": [
+      {
+        "icon": "plus",
+        "label": "New role",
+        "primary": true,
+        "page": "role-editor"
+      }
+    ],
+    "kpis": [
+      {
+        "icon": "shield",
+        "tone": "info",
+        "label": "Roles",
+        "value": "5",
+        "sub": "1 protected"
+      },
+      {
+        "icon": "users",
+        "tone": "up",
+        "label": "Operators",
+        "value": "14",
+        "sub": "All hold a role"
+      },
+      {
+        "icon": "alert",
+        "tone": "warn",
+        "label": "Divergent",
+        "value": "2",
+        "sub": "Differ from their role"
+      },
+      {
+        "icon": "list",
+        "tone": "flat",
+        "label": "Permissions",
+        "value": "31",
+        "sub": "In 13 areas"
+      }
+    ],
+    "cols": [
+      {
+        "k": "role",
+        "l": "Role"
+      },
+      {
+        "k": "holders",
+        "l": "Holders",
+        "w": 90
+      },
+      {
+        "k": "divergent",
+        "l": "Divergent",
+        "w": 130
+      },
+      {
+        "k": "protected",
+        "l": "Protected",
+        "w": 120,
+        "wide": true
+      }
+    ],
+    "rows": [
+      {
+        "id": "super-admin",
+        "role": {
+          "t": "Super admin",
+          "s": "Everything, including staff and roles"
+        },
+        "holders": "2",
+        "divergent": {
+          "tone": "flat",
+          "t": "None"
+        },
+        "protected": {
+          "tone": "info",
+          "t": "Protected"
+        }
+      },
+      {
+        "id": "moderator",
+        "role": {
+          "t": "Moderator",
+          "s": "Reports, listeners and the audit log"
+        },
+        "holders": "5",
+        "divergent": {
+          "tone": "warn",
+          "t": "1 operator"
+        },
+        "protected": {
+          "tone": "flat",
+          "t": "No"
+        }
+      },
+      {
+        "id": "operations",
+        "role": {
+          "t": "Operations",
+          "s": "Catalog, releases and processing"
+        },
+        "holders": "4",
+        "divergent": {
+          "tone": "flat",
+          "t": "None"
+        },
+        "protected": {
+          "tone": "flat",
+          "t": "No"
+        }
+      },
+      {
+        "id": "catalog-editor",
+        "role": {
+          "t": "Catalog editor",
+          "s": "Albums, playlists, podcasts and genres"
+        },
+        "holders": "2",
+        "divergent": {
+          "tone": "warn",
+          "t": "1 operator"
+        },
+        "protected": {
+          "tone": "flat",
+          "t": "No"
+        }
+      },
+      {
+        "id": "read-only",
+        "role": {
+          "t": "Read-only",
+          "s": "Every section, no changes"
+        },
+        "holders": "1",
+        "divergent": {
+          "tone": "flat",
+          "t": "None"
+        },
+        "protected": {
+          "tone": "flat",
+          "t": "No"
+        }
+      }
+    ],
+    "card": {
+      "title": "role",
+      "badge": "protected",
+      "meta": [
+        "holders",
+        "divergent"
+      ]
+    },
+    "pager": "1–5 of 5",
+    "detail": "role-editor",
+    "after": [
+      {
+        "w": 4,
+        "icon": "list",
+        "title": "Permission catalogue",
+        "meta": "Who holds each permission",
+        "blocks": [
+          {
+            "type": "table",
+            "cols": [
+              {
+                "l": "Permission"
+              },
+              {
+                "l": "Area",
+                "w": 140,
+                "wide": true
+              },
+              {
+                "l": "Held by",
+                "w": 240
+              }
+            ],
+            "rows": [
+              [
+                "reports:write",
+                "Moderation",
+                "Super admin, Moderator"
+              ],
+              [
+                "releases:write",
+                "Releases",
+                "Super admin, Operations"
+              ],
+              [
+                "tracks:write",
+                "Catalog",
+                "Super admin, Operations"
+              ],
+              [
+                "users:write",
+                "Listeners",
+                "Super admin, Moderator"
+              ],
+              [
+                "staff:write",
+                "Staff",
+                "Super admin"
+              ],
+              [
+                "roles:write",
+                "Roles",
+                "Super admin"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "empty": {
+      "title": "No roles yet",
+      "desc": "Create a role to give new operators a starting set of permissions."
+    },
+    "noresults": {
+      "title": "No roles match",
+      "desc": "Clear the search to see every role."
+    },
+    "error": {
+      "title": "Couldn’t load roles",
+      "desc": "The admin API didn’t respond. Nothing was changed."
+    },
+    "perm": "roles:read"
+  },
+  "role-editor": {
+    "kind": "form",
+    "nav": "roles",
+    "route": "/roles/:id and /roles/new (roles:read; saving needs roles:write)",
+    "parent": "roles",
+    "hash": "roles/moderator",
+    "icon": "shield",
+    "eyebrow": "ROLES · EDIT",
+    "title": "Moderator",
+    "newTitle": "New role",
+    "newEyebrow": "ROLES · NEW",
+    "createLabel": "Create role",
+    "sub": "Changing a role changes the starting set for new operators. Current holders keep their permissions until you apply it.",
+    "actions": [
+      {
+        "icon": "x",
+        "label": "Delete",
+        "dialog": "delete"
+      },
+      {
+        "icon": "check",
+        "label": "Save changes",
+        "primary": true
+      }
+    ],
+    "form": {
+      "title": "Role",
+      "meta": "Name, purpose and permissions",
+      "fields": [
+        {
+          "k": "name",
+          "type": "text",
+          "label": "Name",
+          "value": "Moderator",
+          "placeholder": "e.g. Support",
+          "error": "Add a name",
+          "badValue": ""
+        },
+        {
+          "k": "description",
+          "type": "textarea",
+          "label": "Description",
+          "value": "Reports, listeners and the audit log.",
+          "placeholder": "What this role is for",
+          "hint": "Shown next to the role when assigning it"
+        },
+        {
+          "k": "perms",
+          "type": "perms",
+          "label": "Permissions",
+          "value": [
+            [
+              "Moderation",
+              [
+                [
+                  "reports:read",
+                  "See reports",
+                  true
+                ],
+                [
+                  "reports:write",
+                  "Resolve and reject reports",
+                  true
+                ]
+              ]
+            ],
+            [
+              "Accounts",
+              [
+                [
+                  "users:read",
+                  "See listeners",
+                  true
+                ],
+                [
+                  "users:write",
+                  "Deactivate listeners, revoke sessions",
+                  true
+                ],
+                [
+                  "artists:read",
+                  "See artists",
+                  true
+                ],
+                [
+                  "artists:write",
+                  "Verify and deactivate artists",
+                  false
+                ]
+              ]
+            ],
+            [
+              "Catalog",
+              [
+                [
+                  "tracks:read",
+                  "See tracks and processing",
+                  false
+                ],
+                [
+                  "releases:read",
+                  "See releases",
+                  false
+                ]
+              ]
+            ],
+            [
+              "System",
+              [
+                [
+                  "audit:read",
+                  "See the audit log",
+                  true
+                ],
+                [
+                  "staff:read",
+                  "See staff",
+                  false
+                ]
+              ]
+            ]
+          ],
+          "hint": "7 of 31 selected",
+          "error": "Pick at least one permission",
+          "badValue": []
+        }
+      ]
+    },
+    "tiles": [
+      {
+        "w": 2,
+        "icon": "users",
+        "existing": true,
+        "title": "Holders",
+        "meta": "5 operators",
+        "blocks": [
+          {
+            "type": "table",
+            "cols": [
+              {
+                "l": "Operator"
+              },
+              {
+                "l": "Matches role",
+                "w": 130
+              }
+            ],
+            "rows": [
+              [
+                {
+                  "t": "leo.mod",
+                  "s": "leo@bitrate.fm"
+                },
+                {
+                  "tone": "up",
+                  "t": "Yes"
+                }
+              ],
+              [
+                {
+                  "t": "ines.mod",
+                  "s": "ines@bitrate.fm"
+                },
+                {
+                  "tone": "warn",
+                  "t": "+ tracks:read"
+                }
+              ],
+              [
+                {
+                  "t": "kai.mod",
+                  "s": "kai@bitrate.fm"
+                },
+                {
+                  "tone": "up",
+                  "t": "Yes"
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "w": 2,
+        "icon": "eye",
+        "title": "Summary",
+        "meta": "What this role can do",
+        "blocks": [
+          {
+            "type": "kv",
+            "rows": [
+              [
+                "Permissions",
+                "7 of 31"
+              ],
+              [
+                "Areas",
+                "Moderation, Accounts, System"
+              ],
+              [
+                "Protected",
+                "No"
+              ]
+            ]
+          }
+        ],
+        "newBlocks": [
+          {
+            "type": "kv",
+            "rows": [
+              [
+                "Permissions",
+                "0 of 31"
+              ],
+              [
+                "Holders",
+                "None yet"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "dialogs": {
+      "delete": {
+        "tone": "error",
+        "icon": "x",
+        "title": "Delete Moderator?",
+        "desc": "5 operators keep their permissions but lose the role label. New operators can’t start from it.",
+        "action": "Delete role",
+        "danger": true
+      }
+    },
+    "saving": "Saving…",
+    "notfound": {
+      "title": "Role not found",
+      "desc": "This role doesn’t exist or was deleted. Go back to roles."
+    },
+    "error": {
+      "title": "Couldn’t load this role",
+      "desc": "The admin API didn’t respond. Nothing was changed."
+    },
+    "perm": "roles:write"
+  },
+  "staff": {
+    "kind": "list",
+    "nav": "staff",
+    "route": "/staff (staff:read)",
+    "icon": "id",
+    "eyebrow": "SYSTEM · STAFF",
+    "title": "Staff",
+    "sub": "Operators who can sign in to the admin console, with their role and access.",
+    "actions": [
+      {
+        "icon": "plus",
+        "label": "New operator",
+        "primary": true,
+        "page": "staff-create"
+      }
+    ],
+    "kpis": [
+      {
+        "icon": "id",
+        "tone": "info",
+        "label": "Operators",
+        "value": "14",
+        "sub": "2 super admins"
+      },
+      {
+        "icon": "check",
+        "tone": "up",
+        "label": "Active today",
+        "value": "9",
+        "sub": "Last sign-in 4 min ago"
+      },
+      {
+        "icon": "alert",
+        "tone": "warn",
+        "label": "Divergent access",
+        "value": "2",
+        "sub": "Differ from their role"
+      },
+      {
+        "icon": "mail",
+        "tone": "flat",
+        "label": "Invited",
+        "value": "1",
+        "sub": "Not signed in yet"
+      }
+    ],
+    "search": "Search username or email",
+    "cols": [
+      {
+        "k": "operator",
+        "l": "Operator",
+        "sort": "asc"
+      },
+      {
+        "k": "role",
+        "l": "Role",
+        "w": 150
+      },
+      {
+        "k": "state",
+        "l": "Status",
+        "w": 110
+      },
+      {
+        "k": "seen",
+        "l": "Last active",
+        "w": 130,
+        "wide": true
+      }
+    ],
+    "rows": [
+      {
+        "id": "ines",
+        "operator": {
+          "t": "ines.mod",
+          "s": "ines@bitrate.fm"
+        },
+        "role": "Moderator",
+        "state": {
+          "tone": "up",
+          "t": "Active"
+        },
+        "seen": "2 h"
+      },
+      {
+        "id": "kai",
+        "operator": {
+          "t": "kai.mod",
+          "s": "kai@bitrate.fm"
+        },
+        "role": "Moderator",
+        "state": {
+          "tone": "up",
+          "t": "Active"
+        },
+        "seen": "Yesterday"
+      },
+      {
+        "id": "leo",
+        "operator": {
+          "t": "leo.mod",
+          "s": "leo@bitrate.fm"
+        },
+        "role": "Moderator",
+        "state": {
+          "tone": "up",
+          "t": "Active"
+        },
+        "seen": "18 min"
+      },
+      {
+        "id": "mara",
+        "operator": {
+          "t": "mara.ops",
+          "s": "mara.ops@bitrate.fm"
+        },
+        "role": "Super admin",
+        "state": {
+          "tone": "up",
+          "t": "Active"
+        },
+        "seen": "now"
+      },
+      {
+        "id": "noor",
+        "operator": {
+          "t": "noor.cat",
+          "s": "noor@bitrate.fm"
+        },
+        "role": "Catalog editor",
+        "state": {
+          "tone": "warn",
+          "t": "Invited"
+        },
+        "seen": "—"
+      },
+      {
+        "id": "sam",
+        "operator": {
+          "t": "sam.ops",
+          "s": "sam@bitrate.fm"
+        },
+        "role": "Operations",
+        "state": {
+          "tone": "up",
+          "t": "Active"
+        },
+        "seen": "1 h"
+      }
+    ],
+    "card": {
+      "title": "operator",
+      "badge": "state",
+      "meta": [
+        "role",
+        "seen"
+      ]
+    },
+    "pager": "1–6 of 14",
+    "detail": "staff-member",
+    "empty": {
+      "title": "No operators yet",
+      "desc": "Invite the first operator to share the work."
+    },
+    "noresults": {
+      "query": "zoe",
+      "title": "No operators match “zoe”",
+      "desc": "Try another username or email."
+    },
+    "error": {
+      "title": "Couldn’t load staff",
+      "desc": "The admin API didn’t respond. Nothing was changed."
+    },
+    "perm": "staff:read"
+  },
+  "staff-create": {
+    "kind": "form",
+    "nav": "staff",
+    "route": "/staff/new (staff:write)",
+    "parent": "staff",
+    "hash": "staff/new",
+    "icon": "id",
+    "eyebrow": "STAFF · NEW OPERATOR",
+    "title": "New operator",
+    "newOnly": true,
+    "sub": "They get an email with a link to sign in. Permissions start from the role; change any of them now or later.",
+    "actions": [
+      {
+        "icon": "check",
+        "label": "Create operator",
+        "primary": true
+      }
+    ],
+    "form": {
+      "title": "Operator",
+      "meta": "Account, role and access",
+      "fields": [
+        {
+          "k": "email",
+          "pattern": "^[^@ ]+@[^@ ]+[.][a-z]{2,}$",
+          "type": "text",
+          "label": "Email",
+          "value": "zoe@bitrate.fm",
+          "placeholder": "name@bitrate.fm",
+          "error": "Enter a work email",
+          "badValue": "zoe@gmail"
+        },
+        {
+          "k": "username",
+          "taken": [
+            "leo.mod",
+            "mara.ops",
+            "sam.ops"
+          ],
+          "type": "text",
+          "label": "Username",
+          "value": "zoe.mod",
+          "placeholder": "name.team",
+          "hint": "Shown in the audit log",
+          "error": "This username is taken",
+          "badValue": "leo.mod"
+        },
+        {
+          "k": "password",
+          "type": "text",
+          "label": "Temporary password",
+          "value": "••••••••••••",
+          "placeholder": "At least 12 characters",
+          "hint": "They change it on first sign-in"
+        },
+        {
+          "k": "role",
+          "type": "select",
+          "label": "Role",
+          "value": "Moderator",
+          "options": [
+            "Super admin",
+            "Moderator",
+            "Operations",
+            "Catalog editor",
+            "Read-only"
+          ]
+        },
+        {
+          "k": "perms",
+          "type": "perms",
+          "label": "Permissions",
+          "value": [
+            [
+              "Moderation",
+              [
+                [
+                  "reports:read",
+                  "See reports",
+                  true
+                ],
+                [
+                  "reports:write",
+                  "Resolve and reject reports",
+                  true
+                ]
+              ]
+            ],
+            [
+              "Accounts",
+              [
+                [
+                  "users:read",
+                  "See listeners",
+                  true
+                ],
+                [
+                  "users:write",
+                  "Deactivate listeners, revoke sessions",
+                  true
+                ],
+                [
+                  "artists:read",
+                  "See artists",
+                  true
+                ],
+                [
+                  "artists:write",
+                  "Verify and deactivate artists",
+                  false
+                ]
+              ]
+            ],
+            [
+              "Catalog",
+              [
+                [
+                  "tracks:read",
+                  "See tracks and processing",
+                  false
+                ],
+                [
+                  "releases:read",
+                  "See releases",
+                  false
+                ]
+              ]
+            ],
+            [
+              "System",
+              [
+                [
+                  "audit:read",
+                  "See the audit log",
+                  true
+                ],
+                [
+                  "staff:read",
+                  "See staff",
+                  false
+                ]
+              ]
+            ]
+          ],
+          "hint": "From Moderator · 7 of 31"
+        }
+      ]
+    },
+    "tiles": [
+      {
+        "w": 2,
+        "icon": "mail",
+        "title": "Invitation",
+        "meta": "What they receive",
+        "blocks": [
+          {
+            "type": "quote",
+            "t": "“mara.ops added you to Bitrate Admin as a Moderator. Sign in with your temporary password within 7 days.”"
+          },
+          {
+            "type": "kv",
+            "rows": [
+              [
+                "Link expires",
+                "in 7 days"
+              ],
+              [
+                "Two-step sign-in",
+                "Required"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "saving": "Creating…",
+    "notfound": {
+      "title": "Page not found",
+      "desc": "Go back to staff."
+    },
+    "error": {
+      "title": "Couldn’t load roles",
+      "desc": "The form needs the role list. Nothing was changed."
+    },
+    "perm": "staff:write"
+  },
+  "staff-member": {
+    "kind": "detail",
+    "nav": "staff",
+    "route": "/staff/:id (staff:read; changes need staff:write)",
+    "parent": "staff",
+    "hash": "staff/ines",
+    "icon": "id",
+    "eyebrow": "STAFF · OPERATOR",
+    "title": "ines.mod",
+    "status": {
+      "tone": "up",
+      "t": "Active"
+    },
+    "sub": "ines@bitrate.fm · Moderator · added by mara.ops on Mar 4, 2026",
+    "actions": [
+      {
+        "icon": "shield",
+        "label": "Change role",
+        "dialog": "role"
+      },
+      {
+        "icon": "x",
+        "label": "Deactivate",
+        "primary": true,
+        "danger": true,
+        "dialog": "deactivate"
+      }
+    ],
+    "tiles": [
+      {
+        "w": 2,
+        "icon": "id",
+        "title": "Operator",
+        "meta": "Account",
+        "blocks": [
+          {
+            "type": "kv",
+            "rows": [
+              [
+                "Username",
+                "ines.mod"
+              ],
+              [
+                "Email",
+                "ines@bitrate.fm"
+              ],
+              [
+                "Role",
+                "Moderator"
+              ],
+              [
+                "Two-step sign-in",
+                "On"
+              ],
+              [
+                "Last active",
+                "2 h ago"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "w": 2,
+        "icon": "scroll",
+        "title": "Recent actions",
+        "meta": "From the audit log",
+        "blocks": [
+          {
+            "type": "feed",
+            "items": [
+              [
+                "Resolved report R-1024",
+                "2 h"
+              ],
+              [
+                "Dismissed report R-1019",
+                "Yesterday"
+              ],
+              [
+                "Deactivated @promo_bot",
+                "Oct 18"
+              ]
+            ]
+          }
+        ],
+        "link": "Open audit log"
+      },
+      {
+        "w": 4,
+        "icon": "shield",
+        "title": "Permissions",
+        "meta": "Moderator + 1 extra",
+        "blocks": [
+          {
+            "type": "perms",
+            "groups": [
+              [
+                "Moderation",
+                [
+                  [
+                    "reports:read",
+                    "See reports",
+                    true
+                  ],
+                  [
+                    "reports:write",
+                    "Resolve and reject reports",
+                    true
+                  ]
+                ]
+              ],
+              [
+                "Accounts",
+                [
+                  [
+                    "users:read",
+                    "See listeners",
+                    true
+                  ],
+                  [
+                    "users:write",
+                    "Deactivate listeners, revoke sessions",
+                    true
+                  ]
+                ]
+              ],
+              [
+                "Catalog",
+                [
+                  [
+                    "tracks:read",
+                    "See tracks and processing",
+                    true,
+                    "Not in Moderator"
+                  ]
+                ]
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "dialogs": {
+      "role": {
+        "tone": "warning",
+        "icon": "shield",
+        "title": "Change ines.mod’s role?",
+        "desc": "Permissions reset to the new role’s set. The extra tracks:read goes away unless you add it back.",
+        "select": {
+          "label": "New role",
+          "value": "Operations"
+        },
+        "action": "Change role"
+      },
+      "deactivate": {
+        "tone": "error",
+        "icon": "x",
+        "title": "Deactivate ines.mod?",
+        "desc": "They are signed out and can’t sign in. Their audit history stays. You can restore the account later.",
+        "action": "Deactivate",
+        "danger": true
+      }
+    },
+    "saving": "Saving…",
+    "notfound": {
+      "title": "Operator not found",
+      "desc": "This operator doesn’t exist or was removed. Go back to staff."
+    },
+    "error": {
+      "title": "Couldn’t load this operator",
+      "desc": "The admin API didn’t respond. Nothing was changed."
+    },
+    "perm": "staff:read"
+  },
+  "login": {
+    "kind": "auth",
+    "route": "/login (public)",
+    "hash": "login",
+    "icon": "lock",
+    "title": "Sign in to Bitrate Admin",
+    "sub": "For Bitrate staff. Use your work account.",
+    "fields": [
+      {
+        "k": "email",
+        "type": "text",
+        "label": "Work email",
+        "pattern": "^[^@ ]+@[^@ ]+[.][a-z]{2,}$",
+        "value": "mara.ops@bitrate.fm",
+        "placeholder": "name@bitrate.fm",
+        "error": "Enter your work email",
+        "badValue": "mara.ops@"
+      },
+      {
+        "k": "password",
+        "type": "text",
+        "label": "Password",
+        "secret": true,
+        "value": "••••••••••••",
+        "placeholder": "Your password",
+        "error": "Enter your password",
+        "badValue": ""
+      }
+    ],
+    "remember": {
+      "label": "Keep me signed in",
+      "desc": "On this device for 30 days"
+    },
+    "action": {
+      "icon": "right",
+      "label": "Sign in"
+    },
+    "saving": "Signing in…",
+    "footer": "Trouble signing in? Ask a super admin to reset your password.",
+    "notices": {
+      "wrong": {
+        "tone": "error",
+        "t": "Email or password is wrong. 3 tries left before a 15-minute pause."
+      },
+      "locked": {
+        "tone": "error",
+        "t": "Too many attempts. Try again in 15 minutes, or ask a super admin."
+      },
+      "expired": {
+        "tone": "info",
+        "t": "Your session ended. Sign in again to pick up where you left off."
+      },
+      "offline": {
+        "tone": "warning",
+        "t": "You’re offline. Sign-in needs a connection."
+      }
+    },
+    "states": [
+      "blank",
+      "errors",
+      "saving",
+      "wrong",
+      "locked",
+      "expired",
+      "offline"
+    ]
+  },
+  "no-access": {
+    "kind": "auth",
+    "route": "/no-access (staff session, no sections)",
+    "hash": "no-access",
+    "icon": "lock",
+    "title": "No sections yet",
+    "sub": "You’re signed in as noor.cat, but your account doesn’t include any section of the console yet. A super admin can give you a role.",
+    "kv": [
+      [
+        "Signed in as",
+        "noor.cat · noor@bitrate.fm"
+      ],
+      [
+        "Role",
+        "None"
+      ],
+      [
+        "Super admins",
+        "mara.ops, sam.ops"
+      ]
+    ],
+    "action": {
+      "icon": "refresh",
+      "label": "Check again"
+    },
+    "secondary": {
+      "icon": "log-out",
+      "label": "Sign out"
+    },
+    "saving": "Checking…",
+    "notices": {
+      "offline": {
+        "tone": "warning",
+        "t": "You’re offline. Reconnect to check your access."
+      }
+    },
+    "states": [
+      "saving",
+      "offline"
+    ]
   }
 }
 const LIST_STATES = ["loading","empty","noresults","selected","error","restricted","offline"]
@@ -4683,7 +7074,14 @@ const STATE_LABEL = {
   "bulk": "Confirm bulk action",
   "takedown": "Take down",
   "private": "Make private",
-  "delete": "Delete"
+  "delete": "Delete",
+  "sessions": "Revoke sessions",
+  "deactivate": "Deactivate",
+  "role": "Change role",
+  "blank": "Empty",
+  "wrong": "Wrong password",
+  "locked": "Locked out",
+  "expired": "Session expired"
 }
 const RESOURCES_UK = {
   "OPERATIONS · MODERATION": "ОПЕРАЦІЇ · МОДЕРАЦІЯ",
@@ -5048,6 +7446,270 @@ const RESOURCES_UK = {
   "Fix 2 fields to save": "Виправте 2 поля, щоб зберегти",
   "Saved · just now": "Збережено · щойно",
   "Create genre": "Створити жанр",
+  "Active": "Активний",
+  "Deactivated": "Деактивовано",
+  "Verified": "Підтверджено",
+  "Not verified": "Не підтверджено",
+  "Revoke sessions": "Завершити сеанси",
+  "Deactivate": "Деактивувати",
+  "ACCOUNTS · ARTISTS": "АКАУНТИ · АРТИСТИ",
+  "Artist accounts, their verification and what they have released.": "Акаунти артистів, їхня верифікація та релізи.",
+  "+1.4% this week": "+1,4% цього тижня",
+  "82% of artists": "82% артистів",
+  "Waiting for verification": "Чекають верифікації",
+  "Oldest 5 days": "Найстаріший 5 днів",
+  "Search name or email": "Пошук за назвою або поштою",
+  "Joined": "Приєднався",
+  "No artists yet": "Артистів ще немає",
+  "Artist accounts appear here as people sign up.": "Акаунти артистів з’являтимуться тут після реєстрації.",
+  "No artists match “harbour”": "Жоден артист не відповідає «harbour»",
+  "Try another name or email, or clear the filters.": "Спробуйте інше ім’я чи пошту або скиньте фільтри.",
+  "Couldn’t load artists": "Не вдалося завантажити артистів",
+  "ARTISTS · ACCOUNT": "АРТИСТИ · АКАУНТ",
+  "kite@harbortapes.fm · joined Nov 18, 2024 · Lisbon, PT": "kite@harbortapes.fm · з 18 лист. 2024 · Лісабон, PT",
+  "Profile": "Профіль",
+  "Account and verification": "Акаунт і верифікація",
+  "Username": "Ім’я користувача",
+  "Two-step sign-in": "Двоетапний вхід",
+  "On": "Увімкнено",
+  "Activity": "Активність",
+  "Monthly listeners": "Слухачів за місяць",
+  "Releases": "Релізи",
+  "Last upload": "Останнє завантаження",
+  "2 days ago": "2 дні тому",
+  "23 tracks": "23 треки",
+  "Active sessions": "Активні сеанси",
+  "2 devices": "2 пристрої",
+  "Device": "Пристрій",
+  "Last active": "Остання активність",
+  "1 report": "1 скарга",
+  "Sign Kite Harbor out everywhere?": "Вийти з усіх пристроїв Kite Harbor?",
+  "2 active sessions end now. They can sign in again with their password.": "2 активні сеанси завершаться зараз. Увійти знову можна з паролем.",
+  "Deactivate Kite Harbor?": "Деактивувати Kite Harbor?",
+  "Their profile and releases disappear for listeners and they can’t sign in. You can restore the account later.": "Профіль і релізи зникнуть для слухачів, а увійти не вийде. Акаунт можна відновити пізніше.",
+  "Artist not found": "Артиста не знайдено",
+  "This account doesn’t exist or was deleted. Go back to artists.": "Такого акаунта немає або його видалено. Поверніться до артистів.",
+  "Couldn’t load this artist": "Не вдалося завантажити артиста",
+  "ACCOUNTS · LISTENERS": "АКАУНТИ · СЛУХАЧІ",
+  "Listener accounts: who they are, whether they confirmed their email, how they use Bitrate.": "Акаунти слухачів: хто вони, чи підтвердили пошту, як користуються Bitrate.",
+  "412 new this week": "412 нових цього тижня",
+  "Active this week": "Активні цього тижня",
+  "64% of listeners": "64% слухачів",
+  "Unconfirmed email": "Пошту не підтверджено",
+  "Older than 7 days: 211": "Старших за 7 днів: 211",
+  "Search username or email": "Пошук за іменем або поштою",
+  "Confirmed": "Підтверджено",
+  "Unconfirmed": "Не підтверджено",
+  "Deactivate 2 listeners?": "Деактивувати 2 слухачів?",
+  "They are signed out and can’t sign in. Their playlists turn private. You can restore the accounts later.": "Їх буде виведено з акаунтів без можливості увійти. Плейлисти стануть приватними. Акаунти можна відновити.",
+  "Deactivate 2 listeners": "Деактивувати 2 слухачів",
+  "Deactivate 1 listener?": "Деактивувати 1 слухача?",
+  "Deactivate 1 listener": "Деактивувати 1 слухача",
+  "Deactivating…": "Деактивую…",
+  "No listeners yet": "Слухачів ще немає",
+  "Listener accounts appear here as people sign up.": "Акаунти слухачів з’являтимуться тут після реєстрації.",
+  "No listeners match “zz”": "Жоден слухач не відповідає «zz»",
+  "Try another username or email, or clear the filter.": "Спробуйте інше ім’я чи пошту або скиньте фільтр.",
+  "Couldn’t load listeners": "Не вдалося завантажити слухачів",
+  "LISTENERS · ACCOUNT": "СЛУХАЧІ · АКАУНТ",
+  "drift.wave@gmail.com · joined Jun 2, 2026 · Berlin, DE": "drift.wave@gmail.com · з 2 черв. 2026 · Берлін, DE",
+  "Since joining": "Від реєстрації",
+  "Listening time": "Час прослуховування",
+  "Liked tracks": "Вподобані треки",
+  "Reports filed": "Подано скарг",
+  "Reports against": "Скарг на акаунт",
+  "1 open": "1 відкрита",
+  "3 devices": "3 пристрої",
+  "Listening history": "Історія прослуховування",
+  "Latest first": "Спершу нові",
+  "Listened": "Слухав",
+  "Playlists": "Плейлисти",
+  "9 playlists · 2 public": "9 плейлистів · 2 публічні",
+  "Sign @driftwave out everywhere?": "Вийти з усіх пристроїв @driftwave?",
+  "3 active sessions end now. They can sign in again with their password.": "3 активні сеанси завершаться зараз. Увійти знову можна з паролем.",
+  "Deactivate @driftwave?": "Деактивувати @driftwave?",
+  "They are signed out and can’t sign in. Their playlists turn private. You can restore the account later.": "Слухача буде виведено без можливості увійти. Плейлисти стануть приватними. Акаунт можна відновити.",
+  "Listener not found": "Слухача не знайдено",
+  "This account doesn’t exist or was deleted. Go back to listeners.": "Такого акаунта немає або його видалено. Поверніться до слухачів.",
+  "Couldn’t load this listener": "Не вдалося завантажити слухача",
+  "SYSTEM · AUDIT LOG": "СИСТЕМА · ЖУРНАЛ АУДИТУ",
+  "Every change staff make, who made it and from where. Entries can’t be edited.": "Кожна зміна персоналу: хто її зробив і звідки. Записи не можна редагувати.",
+  "Actions today": "Дій сьогодні",
+  "+22 vs yesterday": "+22 до вчора",
+  "Staff active today": "Персоналу активно сьогодні",
+  "of 14 operators": "з 14 операторів",
+  "Moderation decisions": "Рішення модерації",
+  "Today": "Сьогодні",
+  "Access changes": "Зміни доступу",
+  "This week": "Цього тижня",
+  "Search staff, action or entity": "Пошук за персоналом, дією чи об’єктом",
+  "Entity": "Об’єкт",
+  "Staff": "Персонал",
+  "Time": "Час",
+  "Who": "Хто",
+  "Action": "Дія",
+  "From": "Звідки",
+  "Approved release": "Схвалив реліз",
+  "Dismissed report": "Відхилив скаргу",
+  "Verified artist": "Верифікував артиста",
+  "Reprocessed track": "Повторно обробив трек",
+  "Changed role to Moderator": "Змінив роль на «Модератор»",
+  "Resolved report": "Вирішив скаргу",
+  "Nothing logged yet": "Записів ще немає",
+  "Staff actions appear here the moment they happen.": "Дії персоналу з’являються тут одразу.",
+  "No release actions by “ines”": "Немає дій із релізами від «ines»",
+  "Try another name, or set Entity back to All.": "Спробуйте інше ім’я або поверніть фільтр «Усі».",
+  "Couldn’t load the audit log": "Не вдалося завантажити журнал аудиту",
+  "SYSTEM · ROLES": "СИСТЕМА · РОЛІ",
+  "Roles are templates: an operator holds permissions, a role is a starting set.": "Ролі — це шаблони: дозволи має оператор, а роль — лише стартовий набір.",
+  "New role": "Нова роль",
+  "1 protected": "1 захищена",
+  "Operators": "Оператори",
+  "All hold a role": "Усі мають роль",
+  "Divergent": "Відхилення",
+  "Differ from their role": "Відрізняються від ролі",
+  "Permissions": "Дозволи",
+  "In 13 areas": "У 13 розділах",
+  "Role": "Роль",
+  "Holders": "Власники",
+  "Protected": "Захищена",
+  "Everything, including staff and roles": "Усе, зокрема персонал і ролі",
+  "Reports, listeners and the audit log": "Скарги, слухачі й журнал аудиту",
+  "Operations": "Операції",
+  "Catalog, releases and processing": "Каталог, релізи й обробка",
+  "Catalog editor": "Редактор каталогу",
+  "Albums, playlists, podcasts and genres": "Альбоми, плейлисти, подкасти й жанри",
+  "Read-only": "Лише перегляд",
+  "Every section, no changes": "Усі розділи без змін",
+  "1 operator": "1 оператор",
+  "Permission catalogue": "Каталог дозволів",
+  "Who holds each permission": "Хто має кожен дозвіл",
+  "Permission": "Дозвіл",
+  "Area": "Розділ",
+  "Held by": "Мають",
+  "No roles yet": "Ролей ще немає",
+  "Create a role to give new operators a starting set of permissions.": "Створіть роль, щоб нові оператори отримували стартовий набір дозволів.",
+  "No roles match": "Жодна роль не відповідає",
+  "Clear the search to see every role.": "Скиньте пошук, щоб побачити всі ролі.",
+  "Couldn’t load roles": "Не вдалося завантажити ролі",
+  "ROLES · EDIT": "РОЛІ · РЕДАГУВАННЯ",
+  "ROLES · NEW": "РОЛІ · НОВА",
+  "Create role": "Створити роль",
+  "Changing a role changes the starting set for new operators. Current holders keep their permissions until you apply it.": "Зміна ролі змінює стартовий набір для нових операторів. Поточні власники зберігають дозволи, доки ви не застосуєте зміни.",
+  "Name, purpose and permissions": "Назва, призначення й дозволи",
+  "e.g. Support": "напр. Підтримка",
+  "What this role is for": "Для чого ця роль",
+  "Shown next to the role when assigning it": "Показується поруч із роллю під час призначення",
+  "7 of 31 selected": "Обрано 7 з 31",
+  "Pick at least one permission": "Оберіть хоча б один дозвіл",
+  "See reports": "Бачити скарги",
+  "Resolve and reject reports": "Вирішувати й відхиляти скарги",
+  "See listeners": "Бачити слухачів",
+  "Deactivate listeners, revoke sessions": "Деактивувати слухачів, завершувати сеанси",
+  "See artists": "Бачити артистів",
+  "Verify and deactivate artists": "Верифікувати й деактивувати артистів",
+  "See tracks and processing": "Бачити треки й обробку",
+  "See releases": "Бачити релізи",
+  "See the audit log": "Бачити журнал аудиту",
+  "See staff": "Бачити персонал",
+  "Accounts": "Акаунти",
+  "System": "Система",
+  "5 operators": "5 операторів",
+  "Operator": "Оператор",
+  "Matches role": "Відповідає ролі",
+  "Yes": "Так",
+  "Summary": "Підсумок",
+  "What this role can do": "Що може ця роль",
+  "7 of 31": "7 з 31",
+  "0 of 31": "0 з 31",
+  "Areas": "Розділи",
+  "Moderation, Accounts, System": "Модерація, Акаунти, Система",
+  "None yet": "Поки немає",
+  "Delete Moderator?": "Видалити «Модератор»?",
+  "5 operators keep their permissions but lose the role label. New operators can’t start from it.": "5 операторів збережуть дозволи, але втратять назву ролі. Нові оператори не зможуть почати з неї.",
+  "Delete role": "Видалити роль",
+  "Role not found": "Роль не знайдено",
+  "This role doesn’t exist or was deleted. Go back to roles.": "Такої ролі немає або її видалено. Поверніться до ролей.",
+  "Couldn’t load this role": "Не вдалося завантажити роль",
+  "SYSTEM · STAFF": "СИСТЕМА · ПЕРСОНАЛ",
+  "Operators who can sign in to the admin console, with their role and access.": "Оператори, які можуть входити в консоль, з їхньою роллю й доступом.",
+  "New operator": "Новий оператор",
+  "2 super admins": "2 суперадміни",
+  "Active today": "Активні сьогодні",
+  "Last sign-in 4 min ago": "Останній вхід 4 хв тому",
+  "Divergent access": "Відмінний доступ",
+  "Invited": "Запрошено",
+  "Not signed in yet": "Ще не входили",
+  "Yesterday": "Учора",
+  "No operators yet": "Операторів ще немає",
+  "Invite the first operator to share the work.": "Запросіть першого оператора, щоб розділити роботу.",
+  "No operators match “zoe”": "Жоден оператор не відповідає «zoe»",
+  "Try another username or email.": "Спробуйте інше ім’я чи пошту.",
+  "Couldn’t load staff": "Не вдалося завантажити персонал",
+  "STAFF · NEW OPERATOR": "ПЕРСОНАЛ · НОВИЙ ОПЕРАТОР",
+  "They get an email with a link to sign in. Permissions start from the role; change any of them now or later.": "Оператор отримає лист із посиланням для входу. Дозволи беруться з ролі; змінити їх можна зараз або пізніше.",
+  "Create operator": "Створити оператора",
+  "Account, role and access": "Акаунт, роль і доступ",
+  "Enter a work email": "Вкажіть робочу пошту",
+  "Shown in the audit log": "Показується в журналі аудиту",
+  "This username is taken": "Це ім’я вже зайняте",
+  "Temporary password": "Тимчасовий пароль",
+  "At least 12 characters": "Щонайменше 12 символів",
+  "They change it on first sign-in": "Його треба змінити під час першого входу",
+  "From Moderator · 7 of 31": "З ролі «Модератор» · 7 з 31",
+  "Invitation": "Запрошення",
+  "What they receive": "Що отримає оператор",
+  "“mara.ops added you to Bitrate Admin as a Moderator. Sign in with your temporary password within 7 days.”": "«mara.ops додала вас у Bitrate Admin як модератора. Увійдіть із тимчасовим паролем протягом 7 днів.»",
+  "Link expires": "Посилання діє",
+  "in 7 days": "7 днів",
+  "Required": "Обов’язковий",
+  "Creating…": "Створюю…",
+  "Page not found": "Сторінку не знайдено",
+  "Go back to staff.": "Поверніться до персоналу.",
+  "The form needs the role list. Nothing was changed.": "Формі потрібен список ролей. Нічого не змінено.",
+  "STAFF · OPERATOR": "ПЕРСОНАЛ · ОПЕРАТОР",
+  "ines@bitrate.fm · Moderator · added by mara.ops on Mar 4, 2026": "ines@bitrate.fm · Модератор · додала mara.ops 4 бер. 2026",
+  "Change role": "Змінити роль",
+  "Account": "Акаунт",
+  "2 h ago": "2 год тому",
+  "Recent actions": "Останні дії",
+  "From the audit log": "З журналу аудиту",
+  "Resolved report R-1024": "Вирішила скаргу R-1024",
+  "Dismissed report R-1019": "Відхилила скаргу R-1019",
+  "Deactivated @promo_bot": "Деактивувала @promo_bot",
+  "Open audit log": "Відкрити журнал аудиту",
+  "Moderator + 1 extra": "Модератор + 1 додатковий",
+  "Not in Moderator": "Немає в ролі «Модератор»",
+  "Change ines.mod’s role?": "Змінити роль ines.mod?",
+  "Permissions reset to the new role’s set. The extra tracks:read goes away unless you add it back.": "Дозволи скинуться до набору нової ролі. Додатковий tracks:read зникне, якщо не додати його знову.",
+  "Deactivate ines.mod?": "Деактивувати ines.mod?",
+  "They are signed out and can’t sign in. Their audit history stays. You can restore the account later.": "Оператора буде виведено без можливості увійти. Історія в аудиті залишиться. Акаунт можна відновити.",
+  "Operator not found": "Оператора не знайдено",
+  "This operator doesn’t exist or was removed. Go back to staff.": "Такого оператора немає або його видалено. Поверніться до персоналу.",
+  "Couldn’t load this operator": "Не вдалося завантажити оператора",
+  "Sign in to Bitrate Admin": "Вхід у Bitrate Admin",
+  "For Bitrate staff. Use your work account.": "Для персоналу Bitrate. Використовуйте робочий акаунт.",
+  "Work email": "Робоча пошта",
+  "Enter your work email": "Вкажіть робочу пошту",
+  "Password": "Пароль",
+  "Your password": "Ваш пароль",
+  "Enter your password": "Вкажіть пароль",
+  "Keep me signed in": "Не виходити",
+  "On this device for 30 days": "На цьому пристрої 30 днів",
+  "Sign in": "Увійти",
+  "Signing in…": "Входжу…",
+  "Trouble signing in? Ask a super admin to reset your password.": "Не вдається увійти? Попросіть суперадміна скинути пароль.",
+  "Email or password is wrong. 3 tries left before a 15-minute pause.": "Неправильна пошта або пароль. Залишилося 3 спроби до паузи на 15 хвилин.",
+  "Too many attempts. Try again in 15 minutes, or ask a super admin.": "Забагато спроб. Спробуйте за 15 хвилин або зверніться до суперадміна.",
+  "Your session ended. Sign in again to pick up where you left off.": "Сеанс завершився. Увійдіть знову, щоб продовжити.",
+  "You’re offline. Sign-in needs a connection.": "Ви офлайн. Для входу потрібне з’єднання.",
+  "No sections yet": "Розділів поки немає",
+  "You’re signed in as noor.cat, but your account doesn’t include any section of the console yet. A super admin can give you a role.": "Ви увійшли як noor.cat, але ваш акаунт поки не має жодного розділу консолі. Суперадмін може призначити вам роль.",
+  "Signed in as": "Ви увійшли як",
+  "Super admins": "Суперадміни",
+  "Check again": "Перевірити ще раз",
+  "Checking…": "Перевіряю…",
+  "You’re offline. Reconnect to check your access.": "Ви офлайн. Підключіться, щоб перевірити доступ.",
   "Cancel": "Скасувати",
   "Clear filters": "Скинути фільтри",
   "Clear selection": "Зняти виділення",
@@ -5066,6 +7728,8 @@ const RESOURCES_UK = {
   "Select": "Вибрати",
   "No results for": "Нічого не знайдено за запитом",
   "Prototype only": "Лише прототип",
+  "Signed in": "Ви увійшли",
+  "Still no sections": "Розділів досі немає",
   "Play": "Відтворити",
   "All statuses": "Усі статуси",
   "Playlist": "Плейлист",
@@ -5096,9 +7760,14 @@ const pagerText = (s) => s.replace(' of ', ` ${t('of')} `)
 const dialogKeys = (sp) => Object.entries(sp.dialogs ?? {}).flatMap(([k, d]) => (d.field ? [k, 'invalid'] : [k]))
 const resViews = (p) => {
   const sp = RESOURCES[p]
-  if (sp.kind === 'list') return ['default', ...LIST_STATES.filter((v) => v !== 'selected' || sp.select), ...dialogKeys(sp)]
-  return ['default', ...(sp.kind === 'form' ? FORM_STATES : DETAIL_STATES).flatMap((s) => (s === 'dialogs' ? dialogKeys(sp) : [s]))]
+  if (sp.kind === 'auth') return ['default', ...sp.states]
+  if (sp.kind === 'list') return ['default', ...LIST_STATES.filter((v) => (v !== 'selected' || sp.select) && (v !== 'noresults' || sp.search || sp.filters)), ...dialogKeys(sp)]
+  const base = sp.kind === 'form' ? FORM_STATES.filter((v) => !(sp.newOnly && v === 'notfound')) : DETAIL_STATES
+  return ['default', ...base.flatMap((s) => (s === 'dialogs' ? dialogKeys(sp) : [s]))]
 }
+/* permission groups: read-only on detail pages, checkboxes in editors */
+const permRows = (groups, live) =>
+  groups.map(([g, items], gi) => `<div class="rpg"><h5>${t(g)}</h5>${items.map(([k, d, on, note], i) => `<div class="rperm">${live ? `<button type="button" class="ck${on ? ' on' : ''}" role="checkbox" aria-checked="${on}" aria-label="${k}" data-perm="${gi}|${i}">${ico('tick')}</button>` : `<span class="ck${on ? ' on' : ''}">${ico('tick')}</span>`}<div class="tx"><b>${k}</b><small>${t(d)}</small></div>${note ? `<span class="delta warn">${t(note)}</span>` : ''}</div>`).join('')}</div>`).join('')
 
 /* the header: back link on detail pages, the title with its status, the page's own actions */
 const isNew = (sp, st) => sp.kind === 'form' && (st.view === 'new' || (st.fresh && ['errors', 'saving', 'offline'].includes(st.view)))
@@ -5116,8 +7785,8 @@ function resHead(sp, st, { actions = true, title } = {}) {
         return `<button type="button" class="pill ${a.danger && a.primary ? 'danger' : a.primary ? 'primary' : 'ghost'}${saving ? ' busy' : ''}"${does}${busy || off ? ' disabled' : ''}>${ico(saving ? 'refresh' : a.icon)}${t(label)}</button>`
       }).join('')}</div>`
     : ''
-  const name = title ?? (fresh ? sp.newTitle : sp.title)
-  return `<header class="head rhead"><div>${d ? `<button type="button" class="rback" data-page="${sp.parent}">${ico('left')}${t(RESOURCES[sp.parent].title)}</button>` : ''}<div class="eyebrow">${t(fresh ? sp.newEyebrow : sp.eyebrow)}</div><h1>${t(name)}${d && sp.status && !title ? cell(sp.status) : ''}</h1>${title ? '' : `<p>${t(sp.sub)}</p>`}</div><div class="grow"></div>${acts}</header>`
+  const name = title ?? ((fresh && sp.newTitle) || sp.title)
+  return `<header class="head rhead"><div>${d ? `<button type="button" class="rback" data-page="${sp.parent}">${ico('left')}${t(RESOURCES[sp.parent].title)}</button>` : ''}<div class="eyebrow">${t((fresh && sp.newEyebrow) || sp.eyebrow)}</div><h1>${t(name)}${d && sp.status && !title ? cell(sp.status) : ''}</h1>${title ? '' : `<p>${t(sp.sub)}</p>`}</div><div class="grow"></div>${acts}</header>`
 }
 const offlineBanner = () => `<article class="tile glass banner"><span class="ai warning">${ico('wifi-off')}</span><div class="tx"><b>${t('You’re offline')}</b><small>${t('Showing data from 09:42. Actions are paused until you reconnect.')}</small></div><button type="button" class="pill ghost" data-online>${ico('refresh')}${t('Try again')}</button></article>`
 const lockMsg = (sp) => msg('lock', 'Not in your role', `${t('Needs')} ${sp.perm}. ${t('Ask a super admin for access.')}`)
@@ -5155,11 +7824,13 @@ function listBody(sp, st) {
     const on = st.sort?.k === c.k
     const label = c.sort ? `<button type="button" class="rsort${on ? ' on' : ''}" data-sort="${c.k}">${t(c.l)}${ico(on && st.sort.dir === 'desc' ? 'arrow-down' : 'arrow-up')}</button>` : t(c.l)
     return `<th${c.w ? ` style="width:${c.w}px"` : ''}${c.wide ? ' class="wide"' : ''}>${label}</th>`
-  }).join('')}<th class="go"></th></tr>`
-  const body = rows.map((r) => `<tr class="${st.sel.has(r.id) ? 'sel' : ''}" data-row="${r.id}">${sp.select ? `<td class="cx">${ck(st.sel.has(r.id), `data-sel="${r.id}"`, t('Select'))}</td>` : ''}${sp.cols.map((c) => `<td${c.wide ? ' class="wide"' : ''}>${cell(r[c.k])}</td>`).join('')}<td class="go">${ico('right')}</td></tr>`).join('')
+  }).join('')}${sp.detail ? '<th class="go"></th>' : ''}</tr>`
+  /* rows open their record; a log without records (Audit) just lists */
+  const opens = (r) => (sp.detail ? ` data-row="${r.id}"` : '')
+  const body = rows.map((r) => `<tr class="${st.sel.has(r.id) ? 'sel' : ''}${sp.detail ? '' : ' still'}"${opens(r)}>${sp.select ? `<td class="cx">${ck(st.sel.has(r.id), `data-sel="${r.id}"`, t('Select'))}</td>` : ''}${sp.cols.map((c) => `<td${c.wide ? ' class="wide"' : ''}>${cell(r[c.k])}</td>`).join('')}${sp.detail ? `<td class="go">${ico('right')}</td>` : ''}</tr>`).join('')
   const cards = rows.map((r) => {
     const cd = sp.card
-    return `<article class="rcard${st.sel.has(r.id) ? ' sel' : ''}" data-row="${r.id}"><div class="top">${sp.select && st.sel.size ? ck(st.sel.has(r.id), `data-sel="${r.id}"`, t('Select')) : ''}${cell(r[cd.title])}${cell(r[cd.badge])}</div><div class="meta">${cd.meta.map((k) => t(cellText(r[k]))).join(' · ')}</div></article>`
+    return `<article class="rcard${st.sel.has(r.id) ? ' sel' : ''}${sp.detail ? '' : ' still'}"${opens(r)}><div class="top">${sp.select && st.sel.size ? ck(st.sel.has(r.id), `data-sel="${r.id}"`, t('Select')) : ''}${cell(r[cd.title])}${cell(r[cd.badge])}</div><div class="meta">${cd.meta.map((k) => t(cellText(r[k]))).join(' · ')}</div></article>`
   }).join('')
   return `<table class="rt rlist"><thead>${head}</thead><tbody>${body}</tbody></table><div class="rcards">${cards}</div>
     <div class="rpager"><span>${pagerText(sp.pager)}</span><div class="nav2"><button type="button" class="ibtn" aria-label="${t('Previous')}" disabled>${ico('left')}</button><button type="button" class="ibtn" aria-label="${t('Next')}">${ico('right')}</button></div></div>`
@@ -5183,7 +7854,8 @@ function listHTML(sp, st) {
     ? `<article class="tile glass rkpi" style="--i:${i}"><span class="sk" style="width:42px;height:42px;border-radius:13px"></span><div class="tx" style="gap:8px;flex:1"><span class="sk" style="width:60%;height:10px"></span><span class="sk" style="width:40%;height:22px"></span></div></article>`
     : `<article class="tile glass rkpi" style="--i:${i}"><span class="ai ${AI_TONE[k.tone]}">${ico(k.icon)}</span><div class="tx"><small>${t(k.label)}</small><b class="num">${['empty', 'error', 'restricted'].includes(v) ? '—' : k.value}</b><span>${['empty', 'error', 'restricted'].includes(v) ? '&nbsp;' : t(k.sub)}</span></div></article>`).join('')}</section>`
   return `${resHead(sp, st, { actions: !['restricted', 'error', 'loading'].includes(v) })}${v === 'offline' ? offlineBanner() : ''}${kpis}
-    <article class="tile glass rtile" style="--i:4" id="rlist">${listBar(sp, st)}${listBody(sp, st)}</article>`
+    <article class="tile glass rtile" style="--i:4" id="rlist">${listBar(sp, st)}${listBody(sp, st)}</article>
+    ${sp.after && !['loading', 'error', 'restricted', 'empty'].includes(v) ? `<section class="ns-grid rgrid">${sp.after.map((tl, i) => dtile(tl, i + 5)).join('')}</section>` : ''}`
 }
 
 /* ---------- detail: header with status and decisions, then a bento of tiles ---------- */
@@ -5194,6 +7866,7 @@ const block = (b) => {
   if (b.type === 'table') return `<table class="tb rt"><thead><tr>${b.cols.map((c) => `<th${c.w ? ` style="width:${c.w}px"` : ''}${c.wide ? ' class="wide"' : ''}>${t(c.l)}</th>`).join('')}</tr></thead><tbody>${b.rows.map((r) => `<tr>${r.map((c, i) => `<td${b.cols[i].wide ? ' class="wide"' : ''}>${cell(c)}</td>`).join('')}</tr>`).join('')}</tbody></table>`
   if (b.type === 'feed') return `<div class="feed">${b.items.map(([x, m]) => `<div class="fi"><i></i><div>${t(x)}<small>${t(m)}</small></div></div>`).join('')}</div>`
   if (b.type === 'checks') return `<div class="rchecks">${b.items.map(([ok, x, note]) => `<div class="rck"><span class="ai ${ok ? 'success' : 'warning'}">${ico(ok ? 'check' : 'alert')}</span><div><b>${t(x)}</b>${note ? `<small>${t(note)}</small>` : ''}</div></div>`).join('')}</div>`
+  if (b.type === 'perms') return `<div class="rperms">${permRows(b.groups, false)}</div>`
   if (b.type === 'chips') return `<div class="rchips"><small>${t(b.label)}</small><div class="chips">${b.items.map((x) => `<span class="delta flat">${t(x)}</span>`).join('')}</div></div>`
   return ''
 }
@@ -5209,6 +7882,7 @@ function dialogHTML(sp, st) {
   const one = sp.kind === 'list' && st.sel.size === 1 && d.titleOne
   const each = sp.kind === 'list' ? n : t
   return `<div class="rscrim" data-dlgclose><div class="rdialog" role="dialog" aria-modal="true" aria-labelledby="dlgT"><span class="ai ${d.tone}">${ico(d.icon)}</span><h3 id="dlgT">${one ? t(d.titleOne) : each(d.title)}</h3><p>${t(d.desc)}</p>
+    ${d.select ? `<label class="rfield"><span>${t(d.select.label)}</span><span class="rin rsel"><select>${(RESOURCES.roles?.rows ?? []).map((r) => `<option${r.role.t === d.select.value ? ' selected' : ''}>${t(r.role.t)}</option>`).join('')}</select>${ico('chev-down')}</span></label>` : ''}
     ${f ? `<label class="rfield${bad ? ' bad' : ''}"><span>${t(f.label)}</span><textarea rows="4" data-dfield placeholder="${t(f.hint)}"${bad ? ' aria-invalid="true"' : ''}>${bad ? '' : f.value.map(t).join('\n')}</textarea>${bad ? `<small class="err">${ico('alert')}${t(f.error)}</small>` : `<small>${t(f.hint)}</small>`}</label>` : ''}
     <div class="racts2"><button type="button" class="pill ghost" data-dlgclose>${t('Cancel')}</button><button type="button" class="pill ${d.danger ? 'danger' : 'primary'}" data-dlgok="${key}">${one ? t(d.actionOne) : each(d.action)}</button></div></div></div>`
 }
@@ -5230,20 +7904,41 @@ function formValues(sp, st) {
   if (st.formView === v && st.form) return st.form
   st.formView = v
   st.invalid = null
-  const blank = (f) => (f.type === 'swatches' ? f.options[0] : '')
-  st.form = Object.fromEntries(sp.form.fields.map((f) => [f.k, v === 'new' ? blank(f) : v === 'errors' && 'badValue' in f ? f.badValue : st.fresh ? blank(f) : f.value]))
+  const allOff = (groups) => groups.map(([g, items]) => [g, items.map(([k, d]) => [k, d, false])])
+  const copy = (x) => JSON.parse(JSON.stringify(x))
+  const blank = (f) => (f.type === 'swatches' ? f.options[0] : f.type === 'select' ? f.value : f.type === 'perms' ? allOff(f.value) : '')
+  const bad = (f) => (f.type === 'perms' ? allOff(f.value) : f.badValue)
+  st.form = Object.fromEntries(sp.form.fields.map((f) => [f.k, copy(v === 'new' ? blank(f) : v === 'errors' && 'badValue' in f ? bad(f) : st.fresh ? blank(f) : f.value)]))
   return st.form
 }
+/* what a save checks: a pattern, names already taken, otherwise just filled in */
+const fieldsOf = (sp) => sp.form?.fields ?? sp.fields ?? []
+const failing = (sp, st) =>
+  fieldsOf(sp)
+    .filter((f) => {
+      if (!f.error) return false
+      const v = st.form[f.k]
+      if (f.type === 'perms') return !v.some(([, items]) => items.some((x) => x[2]))
+      const s = String(v ?? '').trim()
+      if (f.pattern) return !new RegExp(f.pattern).test(s)
+      if (f.taken) return !s || f.taken.includes(s)
+      return !s
+    })
+    .map((f) => f.k)
 /* field errors: what a failed save found, or the drawn example */
 const fieldBad = (f, st) => st.view === 'errors' && (st.invalid ? st.invalid.has(f.k) : !!f.error && 'badValue' in f)
 function fieldHTML(f, st) {
   const v = st.form[f.k] ?? ''
   const err = fieldBad(f, st)
+  const note = err ? `<small class="err">${ico('alert')}${t(f.error)}</small>` : f.hint ? `<small>${t(f.hint)}</small>` : ''
+  if (f.type === 'perms') return `<div class="rfield${err ? ' bad' : ''}"><span>${t(f.label)}</span><div class="rperms">${permRows(v, true)}</div>${note}</div>`
+  if (f.type === 'select')
+    return `<label class="rfield"><span>${t(f.label)}</span><span class="rin rsel"><select data-ff="${f.k}">${f.options.map((o) => `<option value="${o}"${o === v ? ' selected' : ''}>${t(o)}</option>`).join('')}</select>${ico('chev-down')}</span>${note}</label>`
   if (f.type === 'swatches')
     return `<div class="rfield"><span>${t(f.label)}</span><div class="rsw" role="radiogroup" aria-label="${t(f.label)}">${f.options.map((o) => `<button type="button" class="${v === o ? 'on' : ''}" role="radio" aria-checked="${v === o}" aria-label="${o}" data-swatch="${o}" style="--c:var(--${o})"></button>`).join('')}</div></div>`
   const input = f.type === 'textarea'
     ? `<textarea rows="3" data-ff="${f.k}" placeholder="${t(f.placeholder)}">${v}</textarea>`
-    : `<span class="rin">${f.prefix ? `<em>${f.prefix}</em>` : ''}<input data-ff="${f.k}" value="${v}" placeholder="${t(f.placeholder)}"${err ? ' aria-invalid="true"' : ''}></span>`
+    : `<span class="rin">${f.prefix ? `<em>${f.prefix}</em>` : ''}<input${f.secret ? ' type="password"' : ''} data-ff="${f.k}" value="${v}" placeholder="${t(f.placeholder)}"${err ? ' aria-invalid="true"' : ''}></span>`
   return `<label class="rfield${err ? ' bad' : ''}"><span>${t(f.label)}</span>${input}${err ? `<small class="err">${ico('alert')}${t(f.error)}</small>` : f.hint ? `<small>${t(f.hint)}</small>` : ''}</label>`
 }
 function formHTML(sp, st) {
@@ -5256,8 +7951,33 @@ function formHTML(sp, st) {
   const tiles = sp.tiles.filter((tl) => !(fresh && tl.existing)).map((tl, i) => dtile(fresh && tl.newBlocks ? { ...tl, blocks: tl.newBlocks } : tl, i + 1))
   return `${resHead(sp, st)}${v === 'offline' ? offlineBanner() : ''}<section class="ns-grid rgrid">${editor}<div class="rstack">${tiles.join('')}</div></section>`
 }
+/* ---------- sign-in and access: a card over the aurora, no shell ---------- */
+const NOTE_ICON = { error: 'alert', info: 'info', warning: 'wifi-off' }
+function authHTML(sp, st) {
+  const v = st.view
+  if (!st.form || st.formView !== v) {
+    st.formView = v
+    st.invalid = null
+    st.form = Object.fromEntries((sp.fields ?? []).map((f) => [f.k, v === 'blank' ? '' : v === 'errors' && 'badValue' in f ? f.badValue : f.value]))
+  }
+  const busy = v === 'saving'
+  const off = v === 'offline' || v === 'locked'
+  const note = sp.notices?.[v]
+  return `<div class="rauth"><div class="rauth-card glass">
+    <div class="brand"><svg class="mark" aria-hidden="true"><use href="#bitrate-mark"/></svg><span class="words"><b>Bitrate</b><small>${t('Operators')}</small></span></div>
+    <h1>${t(sp.title)}</h1><p>${t(sp.sub)}</p>
+    ${note ? `<div class="rnote ${note.tone}">${ico(NOTE_ICON[note.tone])}<span>${t(note.t)}</span></div>` : ''}
+    ${(sp.kv ?? []).map(([k, x]) => `<div class="kv"><span>${t(k)}</span><b>${t(x)}</b></div>`).join('')}
+    ${(sp.fields ?? []).map((f) => fieldHTML(f, st)).join('')}
+    ${sp.remember ? `<div class="field row"><div class="tx"><b>${t(sp.remember.label)}</b><small>${t(sp.remember.desc)}</small></div><button type="button" class="sw on" role="switch" aria-checked="true" aria-label="${t(sp.remember.label)}" data-remember><i></i></button></div>` : ''}
+    <button type="button" class="pill primary rwide${busy ? ' busy' : ''}" data-auth${busy || off ? ' disabled' : ''}>${ico(busy ? 'refresh' : sp.action.icon)}${t(busy ? sp.saving : sp.action.label)}</button>
+    ${sp.secondary ? `<button type="button" class="pill ghost rwide" data-auth2${busy ? ' disabled' : ''}>${ico(sp.secondary.icon)}${t(sp.secondary.label)}</button>` : ''}
+    ${sp.footer ? `<small class="rfoot">${t(sp.footer)}</small>` : ''}
+  </div></div>`
+}
 function resHTML() {
   const sp = RESOURCES[S.page], st = rs()
+  if (sp.kind === 'auth') return authHTML(sp, st)
   return `<div class="rpage">${sp.kind === 'list' ? listHTML(sp, st) : sp.kind === 'form' ? formHTML(sp, st) : detailPageHTML(sp, st)}</div>`
 }
 function repaintList() {
@@ -5291,11 +8011,29 @@ function resClick(e) {
     setTimeout(() => { st.view = 'default'; renderDock(); render(); island(`<span class="pdot" style="color:var(--success-text);background:var(--success-surface)">${ico('check')}</span>${t(d.action)} · ${t('just now')}`) }, 1300)
     return true
   }
+  if (b && 'remember' in b.dataset) { const on = b.classList.toggle('on'); b.setAttribute('aria-checked', String(on)); return true }
+  if (b && 'auth' in b.dataset) {
+    const invalid = new Set(failing(sp, st))
+    if (invalid.size) { st.view = 'errors'; st.formView = 'errors'; st.invalid = invalid; renderDock(); render(); return true }
+    st.view = 'saving'; renderDock(); render()
+    setTimeout(() => {
+      st.view = 'default'
+      if (S.page === 'login') { go('overview'); island(`<span class="pdot" style="color:var(--success-text);background:var(--success-surface)">${ico('check')}</span>${t('Signed in')}`) }
+      else { renderDock(); render(); island(`<span class="pdot">${ico('lock')}</span>${t('Still no sections')}`) }
+    }, 1100)
+    return true
+  }
+  if (b && 'auth2' in b.dataset) { go('login'); return true }
   if (b?.dataset.swatch) { st.form.color = b.dataset.swatch; render(); return true }
+  if (b?.dataset.perm) {
+    const [g, i] = b.dataset.perm.split('|').map(Number)
+    const item = st.form.perms[g][1][i]
+    item[2] = !item[2]
+    render()
+    return true
+  }
   if (b && 'save' in b.dataset) {
-    const name = $('[data-ff="name"]')?.value.trim() ?? ''
-    const slug = $('[data-ff="slug"]')?.value.trim() ?? ''
-    const invalid = new Set([...(name ? [] : ['name']), ...(/^[a-z0-9-]+$/.test(slug) ? [] : ['slug'])])
+    const invalid = new Set(failing(sp, st))
     if (invalid.size) { st.view = 'errors'; st.formView = 'errors'; st.invalid = invalid; renderDock(); render(); return true }
     st.view = 'saving'; renderDock(); render()
     island(`<span class="pdot">${ico('refresh')}</span>${t(sp.saving)}<span class="bar"><i></i></span>`, 1100, true)
