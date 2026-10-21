@@ -267,6 +267,23 @@ describe('UsersService', () => {
     })
   })
 
+  it('getFollowing pages whom the caller follows, leaving deleted accounts out', async () => {
+    const followed = buildUser({ id: 'user-3' })
+    const followedAt = new Date('2026-10-01T00:00:00.000Z')
+    prisma.$transaction.mockResolvedValue([[{ following: followed, createdAt: followedAt }], 1])
+
+    const result = await service.getFollowing('user-1', 2, 5)
+
+    expect(prisma.userFollow.findMany).toHaveBeenCalledWith({
+      where: { followerId: 'user-1', following: { deletedAt: null } },
+      orderBy: [{ createdAt: 'desc' }, { followingId: 'asc' }],
+      skip: 5,
+      take: 5,
+      include: { following: { select: PUBLIC_USER_SELECT } },
+    })
+    expect(result).toEqual({ data: [{ ...followed, followedAt }], total: 1, page: 2, limit: 5 })
+  })
+
   describe('follower lists', () => {
     const target = 'user-2'
 
