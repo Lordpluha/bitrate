@@ -81,12 +81,12 @@ export class UsersService {
    * Accounts created before acceptance was tracked, or before a new revision, are asked once.
    */
   async acceptLegal(id: UserEntity['id']) {
-    await this.prisma.user.update({
+    const user = await this.prisma.user.update({
       where: { id },
       data: { legalVersion: LEGAL_VERSION, legalAcceptedAt: new Date() },
-      select: { id: true },
+      select: SELF_USER_SELECT,
     })
-    return await this.findSelfById(id)
+    return { ...user, legalAcceptanceRequired: !isLegalAcceptanceCurrent(user.legalVersion) }
   }
 
   /** Runs the get by email operation. Filters `deletedAt` — see `findById`. */
@@ -182,18 +182,17 @@ export class UsersService {
 
   async followUser(followerId: string, followingId: string) {
     if (followerId === followingId) throw new BadRequestException('You cannot follow yourself')
-    const user = await this.prisma.user.findFirst({ where: { id: followingId, deletedAt: null } })
+    const user = await this.prisma.user.findFirst({
+      where: { id: followingId, deletedAt: null },
+      select: { id: true },
+    })
     if (!user) throw new NotFoundException('User not found')
-    const existing = await this.prisma.userFollow.findUnique({
-      where: { followerId_followingId: { followerId, followingId } },
-      select: { followerId: true },
+    // An existing follow is skipped, so only a follow this call created is notified.
+    const { count } = await this.prisma.userFollow.createMany({
+      data: [{ followerId, followingId }],
+      skipDuplicates: true,
     })
-    if (existing) return
-    await this.prisma.userFollow.upsert({
-      where: { followerId_followingId: { followerId, followingId } },
-      create: { followerId, followingId },
-      update: {},
-    })
+    if (count === 0) return
     /* best effort: a queue outage must not fail the follow itself */
     try {
       await this.notifications.followed({ followerId, followingId })

@@ -89,18 +89,16 @@ describe('UsersService', () => {
 
   describe('acceptLegal', () => {
     it('records the current revision and time, then returns the refreshed account', async () => {
-      prisma.user.update.mockResolvedValue(buildUser() as never)
-      prisma.user.findUniqueOrThrow.mockResolvedValue(
-        buildUser({ legalVersion: LEGAL_VERSION }) as never,
-      )
+      prisma.user.update.mockResolvedValue(buildUser({ legalVersion: LEGAL_VERSION }) as never)
 
       const result = await service.acceptLegal('user-1')
 
       expect(prisma.user.update).toHaveBeenCalledWith({
         where: { id: 'user-1' },
         data: { legalVersion: LEGAL_VERSION, legalAcceptedAt: expect.any(Date) },
-        select: { id: true },
+        select: SELF_USER_SELECT,
       })
+      expect(prisma.user.findUniqueOrThrow).not.toHaveBeenCalled()
       expect(result.legalAcceptanceRequired).toBe(false)
     })
   })
@@ -374,32 +372,44 @@ describe('UsersService', () => {
   describe('followUser', () => {
     it('notifies the followed user about a new follow', async () => {
       prisma.user.findFirst.mockResolvedValue({ id: 'b' } as never)
-      prisma.userFollow.findUnique.mockResolvedValue(null)
-      prisma.userFollow.upsert.mockResolvedValue({} as never)
+      prisma.userFollow.createMany.mockResolvedValue({ count: 1 })
 
       await service.followUser('a', 'b')
 
-      expect(prisma.userFollow.upsert).toHaveBeenCalled()
+      expect(prisma.user.findFirst).toHaveBeenCalledWith({
+        where: { id: 'b', deletedAt: null },
+        select: { id: true },
+      })
+      expect(prisma.userFollow.createMany).toHaveBeenCalledWith({
+        data: [{ followerId: 'a', followingId: 'b' }],
+        skipDuplicates: true,
+      })
       expect(producer.followed).toHaveBeenCalledWith({ followerId: 'a', followingId: 'b' })
     })
 
     it('does not notify again for a follow that already existed', async () => {
       prisma.user.findFirst.mockResolvedValue({ id: 'b' } as never)
-      prisma.userFollow.findUnique.mockResolvedValue({ followerId: 'a' } as never)
+      prisma.userFollow.createMany.mockResolvedValue({ count: 0 })
 
       await service.followUser('a', 'b')
 
       expect(producer.followed).not.toHaveBeenCalled()
     })
 
+    it('rejects following a missing or deleted user without writing', async () => {
+      prisma.user.findFirst.mockResolvedValue(null)
+
+      await expect(service.followUser('a', 'b')).rejects.toBeInstanceOf(NotFoundException)
+      expect(prisma.userFollow.createMany).not.toHaveBeenCalled()
+    })
+
     it('still follows when the notification cannot be queued', async () => {
       prisma.user.findFirst.mockResolvedValue({ id: 'b' } as never)
-      prisma.userFollow.findUnique.mockResolvedValue(null)
-      prisma.userFollow.upsert.mockResolvedValue({} as never)
+      prisma.userFollow.createMany.mockResolvedValue({ count: 1 })
       producer.followed.mockRejectedValue(new Error('redis down'))
 
       await expect(service.followUser('a', 'b')).resolves.toBeUndefined()
-      expect(prisma.userFollow.upsert).toHaveBeenCalled()
+      expect(prisma.userFollow.createMany).toHaveBeenCalled()
     })
   })
 })
