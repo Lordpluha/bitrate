@@ -306,7 +306,7 @@ const escalation = () => [
 const header = (m, o) =>
   A(m ? 'Admin/Page Header Compact' : 'Admin/Page Header', W, {
     eyebrow: { content: 'SETTINGS · NOTIFICATIONS' },
-    title: { content: 'Notifications' },
+    title: { content: 'Notifications', width: 'fill_container', textGrowth: 'fixed-width' },
     accent: { enabled: false },
     subtitle: { content: 'Choose what reaches you, where and when. Changes save automatically.' },
     ...(m
@@ -451,12 +451,12 @@ export const notificationsPage = {
   context:
     'Notification settings for each operator, after the admin prototype: channels with their status, an event × channel matrix with priorities (event cards with channel chips on phones), a live preview of the push and the email for the selected event, digest and quiet hours, thresholds and escalation. Changes save automatically; the island reports Saved and Test sent. Not-found is not drawn: the route always exists for a signed-in operator.',
   desktop: (theme) => Shell('Notifications', page(false), { ...PAGE, height: 1860, theme }),
-  mobile: () => MShell('Notifications', page(true), 3840, PAGE),
+  mobile: () => MShell('Notifications', page(true), 3880, PAGE),
   states: [
     state(
       'Loading',
       D('Loading', { loading: true }, { height: 1100 }),
-      M('Loading', { loading: true }, 1240),
+      M('Loading', { loading: true }, 1270),
     ),
     state(
       'Load error',
@@ -466,12 +466,12 @@ export const notificationsPage = {
     state(
       'Push blocked',
       D('Push blocked', { blocked: true }, { height: 1950 }),
-      M('Push blocked', { blocked: true }, 3950),
+      M('Push blocked', { blocked: true }, 4010),
     ),
     state(
       'Test sent',
       D('Test sent', { test: true }, { height: 1960, pocket: { icon: 'send', text: 'Test sent' } }),
-      M('Test sent', { test: true }, 3935),
+      M('Test sent', { test: true }, 3965),
     ),
     state(
       'Daily digest · saving',
@@ -480,7 +480,7 @@ export const notificationsPage = {
         { daily: true, saving: true },
         { height: 1915, pocket: { icon: 'loader', text: 'Saving…' } },
       ),
-      M('Daily digest · saving', { daily: true, saving: true }, 3895),
+      M('Daily digest · saving', { daily: true, saving: true }, 3925),
     ),
     state(
       'Saved',

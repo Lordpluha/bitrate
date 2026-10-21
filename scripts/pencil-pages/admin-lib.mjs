@@ -929,8 +929,6 @@ add(
           'title',
           H('Good morning,', 26, {
             letterSpacing: -0.6,
-            width: 'fill_container',
-            textGrowth: 'fixed-width',
           }),
         ),
         part(
@@ -2685,6 +2683,78 @@ for (const p of ['Admin/Event Card', 'Admin/Event Card Selected']) {
     nest(p, `ch${k}`, k ? 'Admin/Channel Chip/Off' : 'Admin/Channel Chip/On')
 }
 nest('Admin/Popover', 'settings', 'Button/Glass')
+/* the avatar's menu: who is signed in, personal preferences, sign out */
+const profileRow = (p, icon, label, value, o = {}) =>
+  part(
+    p,
+    use(
+      'Admin/Nav Item',
+      { name: label },
+      {
+        icon: { icon, ...(o.danger ? { fill: C.errorText } : {}) },
+        label: { content: label, ...(o.danger ? { fill: C.errorText } : {}) },
+        ...(value ? { countLabel: { content: value } } : { count: { enabled: false } }),
+      },
+    ),
+  )
+add(
+  comp(
+    'Admin/Profile Menu',
+    Col(
+      { name: 'Profile Menu', width: 300, gap: 0, cornerRadius: 22, clip: true, ...glass(0.92) },
+      [
+        Row(
+          {
+            name: 'Who',
+            width: 'fill_container',
+            padding: 16,
+            gap: 12,
+            stroke: C.border,
+            strokeWidth: { bottom: 1 },
+          },
+          [
+            use('Avatar', { name: 'Avatar' }),
+            Col({ name: 'Identity', width: 'fill_container', gap: 2 }, [
+              part(
+                'name',
+                T('mara.ops', {
+                  fontWeight: '600',
+                  width: 'fill_container',
+                  textGrowth: 'fixed-width',
+                }),
+              ),
+              part(
+                'role',
+                muted('Super admin · mara.ops@bitrate.fm', {
+                  fontSize: 12,
+                  width: 'fill_container',
+                  textGrowth: 'fixed-width',
+                }),
+              ),
+            ]),
+          ],
+        ),
+        Col({ name: 'Preferences', width: 'fill_container', gap: 2, padding: 8 }, [
+          profileRow('settings', 'sliders-horizontal', 'Notification settings'),
+          profileRow('language', 'languages', 'Language', 'English'),
+          profileRow('theme', 'moon', 'Theme', 'Dark'),
+        ]),
+        Col(
+          {
+            name: 'Session',
+            width: 'fill_container',
+            padding: 8,
+            stroke: C.border,
+            strokeWidth: { top: 1 },
+          },
+          [profileRow('signOut', 'log-out', 'Sign out', null, { danger: true })],
+        ),
+      ],
+    ),
+  ),
+)
+for (const p of ['settings', 'language', 'theme', 'signOut'])
+  nest('Admin/Profile Menu', p, 'Admin/Nav Item')
 
 /* ---------- the library page: one flex root, a section per family ---------- */
 const cellWidth = (b) =>
@@ -2696,7 +2766,7 @@ const cellWidth = (b) =>
         ? 760
         : /Page Header/.test(b.name)
           ? 900
-          : /Row|Bar|Meter|Legend|Key Value|Field|Slider|Channel|Matrix|Notice|Feed|Message|Route|Motion|Card|Stat|Event|Preview|Banner|Table/.test(
+          : /Row|Bar|Meter|Legend|Key Value|Field|Slider|Channel|Matrix|Notice|Feed|Message|Route|Motion|Card|Stat|Event|Preview|Banner|Table|Loader\/(Actions|Form)/.test(
                 b.name,
               )
             ? 460
@@ -2770,7 +2840,7 @@ const SECTIONS = [
   [
     'Overlays',
     'The bell’s notifications and the command palette.',
-    /^Admin\/(Notice|Popover|Palette)/,
+    /^Admin\/(Notice|Popover|Profile Menu|Palette)/,
   ],
   [
     'Shell',

@@ -496,6 +496,22 @@ input[type="range"] { width: 100%; accent-color: var(--primary); }
 .npop header { border-bottom: 1px solid var(--glass-line); }
 .npop footer { border-top: 1px solid var(--glass-line); justify-content: center; }
 .npop .nlist { overflow: auto; padding: 6px 8px; }
+.avatar { border: 0; padding: 0; cursor: pointer; transition: box-shadow .2s, transform .2s; }
+.avatar:hover, .avatar[aria-expanded="true"] { box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 45%, transparent); }
+.avatar:active { transform: scale(.94); }
+.pmenu { width: 300px; }
+.pmenu .who { display: flex; align-items: center; gap: 12px; padding: 16px; border-bottom: 1px solid var(--glass-line); }
+.pmenu .who .avatar { cursor: default; box-shadow: none; transform: none; }
+.pmenu .who b { display: block; font-weight: 600; }
+.pmenu .who small { display: block; color: var(--muted-fg); font-size: 12px; }
+.pmenu .plist { display: flex; flex-direction: column; gap: 2px; padding: 8px; }
+.pmenu .plist + .plist { border-top: 1px solid var(--glass-line); }
+.prow { display: flex; align-items: center; gap: 12px; width: 100%; height: 40px; padding: 0 10px; border-radius: 12px; color: var(--muted-fg); font-size: 14px; text-align: left; }
+.prow:hover { background: color-mix(in srgb, var(--fg) 6%, transparent); color: var(--fg); }
+.prow .lbl { flex: 1; }
+.prow .val { height: 22px; padding: 0 8px; border-radius: 11px; display: inline-flex; align-items: center; font-size: 12px; font-weight: 600; background: color-mix(in srgb, var(--fg) 8%, transparent); color: var(--muted-fg); }
+.prow.danger { color: var(--error-text); }
+.prow.danger:hover { background: var(--error-surface); }
 .nitem { position: relative; display: flex; gap: 12px; padding: 10px 8px; border-radius: 14px; }
 .nitem:hover { background: color-mix(in srgb, var(--fg) 5%, transparent); }
 .nitem .ai { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; flex: none; }
@@ -548,6 +564,9 @@ body.device .stage { position: relative; z-index: 1; min-height: 100vh; display:
   .topbar, .head .actions:not(.nacts) { display: none; }
 }
 
+@media (max-width: 860px) {
+  .pmenu { top: 76px; bottom: auto; max-height: calc(100vh - 180px); }
+}
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
 }
@@ -583,7 +602,7 @@ body.device .stage { position: relative; z-index: 1; min-height: 100vh; display:
   <main class="main">
     <div class="mtop glass">
       <div class="brand"><svg class="mark" aria-hidden="true"><use href="#bitrate-mark"/></svg><span class="words"><b>Bitrate</b><small data-t="Operators">Operators</small></span></div>
-      <div class="avatar" title="mara.ops · Super admin">MQ</div>
+      <button type="button" class="avatar" data-profile aria-haspopup="menu" aria-label="Profile menu">MQ</button>
     </div>
 
     <div class="topbar">
@@ -593,7 +612,7 @@ body.device .stage { position: relative; z-index: 1; min-height: 100vh; display:
         <div class="pocket" id="pocket"></div>
         <div class="sep"></div>
         <button type="button" class="ibtn" id="bellBtn" aria-label="Notifications"><svg class="i" aria-hidden="true"><use href="#i-bell"/></svg><span class="badge"></span></button>
-        <div class="avatar" title="mara.ops · Super admin">MQ</div>
+        <button type="button" class="avatar" data-profile aria-haspopup="menu" aria-label="Profile menu">MQ</button>
       </div>
     </div>
 
@@ -611,6 +630,7 @@ body.device .stage { position: relative; z-index: 1; min-height: 100vh; display:
 
 <div class="dock glass" id="dock" role="toolbar" aria-label="Prototype states"></div>
 <div class="npop" id="npop" role="dialog" aria-label="Notifications"></div>
+<div class="npop pmenu" id="ppop" role="menu" aria-label="Profile"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="stage" id="stage">
   <div class="phone"><div class="screen">
@@ -681,6 +701,7 @@ body.device .stage { position: relative; z-index: 1; min-height: 100vh; display:
   <symbol id="i-battery" viewBox="0 0 24 24"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2M6 11v2M10 11v2"/></symbol>
   <symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
   <symbol id="i-wifi-off" viewBox="0 0 24 24"><path d="M12 20h.01M8.5 16.43a5 5 0 0 1 7 0M2 8.82a15 15 0 0 1 4.17-2.65M10.66 5c4.01-.36 8.14.9 11.34 3.76M16.85 11.25a10 10 0 0 1 2.22 1.68M5 12.86a10 10 0 0 1 5.17-2.69M2 2l20 20"/></symbol>
+  <symbol id="i-log-out" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></symbol>
 </svg>
 
@@ -881,6 +902,7 @@ function chrome() {
   $('#pq').placeholder = t('Search or jump to…')
   seg($('#seg')); seg($('#mseg'))
   $('#app').classList.toggle('collapsed', S.collapsed)
+  if ($('#ppop')?.classList.contains('open')) $('#ppop').innerHTML = profileHTML()
 }
 const all = () => { chrome(); render() }
 
@@ -957,11 +979,16 @@ function toggleCollapse() { S.collapsed = !S.collapsed; chrome(); setTimeout(() 
 document.addEventListener('click', (e) => {
   if (detailClick(e)) return
   const b = e.target.closest('button, [data-open]')
-  if (!b) { if (e.target.id === 'scrim') closePalette(); if (!e.target.closest('#npop')) closePop(); return }
+  if (!b) { if (e.target.id === 'scrim') closePalette(); if (!e.target.closest('#npop')) closePop(); if (!e.target.closest('#ppop')) closeProfile(); return }
+  if (!('profile' in b.dataset) && (!b.closest('#ppop') || b.dataset.page || 'signout' in b.dataset)) closeProfile()
   if (!b.closest('#npop') && b.id !== 'bellBtn' && b.dataset.tab !== 'alerts') closePop()
   if (demoClick(b) || nsClick(b)) return
   if (b.dataset.page) return go(b.dataset.page)
   if (b.dataset.tab) return b.dataset.tab === 'alerts' ? togglePop() : go(b.dataset.tab)
+  if ('profile' in b.dataset) return toggleProfile()
+  if (b.dataset.pref === 'lang') return toggleLang()
+  if (b.dataset.pref === 'theme') return cycleTheme()
+  if ('signout' in b.dataset) return toast(t('Signed out'), t('Prototype only: you stay signed in.'))
   if ('readall' in b.dataset) { unread = 0; $('#npop').innerHTML = popHTML(); return badges() }
   if (b.id === 'themeBtn' || (b.closest('#sprefs') && b.querySelector('use[href^="#i-moon"], use[href^="#i-sun"], use[href^="#i-contrast"]'))) return cycleTheme()
   if (b.id === 'langBtn' || (b.closest('#sprefs') && b.querySelector('use[href="#i-languages"]'))) return toggleLang()
@@ -978,7 +1005,7 @@ document.addEventListener('click', (e) => {
 })
 document.addEventListener('keydown', (e) => {
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); return $('#scrim').classList.contains('open') ? closePalette() : openPalette() }
-  if (!$('#scrim').classList.contains('open')) { if (e.key === 'Escape') { $('#sheet').classList.remove('open'); closePop() } return }
+  if (!$('#scrim').classList.contains('open')) { if (e.key === 'Escape') { $('#sheet').classList.remove('open'); closePop(); closeProfile() } return }
   if (e.key === 'Escape') closePalette()
   else if (e.key === 'ArrowDown') { sel++; paletteList(); e.preventDefault() }
   else if (e.key === 'ArrowUp') { sel = Math.max(0, sel - 1); paletteList(); e.preventDefault() }
@@ -1425,6 +1452,7 @@ Object.assign(UK, {
   'Browser notifications are blocked': 'Сповіщення браузера заблоковані', 'Allow notifications for this site in the browser settings, then try again.': 'Дозвольте сповіщення для цього сайту в налаштуваннях браузера й спробуйте ще.',
   'Try again': 'Спробувати ще', 'Couldn’t load your notification settings': 'Не вдалося завантажити налаштування сповіщень', 'Nothing was changed. Try again in a moment.': 'Нічого не змінено. Спробуйте за мить.',
   'Mark all read': 'Позначити все прочитаним',
+  'Language': 'Мова', 'Theme': 'Тема', 'Sign out': 'Вийти', 'Signed out': 'Ви вийшли', 'Prototype only: you stay signed in.': 'Лише прототип: сеанс залишається відкритим.',
   'Release review is not in your role': 'Перевірка релізів не входить у вашу роль', 'Needs releases:read. Ask a super admin for access.': 'Потрібен дозвіл releases:read. Попросіть суперадміна.',
   'Restricted': 'Обмежено', 'Not in your role': 'Не у вашій ролі', 'Needs tracks:read. Ask a super admin for access.': 'Потрібен дозвіл tracks:read. Попросіть суперадміна.',
   'Moderator view: tiles outside your role stay locked.': 'Вигляд модератора: плитки поза вашою роллю заблоковані.',
@@ -1634,10 +1662,35 @@ function popHTML() {
 function togglePop() {
   const p = $('#npop')
   if (p.classList.contains('open')) return closePop()
+  closeProfile()
   p.innerHTML = popHTML()
   p.classList.add('open')
 }
 function closePop() { $('#npop')?.classList.remove('open') }
+
+/* ---------- avatar: profile menu ---------- */
+function profileHTML() {
+  const theme = S.theme[0].toUpperCase() + S.theme.slice(1)
+  return `<div class="who"><span class="avatar">MQ</span><div><b>mara.ops</b><small>${t('Super admin')} · mara.ops@bitrate.fm</small></div></div>
+    <div class="plist">
+      <button type="button" class="prow" role="menuitem" data-page="notifications">${ico('sliders')}<span class="lbl">${t('Notification settings')}</span></button>
+      <button type="button" class="prow" role="menuitem" data-pref="lang">${ico('languages')}<span class="lbl">${t('Language')}</span><span class="val">${S.lang === 'uk' ? 'Українська' : 'English'}</span></button>
+      <button type="button" class="prow" role="menuitem" data-pref="theme">${ico(THEME_ICON[S.theme])}<span class="lbl">${t('Theme')}</span><span class="val">${t(theme)}</span></button>
+    </div>
+    <div class="plist"><button type="button" class="prow danger" role="menuitem" data-signout>${ico('log-out')}<span class="lbl">${t('Sign out')}</span></button></div>`
+}
+function toggleProfile() {
+  const p = $('#ppop')
+  if (p.classList.contains('open')) return closeProfile()
+  closePop()
+  p.innerHTML = profileHTML()
+  p.classList.add('open')
+  $$('[data-profile]').forEach((a) => { a.setAttribute('aria-expanded', 'true') })
+}
+function closeProfile() {
+  $('#ppop')?.classList.remove('open')
+  $$('[data-profile]').forEach((a) => { a.setAttribute('aria-expanded', 'false') })
+}
 function badges() { $$('.ibtn .badge, .mtabs .badge').forEach((b) => { b.hidden = unread === 0 }) }
 
 /* ---------- prototype dock: states per page, desktop ⇄ mobile ---------- */
