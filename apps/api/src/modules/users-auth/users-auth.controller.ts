@@ -1,5 +1,5 @@
 import { clearPendingTwoFactorCookie, setPendingTwoFactorCookie } from '@common/auth-cookies'
-import { AUTH_ROUTE_THROTTLE } from '@common/config'
+import { AUTH_ROUTE_THROTTLE, SESSION_ROUTE_THROTTLE } from '@common/config'
 import { SelfUserEntity, UserEntity } from '@modules/users'
 import { UsersService } from '@modules/users/users.service'
 import {
@@ -116,6 +116,7 @@ export class UsersAuthController {
   /** Runs the refresh operation. */
   @AuthRefreshSwagger()
   @UserAuth('refresh')
+  @Throttle(SESSION_ROUTE_THROTTLE)
   @Post('refresh')
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const refresh_token = req[process.env.REFRESH_TOKEN_NAME!] as string
@@ -126,6 +127,7 @@ export class UsersAuthController {
   /** Runs the get me operation. */
   @AuthMeSwagger()
   @UserAuth()
+  @Throttle(SESSION_ROUTE_THROTTLE)
   @Get('me')
   async getMe(@Req() req: Request) {
     const user = req.user as UserEntity
