@@ -38,13 +38,17 @@ import {
 } from './decorators'
 import { UpdateUserDto, UpdateUserSchema } from './dtos'
 import { UserEntity } from './entities'
+import { UserFollowsService } from './user-follows.service'
 import { MAX_AVATAR_BYTES, UsersService } from './users.service'
 
 @ApiExtraModels(UserEntity, SafeUserEntity)
 @ApiTags('Users')
 @Controller({ path: 'users', version: '1' })
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private userFollowsService: UserFollowsService,
+  ) {}
 
   @GetUsersSwagger()
   @Get('')
@@ -115,7 +119,7 @@ export class UsersController {
   @HttpCode(204)
   @Post(':id/follow')
   follow(@Req() req: Request, @Param('id', ParseUUIDPipe) id: string) {
-    return this.usersService.followUser((req.user as UserEntity).id, id)
+    return this.userFollowsService.followUser((req.user as UserEntity).id, id)
   }
 
   @UnfollowUserSwagger()
@@ -123,7 +127,7 @@ export class UsersController {
   @HttpCode(204)
   @Delete(':id/follow')
   unfollow(@Req() req: Request, @Param('id', ParseUUIDPipe) id: string) {
-    return this.usersService.unfollowUser((req.user as UserEntity).id, id)
+    return this.userFollowsService.unfollowUser((req.user as UserEntity).id, id)
   }
 
   @GetFollowingSwagger()
@@ -134,7 +138,7 @@ export class UsersController {
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    return this.usersService.getFollowing((req.user as UserEntity).id, page, limit)
+    return this.userFollowsService.getFollowing((req.user as UserEntity).id, page, limit)
   }
 
   /** What the people the caller follows last played. Declared after `me/following`, before `:id/…`. */
@@ -145,7 +149,7 @@ export class UsersController {
     @Req() req: Request,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    return this.usersService.getFollowingActivity((req.user as UserEntity).id, limit)
+    return this.userFollowsService.getFollowingActivity((req.user as UserEntity).id, limit)
   }
 
   @GetFollowListSwagger('followers')
@@ -157,7 +161,7 @@ export class UsersController {
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    return this.usersService.listFollows('followers', id, req.user?.id, page, limit)
+    return this.userFollowsService.listFollows('followers', id, req.user?.id, page, limit)
   }
 
   @GetFollowListSwagger('following')
@@ -169,6 +173,6 @@ export class UsersController {
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    return this.usersService.listFollows('following', id, req.user?.id, page, limit)
+    return this.userFollowsService.listFollows('following', id, req.user?.id, page, limit)
   }
 }
