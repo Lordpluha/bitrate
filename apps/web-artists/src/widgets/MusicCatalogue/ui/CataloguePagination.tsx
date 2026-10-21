@@ -47,7 +47,7 @@ export function CataloguePagination({
         >
           <ChevronLeft aria-hidden="true" className="size-4" />
         </Button>
-        <span className="artist-workspace-nav-selected rounded-lg border px-3 py-2 text-[0.625rem]">
+        <span className="artist-workspace-nav-selected rounded-lg border px-3 py-2 text-artist-caption">
           Page {page} of {pages}
         </span>
         <Button
