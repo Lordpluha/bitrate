@@ -182,7 +182,6 @@ describe('AdminStaffService', () => {
         name: 'MODERATOR',
         permissions: ['tracks:read'],
       } as never)
-      transaction.role.findFirst.mockResolvedValue({ id: 'role-admin' } as never)
       transaction.staff.count.mockResolvedValue(0)
 
       await expect(
@@ -200,7 +199,6 @@ describe('AdminStaffService', () => {
         name: 'MODERATOR',
         permissions: ['tracks:read'],
       } as never)
-      transaction.role.findFirst.mockResolvedValue({ id: 'role-admin' } as never)
       transaction.staff.count.mockResolvedValue(1)
       transaction.staff.update.mockResolvedValue(buildRawStaff() as never)
 
@@ -281,7 +279,6 @@ describe('AdminStaffService', () => {
       transaction.staff.findFirst.mockResolvedValue(
         buildStaffWithRole({ id: 'staff-1' }, { name: 'ADMIN', builtIn: true }) as never,
       )
-      transaction.role.findFirst.mockResolvedValue({ id: 'role-admin' } as never)
       transaction.staff.count.mockResolvedValue(0)
 
       await expect(service.softDelete('staff-1')).rejects.toThrow(LastAdminException)

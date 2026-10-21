@@ -40,6 +40,20 @@ const BUILT_IN_ADMIN_NAME = 'ADMIN'
 /** The 409 message when a concurrent create claimed the email or username first. */
 const EMAIL_OR_USERNAME_TAKEN = 'Email or username is already in use'
 
+/** The role columns that decide what an operator is granted. */
+const ROLE_GRANT_SELECT = {
+  name: true,
+  builtIn: true,
+  permissions: true,
+} as const satisfies Prisma.RoleSelect
+
+/** What the role/permission writes read off the target operator — never its credentials. */
+const STAFF_ROLE_CHECK_SELECT = {
+  roleId: true,
+  permissions: true,
+  role: { select: { name: true, builtIn: true } },
+} as const satisfies Prisma.StaffSelect
+
 /** Handles the operator directory, role assignment, and permission grants. */
 @Injectable()
 export class AdminStaffService {
@@ -86,11 +100,12 @@ export class AdminStaffService {
    * mapped to the same 409 rather than surfacing as a 500.
    */
   async create(dto: CreateStaffDto, actorStaffId: string) {
-    const role = await this.prisma.role.findUnique({ where: { id: dto.roleId } })
+    const [role] = await Promise.all([
+      this.prisma.role.findUnique({ where: { id: dto.roleId }, select: ROLE_GRANT_SELECT }),
+      this.assertEmailAvailable(dto.email),
+      this.assertUsernameAvailable(dto.username),
+    ])
     if (!role) throw new NotFoundException(`Role ${dto.roleId} not found`)
-
-    await this.assertEmailAvailable(dto.email)
-    await this.assertUsernameAvailable(dto.username)
 
     const isSuperAdmin = role.builtIn && role.name === BUILT_IN_ADMIN_NAME
     const permissions = this.resolveGrantedPermissions({
@@ -144,11 +159,14 @@ export class AdminStaffService {
     return await this.prisma.$transaction(async (tx) => {
       const staff = await tx.staff.findFirst({
         where: { id, deletedAt: null },
-        include: { role: { select: { name: true, builtIn: true } } },
+        select: STAFF_ROLE_CHECK_SELECT,
       })
       if (!staff) throw new StaffNotFoundException(id)
 
-      const newRole = await tx.role.findUnique({ where: { id: dto.roleId } })
+      const newRole = await tx.role.findUnique({
+        where: { id: dto.roleId },
+        select: ROLE_GRANT_SELECT,
+      })
       if (!newRole) throw new NotFoundException(`Role ${dto.roleId} not found`)
 
       const wasSuperAdmin = staff.role.builtIn && staff.role.name === BUILT_IN_ADMIN_NAME
@@ -194,7 +212,7 @@ export class AdminStaffService {
     return await this.prisma.$transaction(async (tx) => {
       const staff = await tx.staff.findFirst({
         where: { id, deletedAt: null },
-        include: { role: { select: { name: true, builtIn: true } } },
+        select: STAFF_ROLE_CHECK_SELECT,
       })
       if (!staff) throw new StaffNotFoundException(id)
       if (staff.role.builtIn && staff.role.name === BUILT_IN_ADMIN_NAME) {
@@ -232,7 +250,7 @@ export class AdminStaffService {
     return await this.prisma.$transaction(async (tx) => {
       const staff = await tx.staff.findFirst({
         where: { id, deletedAt: null },
-        include: { role: { select: { name: true, builtIn: true } } },
+        select: STAFF_ROLE_CHECK_SELECT,
       })
       if (!staff) throw new StaffNotFoundException(id)
 
@@ -269,13 +287,12 @@ export class AdminStaffService {
     tx: Prisma.TransactionClient,
     excludingStaffId: string,
   ): Promise<void> {
-    const adminRole = await tx.role.findFirst({
-      where: { name: BUILT_IN_ADMIN_NAME, builtIn: true },
-    })
-    if (!adminRole) return
-
     const remaining = await tx.staff.count({
-      where: { roleId: adminRole.id, deletedAt: null, id: { not: excludingStaffId } },
+      where: {
+        role: { name: BUILT_IN_ADMIN_NAME, builtIn: true },
+        deletedAt: null,
+        id: { not: excludingStaffId },
+      },
     })
     if (remaining === 0) throw new LastAdminException()
   }
@@ -310,12 +327,18 @@ export class AdminStaffService {
   }
 
   private async assertEmailAvailable(email: string): Promise<void> {
-    const existing = await this.prisma.staff.findUnique({ where: { email } })
+    const existing = await this.prisma.staff.findUnique({
+      where: { email },
+      select: { id: true },
+    })
     if (existing) throw new ConflictException(`Email "${email}" is already in use`)
   }
 
   private async assertUsernameAvailable(username: string): Promise<void> {
-    const existing = await this.prisma.staff.findUnique({ where: { username } })
+    const existing = await this.prisma.staff.findUnique({
+      where: { username },
+      select: { id: true },
+    })
     if (existing) throw new ConflictException(`Username "${username}" is already in use`)
   }
 }
