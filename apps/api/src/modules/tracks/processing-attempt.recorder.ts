@@ -2,7 +2,7 @@ import * as os from 'node:os'
 // biome-ignore lint/style/useImportType: constructor-injected — NestJS DI needs the real class reference at runtime, not a type-only import.
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable, Logger } from '@nestjs/common'
-import { Prisma, type TrackProcessingStep } from '@prisma/client'
+import { Prisma, type TrackProcessingAttemptStatus, type TrackProcessingStep } from '@prisma/client'
 import * as Sentry from '@sentry/nestjs'
 import type {
   FailProcessingAttemptInput,
@@ -16,6 +16,15 @@ import { classifyProcessingError, errorMessageOf, errorNameOf } from './processi
 import { PROCESSING_LOG_LIMITS } from './processing-log/limits'
 import { processingLogSuffix } from './processing-log/log-context'
 import { redactProcessingText } from './processing-log/redact'
+
+/** Identifies the attempt a terminal write closes. */
+type AttemptRef = { trackId: string; jobId: string; attempt: number }
+
+/** Statuses that close a RUNNING attempt from inside `process()`. */
+type TerminalAttemptStatus = Extract<
+  TrackProcessingAttemptStatus,
+  'SUCCEEDED' | 'SUPERSEDED' | 'FAILED'
+>
 
 /** Newest attempts kept per track; older rows are pruned in the same transaction. */
 const RETAINED_ATTEMPTS_PER_TRACK = 25
@@ -126,95 +135,78 @@ export class ProcessingAttemptRecorder {
 
   /** Marks the attempt SUCCEEDED and stamps its duration. */
   async succeed(input: SucceedProcessingAttemptInput): Promise<void> {
-    try {
-      await this.prisma.$transaction(async (tx) => {
-        const row = await this.findRunningRow(tx, input.trackId, input.jobId, input.attempt)
-        if (row) {
-          await tx.trackProcessingAttempt.update({
-            where: { id: row.id },
-            data: {
-              status: 'SUCCEEDED',
-              finishedAt: new Date(),
-              durationMs: Date.now() - row.startedAt.getTime(),
-            },
-          })
-        }
-        await this.pruneOldAttempts(tx, input.trackId)
-      })
-    } catch (error) {
-      this.reportRecorderFailure('succeed', error, { trackId: input.trackId, jobId: input.jobId })
-    }
+    await this.closeRunning('succeed', input, 'SUCCEEDED', () => ({}))
   }
 
   /** Marks the attempt SUPERSEDED — a newer upload replaced this generation mid-flight. */
   async supersede(input: SupersedeProcessingAttemptInput): Promise<void> {
-    try {
-      await this.prisma.$transaction(async (tx) => {
-        const row = await this.findRunningRow(tx, input.trackId, input.jobId, input.attempt)
-        if (row) {
-          await tx.trackProcessingAttempt.update({
-            where: { id: row.id },
-            data: {
-              status: 'SUPERSEDED',
-              finishedAt: new Date(),
-              durationMs: Date.now() - row.startedAt.getTime(),
-              failedStep: input.step,
-            },
-          })
-        }
-        await this.pruneOldAttempts(tx, input.trackId)
-      })
-    } catch (error) {
-      this.reportRecorderFailure('supersede', error, { trackId: input.trackId, jobId: input.jobId })
-    }
+    await this.closeRunning('supersede', input, 'SUPERSEDED', () => ({ failedStep: input.step }))
   }
 
   /** Marks the attempt FAILED, storing redacted diagnostics from the classified error. */
   async fail(input: FailProcessingAttemptInput): Promise<void> {
-    try {
+    await this.closeRunning('fail', input, 'FAILED', () => {
       const classified = classifyProcessingError(input.error)
       const errorInstance = input.error instanceof Error ? input.error : null
+      return {
+        willRetry: input.willRetry,
+        failedStep: input.step,
+        stepDetail: input.stepDetail ?? null,
+        errorCode: classified.code,
+        errorName: errorNameOf(input.error),
+        errorMessage: redactOrNull(errorMessageOf(input.error), {
+          keep: 'head',
+          maxBytes: PROCESSING_LOG_LIMITS.errorMessage,
+        }),
+        errorStack: redactOrNull(errorInstance?.stack, {
+          keep: 'head',
+          maxBytes: PROCESSING_LOG_LIMITS.errorStack,
+        }),
+        retryable: classified.retryable,
+        commandSummary: redactOrNull(classified.commandSummary, {
+          keep: 'head',
+          maxBytes: PROCESSING_LOG_LIMITS.commandSummary,
+        }),
+        stderrTail: redactOrNull(classified.stderrTail, {
+          keep: 'tail',
+          maxBytes: PROCESSING_LOG_LIMITS.stderrTail,
+        }),
+        exitCode: classified.exitCode,
+        signal: classified.signal,
+      }
+    })
+  }
 
+  /**
+   * Closes the RUNNING row this attempt opened with a terminal `status`, its duration and the
+   * columns `extra` builds, then prunes old rows — all in one transaction. A missing row is
+   * left alone; the prune still runs. Never throws.
+   */
+  private async closeRunning(
+    operation: 'succeed' | 'supersede' | 'fail',
+    input: AttemptRef,
+    status: TerminalAttemptStatus,
+    extra: () => Prisma.TrackProcessingAttemptUpdateInput,
+  ): Promise<void> {
+    try {
+      const data = extra()
       await this.prisma.$transaction(async (tx) => {
         const row = await this.findRunningRow(tx, input.trackId, input.jobId, input.attempt)
         if (row) {
           await tx.trackProcessingAttempt.update({
             where: { id: row.id },
             data: {
-              status: 'FAILED',
+              ...data,
+              status,
               finishedAt: new Date(),
               durationMs: Date.now() - row.startedAt.getTime(),
-              willRetry: input.willRetry,
-              failedStep: input.step,
-              stepDetail: input.stepDetail ?? null,
-              errorCode: classified.code,
-              errorName: errorNameOf(input.error),
-              errorMessage: redactOrNull(errorMessageOf(input.error), {
-                keep: 'head',
-                maxBytes: PROCESSING_LOG_LIMITS.errorMessage,
-              }),
-              errorStack: redactOrNull(errorInstance?.stack, {
-                keep: 'head',
-                maxBytes: PROCESSING_LOG_LIMITS.errorStack,
-              }),
-              retryable: classified.retryable,
-              commandSummary: redactOrNull(classified.commandSummary, {
-                keep: 'head',
-                maxBytes: PROCESSING_LOG_LIMITS.commandSummary,
-              }),
-              stderrTail: redactOrNull(classified.stderrTail, {
-                keep: 'tail',
-                maxBytes: PROCESSING_LOG_LIMITS.stderrTail,
-              }),
-              exitCode: classified.exitCode,
-              signal: classified.signal,
             },
           })
         }
         await this.pruneOldAttempts(tx, input.trackId)
       })
     } catch (error) {
-      this.reportRecorderFailure('fail', error, { trackId: input.trackId, jobId: input.jobId })
+      this.reportRecorderFailure(operation, error, { trackId: input.trackId, jobId: input.jobId })
     }
   }
 
