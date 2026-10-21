@@ -1,0 +1,156 @@
+/* Dashboard shell: sidebar, header, commands and the mobile menu. */
+@layer utilities {
+  .artist-workspace-avatar {
+    background: var(--color-artist-selection);
+  }
+
+  .artist-workspace-commands {
+    gap: 0.75rem;
+  }
+
+  .artist-dashboard-main {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100dvh - 5rem);
+    container-type: inline-size;
+  }
+
+  .artist-dashboard-menu,
+  .artist-dashboard-sidebar {
+    background-image: linear-gradient(
+      270deg,
+      var(--color-artist-sidebar-start),
+      var(--color-artist-sidebar-end)
+    );
+  }
+
+  .artist-workspace-nav-item {
+    gap: 0.875rem;
+    padding-inline: 0.8125rem;
+    line-height: 1.5;
+  }
+
+  .artist-workspace-search {
+    justify-content: center;
+    width: 2.75rem;
+    padding-inline: 0;
+  }
+
+  .artist-workspace-search-label {
+    display: none;
+  }
+
+  @variant lg {
+    .artist-dashboard-sidebar {
+      width: 15.5rem;
+      padding: 1.75rem 0.75rem 1.25rem;
+      box-shadow: var(--shadow-artist-sidebar);
+    }
+
+    .artist-workspace-brand-row {
+      gap: 1rem;
+      min-height: 6.125rem;
+      padding-inline: 0.75rem;
+    }
+
+    .artist-workspace-brand {
+      gap: 0.75rem;
+      align-items: flex-start;
+      margin-bottom: 0;
+    }
+
+    .artist-workspace-brand img {
+      margin-top: 0.125rem;
+    }
+
+    .artist-dashboard-sidebar[data-compact="true"] {
+      width: 5rem;
+    }
+
+    .artist-dashboard-sidebar[data-compact="true"] .artist-workspace-brand-row {
+      flex-direction: column;
+      gap: 0.25rem;
+      align-items: center;
+      padding-inline: 0;
+    }
+
+    .artist-dashboard-header {
+      flex-wrap: nowrap;
+      min-height: 5.5rem;
+      background: var(--color-artist-header);
+      border-color: var(--color-artist-control-border);
+      box-shadow: var(--shadow-artist-header);
+    }
+
+    .artist-dashboard-header > div > p {
+      font-size: 0.8125rem;
+      white-space: nowrap;
+    }
+
+    .artist-workspace-breadcrumb-title {
+      font-weight: 400;
+      color: var(--color-text-secondary);
+    }
+
+    .artist-dashboard-main {
+      max-width: none;
+      min-height: calc(100dvh - 5.5rem);
+      padding: 4.75rem 3rem 3rem;
+    }
+
+    .artist-dashboard[data-workspace-page="Music"] .artist-dashboard-main {
+      padding-top: 2rem;
+    }
+    :where(.artist-dashboard[data-workspace-page="Music"])
+      .artist-workspace-header-create {
+      background-color: var(--color-secondary);
+      background-image: none;
+      border: 1px solid var(--color-artist-control-border);
+      box-shadow: none;
+    }
+
+    .artist-workspace-header-create {
+      width: 13.75rem;
+    }
+
+    .artist-workspace-sidebar-footer {
+      gap: 1rem;
+    }
+
+    .artist-workspace-support {
+      min-height: 2.5rem;
+    }
+  }
+
+  @variant xl {
+    .artist-workspace-commands {
+      gap: 1.5rem;
+    }
+
+    .artist-workspace-search {
+      justify-content: flex-start;
+      width: 22.5rem;
+      padding-inline: 0.875rem;
+    }
+
+    .artist-workspace-search-label {
+      display: inline;
+    }
+
+    .artist-workspace-header-create {
+      width: 17.25rem;
+    }
+  }
+
+  .artist-dashboard-menu::backdrop {
+    background-color: color-mix(in srgb, var(--color-black) 80%, transparent);
+  }
+
+  .artist-dashboard-menu:not([open]) {
+    display: none;
+  }
+
+  .artist-dashboard-menu nav a[aria-current="page"] {
+    border-color: var(--color-artist-selection-border);
+  }
+}
