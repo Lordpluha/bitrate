@@ -2,22 +2,23 @@ import { DEFAULT_LIMIT, DEFAULT_PAGE } from '@common/pagination'
 import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { isPrismaP2002 } from '@common/utils/prisma'
 import { PrismaService } from '@infra/prisma/prisma.service'
-import { assertGrantable, normalizePermissions, type Permission } from '@modules/admin-auth'
+import type { Permission } from '@modules/admin-auth'
 import { TokenService } from '@modules/tokens/token.service'
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
-import { ADMIN_STAFF_SAFE_SELECT } from './admin-staff.select'
-import type {
-  ADMIN_STAFF_SORT_FIELDS,
-  AssignStaffRoleDto,
-  CreateStaffDto,
-  UpdateStaffPermissionsDto,
-} from './dtos'
 import {
-  LastAdminException,
-  StaffNotFoundException,
-  SuperAdminPermissionsException,
-} from './errors'
+  ADMIN_STAFF_SAFE_SELECT,
+  ROLE_GRANT_SELECT,
+  STAFF_ROLE_CHECK_SELECT,
+} from './admin-staff.select'
+import type { ADMIN_STAFF_SORT_FIELDS, CreateStaffDto } from './dtos'
+import { StaffNotFoundException } from './errors'
+import {
+  assertNotLastActiveAdmin,
+  isBuiltInAdmin,
+  resolveGrantedPermissions,
+  writePermissionAuditRow,
+} from './staff-permission-grants'
 
 /** One of the operator directory's allowed sort fields. */
 type AdminStaffSortField = (typeof ADMIN_STAFF_SORT_FIELDS)[number]
@@ -25,44 +26,16 @@ type AdminStaffSortField = (typeof ADMIN_STAFF_SORT_FIELDS)[number]
 /** Input for listing operators. */
 type ListStaffInput = { page?: number; limit?: number } & SortInput<AdminStaffSortField>
 
-/** What decides the set an operator is granted on creation or reassignment. */
-type ResolveGrantedPermissionsInput = {
-  isSuperAdmin: boolean
-  override: Permission[] | undefined
-  template: Permission[]
-}
-
-/** Where a permission diff came from — recorded on the detailed audit row. */
-type AuditSource = 'creation' | 'assignment' | 'manual'
-
-const BUILT_IN_ADMIN_NAME = 'ADMIN'
-
-/** The two role columns that identify the built-in super-admin role. */
-type RoleIdentity = { name: string; builtIn: boolean }
-
-/** Whether `role` is the built-in `ADMIN` — whose `permissions` are never consulted. */
-function isBuiltInAdmin(role: RoleIdentity): boolean {
-  return role.builtIn && role.name === BUILT_IN_ADMIN_NAME
-}
+/** An operator as returned to the panel — see {@link ADMIN_STAFF_SAFE_SELECT}. */
+type SafeStaff = Prisma.StaffGetPayload<{ select: typeof ADMIN_STAFF_SAFE_SELECT }>
 
 /** The 409 message when a concurrent create claimed the email or username first. */
 const EMAIL_OR_USERNAME_TAKEN = 'Email or username is already in use'
 
-/** The role columns that decide what an operator is granted. */
-const ROLE_GRANT_SELECT = {
-  name: true,
-  builtIn: true,
-  permissions: true,
-} as const satisfies Prisma.RoleSelect
-
-/** What the role/permission writes read off the target operator — never its credentials. */
-const STAFF_ROLE_CHECK_SELECT = {
-  roleId: true,
-  permissions: true,
-  role: { select: { name: true, builtIn: true } },
-} as const satisfies Prisma.StaffSelect
-
-/** Handles the operator directory, role assignment, and permission grants. */
+/**
+ * Handles the operator directory: listing, creation and deactivation. Role reassignment and
+ * direct permission grants on an existing operator live in `AdminStaffPermissionsService`.
+ */
 @Injectable()
 export class AdminStaffService {
   constructor(
@@ -111,145 +84,15 @@ export class AdminStaffService {
    * mapped to the same 409 rather than surfacing as a 500.
    */
   async create(dto: CreateStaffDto, actorStaffId: string) {
-    const [role] = await Promise.all([
-      this.prisma.role.findUnique({ where: { id: dto.roleId }, select: ROLE_GRANT_SELECT }),
-      this.assertEmailAvailable(dto.email),
-      this.assertUsernameAvailable(dto.username),
-    ])
-    if (!role) throw new NotFoundException(`Role ${dto.roleId} not found`)
-
-    const isSuperAdmin = isBuiltInAdmin(role)
-    const permissions = this.resolveGrantedPermissions({
-      isSuperAdmin,
-      override: dto.permissions,
-      template: role.permissions as Permission[],
-    })
-
+    const permissions = await this.resolveCreationGrant(dto)
     const hashedPassword = await this.token.hashPassword(dto.password)
 
     try {
-      return await this.prisma.$transaction(async (tx) => {
-        const staff = await tx.staff.create({
-          data: {
-            email: dto.email,
-            username: dto.username,
-            password: hashedPassword,
-            roleId: dto.roleId,
-            permissions,
-          },
-          select: ADMIN_STAFF_SAFE_SELECT,
-        })
-
-        await this.writeAuditRow(tx, {
-          actorStaffId,
-          targetStaffId: staff.id,
-          before: [],
-          after: permissions,
-          roleId: dto.roleId,
-          source: 'creation',
-        })
-
-        return staff
-      })
+      return await this.insertWithAudit(dto, permissions, hashedPassword, actorStaffId)
     } catch (error) {
       if (isPrismaP2002(error)) throw new ConflictException(EMAIL_OR_USERNAME_TAKEN)
       throw error
     }
-  }
-
-  /**
-   * Reassigns an operator to a different role. Without a `permissions` override the new
-   * role's current template is copied onto the operator.
-   *
-   * Assigning the built-in `ADMIN` role is the one legitimate escalation path in this system,
-   * and it is reachable only by callers who already hold `staff:write` — which, because that
-   * permission is protected, means only existing ADMINs. Do not narrow this further; that is
-   * the intended design, not an oversight.
-   */
-  async assignRole(id: string, dto: AssignStaffRoleDto, actorStaffId: string) {
-    return await this.prisma.$transaction(async (tx) => {
-      const staff = await tx.staff.findFirst({
-        where: { id, deletedAt: null },
-        select: STAFF_ROLE_CHECK_SELECT,
-      })
-      if (!staff) throw new StaffNotFoundException(id)
-
-      const newRole = await tx.role.findUnique({
-        where: { id: dto.roleId },
-        select: ROLE_GRANT_SELECT,
-      })
-      if (!newRole) throw new NotFoundException(`Role ${dto.roleId} not found`)
-
-      const wasSuperAdmin = isBuiltInAdmin(staff.role)
-      const isSuperAdmin = isBuiltInAdmin(newRole)
-      if (wasSuperAdmin && !isSuperAdmin) {
-        await this.assertNotLastActiveAdmin(tx, id)
-      }
-
-      const before = staff.permissions as Permission[]
-      const after = this.resolveGrantedPermissions({
-        isSuperAdmin,
-        override: dto.permissions,
-        template: newRole.permissions as Permission[],
-      })
-
-      const updated = await tx.staff.update({
-        where: { id },
-        data: { roleId: dto.roleId, permissions: after },
-        select: ADMIN_STAFF_SAFE_SELECT,
-      })
-
-      await this.writeAuditRow(tx, {
-        actorStaffId,
-        targetStaffId: id,
-        before,
-        after,
-        roleId: dto.roleId,
-        source: 'assignment',
-      })
-
-      return updated
-    })
-  }
-
-  /**
-   * Replaces an operator's own permission set directly, independent of its role's template.
-   * Never valid for an operator holding the built-in `ADMIN` role — that role's `permissions`
-   * are never consulted, so writing to them would be a silent no-op dressed up as a change.
-   */
-  async updatePermissions(id: string, dto: UpdateStaffPermissionsDto, actorStaffId: string) {
-    assertGrantable(dto.permissions)
-
-    return await this.prisma.$transaction(async (tx) => {
-      const staff = await tx.staff.findFirst({
-        where: { id, deletedAt: null },
-        select: STAFF_ROLE_CHECK_SELECT,
-      })
-      if (!staff) throw new StaffNotFoundException(id)
-      if (isBuiltInAdmin(staff.role)) {
-        throw new SuperAdminPermissionsException(id)
-      }
-
-      const before = staff.permissions as Permission[]
-      const after = normalizePermissions(dto.permissions as Permission[])
-
-      const updated = await tx.staff.update({
-        where: { id },
-        data: { permissions: after },
-        select: ADMIN_STAFF_SAFE_SELECT,
-      })
-
-      await this.writeAuditRow(tx, {
-        actorStaffId,
-        targetStaffId: id,
-        before,
-        after,
-        roleId: staff.roleId,
-        source: 'manual',
-      })
-
-      return updated
-    })
   }
 
   /**
@@ -265,7 +108,7 @@ export class AdminStaffService {
       })
       if (!staff) throw new StaffNotFoundException(id)
 
-      if (isBuiltInAdmin(staff.role)) await this.assertNotLastActiveAdmin(tx, id)
+      if (isBuiltInAdmin(staff.role)) await assertNotLastActiveAdmin(tx, id)
 
       const updated = await tx.staff.update({
         where: { id },
@@ -278,61 +121,51 @@ export class AdminStaffService {
     })
   }
 
-  /** Resolves the permission set to grant: `[]` for the built-in ADMIN, else override or template. */
-  private resolveGrantedPermissions({
-    isSuperAdmin,
-    override,
-    template,
-  }: ResolveGrantedPermissionsInput): Permission[] {
-    if (isSuperAdmin) return []
-    if (override) {
-      assertGrantable(override)
-      return normalizePermissions(override)
-    }
-    return normalizePermissions(template)
-  }
+  /** Checks the email/username are free and resolves what the new operator's role grants. */
+  private async resolveCreationGrant(dto: CreateStaffDto): Promise<Permission[]> {
+    const [role] = await Promise.all([
+      this.prisma.role.findUnique({ where: { id: dto.roleId }, select: ROLE_GRANT_SELECT }),
+      this.assertEmailAvailable(dto.email),
+      this.assertUsernameAvailable(dto.username),
+    ])
+    if (!role) throw new NotFoundException(`Role ${dto.roleId} not found`)
 
-  /** Throws {@link LastAdminException} if `excludingStaffId` is the last active built-in ADMIN. */
-  private async assertNotLastActiveAdmin(
-    tx: Prisma.TransactionClient,
-    excludingStaffId: string,
-  ): Promise<void> {
-    const remaining = await tx.staff.count({
-      where: {
-        role: { name: BUILT_IN_ADMIN_NAME, builtIn: true },
-        deletedAt: null,
-        id: { not: excludingStaffId },
-      },
+    return resolveGrantedPermissions({
+      isSuperAdmin: isBuiltInAdmin(role),
+      override: dto.permissions,
+      template: role.permissions as Permission[],
     })
-    if (remaining === 0) throw new LastAdminException()
   }
 
-  private async writeAuditRow(
-    tx: Prisma.TransactionClient,
-    input: {
-      actorStaffId: string
-      targetStaffId: string
-      before: Permission[]
-      after: Permission[]
-      roleId?: string
-      source: AuditSource
-    },
-  ): Promise<void> {
-    await tx.auditLog.create({
-      data: {
-        staffId: input.actorStaffId,
-        action: 'admin-staff.permissionsChanged',
-        entityType: 'admin-staff',
-        entityId: input.targetStaffId,
-        metadata: {
-          before: input.before,
-          after: input.after,
-          added: input.after.filter((permission) => !input.before.includes(permission)),
-          removed: input.before.filter((permission) => !input.after.includes(permission)),
-          ...(input.roleId && { roleId: input.roleId }),
-          source: input.source,
+  /** Inserts the operator and its `creation` permission audit row in one transaction. */
+  private insertWithAudit(
+    dto: CreateStaffDto,
+    permissions: Permission[],
+    hashedPassword: string,
+    actorStaffId: string,
+  ): Promise<SafeStaff> {
+    return this.prisma.$transaction(async (tx) => {
+      const staff = await tx.staff.create({
+        data: {
+          email: dto.email,
+          username: dto.username,
+          password: hashedPassword,
+          roleId: dto.roleId,
+          permissions,
         },
-      },
+        select: ADMIN_STAFF_SAFE_SELECT,
+      })
+
+      await writePermissionAuditRow(tx, {
+        actorStaffId,
+        targetStaffId: staff.id,
+        before: [],
+        after: permissions,
+        roleId: dto.roleId,
+        source: 'creation',
+      })
+
+      return staff
     })
   }
 
