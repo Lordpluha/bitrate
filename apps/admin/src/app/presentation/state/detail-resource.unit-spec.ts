@@ -29,6 +29,23 @@ describe('createDetailResource', () => {
     expect(resource.loading()).toBe(false)
   })
 
+  it('shows a record a write returned without fetching again', async () => {
+    let loads = 0
+    const resource = createDetailResource<Row>({
+      load: async () => {
+        loads += 1
+        return { id: 'a' }
+      },
+      errorMessage: 'nope',
+    })
+    await resource.reload()
+
+    resource.set({ id: 'b' })
+
+    expect(resource.value()).toEqual({ id: 'b' })
+    expect(loads).toBe(1)
+  })
+
   it('reports a missing record as not found, not as a failure', async () => {
     const resource = createDetailResource<Row>({
       load: () => Promise.reject(new ResourceNotFoundError()),

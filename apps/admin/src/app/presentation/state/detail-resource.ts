@@ -17,6 +17,8 @@ export type DetailResource<T> = {
   failure: WritableSignal<string | null>
   /** Fetches the record again — use on first render and after a write. */
   reload: () => Promise<void>
+  /** Shows a record a write already returned, without fetching it again. */
+  set: (record: T) => void
 }
 
 /**
@@ -52,5 +54,6 @@ export function createDetailResource<T>({
     notFound: notFound.asReadonly(),
     failure,
     reload,
+    set: (record: T) => value.set(record),
   }
 }
