@@ -1,4 +1,4 @@
-import { pipeline } from 'node:stream'
+import { pipeToResponse } from '@common/utils/stream'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
 import type { ArtistAuthRequest } from '@modules/artists-auth/types'
 import type { UserAuthRequest } from '@modules/users-auth/types'
@@ -63,18 +63,6 @@ const IMMUTABLE_CACHE_CONTROL = 'private, max-age=31536000, immutable, no-transf
 
 const logger = new Logger('TracksController')
 
-/**
- * Streams storage bytes into the response. Unlike `.pipe`, a failing source destroys the
- * response (and a dropped client destroys the source), so neither side hangs or leaks.
- */
-function pipeToResponse(stream: NodeJS.ReadableStream, res: Response): void {
-  pipeline(stream, res, (error) => {
-    if (error && error.code !== 'ERR_STREAM_PREMATURE_CLOSE') {
-      logger.warn(`Audio stream failed: ${error.message}`)
-    }
-  })
-}
-
 /** A storage read answering an optional HTTP Range request. */
 type RangeStream = {
   stream: NodeJS.ReadableStream
@@ -103,7 +91,7 @@ function sendRangeStream(
       ? { 'Content-Range': `bytes ${data.start}-${data.end}/${data.fileSize}` }
       : {}),
   })
-  pipeToResponse(data.stream, res)
+  pipeToResponse(data.stream, res, logger, 'Audio')
 }
 
 /** Track catalogue, uploads, likes and audio delivery. */
@@ -163,7 +151,7 @@ export class TracksController {
         ? IMMUTABLE_CACHE_CONTROL
         : 'private, max-age=30, no-transform',
     })
-    pipeToResponse(data.stream, res)
+    pipeToResponse(data.stream, res, logger, 'Audio')
   }
 
   @StreamTrackSwagger()
