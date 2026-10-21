@@ -1,3 +1,4 @@
+import { pipeline } from 'node:stream'
 import type { ArtistEntity } from '@modules/artists'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
 import type { UserEntity } from '@modules/users'
@@ -10,6 +11,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  Logger,
   Param,
   ParseEnumPipe,
   ParseIntPipe,
@@ -59,6 +61,20 @@ type TrackUploadFiles = { audio?: Express.Multer.File[]; cover?: Express.Multer.
 
 /** Rendition bytes never change, so they can be cached for a long time. */
 const IMMUTABLE_CACHE_CONTROL = 'private, max-age=31536000, immutable, no-transform'
+
+const logger = new Logger('TracksController')
+
+/**
+ * Streams storage bytes into the response. Unlike `.pipe`, a failing source destroys the
+ * response (and a dropped client destroys the source), so neither side hangs or leaks.
+ */
+function pipeToResponse(stream: NodeJS.ReadableStream, res: Response): void {
+  pipeline(stream, res, (error) => {
+    if (error && error.code !== 'ERR_STREAM_PREMATURE_CLOSE') {
+      logger.warn(`Audio stream failed: ${error.message}`)
+    }
+  })
+}
 
 /** Represents the tracks controller. */
 @ApiExtraModels(TrackEntity, TrackManifestEntity, TrackManifestRenditionEntity)
@@ -120,7 +136,7 @@ export class TracksController {
         ? IMMUTABLE_CACHE_CONTROL
         : 'private, max-age=30, no-transform',
     })
-    return data.stream.pipe(res)
+    pipeToResponse(data.stream, res)
   }
 
   /** Runs the stream track operation. */
@@ -158,7 +174,7 @@ export class TracksController {
         : {}),
     })
 
-    return streamData.stream.pipe(res)
+    pipeToResponse(streamData.stream, res)
   }
 
   /** Runs the post track operation. */
@@ -266,7 +282,7 @@ export class TracksController {
         : {}),
     })
 
-    return rendition.stream.pipe(res)
+    pipeToResponse(rendition.stream, res)
   }
 
   /** Runs the like track operation. */

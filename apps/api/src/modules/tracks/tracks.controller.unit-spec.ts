@@ -1,3 +1,6 @@
+import { once } from 'node:events'
+import { PassThrough, Readable } from 'node:stream'
+import { finished } from 'node:stream/promises'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { BadRequestException } from '@nestjs/common'
 import { buildAudioFile, buildTrack } from './__tests__/fixtures/tracks.fixtures'
@@ -32,6 +35,21 @@ const makeStreamingServiceMock = () =>
     getHlsMasterPlaylist: jest.fn(),
     getHlsAsset: jest.fn(),
   }) as unknown as jest.Mocked<TrackStreamingService>
+
+/** A source whose first read fails, as a dropped storage connection does. */
+const failingStream = () =>
+  new Readable({
+    read() {
+      this.destroy(new Error('storage connection reset'))
+    },
+  })
+
+/** A writable stand-in for the Express response that records headers. */
+const makeStreamResponse = () =>
+  Object.assign(new PassThrough(), {
+    set: jest.fn(),
+    status: jest.fn().mockReturnThis(),
+  })
 
 const makePlaybackServiceMock = () =>
   ({
@@ -90,33 +108,62 @@ describe('TracksController', () => {
     expect(result).toBe('sent')
   })
 
-  it('getHlsAsset should pipe an authenticated segment response', async () => {
-    const stream = { pipe: jest.fn().mockReturnValue('piped') }
+  it('getHlsAsset should stream an authenticated segment response', async () => {
     streamingService.getHlsAsset.mockResolvedValue({
-      stream,
+      stream: Readable.from([Buffer.from('segment')]),
       contentType: 'video/iso.segment',
       contentLength: 1024,
       immutable: true,
     } as never)
-    const res = { set: jest.fn() }
+    const res = makeStreamResponse()
 
-    const result = await controller.getHlsAsset('track-1', 192, 'segment_00000.m4s', res as never)
+    await controller.getHlsAsset('track-1', 192, 'segment_00000.m4s', res as never)
+    const [body] = (await once(res, 'data')) as [Buffer]
 
     expect(streamingService.getHlsAsset).toHaveBeenCalledWith('track-1', 192, 'segment_00000.m4s')
     expect(res.set).toHaveBeenCalledWith(expect.objectContaining({ 'Content-Length': 1024 }))
-    expect(stream.pipe).toHaveBeenCalledWith(res)
-    expect(result).toBe('piped')
+    expect(body.toString()).toBe('segment')
   })
 
+  it.each(['getHlsAsset', 'streamTrack', 'streamRendition'] as const)(
+    '%s should close the response when the storage stream fails',
+    async (route) => {
+      const stream = failingStream()
+      const data = {
+        stream,
+        contentType: 'audio/mp4',
+        contentLength: 1024,
+        immutable: true,
+        isPartial: false,
+        bitrate: 192,
+        format: 'opus',
+      }
+      streamingService.getHlsAsset.mockResolvedValue(data as never)
+      streamingService.getTrackStream.mockResolvedValue(data as never)
+      playbackService.getRenditionStream.mockResolvedValue(data as never)
+      const res = makeStreamResponse()
+      const req = { headers: {} } as never
+
+      if (route === 'getHlsAsset')
+        await controller.getHlsAsset('track-1', 192, 'init.mp4', res as never)
+      if (route === 'streamTrack') await controller.streamTrack('track-1', req, res as never)
+      if (route === 'streamRendition')
+        await controller.streamRendition('track-1', 192, req, res as never)
+
+      await expect(finished(res)).rejects.toThrow('storage connection reset')
+      expect(res.destroyed).toBe(true)
+    },
+  )
+
   it('getHlsAsset should omit Content-Length when the asset length is unknown', async () => {
-    const stream = { pipe: jest.fn().mockReturnValue('piped') }
+    const stream = Readable.from([])
     streamingService.getHlsAsset.mockResolvedValue({
       stream,
       contentType: 'video/iso.segment',
       contentLength: undefined,
       immutable: true,
     } as never)
-    const res = { set: jest.fn() }
+    const res = makeStreamResponse()
 
     await controller.getHlsAsset('track-1', 192, 'segment_00000.m4s', res as never)
 
@@ -125,7 +172,7 @@ describe('TracksController', () => {
   })
 
   it('streamTrack should omit Content-Length when the length is unknown', async () => {
-    const stream = { pipe: jest.fn().mockReturnValue('piped') }
+    const stream = Readable.from([])
     streamingService.getTrackStream.mockResolvedValue({
       stream,
       contentType: 'audio/mpeg',
@@ -138,7 +185,7 @@ describe('TracksController', () => {
       format: 'opus',
     } as never)
     const req = { headers: {} } as never
-    const res = { status: jest.fn().mockReturnThis(), set: jest.fn() }
+    const res = makeStreamResponse()
 
     await controller.streamTrack('track-1', req, res as never, undefined, 'opus')
 
