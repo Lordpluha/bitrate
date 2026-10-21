@@ -57,7 +57,12 @@ export const createPlayerState: StateCreator<PlayerState, [], []> = (
   togglePlay: () => set((state) => ({ isPlaying: !state.isPlaying })),
   setCurrentTime: (currentTime) => set({ currentTime }),
   setDuration: (duration) => set({ duration }),
-  setProgress: (progress) => set({ progress }),
+  setPlaybackTime: ({ currentTime, duration }) =>
+    set(
+      Number.isFinite(duration) && duration > 0
+        ? { currentTime, progress: (currentTime / duration) * 100 }
+        : { currentTime },
+    ),
   setVolume: (volume) => set({ volume }),
   setPlaylistTracks: (playlist) =>
     set((state) => {
