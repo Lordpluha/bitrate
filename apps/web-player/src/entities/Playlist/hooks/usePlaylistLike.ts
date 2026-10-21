@@ -5,7 +5,7 @@ import {
   useLikePlaylist,
   useUnlikePlaylist,
 } from '@/entities/Playlist/api/client'
-import { showApiErrorToast, showApiSuccessToast } from '@/shared/api/feedback'
+import { showApiSuccessToast } from '@/shared/api/feedback'
 import { useAuth } from '@/shared/hooks'
 
 export type LikeablePlaylist = {
@@ -27,28 +27,21 @@ export const usePlaylistLike = ({ playlist }: UsePlaylistLikeOptions) => {
     likedPlaylists?.some((liked) => liked.id === playlist.id) ?? false
   const isPending = likePlaylist.isPending || unlikePlaylist.isPending
 
-  const toggleLike = async () => {
+  /** Failures are toasted by the query client's mutation cache. */
+  const toggleLike = () => {
     if (isPending) return
 
-    try {
-      if (isLiked) {
-        await unlikePlaylist.mutateAsync({
-          params: { path: { id: playlist.id } },
-        })
-        showApiSuccessToast('Removed from Your Library')
-        return
-      }
-
-      await likePlaylist.mutateAsync({
-        params: { path: { id: playlist.id } },
+    const variables = { params: { path: { id: playlist.id } } }
+    if (isLiked) {
+      unlikePlaylist.mutate(variables, {
+        onSuccess: () => showApiSuccessToast('Removed from Your Library'),
       })
-      showApiSuccessToast('Added to Your Library')
-    } catch (error) {
-      showApiErrorToast(
-        error,
-        `Failed to update ${playlist.title ?? 'playlist'}`,
-      )
+      return
     }
+
+    likePlaylist.mutate(variables, {
+      onSuccess: () => showApiSuccessToast('Added to Your Library'),
+    })
   }
 
   return {

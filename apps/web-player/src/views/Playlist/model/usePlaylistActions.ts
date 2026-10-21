@@ -8,7 +8,7 @@ import {
   useRemoveTrackFromPlaylist,
 } from '@/entities/Playlist'
 import type { TrackEntity } from '@/entities/Track'
-import { showApiErrorToast, showApiSuccessToast } from '@/shared/api/feedback'
+import { showApiSuccessToast } from '@/shared/api/feedback'
 import { ROUTES } from '@/shared/routes'
 import type { PlaylistActions } from '@/views/Playlist/model/playlist.types'
 
@@ -33,51 +33,45 @@ export const usePlaylistActions = ({
     [tracks],
   )
 
-  const deletePlaylist = async () => {
+  /** Failures are toasted by the query client's mutation cache. */
+  const deletePlaylist = () => {
     if (!window.confirm('Delete this playlist?')) return
 
-    try {
-      await deleteMutation.mutateAsync(playlistId)
-      showApiSuccessToast('Playlist deleted')
-      router.push(ROUTES.main)
-    } catch (error) {
-      showApiErrorToast(error, 'Failed to delete playlist')
-    }
+    deleteMutation.mutate(playlistId, {
+      onSuccess: () => {
+        showApiSuccessToast('Playlist deleted')
+        router.push(ROUTES.main)
+      },
+    })
   }
 
-  const removeTrack = async (trackId: string) => {
-    try {
-      await removeTrackMutation.mutateAsync({
-        params: { path: { id: playlistId, trackId } },
-      })
-      showApiSuccessToast('Track removed from playlist')
-    } catch (error) {
-      showApiErrorToast(error, 'Failed to remove track from playlist')
-    }
-  }
+  const removeTrack = (trackId: string) =>
+    removeTrackMutation.mutate(
+      { params: { path: { id: playlistId, trackId } } },
+      { onSuccess: () => showApiSuccessToast('Track removed from playlist') },
+    )
 
-  const addTrack = async (track: TrackEntity) => {
+  const addTrack = (track: TrackEntity) => {
     if (existingTrackIds.has(track.id)) return
 
-    try {
-      setAddingTrackId(track.id)
-      await addTracksMutation.mutateAsync({
+    setAddingTrackId(track.id)
+    addTracksMutation.mutate(
+      {
         body: { trackIds: [track.id] },
         params: { path: { id: playlistId } },
-      })
-      showApiSuccessToast(`Added to ${playlistTitle}`)
-    } catch (error) {
-      showApiErrorToast(error, 'Failed to add track to playlist')
-    } finally {
-      setAddingTrackId(null)
-    }
+      },
+      {
+        onSettled: () => setAddingTrackId(null),
+        onSuccess: () => showApiSuccessToast(`Added to ${playlistTitle}`),
+      },
+    )
   }
 
   return {
     addingTrackId,
-    deletePlaylist: () => void deletePlaylist(),
+    deletePlaylist,
     existingTrackIds,
-    addTrack: (track) => void addTrack(track),
-    removeTrack: (trackId) => void removeTrack(trackId),
+    addTrack,
+    removeTrack,
   }
 }

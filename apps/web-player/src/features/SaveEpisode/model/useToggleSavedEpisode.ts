@@ -7,7 +7,6 @@ import {
   useSaveEpisode,
   useUnsaveEpisode,
 } from '@/entities/Podcast'
-import { showApiErrorToast } from '@/shared/api/feedback'
 
 type UseToggleSavedEpisodeInput = {
   /** The show the toggled episodes belong to, shown in the library entry of a new save. */
@@ -19,7 +18,7 @@ type ToggleSavedEpisodeInput = {
   isSaved: boolean
 }
 
-/** Saves or removes one of the show's episodes, reporting a failed request in a toast. */
+/** Saves or removes one of the show's episodes; the mutation cache toasts a failed request. */
 export const useToggleSavedEpisode = ({
   podcast,
 }: UseToggleSavedEpisodeInput) => {
@@ -28,16 +27,10 @@ export const useToggleSavedEpisode = ({
 
   return ({ episode, isSaved }: ToggleSavedEpisodeInput) => {
     if (isSaved) {
-      unsaveEpisode.mutate(episode.id, {
-        onError: (error) =>
-          showApiErrorToast(error, `Unable to remove ${episode.title}.`),
-      })
+      unsaveEpisode.mutate(episode.id)
       return
     }
 
-    saveEpisode.mutate(toSavedEpisode({ episode, podcast }), {
-      onError: (error) =>
-        showApiErrorToast(error, `Unable to save ${episode.title}.`),
-    })
+    saveEpisode.mutate(toSavedEpisode({ episode, podcast }))
   }
 }

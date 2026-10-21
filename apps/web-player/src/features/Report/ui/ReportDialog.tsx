@@ -3,7 +3,7 @@
 import { cn } from '@bitrate/ui-react'
 import { useState } from 'react'
 import { useCreateModerationReport } from '@/entities/Moderation'
-import { showApiErrorToast, showApiSuccessToast } from '@/shared/api/feedback'
+import { showApiSuccessToast } from '@/shared/api/feedback'
 import { Z_INDEX_CLASS } from '@/shared/constants'
 import { useOverlayFocus } from '@/shared/hooks/useOverlayFocus'
 
@@ -52,23 +52,25 @@ export const ReportDialog = ({
 
   if (!isOpen) return null
 
-  const submitReport = async () => {
-    try {
-      await createReport.mutateAsync({
+  /** Failures are toasted by the query client's mutation cache. */
+  const submitReport = () =>
+    createReport.mutate(
+      {
         body: {
           details: details.trim() || undefined,
           entityId,
           entityType,
           reason,
         },
-      })
-      showApiSuccessToast(`Report for ${entityName} was submitted`)
-      setDetails('')
-      onClose()
-    } catch (error) {
-      showApiErrorToast(error, 'Could not submit report')
-    }
-  }
+      },
+      {
+        onSuccess: () => {
+          showApiSuccessToast(`Report for ${entityName} was submitted`)
+          setDetails('')
+          onClose()
+        },
+      },
+    )
 
   return (
     <div
@@ -133,7 +135,7 @@ export const ReportDialog = ({
           <button
             className="rounded-full bg-text px-5 py-2 text-sm font-bold text-background disabled:opacity-60"
             disabled={createReport.isPending}
-            onClick={() => void submitReport()}
+            onClick={submitReport}
             type="button"
           >
             {createReport.isPending ? 'Sending...' : 'Send report'}

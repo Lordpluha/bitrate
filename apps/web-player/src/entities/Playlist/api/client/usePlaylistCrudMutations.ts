@@ -18,6 +18,7 @@ export const useCreatePlaylist = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
+    meta: { errorMessage: 'Failed to create playlist' },
     mutationFn: async (body: CreatePlaylistPayload) => {
       const { data, response } = await clientFetchClient.POST(
         '/api/v1/playlists',
@@ -43,6 +44,7 @@ export const useUpdatePlaylist = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
+    meta: { errorMessage: 'Failed to update playlist' },
     mutationFn: async ({
       playlistId,
       body,
@@ -75,6 +77,7 @@ export const useDeletePlaylist = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
+    meta: { errorMessage: 'Failed to delete playlist' },
     mutationFn: async (playlistId: string) => {
       const { response } = await clientFetchClient.DELETE(
         '/api/v1/playlists/{id}',

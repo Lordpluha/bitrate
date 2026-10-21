@@ -80,10 +80,14 @@ export const albumDetailQuery = (albumId: string) =>
 export const useAlbum = (albumId?: string) =>
   useQuery({ ...albumDetailQuery(albumId ?? ''), enabled: !!albumId })
 
+/** Fallback for the mutation cache's error toast. */
+const LIBRARY_ERROR_MESSAGE = 'Could not update your library'
+
 export const useLikeAlbum = () => {
   const queryClient = useQueryClient()
 
   return useMutation('post', '/api/v1/albums/{id}/like', {
+    meta: { errorMessage: LIBRARY_ERROR_MESSAGE },
     onSuccess: async (_data, variables) => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: apiQueryKeys.albums.all }),
@@ -99,6 +103,7 @@ export const useUnlikeAlbum = () => {
   const queryClient = useQueryClient()
 
   return useMutation('delete', '/api/v1/albums/{id}/like', {
+    meta: { errorMessage: LIBRARY_ERROR_MESSAGE },
     onSuccess: async (_data, variables) => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: apiQueryKeys.albums.all }),
