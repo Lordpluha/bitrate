@@ -107,6 +107,7 @@ export function register(add) {
             ]),
           ],
         ),
+        { cell: 'medium' },
       ),
     )
   }

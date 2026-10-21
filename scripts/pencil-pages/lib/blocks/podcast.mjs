@@ -118,6 +118,7 @@ const epRow = (name, kind) =>
         ]),
       ],
     ),
+    { cell: 'wide' },
   )
 const skip = (icon, n) =>
   Col({ name: `Skip ${n}`, gap: 0, alignItems: 'center' }, [
@@ -186,6 +187,7 @@ export function register(add) {
           part('duration', T('8 min', { fontSize: 12, fill: C.mutedForeground })),
         ],
       ),
+      { cell: 'wide' },
     ),
     comp(
       'Podcast/Chapter Active',
@@ -206,6 +208,7 @@ export function register(add) {
           part('duration', T('8 min', { fontSize: 12, fill: C.mutedForeground })),
         ],
       ),
+      { cell: 'wide' },
     ),
     comp(
       'Podcast/Seek Chapters',
@@ -230,6 +233,7 @@ export function register(add) {
           part('duration', T('-23:48', { fontSize: 12, fill: C.mutedForeground })),
         ]),
       ]),
+      { cell: 'wide' },
     ),
   )
 }

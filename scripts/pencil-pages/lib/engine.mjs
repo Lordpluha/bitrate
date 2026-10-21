@@ -47,8 +47,16 @@ export const restamp = (name, node) => {
   }
   visit(node, '0')
 }
-export const comp = (name, node) => {
+const cells = new WeakMap()
+/** The page-blocks cell size a component asked for in comp(), if any. */
+export const cellOf = (node) => cells.get(node)
+/**
+ * Makes `node` the reusable component `name`: stable ids, parts recorded in the registry. `cell` sizes
+ * its page-blocks cell when its width follows its parent: 'medium' (480) or 'wide' (960).
+ */
+export const comp = (name, node, { cell } = {}) => {
   restamp(name, node)
+  if (cell) cells.set(node, cell)
   node.reusable = true
   node.name = name
   const parts = {}

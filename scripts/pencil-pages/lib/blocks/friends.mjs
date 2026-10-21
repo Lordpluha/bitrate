@@ -83,6 +83,7 @@ export function register(add) {
           }),
         ],
       ),
+      { cell: 'medium' },
     )
     add(node)
   }
@@ -137,6 +138,7 @@ export function register(add) {
           }),
         ],
       ),
+      { cell: 'medium' },
     ),
   )
 }

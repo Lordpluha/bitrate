@@ -338,6 +338,7 @@ export function register(add) {
         ]),
         slot('actions', { layout: 'horizontal', width: 'fit_content', gap: 10 }),
       ]),
+      { cell: 'wide' },
     ),
     comp(
       'Table/Header Row',
@@ -353,6 +354,7 @@ export function register(add) {
         },
         [slot('cells', { layout: 'horizontal', gap: 16, alignItems: 'center' })],
       ),
+      { cell: 'wide' },
     ),
     comp(
       'Table/Row',
@@ -368,6 +370,7 @@ export function register(add) {
         },
         [slot('cells', { layout: 'horizontal', gap: 16, alignItems: 'center' })],
       ),
+      { cell: 'wide' },
     ),
     comp(
       'Table/Row Selected',
@@ -383,6 +386,7 @@ export function register(add) {
         },
         [slot('cells', { layout: 'horizontal', gap: 16, alignItems: 'center' })],
       ),
+      { cell: 'wide' },
     ),
     comp(
       'Key Value Row',
@@ -404,6 +408,7 @@ export function register(add) {
           }),
         ],
       ),
+      { cell: 'medium' },
     ),
     ...[
       ['Done', 'circle-check', C.success],
@@ -471,6 +476,7 @@ export function register(add) {
           part('action', T('Cancel', { fontSize: 13, fontWeight: '600', fill: C.mutedForeground })),
         ],
       ),
+      { cell: 'medium' },
     ),
     comp(
       'Option Card',
@@ -566,6 +572,7 @@ export function register(add) {
           }),
         ],
       ),
+      { cell: 'medium' },
     ),
     comp(
       'Date Row',
@@ -591,6 +598,7 @@ export function register(add) {
           part('meta', T('Meta', { fontSize: 13, fill: C.mutedForeground })),
         ]),
       ]),
+      { cell: 'medium' },
     ),
     comp(
       'Activity Item',
@@ -643,6 +651,7 @@ export function register(add) {
           I('chevron-right', { width: 16, height: 16 }),
         ],
       ),
+      { cell: 'wide' },
     ),
     comp(
       'Result Row/Selected',
@@ -676,6 +685,7 @@ export function register(add) {
           I('corner-down-left', { width: 16, height: 16 }),
         ],
       ),
+      { cell: 'wide' },
     ),
   )
 

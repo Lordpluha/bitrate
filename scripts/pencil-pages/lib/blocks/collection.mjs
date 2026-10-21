@@ -29,6 +29,7 @@ const collectionHeader = (name, coverNode) =>
         ]),
       ],
     ),
+    { cell: 'wide' },
   )
 /** Registers this section's library components, in build order. */
 export function register(add) {
@@ -80,6 +81,7 @@ export function register(add) {
         part('title', H('Section', 22)),
         part('action', T('Show all', { fontSize: 13, fontWeight: '600', fill: C.mutedForeground })),
       ]),
+      { cell: 'wide' },
     ),
     comp(
       'Track Table/Header',
@@ -131,6 +133,7 @@ export function register(add) {
           ]),
         ],
       ),
+      { cell: 'wide' },
     ),
     comp(
       'Track Row/Playing',
@@ -178,6 +181,7 @@ export function register(add) {
           ]),
         ],
       ),
+      { cell: 'wide' },
     ),
   )
 }

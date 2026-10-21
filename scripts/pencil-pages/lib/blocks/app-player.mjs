@@ -35,6 +35,7 @@ const cmdItem = (name, active) =>
         part('hint', T(active ? '↵' : '', { fontSize: 12, fill: C.mutedForeground })),
       ],
     ),
+    { cell: 'medium' },
   )
 const ATMO = {
   type: 'gradient',
@@ -172,6 +173,7 @@ export function register(add) {
           part('hint', T('', { fontSize: 12, fill: C.mutedForeground })),
         ],
       ),
+      { cell: 'medium' },
     ),
   )
   add(
@@ -414,7 +416,7 @@ export function register(add) {
         [videoControls()],
       ),
     ),
-    comp('Video/Control Bar', videoControls()),
+    comp('Video/Control Bar', videoControls(), { cell: 'wide' }),
   )
   add(
     tabPill('Tabs/Expandable', false),
