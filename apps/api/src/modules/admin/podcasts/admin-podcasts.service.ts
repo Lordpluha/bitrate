@@ -114,14 +114,17 @@ export class AdminPodcastsService {
     order,
   }: ListPodcastsInput) {
     const where = this.buildWhere({ status, q })
-    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const orderBy = buildSortOrderBy<Prisma.PodcastOrderByWithRelationInput>({ sort, order }, [
+      { createdAt: 'desc' },
+      { id: 'desc' },
+    ])
     const [rows, total] = await Promise.all([
       this.prisma.podcast.findMany({
         where,
         select: PODCAST_ROW_SELECT,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: orderBy as unknown as Prisma.PodcastOrderByWithRelationInput[],
+        orderBy,
       }),
       this.prisma.podcast.count({ where }),
     ])

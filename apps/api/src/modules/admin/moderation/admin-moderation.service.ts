@@ -61,13 +61,16 @@ export class AdminModerationService {
       ...(status && { status }),
       ...(entityType && { entityType }),
     } satisfies Prisma.ModerationReportWhereInput
-    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const orderBy = buildSortOrderBy<Prisma.ModerationReportOrderByWithRelationInput>(
+      { sort, order },
+      [{ createdAt: 'desc' }, { id: 'desc' }],
+    )
     const [data, total] = await Promise.all([
       this.prisma.moderationReport.findMany({
         where,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: orderBy as unknown as Prisma.ModerationReportOrderByWithRelationInput[],
+        orderBy,
       }),
       this.prisma.moderationReport.count({ where }),
     ])
@@ -88,7 +91,10 @@ export class AdminModerationService {
       ...(status && { status }),
       ...(entityType && { entityType }),
     } satisfies Prisma.ModerationReportWhereInput
-    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const orderBy = buildSortOrderBy<Prisma.ModerationReportOrderByWithRelationInput>(
+      { sort, order },
+      [{ createdAt: 'desc' }, { id: 'desc' }],
+    )
     const total = await this.prisma.moderationReport.count({ where })
 
     return openCsvExport({
@@ -103,7 +109,7 @@ export class AdminModerationService {
         this.prisma.moderationReport.findMany({
           where,
           select: ADMIN_REPORT_EXPORT_SELECT,
-          orderBy: orderBy as unknown as Prisma.ModerationReportOrderByWithRelationInput[],
+          orderBy,
           skip,
           take,
         }),

@@ -65,14 +65,17 @@ export class AdminStaffService {
   /** Runs the find all operation, paginated. */
   async findAll({ page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, sort, order }: ListStaffInput) {
     const where = { deletedAt: null } satisfies Prisma.StaffWhereInput
-    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const orderBy = buildSortOrderBy<Prisma.StaffOrderByWithRelationInput>({ sort, order }, [
+      { createdAt: 'desc' },
+      { id: 'desc' },
+    ])
     const [data, total] = await Promise.all([
       this.prisma.staff.findMany({
         where,
         select: ADMIN_STAFF_SAFE_SELECT,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: orderBy as unknown as Prisma.StaffOrderByWithRelationInput[],
+        orderBy,
       }),
       this.prisma.staff.count({ where }),
     ])

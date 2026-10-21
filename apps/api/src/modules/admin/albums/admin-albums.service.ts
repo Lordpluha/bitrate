@@ -96,14 +96,17 @@ export class AdminAlbumsService {
     order,
   }: ListAlbumsInput) {
     const where = this.buildWhere({ status, artistId, q })
-    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const orderBy = buildSortOrderBy<Prisma.AlbumOrderByWithRelationInput>({ sort, order }, [
+      { createdAt: 'desc' },
+      { id: 'desc' },
+    ])
     const [rows, total] = await Promise.all([
       this.prisma.album.findMany({
         where,
         select: ALBUM_ROW_SELECT,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: orderBy as unknown as Prisma.AlbumOrderByWithRelationInput[],
+        orderBy,
       }),
       this.prisma.album.count({ where }),
     ])
