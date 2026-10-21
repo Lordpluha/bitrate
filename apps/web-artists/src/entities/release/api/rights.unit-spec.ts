@@ -1,6 +1,6 @@
 import { clientFetchClient } from '@shared/api/fetchClient'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { saveSplits } from './rights'
+import { saveSplits, submitRelease } from './rights'
 
 const id = '019a0000-0000-7000-8000-000000000200'
 const contributorId = '10af9f3e-2c5c-486b-9374-c67f8b556683'
@@ -21,8 +21,12 @@ const input = {
   expectedUpdatedAt,
 }
 
-function respond(status: number, body: unknown) {
-  vi.spyOn(clientFetchClient, 'PUT').mockResolvedValue({
+function respond(
+  status: number,
+  body: unknown,
+  method: 'PUT' | 'POST' = 'PUT',
+) {
+  vi.spyOn(clientFetchClient, method).mockResolvedValue({
     data: status < 400 ? body : undefined,
     error: status < 400 ? undefined : body,
     response: new Response(null, { status }),
@@ -58,5 +62,26 @@ describe('saveSplits', () => {
     await expect(saveSplits({ id, input })).rejects.toThrow(
       'This release changed or is no longer a draft',
     )
+  })
+})
+
+describe('submitRelease', () => {
+  const submit = () =>
+    submitRelease({ id, input: { reviewed: true, expectedUpdatedAt } })
+
+  it('counts the blockers the API reports', async () => {
+    respond(
+      422,
+      { blockers: [{ code: 'NO_TRACKS' }, { code: 'COVER_MISSING' }] },
+      'POST',
+    )
+    await expect(submit()).rejects.toThrow(
+      'Resolve 2 blockers before submission.',
+    )
+  })
+
+  it('confirms a release that moved to review', async () => {
+    respond(200, { ...release, status: 'SUBMITTED' }, 'POST')
+    await expect(submit()).resolves.toMatchObject({ status: 'SUBMITTED' })
   })
 })
