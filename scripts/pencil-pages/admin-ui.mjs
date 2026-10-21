@@ -229,21 +229,23 @@ const NAV_ICON = {
 const PAGE_LABEL = { overview: 'Overview', ...NAV_LABEL }
 /** Overrides shared by the sidebar and the phone menu: the active page, theme, language, hidden items. */
 const panel = ({ page = 'overview', theme = 'Dark', uk = false, rail = false, hide = [] } = {}) => {
-  const active = rail
-    ? A(
-        'Admin/Rail Item Active',
-        { name: `Nav / ${PAGE_LABEL[page]}` },
-        { icon: { icon: NAV_ICON[page] } },
-      )
-    : A(
-        'Admin/Nav Item Active',
-        { name: `Nav / ${PAGE_LABEL[page]}` },
-        {
-          icon: { icon: NAV_ICON[page] },
-          label: { content: PAGE_LABEL[page] },
-          count: { enabled: false },
-        },
-      )
+  const active = !NAV_ICON[page]
+    ? undefined
+    : rail
+      ? A(
+          'Admin/Rail Item Active',
+          { name: `Nav / ${PAGE_LABEL[page]}` },
+          { icon: { icon: NAV_ICON[page] } },
+        )
+      : A(
+          'Admin/Nav Item Active',
+          { name: `Nav / ${PAGE_LABEL[page]}` },
+          {
+            icon: { icon: NAV_ICON[page] },
+            label: { content: PAGE_LABEL[page] },
+            count: { enabled: false },
+          },
+        )
   const o = { [`nav_${page}`]: active, 'pref_theme.icon': { icon: THEME_ICON[theme] } }
   if (!rail) {
     o['pref_theme.label'] = { content: theme }
@@ -261,7 +263,7 @@ const panel = ({ page = 'overview', theme = 'Dark', uk = false, rail = false, hi
 }
 /** The island: the page name, and a live pocket when it reports a status. */
 const islandParts = (page, pocket, unread = true) => ({
-  'island.crumb': { content: PAGE_LABEL[page] },
+  'island.crumb': { content: PAGE_LABEL[page] ?? 'Not found' },
   ...(pocket
     ? {
         'island.pocket': { enabled: true },
@@ -342,7 +344,14 @@ export function MShell(
   { page = 'overview', uk = false, unread = true, fit = false } = {},
 ) {
   /* notification settings belong to the alerts tab (the bell's list leads there); sections open from the menu */
-  const tab = page === 'overview' ? 'overview' : page === 'notifications' ? 'alerts' : 'menu'
+  const tab =
+    page === 'overview'
+      ? 'overview'
+      : page === 'notifications'
+        ? 'alerts'
+        : NAV_ICON[page]
+          ? 'menu'
+          : null
   const tabs = {}
   for (const [k, icon] of [
     ['overview', 'layout-dashboard'],

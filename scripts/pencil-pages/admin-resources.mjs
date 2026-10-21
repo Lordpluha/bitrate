@@ -2828,6 +2828,30 @@ const login = {
   },
   states: ['blank', 'errors', 'saving', 'wrong', 'locked', 'expired', 'offline'],
 }
+/* any address the console doesn't know: inside the shell, with ways back */
+const notFound = {
+  kind: 'lost',
+  route: '** (any unknown address, staff session; replaces the silent redirect to /)',
+  hash: 'not-found',
+  icon: 'search',
+  code: '404',
+  title: 'This page doesn’t exist',
+  sub: 'The link may be old, or the record was removed. Nothing is wrong with your account.',
+  path: '/moderation/R-0000',
+  actions: [
+    { icon: 'dashboard', label: 'Go to Overview', primary: true, page: 'overview' },
+    { icon: 'search', label: 'Search the console', palette: true },
+  ],
+  linksTitle: 'Where people usually go',
+  linksMeta: 'Sections in your role',
+  links: [
+    ['flag', 'Moderation', '16 open reports', 'moderation'],
+    ['disc', 'Releases', '7 awaiting review', 'releases'],
+    ['audio', 'Catalog', '4 tracks need attention', 'catalog'],
+    ['scroll', 'Audit log', 'Latest staff actions', 'audit'],
+  ],
+  states: ['offline'],
+}
 const noAccess = {
   kind: 'auth',
   route: '/no-access (staff session, no sections)',
@@ -2875,6 +2899,7 @@ export const RESOURCES = {
   'staff-member': staffMember,
   login,
   'no-access': noAccess,
+  'not-found': notFound,
 }
 
 /** States drawn for every page of a kind (desktop + mobile each). */
@@ -3665,6 +3690,19 @@ export const RESOURCES_UK = {
   'No results for': 'Нічого не знайдено за запитом',
   'Prototype only': 'Лише прототип',
   'Signed in': 'Ви увійшли',
+  'This page doesn’t exist': 'Такої сторінки немає',
+  'The link may be old, or the record was removed. Nothing is wrong with your account.':
+    'Посилання могло застаріти або запис видалено. З вашим акаунтом усе гаразд.',
+  'You opened': 'Ви відкрили',
+  'Go to Overview': 'На огляд',
+  'Search the console': 'Пошук у консолі',
+  'Where people usually go': 'Куди зазвичай переходять',
+  'Sections in your role': 'Розділи у вашій ролі',
+  '16 open reports': '16 відкритих скарг',
+  '7 awaiting review': '7 чекають перевірки',
+  '4 tracks need attention': '4 треки потребують уваги',
+  'Latest staff actions': 'Останні дії персоналу',
+  'Not found': 'Не знайдено',
   'Still no sections': 'Розділів досі немає',
   Play: 'Відтворити',
   'All statuses': 'Усі статуси',

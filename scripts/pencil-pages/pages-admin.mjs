@@ -1385,7 +1385,7 @@ export const adminPages = {
     title: 'Admin / Overview',
     route: '/ (requireStaffSession + overview:read)',
     context:
-      'Operations centre for staff, drawn after the admin prototype: glass bento tiles over the aurora — what needs action first, then KPIs, listens, the track pipeline, reports by type, accounts and the audit trail. Every tile opens its analysis. The sidebar footer switches the language (English ↔ Українська), cycles the theme (Dark → Light → Dim) and collapses the panel to a rail. Not-found is not drawn: unknown admin routes redirect to /. Overlays (bell, profile menu, command palette, menu) are drawn in the flow under the top bar; the prototype shows them floating.',
+      'Operations centre for staff, drawn after the admin prototype: glass bento tiles over the aurora — what needs action first, then KPIs, listens, the track pipeline, reports by type, accounts and the audit trail. Every tile opens its analysis. The sidebar footer switches the language (English ↔ Українська), cycles the theme (Dark → Light → Dim) and collapses the panel to a rail. Not-found is not a state of this page: unknown admin addresses open the 404 page (not-found/not-found.pen). Overlays (bell, profile menu, command palette, menu) are drawn in the flow under the top bar; the prototype shows them floating.',
     desktop: (theme) => Shell('Overview', overview(false), { theme }),
     mobile: () => MShell('Overview', overview(true), 2915),
     extra: [['Interaction notes', notesFrame]],

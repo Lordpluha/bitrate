@@ -28,6 +28,7 @@ const ICON = {
   audio: 'audio-lines',
   list: 'list',
   scroll: 'scroll-text',
+  dashboard: 'layout-dashboard',
   disc: 'disc-3',
   clock: 'clock',
   trend: 'trending-up',
@@ -864,6 +865,114 @@ const authPage = (key, sp) => ({
   }),
 })
 
+/* ---------- 404: inside the shell, with the address and ways back ---------- */
+const lostNodes = (sp, st, m) => [
+  st === 'offline' ? banner() : null,
+  panel([
+    L(
+      {
+        name: 'Lost',
+        layout: 'vertical',
+        gap: 12,
+        alignItems: 'center',
+        width: 'fill_container',
+        padding: m ? [36, 18, 28, 18] : [48, 24, 40, 24],
+      },
+      [
+        Tx('Display', sp.code, {
+          fontSize: m ? 84 : 132,
+          letterSpacing: -4,
+          fill: {
+            type: 'gradient',
+            gradientType: 'linear',
+            rotation: 90,
+            colors: [
+              { color: C.accent, position: 0 },
+              { color: C.blue500, position: 1 },
+            ],
+          },
+        }),
+        Tx('H1', sp.title, { textAlign: 'center', ...(m ? WRAP : {}) }),
+        Tx('Muted', sp.sub, {
+          textAlign: 'center',
+          width: m ? 'fill_container' : 460,
+          textGrowth: 'fixed-width',
+        }),
+        A('Admin/Path', { name: 'Path' }, { path: { content: sp.path } }),
+        Row(
+          {
+            name: 'Actions',
+            gap: 8,
+            padding: [8, 0, 0, 0],
+            ...(m ? { layout: 'vertical', alignItems: 'center' } : {}),
+          },
+          sp.actions.map((a) =>
+            Btn(
+              a.primary ? 'Default' : 'Glass',
+              a.label,
+              a.palette ? 'search' : 'layout-dashboard',
+            ),
+          ),
+        ),
+      ],
+    ),
+  ]),
+  A(
+    'Admin/Tile',
+    { name: 'Tile / Links', ...W },
+    {
+      icon: { icon: 'layout-dashboard' },
+      title: { content: sp.linksTitle },
+      meta: { content: sp.linksMeta },
+      actions: { enabled: false },
+      content: L(
+        { name: 'Links', layout: 'vertical', gap: 10, width: 'fill_container' },
+        (m ? sp.links.map((l) => [l]) : [sp.links.slice(0, 2), sp.links.slice(2)]).map((pair, i) =>
+          Row(
+            { name: `Links ${i + 1}`, gap: 10, width: 'fill_container' },
+            pair.map(([ic, label, desc]) =>
+              A(
+                'Admin/Action Row/Info',
+                { name: `Link / ${label}`, ...W },
+                {
+                  icon: { icon: icon(ic) },
+                  title: { content: label },
+                  meta: { content: desc },
+                  count: { enabled: false },
+                },
+              ),
+            ),
+          ),
+        ),
+      ),
+    },
+  ),
+]
+const lostPage = (key, sp) => {
+  const D = (label, st) => (theme) =>
+    Shell(label, lostNodes(sp, st, false), {
+      page: key,
+      theme: theme ?? 'Dark',
+      fit: true,
+      pocket: pocketFor(st, sp),
+    })
+  const M = (label, st) => () => MShell(label, lostNodes(sp, st, true), 0, { page: key, fit: true })
+  return {
+    title: 'Admin / Not found',
+    route: sp.route,
+    context: `${sp.sub} Shown for any address the console doesn't know (apps/admin's ** route), inside the shell. Same data as the prototype (#${sp.hash}; any unknown hash opens it).`,
+    desktop: (theme) => D('Default', 'default')(theme),
+    mobile: M('Default', 'default'),
+    states: sp.states.map((st) =>
+      state(
+        STATE_LABEL[st] ?? st,
+        () => D(STATE_LABEL[st] ?? st, st)(),
+        M(STATE_LABEL[st] ?? st, st),
+      ),
+    ),
+  }
+}
+
 /* ---------- pages ---------- */
 const dialogKeys = (sp) =>
   Object.entries(sp.dialogs ?? {}).flatMap(([k, d]) => (d.field ? [k, 'invalid'] : [k]))
@@ -881,6 +990,7 @@ const statesOf = (sp) =>
       ).flatMap((s) => (s === 'dialogs' ? dialogKeys(sp) : [s]))
 function resourcePage(key, sp) {
   if (sp.kind === 'auth') return authPage(key, sp)
+  if (sp.kind === 'lost') return lostPage(key, sp)
   const nodes = sp.kind === 'list' ? listNodes : sp.kind === 'form' ? formNodes : detailNodes
   const page = sp.nav
   const title = `Admin / ${sp.kind === 'list' ? sp.title : `${RESOURCES[sp.parent].title} · ${sp.title}`}`
