@@ -159,9 +159,7 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const parsed = playPayloadSchema.safeParse(payload)
       if (!parsed.success) throw new Error('Invalid payload')
 
-      const track = await this.tracksService.findTrackById(parsed.data.trackId)
-      if (!track) throw new Error('Track not found')
-
+      // Opening the stream refuses a missing, deleted or unready track.
       const { trackId, currentTime } = parsed.data
       const audio = await this.startAudioStream(client, parsed.data)
       this.sessions.startPlaying(userId, trackId, currentTime)
