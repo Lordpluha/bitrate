@@ -596,6 +596,9 @@ export const createStage = async ({
 
   const timer = new THREE.Timer()
   let running = true
+  /** The render loop runs; without it (reduced motion) every change must redraw by itself. */
+  let looping = false
+  const still = () => renderer.render(scene, camera)
   let frame = 0
   let last = performance.now()
   let slow = 0
@@ -758,6 +761,7 @@ export const createStage = async ({
     chromeU.uBase.value.set(token(light ? 'neutral-400' : 'neutral-700'))
     hemi.intensity = light ? 1.15 : 0.95
     fieldU.uCol.value.set(token(light ? 'purple-500' : 'purple-400'))
+    if (!looping) still()
   }
   const resize = () => {
     const w = window.innerWidth
@@ -772,7 +776,9 @@ export const createStage = async ({
     PX.k = (2 * halfH) / h
     fieldU.uBoard.value.set(PX.ox, PX.oy, s, PX.k)
     fieldU.uView.value.set(w, h)
-    place(current, 0.01)
+    /* without the loop, setSize() leaves a blank canvas: place instantly and redraw */
+    place(current, looping ? 0.01 : 0)
+    if (!looping) still()
   }
   window.addEventListener('resize', resize, { signal })
   resize()
@@ -782,9 +788,10 @@ export const createStage = async ({
     go,
     retheme,
     start: () => {
+      looping = true
       frame = requestAnimationFrame(tick)
     },
-    still: () => renderer.render(scene, camera),
+    still,
     dispose: () => {
       running = false
       cancelAnimationFrame(frame)
