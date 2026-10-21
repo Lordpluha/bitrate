@@ -36,6 +36,24 @@ export function DashboardOverview({ dashboard }: DashboardOverviewProps) {
   )
 }
 
+type CurrentReleaseSummary = NonNullable<ArtistDashboard['currentRelease']>
+
+/** What the current release is waiting on, in the artist's words. */
+function currentReleaseText({ status, blockerCount }: CurrentReleaseSummary) {
+  switch (status) {
+    case 'DRAFT':
+      return blockerCount > 0
+        ? `${blockerCount} ${blockerCount === 1 ? 'step' : 'steps'} left before review`
+        : 'Ready to submit for review'
+    case 'SUBMITTED':
+      return 'Waiting for Bitrate review'
+    case 'REJECTED':
+      return 'Changes requested by the reviewer'
+    default:
+      return 'Nothing to do right now'
+  }
+}
+
 function CurrentRelease({
   release,
 }: {
@@ -76,15 +94,7 @@ function CurrentRelease({
                   : 'text-text-secondary',
               )}
             >
-              {release.status === 'DRAFT'
-                ? release.blockerCount > 0
-                  ? `${release.blockerCount} ${release.blockerCount === 1 ? 'step' : 'steps'} left before review`
-                  : 'Ready to submit for review'
-                : release.status === 'SUBMITTED'
-                  ? 'Waiting for Bitrate review'
-                  : release.status === 'REJECTED'
-                    ? 'Changes requested by the reviewer'
-                    : 'Nothing to do right now'}
+              {currentReleaseText(release)}
             </p>
           </div>
           <Button
