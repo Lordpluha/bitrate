@@ -93,14 +93,19 @@ export const mountScenes = (ctx: EngineContext, deps: SceneDeps) => {
     if (!el) return
     el.textContent = ''
     const o = { n: 0 }
+    let shown = 0
     tl.to(
       o,
       {
         n: text.length,
         duration,
         ease: 'none',
+        /* touch the DOM only when another character appears */
         onUpdate: () => {
-          el.textContent = text.slice(0, Math.round(o.n))
+          const n = Math.round(o.n)
+          if (n === shown) return
+          shown = n
+          el.textContent = text.slice(0, n)
         },
       },
       at,
