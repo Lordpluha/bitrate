@@ -60,6 +60,20 @@ import {
 /** No CDN sits in front of this route — it is a review surface, not a distribution path. */
 const AUDIO_CACHE_CONTROL = 'private, no-store'
 
+/** Playback issues many Range requests per track, so both audio routes get a higher limit. */
+const AUDIO_THROTTLE = { default: { ttl: 60_000, limit: 1_200 } }
+
+/** The headers every audio response carries, for a body of `contentLength` bytes. */
+function audioHeaders(contentType: string, contentLength: number): Record<string, string> {
+  return {
+    'Content-Type': contentType,
+    'Accept-Ranges': 'bytes',
+    'Content-Length': String(contentLength),
+    'Cache-Control': AUDIO_CACHE_CONTROL,
+    'Content-Disposition': 'inline',
+  }
+}
+
 const logger = new Logger('AdminTracksController')
 
 /** Operator-facing track processing pipeline. */
@@ -110,7 +124,7 @@ export class AdminTracksController {
    */
   @RequirePermission('tracks:read')
   @ProbeTrackAudioSwagger()
-  @Throttle({ default: { ttl: 60_000, limit: 1_200 } })
+  @Throttle(AUDIO_THROTTLE)
   @Head(':id/audio')
   async probeAudio(
     @Param('id', ParseUUIDPipe) id: string,
@@ -118,20 +132,14 @@ export class AdminTracksController {
     @Res() res: Response,
   ) {
     const meta = await this.trackAudio.head(id, bitrate)
-    res.set({
-      'Content-Type': meta.contentType,
-      'Accept-Ranges': 'bytes',
-      'Content-Length': String(meta.fileSize),
-      'Cache-Control': AUDIO_CACHE_CONTROL,
-      'Content-Disposition': 'inline',
-    })
+    res.set(audioHeaders(meta.contentType, meta.fileSize))
     res.status(HttpStatus.OK).send()
   }
 
   /** Runs the stream audio operation. */
   @RequirePermission('tracks:read')
   @StreamTrackAudioSwagger()
-  @Throttle({ default: { ttl: 60_000, limit: 1_200 } })
+  @Throttle(AUDIO_THROTTLE)
   @Get(':id/audio')
   async streamAudio(
     @Param('id', ParseUUIDPipe) id: string,
@@ -153,11 +161,7 @@ export class AdminTracksController {
 
     res.status(audio.isPartial ? HttpStatus.PARTIAL_CONTENT : HttpStatus.OK)
     res.set({
-      'Content-Type': audio.contentType,
-      'Accept-Ranges': 'bytes',
-      'Content-Length': String(audio.contentLength),
-      'Cache-Control': AUDIO_CACHE_CONTROL,
-      'Content-Disposition': 'inline',
+      ...audioHeaders(audio.contentType, audio.contentLength),
       ...(audio.isPartial
         ? { 'Content-Range': `bytes ${audio.start}-${audio.end}/${audio.fileSize}` }
         : {}),
