@@ -36,6 +36,21 @@ function redactOrNull(
   return value ? redactProcessingText(value, options) : null
 }
 
+/** The error's message, redacted to the `errorMessage` column limit. */
+function redactedErrorMessage(error: unknown): string | null {
+  return redactOrNull(errorMessageOf(error), {
+    keep: 'head',
+    maxBytes: PROCESSING_LOG_LIMITS.errorMessage,
+  })
+}
+
+/** The columns {@link ProcessingAttemptRecorder.finalize} reads from an existing attempt row. */
+type FinalizableRow = {
+  id: string
+  finishedAt: Date | null
+  failedStep: TrackProcessingStep | null
+}
+
 /**
  * Best-effort, append-only log of BullMQ attempts for the audio-processing pipeline.
  *
@@ -69,38 +84,54 @@ export class ProcessingAttemptRecorder {
    */
   async start(input: StartProcessingAttemptInput): Promise<void> {
     try {
-      await this.prisma.trackProcessingAttempt.updateMany({
-        where: {
-          status: 'RUNNING',
-          OR: [
-            { jobId: input.jobId },
-            { trackId: input.trackId, sourceFileName: input.sourceFileName },
-          ],
-        },
-        data: { status: 'STALLED', errorCode: 'STALLED', finishedAt: new Date() },
-      })
-
-      await this.prisma.trackProcessingAttempt.create({
-        data: {
-          trackId: input.trackId,
-          sourceFileName: input.sourceFileName,
-          jobId: input.jobId,
-          attempt: input.attempt,
-          maxAttempts: input.maxAttempts,
-          trigger: input.trigger,
-          status: 'RUNNING',
-          inputBytes: input.input?.bytes ?? null,
-          inputCodec: input.input?.codec ?? null,
-          inputContainer: input.input?.container ?? null,
-          inputBitrateKbps: input.input?.bitrateKbps ?? null,
-          inputDurationSec: input.input?.durationSec ?? null,
-          workerHost: this.workerHost,
-          workerPid: this.workerPid,
-          workerRelease: this.workerRelease,
-        },
-      })
+      await this.stallRunningRows(input)
+      await this.prisma.trackProcessingAttempt.create({ data: this.runningRow(input) })
     } catch (error) {
       this.reportRecorderFailure('start', error, { trackId: input.trackId, jobId: input.jobId })
+    }
+  }
+
+  /** Marks older RUNNING rows of the same job or track generation STALLED. */
+  private async stallRunningRows(input: StartProcessingAttemptInput): Promise<void> {
+    await this.prisma.trackProcessingAttempt.updateMany({
+      where: {
+        status: 'RUNNING',
+        OR: [
+          { jobId: input.jobId },
+          { trackId: input.trackId, sourceFileName: input.sourceFileName },
+        ],
+      },
+      data: { status: 'STALLED', errorCode: 'STALLED', finishedAt: new Date() },
+    })
+  }
+
+  /** The RUNNING row `start()` opens, with the enqueue-time input probe when the job has one. */
+  private runningRow(
+    input: StartProcessingAttemptInput,
+  ): Prisma.TrackProcessingAttemptUncheckedCreateInput {
+    return {
+      trackId: input.trackId,
+      sourceFileName: input.sourceFileName,
+      jobId: input.jobId,
+      attempt: input.attempt,
+      maxAttempts: input.maxAttempts,
+      trigger: input.trigger,
+      status: 'RUNNING',
+      inputBytes: input.input?.bytes ?? null,
+      inputCodec: input.input?.codec ?? null,
+      inputContainer: input.input?.container ?? null,
+      inputBitrateKbps: input.input?.bitrateKbps ?? null,
+      inputDurationSec: input.input?.durationSec ?? null,
+      ...this.workerColumns(),
+    }
+  }
+
+  /** Identifies the process that wrote a row. */
+  private workerColumns() {
+    return {
+      workerHost: this.workerHost,
+      workerPid: this.workerPid,
+      workerRelease: this.workerRelease,
     }
   }
 
@@ -152,10 +183,7 @@ export class ProcessingAttemptRecorder {
         stepDetail: input.stepDetail ?? null,
         errorCode: classified.code,
         errorName: errorNameOf(input.error),
-        errorMessage: redactOrNull(errorMessageOf(input.error), {
-          keep: 'head',
-          maxBytes: PROCESSING_LOG_LIMITS.errorMessage,
-        }),
+        errorMessage: redactedErrorMessage(input.error),
         errorStack: redactOrNull(errorInstance?.stack, {
           keep: 'head',
           maxBytes: PROCESSING_LOG_LIMITS.errorStack,
@@ -242,46 +270,11 @@ export class ProcessingAttemptRecorder {
           select: { id: true, finishedAt: true, failedStep: true },
         })
 
-        if (row) {
-          await tx.trackProcessingAttempt.update({
-            where: { id: row.id },
-            data: {
-              status: 'FAILED',
-              willRetry: false,
-              deadLetterJobId: input.deadLetterJobId,
-              finishedAt: row.finishedAt ?? new Date(),
-            },
-          })
-          await this.pruneOldAttempts(tx, input.trackId)
-          return row.failedStep
-        }
-
-        const isStalledMessage = /stalled/i.test(input.error.message)
-        await tx.trackProcessingAttempt.create({
-          data: {
-            trackId: input.trackId,
-            sourceFileName: input.sourceFileName,
-            jobId: input.jobId,
-            attempt: input.attempt,
-            maxAttempts: input.attempt,
-            trigger: 'UPLOAD',
-            status: 'FAILED',
-            willRetry: false,
-            deadLetterJobId: input.deadLetterJobId,
-            finishedAt: new Date(),
-            errorCode: isStalledMessage ? 'STALLED' : 'UNKNOWN',
-            errorName: errorNameOf(input.error),
-            errorMessage: redactOrNull(errorMessageOf(input.error), {
-              keep: 'head',
-              maxBytes: PROCESSING_LOG_LIMITS.errorMessage,
-            }),
-            workerHost: this.workerHost,
-            workerPid: this.workerPid,
-            workerRelease: this.workerRelease,
-          },
-        })
+        const failedStep = row
+          ? await this.markDeadLettered(tx, row, input)
+          : await this.insertSyntheticFailure(tx, input)
         await this.pruneOldAttempts(tx, input.trackId)
-        return null
+        return failedStep
       })
     } catch (error) {
       this.reportRecorderFailure('finalize', error, { trackId: input.trackId, jobId: input.jobId })
@@ -289,36 +282,57 @@ export class ProcessingAttemptRecorder {
     }
   }
 
+  /** Stamps the dead-letter job onto the attempt's existing row; returns its failed step. */
+  private async markDeadLettered(
+    tx: Prisma.TransactionClient,
+    row: FinalizableRow,
+    input: FinalizeProcessingAttemptInput,
+  ): Promise<TrackProcessingStep | null> {
+    await tx.trackProcessingAttempt.update({
+      where: { id: row.id },
+      data: {
+        status: 'FAILED',
+        willRetry: false,
+        deadLetterJobId: input.deadLetterJobId,
+        finishedAt: row.finishedAt ?? new Date(),
+      },
+    })
+    return row.failedStep
+  }
+
+  /** Inserts a FAILED row for an attempt that never opened one; its failed step is unknown. */
+  private async insertSyntheticFailure(
+    tx: Prisma.TransactionClient,
+    input: FinalizeProcessingAttemptInput,
+  ): Promise<null> {
+    const isStalledMessage = /stalled/i.test(input.error.message)
+    await tx.trackProcessingAttempt.create({
+      data: {
+        trackId: input.trackId,
+        sourceFileName: input.sourceFileName,
+        jobId: input.jobId,
+        attempt: input.attempt,
+        maxAttempts: input.attempt,
+        trigger: 'UPLOAD',
+        status: 'FAILED',
+        willRetry: false,
+        deadLetterJobId: input.deadLetterJobId,
+        finishedAt: new Date(),
+        errorCode: isStalledMessage ? 'STALLED' : 'UNKNOWN',
+        errorName: errorNameOf(input.error),
+        errorMessage: redactedErrorMessage(input.error),
+        ...this.workerColumns(),
+      },
+    })
+    return null
+  }
+
   /** Records a job that could not even be enqueued — attempt 0, no BullMQ job ever existed. */
   async recordEnqueueFailure(input: RecordEnqueueFailureInput): Promise<void> {
     try {
-      const classified = classifyProcessingError(input.error)
-
+      const data = this.enqueueFailureRow(input)
       await this.prisma.$transaction(async (tx) => {
-        await tx.trackProcessingAttempt.create({
-          data: {
-            trackId: input.trackId,
-            sourceFileName: input.sourceFileName,
-            jobId: input.jobId,
-            attempt: 0,
-            maxAttempts: 0,
-            trigger: input.trigger,
-            status: 'FAILED',
-            willRetry: false,
-            finishedAt: new Date(),
-            failedStep: 'CLAIM',
-            errorCode: classified.code,
-            errorName: errorNameOf(input.error),
-            errorMessage: redactOrNull(errorMessageOf(input.error), {
-              keep: 'head',
-              maxBytes: PROCESSING_LOG_LIMITS.errorMessage,
-            }),
-            retryable: classified.retryable,
-            workerHost: this.workerHost,
-            workerPid: this.workerPid,
-            workerRelease: this.workerRelease,
-          },
-        })
+        await tx.trackProcessingAttempt.create({ data })
         await this.pruneOldAttempts(tx, input.trackId)
       })
     } catch (error) {
@@ -326,6 +340,30 @@ export class ProcessingAttemptRecorder {
         trackId: input.trackId,
         jobId: input.jobId,
       })
+    }
+  }
+
+  /** The attempt-0 FAILED row for a job that never reached the queue. */
+  private enqueueFailureRow(
+    input: RecordEnqueueFailureInput,
+  ): Prisma.TrackProcessingAttemptUncheckedCreateInput {
+    const classified = classifyProcessingError(input.error)
+    return {
+      trackId: input.trackId,
+      sourceFileName: input.sourceFileName,
+      jobId: input.jobId,
+      attempt: 0,
+      maxAttempts: 0,
+      trigger: input.trigger,
+      status: 'FAILED',
+      willRetry: false,
+      finishedAt: new Date(),
+      failedStep: 'CLAIM',
+      errorCode: classified.code,
+      errorName: errorNameOf(input.error),
+      errorMessage: redactedErrorMessage(input.error),
+      retryable: classified.retryable,
+      ...this.workerColumns(),
     }
   }
 
