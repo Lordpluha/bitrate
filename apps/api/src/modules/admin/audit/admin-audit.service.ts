@@ -42,7 +42,7 @@ export class AdminAuditService {
     return this.resolveActors(rows)
   }
 
-  /** Runs the find all operation, paginated, newest first. */
+  /** Lists audit log rows, paginated, newest first. */
   async findAll(query: ListAdminAuditLogsQueryDto) {
     const { page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, sort, order } = query
     const where = this.buildWhere(query)
