@@ -29,6 +29,7 @@ import { getMasterKey } from './audio-storage-keys'
 import type { CreateTrackDto, UpdateTrackDto } from './dtos'
 import type { TrackEntity } from './entities'
 import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
+import { deleteObjectQuietly } from './storage-cleanup'
 import { getTargetBitrates, MAX_COVER_BYTES } from './track-audio.helpers'
 import type { AudioMetadata } from './track-media'
 import { cleanupUploadedAudio, inspectAudioFile } from './track-media'
@@ -156,13 +157,7 @@ export class TrackUploadService {
 
   /** Best-effort removal of a master uploaded for a track that was never persisted. */
   private async discardStoredMaster(fileName: string) {
-    try {
-      await this.storage.deleteObject(getMasterKey(fileName))
-    } catch (error) {
-      this.logger.warn(
-        `Unable to remove orphaned master ${fileName}: ${error instanceof Error ? error.message : 'unknown error'}`,
-      )
-    }
+    await deleteObjectQuietly(this.storage, getMasterKey(fileName), this.logger)
   }
 
   /**

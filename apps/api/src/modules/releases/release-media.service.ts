@@ -1,6 +1,5 @@
 import { execFile } from 'node:child_process'
 import { randomUUID } from 'node:crypto'
-import { createReadStream } from 'node:fs'
 import { rm } from 'node:fs/promises'
 import { promisify } from 'node:util'
 import { resolveSafeMulterPath } from '@common/utils/multer-file'
@@ -12,7 +11,9 @@ import {
 } from '@infra/storage/public-images'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
+import { storeMaster } from '@modules/tracks/audio-master'
 import { getUploadTempDir } from '@modules/tracks/audio-scratch'
+import { deleteObjectQuietly } from '@modules/tracks/storage-cleanup'
 import {
   BadRequestException,
   Inject,
@@ -138,7 +139,7 @@ export class ReleaseMediaService {
     file: Express.Multer.File | undefined,
     input: UploadReleaseTrackDto,
   ) {
-    const master = await this.storeMaster(ownerArtistId, file)
+    const master = await this.storeUploadedMaster(ownerArtistId, file)
     try {
       return await this.prisma.$transaction(async (tx) => {
         const release = await lockOwnedDraft(tx, ownerArtistId, id, input.expectedUpdatedAt, {
@@ -161,7 +162,7 @@ export class ReleaseMediaService {
         return { release, track: { ...track, hasAudio: true } }
       })
     } catch (error) {
-      await this.deleteObject(master.key)
+      await deleteObjectQuietly(this.storage, master.key, this.logger)
       throw error
     }
   }
@@ -206,7 +207,7 @@ export class ReleaseMediaService {
     file: Express.Multer.File | undefined,
     input: ReleaseDraftVersionDto,
   ) {
-    const master = await this.storeMaster(ownerArtistId, file)
+    const master = await this.storeUploadedMaster(ownerArtistId, file)
     let replaced: { previousKey: string | null; release: LockedDraft; track: TrackDraft }
     try {
       replaced = await this.prisma.$transaction(async (tx) => {
@@ -227,11 +228,11 @@ export class ReleaseMediaService {
         return { previousKey: existing.audioKey, release, track }
       })
     } catch (error) {
-      await this.deleteObject(master.key)
+      await deleteObjectQuietly(this.storage, master.key, this.logger)
       throw error
     }
     const { previousKey, release, track } = replaced
-    if (previousKey) await this.deleteObject(previousKey)
+    if (previousKey) await deleteObjectQuietly(this.storage, previousKey, this.logger)
     return { release, track: { ...track, hasAudio: true } }
   }
 
@@ -268,7 +269,7 @@ export class ReleaseMediaService {
       })
       return { release: locked, previousKey: existing.audioKey }
     })
-    if (previousKey) await this.deleteObject(previousKey)
+    if (previousKey) await deleteObjectQuietly(this.storage, previousKey, this.logger)
     return { release, trackId }
   }
 
@@ -295,7 +296,7 @@ export class ReleaseMediaService {
   }
 
   /** Moves the temporary upload into private storage; the local file is always removed. */
-  private async storeMaster(
+  private async storeUploadedMaster(
     ownerArtistId: string,
     file: Express.Multer.File | undefined,
   ): Promise<StoredMaster> {
@@ -306,7 +307,7 @@ export class ReleaseMediaService {
       if (!extension) throw new BadRequestException(RELEASE_ERRORS.AUDIO_TYPE_INVALID)
       const key = `release-masters/${ownerArtistId}/${randomUUID()}${extension}`
       const duration = await probeDurationSeconds(path)
-      await this.storage.upload(key, createReadStream(path), file.mimetype)
+      await storeMaster({ storage: this.storage, key, filePath: path, contentType: file.mimetype })
       return {
         key,
         fileName: displayFileName(file.originalname),
@@ -329,16 +330,6 @@ export class ReleaseMediaService {
       select: { cover: true },
     })
     return release?.cover ?? null
-  }
-
-  /** Best-effort removal; an orphaned private object is waste, never a failed request. */
-  private async deleteObject(key: string): Promise<void> {
-    try {
-      await this.storage.deleteObject(key)
-    } catch (error) {
-      const reason = error instanceof Error ? error.message : 'unknown error'
-      this.logger.warn(`Unable to remove release master ${key}: ${reason}`)
-    }
   }
 }
 
