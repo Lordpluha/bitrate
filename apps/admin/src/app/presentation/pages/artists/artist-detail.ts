@@ -15,12 +15,12 @@ import {
   canRevokeArtistSessions,
   type ArtistDetail,
 } from '@domain/artist'
-import { ResourceNotFoundError } from '@domain/shared'
 import { ConfirmAction } from '@presentation/components'
 import {
   isStaleStateError,
   resourceWriteErrorMessage,
 } from '@presentation/pages/shared/resource-write-error.message'
+import { createDetailResource } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { ArtistAlbums } from './artist-albums'
@@ -61,17 +61,22 @@ export class ArtistDetailPage {
   protected readonly canRevokeSessions = inject(SessionStore).can('artists:revoke-sessions')
   protected readonly artistId = this.route.snapshot.paramMap.get('id') ?? ''
 
-  protected readonly artist = signal<ArtistDetail | null>(null)
-  protected readonly loading = signal(true)
-  protected readonly notFound = signal(false)
-  protected readonly failure = signal<string | null>(null)
+  private readonly record = createDetailResource({
+    load: () => this.getArtist.execute(this.artistId),
+    errorMessage: 'Could not load this artist.',
+  })
+
+  protected readonly artist = this.record.value
+  protected readonly loading = this.record.loading
+  protected readonly notFound = this.record.notFound
+  protected readonly failure = this.record.failure
   protected readonly status = signal<string | null>(null)
   protected readonly armed = signal<ArmedAction>(null)
   protected readonly pending = signal(false)
   protected readonly verifying = signal(false)
 
   constructor() {
-    void this.load()
+    void this.record.reload()
   }
 
   protected deactivation(artist: ArtistDetail) {
@@ -98,7 +103,7 @@ export class ArtistDetailPage {
     this.failure.set(null)
     try {
       await this.toggleVerificationUseCase.execute(current)
-      await this.load()
+      await this.record.reload()
     } catch (error) {
       this.failure.set(
         resourceWriteErrorMessage({ error, action: 'deactivate', label: current.username }),
@@ -134,7 +139,7 @@ export class ArtistDetailPage {
           `Revoked ${revoked} session${revoked === 1 ? '' : 's'} for ${current.username}.`,
         )
       }
-      await this.load()
+      await this.record.reload()
     } catch (error) {
       this.failure.set(
         resourceWriteErrorMessage({
@@ -143,23 +148,10 @@ export class ArtistDetailPage {
           label: current.username,
         }),
       )
-      if (isStaleStateError(error)) await this.load()
+      if (isStaleStateError(error)) await this.record.reload()
     } finally {
       this.pending.set(false)
       this.armed.set(null)
-    }
-  }
-
-  private async load(): Promise<void> {
-    this.loading.set(true)
-    try {
-      this.artist.set(await this.getArtist.execute(this.artistId))
-      this.notFound.set(false)
-    } catch (error) {
-      if (error instanceof ResourceNotFoundError) this.notFound.set(true)
-      else this.failure.set('Could not load this artist.')
-    } finally {
-      this.loading.set(false)
     }
   }
 }

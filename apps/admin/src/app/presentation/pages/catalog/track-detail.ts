@@ -15,12 +15,12 @@ import {
   isTrackStuck,
   type TrackDetail,
 } from '@domain/track'
-import { ResourceNotFoundError } from '@domain/shared'
 import { ConfirmAction, TrackAudioPlayer } from '@presentation/components'
 import {
   isStaleStateError,
   resourceWriteErrorMessage,
 } from '@presentation/pages/shared/resource-write-error.message'
+import { createDetailResource } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { ProcessingHistory } from './processing-history'
@@ -58,10 +58,15 @@ export class TrackDetailPage {
   protected readonly canRestore = inject(SessionStore).can('tracks:restore')
   protected readonly trackId = this.route.snapshot.paramMap.get('id') ?? ''
 
-  protected readonly track = signal<TrackDetail | null>(null)
-  protected readonly loading = signal(true)
-  protected readonly notFound = signal(false)
-  protected readonly failure = signal<string | null>(null)
+  private readonly record = createDetailResource({
+    load: () => this.getTrack.execute(this.trackId),
+    errorMessage: 'Could not load this track.',
+  })
+
+  protected readonly track = this.record.value
+  protected readonly loading = this.record.loading
+  protected readonly notFound = this.record.notFound
+  protected readonly failure = this.record.failure
   protected readonly status = signal<string | null>(null)
   protected readonly armed = signal<ArmedAction>(null)
   protected readonly pending = signal(false)
@@ -73,7 +78,7 @@ export class TrackDetailPage {
   }
 
   constructor() {
-    void this.load()
+    void this.record.reload()
   }
 
   protected reprocessible(track: TrackDetail): boolean {
@@ -107,7 +112,7 @@ export class TrackDetailPage {
     try {
       await this.reprocessTrack.execute(current)
       this.status.set(`"${current.title}" was queued for reprocessing.`)
-      await this.load()
+      await this.record.reload()
       await this.history()?.reload()
     } catch (error) {
       this.failure.set(
@@ -138,7 +143,7 @@ export class TrackDetailPage {
         await this.restoreTrack.execute({ track: current, reason })
         this.status.set(`"${current.title}" was restored.`)
       }
-      await this.load()
+      await this.record.reload()
     } catch (error) {
       this.failure.set(
         resourceWriteErrorMessage({
@@ -148,23 +153,10 @@ export class TrackDetailPage {
           resource: 'track',
         }),
       )
-      if (isStaleStateError(error)) await this.load()
+      if (isStaleStateError(error)) await this.record.reload()
     } finally {
       this.pending.set(false)
       this.armed.set(null)
-    }
-  }
-
-  private async load(): Promise<void> {
-    this.loading.set(true)
-    try {
-      this.track.set(await this.getTrack.execute(this.trackId))
-      this.notFound.set(false)
-    } catch (error) {
-      if (error instanceof ResourceNotFoundError) this.notFound.set(true)
-      else this.failure.set('Could not load this track.')
-    } finally {
-      this.loading.set(false)
     }
   }
 }

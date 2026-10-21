@@ -8,8 +8,8 @@ import {
   type ModerationSubject,
   type ReportDetail,
 } from '@domain/moderation'
-import { ResourceNotFoundError } from '@domain/shared'
 import { LocalizedDatePipe } from '@presentation/pipes'
+import { createDetailResource } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 
@@ -50,14 +50,19 @@ export class ReportDetailPage {
   protected readonly targets = ADVANCE_TARGETS
   protected readonly reportId = this.route.snapshot.paramMap.get('id') ?? ''
 
-  protected readonly report = signal<ReportDetail | null>(null)
-  protected readonly loading = signal(true)
-  protected readonly notFound = signal(false)
-  protected readonly failure = signal<string | null>(null)
+  private readonly record = createDetailResource({
+    load: () => this.getReport.execute(this.reportId),
+    errorMessage: 'Could not load this report.',
+  })
+
+  protected readonly report = this.record.value
+  protected readonly loading = this.record.loading
+  protected readonly notFound = this.record.notFound
+  protected readonly failure = this.record.failure
   protected readonly pending = signal(false)
 
   constructor() {
-    void this.load()
+    void this.record.reload()
   }
 
   protected advanceable(report: ReportDetail, status: ModerationStatus): boolean {
@@ -76,24 +81,11 @@ export class ReportDetailPage {
     this.failure.set(null)
     try {
       const updated = await this.advanceReport.execute({ report: current, status })
-      this.report.set({ ...current, ...updated })
+      this.record.set({ ...current, ...updated })
     } catch {
       this.failure.set(`Could not move this report to ${status}.`)
     } finally {
       this.pending.set(false)
-    }
-  }
-
-  private async load(): Promise<void> {
-    this.loading.set(true)
-    try {
-      this.report.set(await this.getReport.execute(this.reportId))
-      this.notFound.set(false)
-    } catch (error) {
-      if (error instanceof ResourceNotFoundError) this.notFound.set(true)
-      else this.failure.set('Could not load this report.')
-    } finally {
-      this.loading.set(false)
     }
   }
 }
