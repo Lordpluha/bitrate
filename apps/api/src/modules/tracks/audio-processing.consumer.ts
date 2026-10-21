@@ -1,6 +1,6 @@
 import { readdir, rm } from 'node:fs/promises'
 import { extname, join } from 'node:path'
-import * as PrismaServiceModule from '@infra/prisma/prisma.service'
+import { PrismaService } from '@infra/prisma/prisma.service'
 import {
   AUDIO_PROCESSING_DEAD_LETTER_QUEUE,
   AUDIO_PROCESSING_QUEUE,
@@ -37,15 +37,12 @@ import { redactProcessingText } from './processing-log/redact'
 })
 export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit {
   constructor(
-    @Inject(PrismaServiceModule.PrismaService)
-    private readonly prisma: PrismaServiceModule.PrismaService,
+    private readonly prisma: PrismaService,
     @Inject(STORAGE_SERVICE)
     private readonly storage: StorageService,
     @InjectQueue(AUDIO_PROCESSING_DEAD_LETTER_QUEUE)
     private readonly deadLetterQueue: Queue<ConvertAudioJob | UnrecognisedAudioJob>,
-    @Inject(ProcessingAttemptRecorder)
     private readonly recorder: ProcessingAttemptRecorder,
-    @Inject(NotificationsProducer)
     private readonly notifications: NotificationsProducer,
   ) {
     super()
