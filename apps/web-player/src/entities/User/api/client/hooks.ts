@@ -232,6 +232,6 @@ export const useUserFollows = ({
   useTanStackQuery({
     enabled: Boolean(userId),
     queryFn: () => getUserFollowsPage({ kind, limit, userId }),
-    queryKey: apiQueryKeys.users.follows(userId, kind),
+    queryKey: apiQueryKeys.users.follows(userId, kind, limit),
     retry: false,
   })

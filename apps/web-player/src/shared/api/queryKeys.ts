@@ -118,7 +118,7 @@ export const apiQueryKeys = {
       ['users', 'search', params] as const,
     following: ['users', 'following'] as const,
     followingActivity: ['users', 'following', 'activity'] as const,
-    follows: (userId: string, kind: 'followers' | 'following') =>
-      ['users', 'follows', userId, kind] as const,
+    follows: (userId: string, kind: 'followers' | 'following', limit: number) =>
+      ['users', 'follows', userId, kind, { limit }] as const,
   },
 } as const
