@@ -1,7 +1,6 @@
 import { pipeline } from 'node:stream'
-import type { ArtistEntity } from '@modules/artists'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
-import type { UserEntity } from '@modules/users'
+import type { ArtistAuthRequest } from '@modules/artists-auth/types'
 import type { UserAuthRequest } from '@modules/users-auth/types'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
@@ -76,7 +75,38 @@ function pipeToResponse(stream: NodeJS.ReadableStream, res: Response): void {
   })
 }
 
-/** Represents the tracks controller. */
+/** A storage read answering an optional HTTP Range request. */
+type RangeStream = {
+  stream: NodeJS.ReadableStream
+  contentType: string
+  isPartial: boolean
+  start?: number
+  end?: number
+  fileSize?: number
+}
+
+/**
+ * Sends a ranged read as 206 (with `Content-Range`) or 200, plus the route's own `headers`,
+ * then streams the body.
+ */
+function sendRangeStream(
+  res: Response,
+  data: RangeStream,
+  headers: Record<string, string | number>,
+): void {
+  res.status(data.isPartial ? 206 : 200)
+  res.set({
+    'Content-Type': data.contentType,
+    'Accept-Ranges': 'bytes',
+    ...headers,
+    ...(data.isPartial
+      ? { 'Content-Range': `bytes ${data.start}-${data.end}/${data.fileSize}` }
+      : {}),
+  })
+  pipeToResponse(data.stream, res)
+}
+
+/** Track catalogue, uploads, likes and audio delivery. */
 @ApiExtraModels(TrackEntity, TrackManifestEntity, TrackManifestRenditionEntity)
 @ApiTags('Tracks')
 @Controller({ path: 'tracks', version: '1' })
@@ -88,7 +118,6 @@ export class TracksController {
     private trackPlaybackService: TrackPlaybackService,
   ) {}
 
-  /** Runs the get all operation. */
   @TracksGetAllSwagger()
   @Get('')
   getAll(
@@ -100,7 +129,6 @@ export class TracksController {
     return this.tracksService.findAll({ artistId, limit, page, title })
   }
 
-  /** Runs the get hls master playlist operation. */
   @GetHlsMasterPlaylistSwagger()
   @UserAuth()
   @Throttle({ default: { ttl: 60_000, limit: 600 } })
@@ -117,7 +145,6 @@ export class TracksController {
     return res.send(playlist)
   }
 
-  /** Runs the get hls asset operation. */
   @GetHlsAssetSwagger()
   @UserAuth()
   @Throttle({ default: { ttl: 60_000, limit: 1_200 } })
@@ -139,7 +166,6 @@ export class TracksController {
     pipeToResponse(data.stream, res)
   }
 
-  /** Runs the stream track operation. */
   @StreamTrackSwagger()
   @UserAuth()
   @Throttle({ default: { ttl: 60_000, limit: 600 } })
@@ -159,36 +185,26 @@ export class TracksController {
       format,
     )
 
-    res.status(streamData.isPartial ? 206 : 200)
-    res.set({
-      'Content-Type': streamData.contentType,
-      'Accept-Ranges': 'bytes',
+    sendRangeStream(res, streamData, {
       ...(streamData.contentLength === undefined
         ? {}
         : { 'Content-Length': streamData.contentLength }),
       'Cache-Control': 'private, max-age=3600, no-transform',
       'X-Audio-Bitrate': streamData.bitrate,
       'X-Audio-Format': streamData.format,
-      ...(streamData.isPartial
-        ? { 'Content-Range': `bytes ${streamData.start}-${streamData.end}/${streamData.fileSize}` }
-        : {}),
     })
-
-    pipeToResponse(streamData.stream, res)
   }
 
-  /** Runs the post track operation. */
   @PostTrackSwagger()
   @ArtistAuth()
   @Post('')
   @TrackFilesInterceptor()
   async postTrack(
-    @Req() req: Request,
+    @Req() req: ArtistAuthRequest,
     @Body(new ZodValidationPipe(CreateTrackSchema))
     createTrackDto: CreateTrackDto,
     @UploadedFiles() files: TrackUploadFiles,
   ) {
-    const artist = req.artist as ArtistEntity
     const audioFile = files?.audio?.[0]
     const coverFile = files?.cover?.[0]
 
@@ -196,24 +212,22 @@ export class TracksController {
       throw new BadRequestException('Audio file is required')
     }
 
-    return await this.trackUploadService.create(artist.id, createTrackDto, audioFile, coverFile)
+    return await this.trackUploadService.create(req.artist.id, createTrackDto, audioFile, coverFile)
   }
 
-  /** Runs the put track operation. */
   @UpdateTrackByIdSwagger()
   @ArtistAuth()
   @Put(':id')
   @TrackFilesInterceptor()
   putTrack(
-    @Req() req: Request,
+    @Req() req: ArtistAuthRequest,
     @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
     @Body(new ZodValidationPipe(UpdateTrackSchema))
     updateTrackDto: UpdateTrackDto,
     @UploadedFiles() files: TrackUploadFiles,
   ) {
-    const artist = req.artist as ArtistEntity
     return this.trackUploadService.update(
-      artist.id,
+      req.artist.id,
       id,
       updateTrackDto,
       files?.audio?.[0],
@@ -221,27 +235,23 @@ export class TracksController {
     )
   }
 
-  /** Runs the get liked tracks operation. */
   @TracksGetLikedSwagger()
   @UserAuth()
   @Get('liked')
   getLikedTracks(
-    @Req() req: Request,
+    @Req() req: UserAuthRequest,
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    const artist = req.user as UserEntity
-    return this.tracksService.findLikedTracks(artist.id, { page, limit })
+    return this.tracksService.findLikedTracks(req.user.id, { page, limit })
   }
 
-  /** Runs the get by id operation. */
   @GetTrackByIdSwagger()
   @Get(':id')
   getById(@Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
     return this.tracksService.findTrackById(id)
   }
 
-  /** Runs the get manifest operation. */
   @GetTrackManifestSwagger()
   @UserAuth()
   @Get(':id/manifest')
@@ -249,7 +259,6 @@ export class TracksController {
     return this.trackPlaybackService.getManifest(id)
   }
 
-  /** Runs the stream rendition operation. */
   @StreamTrackRenditionSwagger()
   @UserAuth()
   @Throttle({ default: { ttl: 60_000, limit: 1_200 } })
@@ -271,21 +280,12 @@ export class TracksController {
       throw error
     }
 
-    res.status(rendition.isPartial ? 206 : 200)
-    res.set({
-      'Content-Type': rendition.contentType,
-      'Accept-Ranges': 'bytes',
+    sendRangeStream(res, rendition, {
       'Content-Length': String(rendition.contentLength),
       'Cache-Control': IMMUTABLE_CACHE_CONTROL,
-      ...(rendition.isPartial
-        ? { 'Content-Range': `bytes ${rendition.start}-${rendition.end}/${rendition.fileSize}` }
-        : {}),
     })
-
-    pipeToResponse(rendition.stream, res)
   }
 
-  /** Runs the like track operation. */
   @LikeTrackSwagger()
   @UserAuth()
   @Post(':id/like')
@@ -293,7 +293,6 @@ export class TracksController {
     return this.tracksService.like(req.user.id, id)
   }
 
-  /** Runs the unlike track operation. */
   @UnlikeTrackSwagger()
   @UserAuth()
   @HttpCode(200)
