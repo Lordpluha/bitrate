@@ -17,11 +17,12 @@ import {
   type PodcastEpisode,
 } from '@domain/podcast'
 import { ResourceNotFoundError, TAKE_DOWN_REASON_MAX_LENGTH } from '@domain/shared'
-import { LocalizedDatePipe } from '@presentation/pipes'
+import { formatMinutes } from '@presentation/pages/shared/duration.formatter'
 import {
   isStaleStateError,
   resourceWriteErrorMessage,
 } from '@presentation/pages/shared/resource-write-error.message'
+import { LocalizedDatePipe } from '@presentation/pipes'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmDialogImports } from '@spartan-ng/helm/dialog'
@@ -101,9 +102,7 @@ export class PodcastDetailPage {
   }
 
   protected lengthLabel(episode: PodcastEpisode): string {
-    return episode.durationSeconds === null
-      ? '—'
-      : `${Math.round(episode.durationSeconds / 60)} min`
+    return formatMinutes(episode.durationSeconds)
   }
 
   protected askPodcast(action: 'take-down' | 'restore'): void {
