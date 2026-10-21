@@ -40,6 +40,7 @@ import {
   type UploadReleaseTrackDto,
   UploadReleaseTrackSchema,
 } from './dtos/release-media.dto'
+import { ReleaseCoverService } from './release-cover.service'
 import { ReleaseAudioInterceptor, ReleaseCoverInterceptor } from './release-media.interceptors'
 import { ReleaseMediaService } from './release-media.service'
 
@@ -49,7 +50,10 @@ const logger = new Logger('ReleaseMediaController')
 @ApiTags('Releases')
 @Controller({ path: 'releases', version: '1' })
 export class ReleaseMediaController {
-  constructor(private readonly media: ReleaseMediaService) {}
+  constructor(
+    private readonly media: ReleaseMediaService,
+    private readonly covers: ReleaseCoverService,
+  ) {}
 
   @UploadReleaseCoverSwagger()
   @ArtistAuth()
@@ -62,7 +66,7 @@ export class ReleaseMediaController {
     @UploadedFile() file: Express.Multer.File | undefined,
     @Body(new ZodValidationPipe(UploadReleaseCoverSchema)) input: UploadReleaseCoverDto,
   ) {
-    return this.media.uploadCover(request.artist.id, id, file, input)
+    return this.covers.uploadCover(request.artist.id, id, file, input)
   }
 
   @RemoveReleaseCoverSwagger()
@@ -74,7 +78,7 @@ export class ReleaseMediaController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(ReleaseDraftVersionSchema)) input: ReleaseDraftVersionDto,
   ) {
-    return this.media.removeCover(request.artist.id, id, input)
+    return this.covers.removeCover(request.artist.id, id, input)
   }
 
   @UploadReleaseTrackSwagger()
