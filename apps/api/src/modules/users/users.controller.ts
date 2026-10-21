@@ -1,6 +1,3 @@
-import { removePublicImage, storePublicImage } from '@infra/storage/public-images'
-import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
-import type { StorageService } from '@infra/storage/storage.types'
 import { SafeUserEntity } from '@modules/users'
 import type { OptionalUserAuthRequest } from '@modules/users-auth/types'
 import { OptionalUserAuth, UserAuth } from '@modules/users-auth/users-auth.guard'
@@ -11,7 +8,6 @@ import {
   Delete,
   Get,
   HttpCode,
-  Inject,
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
@@ -42,23 +38,14 @@ import {
 } from './decorators'
 import { UpdateUserDto, UpdateUserSchema } from './dtos'
 import { UserEntity } from './entities'
-import { UsersService } from './users.service'
-
-/** Avatars are held in memory up to this size, then uploaded to storage. */
-const MAX_AVATAR_BYTES = 5 * 1024 * 1024
-
-/** Where avatars live in storage; the first part of their public `/static/...` URL. */
-const AVATAR_FOLDER = 'users/avatars'
+import { MAX_AVATAR_BYTES, UsersService } from './users.service'
 
 /** Represents the users controller. */
 @ApiExtraModels(UserEntity, SafeUserEntity)
 @ApiTags('Users')
 @Controller({ path: 'users', version: '1' })
 export class UsersController {
-  constructor(
-    private usersService: UsersService,
-    @Inject(STORAGE_SERVICE) private readonly storage: StorageService,
-  ) {}
+  constructor(private usersService: UsersService) {}
 
   /** Runs the get all operation. */
   @GetUsersSwagger()
@@ -126,17 +113,7 @@ export class UsersController {
   )
   async uploadAvatar(@Req() req: Request, @UploadedFile() file?: Express.Multer.File) {
     if (!file) throw new BadRequestException('Avatar file is required')
-
-    const name = await storePublicImage(this.storage, AVATAR_FOLDER, file, {
-      maxBytes: MAX_AVATAR_BYTES,
-    })
-    const user = req.user as UserEntity
-    try {
-      return await this.usersService.uploadAvatar(user.id, name)
-    } catch (error) {
-      await removePublicImage(this.storage, AVATAR_FOLDER, name)
-      throw error
-    }
+    return await this.usersService.uploadAvatar((req.user as UserEntity).id, file)
   }
 
   @FollowUserSwagger()

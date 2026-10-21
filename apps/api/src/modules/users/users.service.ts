@@ -2,10 +2,18 @@ import { isLegalAcceptanceCurrent, LEGAL_VERSION } from '@common/legal'
 import { normalizePagination } from '@common/pagination'
 import { readUserSettings } from '@common/user-settings'
 import { PrismaService } from '@infra/prisma/prisma.service'
+import {
+  type PublicImageFolder,
+  removePublicImage,
+  storePublicImage,
+} from '@infra/storage/public-images'
+import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
+import type { StorageService } from '@infra/storage/storage.types'
 import { NotificationsProducer } from '@modules/notifications'
 import {
   BadRequestException,
   ForbiddenException,
+  Inject,
   Injectable,
   Logger,
   NotFoundException,
@@ -22,6 +30,15 @@ const ACTIVITY_WINDOW_DAYS = 7
 const ACTIVITY_DEFAULT = 50
 const ACTIVITY_MAX = 100
 
+/** Largest avatar accepted, in bytes. */
+export const MAX_AVATAR_BYTES = 5 * 1024 * 1024
+
+/** Where avatars live in storage; the first part of their public `/static/...` URL. */
+const AVATAR_FOLDER = 'users/avatars' satisfies PublicImageFolder
+
+/** The URL prefix of avatars this service stored; anything else is not ours to delete. */
+const AVATAR_PATH_PREFIX = `/static/${AVATAR_FOLDER}/`
+
 /** Represents the users service. */
 @Injectable()
 export class UsersService {
@@ -29,6 +46,7 @@ export class UsersService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly notifications: NotificationsProducer,
+    @Inject(STORAGE_SERVICE) private readonly storage: StorageService,
   ) {}
 
   private readonly logger = new Logger(UsersService.name)
@@ -132,14 +150,34 @@ export class UsersService {
     })
   }
 
-  /** Runs the upload avatar operation. */
-  async uploadAvatar(userId: string, filename: string) {
-    const avatarPath = `/static/users/avatars/${filename}`
-    return await this.prisma.user.update({
+  /**
+   * Stores a new avatar and points the user at it. The stored object is removed again when the
+   * save fails, and the previous avatar is removed best-effort once the new one is saved.
+   */
+  async uploadAvatar(userId: UserEntity['id'], file: Express.Multer.File) {
+    const previous = await this.prisma.user.findUnique({
       where: { id: userId },
-      data: { avatar: avatarPath },
-      select: PUBLIC_USER_SELECT,
+      select: { avatar: true },
     })
+    const name = await storePublicImage(this.storage, AVATAR_FOLDER, file, {
+      maxBytes: MAX_AVATAR_BYTES,
+    })
+    let updated: Prisma.UserGetPayload<{ select: typeof PUBLIC_USER_SELECT }>
+    try {
+      updated = await this.prisma.user.update({
+        where: { id: userId },
+        data: { avatar: `${AVATAR_PATH_PREFIX}${name}` },
+        select: PUBLIC_USER_SELECT,
+      })
+    } catch (error) {
+      await removePublicImage(this.storage, AVATAR_FOLDER, name)
+      throw error
+    }
+    const previousName = previous?.avatar?.startsWith(AVATAR_PATH_PREFIX)
+      ? previous.avatar.slice(AVATAR_PATH_PREFIX.length)
+      : null
+    await removePublicImage(this.storage, AVATAR_FOLDER, previousName)
+    return updated
   }
 
   async followUser(followerId: string, followingId: string) {
