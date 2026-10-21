@@ -682,21 +682,10 @@ def guard(command, cwd, depth=0):
                     verdict = git_guard(words, known_cwd)
                 except subprocess.CalledProcessError:
                     verdict = ASK
-        elif executable in {'rm', 'unlink', 'shred'}:
-            verdict = rm_guard(words, known_cwd)
-        elif executable == 'find':
-            verdict = find_guard(words, known_cwd, depth)
-        elif executable in SHELLS:
-            verdict = shell_guard(words, cwd, depth, stdin_redirect)
+        elif executable in PROGRAM_GUARDS:
+            verdict = PROGRAM_GUARDS[executable](words, known_cwd, cwd, depth, stdin_redirect)
         elif INTERPRETER.fullmatch(executable):
-            flag = next((i for i, w in enumerate(words) if w in {'-c', '-e', '-p', '-r', '--eval'}), None)
-            if flag is not None and flag + 1 < len(words):
-                verdict = code_guard(words[flag + 1], cwd, depth)
-        elif executable == 'eval':
-            body = ' '.join(words[1:])
-            verdict = ASK if '$' in body or '`' in body else guard(body, cwd, depth + 1)
-        elif executable in {'sudo', 'su', 'doas', 'pkexec'}:
-            verdict = ASK
+            verdict = interpreter_guard(words, known_cwd, cwd, depth, stdin_redirect)
         if verdict and verdict[0] == 'deny':
             return verdict
         pending = verdict or pending
@@ -721,6 +710,30 @@ def shell_guard(words, cwd, depth, stdin_redirect):
     else:
         reads_stdin = True
     return ASK if reads_stdin and not stdin_redirect else None
+
+
+def interpreter_guard(words, _known_cwd, cwd, depth, _stdin_redirect):
+    """Inline code passed to an interpreter (`python -c`, `node -e`, …)."""
+    flag = next((i for i, w in enumerate(words) if w in {'-c', '-e', '-p', '-r', '--eval'}), None)
+    return code_guard(words[flag + 1], cwd, depth) if flag is not None and flag + 1 < len(words) else None
+
+
+def eval_guard(words, _known_cwd, cwd, depth, _stdin_redirect):
+    body = ' '.join(words[1:])
+    return ASK if '$' in body or '`' in body else guard(body, cwd, depth + 1)
+
+
+# Program-specific inspectors, keyed by executable name. Each takes
+# (words, known_cwd, cwd, depth, stdin_redirect); known_cwd is None once `cd` made cwd uncertain.
+# git and the shell builtins that change cwd or variables stay inline in `guard`.
+PROGRAM_GUARDS = {
+    **dict.fromkeys(('rm', 'unlink', 'shred'), lambda words, known_cwd, *_: rm_guard(words, known_cwd)),
+    'find': lambda words, known_cwd, _cwd, depth, _stdin: find_guard(words, known_cwd, depth),
+    **dict.fromkeys(SHELLS, lambda words, _known_cwd, cwd, depth, stdin_redirect:
+                    shell_guard(words, cwd, depth, stdin_redirect)),
+    'eval': eval_guard,
+    **dict.fromkeys(('sudo', 'su', 'doas', 'pkexec'), lambda *_: ASK),
+}
 
 
 def main():
