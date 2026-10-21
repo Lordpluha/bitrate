@@ -9,9 +9,10 @@ import {
   ReleaseReviewError,
   type ReleaseSubmissionDetail,
 } from '@domain/release-review'
-import { ActionNotAllowedError, ResourceNotFoundError } from '@domain/shared'
+import { ActionNotAllowedError } from '@domain/shared'
 import { formatClockDuration } from '@presentation/pages/shared/duration.formatter'
 import { LocalizedDatePipe } from '@presentation/pipes'
+import { createDetailResource } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmLabelImports } from '@spartan-ng/helm/label'
@@ -36,8 +37,8 @@ function lines(value: string): string[] {
 }
 
 /**
- * Over 100 lines: loading, the decision form's armed state and failure reporting describe one
- * reviewer action on one submission — the same reason `album-detail.ts` gives for its size.
+ * Over 100 lines: the decision form's armed state and failure reporting describe one reviewer
+ * action on one submission, so they stay together.
  */
 @Component({
   selector: 'app-release-review-detail',
@@ -70,10 +71,15 @@ export class ReleaseReviewDetailPage {
   protected readonly rightLabels = RELEASE_RIGHT_LABELS
   protected readonly formatDuration = formatClockDuration
 
-  protected readonly release = signal<ReleaseSubmissionDetail | null>(null)
-  protected readonly loading = signal(true)
-  protected readonly notFound = signal(false)
-  protected readonly failure = signal<string | null>(null)
+  private readonly record = createDetailResource({
+    load: () => this.getRelease.execute(this.releaseId),
+    errorMessage: 'Could not load this release.',
+  })
+
+  protected readonly release = this.record.value
+  protected readonly loading = this.record.loading
+  protected readonly notFound = this.record.notFound
+  protected readonly failure = this.record.failure
   protected readonly status = signal<string | null>(null)
   protected readonly mode = signal<DecisionMode>(null)
   protected readonly message = signal('')
@@ -90,7 +96,7 @@ export class ReleaseReviewDetailPage {
   )
 
   constructor() {
-    void this.load()
+    void this.record.reload()
   }
 
   protected decidable(release: ReleaseSubmissionDetail): boolean {
@@ -139,10 +145,11 @@ export class ReleaseReviewDetailPage {
       this.message.set('')
       this.requiredText.set('')
       this.recommendationText.set('')
-      await this.load()
+      await this.record.reload()
     } catch (error) {
       this.failure.set(this.describe(error))
-      if (error instanceof ReleaseReviewError && error.reason === 'stale') await this.load()
+      if (error instanceof ReleaseReviewError && error.reason === 'stale')
+        await this.record.reload()
     } finally {
       this.working.set(false)
     }
@@ -163,18 +170,5 @@ export class ReleaseReviewDetailPage {
       }
     }
     return 'Could not save the decision. Please try again.'
-  }
-
-  private async load(): Promise<void> {
-    this.loading.set(true)
-    try {
-      this.release.set(await this.getRelease.execute(this.releaseId))
-      this.notFound.set(false)
-    } catch (error) {
-      if (error instanceof ResourceNotFoundError) this.notFound.set(true)
-      else this.failure.set('Could not load this release.')
-    } finally {
-      this.loading.set(false)
-    }
   }
 }
