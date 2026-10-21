@@ -1,7 +1,7 @@
 'use client'
 
-import { cn } from '@bitrate/ui-react'
-import { CollectionSkeleton, StateMessage } from '@shared/ui'
+import { Button, cn } from '@bitrate/ui-react'
+import { CollectionSkeleton, Skeleton, StateMessage } from '@shared/ui'
 import { MediaImage } from '@shared/ui/MediaImage'
 import { Info, Podcast, SearchIcon, Share2 } from 'lucide-react'
 import Link from 'next/link'
@@ -9,6 +9,7 @@ import { useMemo, useState } from 'react'
 import {
   useAllSavedEpisodes,
   usePodcast,
+  usePodcastEpisodes,
   useSaveEpisode,
   useUnsaveEpisode,
 } from '@/entities/Podcast'
@@ -19,8 +20,9 @@ import { ErrorState } from '@/shared/ui/ErrorState'
 import { getPodcastCoverUrl } from '@/shared/utils/mediaUrl'
 import {
   type EpisodeFilter,
-  filterEpisodes,
+  filterSavedEpisodes,
 } from '@/views/Podcast/model/filterEpisodes'
+import { useDebouncedValue } from '@/views/Podcast/model/useDebouncedValue'
 import { EpisodeRow } from '@/views/Podcast/ui/EpisodeRow'
 
 type PodcastPageProps = {
@@ -28,6 +30,8 @@ type PodcastPageProps = {
 }
 
 type PodcastTab = 'about' | 'episodes'
+
+const SEARCH_DEBOUNCE_MS = 300
 
 const chipClassName = (isActive: boolean) =>
   cn(
@@ -56,18 +60,29 @@ const copyLink = async () => {
 
 /**
  * The design's podcast show: cover, title, publisher and facts, then Episodes (Newest / Saved
- * filters and search) and About. Following, progress and playback of episodes are concepts and
- * wait for the backend.
+ * filters and search) and About. Newest pages and searches on the server; Saved narrows the
+ * listener's saved library. Following, progress and playback of episodes are concepts and wait
+ * for the backend.
  */
 export const PodcastPage = ({ podcastId }: PodcastPageProps) => {
   const { isAuthenticated } = useAuth()
-  const podcastQuery = usePodcast(podcastId, 1, 50)
+  /** Only the show and its unfiltered episode total; the episodes page themselves below. */
+  const podcastQuery = usePodcast(podcastId, 1, 1)
   const savedQuery = useAllSavedEpisodes(isAuthenticated)
   const saveEpisode = useSaveEpisode()
   const unsaveEpisode = useUnsaveEpisode()
   const [tab, setTab] = useState<PodcastTab>('episodes')
   const [filter, setFilter] = useState<EpisodeFilter>('newest')
   const [query, setQuery] = useState('')
+  const trimmedQuery = query.trim()
+  const debouncedQuery = useDebouncedValue({
+    delayMs: SEARCH_DEBOUNCE_MS,
+    value: trimmedQuery,
+  })
+  const episodesQuery = usePodcastEpisodes({
+    podcastId,
+    query: debouncedQuery,
+  })
   const savedIds = useMemo(
     () => new Set(savedQuery.data?.map((episode) => episode.id) ?? []),
     [savedQuery.data],
@@ -92,12 +107,26 @@ export const PodcastPage = ({ podcastId }: PodcastPageProps) => {
   }
 
   const podcast = podcastQuery.data
-  const episodes = filterEpisodes({
-    episodes: podcast.episodes.data,
-    filter,
-    query,
-    savedIds,
-  })
+  const isSavedFilter = filter === 'saved'
+  const episodes = isSavedFilter
+    ? filterSavedEpisodes({
+        episodes: savedQuery.data ?? [],
+        podcastId,
+        query: trimmedQuery,
+      })
+    : (episodesQuery.data?.pages.flatMap((page) => page.data) ?? [])
+  const resultQuery = isSavedFilter ? trimmedQuery : debouncedQuery
+  const resultCount = isSavedFilter
+    ? episodes.length
+    : (episodesQuery.data?.pages[0]?.total ?? 0)
+  const isEpisodesPending = isSavedFilter
+    ? savedQuery.isPending
+    : episodesQuery.isPending
+  const isEpisodesError = isSavedFilter
+    ? savedQuery.isError
+    : episodesQuery.isError
+  const retryEpisodes = () =>
+    void (isSavedFilter ? savedQuery.refetch() : episodesQuery.refetch())
   const facts = [
     `${podcast.episodes.total} ${podcast.episodes.total === 1 ? 'episode' : 'episodes'}`,
   ]
@@ -247,33 +276,62 @@ export const PodcastPage = ({ podcastId }: PodcastPageProps) => {
               </label>
             </div>
 
-            {query.trim() ? (
+            {resultQuery && !isEpisodesPending && !isEpisodesError ? (
               <p className="text-[13px] text-muted-foreground" role="status">
-                {episodes.length}{' '}
-                {episodes.length === 1 ? 'episode' : 'episodes'} for “
-                {query.trim()}”
+                {resultCount} {resultCount === 1 ? 'episode' : 'episodes'} for “
+                {resultQuery}”
               </p>
             ) : null}
 
-            {podcast.episodes.data.length === 0 ? (
+            {podcast.episodes.total === 0 ? (
               <StateMessage
                 className="min-h-80"
                 description="New episodes will appear here."
                 icon={Podcast}
                 title="No episodes have been published yet."
               />
+            ) : isEpisodesPending ? (
+              <div
+                aria-busy="true"
+                aria-label="Loading episodes"
+                className="flex flex-col"
+                role="status"
+              >
+                {[0, 1, 2].map((row) => (
+                  <div className="flex items-start gap-4 py-4" key={row}>
+                    <Skeleton className="size-18 shrink-0 rounded-md" />
+                    <div className="flex flex-1 flex-col gap-2 pt-1">
+                      <Skeleton className="h-3.5 w-2/5" />
+                      <Skeleton className="h-3 w-1/4" />
+                      <Skeleton className="h-3 w-3/5" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : isEpisodesError ? (
+              <StateMessage
+                className="min-h-60"
+                description="Check your connection and try again."
+                icon={Podcast}
+                primary={{ label: 'Try again', onClick: retryEpisodes }}
+                title="Episodes couldn’t load."
+                tone="error"
+              />
             ) : episodes.length === 0 ? (
               <StateMessage
                 className="min-h-60"
                 icon={Podcast}
                 title={
-                  filter === 'saved'
+                  isSavedFilter && !trimmedQuery
                     ? 'No saved episodes from this show yet.'
                     : 'No episodes match your search.'
                 }
               />
             ) : (
-              <div className="flex flex-col">
+              <div
+                aria-busy={!isSavedFilter && episodesQuery.isPlaceholderData}
+                className="flex flex-col"
+              >
                 {episodes.map((episode) => {
                   const isSaved = savedIds.has(episode.id)
                   return (
@@ -285,8 +343,20 @@ export const PodcastPage = ({ podcastId }: PodcastPageProps) => {
                         isAuthenticated
                           ? () =>
                               isSaved
-                                ? unsaveEpisode.mutate(episode.id)
-                                : saveEpisode.mutate(episode.id)
+                                ? unsaveEpisode.mutate(episode.id, {
+                                    onError: (error) =>
+                                      showApiErrorToast(
+                                        error,
+                                        `Unable to remove ${episode.title}.`,
+                                      ),
+                                  })
+                                : saveEpisode.mutate(episode.id, {
+                                    onError: (error) =>
+                                      showApiErrorToast(
+                                        error,
+                                        `Unable to save ${episode.title}.`,
+                                      ),
+                                  })
                           : undefined
                       }
                     />
@@ -294,6 +364,19 @@ export const PodcastPage = ({ podcastId }: PodcastPageProps) => {
                 })}
               </div>
             )}
+
+            {!isSavedFilter && episodesQuery.hasNextPage ? (
+              <Button
+                className="self-center"
+                disabled={episodesQuery.isFetchingNextPage}
+                onClick={() => void episodesQuery.fetchNextPage()}
+                variant="outline"
+              >
+                {episodesQuery.isFetchingNextPage
+                  ? 'Loading episodes…'
+                  : 'Load more episodes'}
+              </Button>
+            ) : null}
 
             {isAuthenticated ? null : (
               <div className="flex items-start gap-2.5 rounded-[10px] border border-info-border bg-info-surface px-4 py-3 text-[13px] text-info-text">
