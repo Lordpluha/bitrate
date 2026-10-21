@@ -2,7 +2,12 @@ import { DEFAULT_LIMIT, DEFAULT_PAGE } from '@common/pagination'
 import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { AdminResourceStatus, AuditContextValue } from '@modules/admin/shared'
-import { isoOrNull, writeTakeDownAudit } from '@modules/admin/shared'
+import {
+  runTakeDownTransition,
+  statusWhere,
+  type TakeDownActor,
+  type TakeDownDirection,
+} from '@modules/admin/shared'
 import { Injectable } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import type { ADMIN_PODCASTS_SORT_FIELDS } from './dtos'
@@ -71,17 +76,10 @@ type EpisodeRowRecord = Prisma.EpisodeGetPayload<{ select: typeof EPISODE_ROW_SE
 export class AdminPodcastsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  /** Builds the `deletedAt` half of the `where` clause for the `status` take-down filter. */
-  private buildStatusWhere(status: AdminResourceStatus = 'active') {
-    if (status === 'all') return {}
-    if (status === 'deactivated') return { deletedAt: { not: null } }
-    return { deletedAt: null }
-  }
-
   /** Builds the shared `where` clause for listing and counting. */
   private buildWhere({ status, q }: Omit<ListPodcastsInput, 'page' | 'limit'>) {
     return {
-      ...this.buildStatusWhere(status),
+      ...statusWhere(status),
       ...(q && { title: { contains: q, mode: 'insensitive' } }),
     } satisfies Prisma.PodcastWhereInput
   }
@@ -160,83 +158,23 @@ export class AdminPodcastsService {
    * are deliberately left untouched — each stays independently manageable. The write is an
    * `updateMany` scoped to `deletedAt: null` so a concurrent take-down loses with a 409.
    */
-  async softDelete(
+  softDelete(
     id: string,
     staffId: string,
     reason?: string,
     auditContext: AuditContextValue = {},
-  ) {
-    const existing = await this.prisma.podcast.findFirst({
-      where: { id },
-      select: { deletedAt: true },
-    })
-    if (!existing) throw new PodcastNotFoundException(id)
-    if (existing.deletedAt) throw new PodcastAlreadyDeletedException(id)
-
-    return await this.prisma.$transaction(async (tx) => {
-      const { count } = await tx.podcast.updateMany({
-        where: { id, deletedAt: null },
-        data: { deletedAt: new Date() },
-      })
-      if (count === 0) throw new PodcastAlreadyDeletedException(id)
-
-      const updated = await tx.podcast.findFirstOrThrow({
-        where: { id },
-        select: PODCAST_ROW_SELECT,
-      })
-      await writeTakeDownAudit({
-        tx,
-        entityType: 'admin-podcasts',
-        entityId: id,
-        action: 'admin-podcasts.delete',
-        staffId,
-        reason,
-        before: { deletedAt: isoOrNull(existing.deletedAt) },
-        after: { deletedAt: isoOrNull(updated.deletedAt) },
-        ...auditContext,
-      })
-      return this.toRow(updated)
-    })
+  ): Promise<AdminPodcastEntity> {
+    return this.transition('take-down', id, { staffId, reason, ...auditContext })
   }
 
   /** Restores a soft-deleted podcast with the same count-guard pattern as {@link softDelete}. */
-  async restore(
+  restore(
     id: string,
     staffId: string,
     reason?: string,
     auditContext: AuditContextValue = {},
-  ) {
-    const existing = await this.prisma.podcast.findFirst({
-      where: { id },
-      select: { deletedAt: true },
-    })
-    if (!existing) throw new PodcastNotFoundException(id)
-    if (!existing.deletedAt) throw new PodcastNotDeletedException(id)
-
-    return await this.prisma.$transaction(async (tx) => {
-      const { count } = await tx.podcast.updateMany({
-        where: { id, deletedAt: { not: null } },
-        data: { deletedAt: null },
-      })
-      if (count === 0) throw new PodcastNotDeletedException(id)
-
-      const updated = await tx.podcast.findFirstOrThrow({
-        where: { id },
-        select: PODCAST_ROW_SELECT,
-      })
-      await writeTakeDownAudit({
-        tx,
-        entityType: 'admin-podcasts',
-        entityId: id,
-        action: 'admin-podcasts.restore',
-        staffId,
-        reason,
-        before: { deletedAt: isoOrNull(existing.deletedAt) },
-        after: { deletedAt: isoOrNull(updated.deletedAt) },
-        ...auditContext,
-      })
-      return this.toRow(updated)
-    })
+  ): Promise<AdminPodcastEntity> {
+    return this.transition('restore', id, { staffId, reason, ...auditContext })
   }
 
   /**
@@ -244,84 +182,80 @@ export class AdminPodcastsService {
    * is a 404 — an id pair never reaches an episode of another podcast. Neither the parent
    * podcast nor sibling episodes are touched.
    */
-  async softDeleteEpisode(
+  softDeleteEpisode(
     podcastId: string,
     episodeId: string,
     staffId: string,
     reason?: string,
     auditContext: AuditContextValue = {},
-  ) {
-    const existing = await this.prisma.episode.findFirst({
-      where: { id: episodeId, podcastId },
-      select: { deletedAt: true },
-    })
-    if (!existing) throw new EpisodeNotFoundException(episodeId)
-    if (existing.deletedAt) throw new EpisodeAlreadyDeletedException(episodeId)
-
-    return await this.prisma.$transaction(async (tx) => {
-      const { count } = await tx.episode.updateMany({
-        where: { id: episodeId, podcastId, deletedAt: null },
-        data: { deletedAt: new Date() },
-      })
-      if (count === 0) throw new EpisodeAlreadyDeletedException(episodeId)
-
-      const updated = await tx.episode.findFirstOrThrow({
-        where: { id: episodeId, podcastId },
-        select: EPISODE_ROW_SELECT,
-      })
-      await writeTakeDownAudit({
-        tx,
-        entityType: 'admin-podcast-episodes',
-        entityId: episodeId,
-        action: 'admin-podcast-episodes.delete',
-        staffId,
-        reason,
-        before: { deletedAt: isoOrNull(existing.deletedAt) },
-        after: { deletedAt: isoOrNull(updated.deletedAt) },
-        ...auditContext,
-      })
-      return this.toEpisodeRow(updated)
+  ): Promise<AdminPodcastEpisodeEntity> {
+    return this.transitionEpisode('take-down', podcastId, episodeId, {
+      staffId,
+      reason,
+      ...auditContext,
     })
   }
 
   /** Restores one soft-deleted episode of a podcast; mirrors {@link softDeleteEpisode}. */
-  async restoreEpisode(
+  restoreEpisode(
     podcastId: string,
     episodeId: string,
     staffId: string,
     reason?: string,
     auditContext: AuditContextValue = {},
-  ) {
-    const existing = await this.prisma.episode.findFirst({
-      where: { id: episodeId, podcastId },
-      select: { deletedAt: true },
+  ): Promise<AdminPodcastEpisodeEntity> {
+    return this.transitionEpisode('restore', podcastId, episodeId, {
+      staffId,
+      reason,
+      ...auditContext,
     })
-    if (!existing) throw new EpisodeNotFoundException(episodeId)
-    if (!existing.deletedAt) throw new EpisodeNotDeletedException(episodeId)
+  }
 
-    return await this.prisma.$transaction(async (tx) => {
-      const { count } = await tx.episode.updateMany({
-        where: { id: episodeId, podcastId, deletedAt: { not: null } },
-        data: { deletedAt: null },
-      })
-      if (count === 0) throw new EpisodeNotDeletedException(episodeId)
+  /** Takes a podcast down or restores it, with its audit row — see {@link runTakeDownTransition}. */
+  private transition(
+    direction: TakeDownDirection,
+    id: string,
+    actor: TakeDownActor,
+  ): Promise<AdminPodcastEntity> {
+    const takeDown = direction === 'take-down'
+    return runTakeDownTransition({
+      prisma: this.prisma,
+      direction,
+      current: () => this.prisma.podcast.findFirst({ where: { id }, select: { deletedAt: true } }),
+      mark: (tx, guard, data) => tx.podcast.updateMany({ where: { id, ...guard }, data }),
+      load: async (tx) =>
+        this.toRow(
+          await tx.podcast.findFirstOrThrow({ where: { id }, select: PODCAST_ROW_SELECT }),
+        ),
+      notFound: () => new PodcastNotFoundException(id),
+      conflict: () =>
+        takeDown ? new PodcastAlreadyDeletedException(id) : new PodcastNotDeletedException(id),
+      audit: { entityType: 'admin-podcasts', entityId: id, ...actor },
+    })
+  }
 
-      const updated = await tx.episode.findFirstOrThrow({
-        where: { id: episodeId, podcastId },
-        select: EPISODE_ROW_SELECT,
-      })
-      await writeTakeDownAudit({
-        tx,
-        entityType: 'admin-podcast-episodes',
-        entityId: episodeId,
-        action: 'admin-podcast-episodes.restore',
-        staffId,
-        reason,
-        before: { deletedAt: isoOrNull(existing.deletedAt) },
-        after: { deletedAt: isoOrNull(updated.deletedAt) },
-        ...auditContext,
-      })
-      return this.toEpisodeRow(updated)
+  /** Takes one episode of `podcastId` down or restores it — another podcast's episode is a 404. */
+  private transitionEpisode(
+    direction: TakeDownDirection,
+    podcastId: string,
+    episodeId: string,
+    actor: TakeDownActor,
+  ): Promise<AdminPodcastEpisodeEntity> {
+    const takeDown = direction === 'take-down'
+    const where = { id: episodeId, podcastId }
+    return runTakeDownTransition({
+      prisma: this.prisma,
+      direction,
+      current: () => this.prisma.episode.findFirst({ where, select: { deletedAt: true } }),
+      mark: (tx, guard, data) => tx.episode.updateMany({ where: { ...where, ...guard }, data }),
+      load: async (tx) =>
+        this.toEpisodeRow(await tx.episode.findFirstOrThrow({ where, select: EPISODE_ROW_SELECT })),
+      notFound: () => new EpisodeNotFoundException(episodeId),
+      conflict: () =>
+        takeDown
+          ? new EpisodeAlreadyDeletedException(episodeId)
+          : new EpisodeNotDeletedException(episodeId),
+      audit: { entityType: 'admin-podcast-episodes', entityId: episodeId, ...actor },
     })
   }
 }

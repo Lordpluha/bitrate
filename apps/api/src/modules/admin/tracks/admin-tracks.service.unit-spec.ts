@@ -284,12 +284,14 @@ describe('AdminTracksService', () => {
   describe('softDelete', () => {
     it('throws TrackNotFoundException when the track does not exist', async () => {
       prisma.track.findFirst.mockResolvedValue(null)
+      transaction.track.updateMany.mockResolvedValue({ count: 0 })
 
       await expect(service.softDelete('missing', STAFF_ID)).rejects.toThrow(TrackNotFoundException)
     })
 
     it('throws TrackAlreadyDeletedException when the track is already deleted', async () => {
       prisma.track.findFirst.mockResolvedValue(buildTrack({ deletedAt: new Date() }) as never)
+      transaction.track.updateMany.mockResolvedValue({ count: 0 })
 
       await expect(service.softDelete('track-1', STAFF_ID)).rejects.toThrow(
         TrackAlreadyDeletedException,
@@ -422,7 +424,10 @@ describe('AdminTracksService', () => {
           buildTrack({ id, deletedAt: id === 'gone' ? new Date() : null }),
         ) as never
       }) as never)
-      transaction.track.updateMany.mockResolvedValue({ count: 1 })
+      transaction.track.updateMany.mockImplementation(((args: unknown) => {
+        const id = (args as { where: { id: string } }).where.id
+        return Promise.resolve({ count: id === 'ok' ? 1 : 0 }) as never
+      }) as never)
       transaction.track.findFirstOrThrow.mockResolvedValue(
         buildTrackWithArtist({ id: 'ok', deletedAt: new Date() }) as never,
       )

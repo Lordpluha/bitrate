@@ -155,6 +155,7 @@ describe('AdminPodcastsService', () => {
   describe('softDelete', () => {
     it('throws PodcastNotFoundException when the podcast does not exist', async () => {
       prisma.podcast.findFirst.mockResolvedValue(null)
+      transaction.podcast.updateMany.mockResolvedValue({ count: 0 })
 
       await expect(service.softDelete('missing', STAFF_ID)).rejects.toThrow(
         PodcastNotFoundException,
@@ -163,6 +164,7 @@ describe('AdminPodcastsService', () => {
 
     it('throws PodcastAlreadyDeletedException when already taken down', async () => {
       prisma.podcast.findFirst.mockResolvedValue(buildPodcast({ deletedAt: DELETED_AT }) as never)
+      transaction.podcast.updateMany.mockResolvedValue({ count: 0 })
 
       await expect(service.softDelete('podcast-1', STAFF_ID)).rejects.toThrow(
         PodcastAlreadyDeletedException,
@@ -258,6 +260,7 @@ describe('AdminPodcastsService', () => {
   describe('softDeleteEpisode', () => {
     it('throws EpisodeNotFoundException when the episode does not belong to the podcast', async () => {
       prisma.episode.findFirst.mockResolvedValue(null)
+      transaction.episode.updateMany.mockResolvedValue({ count: 0 })
 
       await expect(service.softDeleteEpisode('podcast-2', 'episode-1', STAFF_ID)).rejects.toThrow(
         EpisodeNotFoundException,
@@ -269,6 +272,7 @@ describe('AdminPodcastsService', () => {
 
     it('throws EpisodeAlreadyDeletedException when already taken down', async () => {
       prisma.episode.findFirst.mockResolvedValue(buildEpisode({ deletedAt: DELETED_AT }) as never)
+      transaction.episode.updateMany.mockResolvedValue({ count: 0 })
 
       await expect(service.softDeleteEpisode('podcast-1', 'episode-1', STAFF_ID)).rejects.toThrow(
         EpisodeAlreadyDeletedException,

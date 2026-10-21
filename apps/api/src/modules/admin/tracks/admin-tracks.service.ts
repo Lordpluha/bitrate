@@ -2,7 +2,14 @@ import { DEFAULT_LIMIT, DEFAULT_PAGE, type PaginationInput } from '@common/pagin
 import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { AdminResourceStatus, AuditContextValue, CsvExport } from '@modules/admin/shared'
-import { isoOrNull, openCsvExport, runBatch, writeTakeDownAudit } from '@modules/admin/shared'
+import {
+  openCsvExport,
+  runBatch,
+  runTakeDownTransition,
+  statusWhere,
+  type TakeDownActor,
+  type TakeDownDirection,
+} from '@modules/admin/shared'
 import { TrackUploadService } from '@modules/tracks'
 import { Injectable } from '@nestjs/common'
 import { Prisma, type TrackProcessingStatus } from '@prisma/client'
@@ -106,17 +113,10 @@ export class AdminTracksService {
     private readonly trackUpload: TrackUploadService,
   ) {}
 
-  /** Builds the `deletedAt` half of the `where` clause for the `status` take-down filter. */
-  private buildStatusWhere(status: AdminResourceStatus = 'active') {
-    if (status === 'all') return {}
-    if (status === 'deactivated') return { deletedAt: { not: null } }
-    return { deletedAt: null }
-  }
-
   /** Builds the shared Prisma `where` clause for counting. */
   private buildWhere({ processingStatus, status, q }: Omit<ListTracksInput, 'page' | 'limit'>) {
     return {
-      ...this.buildStatusWhere(status),
+      ...statusWhere(status),
       ...(processingStatus && { processingStatus }),
       ...(q && { title: { contains: q, mode: 'insensitive' } }),
     } satisfies Prisma.TrackWhereInput
@@ -408,40 +408,13 @@ export class AdminTracksService {
    * action that already happened. A `count` of 0 means someone else won the race, which is a
    * 409, not the 404 a genuinely missing track gets.
    */
-  async softDelete(
+  softDelete(
     id: string,
     staffId: string,
     reason?: string,
     auditContext: AuditContextValue = {},
   ): Promise<AdminTrackRow> {
-    const existing = await this.prisma.track.findFirst({ where: { id }, select: DELETED_AT_SELECT })
-    if (!existing) throw new TrackNotFoundException(id)
-    if (existing.deletedAt) throw new TrackAlreadyDeletedException(id)
-
-    return await this.prisma.$transaction(async (tx) => {
-      const { count } = await tx.track.updateMany({
-        where: { id, deletedAt: null },
-        data: { deletedAt: new Date() },
-      })
-      if (count === 0) throw new TrackAlreadyDeletedException(id)
-
-      const updated = await tx.track.findFirstOrThrow({
-        where: { id },
-        select: TRACK_ROW_SELECT,
-      })
-      await writeTakeDownAudit({
-        tx,
-        entityType: 'admin-tracks',
-        entityId: id,
-        action: 'admin-tracks.delete',
-        staffId,
-        reason,
-        before: { deletedAt: isoOrNull(existing.deletedAt) },
-        after: { deletedAt: isoOrNull(updated.deletedAt) },
-        ...auditContext,
-      })
-      return this.toRow(updated)
-    })
+    return this.transition('take-down', id, { staffId, reason, ...auditContext })
   }
 
   /** Takes every id down independently via {@link softDelete}; per-id results, same rules. */
@@ -454,39 +427,33 @@ export class AdminTracksService {
    * Uses the same `updateMany` + count-guard pattern as {@link softDelete} for the same
    * concurrent-request reason.
    */
-  async restore(
+  restore(
     id: string,
     staffId: string,
     reason?: string,
     auditContext: AuditContextValue = {},
   ): Promise<AdminTrackRow> {
-    const existing = await this.prisma.track.findFirst({ where: { id }, select: DELETED_AT_SELECT })
-    if (!existing) throw new TrackNotFoundException(id)
-    if (!existing.deletedAt) throw new TrackNotDeletedException(id)
+    return this.transition('restore', id, { staffId, reason, ...auditContext })
+  }
 
-    return await this.prisma.$transaction(async (tx) => {
-      const { count } = await tx.track.updateMany({
-        where: { id, deletedAt: { not: null } },
-        data: { deletedAt: null },
-      })
-      if (count === 0) throw new TrackNotDeletedException(id)
-
-      const updated = await tx.track.findFirstOrThrow({
-        where: { id },
-        select: TRACK_ROW_SELECT,
-      })
-      await writeTakeDownAudit({
-        tx,
-        entityType: 'admin-tracks',
-        entityId: id,
-        action: 'admin-tracks.restore',
-        staffId,
-        reason,
-        before: { deletedAt: isoOrNull(existing.deletedAt) },
-        after: { deletedAt: isoOrNull(updated.deletedAt) },
-        ...auditContext,
-      })
-      return this.toRow(updated)
+  /** Takes a track down or restores it, with its audit row — see {@link runTakeDownTransition}. */
+  private transition(
+    direction: TakeDownDirection,
+    id: string,
+    actor: TakeDownActor,
+  ): Promise<AdminTrackRow> {
+    const takeDown = direction === 'take-down'
+    return runTakeDownTransition({
+      prisma: this.prisma,
+      direction,
+      current: () => this.prisma.track.findFirst({ where: { id }, select: { deletedAt: true } }),
+      mark: (tx, guard, data) => tx.track.updateMany({ where: { id, ...guard }, data }),
+      load: async (tx) =>
+        this.toRow(await tx.track.findFirstOrThrow({ where: { id }, select: TRACK_ROW_SELECT })),
+      notFound: () => new TrackNotFoundException(id),
+      conflict: () =>
+        takeDown ? new TrackAlreadyDeletedException(id) : new TrackNotDeletedException(id),
+      audit: { entityType: 'admin-tracks', entityId: id, ...actor },
     })
   }
 }

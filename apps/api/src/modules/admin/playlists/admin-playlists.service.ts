@@ -2,7 +2,13 @@ import { DEFAULT_LIMIT, DEFAULT_PAGE } from '@common/pagination'
 import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { AdminResourceStatus, AuditContextValue } from '@modules/admin/shared'
-import { isoOrNull, writeTakeDownAudit } from '@modules/admin/shared'
+import {
+  runTakeDownTransition,
+  statusWhere,
+  type TakeDownActor,
+  type TakeDownDirection,
+  writeTakeDownAudit,
+} from '@modules/admin/shared'
 import { Injectable } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import type { ADMIN_PLAYLISTS_SORT_FIELDS } from './dtos'
@@ -63,9 +69,6 @@ const PLAYLIST_DETAIL_SELECT = {
   },
 } as const satisfies Prisma.PlaylistSelect
 
-/** What the take-down/restore pre-checks read. */
-const DELETED_AT_SELECT = { deletedAt: true } as const satisfies Prisma.PlaylistSelect
-
 type PlaylistRowRecord = Prisma.PlaylistGetPayload<{ select: typeof PLAYLIST_ROW_SELECT }>
 type PlaylistDetailRecord = Prisma.PlaylistGetPayload<{ select: typeof PLAYLIST_DETAIL_SELECT }>
 
@@ -74,13 +77,6 @@ type PlaylistDetailRecord = Prisma.PlaylistGetPayload<{ select: typeof PLAYLIST_
 export class AdminPlaylistsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  /** Builds the `deletedAt` half of the `where` clause for the `status` take-down filter. */
-  private buildStatusWhere(status: AdminResourceStatus = 'active') {
-    if (status === 'all') return {}
-    if (status === 'deactivated') return { deletedAt: { not: null } }
-    return { deletedAt: null }
-  }
-
   /**
    * Builds the shared `where` clause for listing and counting. `isPublic: true` is not
    * optional: private playlists are user content, never an operator moderation surface.
@@ -88,7 +84,7 @@ export class AdminPlaylistsService {
   private buildWhere({ status, ownerId, q }: Omit<ListPlaylistsInput, 'page' | 'limit'>) {
     return {
       isPublic: true,
-      ...this.buildStatusWhere(status),
+      ...statusWhere(status),
       ...(ownerId && { userId: ownerId }),
       ...(q && { title: { contains: q, mode: 'insensitive' } }),
     } satisfies Prisma.PlaylistWhereInput
@@ -236,85 +232,48 @@ export class AdminPlaylistsService {
    * `deletedAt` and nothing else, so visibility is untouched. The write is an `updateMany`
    * scoped to `deletedAt: null` so a concurrent take-down loses with a 409.
    */
-  async softDelete(
+  softDelete(
     id: string,
     staffId: string,
     reason?: string,
     auditContext: AuditContextValue = {},
-  ) {
-    const existing = await this.prisma.playlist.findFirst({
-      where: { id },
-      select: DELETED_AT_SELECT,
-    })
-    if (!existing) throw new PlaylistNotFoundException(id)
-    if (existing.deletedAt) throw new PlaylistAlreadyDeletedException(id)
-
-    return await this.prisma.$transaction(async (tx) => {
-      const { count } = await tx.playlist.updateMany({
-        where: { id, deletedAt: null },
-        data: { deletedAt: new Date() },
-      })
-      if (count === 0) throw new PlaylistAlreadyDeletedException(id)
-
-      const updated = await tx.playlist.findFirstOrThrow({
-        where: { id },
-        select: PLAYLIST_ROW_SELECT,
-      })
-      await writeTakeDownAudit({
-        tx,
-        entityType: AUDIT_ENTITY_TYPE,
-        entityId: id,
-        action: 'admin-playlists.delete',
-        staffId,
-        reason,
-        before: { deletedAt: isoOrNull(existing.deletedAt) },
-        after: { deletedAt: isoOrNull(updated.deletedAt) },
-        ...auditContext,
-      })
-      return this.toRow(updated)
-    })
+  ): Promise<AdminPlaylistEntity> {
+    return this.transition('take-down', id, { staffId, reason, ...auditContext })
   }
 
   /**
    * Restores a soft-deleted playlist, recording the operator's stated reason in an audit row.
    * Clears `deletedAt` only — a hidden playlist stays hidden. Same guard as {@link softDelete}.
    */
-  async restore(
+  restore(
     id: string,
     staffId: string,
     reason?: string,
     auditContext: AuditContextValue = {},
-  ) {
-    const existing = await this.prisma.playlist.findFirst({
-      where: { id },
-      select: DELETED_AT_SELECT,
-    })
-    if (!existing) throw new PlaylistNotFoundException(id)
-    if (!existing.deletedAt) throw new PlaylistNotDeletedException(id)
+  ): Promise<AdminPlaylistEntity> {
+    return this.transition('restore', id, { staffId, reason, ...auditContext })
+  }
 
-    return await this.prisma.$transaction(async (tx) => {
-      const { count } = await tx.playlist.updateMany({
-        where: { id, deletedAt: { not: null } },
-        data: { deletedAt: null },
-      })
-      if (count === 0) throw new PlaylistNotDeletedException(id)
-
-      const updated = await tx.playlist.findFirstOrThrow({
-        where: { id },
-        select: PLAYLIST_ROW_SELECT,
-      })
-      await writeTakeDownAudit({
-        tx,
-        entityType: AUDIT_ENTITY_TYPE,
-        entityId: id,
-        action: 'admin-playlists.restore',
-        staffId,
-        reason,
-        before: { deletedAt: isoOrNull(existing.deletedAt) },
-        after: { deletedAt: isoOrNull(updated.deletedAt) },
-        ...auditContext,
-      })
-      return this.toRow(updated)
+  /** Takes a playlist down or restores it, with its audit row — see {@link runTakeDownTransition}. */
+  private transition(
+    direction: TakeDownDirection,
+    id: string,
+    actor: TakeDownActor,
+  ): Promise<AdminPlaylistEntity> {
+    const takeDown = direction === 'take-down'
+    return runTakeDownTransition({
+      prisma: this.prisma,
+      direction,
+      current: () => this.prisma.playlist.findFirst({ where: { id }, select: { deletedAt: true } }),
+      mark: (tx, guard, data) => tx.playlist.updateMany({ where: { id, ...guard }, data }),
+      load: async (tx) =>
+        this.toRow(
+          await tx.playlist.findFirstOrThrow({ where: { id }, select: PLAYLIST_ROW_SELECT }),
+        ),
+      notFound: () => new PlaylistNotFoundException(id),
+      conflict: () =>
+        takeDown ? new PlaylistAlreadyDeletedException(id) : new PlaylistNotDeletedException(id),
+      audit: { entityType: AUDIT_ENTITY_TYPE, entityId: id, ...actor },
     })
   }
 }
