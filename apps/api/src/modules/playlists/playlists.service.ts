@@ -26,16 +26,15 @@ const ADD_TRACKS_ATTEMPTS = 3
 const isSerializationFailure = (error: unknown): boolean =>
   error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2034'
 
-/** Represents the playlists service. */
+/** Playlist CRUD, likes and track membership. */
 @Injectable()
 export class PlaylistsService {
-  /** Creates a new instance. */
   constructor(
     private readonly prisma: PrismaService,
     private readonly cache: CacheService,
   ) {}
 
-  /** Runs the create operation. */
+  /** Creates an empty playlist owned by the user. */
   async create(userId: UserEntity['id'], playlistDto: CreatePlaylistDto) {
     const playlist = await this.prisma.playlist.create({
       data: {
@@ -48,7 +47,7 @@ export class PlaylistsService {
     return playlist
   }
 
-  /** Runs the get all operation. */
+  /** Public playlists, newest first; optionally one owner's profile list. */
   async getAll({ page = 1, limit = 10, userId }: PaginationInput & { userId?: UserEntity['id'] }) {
     const pagination = normalizePagination(page, limit)
     /* a profile lists the owner's public playlists only while they keep them on their profile */
@@ -106,14 +105,14 @@ export class PlaylistsService {
     }
   }
 
-  /** Runs the get by id operation. */
+  /** An active playlist by id, regardless of visibility. */
   async getById(id: PlaylistEntity['id']) {
     const playlist = await this.prisma.playlist.findFirst({ where: { id, deletedAt: null } })
     if (!playlist) throw new NotFoundException('Playlist not found')
     return playlist
   }
 
-  /** Runs the get by id populated operation. */
+  /** A visible playlist with its ready tracks in position order and its owner. */
   async getByIdPopulated(id: PlaylistEntity['id'], userId?: UserEntity['id']) {
     const playlist = await this.prisma.playlist.findFirst({
       where: {
@@ -149,22 +148,18 @@ export class PlaylistsService {
     }
   }
 
-  /** Runs the update operation. */
+  /** Updates the user's own playlist. */
   async update(userId: UserEntity['id'], id: PlaylistEntity['id'], updateDto: UpdatePlaylistDto) {
-    const playlist = await this.prisma.playlist.findFirst({ where: { id, deletedAt: null } })
-    if (!playlist) throw new NotFoundException('Playlist not found')
-    if (playlist.userId !== userId) throw new ForbiddenException('You do not own this playlist')
+    await this.requireOwned(userId, id, 'forbid')
 
     const updated = await this.prisma.playlist.update({ where: { id }, data: updateDto })
     await this.cache.invalidate(NS.SEARCH)
     return updated
   }
 
-  /** Runs the delete operation. */
+  /** Soft-deletes the user's own playlist. */
   async delete(userId: UserEntity['id'], id: PlaylistEntity['id']) {
-    const playlist = await this.prisma.playlist.findFirst({ where: { id, deletedAt: null } })
-    if (!playlist) throw new NotFoundException('Playlist not found')
-    if (playlist.userId !== userId) throw new ForbiddenException('You do not own this playlist')
+    await this.requireOwned(userId, id, 'forbid')
 
     const deleted = await this.prisma.playlist.update({
       where: { id },
@@ -174,7 +169,7 @@ export class PlaylistsService {
     return deleted
   }
 
-  /** Runs the like operation. */
+  /** Likes a public playlist; liking twice is a no-op. */
   async like(userId: UserEntity['id'], playlistId: PlaylistEntity['id']) {
     try {
       const result = await this.prisma.$transaction(async (tx) => {
@@ -203,7 +198,7 @@ export class PlaylistsService {
     }
   }
 
-  /** Runs the unlike operation. */
+  /** Removes the like; unliking twice is a no-op. */
   async unlike(userId: UserEntity['id'], playlistId: PlaylistEntity['id']) {
     try {
       const result = await this.prisma.$transaction(async (tx) => {
@@ -263,12 +258,9 @@ export class PlaylistsService {
     return { data, total, page: pagination.page, limit: pagination.limit }
   }
 
-  /** Runs the add tracks operation. */
+  /** Appends ready tracks to the user's own playlist. */
   async addTracks(userId: UserEntity['id'], id: PlaylistEntity['id'], dto: AddTracksDto) {
-    const playlist = await this.prisma.playlist.findFirst({
-      where: { id, userId, deletedAt: null },
-    })
-    if (!playlist) throw new NotFoundException('Playlist not found or not owned by user')
+    await this.requireOwned(userId, id, 'hide')
 
     const uniqueTrackIds = [...new Set(dto.trackIds)]
     const readyCount = await this.prisma.track.count({
@@ -318,12 +310,9 @@ export class PlaylistsService {
     return await this.getByIdPopulated(id, userId)
   }
 
-  /** Runs the remove track operation. */
+  /** Removes the track's first occurrence from the user's own playlist. */
   async removeTrack(userId: UserEntity['id'], id: PlaylistEntity['id'], trackId: string) {
-    const playlist = await this.prisma.playlist.findFirst({
-      where: { id, userId, deletedAt: null },
-    })
-    if (!playlist) throw new NotFoundException('Playlist not found or not owned by user')
+    await this.requireOwned(userId, id, 'hide')
 
     const membership = await this.prisma.playlistTrack.findFirst({
       where: { playlistId: id, trackId },
@@ -337,5 +326,26 @@ export class PlaylistsService {
     ])
     await this.cache.invalidate(NS.SEARCH)
     return await this.getByIdPopulated(id, userId)
+  }
+
+  /**
+   * Resolves an active playlist the user owns. Another user's playlist is a 403 for `forbid`
+   * and indistinguishable from a missing one (404) for `hide`.
+   */
+  private async requireOwned(
+    userId: UserEntity['id'],
+    id: PlaylistEntity['id'],
+    foreign: 'forbid' | 'hide',
+  ): Promise<void> {
+    const playlist = await this.prisma.playlist.findFirst({
+      where: { id, deletedAt: null, ...(foreign === 'hide' ? { userId } : {}) },
+      select: { userId: true },
+    })
+    if (!playlist) {
+      throw new NotFoundException(
+        foreign === 'hide' ? 'Playlist not found or not owned by user' : 'Playlist not found',
+      )
+    }
+    if (playlist.userId !== userId) throw new ForbiddenException('You do not own this playlist')
   }
 }
