@@ -189,35 +189,39 @@ export class OAuthService {
       )
     }
 
-    let user = existingUser
-    if (!user) {
-      // A brand-new account is only created once the legal documents were accepted.
-      if (!acceptance.acceptLegal) throw new LegalAcceptanceRequiredError()
-      try {
-        user = await this.prisma.user.create({
-          data: {
-            email: profile.email,
-            username: this.generateUniqueUsername(profile.name),
-            password: null,
-            avatar: null,
-            description: null,
-            emailVerifiedAt: new Date(),
-            updatedAt: new Date(),
-            legalVersion: LEGAL_VERSION,
-            legalAcceptedAt: new Date(),
-          },
-        })
-      } catch (err) {
-        if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
-          throw new ConflictException('Failed to generate a unique username, please try again')
-        }
-        throw err
-      }
+    if (existingUser) {
+      await this.prisma.userOAuthAccount.create({
+        data: { userId: existingUser.id, provider, providerAccountId: profile.id },
+      })
+      return this.sessionOrPending(existingUser)
     }
 
-    await this.prisma.userOAuthAccount.create({
-      data: { userId: user.id, provider, providerAccountId: profile.id },
-    })
+    // A brand-new account is only created once the legal documents were accepted.
+    if (!acceptance.acceptLegal) throw new LegalAcceptanceRequiredError()
+    let user: Awaited<ReturnType<typeof this.prisma.user.create>>
+    try {
+      // The account and its provider link are one write, so a failure never leaves an
+      // account that no provider can sign in to.
+      user = await this.prisma.user.create({
+        data: {
+          email: profile.email,
+          username: this.generateUniqueUsername(profile.name),
+          password: null,
+          avatar: null,
+          description: null,
+          emailVerifiedAt: new Date(),
+          updatedAt: new Date(),
+          legalVersion: LEGAL_VERSION,
+          legalAcceptedAt: new Date(),
+          oauthAccounts: { create: { provider, providerAccountId: profile.id } },
+        },
+      })
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+        throw new ConflictException('Failed to generate a unique username, please try again')
+      }
+      throw err
+    }
 
     return this.sessionOrPending(user)
   }

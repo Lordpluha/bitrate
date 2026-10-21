@@ -211,6 +211,8 @@ export class ArtistOAuthService {
     const acceptedAt = new Date()
     let artist: Awaited<ReturnType<typeof this.prisma.artist.create>>
     try {
+      // The account and its provider link are one write, so a failure never leaves an
+      // account that no provider can sign in to.
       artist = await this.prisma.artist.create({
         data: {
           email: profile.email,
@@ -221,6 +223,7 @@ export class ArtistOAuthService {
           legalAcceptedAt: acceptedAt,
           artistAgreementVersion: ARTIST_AGREEMENT_VERSION,
           artistAgreementAcceptedAt: acceptedAt,
+          oauthAccounts: { create: { provider, providerAccountId: profile.id } },
         },
       })
     } catch (err) {
@@ -229,10 +232,6 @@ export class ArtistOAuthService {
       }
       throw err
     }
-
-    await this.prisma.artistOAuthAccount.create({
-      data: { artistId: artist.id, provider, providerAccountId: profile.id },
-    })
 
     return this.sessionOrPending(artist, client)
   }

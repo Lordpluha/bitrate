@@ -103,5 +103,24 @@ describe('ArtistOAuthService', () => {
         }),
       })
     })
+
+    /** A failure after a separate artist write would leave an account no provider can sign in to. */
+    it('creates the artist and its OAuth link in one write', async () => {
+      prisma.artist.create.mockResolvedValue({
+        id: 'artist-10',
+        username: 'new',
+        twoFactorEnabled: false,
+      } as never)
+      prisma.artistSession.create.mockResolvedValue({} as never)
+
+      await findOrCreate('google', profile, { acceptLegal: true, acceptArtistAgreement: true })
+
+      expect(prisma.artist.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          oauthAccounts: { create: { provider: 'google', providerAccountId: 'provider-2' } },
+        }),
+      })
+      expect(prisma.artistOAuthAccount.create).not.toHaveBeenCalled()
+    })
   })
 })

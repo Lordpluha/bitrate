@@ -126,6 +126,50 @@ describe('OAuthService', () => {
       })
     })
 
+    /** A failure after a separate user write would leave an account no provider can sign in to. */
+    it('creates a new user and its OAuth link in one write', async () => {
+      prisma.userOAuthAccount.findUnique.mockResolvedValue(null)
+      prisma.user.findFirst.mockResolvedValue(null)
+      prisma.user.create.mockResolvedValue({
+        id: 'user-10',
+        username: 'new',
+        twoFactorEnabled: false,
+      } as never)
+      prisma.userSession.create.mockResolvedValue({} as never)
+
+      await call(
+        'google',
+        { id: 'google-10', email: 'new@example.com', name: 'New' },
+        { acceptLegal: true },
+      )
+
+      expect(prisma.user.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          oauthAccounts: { create: { provider: 'google', providerAccountId: 'google-10' } },
+        }),
+      })
+      expect(prisma.userOAuthAccount.create).not.toHaveBeenCalled()
+    })
+
+    it('links a provider to an existing password-less account', async () => {
+      prisma.userOAuthAccount.findUnique.mockResolvedValue(null)
+      prisma.user.findFirst.mockResolvedValue({
+        id: 'user-11',
+        username: 'oauth-only',
+        password: null,
+        twoFactorEnabled: false,
+      } as never)
+      prisma.userOAuthAccount.create.mockResolvedValue({} as never)
+      prisma.userSession.create.mockResolvedValue({} as never)
+
+      await call('facebook', { id: 'fb-11', email: 'oauth@example.com', name: 'OAuth' })
+
+      expect(prisma.user.create).not.toHaveBeenCalled()
+      expect(prisma.userOAuthAccount.create).toHaveBeenCalledWith({
+        data: { userId: 'user-11', provider: 'facebook', providerAccountId: 'fb-11' },
+      })
+    })
+
     it('still signs in an already linked account without asking for acceptance again', async () => {
       prisma.userOAuthAccount.findUnique.mockResolvedValue({
         id: 'link-2',
