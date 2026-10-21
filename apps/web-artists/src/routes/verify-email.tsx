@@ -27,7 +27,7 @@ export const Route = createFileRoute('/verify-email')({
 function VerifyEmailPage() {
   const { token, email, next } = Route.useSearch()
   return (
-    <main className="min-h-screen flex items-center justify-center bg-black-800 p-6 text-white">
+    <main className="min-h-screen flex items-center justify-center bg-background p-6 text-foreground">
       <VerifyEmailForm
         email={email}
         key={`${token ?? ''}:${email ?? ''}`}
