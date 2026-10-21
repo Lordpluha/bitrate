@@ -54,7 +54,6 @@ export const mountParticles2d = ({
     c2.setTransform(d, 0, 0, d, 0, 0)
   }
   size()
-  window.addEventListener('resize', size, { signal: ctx.signal })
   const draw = (t: number) => {
     if (document.hidden) return
     const w = window.innerWidth
@@ -75,8 +74,18 @@ export const mountParticles2d = ({
   }
   if (ctx.reduce) {
     draw(0)
+    /* resizing clears the canvas and nothing else redraws a still field */
+    window.addEventListener(
+      'resize',
+      () => {
+        size()
+        draw(0)
+      },
+      { signal: ctx.signal },
+    )
     return
   }
+  window.addEventListener('resize', size, { signal: ctx.signal })
   gsap.ticker.add(draw)
   ctx.onDispose(() => gsap.ticker.remove(draw))
 }
