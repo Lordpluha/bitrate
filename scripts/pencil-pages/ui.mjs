@@ -48,6 +48,12 @@ export const L = (o = {}, children = []) => {
 }
 export const Row = (o, ch) => L({ name: 'Row', gap: 12, alignItems: 'center', ...o }, ch)
 export const Col = (o, ch) => L({ name: 'Column', layout: 'vertical', gap: 12, ...o }, ch)
+/** A row of kit tabs, the one at `active` selected. */
+export const Tabs = (labels, active = 0) =>
+  Row(
+    { name: 'Tabs', gap: 4 },
+    labels.map((l, i) => Tab(l, i === active)),
+  )
 export const Fill = (ch, o = {}) =>
   L(
     {

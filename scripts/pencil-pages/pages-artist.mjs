@@ -14,7 +14,7 @@ import {
   Select,
   Button,
   Badge,
-  Tab,
+  Tabs,
   Progress,
   Alert,
   ErrorState,
@@ -29,8 +29,6 @@ import {
   ART,
 } from './ui.mjs'
 import {
-  Shell,
-  MShell,
   PageHeader,
   Status,
   Kv,
@@ -46,41 +44,11 @@ import {
   Stepper,
   Demo,
   two,
+  stats,
+  panel,
+  artistSpecs,
 } from './artist-ui.mjs'
 
-const tabs = (labels, active = 0) =>
-  Row(
-    { name: 'Tabs', gap: 4 },
-    labels.map((l, i) => Tab(l, i === active)),
-  )
-const stat = (label, value, sub) =>
-  R(
-    'Stat Tile',
-    {},
-    { label: { content: label }, value: { content: value }, sub: { content: sub } },
-  )
-const stats = (m, items) =>
-  m
-    ? Col(
-        { name: 'Stats', gap: 12, width: 'fill_container' },
-        items.map((s) => stat(...s)),
-      )
-    : Row(
-        { name: 'Stats', gap: 16, width: 'fill_container' },
-        items.map((s) => stat(...s)),
-      )
-const panel = (title, children, o = {}) =>
-  Panel(
-    [
-      title &&
-        Row({ width: 'fill_container', justifyContent: 'space_between' }, [
-          Tx('H4', title),
-          o.right,
-        ]),
-      ...children,
-    ],
-    o.w ? { width: o.w } : {},
-  )
 const filters = (m, search) =>
   m
     ? [Input(null, search)]
@@ -110,18 +78,7 @@ const releaseHead = (title, sub, status) =>
     ]),
     Status(status),
   ])
-const pair = (name, opts, build, more = []) => ({
-  ...opts,
-  desktop: () => Shell(name, opts.shell, build(false)),
-  mobile: () => MShell(name, build(true), opts.mHeight ?? 1400),
-  states: [...(opts.states ?? []), ...more],
-})
-const st = (label, shell, build, mh = 1100) =>
-  state(
-    label,
-    () => Shell(label, shell, build(false)),
-    () => MShell(label, build(true), mh),
-  )
+const { pair, st } = artistSpecs({ pageHeight: 1400, stateHeight: 1100 })
 
 /* ---------- public ---------- */
 const _authCard = (children) => children
@@ -644,7 +601,7 @@ export const artistPages = {
         'Manage tracks, releases and drafts.',
         m ? [] : [Button('Upload track', 'outline', { icon: 'upload' })],
       ),
-      tabs(['Tracks 6', 'Releases 3']),
+      Tabs(['Tracks 6', 'Releases 3']),
       ...filters(m, 'Search tracks'),
       Col({ name: 'Table', width: 'fill_container', gap: 0 }, [
         !m &&
@@ -683,7 +640,7 @@ export const artistPages = {
     [
       st('Releases tab', { nav: 'music', crumb: 'Music', action: 'Create release' }, (m) => [
         PageHeader('Your music catalogue', 'Manage tracks, releases and drafts.'),
-        tabs(['Tracks 6', 'Releases 5'], 1),
+        Tabs(['Tracks 6', 'Releases 5'], 1),
         ...filters(m, 'Search releases'),
         Col({ width: 'fill_container', gap: 0 }, [
           !m &&
@@ -718,7 +675,7 @@ export const artistPages = {
       ]),
       st('Filters applied', { nav: 'music', crumb: 'Music', action: 'Create release' }, (_m) => [
         PageHeader('Your music catalogue', 'Manage tracks, releases and drafts.'),
-        tabs(['Tracks 6', 'Releases 5'], 1),
+        Tabs(['Tracks 6', 'Releases 5'], 1),
         Row({ gap: 8 }, [
           Badge('night', 'secondary'),
           Badge('Single', 'secondary'),
@@ -1261,7 +1218,7 @@ const wsShell = (crumb, action) => ({
   action,
   actionIcon: null,
 })
-const wsTabs = (i) => tabs(['Overview', 'Tasks', 'Feedback', 'Delivery', 'Versions', 'Activity'], i)
+const wsTabs = (i) => Tabs(['Overview', 'Tasks', 'Feedback', 'Delivery', 'Versions', 'Activity'], i)
 export const releasePages = {
   'release-workspace': pair(
     'Release workspace',
@@ -1829,7 +1786,7 @@ export const releasePages = {
     },
     (m) => [
       PageHeader('Edit metadata', 'Keep release and track details accurate', [], 'NIGHT SIGNAL'),
-      tabs(['Track details', 'Release details', 'Contributors & rights']),
+      Tabs(['Track details', 'Release details', 'Contributors & rights']),
       ...two(
         m,
         [
