@@ -15,6 +15,7 @@ import { ApiTags } from '@nestjs/swagger'
 import type { Request } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { AdminStaffService } from './admin-staff.service'
+import { AdminStaffPermissionsService } from './admin-staff-permissions.service'
 import {
   AssignStaffRoleSwagger,
   CreateStaffSwagger,
@@ -39,7 +40,10 @@ import {
 @AdminAuth()
 @Controller({ path: 'admin/staff', version: '1' })
 export class AdminStaffController {
-  constructor(private readonly staff: AdminStaffService) {}
+  constructor(
+    private readonly staff: AdminStaffService,
+    private readonly staffPermissions: AdminStaffPermissionsService,
+  ) {}
 
   /** Runs the list staff operation. */
   @RequirePermission('staff:read')
@@ -77,7 +81,7 @@ export class AdminStaffController {
     @Body(new ZodValidationPipe(AssignStaffRoleSchema)) dto: AssignStaffRoleDto,
     @Req() req: Request & { staff: { id: string } },
   ) {
-    return this.staff.assignRole(id, dto, req.staff.id)
+    return this.staffPermissions.assignRole(id, dto, req.staff.id)
   }
 
   /** Runs the update permissions operation. */
@@ -89,7 +93,7 @@ export class AdminStaffController {
     @Body(new ZodValidationPipe(UpdateStaffPermissionsSchema)) dto: UpdateStaffPermissionsDto,
     @Req() req: Request & { staff: { id: string } },
   ) {
-    return this.staff.updatePermissions(id, dto, req.staff.id)
+    return this.staffPermissions.updatePermissions(id, dto, req.staff.id)
   }
 
   /** Runs the deactivate operation. */
