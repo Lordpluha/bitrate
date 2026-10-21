@@ -16,6 +16,13 @@ import { Prisma } from '@prisma/client'
 import { AddTracksDto, CreatePlaylistDto, UpdatePlaylistDto } from './dtos'
 import { PlaylistEntity } from './entities'
 
+/** Appends retried after a position race or serialization failure. */
+const ADD_TRACKS_ATTEMPTS = 3
+
+/** Prisma's "transaction failed due to a write conflict or a deadlock" error. */
+const isSerializationFailure = (error: unknown): boolean =>
+  error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2034'
+
 /** Represents the playlists service. */
 @Injectable()
 export class PlaylistsService {
@@ -271,7 +278,7 @@ export class PlaylistsService {
       throw new BadRequestException('Some tracks are not available yet')
     }
 
-    for (let attempt = 1; attempt <= 3; attempt += 1) {
+    for (let attempt = 1; attempt <= ADD_TRACKS_ATTEMPTS; attempt += 1) {
       try {
         await this.prisma.$transaction(
           async (tx) => {
@@ -294,14 +301,12 @@ export class PlaylistsService {
           { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
         )
         break
-      } catch (error) {
-        const code =
-          error && typeof error === 'object' && 'code' in error ? String(error.code) : undefined
-        if (code !== 'P2002' && code !== 'P2034') throw error
-        if (attempt === 3) {
-          if (code === 'P2002')
-            throw new ConflictException('One or more tracks are already in this playlist')
-          throw error
+      } catch (error: unknown) {
+        // A track may sit in a playlist more than once, so a unique conflict here is always a
+        // concurrent append taking the same positions; like a serialization failure, retry it.
+        if (!(isPrismaP2002(error) || isSerializationFailure(error))) throw error
+        if (attempt === ADD_TRACKS_ATTEMPTS) {
+          throw new ConflictException('Playlist was changed concurrently, please retry')
         }
       }
     }
