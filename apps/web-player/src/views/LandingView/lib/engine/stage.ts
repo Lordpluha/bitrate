@@ -38,7 +38,7 @@ type Look = {
 }
 
 /** Per scene: shape, board position (px), size (px), tilt, twist, noise and palette. */
-const LOOK: readonly Look[] = [
+export const LOOK: readonly Look[] = [
   {
     shape: 0,
     x: 1000,
