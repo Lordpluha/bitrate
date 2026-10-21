@@ -1,20 +1,16 @@
-import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core'
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core'
 import { RouterLink } from '@angular/router'
 import { ListReleaseSubmissionsUseCase } from '@application/release-review'
 import type { ReleaseQueueStatus, ReleaseSubmission } from '@domain/release-review'
 import { CollectionStatus, Paginator } from '@presentation/components'
 import { LocalizedDatePipe } from '@presentation/pipes'
-import { bindQueryState, createCollection } from '@presentation/state'
+import { bindQueryState, bindSearchDraft, createCollection } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmInputImports } from '@spartan-ng/helm/input'
 import { HlmTableImports } from '@spartan-ng/helm/table'
-import { debounceTime, skip } from 'rxjs'
 import { RELEASE_KIND_LABELS, RELEASE_STATUS_BADGES, RELEASE_STATUS_LABELS } from './release-labels'
 import { releaseQueueQueryCodec } from './release-queue.query'
-
-const SEARCH_DEBOUNCE_MS = 300
 
 const STATUS_OPTIONS: readonly { value: ReleaseQueueStatus; label: string }[] = [
   { value: 'SUBMITTED', label: 'Awaiting review' },
@@ -47,7 +43,11 @@ export class ReleaseQueuePage {
   protected readonly statusLabels = RELEASE_STATUS_LABELS
   protected readonly statusBadges = RELEASE_STATUS_BADGES
   protected readonly query = bindQueryState({ codec: releaseQueueQueryCodec })
-  protected readonly draft = signal(this.query.state().query)
+  protected readonly draft = bindSearchDraft({
+    query: this.query,
+    read: (state) => state.query,
+    toPatch: (query) => ({ query, page: 1 }),
+  })
 
   protected readonly collection = createCollection<ReleaseSubmission>({
     errorMessage: 'Could not load the release queue.',
@@ -66,14 +66,6 @@ export class ReleaseQueuePage {
       const { page } = this.query.state()
       void this.collection.show(page)
     })
-
-    effect(() => {
-      this.draft.set(this.query.state().query)
-    })
-
-    toObservable(this.draft)
-      .pipe(debounceTime(SEARCH_DEBOUNCE_MS), skip(1), takeUntilDestroyed())
-      .subscribe((value) => this.query.patch({ query: value, page: 1 }, { replaceUrl: true }))
   }
 
   protected applyFilters(): void {

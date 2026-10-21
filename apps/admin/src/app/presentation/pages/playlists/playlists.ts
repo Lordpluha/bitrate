@@ -1,5 +1,4 @@
-import { Component, effect, inject, signal } from '@angular/core'
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
+import { Component, effect, inject } from '@angular/core'
 import { RouterLink } from '@angular/router'
 import { ListPlaylistsUseCase } from '@application/playlists'
 import type { Playlist, PlaylistSortField } from '@domain/playlist'
@@ -11,16 +10,12 @@ import {
   sortHeaderAriaSort,
 } from '@presentation/components'
 import { LocalizedDatePipe } from '@presentation/pipes'
-import { bindQueryState, createCollection } from '@presentation/state'
+import { bindQueryState, bindSearchDraft, createCollection } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmInputImports } from '@spartan-ng/helm/input'
 import { HlmTableImports } from '@spartan-ng/helm/table'
-import { debounceTime, skip } from 'rxjs'
 import { playlistsQueryCodec } from './playlists.query'
-
-/** How long to wait after the last keystroke before a text filter reaches the URL. */
-const SEARCH_DEBOUNCE_MS = 300
 
 /** The take-down filter's buttons, in the order an operator reads them. */
 const STATUS_OPTIONS: readonly { value: ResourceStatus; label: string }[] = [
@@ -50,7 +45,11 @@ export class PlaylistsPage {
   protected readonly statusOptions = STATUS_OPTIONS
   protected readonly ariaSort = sortHeaderAriaSort<PlaylistSortField>
   protected readonly query = bindQueryState({ codec: playlistsQueryCodec })
-  protected readonly draft = signal(this.query.state().query)
+  protected readonly draft = bindSearchDraft({
+    query: this.query,
+    read: (state) => state.query,
+    toPatch: (query) => ({ query, page: 1 }),
+  })
 
   protected readonly collection = createCollection<Playlist>({
     errorMessage: 'Could not load playlists.',
@@ -71,15 +70,6 @@ export class PlaylistsPage {
       const { page } = this.query.state()
       void this.collection.show(page)
     })
-
-    /** Keeps the box in sync with the URL, e.g. after back/forward changes the filter. */
-    effect(() => {
-      this.draft.set(this.query.state().query)
-    })
-
-    toObservable(this.draft)
-      .pipe(debounceTime(SEARCH_DEBOUNCE_MS), skip(1), takeUntilDestroyed())
-      .subscribe((value) => this.query.patch({ query: value, page: 1 }, { replaceUrl: true }))
   }
 
   protected applyFilters(): void {

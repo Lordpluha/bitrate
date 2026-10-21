@@ -1,5 +1,4 @@
 import { Component, computed, effect, inject, signal, untracked } from '@angular/core'
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
 import { RouterLink } from '@angular/router'
 import {
   ListTracksUseCase,
@@ -35,16 +34,17 @@ import {
   sortHeaderAriaSort,
 } from '@presentation/components'
 import { LocalizedDatePipe } from '@presentation/pipes'
-import { bindQueryState, createCollection, createSelection } from '@presentation/state'
+import {
+  bindQueryState,
+  bindSearchDraft,
+  createCollection,
+  createSelection,
+} from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmInputImports } from '@spartan-ng/helm/input'
 import { HlmTableImports } from '@spartan-ng/helm/table'
-import { debounceTime, skip } from 'rxjs'
 import { CATALOG_STATUSES, catalogQueryCodec } from './catalog.query'
-
-/** How long to wait after the last keystroke before a text filter reaches the URL. */
-const SEARCH_DEBOUNCE_MS = 300
 
 @Component({
   selector: 'app-catalog',
@@ -77,7 +77,11 @@ export class CatalogPage {
   protected readonly statuses = CATALOG_STATUSES
   protected readonly ariaSort = sortHeaderAriaSort<TrackSortField>
   protected readonly query = bindQueryState({ codec: catalogQueryCodec })
-  protected readonly draft = signal(this.query.state().query)
+  protected readonly draft = bindSearchDraft({
+    query: this.query,
+    read: (state) => state.query,
+    toPatch: (query) => ({ query, page: 1 }),
+  })
   protected readonly busyId = signal<string | null>(null)
 
   /** The URL's filter and sort — what the list loads and the CSV export asks for. */
@@ -144,16 +148,6 @@ export class CatalogPage {
       this.query.state()
       untracked(() => this.selection.clear())
     })
-
-    /** Keeps the box in sync with the URL, e.g. after back/forward changes the filter. */
-    effect(() => {
-      const { query: urlQuery } = this.query.state()
-      this.draft.set(urlQuery)
-    })
-
-    toObservable(this.draft)
-      .pipe(debounceTime(SEARCH_DEBOUNCE_MS), skip(1), takeUntilDestroyed())
-      .subscribe((value) => this.query.patch({ query: value, page: 1 }, { replaceUrl: true }))
   }
 
   protected isStuck(track: Track): boolean {
