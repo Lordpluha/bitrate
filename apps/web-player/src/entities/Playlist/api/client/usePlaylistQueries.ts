@@ -8,6 +8,7 @@ import {
   useQuery as useTanStackQuery,
 } from '@tanstack/react-query'
 import { useEffect } from 'react'
+import { fetchAllPages } from '@/shared/api/fetchAllPages'
 import type { PlaylistWithTracks } from './playlist.types'
 import { playlistQueryKeys, withPlayableTrackUrls } from './playlistQuery'
 import {
@@ -91,16 +92,8 @@ const getLikedPlaylistsPage = async (page: number) => {
   return likedPlaylistsPageSchema.parse(data)
 }
 
-const getAllLikedPlaylists = async () => {
-  const firstPage = await getLikedPlaylistsPage(1)
-  const pageCount = Math.ceil(firstPage.total / firstPage.limit)
-  const remainingPages = await Promise.all(
-    Array.from({ length: Math.max(pageCount - 1, 0) }, (_, index) =>
-      getLikedPlaylistsPage(index + 2),
-    ),
-  )
-  return [firstPage, ...remainingPages].flatMap(({ data }) => data)
-}
+const getAllLikedPlaylists = () =>
+  fetchAllPages({ fetchPage: getLikedPlaylistsPage })
 
 /** Every playlist the signed-in user liked, newest like first (`GET /playlists/liked`). */
 export const useLikedPlaylists = (enabled = true) =>

@@ -9,6 +9,7 @@ import { clientFetchClient, useMutation } from '@shared/api/client'
 import { ensureOkResponse } from '@shared/api/errors'
 import { apiQueryKeys } from '@shared/api/queryKeys'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { fetchAllPages } from '@/shared/api/fetchAllPages'
 
 export type ArtistEntity = {
   id: string
@@ -74,17 +75,8 @@ const getFollowedArtistsPage = async (page: number) => {
   return artistsPaginatedResponseSchema.parse(data)
 }
 
-export const getAllFollowedArtists = async () => {
-  const firstPage = await getFollowedArtistsPage(1)
-  const pageCount = Math.ceil(firstPage.total / firstPage.limit)
-  const remainingPages = await Promise.all(
-    Array.from({ length: Math.max(pageCount - 1, 0) }, (_, index) =>
-      getFollowedArtistsPage(index + 2),
-    ),
-  )
-
-  return [firstPage, ...remainingPages].flatMap(({ data }) => data)
-}
+export const getAllFollowedArtists = () =>
+  fetchAllPages({ fetchPage: getFollowedArtistsPage })
 
 export const useFollowedArtists = (enabled = true) =>
   useQuery({
