@@ -176,6 +176,21 @@ class HookTests(unittest.TestCase):
             with self.subTest(command=command):
                 self.assertEqual(self.call('Bash', {'command': command}), {})
 
+    def test_main_checkout_multi_target_rm_asks_only_for_uncommitted_work(self):
+        (self.repo / '.gitignore').write_text('dist/\n')
+        (self.repo / 'dist').mkdir()
+        (self.repo / 'dist' / 'out.js').write_text('built')
+        (self.repo / 'kept.txt').write_text('committed')
+        subprocess.run(['git', '-C', str(self.repo), 'add', '.gitignore', 'kept.txt'], check=True)
+        subprocess.run(['git', '-C', str(self.repo), 'commit', '-q', '-m', 'x'], check=True,
+                       env={**os.environ, 'GIT_AUTHOR_NAME': 't', 'GIT_AUTHOR_EMAIL': 't@t',
+                            'GIT_COMMITTER_NAME': 't', 'GIT_COMMITTER_EMAIL': 't@t'})
+        (self.repo / 'draft.txt').write_text('uncommitted')
+        self.assertEqual(self.call('Bash', {'command': 'rm -f kept.txt dist/out.js'}), {})
+        for command in ['rm kept.txt draft.txt', 'rm -rf dist kept.txt draft.txt']:
+            with self.subTest(command=command):
+                self.assertEqual(self.call('Bash', {'command': command})['permissionDecision'], 'ask')
+
     def test_agent_worktree_cannot_reach_shared_state_or_main_checkout(self):
         agent = self.repo / '.claude' / 'worktrees' / 'agent'
         subprocess.run(['git', '-C', str(self.repo), 'worktree', 'add', '--orphan',
