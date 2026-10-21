@@ -3,7 +3,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router'
 import { GetAlbumUseCase, RestoreAlbumUseCase, TakeDownAlbumUseCase } from '@application/albums'
 import { SessionStore } from '@application/session'
 import { type AlbumDetail, canRestoreAlbum, canTakeDownAlbum } from '@domain/album'
-import { ResourceNotFoundError } from '@domain/shared'
+import { ResourceNotFoundError, TAKE_DOWN_REASON_MAX_LENGTH } from '@domain/shared'
 import { LocalizedDatePipe } from '@presentation/pipes'
 import {
   isStaleStateError,
@@ -14,9 +14,6 @@ import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmDialogImports } from '@spartan-ng/helm/dialog'
 import { HlmLabelImports } from '@spartan-ng/helm/label'
 import { HlmTableImports } from '@spartan-ng/helm/table'
-
-/** Mirrors the API's `TakeDownReasonSchema` limit. */
-const REASON_MAX_LENGTH = 500
 
 /** The write the open dialog will perform; `null` while it is closed. */
 type PendingAction = 'take-down' | 'restore' | null
@@ -49,7 +46,7 @@ export class AlbumDetailPage {
   protected readonly canTakeDown = this.session.can('albums:delete')
   protected readonly canRestore = this.session.can('albums:restore')
   protected readonly albumId = this.route.snapshot.paramMap.get('id') ?? ''
-  protected readonly reasonMaxLength = REASON_MAX_LENGTH
+  protected readonly reasonMaxLength = TAKE_DOWN_REASON_MAX_LENGTH
 
   protected readonly album = signal<AlbumDetail | null>(null)
   protected readonly loading = signal(true)
