@@ -20,6 +20,7 @@ import {
   ART,
   id,
 } from './kit.mjs'
+import { stableIds } from './stable-id.mjs'
 
 setMode('lib')
 const [libF, regF] = process.argv.slice(2)
@@ -43,25 +44,8 @@ const at = row.children.findIndex((c) => c.name === '00E • Page Blocks')
 
 const reg = {}
 const part = (p, node) => Object.assign(node, { _part: p })
-/* stable ids: a component's nodes get ids hashed from its name and their position in the tree, so a
-   rebuild without structural changes keeps every id and open designs never point at vanished nodes */
-const ALPHA = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-const taken = new Set(ids)
-const stable = (key) => {
-  for (let salt = 0; ; salt++) {
-    let h = 2166136261
-    for (const ch of `${key}#${salt}`) h = Math.imul(h ^ ch.charCodeAt(0), 16777619) >>> 0
-    let out = ''
-    for (let i = 0; i < 6; i++) {
-      out += ALPHA[h % 62]
-      h = Math.imul(h ^ (h >>> 13), 2246822507) >>> 0
-    }
-    if (!taken.has(out)) {
-      taken.add(out)
-      return out
-    }
-  }
-}
+/* stable ids: a component's nodes get ids hashed from its name and their position in the tree */
+const stable = stableIds(new Set(ids))
 const restamp = (name, node) => {
   const visit = (n, path) => {
     if (!n || typeof n !== 'object' || !n.id) return

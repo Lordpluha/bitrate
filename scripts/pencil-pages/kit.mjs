@@ -1,6 +1,7 @@
 // Page-design generator kit: emits .pen node JSON bound to the Bitrate library (`ds`).
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
+import { stableIds } from './stable-id.mjs'
 
 const ALPHA = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'
 let used = new Set()
@@ -732,16 +733,26 @@ const errorMessage = (title, desc, mobile, actions = [['Try again']]) =>
   message('triangle-alert', title, desc, actions, mobile, C.destructive)
 
 /* ---------- file writer ---------- */
-const clone = (n) => {
-  if (Array.isArray(n)) return n.map(clone)
+/* every placed node gets a stable id hashed from the page, the frame label and its tree path, so
+   regenerating an unchanged page rewrites its file byte for byte */
+const clone = (n, stamp, path) => {
+  if (Array.isArray(n)) return n.map((c, i) => clone(c, stamp, `${path}.${i}`))
   if (!n || typeof n !== 'object') return n
   const o = {}
   for (const [k, v] of Object.entries(n))
-    if (k !== '_state') o[k] = k === 'id' ? id() : k === 'descendants' ? cloneDesc(v) : clone(v)
+    if (k !== '_state')
+      o[k] =
+        k === 'id'
+          ? stamp(path)
+          : k === 'descendants'
+            ? cloneDesc(v, stamp, `${path}/${k}`)
+            : clone(v, stamp, `${path}/${k}`)
   return o
 }
-const cloneDesc = (d) =>
-  Object.fromEntries(Object.entries(d).map(([k, v]) => [k, v?.type ? clone(v) : v]))
+const cloneDesc = (d, stamp, path) =>
+  Object.fromEntries(
+    Object.entries(d).map(([k, v]) => [k, v?.type ? clone(v, stamp, `${path}/${k}`) : v]),
+  )
 
 /* pen.dev opens a document empty when any children array holds a non-node (e.g. a `cond && node`
    left `false` inside a raw slot replacement), so strip them everywhere before writing */
@@ -764,10 +775,11 @@ const prune = (nodes) => {
 export function writePage(root, dir, spec) {
   const { title, route, context, desktop, mobile, extra = [], states = [] } = spec
   used = new Set()
+  const stamp = stableIds()
   const frames = []
   let x = 0
   const place = (node, theme, label, note) => {
-    const n = clone(node)
+    const n = clone(node, stamp, `${dir}/${label}`)
     Object.assign(n, {
       x,
       y: 0,
