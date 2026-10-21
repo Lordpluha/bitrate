@@ -25872,6 +25872,8 @@ export interface operations {
         page?: number
         /** @description Episodes page size */
         limit?: number
+        /** @description Case-insensitive episode title or description search */
+        q?: string
       }
       header?: never
       path: {
