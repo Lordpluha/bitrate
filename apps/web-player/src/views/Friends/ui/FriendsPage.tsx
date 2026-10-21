@@ -51,6 +51,19 @@ const tabClassName = (isActive: boolean) =>
       : 'text-muted-foreground hover:bg-surface hover:text-foreground',
   )
 
+/** Splits friends into online (incl. away) and offline in one pass, keeping order. */
+type PartitionByPresenceInput = { friends: Friend[] }
+
+const partitionByPresence = ({ friends }: PartitionByPresenceInput) => {
+  const online: Friend[] = []
+  const offline: Friend[] = []
+  for (const friend of friends) {
+    if (friend.presence.status === 'offline') offline.push(friend)
+    else online.push(friend)
+  }
+  return { offline, online }
+}
+
 /** The row's ellipsis menu, and the inline "Remove friend?" confirmation it opens. */
 const FriendActions = ({ friend }: { friend: Friend }) => {
   const router = useRouter()
@@ -140,8 +153,7 @@ export const FriendsPage = () => {
   const incoming = useFriendRequests('incoming')
   const requestCount = incoming.data?.length ?? 0
   const all = friends.data ?? []
-  const online = all.filter(({ presence }) => presence.status !== 'offline')
-  const offline = all.filter(({ presence }) => presence.status === 'offline')
+  const { offline, online } = partitionByPresence({ friends: all })
 
   const findFriends = (
     <Button

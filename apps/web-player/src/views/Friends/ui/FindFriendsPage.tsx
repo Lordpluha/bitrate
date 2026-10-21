@@ -12,7 +12,7 @@ import {
   UserPlus,
 } from 'lucide-react'
 import Link from 'next/link'
-import { useDeferredValue, useState } from 'react'
+import { useDeferredValue, useMemo, useState } from 'react'
 import {
   getFriendRelation,
   PersonRow,
@@ -138,8 +138,20 @@ export const FindFriendsPage = () => {
   const friends = useFriends()
   const incoming = useFriendRequests('incoming')
   const outgoing = useFriendRequests('outgoing')
-  const friendIds = new Set((friends.data ?? []).map(({ user }) => user.id))
-  const results = (people.data ?? []).filter(({ id }) => id !== me?.id)
+  const results = useMemo(() => {
+    const friendIds = new Set((friends.data ?? []).map(({ user }) => user.id))
+    return (people.data ?? [])
+      .filter(({ id }) => id !== me?.id)
+      .map((person) => ({
+        person,
+        relation: getFriendRelation({
+          friendIds,
+          incoming: incoming.data ?? [],
+          outgoing: outgoing.data ?? [],
+          userId: person.id,
+        }),
+      }))
+  }, [friends.data, incoming.data, me?.id, outgoing.data, people.data])
 
   return (
     <div className="h-full overflow-y-auto custom-scrollbar">
@@ -220,17 +232,12 @@ export const FindFriendsPage = () => {
               “{search}”
             </p>
             <div className="flex flex-col">
-              {results.map((person) => (
+              {results.map(({ person, relation }) => (
                 <PersonResult
                   key={person.id}
                   onNotice={setNotice}
                   person={person}
-                  relation={getFriendRelation({
-                    friendIds,
-                    incoming: incoming.data ?? [],
-                    outgoing: outgoing.data ?? [],
-                    userId: person.id,
-                  })}
+                  relation={relation}
                 />
               ))}
             </div>
