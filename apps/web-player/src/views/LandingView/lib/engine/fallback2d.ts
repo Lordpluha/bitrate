@@ -3,6 +3,7 @@ import { lc } from '../styles/lc'
 import { type EngineContext, must } from './context'
 import { PARTNER_MARKS } from './marks'
 import { type PaletteToken, tokenSolid } from './palette'
+import { collideBalls, type PhysicsBall } from './physics'
 
 const DOT_COUNT = 520
 const DOT_INKS: readonly PaletteToken[] = [
@@ -83,14 +84,7 @@ export const mountParticles2d = ({
   ctx.onDispose(() => gsap.ticker.remove(draw))
 }
 
-type Bubble = {
-  el: HTMLDivElement
-  r: number
-  x: number
-  y: number
-  vx: number
-  vy: number
-}
+type Bubble = PhysicsBall & { el: HTMLDivElement }
 
 /** Without WebGL: the partner marks as DOM bubbles with 2D physics. Returns a reset for scene entry. */
 export const mountPartners2d = (ctx: EngineContext) => {
@@ -110,7 +104,12 @@ export const mountPartners2d = (ctx: EngineContext) => {
     el.style.font = `700 ${r > 70 ? 16 : 12}px/1 var(--font-display)`
     el.textContent = mark.label
     zone.appendChild(el)
-    balls.push({ el, r, x: 0, y: 0, vx: 0, vy: 0 })
+    balls.push({
+      el,
+      r,
+      p: { x: 0, y: 0, z: 0 },
+      v: { x: 0, y: 0, z: 0 },
+    })
   }
   ctx.onDispose(() => {
     for (const b of balls) b.el.remove()
@@ -143,7 +142,8 @@ export const mountPartners2d = (ctx: EngineContext) => {
     (e) => {
       const [x, y] = local(e)
       PF.ptr = [x, y]
-      PF.grab = balls.find((b) => Math.hypot(b.x - x, b.y - y) < b.r) ?? null
+      PF.grab =
+        balls.find((b) => Math.hypot(b.p.x - x, b.p.y - y) < b.r) ?? null
       if (PF.grab) {
         zone.setPointerCapture(e.pointerId)
         state.dragging = true
@@ -162,10 +162,10 @@ export const mountPartners2d = (ctx: EngineContext) => {
     const H = zone.offsetHeight
     balls.forEach((b, i) => {
       const a = i * 2.4
-      b.x = W / 2 + Math.cos(a) * W * 0.75
-      b.y = H / 2 + Math.sin(a) * H * 0.75
-      b.vx = -Math.cos(a) * 320
-      b.vy = -Math.sin(a) * 320
+      b.p.x = W / 2 + Math.cos(a) * W * 0.75
+      b.p.y = H / 2 + Math.sin(a) * H * 0.75
+      b.v.x = -Math.cos(a) * 320
+      b.v.y = -Math.sin(a) * 320
     })
   }
   reset()
@@ -174,64 +174,37 @@ export const mountPartners2d = (ctx: EngineContext) => {
     const H = zone.offsetHeight
     for (const b of balls) {
       if (PF.grab === b && PF.ptr) {
-        b.vx = (PF.ptr[0] - b.x) * 14
-        b.vy = (PF.ptr[1] - b.y) * 14
+        b.v.x = (PF.ptr[0] - b.p.x) * 14
+        b.v.y = (PF.ptr[1] - b.p.y) * 14
       } else {
-        b.vx += (W / 2 - b.x) * 3.2 * dt
-        b.vy += (H / 2 - b.y) * 3.2 * dt
+        b.v.x += (W / 2 - b.p.x) * 3.2 * dt
+        b.v.y += (H / 2 - b.p.y) * 3.2 * dt
         if (PF.ptr) {
-          const dx = b.x - PF.ptr[0]
-          const dy = b.y - PF.ptr[1]
+          const dx = b.p.x - PF.ptr[0]
+          const dy = b.p.y - PF.ptr[1]
           const d = Math.hypot(dx, dy) || 1e-3
           const min = b.r + 60
           if (d < min) {
-            b.vx += (dx / d) * (min - d) * 14
-            b.vy += (dy / d) * (min - d) * 14
+            b.v.x += (dx / d) * (min - d) * 14
+            b.v.y += (dy / d) * (min - d) * 14
           }
         }
       }
       const damp = Math.exp(-2.2 * dt)
-      b.vx *= damp
-      b.vy *= damp
+      b.v.x *= damp
+      b.v.y *= damp
     }
-    for (let i = 0; i < balls.length; i++) {
-      const a = balls[i]
-      if (!a) continue
-      for (let j = i + 1; j < balls.length; j++) {
-        const c = balls[j]
-        if (!c) continue
-        const dx = c.x - a.x
-        const dy = c.y - a.y
-        const d = Math.hypot(dx, dy) || 1e-3
-        const min = a.r + c.r
-        if (d >= min) continue
-        const nx = dx / d
-        const ny = dy / d
-        const corr = (min - d) / 2
-        a.x -= nx * corr
-        a.y -= ny * corr
-        c.x += nx * corr
-        c.y += ny * corr
-        const rv = (c.vx - a.vx) * nx + (c.vy - a.vy) * ny
-        if (rv < 0) {
-          const imp = -rv * 0.75
-          a.vx -= nx * imp
-          a.vy -= ny * imp
-          c.vx += nx * imp
-          c.vy += ny * imp
-        }
-      }
-    }
+    collideBalls({ balls, dims: 2, bounce: 1.5 })
     for (const b of balls) {
-      b.x += b.vx * dt
-      b.y += b.vy * dt
+      b.p.x += b.v.x * dt
+      b.p.y += b.v.y * dt
     }
   }
   /** Writes the simulated bubbles to the DOM: once per frame, after all sub-steps. */
   const render = () => {
     for (const b of balls) {
-      const sq = 1 + Math.min(0.12, Math.hypot(b.vx, b.vy) * 0.0004)
-      b.el.style.transform = `translate(${b.x - b.r}px, ${b.y - b.r}px) scale(${sq}, ${1 / sq})`
+      const sq = 1 + Math.min(0.12, Math.hypot(b.v.x, b.v.y) * 0.0004)
+      b.el.style.transform = `translate(${b.p.x - b.r}px, ${b.p.y - b.r}px) scale(${sq}, ${1 / sq})`
     }
   }
   const tick = () => {
