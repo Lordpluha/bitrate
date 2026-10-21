@@ -109,8 +109,16 @@ const StatsContent = ({ range }: { range: DiscoveryRange }) => {
     )
   }
 
+  const isSwitchingRange = tracks.isPlaceholderData || artists.isPlaceholderData
+
   return (
-    <div className="flex flex-col gap-4">
+    <div
+      aria-busy={isSwitchingRange}
+      className={cn(
+        'flex flex-col gap-4 transition-opacity',
+        isSwitchingRange && 'opacity-60',
+      )}
+    >
       <div className="grid grid-cols-2 gap-3 md:gap-4 xl:grid-cols-4">
         {stats.map((stat) => (
           <StatTile key={stat.label} {...stat} />
