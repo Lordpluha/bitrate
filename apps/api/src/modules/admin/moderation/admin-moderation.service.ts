@@ -229,7 +229,7 @@ export class AdminModerationService {
         where: { id, status: existing.status },
         data,
       })
-      if (!updated) throw new ReportStatusChangedException(id)
+      if (!updated) throw new ReportStatusChangedException()
       await writeTakeDownAudit({
         tx,
         entityType: 'admin-moderation',
