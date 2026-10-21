@@ -1,6 +1,6 @@
 import { websocketConfig } from '@common/config/connections'
 import { WsUserAuthGuard } from '@modules/users-auth/users-auth.ws.guard'
-import { Inject, Logger, UseGuards } from '@nestjs/common'
+import { Logger, UseGuards } from '@nestjs/common'
 import { ExecutionContextHost } from '@nestjs/core/helpers/execution-context-host'
 import {
   ConnectedSocket,
@@ -23,7 +23,7 @@ import type { AuthenticatedSocket, StreamTrackPayload } from './audio-gateway.ty
 import { AudioSessionRegistry } from './audio-session.registry'
 import type { PauseTrackDto, StartTrackDto, UpdateStreamingDto } from './dtos'
 import { TrackStreamingService } from './track-streaming.service'
-import * as TracksServiceModule from './tracks.service'
+import { TracksService } from './tracks.service'
 
 /** The payload one WebSocket handler contributes to its success response. */
 type HandlerResult = Record<string, unknown>
@@ -40,10 +40,9 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private readonly sessions = new AudioSessionRegistry()
 
   constructor(
-    @Inject(TracksServiceModule.TracksService)
-    private tracksService: TracksServiceModule.TracksService,
-    @Inject(TrackStreamingService) private trackStreamingService: TrackStreamingService,
-    @Inject(WsUserAuthGuard) private wsAuthGuard: WsUserAuthGuard,
+    private tracksService: TracksService,
+    private trackStreamingService: TrackStreamingService,
+    private wsAuthGuard: WsUserAuthGuard,
   ) {}
 
   /**
