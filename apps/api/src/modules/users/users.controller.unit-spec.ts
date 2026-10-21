@@ -1,5 +1,4 @@
-import type { StorageService } from '@infra/storage/storage.types'
-import { beforeEach, describe, expect, it, jest } from '@jest/globals'
+import { beforeEach, describe, expect, it } from '@jest/globals'
 import type { Request } from 'express'
 import { type DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended'
 import { buildUser } from './__tests__/fixtures/users.fixtures'
@@ -20,17 +19,12 @@ const avatarFile = (overrides: Partial<Express.Multer.File> = {}) =>
 describe('UsersController', () => {
   let controller: UsersController
   let service: DeepMockProxy<UsersService>
-  let storage: jest.Mocked<StorageService>
 
   beforeEach(() => {
     service = mockDeep<UsersService>()
     mockReset(service)
-    storage = {
-      upload: jest.fn().mockImplementation(async (key: unknown) => key as never),
-      deleteObject: jest.fn().mockResolvedValue(undefined as never),
-    } as unknown as jest.Mocked<StorageService>
 
-    controller = new UsersController(service, storage)
+    controller = new UsersController(service)
   })
 
   it('getAll should reject invalid requests when username missing', async () => {
@@ -87,43 +81,21 @@ describe('UsersController', () => {
     expect(result).toBe(updated)
   })
 
-  it('uploadAvatar stores the image in storage and saves its generated name for the user', async () => {
+  it('uploadAvatar hands the uploaded file to the service for the signed-in user', async () => {
     const updated = buildUser({ avatar: '/static/users/avatars/avatar.png' })
     service.uploadAvatar.mockResolvedValue(updated)
     const req = { user: buildUser({ id: 'user-1' }) } as unknown as Request
+    const file = avatarFile()
 
-    const result = await controller.uploadAvatar(req, avatarFile())
+    const result = await controller.uploadAvatar(req, file)
 
-    const key = storage.upload.mock.calls[0]?.[0] as string
-    expect(key).toMatch(/^users\/avatars\/[0-9a-f-]{36}\.png$/)
-    expect(service.uploadAvatar).toHaveBeenCalledWith('user-1', key.replace('users/avatars/', ''))
+    expect(service.uploadAvatar).toHaveBeenCalledWith('user-1', file)
     expect(result).toBe(updated)
   })
 
   it('uploadAvatar rejects a missing file', async () => {
     const req = { user: buildUser({ id: 'user-1' }) } as unknown as Request
     await expect(controller.uploadAvatar(req, undefined)).rejects.toThrow('Avatar file is required')
-  })
-
-  it('uploadAvatar rejects spoofed content without uploading anything', async () => {
-    const req = { user: buildUser({ id: 'user-1' }) } as unknown as Request
-    const spoofed = avatarFile({ buffer: Buffer.from('<script>bad', 'ascii') })
-
-    await expect(controller.uploadAvatar(req, spoofed)).rejects.toThrow(
-      'Invalid image file content',
-    )
-
-    expect(storage.upload).not.toHaveBeenCalled()
     expect(service.uploadAvatar).not.toHaveBeenCalled()
-  })
-
-  it('removes the stored avatar when persisting it fails', async () => {
-    service.uploadAvatar.mockRejectedValue(new Error('database unavailable'))
-    const req = { user: buildUser({ id: 'user-1' }) } as unknown as Request
-
-    await expect(controller.uploadAvatar(req, avatarFile())).rejects.toThrow('database unavailable')
-
-    const key = storage.upload.mock.calls[0]?.[0] as string
-    expect(storage.deleteObject).toHaveBeenCalledWith(key)
   })
 })

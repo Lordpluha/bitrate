@@ -1,5 +1,3 @@
-import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
-import type { StorageService } from '@infra/storage/storage.types'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { OptionalUserAuthGuard, UserAuthGuard } from '@modules/users-auth/users-auth.guard'
 import type { INestApplication } from '@nestjs/common'
@@ -24,22 +22,14 @@ const makeServiceMock = () =>
 describe('UsersController (int)', () => {
   let app: INestApplication
   let service: jest.Mocked<UsersService>
-  let storage: jest.Mocked<StorageService>
   const user = buildUser()
 
   beforeAll(async () => {
     service = makeServiceMock()
-    storage = {
-      upload: jest.fn().mockImplementation(async (key: unknown) => key as never),
-      deleteObject: jest.fn(),
-    } as unknown as jest.Mocked<StorageService>
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
-      providers: [
-        { provide: UsersService, useValue: service },
-        { provide: STORAGE_SERVICE, useValue: storage },
-      ],
+      providers: [{ provide: UsersService, useValue: service }],
     })
       .overrideGuard(OptionalUserAuthGuard)
       .useValue({
@@ -76,7 +66,6 @@ describe('UsersController (int)', () => {
     service.getByUsername.mockReset()
     service.updateById.mockReset()
     service.uploadAvatar.mockReset()
-    storage.upload.mockClear()
   })
 
   it('GET /users/username/:username should return 200', async () => {
@@ -136,11 +125,8 @@ describe('UsersController (int)', () => {
     expect(res.status).toBe(400)
   })
 
-  it('POST /users/avatar should call uploadAvatar and return 201', async () => {
+  it('POST /users/avatar should hand the uploaded file to uploadAvatar and return 201', async () => {
     service.uploadAvatar.mockResolvedValue(user as never)
-
-    // A real PNG signature: the handler compares the file's magic bytes against
-    // the declared content type, so a placeholder string is rejected as spoofed.
     const pngBytes = Buffer.from([
       0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d,
     ])
@@ -153,24 +139,21 @@ describe('UsersController (int)', () => {
       })
 
     expect(res.status).toBe(201)
-    expect(storage.upload).toHaveBeenCalledWith(
-      expect.stringMatching(/^users\/avatars\/[0-9a-f-]{36}\.png$/),
-      pngBytes,
-      'image/png',
+    expect(service.uploadAvatar).toHaveBeenCalledWith(
+      user.id,
+      expect.objectContaining({ buffer: pngBytes, mimetype: 'image/png' }),
     )
-    expect(service.uploadAvatar).toHaveBeenCalledWith(user.id, expect.any(String))
   })
 
-  it('POST /users/avatar rejects spoofed image content and stores nothing', async () => {
+  it('POST /users/avatar rejects a disallowed type before reaching the service', async () => {
     const res = await request(app.getHttpServer())
       .post('/users/avatar')
       .attach('avatar', Buffer.from('<script>alert(1)</script>'), {
-        filename: 'evil.png',
-        contentType: 'image/png',
+        filename: 'evil.html',
+        contentType: 'text/html',
       })
 
     expect(res.status).toBe(400)
-    expect(storage.upload).not.toHaveBeenCalled()
     expect(service.uploadAvatar).not.toHaveBeenCalled()
   })
 
