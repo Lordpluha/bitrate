@@ -14,6 +14,12 @@ import { Circle, Ellipsis, Music2, Pause, Play } from 'lucide-react'
 
 export type CatalogueItem = MusicTrack | MusicRelease
 
+const shortDate = new Intl.DateTimeFormat('en', {
+  month: 'short',
+  day: '2-digit',
+  timeZone: 'UTC',
+})
+
 function catalogueDate(value: string) {
   const date = new Date(value)
   const today = new Date()
@@ -30,11 +36,7 @@ function catalogueDate(value: string) {
   if (elapsed === 0) return 'Today'
   if (elapsed === 1) return 'Yesterday'
   if (elapsed === 2) return '2 days ago'
-  return new Intl.DateTimeFormat('en', {
-    month: 'short',
-    day: '2-digit',
-    timeZone: 'UTC',
-  }).format(date)
+  return shortDate.format(date)
 }
 
 function catalogueStatus(item: CatalogueItem) {
