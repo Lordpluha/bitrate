@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core'
 import { RouterLink } from '@angular/router'
 import {
   DeactivateArtistUseCase,
@@ -43,6 +43,7 @@ import { artistsQueryCodec } from './artists.query'
     HlmInputImports,
     HlmTableImports,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './artists.html',
 })
 export class ArtistsPage {

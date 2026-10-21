@@ -1,4 +1,12 @@
-import { Component, computed, effect, inject, signal, untracked } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+  untracked,
+} from '@angular/core'
 import { RouterLink } from '@angular/router'
 import { ExportUsersCsvUseCase } from '@application/export'
 import { SessionStore } from '@application/session'
@@ -52,6 +60,7 @@ import { usersQueryCodec } from './users.query'
     HlmInputImports,
     HlmTableImports,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './users.html',
 })
 export class UsersPage {

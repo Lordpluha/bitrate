@@ -1,4 +1,4 @@
-import { Component, effect, inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core'
 import { RouterLink } from '@angular/router'
 import { ListPlaylistsUseCase } from '@application/playlists'
 import type { Playlist, PlaylistSortField } from '@domain/playlist'
@@ -37,6 +37,7 @@ const STATUS_OPTIONS: readonly { value: ResourceStatus; label: string }[] = [
     HlmInputImports,
     HlmTableImports,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './playlists.html',
 })
 export class PlaylistsPage {

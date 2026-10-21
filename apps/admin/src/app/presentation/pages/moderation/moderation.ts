@@ -1,4 +1,12 @@
-import { Component, computed, effect, inject, signal, untracked } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+  untracked,
+} from '@angular/core'
 import { RouterLink } from '@angular/router'
 import {
   AdvanceReportsBatchUseCase,
@@ -50,6 +58,7 @@ import {
     HlmButtonImports,
     HlmTableImports,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './moderation.html',
 })
 export class ModerationQueue {

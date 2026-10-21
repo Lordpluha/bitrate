@@ -1,4 +1,4 @@
-import { Component, effect, inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core'
 import { RouterLink } from '@angular/router'
 import { ListAlbumsUseCase } from '@application/albums'
 import type { Album, AlbumSortField } from '@domain/album'
@@ -37,6 +37,7 @@ const STATUS_OPTIONS: readonly { value: ResourceStatus; label: string }[] = [
     HlmInputImports,
     HlmTableImports,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './albums.html',
 })
 export class AlbumsPage {

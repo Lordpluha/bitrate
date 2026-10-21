@@ -1,4 +1,4 @@
-import { Component, effect, inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core'
 import { ListAuditEntriesUseCase } from '@application/audit'
 import { auditActorLabel, type AuditEntry, type AuditSortField } from '@domain/audit'
 import type { Sort } from '@domain/shared'
@@ -28,6 +28,7 @@ import { auditQueryCodec } from './audit.query'
     HlmInputImports,
     HlmTableImports,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './audit.html',
 })
 export class AuditPage {
