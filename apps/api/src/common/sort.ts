@@ -39,15 +39,14 @@ export type SortInput<Field extends string> = { sort?: Field; order?: SortOrder 
  * and appends `id` as a stable tie-break in the same direction, so paging through equal
  * values never repeats or skips a row.
  *
- * The return type is intentionally the widened `Record<string, SortOrder>[]` rather than a
- * specific `Prisma.<Model>OrderByWithRelationInput[]` — one helper serves every resource.
- * Callers assert the precise Prisma type at the call site; that's safe because `Field` is
- * already constrained to the resource's own zod-validated allowlist.
+ * `OrderBy` is the resource's Prisma `orderBy` input (pass it explicitly, e.g.
+ * `buildSortOrderBy<Prisma.UserOrderByWithRelationInput>(…)`), so `sort` must be one of that
+ * model's own keys and the result drops straight into `findMany` without a cast at the call site.
  */
-export function buildSortOrderBy<Field extends string>(
-  { sort, order = 'asc' }: SortInput<Field>,
-  fallback: readonly Record<string, SortOrder>[],
-): readonly Record<string, SortOrder>[] {
+export function buildSortOrderBy<OrderBy extends { id?: unknown }>(
+  { sort, order = 'asc' }: SortInput<string & keyof OrderBy>,
+  fallback: OrderBy[],
+): OrderBy[] {
   if (!sort) return fallback
   // Keep property names literal even when this helper is called without DTO validation.
   // The endpoint schemas further restrict which of these fields each resource accepts.
@@ -86,5 +85,6 @@ export function buildSortOrderBy<Field extends string>(
     default:
       throw new Error('Unsupported sort field')
   }
-  return [primary, { id: order }]
+  // Sound: `sort` is a key of `OrderBy` and the switch emits only that key, with a sort order.
+  return [primary, { id: order }] as OrderBy[]
 }

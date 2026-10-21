@@ -66,14 +66,17 @@ export class AdminUsersService {
     order,
   }: ListUsersInput) {
     const where = this.buildWhere({ status, q })
-    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const orderBy = buildSortOrderBy<Prisma.UserOrderByWithRelationInput>({ sort, order }, [
+      { createdAt: 'desc' },
+      { id: 'desc' },
+    ])
     const [data, total] = await Promise.all([
       this.prisma.user.findMany({
         where,
         select: ADMIN_USER_SAFE_SELECT,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: orderBy as unknown as Prisma.UserOrderByWithRelationInput[],
+        orderBy,
       }),
       this.prisma.user.count({ where }),
     ])
@@ -92,7 +95,10 @@ export class AdminUsersService {
     auditContext: AuditContextValue = {},
   ): Promise<CsvExport> {
     const where = this.buildWhere({ status, q })
-    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const orderBy = buildSortOrderBy<Prisma.UserOrderByWithRelationInput>({ sort, order }, [
+      { createdAt: 'desc' },
+      { id: 'desc' },
+    ])
     const total = await this.prisma.user.count({ where })
 
     return openCsvExport({
@@ -107,7 +113,7 @@ export class AdminUsersService {
         this.prisma.user.findMany({
           where,
           select: ADMIN_USER_EXPORT_SELECT,
-          orderBy: orderBy as unknown as Prisma.UserOrderByWithRelationInput[],
+          orderBy,
           skip,
           take,
         }),

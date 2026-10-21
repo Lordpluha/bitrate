@@ -69,14 +69,17 @@ export class AdminArtistsService {
     order,
   }: ListArtistsInput) {
     const where = this.buildWhere({ verified, status, q })
-    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const orderBy = buildSortOrderBy<Prisma.ArtistOrderByWithRelationInput>({ sort, order }, [
+      { createdAt: 'desc' },
+      { id: 'desc' },
+    ])
     const [data, total] = await Promise.all([
       this.prisma.artist.findMany({
         where,
         select: ADMIN_ARTIST_SAFE_SELECT,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: orderBy as unknown as Prisma.ArtistOrderByWithRelationInput[],
+        orderBy,
       }),
       this.prisma.artist.count({ where }),
     ])
@@ -94,7 +97,10 @@ export class AdminArtistsService {
     auditContext: AuditContextValue = {},
   ): Promise<CsvExport> {
     const where = this.buildWhere({ verified, status, q })
-    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const orderBy = buildSortOrderBy<Prisma.ArtistOrderByWithRelationInput>({ sort, order }, [
+      { createdAt: 'desc' },
+      { id: 'desc' },
+    ])
     const total = await this.prisma.artist.count({ where })
 
     return openCsvExport({
@@ -109,7 +115,7 @@ export class AdminArtistsService {
         this.prisma.artist.findMany({
           where,
           select: ADMIN_ARTIST_EXPORT_SELECT,
-          orderBy: orderBy as unknown as Prisma.ArtistOrderByWithRelationInput[],
+          orderBy,
           skip,
           take,
         }),

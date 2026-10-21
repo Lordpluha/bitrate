@@ -110,14 +110,17 @@ export class AdminPlaylistsService {
     order,
   }: ListPlaylistsInput) {
     const where = this.buildWhere({ status, ownerId, q })
-    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const orderBy = buildSortOrderBy<Prisma.PlaylistOrderByWithRelationInput>({ sort, order }, [
+      { createdAt: 'desc' },
+      { id: 'desc' },
+    ])
     const [rows, total] = await Promise.all([
       this.prisma.playlist.findMany({
         where,
         select: PLAYLIST_ROW_SELECT,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: orderBy as unknown as Prisma.PlaylistOrderByWithRelationInput[],
+        orderBy,
       }),
       this.prisma.playlist.count({ where }),
     ])

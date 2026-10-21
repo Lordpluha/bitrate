@@ -215,7 +215,10 @@ export class AdminTracksService {
   ): Promise<CsvExport> {
     const where = this.buildWhere({ processingStatus, status, q })
     const total = await this.prisma.track.count({ where })
-    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const orderBy = buildSortOrderBy<Prisma.TrackOrderByWithRelationInput>({ sort, order }, [
+      { createdAt: 'desc' },
+      { id: 'desc' },
+    ])
     const rawWhere = this.buildRawWhere({ processingStatus, status, q })
 
     return openCsvExport<AdminTrackRow>({
@@ -231,7 +234,7 @@ export class AdminTracksService {
         const tracks = await this.prisma.track.findMany({
           where,
           select: TRACK_ROW_SELECT,
-          orderBy: orderBy as unknown as Prisma.TrackOrderByWithRelationInput[],
+          orderBy,
           skip,
           take,
         })
@@ -252,13 +255,16 @@ export class AdminTracksService {
     order,
   }: ListTracksInput) {
     const where = this.buildWhere({ processingStatus, status, q })
-    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const orderBy = buildSortOrderBy<Prisma.TrackOrderByWithRelationInput>({ sort, order }, [
+      { createdAt: 'desc' },
+      { id: 'desc' },
+    ])
 
     const [tracks, total] = await Promise.all([
       this.prisma.track.findMany({
         where,
         select: TRACK_ROW_SELECT,
-        orderBy: orderBy as unknown as Prisma.TrackOrderByWithRelationInput[],
+        orderBy,
         skip: (page - 1) * limit,
         take: limit,
       }),

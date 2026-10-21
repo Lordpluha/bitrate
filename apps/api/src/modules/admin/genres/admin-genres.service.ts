@@ -62,7 +62,10 @@ export class AdminGenresService {
         ],
       }),
     } satisfies Prisma.GenreWhereInput
-    const orderBy = buildSortOrderBy({ sort, order }, [{ name: 'asc' }, { id: 'asc' }])
+    const orderBy = buildSortOrderBy<Prisma.GenreOrderByWithRelationInput>({ sort, order }, [
+      { name: 'asc' },
+      { id: 'asc' },
+    ])
 
     const [rows, total] = await Promise.all([
       this.prisma.genre.findMany({
@@ -70,7 +73,7 @@ export class AdminGenresService {
         select: ADMIN_GENRE_SELECT,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: orderBy as unknown as Prisma.GenreOrderByWithRelationInput[],
+        orderBy,
       }),
       this.prisma.genre.count({ where }),
     ])

@@ -46,14 +46,17 @@ export class AdminAuditService {
   async findAll(query: ListAdminAuditLogsQueryDto) {
     const { page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, sort, order } = query
     const where = this.buildWhere(query)
-    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const orderBy = buildSortOrderBy<Prisma.AuditLogOrderByWithRelationInput>({ sort, order }, [
+      { createdAt: 'desc' },
+      { id: 'desc' },
+    ])
 
     const [rows, total] = await Promise.all([
       this.prisma.auditLog.findMany({
         where,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: orderBy as unknown as Prisma.AuditLogOrderByWithRelationInput[],
+        orderBy,
       }),
       this.prisma.auditLog.count({ where }),
     ])
