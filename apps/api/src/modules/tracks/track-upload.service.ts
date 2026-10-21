@@ -128,6 +128,32 @@ export class TrackUploadService {
     })
   }
 
+  /**
+   * Uploads the master and the cover side by side. When either upload fails, the one that
+   * succeeded is removed again before the failure is rethrown, so nothing is left in storage.
+   * @returns the stored cover's generated name, or null without a cover.
+   */
+  private async storeUploads(
+    audioFile: Express.Multer.File | undefined,
+    coverFile: Express.Multer.File | undefined,
+  ): Promise<string | null> {
+    const [master, cover] = await Promise.allSettled([
+      audioFile ? this.storeUploadedMaster(audioFile) : undefined,
+      coverFile ? this.storeCover(coverFile) : null,
+    ])
+    if (master.status === 'fulfilled' && cover.status === 'fulfilled') return cover.value
+    if (master.status === 'fulfilled' && audioFile) {
+      await this.discardStoredMaster(audioFile.filename)
+    }
+    if (cover.status === 'fulfilled') {
+      await removePublicImage(this.storage, COVER_FOLDER, cover.value)
+    }
+    const failure = [master, cover].find(
+      (result): result is PromiseRejectedResult => result.status === 'rejected',
+    )
+    throw failure?.reason
+  }
+
   /** Best-effort removal of a master uploaded for a track that was never persisted. */
   private async discardStoredMaster(fileName: string) {
     try {
@@ -175,9 +201,8 @@ export class TrackUploadService {
       const metadata = await inspectAudioFile(resolveSafeMulterPath(audioFile, getUploadTempDir()))
       const bitrates = getTargetBitrates(metadata.bitrate)
 
-      await this.storeUploadedMaster(audioFile)
+      coverName = await this.storeUploads(audioFile, coverFile)
       masterStored = true
-      if (coverFile) coverName = await this.storeCover(coverFile)
 
       const track = await this.prisma.track.create({
         data: {
@@ -247,11 +272,8 @@ export class TrackUploadService {
         : null
       const bitrates = metadata ? getTargetBitrates(metadata.bitrate) : null
 
-      if (audioFile) {
-        await this.storeUploadedMaster(audioFile)
-        masterStored = true
-      }
-      if (coverFile) coverName = await this.storeCover(coverFile)
+      coverName = (await this.storeUploads(audioFile, coverFile)) ?? undefined
+      masterStored = audioFile !== undefined
 
       const track = await this.prisma.$transaction(async (tx) => {
         const updated = await tx.track.update({
