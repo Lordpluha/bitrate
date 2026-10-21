@@ -1,167 +1,76 @@
-import { randomBytes } from 'node:crypto'
+import type { LoginResult } from '@common/auth.types'
 import type { AppConfig } from '@common/config'
 import { LEGAL_VERSION, LegalAcceptanceRequiredError } from '@common/legal'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import {
-  ConflictException,
-  Injectable,
-  InternalServerErrorException,
-  UnauthorizedException,
-} from '@nestjs/common'
+  type OAuthProfile,
+  type OAuthProvider,
+  OAuthProviderClient,
+  oauthUsername,
+} from '@modules/auth-core'
+import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Prisma } from '@prisma/client'
-import { TokenService } from '../tokens/token.service'
+import { UserAuthService } from './user-auth.service'
 
 /** What the user accepted before leaving for the provider. */
 interface LegalAcceptance {
   acceptLegal: boolean
 }
 
-/** Describes the oauth profile. */
-interface OAuthProfile {
-  /** The id value. */
-  id: string
-  /** The email value. */
-  email: string
-  /** The name value. */
-  name: string
-}
+/** The listener OAuth routes; the provider returns to `<this>/<provider>/callback`. */
+const CALLBACK_BASE = 'auth/oauth'
 
-/** Represents the oauth service. */
-/**
- * Every route is served under the global prefix and URI version set in
- * `main.ts`. The redirect URI handed to the provider must include it, or the
- * provider sends the user back to a path that does not exist.
- */
-const API_PREFIX = '/api/v1'
-
+/** Listener social sign-in: the provider round trip, then account lookup, linking or creation. */
 @Injectable()
 export class OAuthService {
-  /** Creates a new instance. */
+  private readonly provider: OAuthProviderClient
+
   constructor(
     private readonly prisma: PrismaService,
-    private readonly token: TokenService,
-    private readonly config: ConfigService<AppConfig>,
-  ) {}
+    private readonly auth: UserAuthService,
+    config: ConfigService<AppConfig>,
+  ) {
+    this.provider = new OAuthProviderClient(config)
+  }
 
-  /** Runs the generate state operation. */
+  /** A random CSRF state the callback must echo back. */
   generateState(): string {
-    return randomBytes(32).toString('hex')
+    return this.provider.generateState()
   }
 
-  /** Runs the get google auth url operation. */
+  /** Google's consent URL for this state. */
   getGoogleAuthUrl(state: string): string {
-    const clientId = this.config.get('OAUTH_GOOGLE_CLIENT_ID')
-    if (!clientId) throw new InternalServerErrorException('Google OAuth is not configured')
-    const params = new URLSearchParams({
-      client_id: clientId,
-      redirect_uri: this.buildRedirectUri('google'),
-      response_type: 'code',
-      scope: 'openid email profile',
-      access_type: 'offline',
-      state,
-    })
-    return `https://accounts.google.com/o/oauth2/v2/auth?${params}`
+    return this.provider.authUrl('google', CALLBACK_BASE, state)
   }
 
-  /** Runs the handle google callback operation. */
-  async handleGoogleCallback(code: string, acceptance: LegalAcceptance) {
-    const profile = await this.exchangeGoogleCode(code)
-    return this.findOrCreateUserAndLogin('google', profile, acceptance)
+  /** Exchanges a Google code and signs the matching listener in. */
+  handleGoogleCallback(code: string, acceptance: LegalAcceptance): Promise<LoginResult> {
+    return this.handleCallback('google', code, acceptance)
   }
 
-  /** Runs the get facebook auth url operation. */
+  /** Facebook's consent URL for this state. */
   getFacebookAuthUrl(state: string): string {
-    const appId = this.config.get('OAUTH_FACEBOOK_APP_ID')
-    if (!appId) throw new InternalServerErrorException('Facebook OAuth is not configured')
-    const params = new URLSearchParams({
-      client_id: appId,
-      redirect_uri: this.buildRedirectUri('facebook'),
-      response_type: 'code',
-      scope: 'email,public_profile',
-      state,
-    })
-    return `https://www.facebook.com/v19.0/dialog/oauth?${params}`
+    return this.provider.authUrl('facebook', CALLBACK_BASE, state)
   }
 
-  /** Runs the handle facebook callback operation. */
-  async handleFacebookCallback(code: string, acceptance: LegalAcceptance) {
-    const profile = await this.exchangeFacebookCode(code)
-    return this.findOrCreateUserAndLogin('facebook', profile, acceptance)
+  /** Exchanges a Facebook code and signs the matching listener in. */
+  handleFacebookCallback(code: string, acceptance: LegalAcceptance): Promise<LoginResult> {
+    return this.handleCallback('facebook', code, acceptance)
   }
 
-  /** Runs the build redirect uri operation. */
-  private buildRedirectUri(provider: 'google' | 'facebook'): string {
-    const base = this.config.get('API_BASE_URL') ?? 'http://localhost:3000'
-    return `${base}${API_PREFIX}/auth/oauth/${provider}/callback`
+  private async handleCallback(
+    provider: OAuthProvider,
+    code: string,
+    acceptance: LegalAcceptance,
+  ): Promise<LoginResult> {
+    const profile = await this.provider.exchange(provider, code, CALLBACK_BASE)
+    return this.findOrCreateUserAndLogin(provider, profile, acceptance)
   }
 
-  /** Runs the exchange google code operation. */
-  private async exchangeGoogleCode(code: string): Promise<OAuthProfile> {
-    const clientId = this.config.get('OAUTH_GOOGLE_CLIENT_ID')!
-    const clientSecret = this.config.get('OAUTH_GOOGLE_CLIENT_SECRET')!
-
-    const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        code,
-        client_id: clientId,
-        client_secret: clientSecret,
-        redirect_uri: this.buildRedirectUri('google'),
-        grant_type: 'authorization_code',
-      }),
-    })
-
-    const tokenData = (await tokenRes.json()) as { access_token?: string; error?: string }
-    if (!tokenData.access_token) {
-      throw new UnauthorizedException('Failed to exchange Google OAuth code')
-    }
-
-    const profileRes = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-      headers: { Authorization: `Bearer ${tokenData.access_token}` },
-    })
-    const profile = (await profileRes.json()) as {
-      id: string
-      email: string
-      name: string
-      verified_email: boolean
-    }
-
-    if (!profile.verified_email) {
-      throw new UnauthorizedException('Google account email is not verified')
-    }
-
-    return { id: profile.id, email: profile.email, name: profile.name }
-  }
-
-  /** Runs the exchange facebook code operation. */
-  private async exchangeFacebookCode(code: string): Promise<OAuthProfile> {
-    const appId = this.config.get('OAUTH_FACEBOOK_APP_ID')!
-    const appSecret = this.config.get('OAUTH_FACEBOOK_APP_SECRET')!
-    const redirectUri = this.buildRedirectUri('facebook')
-
-    const tokenRes = await fetch(
-      `https://graph.facebook.com/v19.0/oauth/access_token?${new URLSearchParams({ client_id: appId, client_secret: appSecret, redirect_uri: redirectUri, code })}`,
-    )
-    const tokenData = (await tokenRes.json()) as { access_token?: string }
-    if (!tokenData.access_token) {
-      throw new UnauthorizedException('Failed to exchange Facebook OAuth code')
-    }
-
-    const profileRes = await fetch(
-      `https://graph.facebook.com/me?fields=id,name,email&access_token=${tokenData.access_token}`,
-    )
-    const profile = (await profileRes.json()) as { id: string; email?: string; name: string }
-    if (!profile.email) {
-      throw new UnauthorizedException('Facebook account did not provide an email address')
-    }
-    return { id: profile.id, email: profile.email, name: profile.name }
-  }
-
-  /** Runs the find or create user and login operation. */
+  /** Signs in the account linked to the provider identity, linking or creating one first. */
   private async findOrCreateUserAndLogin(
-    provider: string,
+    provider: OAuthProvider,
     profile: OAuthProfile,
     acceptance: LegalAcceptance,
   ) {
@@ -175,7 +84,7 @@ export class OAuthService {
     if (existing) {
       if (existing.user.deletedAt)
         throw new UnauthorizedException({ message: 'Invalid credentials' })
-      return this.sessionOrPending(existing.user)
+      return this.auth.signInVerified(existing.user)
     }
 
     // If an account with this email already has a password, refuse auto-linking.
@@ -195,7 +104,7 @@ export class OAuthService {
       await this.prisma.userOAuthAccount.create({
         data: { userId: existingUser.id, provider, providerAccountId: profile.id },
       })
-      return this.sessionOrPending(existingUser)
+      return this.auth.signInVerified(existingUser)
     }
 
     // A brand-new account is only created once the legal documents were accepted.
@@ -207,7 +116,7 @@ export class OAuthService {
       user = await this.prisma.user.create({
         data: {
           email: profile.email,
-          username: this.generateUniqueUsername(profile.name),
+          username: oauthUsername(profile.name),
           password: null,
           avatar: null,
           description: null,
@@ -225,45 +134,6 @@ export class OAuthService {
       throw err
     }
 
-    return this.sessionOrPending(user)
-  }
-
-  /** Runs the session or pending operation. */
-  private async sessionOrPending(user: {
-    id: string
-    username: string
-    twoFactorEnabled: boolean
-  }) {
-    if (user.twoFactorEnabled) {
-      const pendingToken = await this.token.generateTwoFAPendingToken(user.id)
-      return { requires2fa: true as const, pendingToken }
-    }
-    return this.createSession(user)
-  }
-
-  /** Runs the create session operation. */
-  private async createSession(user: { id: string; username: string }) {
-    const access_token = await this.token.generateAccessToken(user.id, user.username, 'user')
-    const refresh_token = await this.token.generateRefreshToken(user.id, user.username, 'user')
-
-    await this.prisma.userSession.create({
-      data: {
-        access_token: this.token.hashToken(access_token),
-        refresh_token: this.token.hashToken(refresh_token),
-        userId: user.id,
-        expiresAt: this.token.getRefreshTokenExpiresAt(),
-      },
-    })
-
-    return { access_token, refresh_token }
-  }
-
-  /** Runs the generate unique username operation. */
-  private generateUniqueUsername(name: string): string {
-    const base = name
-      .toLowerCase()
-      .replace(/[^a-z0-9]/g, '_')
-      .slice(0, 20)
-    return `${base}_${randomBytes(4).toString('hex')}`
+    return this.auth.signInVerified(user)
   }
 }

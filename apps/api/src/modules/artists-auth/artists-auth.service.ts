@@ -10,7 +10,7 @@ import { PrismaService } from '@infra/prisma/prisma.service'
 import type { ArtistEntity } from '@modules/artists'
 import { ArtistsPrivateService } from '@modules/artists/artists.private.service'
 import { ArtistsService } from '@modules/artists/artists.service'
-import { AccountAuthCore } from '@modules/auth-core'
+import { AccountAuthCore, type SignInAccount } from '@modules/auth-core'
 import { TokenService } from '@modules/tokens/token.service'
 import {
   BadRequestException,
@@ -88,6 +88,11 @@ export class ArtistsAuthService {
     client: SessionClient = {},
   ): Promise<LoginResult> {
     return this.core.login(email, password, client)
+  }
+
+  /** Signs in an artist whose identity a social provider proved: 2FA challenge or session. */
+  signInVerified(artist: SignInAccount, client: SessionClient = {}): Promise<LoginResult> {
+    return this.core.issueSessionOrChallenge(artist, client)
   }
 
   /** Runs the complete two factor login operation. */

@@ -41,6 +41,11 @@ export interface SessionAccount {
   username: string
 }
 
+/** An account about to be signed in, and whether it must pass a two-factor challenge first. */
+export interface SignInAccount extends SessionAccount {
+  twoFactorEnabled: boolean
+}
+
 /** Hashed token pair and expiry of one session. */
 export interface SessionTokens {
   access_token: string
@@ -142,11 +147,18 @@ export class AccountAuthCore<Account extends AuthCredentials, Client> {
       await this.store.resetFailedLogins(account.id)
     }
 
+    return this.issueSessionOrChallenge(account, client)
+  }
+
+  /**
+   * Finishes a sign-in whose credentials are already proven (password or social provider):
+   * a two-factor challenge when the account has 2FA on, a new session otherwise.
+   */
+  async issueSessionOrChallenge(account: SignInAccount, client: Client): Promise<LoginResult> {
     if (account.twoFactorEnabled) {
       const pendingToken = await this.token.generateTwoFAPendingToken(account.id)
       return { requires2fa: true as const, pendingToken }
     }
-
     return this.issueSession(account, client)
   }
 
