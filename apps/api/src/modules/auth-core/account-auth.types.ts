@@ -36,7 +36,7 @@ export interface SessionTokens {
 }
 
 /** A single-use token (password reset or email verification) looked up by its hash. */
-export interface AccountTokenRecord {
+interface AccountTokenRecord {
   accountId: string
   expiresAt: Date
 }
