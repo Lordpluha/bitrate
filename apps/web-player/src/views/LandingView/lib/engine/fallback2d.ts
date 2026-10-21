@@ -2,7 +2,7 @@ import { gsap } from 'gsap'
 import { lc } from '../styles/lc'
 import { type EngineContext, must } from './context'
 import { PARTNER_MARKS } from './marks'
-import { type PaletteToken, tokenAlpha } from './palette'
+import { type PaletteToken, tokenSolid } from './palette'
 
 const DOT_COUNT = 520
 const DOT_INKS: readonly PaletteToken[] = [
@@ -31,12 +31,6 @@ export const mountParticles2d = ({
       ink: ink ?? 'purple-400',
     }
   })
-  const fills = new Map(
-    DOT_INKS.map((name) => [
-      name,
-      (a: number) => tokenAlpha({ name, alpha: a }),
-    ]),
-  )
   let mx = 0
   let my = 0
   window.addEventListener(
@@ -60,17 +54,26 @@ export const mountParticles2d = ({
     const h = window.innerHeight
     c2.clearRect(0, 0, w, h)
     const R = Math.hypot(w, h) * 0.62
+    /* one resolved colour per ink; each dot only varies the alpha */
+    const fills = new Map(DOT_INKS.map((name) => [name, tokenSolid(name)]))
+    let ink = ''
     for (const d of dots) {
       const a = d.a + t * 0.02 * d.z
       const rr = d.r * R * (0.92 + 0.08 * Math.sin(t * 0.6 + d.a))
       const x = w * 0.62 + Math.cos(a) * rr + mx * 40 * d.z
       const y = h * 0.5 + Math.sin(a) * rr * 0.62 + my * 30 * d.z
       const tw = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * 1.7 + d.a * 3))
-      c2.fillStyle = fills.get(d.ink)?.((0.25 + 0.55 * d.z) * tw) ?? ''
+      const fill = fills.get(d.ink) ?? ''
+      if (fill !== ink) {
+        c2.fillStyle = fill
+        ink = fill
+      }
+      c2.globalAlpha = (0.25 + 0.55 * d.z) * tw
       c2.beginPath()
       c2.arc(x, y, 0.8 + d.z * 1.6, 0, Math.PI * 2)
       c2.fill()
     }
+    c2.globalAlpha = 1
   }
   if (ctx.reduce) {
     draw(0)

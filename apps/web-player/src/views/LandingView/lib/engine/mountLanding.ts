@@ -6,6 +6,7 @@ import { mountCursor } from './cursor'
 import { mountParticles2d, mountPartners2d } from './fallback2d'
 import { mountHeadings } from './headings'
 import { playIntro } from './intro'
+import { clearTokenCache } from './palette'
 import { mountPointer } from './pointer'
 import { mountScenes } from './scenes'
 import { createStage, hasWebGL, type Stage } from './stage'
@@ -81,6 +82,7 @@ export const mountLanding = ({
 
   /* the app theme lives as a class on <html>: repaint highlights and the stage when it changes */
   const themeWatch = new MutationObserver(() => {
+    clearTokenCache()
     headings.paint()
     stage?.retheme()
   })
