@@ -1,4 +1,4 @@
-import type { Response } from 'express'
+import type { Request, Response } from 'express'
 
 /** Holds the half-finished login while the user fetches their 2FA code. */
 const PENDING_2FA_COOKIE = 'pending_2fa_token'
@@ -34,6 +34,12 @@ export function setPendingTwoFactorCookie(res: Response, token: string): void {
     maxAge: PENDING_2FA_MAX_AGE_MS,
     ...(process.env.COOKIE_DOMAIN ? { domain: process.env.COOKIE_DOMAIN } : {}),
   })
+}
+
+/** The pending-2FA token a password or social sign-in left in the browser, if any. */
+export function readPendingTwoFactorToken(req: Request): string | undefined {
+  const token: unknown = req.cookies?.[PENDING_2FA_COOKIE]
+  return typeof token === 'string' ? token : undefined
 }
 
 /** Drops the pending-2FA token once the challenge is resolved. */

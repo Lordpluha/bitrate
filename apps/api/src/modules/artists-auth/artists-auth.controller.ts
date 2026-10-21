@@ -1,6 +1,11 @@
-import { clearPendingTwoFactorCookie, setPendingTwoFactorCookie } from '@common/auth-cookies'
+import {
+  clearPendingTwoFactorCookie,
+  readPendingTwoFactorToken,
+  setPendingTwoFactorCookie,
+} from '@common/auth-cookies'
 import { AUTH_ROUTE_THROTTLE, SESSION_ROUTE_THROTTLE } from '@common/config'
 import { ArtistsService } from '@modules/artists/artists.service'
+import { readAccessToken, readRefreshToken } from '@modules/auth-core'
 import { TokenService } from '@modules/tokens/token.service'
 import {
   BadRequestException,
@@ -125,8 +130,7 @@ export class AuthController {
   @ArtistAuth()
   @Post('logout')
   async logout(@Req() req: ArtistAuthRequest & Request, @Res({ passthrough: true }) res: Response) {
-    const access_token = req[process.env.ACCESS_TOKEN_NAME!] as string
-    await this.artistAuthService.logout(req.artist.id, access_token)
+    await this.artistAuthService.logout(req.artist.id, readAccessToken(req))
     this.tokenService.clearAuthCookies(res)
   }
 
@@ -136,8 +140,7 @@ export class AuthController {
   @Throttle(SESSION_ROUTE_THROTTLE)
   @Post('refresh')
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const refresh_token = req[process.env.REFRESH_TOKEN_NAME!] as string
-    const tokens = await this.artistAuthService.refresh(refresh_token, sessionClient(req))
+    const tokens = await this.artistAuthService.refresh(readRefreshToken(req), sessionClient(req))
     this.tokenService.setAuthCookies(res, tokens.access_token, tokens.refresh_token)
   }
 
@@ -236,7 +239,7 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const pendingToken = req.cookies?.pending_2fa_token ?? dto.pendingToken
+    const pendingToken = readPendingTwoFactorToken(req) ?? dto.pendingToken
     const artist = await this.twoFactorService.verifyLoginCode(pendingToken, dto.code)
     const { access_token, refresh_token } = await this.artistAuthService.completeTwoFactorLogin(
       artist.id,
