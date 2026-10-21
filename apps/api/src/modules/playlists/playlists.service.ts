@@ -257,51 +257,9 @@ export class PlaylistsService {
   /** Appends ready tracks to the user's own playlist. */
   async addTracks(userId: UserEntity['id'], id: PlaylistEntity['id'], dto: AddTracksDto) {
     await this.requireOwned(userId, id, 'hide')
-
     const uniqueTrackIds = [...new Set(dto.trackIds)]
-    const readyCount = await this.prisma.track.count({
-      where: {
-        id: { in: uniqueTrackIds },
-        processingStatus: 'READY',
-        deletedAt: null,
-      },
-    })
-    if (readyCount !== uniqueTrackIds.length) {
-      throw new BadRequestException('Some tracks are not available yet')
-    }
-
-    for (let attempt = 1; attempt <= ADD_TRACKS_ATTEMPTS; attempt += 1) {
-      try {
-        await this.prisma.$transaction(
-          async (tx) => {
-            const lastTrack = await tx.playlistTrack.findFirst({
-              where: { playlistId: id },
-              orderBy: { position: 'desc' },
-              select: { position: true },
-            })
-            const firstPosition = (lastTrack?.position ?? -1) + 1
-            await tx.playlistTrack.createMany({
-              data: uniqueTrackIds.map((trackId, index) => ({
-                playlistId: id,
-                trackId,
-                addedById: userId,
-                position: firstPosition + index,
-              })),
-            })
-            await tx.playlist.update({ where: { id }, data: { updatedAt: new Date() } })
-          },
-          { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
-        )
-        break
-      } catch (error: unknown) {
-        // A track may sit in a playlist more than once, so a unique conflict here is always a
-        // concurrent append taking the same positions; like a serialization failure, retry it.
-        if (!(isPrismaP2002(error) || isPrismaP2034(error))) throw error
-        if (attempt === ADD_TRACKS_ATTEMPTS) {
-          throw new ConflictException('Playlist was changed concurrently, please retry')
-        }
-      }
-    }
+    await this.assertTracksReady(uniqueTrackIds)
+    await this.appendWithRetry(userId, id, uniqueTrackIds)
     await this.cache.invalidate(NS.SEARCH)
     return await this.getByIdPopulated(id, userId)
   }
@@ -343,5 +301,67 @@ export class PlaylistsService {
       )
     }
     if (playlist.userId !== userId) throw new ForbiddenException('You do not own this playlist')
+  }
+
+  /** Rejects the batch unless every track exists, is not deleted and finished processing. */
+  private async assertTracksReady(trackIds: string[]): Promise<void> {
+    const readyCount = await this.prisma.track.count({
+      where: {
+        id: { in: trackIds },
+        processingStatus: 'READY',
+        deletedAt: null,
+      },
+    })
+    if (readyCount !== trackIds.length) {
+      throw new BadRequestException('Some tracks are not available yet')
+    }
+  }
+
+  private async appendWithRetry(
+    userId: UserEntity['id'],
+    id: PlaylistEntity['id'],
+    trackIds: string[],
+  ): Promise<void> {
+    for (let attempt = 1; attempt <= ADD_TRACKS_ATTEMPTS; attempt += 1) {
+      try {
+        await this.append(userId, id, trackIds)
+        return
+      } catch (error: unknown) {
+        // A track may sit in a playlist more than once, so a unique conflict here is always a
+        // concurrent append taking the same positions; like a serialization failure, retry it.
+        if (!(isPrismaP2002(error) || isPrismaP2034(error))) throw error
+        if (attempt === ADD_TRACKS_ATTEMPTS) {
+          throw new ConflictException('Playlist was changed concurrently, please retry')
+        }
+      }
+    }
+  }
+
+  /** Writes the tracks after the current last position in one serializable transaction. */
+  private async append(
+    userId: UserEntity['id'],
+    id: PlaylistEntity['id'],
+    trackIds: string[],
+  ): Promise<void> {
+    await this.prisma.$transaction(
+      async (tx) => {
+        const lastTrack = await tx.playlistTrack.findFirst({
+          where: { playlistId: id },
+          orderBy: { position: 'desc' },
+          select: { position: true },
+        })
+        const firstPosition = (lastTrack?.position ?? -1) + 1
+        await tx.playlistTrack.createMany({
+          data: trackIds.map((trackId, index) => ({
+            playlistId: id,
+            trackId,
+            addedById: userId,
+            position: firstPosition + index,
+          })),
+        })
+        await tx.playlist.update({ where: { id }, data: { updatedAt: new Date() } })
+      },
+      { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
+    )
   }
 }
