@@ -1,10 +1,10 @@
 import { clientFetchClient } from '@shared/api/fetchClient'
 import { uploadForm } from '@shared/api/uploadForm'
+import { writeSignal } from '@shared/api/writeTimeout'
 import { z } from 'zod'
 import { releaseSummarySchema } from '../model/release.schema'
-import { advancedRelease, guardedWrite, type WriteResult } from './rights'
+import { advancedRelease, guardedWrite, type WriteResult } from './guardedWrite'
 
-const WRITE_TIMEOUT_MS = 30_000
 /** Large masters on slow links need far longer than a JSON write. */
 const UPLOAD_TIMEOUT_MS = 30 * 60_000
 
@@ -104,7 +104,7 @@ export function removeCover({ id, expectedUpdatedAt }: DraftVersionRequest) {
       clientFetchClient.DELETE('/api/v1/releases/{id}/cover', {
         params: { path: { id } },
         body: { expectedUpdatedAt },
-        signal: AbortSignal.timeout(WRITE_TIMEOUT_MS),
+        signal: writeSignal(),
       }),
     (data) => {
       const parsed = coverResultSchema.safeParse(data)
@@ -184,7 +184,7 @@ export function removeTrack({ id, trackId, expectedUpdatedAt }: TrackRequest) {
       clientFetchClient.DELETE('/api/v1/releases/{id}/tracks/{trackId}', {
         params: { path: { id, trackId } },
         body: { expectedUpdatedAt },
-        signal: AbortSignal.timeout(WRITE_TIMEOUT_MS),
+        signal: writeSignal(),
       }),
     (data) => {
       const parsed = removedTrackSchema.safeParse(data)
@@ -217,7 +217,7 @@ export function renameTrack({
       clientFetchClient.PATCH('/api/v1/releases/{id}/tracks/{trackId}', {
         params: { path: { id, trackId } },
         body: { title, expectedUpdatedAt },
-        signal: AbortSignal.timeout(WRITE_TIMEOUT_MS),
+        signal: writeSignal(),
       }),
     (data) => {
       const parsed = renamedTrackSchema.safeParse(data)
@@ -246,27 +246,18 @@ export interface ReorderTracksRequest extends DraftVersionRequest {
 }
 
 /** Saves the full running order; the API rejects a list that misses or repeats a recording. */
-export async function reorderTracks({
+export function reorderTracks({
   id,
   trackIds,
   expectedUpdatedAt,
 }: ReorderTracksRequest) {
-  const unconfirmed =
-    'Could not confirm the new order. Check the tracks before trying again.'
-  const result = await clientFetchClient
-    .PUT('/api/v1/releases/{id}/tracks/order', {
-      params: { path: { id } },
-      body: { trackIds, expectedUpdatedAt },
-      signal: AbortSignal.timeout(WRITE_TIMEOUT_MS),
-    })
-    .catch(() => undefined)
-  if (!result) throw new Error(unconfirmed)
-  if (result.response.status === 422)
-    throw new Error(
-      'A recording was added or removed meanwhile. Reload to see the latest list.',
-    )
   return guardedWrite(
-    () => Promise.resolve(result),
+    () =>
+      clientFetchClient.PUT('/api/v1/releases/{id}/tracks/order', {
+        params: { path: { id } },
+        body: { trackIds, expectedUpdatedAt },
+        signal: writeSignal(),
+      }),
     (data) => {
       const parsed = reorderedSchema.safeParse(data)
       return parsed.success &&
@@ -275,6 +266,13 @@ export async function reorderTracks({
         ? parsed.data
         : undefined
     },
-    { invalid: 'Could not save the new order. Please try again.', unconfirmed },
+    {
+      invalid: 'Could not save the new order. Please try again.',
+      unconfirmed:
+        'Could not confirm the new order. Check the tracks before trying again.',
+      statusMessages: {
+        422: 'A recording was added or removed meanwhile. Reload to see the latest list.',
+      },
+    },
   )
 }

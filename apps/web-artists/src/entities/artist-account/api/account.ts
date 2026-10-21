@@ -2,6 +2,7 @@ import type { ApiSchemas } from '@bitrate/contracts'
 import { artistMusicKeys } from '@shared/api/artistMusicKeys'
 import { clientFetchClient } from '@shared/api/fetchClient'
 import { uploadForm } from '@shared/api/uploadForm'
+import { writeSignal } from '@shared/api/writeTimeout'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { z } from 'zod'
 import {
@@ -9,7 +10,6 @@ import {
   artistProfileSchema,
 } from '../model/profile.schema'
 
-const WRITE_TIMEOUT_MS = 30_000
 const STALE =
   'Your profile changed since this page loaded. Your entries are kept; reload the page to see the latest version.'
 
@@ -86,7 +86,7 @@ export function useUpdateProfile(artistId: string) {
     const send = () =>
       clientFetchClient.PATCH('/api/v1/artist-profile', {
         body: input,
-        signal: AbortSignal.timeout(WRITE_TIMEOUT_MS),
+        signal: writeSignal(),
       })
     let result: Awaited<ReturnType<typeof send>>
     try {
@@ -136,7 +136,7 @@ export function useProfileImage(artistId: string) {
           clientFetchClient.DELETE('/api/v1/artist-profile/{kind}', {
             params: { path: { kind } },
             body: { expectedUpdatedAt },
-            signal: AbortSignal.timeout(WRITE_TIMEOUT_MS),
+            signal: writeSignal(),
           })
         let result: Awaited<ReturnType<typeof send>>
         try {
