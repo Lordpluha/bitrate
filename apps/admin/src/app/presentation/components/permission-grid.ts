@@ -1,10 +1,28 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core'
 import { PERMISSIONS, type Permission, PROTECTED_PERMISSIONS } from '@domain/access'
+import { TranslocoPipe } from '@jsverse/transloco'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 
 type PermissionGroup = { resource: string; permissions: Permission[] }
 
 const PROTECTED_SET = new Set<Permission>(PROTECTED_PERMISSIONS)
+
+/** A group's name in words — the resource prefix as the console's own section names it. */
+const GROUP_KEY: Record<string, string> = {
+  albums: 'permissions.group.albums',
+  artists: 'permissions.group.artists',
+  audit: 'permissions.group.audit',
+  genres: 'permissions.group.genres',
+  overview: 'permissions.group.overview',
+  playlists: 'permissions.group.playlists',
+  podcasts: 'permissions.group.podcasts',
+  releases: 'permissions.group.releases',
+  reports: 'permissions.group.reports',
+  roles: 'permissions.group.roles',
+  staff: 'permissions.group.staff',
+  tracks: 'permissions.group.tracks',
+  users: 'permissions.group.users',
+}
 
 /**
  * Every grantable permission, grouped by resource (the prefix before `:`) and rendered as one
@@ -20,7 +38,7 @@ const PROTECTED_SET = new Set<Permission>(PROTECTED_PERMISSIONS)
  */
 @Component({
   selector: 'app-permission-grid',
-  imports: [HlmBadgeImports],
+  imports: [HlmBadgeImports, TranslocoPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './permission-grid.html',
 })
@@ -45,6 +63,11 @@ export class PermissionGrid {
 
     return [...byResource.entries()].map(([resource, permissions]) => ({ resource, permissions }))
   })
+
+  /** The group's transloco key, or `null` for a resource this console does not name yet. */
+  protected groupKey(resource: string): string | null {
+    return GROUP_KEY[resource] ?? null
+  }
 
   protected isChecked(permission: Permission): boolean {
     return this.selected().includes(permission)

@@ -1,40 +1,57 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
-import { Router, RouterLink } from '@angular/router'
+import { Router } from '@angular/router'
 import { ListRolesUseCase } from '@application/roles'
 import { CreateStaffUseCase } from '@application/staff'
 import type { Permission } from '@domain/access'
 import type { Role } from '@domain/role'
-import { PermissionGrid } from '@presentation/components'
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco'
+import { NgIcon, provideIcons } from '@ng-icons/core'
+import { lucideCheck, lucideKeyRound, lucideShieldCheck, lucideUser } from '@ng-icons/lucide'
+import { PageHeader, PermissionGrid, StateMessage, Tile, TileGrid } from '@presentation/components'
 import { zodErrorMessage, zodValidator } from '@presentation/forms'
+import { LocaleStore } from '@presentation/navigation'
+import type { Notice } from '@presentation/pages/shared/resource-write-error.message'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmInputImports } from '@spartan-ng/helm/input'
 import { HlmLabelImports } from '@spartan-ng/helm/label'
-import { staffCreateSchema } from './staff-create.schema'
-import { staffWriteErrorMessage } from './staff-write-error.message'
+import { MIN_PASSWORD_LENGTH, staffCreateSchema } from './staff-create.schema'
+import { staffWriteError } from './staff-write-error.message'
+
+type StaffCreateField = 'email' | 'username' | 'password' | 'roleId'
 
 @Component({
   selector: 'app-staff-create',
   imports: [
-    ReactiveFormsModule,
-    RouterLink,
-    PermissionGrid,
     HlmButtonImports,
     HlmInputImports,
     HlmLabelImports,
+    NgIcon,
+    PageHeader,
+    PermissionGrid,
+    ReactiveFormsModule,
+    StateMessage,
+    Tile,
+    TileGrid,
+    TranslocoPipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideIcons({ lucideCheck, lucideKeyRound, lucideShieldCheck, lucideUser })],
+  host: { class: 'flex flex-col gap-5 lg:gap-[22px]' },
   templateUrl: './staff-create.html',
 })
 export class StaffCreatePage {
   private readonly router = inject(Router)
   private readonly createStaff = inject(CreateStaffUseCase)
   private readonly listRoles = inject(ListRolesUseCase)
+  private readonly transloco = inject(TranslocoService)
+  private readonly locale = inject(LocaleStore).locale
 
+  protected readonly minPassword = MIN_PASSWORD_LENGTH
   protected readonly roles = signal<Role[]>([])
   protected readonly loadingRoles = signal(true)
   protected readonly submitting = signal(false)
-  protected readonly failure = signal<string | null>(null)
+  protected readonly failure = signal<Notice | null>(null)
 
   /** Whether the administrator adjusted the template's preview — the override-vs-copy switch. */
   protected readonly permissionsTouched = signal(false)
@@ -50,11 +67,18 @@ export class StaffCreatePage {
     { validators: zodValidator(staffCreateSchema) },
   )
 
+  protected readonly back = computed(() => ({ link: '/staff', label: this.t('staff.title') }))
+  protected readonly failureText = computed(() => {
+    const notice = this.failure()
+    return notice === null ? null : this.t(notice.key, notice.params)
+  })
+
   constructor() {
     void this.loadRoles()
   }
 
-  protected errorFor(field: 'email' | 'username' | 'password' | 'roleId'): string | null {
+  /** The field's error as a transloco key, once the operator has touched it. */
+  protected errorFor(field: StaffCreateField): string | null {
     const control = this.form.get(field)
     if (!control || !control.touched) return null
 
@@ -84,7 +108,7 @@ export class StaffCreatePage {
       const created = await this.createStaff.execute(this.createInput())
       await this.router.navigate(['/staff', created.id])
     } catch (error) {
-      this.failure.set(staffWriteErrorMessage({ error, operation: 'create' }))
+      this.failure.set(staffWriteError({ error, operation: 'create' }))
     } finally {
       this.submitting.set(false)
     }
@@ -106,9 +130,13 @@ export class StaffCreatePage {
     try {
       this.roles.set(await this.listRoles.execute())
     } catch {
-      this.failure.set('Could not load roles.')
+      this.failure.set({ key: 'operator.error.loadRoles' })
     } finally {
       this.loadingRoles.set(false)
     }
+  }
+
+  private t(key: string, params: Record<string, string | number> = {}): string {
+    return this.transloco.translate(key, params, this.locale())
   }
 }
