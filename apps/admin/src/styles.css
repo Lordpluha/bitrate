@@ -14,6 +14,9 @@
  */
 @import '@angular/cdk/overlay-prebuilt.css';
 
+/* Glass styles for the helm dialog, select and tabs hooks. */
+@import './styles/spartan.css';
+
 @source "./";
 
 /**
@@ -75,6 +78,23 @@
   /* The bento: tiles, the floating sidebar and the island share one generous radius family. */
   --radius-tile: 1.5rem;
   --radius-panel: 1.75rem;
+
+  /* Tiles rise into place in reading order (`style="--i: n"` staggers them); skeletons shimmer. */
+  --animate-rise: rise 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) calc(var(--i, 0) * 60ms) backwards;
+  --animate-shimmer: shimmer 1.4s infinite;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+
+  @keyframes shimmer {
+    to {
+      transform: translateX(100%);
+    }
+  }
 }
 
 /**

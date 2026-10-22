@@ -11,15 +11,16 @@ import { HlmButtonImports } from '@spartan-ng/helm/button'
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (pageCount() > 1) {
-      <nav class="flex items-center justify-between gap-4 pt-2" aria-label="Pagination">
-        <p class="text-sm text-muted-foreground">
-          Page {{ page() }} of {{ pageCount() }} · {{ total() }} total
-        </p>
-        <div class="flex gap-2">
+      <nav
+        class="flex items-center justify-between gap-4 border-t border-glass-line py-2 pe-2.5 ps-4 text-[0.8125rem] text-muted-foreground"
+        aria-label="Pagination"
+      >
+        <p class="tabular-nums">Page {{ page() }} of {{ pageCount() }} · {{ total() }} total</p>
+        <div class="flex gap-1">
           <button
             hlmBtn
             size="sm"
-            variant="outline"
+            variant="ghost"
             type="button"
             [disabled]="page() <= 1 || disabled()"
             (click)="goTo.emit(page() - 1)"
@@ -29,7 +30,7 @@ import { HlmButtonImports } from '@spartan-ng/helm/button'
           <button
             hlmBtn
             size="sm"
-            variant="outline"
+            variant="ghost"
             type="button"
             [disabled]="page() >= pageCount() || disabled()"
             (click)="goTo.emit(page() + 1)"
