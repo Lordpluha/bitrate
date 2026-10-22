@@ -1,105 +1,136 @@
-<section class="w-full space-y-8 p-8">
-  <header class="space-y-1">
-    <a routerLink="/playlists" class="text-sm text-muted-foreground hover:underline"
-      >&larr; Playlists</a
+@if (playlist(); as p) {
+  <app-page-header
+    [back]="back()"
+    [eyebrow]="'playlist.eyebrow' | transloco"
+    [title]="p.title"
+    [subtitle]="
+      'playlist.subtitle'
+        | transloco: { owner: p.ownerUsername, count: p.trackCount, followers: p.followersCount }
+    "
+  >
+    <span headerStatus hlmBadge [variant]="p.isPublic ? 'info' : 'secondary'">{{
+      (p.isPublic ? 'playlists.visibility.public' : 'playlists.visibility.private') | transloco
+    }}</span>
+    @if (p.takenDownAt) {
+      <span headerStatus hlmBadge variant="secondary">{{ 'content.takenDown' | transloco }}</span>
+    }
+    <ng-container ngProjectAs="[headerActions]">
+      @if (canHideOrUnhide() && hideable(p)) {
+        <button hlmBtn variant="secondary" type="button" (click)="ask('hide')">
+          <ng-icon name="lucideEyeOff" aria-hidden="true" />
+          {{ 'playlist.action.hide' | transloco }}
+        </button>
+      }
+      @if (canHideOrUnhide() && unhideable(p)) {
+        <button hlmBtn variant="secondary" type="button" (click)="ask('unhide')">
+          <ng-icon name="lucideEye" aria-hidden="true" />
+          {{ 'playlist.action.unhide' | transloco }}
+        </button>
+      }
+      @if (canTakeDown() && takeDownable(p)) {
+        <button hlmBtn variant="destructive" type="button" (click)="ask('take-down')">
+          <ng-icon name="lucideX" aria-hidden="true" />
+          {{ 'content.takeDown' | transloco }}
+        </button>
+      }
+      @if (canRestore() && restorable(p)) {
+        <button hlmBtn type="button" (click)="ask('restore')">
+          <ng-icon name="lucideRotateCcw" aria-hidden="true" />
+          {{ 'content.restore' | transloco }}
+        </button>
+      }
+    </ng-container>
+  </app-page-header>
+
+  @if (status(); as text) {
+    <p
+      class="flex items-center gap-3 rounded-tile border border-success/40 bg-glass p-4 text-sm shadow-glass backdrop-blur-[22px]"
+      role="status"
     >
-    @if (loading() && !playlist()) {
-      <h1 class="text-xl font-semibold text-foreground">Playlist</h1>
-    } @else if (playlist(); as p) {
-      <h1 class="text-xl font-semibold text-foreground">
-        {{ p.title }}
-        <span hlmBadge [variant]="p.isPublic ? 'default' : 'outline'" class="ml-2 align-middle">{{
-          p.isPublic ? 'public' : 'private'
-        }}</span>
-        @if (p.takenDownAt) {
-          <span hlmBadge variant="destructive" class="ml-2 align-middle">taken down</span>
-        }
-      </h1>
-      <p class="text-sm text-muted-foreground">
-        by
-        <a [routerLink]="['/users', p.ownerId]" class="hover:underline">{{ p.ownerUsername }}</a>
-      </p>
-    }
-  </header>
-
-  @if (loading() && !playlist()) {
-    <p class="text-sm text-muted-foreground" role="status">Loading…</p>
-  } @else if (notFound()) {
-    <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
-      This playlist could not be found.
+      <span
+        class="grid size-9 shrink-0 place-items-center rounded-xl bg-success-surface text-success-text"
+        aria-hidden="true"
+      >
+        <ng-icon name="lucideCheck" />
+      </span>
+      {{ text }}
     </p>
-  } @else if (playlist(); as p) {
-    @if (status(); as message) {
-      <p class="rounded-md bg-muted px-3 py-2 text-sm text-foreground" role="status">
-        {{ message }}
-      </p>
-    }
-    @if (failure(); as message) {
-      <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
-        {{ message }}
-      </p>
-    }
+  }
+  @if (failureText(); as message) {
+    <app-state-message
+      class="rounded-tile border border-error/40 bg-glass p-4 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="message"
+      [compact]="true"
+    />
+  }
 
-    <section class="space-y-3">
-      <h2 class="text-lg font-semibold text-foreground">Details</h2>
-      <dl class="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <div class="rounded-md border border-border p-3">
-          <dt class="text-xs text-muted-foreground">Tracks</dt>
-          <dd class="text-lg font-semibold tabular-nums text-foreground">{{ p.trackCount }}</dd>
-        </div>
-        <div class="rounded-md border border-border p-3">
-          <dt class="text-xs text-muted-foreground">Followers</dt>
-          <dd class="text-lg font-semibold tabular-nums text-foreground">
-            {{ p.followersCount }}
-          </dd>
-        </div>
-        <div class="rounded-md border border-border p-3">
-          <dt class="text-xs text-muted-foreground">Collaborative</dt>
-          <dd class="text-sm text-foreground">{{ p.collaborative ? 'Yes' : 'No' }}</dd>
-        </div>
-        <div class="rounded-md border border-border p-3">
-          <dt class="text-xs text-muted-foreground">Created</dt>
-          <dd class="text-sm tabular-nums text-foreground">
-            {{ p.createdAt | localizedDate: 'dd.MM.yyyy' }}
-          </dd>
-        </div>
-      </dl>
+  <app-tile-grid>
+    <app-tile
+      icon="lucideListMusic"
+      [title]="'playlist.tile.details' | transloco"
+      [meta]="'playlist.tile.detailsMeta' | transloco"
+      [span]="2"
+    >
+      <div>
+        <app-kv-row [label]="'playlist.tile.owner' | transloco">
+          <a class="hover:underline" [routerLink]="['/users', p.ownerId]">{{ p.ownerUsername }}</a>
+        </app-kv-row>
+        <app-kv-row [label]="'playlist.tile.followers' | transloco">{{
+          p.followersCount
+        }}</app-kv-row>
+        <app-kv-row [label]="'playlist.tile.collaborative' | transloco">{{
+          (p.collaborative ? 'ui.yes' : 'ui.no') | transloco
+        }}</app-kv-row>
+        <app-kv-row [label]="'playlist.tile.created' | transloco">{{
+          p.createdAt | localizedDate: 'dd.MM.yyyy'
+        }}</app-kv-row>
+      </div>
       @if (p.description) {
-        <p class="text-sm text-foreground">{{ p.description }}</p>
+        <p class="text-[0.8125rem] text-muted-foreground">{{ p.description }}</p>
       }
       <a
+        class="mt-auto inline-flex items-center gap-1.5 text-[0.8125rem] font-semibold text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
         [routerLink]="['/audit']"
         [queryParams]="{ entityType: 'admin-playlists', entityId: p.id }"
-        class="block text-sm text-muted-foreground hover:underline"
       >
-        View audit history &rarr;
+        {{ 'content.audit' | transloco }}
+        <ng-icon name="lucideArrowRight" aria-hidden="true" />
       </a>
-    </section>
+    </app-tile>
 
-    <section class="space-y-3">
-      <h2 class="text-lg font-semibold text-foreground">Tracks</h2>
+    <app-tile
+      icon="lucideList"
+      [title]="'playlist.tile.tracks' | transloco"
+      [meta]="'playlist.tile.tracksMeta' | transloco: { count: p.trackCount }"
+      [span]="2"
+    >
       @if (p.tracks.length === 0) {
-        <p class="text-sm text-muted-foreground">This playlist has no tracks.</p>
+        <p class="text-sm text-muted-foreground">{{ 'playlist.tile.tracksNone' | transloco }}</p>
       } @else {
         <div hlmTableContainer>
           <table hlmTable>
             <caption hlmCaption class="sr-only">
-              Tracks in playlist order
+              {{
+                'playlist.tile.caption' | transloco
+              }}
             </caption>
             <thead hlmTHead>
               <tr hlmTr>
-                <th hlmTh scope="col">#</th>
-                <th hlmTh scope="col">Track</th>
+                <th hlmTh scope="col" class="w-8">{{ 'playlist.tile.number' | transloco }}</th>
+                <th hlmTh scope="col">{{ 'playlist.tile.track' | transloco }}</th>
               </tr>
             </thead>
             <tbody hlmTBody>
               @for (track of p.tracks; track track.id) {
                 <tr hlmTr>
                   <td hlmTd class="tabular-nums text-muted-foreground">{{ track.position + 1 }}</td>
-                  <td hlmTd>
-                    <a [routerLink]="['/catalog', track.id]" class="hover:underline">{{
-                      track.title
-                    }}</a>
+                  <td hlmTd class="whitespace-normal">
+                    <a
+                      class="font-semibold hover:underline"
+                      [routerLink]="['/catalog', track.id]"
+                      >{{ track.title }}</a
+                    >
                   </td>
                 </tr>
               }
@@ -107,86 +138,85 @@
           </table>
         </div>
         @if (p.trackCount > p.tracks.length) {
-          <p class="text-sm text-muted-foreground">
-            Showing the first {{ p.tracks.length }} of {{ p.trackCount }} tracks.
+          <p class="text-xs text-muted-foreground">
+            {{
+              'playlist.tile.firstOf' | transloco: { shown: p.tracks.length, count: p.trackCount }
+            }}
           </p>
         }
       }
-    </section>
-
-    <section class="space-y-3">
-      <h2 class="text-lg font-semibold text-foreground">Actions</h2>
-
-      <div class="flex flex-wrap gap-2">
-        @if (canHideOrUnhide() && hideable(p)) {
-          <button hlmBtn size="sm" variant="outline" type="button" (click)="ask('hide')">
-            Hide
-          </button>
-        }
-        @if (canHideOrUnhide() && unhideable(p)) {
-          <button hlmBtn size="sm" variant="outline" type="button" (click)="ask('unhide')">
-            Un-hide
-          </button>
-        }
-        @if (canTakeDown() && takeDownable(p)) {
-          <button hlmBtn size="sm" variant="ghost" type="button" (click)="ask('take-down')">
-            Take down
-          </button>
-        }
-        @if (canRestore() && restorable(p)) {
-          <button hlmBtn size="sm" variant="outline" type="button" (click)="ask('restore')">
-            Restore
-          </button>
-        }
-      </div>
-      @if (
-        !(canHideOrUnhide() && (hideable(p) || unhideable(p))) &&
-        !(canTakeDown() && takeDownable(p)) &&
-        !(canRestore() && restorable(p))
-      ) {
-        <p class="text-sm text-muted-foreground">No actions available.</p>
+    </app-tile>
+  </app-tile-grid>
+} @else {
+  <app-page-header
+    [back]="back()"
+    [eyebrow]="'playlist.eyebrow' | transloco"
+    [title]="'playlist.loadingTitle' | transloco"
+  />
+  @if (loading()) {
+    <app-tile-grid role="status" [attr.aria-label]="'ui.loading' | transloco">
+      @for (tile of [1, 2]; track tile) {
+        <app-tile [title]="'ui.loading' | transloco" [span]="2">
+          <app-skeleton class="h-3.5 w-full" />
+          <app-skeleton class="h-3.5 w-4/5" />
+          <app-skeleton class="h-3.5 w-3/5" />
+        </app-tile>
       }
-    </section>
-  } @else if (failure(); as message) {
-    <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
-      {{ message }}
-    </p>
+    </app-tile-grid>
+  } @else if (notFound()) {
+    <app-state-message
+      class="min-h-[340px] rounded-tile border border-glass-line bg-glass p-5 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="'playlist.notFound.title' | transloco"
+      [description]="'playlist.notFound.desc' | transloco"
+    />
+  } @else if (failureText(); as message) {
+    <app-state-message
+      class="min-h-[340px] rounded-tile border border-glass-line bg-glass p-5 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="message"
+      [actionLabel]="'ui.tryAgain' | transloco"
+      (action)="reload()"
+    />
   }
+}
 
-  <hlm-dialog [state]="pendingAction() ? 'open' : 'closed'" (closed)="cancel()">
-    <hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-md">
-      @if (pendingAction(); as action) {
-        <hlm-dialog-header>
-          <h2 hlmDialogTitle>{{ dialogCopy[action].title }}</h2>
-          <p hlmDialogDescription>{{ dialogCopy[action].body(playlist()?.title ?? '') }}</p>
-        </hlm-dialog-header>
-
-        <div class="space-y-1">
-          <label hlmLabel for="playlist-action-reason">Reason (optional)</label>
-          <textarea
-            id="playlist-action-reason"
-            class="dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 w-full min-w-0 rounded-md border bg-transparent px-2.5 py-1.5 text-sm shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:ring-3 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
-            rows="2"
-            [attr.maxlength]="reasonMaxLength"
-            [disabled]="working()"
-            [value]="reason()"
-            (input)="reason.set($any($event.target).value)"
-          ></textarea>
-        </div>
-
-        <hlm-dialog-footer>
-          <button hlmBtn variant="outline" type="button" (click)="cancel()">Cancel</button>
-          <button
-            hlmBtn
-            [variant]="dialogCopy[action].destructive ? 'destructive' : 'default'"
-            type="button"
-            [disabled]="working()"
-            (click)="confirm()"
-          >
-            {{ working() ? 'Working…' : dialogCopy[action].confirm }}
-          </button>
-        </hlm-dialog-footer>
-      }
-    </hlm-dialog-content>
-  </hlm-dialog>
-</section>
+<hlm-dialog [state]="pendingAction() ? 'open' : 'closed'" (closed)="cancel()">
+  <hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-md">
+    @if (pendingAction(); as action) {
+      <hlm-dialog-header>
+        <h2 hlmDialogTitle>{{ dialogCopy[action].title | transloco }}</h2>
+        <p hlmDialogDescription>
+          {{ dialogCopy[action].body | transloco: { title: playlist()?.title ?? '' } }}
+        </p>
+      </hlm-dialog-header>
+      <div class="space-y-1.5">
+        <label hlmLabel for="playlist-action-reason">{{ 'ui.confirm.reason' | transloco }}</label>
+        <textarea
+          #reasonField
+          id="playlist-action-reason"
+          class="w-full min-w-0 rounded-xl border border-glass-line bg-foreground/5 px-3 py-2 text-sm outline-none transition-[border-color,box-shadow] focus-visible:border-primary/60 focus-visible:ring-3 focus-visible:ring-primary/20 disabled:opacity-50"
+          rows="2"
+          [attr.maxlength]="reasonMaxLength"
+          [disabled]="working()"
+          [value]="reason()"
+          (input)="reason.set(reasonField.value)"
+        ></textarea>
+      </div>
+      <hlm-dialog-footer>
+        <button hlmBtn variant="ghost" type="button" (click)="cancel()">
+          {{ 'ui.cancel' | transloco }}
+        </button>
+        <button
+          hlmBtn
+          [variant]="dialogCopy[action].destructive ? 'destructive' : 'default'"
+          type="button"
+          [disabled]="working()"
+          (click)="confirm()"
+        >
+          {{ working() ? ('ui.working' | transloco) : (dialogCopy[action].confirm | transloco) }}
+        </button>
+      </hlm-dialog-footer>
+    }
+  </hlm-dialog-content>
+</hlm-dialog>

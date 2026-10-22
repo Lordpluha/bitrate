@@ -10,10 +10,9 @@ import {
 import { SessionStore } from '@application/session'
 import type { PlaylistDetail } from '@domain/playlist'
 import { ResourceNotFoundError, ResourceWriteError } from '@domain/shared'
-import { TranslocoTestingModule } from '@jsverse/transloco'
-import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { PlaylistDetailPage } from './playlist-detail'
+import { provideTestTransloco } from '@testing/transloco'
 
 const ADMIN_STAFF = {
   id: '3f2504e0-4f89-41d3-9a0c-0305e82c3301',
@@ -57,13 +56,8 @@ const restorePlaylist = vi.fn<(input: unknown) => Promise<void>>()
 function create(permissions: string[] = []): void {
   TestBed.resetTestingModule()
   TestBed.configureTestingModule({
-    imports: [
-      TranslocoTestingModule.forRoot({
-        langs: { en: {}, uk: {} },
-        translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-      }),
-    ],
     providers: [
+      ...provideTestTransloco(),
       provideZonelessChangeDetection(),
       provideRouter([]),
       { provide: GetPlaylistUseCase, useValue: { execute: getPlaylist } },
@@ -112,7 +106,7 @@ describe('PlaylistDetailPage', () => {
     expect(rows).toHaveLength(2)
     expect(rows[0]?.textContent).toContain('Intro')
     expect(rows[0]?.querySelector('a')?.getAttribute('href')).toBe(`/catalog/${TRACK_ID}`)
-    expect(host.textContent).toContain('public')
+    expect(host.textContent).toContain('Public')
   })
 
   it('says when only the first tracks of a longer playlist are shown', async () => {
@@ -130,7 +124,7 @@ describe('PlaylistDetailPage', () => {
 
     const { host } = await render()
 
-    expect(host.querySelector('[role="alert"]')?.textContent).toContain('could not be found')
+    expect(host.querySelector('[role="alert"]')?.textContent).toContain('Playlist not found')
   })
 
   it('shows a load failure, not not-found, when the load fails for another reason', async () => {
@@ -140,8 +134,8 @@ describe('PlaylistDetailPage', () => {
     const { host } = await render()
 
     const alert = host.querySelector('[role="alert"]')
-    expect(alert?.textContent).toContain('Could not load this playlist.')
-    expect(alert?.textContent).not.toContain('could not be found')
+    expect(alert?.textContent).toContain('Couldn’t load this playlist')
+    expect(alert?.textContent).not.toContain('Playlist not found')
   })
 
   it('offers Hide and Take down, not Un-hide or Restore, for an active public playlist', async () => {
@@ -152,7 +146,7 @@ describe('PlaylistDetailPage', () => {
 
     expect(buttonLabelled(host, 'Hide')).toBeDefined()
     expect(buttonLabelled(host, 'Take down')).toBeDefined()
-    expect(buttonLabelled(host, 'Un-hide')).toBeUndefined()
+    expect(buttonLabelled(host, 'Make public')).toBeUndefined()
     expect(buttonLabelled(host, 'Restore')).toBeUndefined()
   })
 
@@ -165,7 +159,7 @@ describe('PlaylistDetailPage', () => {
 
     const { host } = await render()
 
-    expect(buttonLabelled(host, 'Un-hide')).toBeDefined()
+    expect(buttonLabelled(host, 'Make public')).toBeDefined()
     expect(buttonLabelled(host, 'Restore')).toBeDefined()
     expect(buttonLabelled(host, 'Hide')).toBeUndefined()
     expect(buttonLabelled(host, 'Take down')).toBeUndefined()
@@ -189,7 +183,6 @@ describe('PlaylistDetailPage', () => {
 
     expect(buttonLabelled(host, 'Hide')).toBeUndefined()
     expect(buttonLabelled(host, 'Take down')).toBeUndefined()
-    expect(host.textContent).toContain('No actions available.')
   })
 
   it('does not hide until the dialog is confirmed, then sends isPublic false and the reason', async () => {
@@ -227,9 +220,9 @@ describe('PlaylistDetailPage', () => {
     create()
 
     const { host, settle } = await render()
-    buttonLabelled(host, 'Un-hide')?.click()
+    buttonLabelled(host, 'Make public')?.click()
     await settle()
-    buttonLabelled(document.body, 'Yes, un-hide')?.click()
+    buttonLabelled(document.body, 'Yes, make public')?.click()
     await settle()
 
     expect(setVisibility).toHaveBeenCalledWith({
@@ -283,9 +276,9 @@ describe('PlaylistDetailPage', () => {
     create()
 
     const { host, settle } = await render()
-    buttonLabelled(host, 'Un-hide')?.click()
+    buttonLabelled(host, 'Make public')?.click()
     await settle()
-    buttonLabelled(document.body, 'Yes, un-hide')?.click()
+    buttonLabelled(document.body, 'Yes, make public')?.click()
     await settle()
 
     expect(host.querySelector('[role="alert"]')?.textContent).toContain(

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core'
 import { ActivatedRoute, RouterLink } from '@angular/router'
+import { TranslocoService } from '@jsverse/transloco'
 import {
   DeactivateArtistUseCase,
   GetArtistUseCase,
@@ -18,7 +19,8 @@ import {
 import { ConfirmAction } from '@presentation/components'
 import {
   isStaleStateError,
-  resourceWriteErrorMessage,
+  resourceWriteError,
+  type Notice,
 } from '@presentation/pages/shared/resource-write-error.message'
 import { createDetailResource } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
@@ -48,6 +50,7 @@ type ArmedAction = 'deactivate' | 'restore' | 'revoke-sessions' | null
   templateUrl: './artist-detail.html',
 })
 export class ArtistDetailPage {
+  private readonly transloco = inject(TranslocoService)
   private readonly route = inject(ActivatedRoute)
   private readonly getArtist = inject(GetArtistUseCase)
   private readonly deactivateArtist = inject(DeactivateArtistUseCase)
@@ -106,7 +109,7 @@ export class ArtistDetailPage {
       await this.record.reload()
     } catch (error) {
       this.failure.set(
-        resourceWriteErrorMessage({ error, action: 'deactivate', label: current.username }),
+        this.say(resourceWriteError({ error, action: 'deactivate', label: current.username })),
       )
     } finally {
       this.verifying.set(false)
@@ -142,17 +145,24 @@ export class ArtistDetailPage {
       await this.record.reload()
     } catch (error) {
       this.failure.set(
-        resourceWriteErrorMessage({
-          error,
-          action: toWriteAction(action),
-          label: current.username,
-        }),
+        this.say(
+          resourceWriteError({
+            error,
+            action: toWriteAction(action),
+            label: current.username,
+          }),
+        ),
       )
       if (isStaleStateError(error)) await this.record.reload()
     } finally {
       this.pending.set(false)
       this.armed.set(null)
     }
+  }
+
+  /** A write failure in the active language; shown until the operator acts again. */
+  private say(notice: Notice): string {
+    return this.transloco.translate(notice.key, notice.params ?? {})
   }
 }
 

@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import {
-  attemptOutcomeLabel,
   hasDiagnostics,
   isAttemptRunningTooLong,
   type ProcessingAttempt,
@@ -45,16 +44,6 @@ function attempt(overrides: Partial<ProcessingAttempt> = {}): ProcessingAttempt 
     ...overrides,
   }
 }
-
-describe('attemptOutcomeLabel', () => {
-  it('labels every status', () => {
-    expect(attemptOutcomeLabel(attempt({ status: 'RUNNING' }))).toBe('Running')
-    expect(attemptOutcomeLabel(attempt({ status: 'SUCCEEDED' }))).toBe('Succeeded')
-    expect(attemptOutcomeLabel(attempt({ status: 'FAILED' }))).toBe('Failed')
-    expect(attemptOutcomeLabel(attempt({ status: 'SUPERSEDED' }))).toBe('Superseded')
-    expect(attemptOutcomeLabel(attempt({ status: 'STALLED' }))).toBe('Stalled')
-  })
-})
 
 describe('hasDiagnostics', () => {
   it('is false for a clean success with nothing to show', () => {

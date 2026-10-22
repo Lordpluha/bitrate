@@ -1,7 +1,7 @@
+import { TranslocoPipe } from '@jsverse/transloco'
 import { ChangeDetectionStrategy, Component, effect, inject, input, untracked } from '@angular/core'
 import { ListProcessingAttemptsUseCase } from '@application/catalog'
 import {
-  attemptOutcomeLabel,
   hasDiagnostics,
   isAttemptRunningTooLong,
   type ProcessingAttempt,
@@ -16,11 +16,25 @@ import { HlmTableImports } from '@spartan-ng/helm/table'
 import { ProcessingAttemptDiagnostics } from './processing-attempt-diagnostics'
 
 const BADGE_VARIANT: Record<ProcessingAttempt['status'], NonNullable<BadgeVariants['variant']>> = {
-  SUCCEEDED: 'default',
+  SUCCEEDED: 'success',
   FAILED: 'destructive',
-  RUNNING: 'outline',
-  STALLED: 'outline',
-  SUPERSEDED: 'outline',
+  RUNNING: 'info',
+  STALLED: 'warning',
+  SUPERSEDED: 'secondary',
+}
+
+const STATUS_KEY: Record<ProcessingAttempt['status'], string> = {
+  RUNNING: 'attempt.status.RUNNING',
+  SUCCEEDED: 'attempt.status.SUCCEEDED',
+  FAILED: 'attempt.status.FAILED',
+  SUPERSEDED: 'attempt.status.SUPERSEDED',
+  STALLED: 'attempt.status.STALLED',
+}
+
+const TRIGGER_KEY: Record<ProcessingAttempt['trigger'], string> = {
+  UPLOAD: 'attempt.trigger.UPLOAD',
+  REPLACE: 'attempt.trigger.REPLACE',
+  REPROCESS: 'attempt.trigger.REPROCESS',
 }
 
 /**
@@ -31,6 +45,7 @@ const BADGE_VARIANT: Record<ProcessingAttempt['status'], NonNullable<BadgeVarian
 @Component({
   selector: 'app-processing-history',
   imports: [
+    TranslocoPipe,
     LocalizedDatePipe,
     CollectionStatus,
     Paginator,
@@ -50,7 +65,7 @@ export class ProcessingHistory {
   readonly legacyError = input<string | null>(null)
 
   protected readonly collection = createCollection<ProcessingAttempt>({
-    errorMessage: 'Could not load processing history.',
+    errorMessage: 'attempt.error',
     load: (page) => this.listAttempts.execute({ trackId: this.trackId(), page }),
   })
 
@@ -71,9 +86,8 @@ export class ProcessingHistory {
     return this.collection.reload()
   }
 
-  protected label(attempt: ProcessingAttempt): string {
-    return attemptOutcomeLabel(attempt)
-  }
+  protected readonly statusKey = STATUS_KEY
+  protected readonly triggerKey = TRIGGER_KEY
 
   protected badgeVariant(attempt: ProcessingAttempt): NonNullable<BadgeVariants['variant']> {
     return BADGE_VARIANT[attempt.status]
@@ -91,10 +105,11 @@ export class ProcessingHistory {
     return attempt.durationMs === null ? '—' : humaniseDurationMs(attempt.durationMs)
   }
 
-  protected retryLabel(attempt: ProcessingAttempt): string {
-    if (attempt.willRetry) return 'Will retry'
-    if (attempt.retryable) return 'Likely transient'
-    return ''
+  /** Whether the pipeline will try again or believes the error transient; `null` otherwise. */
+  protected retryKey(attempt: ProcessingAttempt): string | null {
+    if (attempt.willRetry) return 'attempt.willRetry'
+    if (attempt.retryable) return 'attempt.transient'
+    return null
   }
 
   protected showLegacyError(): boolean {
