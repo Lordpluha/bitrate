@@ -3,7 +3,7 @@
 import { cn } from '@bitrate/ui-react'
 import { useFollowArtist, useUnfollowArtist } from '@entities/Artist/api/client'
 import { useIsFollowingArtist } from '@entities/Artist/lib/useIsFollowingArtist'
-import { showApiErrorToast, showApiSuccessToast } from '@shared/api/feedback'
+import { showApiSuccessToast } from '@shared/api/feedback'
 import { useAuth } from '@shared/hooks/useAuth'
 
 export type FollowArtistButtonProps = {
@@ -29,21 +29,21 @@ export const FollowArtistButton = ({
   const unfollowArtist = useUnfollowArtist()
   const isPending = followArtist.isPending || unfollowArtist.isPending
 
-  const handleToggle = async () => {
+  /** Failures are toasted by the query client's mutation cache. */
+  const handleToggle = () => {
     if (isPending) return
 
-    try {
-      if (isFollowing) {
-        await unfollowArtist.mutateAsync({ params: { path: { id: artistId } } })
-        showApiSuccessToast(`Unfollowed ${artistName}`)
-        return
-      }
-
-      await followArtist.mutateAsync({ params: { path: { id: artistId } } })
-      showApiSuccessToast(`Following ${artistName}`)
-    } catch (error) {
-      showApiErrorToast(error, 'Could not update follow state')
+    const variables = { params: { path: { id: artistId } } }
+    if (isFollowing) {
+      unfollowArtist.mutate(variables, {
+        onSuccess: () => showApiSuccessToast(`Unfollowed ${artistName}`),
+      })
+      return
     }
+
+    followArtist.mutate(variables, {
+      onSuccess: () => showApiSuccessToast(`Following ${artistName}`),
+    })
   }
 
   if (!isAuthenticated) return null
@@ -60,7 +60,7 @@ export const FollowArtistButton = ({
       disabled={isPending}
       onClick={(event) => {
         event.stopPropagation()
-        void handleToggle()
+        handleToggle()
       }}
       type="button"
     >

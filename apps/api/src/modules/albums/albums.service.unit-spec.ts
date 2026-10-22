@@ -1,6 +1,7 @@
 import { ARTIST_AGREEMENT_VERSION } from '@common/legal'
 import { beforeEach, describe, expect, it } from '@jest/globals'
 import { NotFoundException } from '@nestjs/common'
+import { Prisma } from '@prisma/client'
 import { makeCacheMock, type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildAlbum, buildArtist } from './__tests__/fixtures/albums.fixtures'
 import { ALBUM_TRACKS_INCLUDE, AlbumsService } from './albums.service'
@@ -13,6 +14,12 @@ const buildAlbumWithTracks = (overrides: Partial<AlbumWithTracks> = {}): AlbumWi
   tracks: [],
   ...overrides,
 })
+
+const recordNotFound = () =>
+  new Prisma.PrismaClientKnownRequestError('Record to update not found.', {
+    clientVersion: 'test',
+    code: 'P2025',
+  })
 
 describe('AlbumsService', () => {
   let service: AlbumsService
@@ -147,6 +154,19 @@ describe('AlbumsService', () => {
     ).rejects.toBeInstanceOf(NotFoundException)
   })
 
+  it('create should refuse an artist that was soft-deleted', async () => {
+    prisma.artist.findUnique.mockResolvedValue({ id: 'artist-1', deletedAt: new Date() } as never)
+
+    await expect(
+      service.create('artist-1', { title: 'New Album', rightsConfirmed: true }),
+    ).rejects.toBeInstanceOf(NotFoundException)
+    expect(prisma.artist.findUnique).toHaveBeenCalledWith({
+      where: { id: 'artist-1' },
+      select: { id: true, deletedAt: true },
+    })
+    expect(prisma.album.create).not.toHaveBeenCalled()
+  })
+
   it('create should create album for artist', async () => {
     prisma.artist.findUnique.mockResolvedValue(buildArtist())
     const created = buildAlbum({ title: 'New Album' })
@@ -212,7 +232,7 @@ describe('AlbumsService', () => {
   })
 
   it('update should throw when album not found', async () => {
-    prisma.album.findFirst.mockResolvedValue(null)
+    prisma.album.update.mockRejectedValue(recordNotFound())
 
     await expect(service.update('artist-1', 'album-1', { title: 'Updated' })).rejects.toThrow(
       'Album not found or does not belong to the artist',
@@ -220,24 +240,20 @@ describe('AlbumsService', () => {
   })
 
   it('update should update album', async () => {
-    prisma.album.findFirst.mockResolvedValue(buildAlbum())
     const updated = buildAlbum({ title: 'Updated' })
     prisma.album.update.mockResolvedValue(updated)
 
     const result = await service.update('artist-1', 'album-1', { title: 'Updated' })
 
-    expect(prisma.album.findFirst).toHaveBeenCalledWith({
-      where: { id: 'album-1', artistId: 'artist-1', deletedAt: null },
-    })
+    expect(prisma.album.findFirst).not.toHaveBeenCalled()
     expect(prisma.album.update).toHaveBeenCalledWith({
-      where: { id: 'album-1' },
+      where: { id: 'album-1', artistId: 'artist-1', deletedAt: null },
       data: { title: 'Updated' },
     })
     expect(result).toBe(updated)
   })
 
   it('update should pass description when provided', async () => {
-    prisma.album.findFirst.mockResolvedValue(buildAlbum())
     const updated = buildAlbum({ title: 'Updated', description: 'new desc' })
     prisma.album.update.mockResolvedValue(updated)
 
@@ -247,14 +263,14 @@ describe('AlbumsService', () => {
     })
 
     expect(prisma.album.update).toHaveBeenCalledWith({
-      where: { id: 'album-1' },
+      where: { id: 'album-1', artistId: 'artist-1', deletedAt: null },
       data: { title: 'Updated', description: 'new desc' },
     })
     expect(result).toBe(updated)
   })
 
   it('delete should throw when album not found', async () => {
-    prisma.album.findFirst.mockResolvedValue(null)
+    prisma.album.update.mockRejectedValue(recordNotFound())
 
     await expect(service.delete('artist-1', 'album-1')).rejects.toThrow(
       'Album not found or does not belong to the artist',
@@ -262,17 +278,14 @@ describe('AlbumsService', () => {
   })
 
   it('delete should soft-delete album', async () => {
-    prisma.album.findFirst.mockResolvedValue(buildAlbum())
     const deleted = buildAlbum()
     prisma.album.update.mockResolvedValue(deleted)
 
     const result = await service.delete('artist-1', 'album-1')
 
-    expect(prisma.album.findFirst).toHaveBeenCalledWith({
-      where: { id: 'album-1', artistId: 'artist-1', deletedAt: null },
-    })
+    expect(prisma.album.findFirst).not.toHaveBeenCalled()
     expect(prisma.album.update).toHaveBeenCalledWith({
-      where: { id: 'album-1' },
+      where: { id: 'album-1', artistId: 'artist-1', deletedAt: null },
       data: { deletedAt: expect.any(Date) },
       omit: { artistId: true },
     })

@@ -26,6 +26,11 @@ const useRevokeSessionMutation = (revokeAllOthers: boolean) => {
   const queryClient = useQueryClient()
 
   return useMutation({
+    meta: {
+      errorMessage: revokeAllOthers
+        ? 'Could not revoke other sessions'
+        : 'Could not revoke session',
+    },
     mutationFn: async (sessionId?: string) => {
       const { response } = revokeAllOthers
         ? await clientFetchClient.DELETE('/api/v1/auth/sessions', {})

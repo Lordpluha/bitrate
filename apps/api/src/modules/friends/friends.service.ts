@@ -25,7 +25,6 @@ const PUBLIC_USER_SELECT = {
 /** A friend plus the player data their presence is derived from. */
 const FRIEND_SELECT = {
   ...PUBLIC_USER_SELECT,
-  deletedAt: true,
   devices: { orderBy: { lastSeenAt: 'desc' }, take: 1, select: { lastSeenAt: true } },
   playerState: {
     select: {
@@ -75,42 +74,17 @@ export class FriendsService {
    */
   async sendRequest(senderId: string, receiverId: string) {
     if (senderId === receiverId) throw new BadRequestException(FRIEND_ERRORS.SELF)
-    const receiver = await this.prisma.user.findFirst({
-      where: { id: receiverId, deletedAt: null },
-      select: { id: true },
-    })
+    const { receiver, friendship, theirs, mine } = await this.requestContext(senderId, receiverId)
     if (!receiver) throw new NotFoundException(FRIEND_ERRORS.USER_NOT_FOUND)
-    const friendship = await this.prisma.friendship.findUnique({
-      where: { userAId_userBId: orderedPair(senderId, receiverId) },
-      select: { userAId: true },
-    })
     if (friendship) throw new ConflictException(FRIEND_ERRORS.ALREADY_FRIENDS)
 
-    const theirs = await this.prisma.friendRequest.findUnique({
-      where: { senderId_receiverId: { senderId: receiverId, receiverId: senderId } },
-    })
     if (theirs) {
       await this.befriend(senderId, receiverId)
       return { status: 'accepted' as const }
     }
 
-    const mine = await this.findPending(senderId, receiverId)
     if (mine) return { request: mine, status: 'pending' as const }
-
-    try {
-      const request = await this.prisma.friendRequest.create({
-        data: { receiverId, senderId },
-        select: { createdAt: true, id: true },
-      })
-      await this.queue(() => this.notifications.friendRequested({ requestId: request.id }))
-      return { request, status: 'pending' as const }
-    } catch (error) {
-      if (!isPrismaP2002(error)) throw error
-      /* a concurrent call created it first */
-      const request = await this.findPending(senderId, receiverId)
-      if (!request) throw error
-      return { request, status: 'pending' as const }
-    }
+    return { request: await this.createRequest(senderId, receiverId), status: 'pending' as const }
   }
 
   /** Accepts a request addressed to the caller. */
@@ -146,44 +120,9 @@ export class FriendsService {
 
   /** The caller's friends with their presence: listening first, then online, away, offline. */
   async listFriends(userId: string) {
-    const friendships = await this.prisma.friendship.findMany({
-      where: { OR: [{ userAId: userId }, { userBId: userId }] },
-      take: MAX_FRIENDS,
-      select: {
-        createdAt: true,
-        userAId: true,
-        userA: { select: FRIEND_SELECT },
-        userB: { select: FRIEND_SELECT },
-      },
-    })
+    const friendships = await this.loadFriendships(userId)
     const now = new Date()
-    const friends = friendships.flatMap(({ createdAt, userA, userAId, userB }) => {
-      const friend = userAId === userId ? userB : userA
-      if (!friend || friend.deletedAt) return []
-      const { deletedAt: _deletedAt, devices, playerState, settings, ...user } = friend
-      const track = playerState?.currentTrack
-      const playable =
-        track && !track.deletedAt && track.processingStatus === 'READY'
-          ? { artist: track.artist, cover: track.cover, id: track.id, title: track.title }
-          : null
-      const presence = derivePresence({
-        deviceSeenAt: devices[0]?.lastSeenAt ?? null,
-        now,
-        player: playerState
-          ? { isPlaying: playerState.isPlaying, track: playable, updatedAt: playerState.updatedAt }
-          : null,
-        sharesListening:
-          (settings?.showListeningActivity ?? true) && !(settings?.privateSession ?? false),
-      })
-      return [{ friendsSince: createdAt, presence, user }]
-    })
-    return friends.sort(
-      (a, b) =>
-        Number(!a.presence.nowPlaying) - Number(!b.presence.nowPlaying) ||
-        STATUS_ORDER[a.presence.status] - STATUS_ORDER[b.presence.status] ||
-        (b.presence.lastActiveAt?.getTime() ?? 0) - (a.presence.lastActiveAt?.getTime() ?? 0) ||
-        a.user.username.localeCompare(b.user.username),
-    )
+    return friendships.map((friendship) => toFriendView(friendship, now)).sort(compareFriends)
   }
 
   /** Pending requests sent to the caller (`incoming`) or by the caller (`outgoing`), newest first. */
@@ -211,6 +150,70 @@ export class FriendsService {
       where: { senderId_receiverId: { senderId, receiverId } },
       select: { createdAt: true, id: true },
     })
+  }
+
+  /** Everything `sendRequest` decides on; independent reads, checked in order by the caller. */
+  private async requestContext(senderId: string, receiverId: string) {
+    const [receiver, friendship, theirs, mine] = await Promise.all([
+      this.prisma.user.findFirst({
+        where: { id: receiverId, deletedAt: null },
+        select: { id: true },
+      }),
+      this.prisma.friendship.findUnique({
+        where: { userAId_userBId: orderedPair(senderId, receiverId) },
+        select: { userAId: true },
+      }),
+      this.prisma.friendRequest.findUnique({
+        where: { senderId_receiverId: { senderId: receiverId, receiverId: senderId } },
+        select: { id: true },
+      }),
+      this.findPending(senderId, receiverId),
+    ])
+    return { receiver, friendship, theirs, mine }
+  }
+
+  /** Creates the pending request and notifies the receiver; a concurrent duplicate is reused. */
+  private async createRequest(senderId: string, receiverId: string) {
+    try {
+      const request = await this.prisma.friendRequest.create({
+        data: { receiverId, senderId },
+        select: { createdAt: true, id: true },
+      })
+      await this.queue(() => this.notifications.friendRequested({ requestId: request.id }))
+      return request
+    } catch (error) {
+      if (!isPrismaP2002(error)) throw error
+      /* a concurrent call created it first */
+      const request = await this.findPending(senderId, receiverId)
+      if (!request) throw error
+      return request
+    }
+  }
+
+  /** The oldest `MAX_FRIENDS` friendships with the other person's presence data. */
+  private async loadFriendships(userId: string): Promise<FriendshipRecord[]> {
+    // A friendship stores the smaller id first, so the caller is on either side. Each query
+    // loads only the other person, and deleted accounts are left out before the cap applies.
+    const [asUserA, asUserB] = await Promise.all([
+      this.prisma.friendship.findMany({
+        where: { userAId: userId, userB: { deletedAt: null } },
+        orderBy: [{ createdAt: 'asc' }, { userBId: 'asc' }],
+        take: MAX_FRIENDS,
+        select: { createdAt: true, userB: { select: FRIEND_SELECT } },
+      }),
+      this.prisma.friendship.findMany({
+        where: { userBId: userId, userA: { deletedAt: null } },
+        orderBy: [{ createdAt: 'asc' }, { userAId: 'asc' }],
+        take: MAX_FRIENDS,
+        select: { createdAt: true, userA: { select: FRIEND_SELECT } },
+      }),
+    ])
+    return [
+      ...asUserA.map(({ createdAt, userB }) => ({ createdAt, friend: userB })),
+      ...asUserB.map(({ createdAt, userA }) => ({ createdAt, friend: userA })),
+    ]
+      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+      .slice(0, MAX_FRIENDS)
   }
 
   /** `accepterId` takes up `requesterId`'s request: one friendship, no requests left either way. */
@@ -244,4 +247,41 @@ export class FriendsService {
       )
     }
   }
+}
+
+interface FriendshipRecord {
+  createdAt: Date
+  friend: Prisma.UserGetPayload<{ select: typeof FRIEND_SELECT }>
+}
+
+type FriendView = ReturnType<typeof toFriendView>
+
+/** The public profile plus presence; a removed or unprocessed track is not shown as playing. */
+function toFriendView({ createdAt, friend }: FriendshipRecord, now: Date) {
+  const { devices, playerState, settings, ...user } = friend
+  const track = playerState?.currentTrack
+  const playable =
+    track && !track.deletedAt && track.processingStatus === 'READY'
+      ? { artist: track.artist, cover: track.cover, id: track.id, title: track.title }
+      : null
+  const presence = derivePresence({
+    deviceSeenAt: devices[0]?.lastSeenAt ?? null,
+    now,
+    player: playerState
+      ? { isPlaying: playerState.isPlaying, track: playable, updatedAt: playerState.updatedAt }
+      : null,
+    sharesListening:
+      (settings?.showListeningActivity ?? true) && !(settings?.privateSession ?? false),
+  })
+  return { friendsSince: createdAt, presence, user }
+}
+
+/** Listening first, then online, away, offline; most recently active, then by name. */
+function compareFriends(a: FriendView, b: FriendView): number {
+  return (
+    Number(!a.presence.nowPlaying) - Number(!b.presence.nowPlaying) ||
+    STATUS_ORDER[a.presence.status] - STATUS_ORDER[b.presence.status] ||
+    (b.presence.lastActiveAt?.getTime() ?? 0) - (a.presence.lastActiveAt?.getTime() ?? 0) ||
+    a.user.username.localeCompare(b.user.username)
+  )
 }

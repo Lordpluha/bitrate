@@ -57,83 +57,53 @@ function colorToHex(color) {
   return rgb ? rgbToHex(rgb) : color
 }
 
+const IGNORED = new Set(['none', 'transparent'])
+/** A fill/stroke paint that is a colour (not `none`, `transparent` or a `url(#…)` reference). */
+const isPaintColor = (color) => !IGNORED.has(color) && !color.startsWith('url(')
+const isStopColor = (color) => !IGNORED.has(color)
+
+/**
+ * Every colour value the SVG paints with, lower-cased, in scan order: fill/stroke attributes,
+ * fill/stroke in inline styles, then gradient stop-color attributes and stop inline styles.
+ */
+function* paintedColors(svgContent) {
+  for (const match of svgContent.matchAll(/fill="([^"]+)"/g))
+    yield [match[1].toLowerCase(), isPaintColor]
+  for (const match of svgContent.matchAll(/stroke="([^"]+)"/g))
+    yield [match[1].toLowerCase(), isPaintColor]
+  for (const match of svgContent.matchAll(/style="([^"]+)"/g)) {
+    const fill = match[1].match(/fill\s*:\s*([^;]+)/i)
+    if (fill) yield [fill[1].trim().toLowerCase(), isPaintColor]
+    const stroke = match[1].match(/stroke\s*:\s*([^;]+)/i)
+    if (stroke) yield [stroke[1].trim().toLowerCase(), isPaintColor]
+  }
+  for (const match of svgContent.matchAll(/stop-color="([^"]+)"/g))
+    yield [match[1].toLowerCase(), isStopColor]
+  for (const match of svgContent.matchAll(/<stop[^>]*style="([^"]+)"/g)) {
+    const stop = match[1].match(/stop-color\s*:\s*([^;]+)/i)
+    if (stop) yield [stop[1].trim().toLowerCase(), isStopColor]
+  }
+}
+
+/**
+ * Собирает цвета SVG за один проход
+ * @returns {Map<string, string>} - mapping HEX -> первое оригинальное значение, в порядке появления
+ */
+export function collectColors(svgContent) {
+  const colorMap = new Map()
+  for (const [color, accepts] of paintedColors(svgContent)) {
+    if (!accepts(color)) continue
+    const hexColor = colorToHex(color)
+    if (!colorMap.has(hexColor)) colorMap.set(hexColor, color)
+  }
+  return colorMap
+}
+
 /**
  * Извлекает все уникальные цвета из SVG
  */
 export function extractColors(svgContent) {
-  const colors = new Set()
-
-  // Ищем fill и stroke атрибуты
-  const fillMatches = svgContent.matchAll(/fill="([^"]+)"/g)
-  const strokeMatches = svgContent.matchAll(/stroke="([^"]+)"/g)
-
-  for (const match of fillMatches) {
-    const color = match[1].toLowerCase()
-    if (color !== 'none' && color !== 'transparent' && !color.startsWith('url(')) {
-      colors.add(color)
-    }
-  }
-
-  for (const match of strokeMatches) {
-    const color = match[1].toLowerCase()
-    if (color !== 'none' && color !== 'transparent' && !color.startsWith('url(')) {
-      colors.add(color)
-    }
-  }
-
-  // Ищем цвета в inline-стилях (style="fill: #fff; stroke: #000")
-  const styleMatches = svgContent.matchAll(/style="([^"]+)"/g)
-  for (const match of styleMatches) {
-    const styleContent = match[1]
-
-    // Извлекаем fill из стилей
-    const fillStyleMatch = styleContent.match(/fill\s*:\s*([^;]+)/i)
-    if (fillStyleMatch) {
-      const color = fillStyleMatch[1].trim().toLowerCase()
-      if (color !== 'none' && color !== 'transparent' && !color.startsWith('url(')) {
-        colors.add(color)
-      }
-    }
-
-    // Извлекаем stroke из стилей
-    const strokeStyleMatch = styleContent.match(/stroke\s*:\s*([^;]+)/i)
-    if (strokeStyleMatch) {
-      const color = strokeStyleMatch[1].trim().toLowerCase()
-      if (color !== 'none' && color !== 'transparent' && !color.startsWith('url(')) {
-        colors.add(color)
-      }
-    }
-  }
-
-  // Ищем цвета в градиентах (stop-color атрибут)
-  const stopColorMatches = svgContent.matchAll(/stop-color="([^"]+)"/g)
-  for (const match of stopColorMatches) {
-    const color = match[1].toLowerCase()
-    if (color !== 'none' && color !== 'transparent') {
-      colors.add(color)
-    }
-  }
-
-  // Ищем stop-color в inline-стилях градиентов
-  const stopStyleMatches = svgContent.matchAll(/<stop[^>]*style="([^"]+)"/g)
-  for (const match of stopStyleMatches) {
-    const styleContent = match[1]
-    const stopColorMatch = styleContent.match(/stop-color\s*:\s*([^;]+)/i)
-    if (stopColorMatch) {
-      const color = stopColorMatch[1].trim().toLowerCase()
-      if (color !== 'none' && color !== 'transparent') {
-        colors.add(color)
-      }
-    }
-  }
-
-  // Конвертируем все цвета в HEX
-  const hexColors = new Set()
-  for (const color of colors) {
-    hexColors.add(colorToHex(color))
-  }
-
-  return hexColors
+  return new Set(collectColors(svgContent).keys())
 }
 
 /**
@@ -141,104 +111,27 @@ export function extractColors(svgContent) {
  * @returns {Map<string, string>} - mapping HEX -> оригинальное значение
  */
 export function extractColorsWithOriginals(svgContent) {
-  const colorMap = new Map() // HEX -> original value
+  return collectColors(svgContent)
+}
 
-  // Ищем fill и stroke атрибуты
-  const fillMatches = svgContent.matchAll(/fill="([^"]+)"/g)
-  const strokeMatches = svgContent.matchAll(/stroke="([^"]+)"/g)
-
-  for (const match of fillMatches) {
-    const color = match[1].toLowerCase()
-    if (color !== 'none' && color !== 'transparent' && !color.startsWith('url(')) {
-      const hexColor = colorToHex(color)
-      if (!colorMap.has(hexColor)) {
-        colorMap.set(hexColor, color)
-      }
-    }
+/**
+ * Одноцветен ли набор HEX-цветов: пусто или один чёрный/белый цвет
+ * @param {Set<string>} colors
+ */
+export function colorsAreMonochrome(colors) {
+  if (colors.size === 0) return true
+  if (colors.size === 1) {
+    const [color] = colors
+    return color === '#000000' || color === '#ffffff'
   }
-
-  for (const match of strokeMatches) {
-    const color = match[1].toLowerCase()
-    if (color !== 'none' && color !== 'transparent' && !color.startsWith('url(')) {
-      const hexColor = colorToHex(color)
-      if (!colorMap.has(hexColor)) {
-        colorMap.set(hexColor, color)
-      }
-    }
-  }
-
-  // Ищем цвета в inline-стилях
-  const styleMatches = svgContent.matchAll(/style="([^"]+)"/g)
-  for (const match of styleMatches) {
-    const styleContent = match[1]
-
-    const fillStyleMatch = styleContent.match(/fill\s*:\s*([^;]+)/i)
-    if (fillStyleMatch) {
-      const color = fillStyleMatch[1].trim().toLowerCase()
-      if (color !== 'none' && color !== 'transparent' && !color.startsWith('url(')) {
-        const hexColor = colorToHex(color)
-        if (!colorMap.has(hexColor)) {
-          colorMap.set(hexColor, color)
-        }
-      }
-    }
-
-    const strokeStyleMatch = styleContent.match(/stroke\s*:\s*([^;]+)/i)
-    if (strokeStyleMatch) {
-      const color = strokeStyleMatch[1].trim().toLowerCase()
-      if (color !== 'none' && color !== 'transparent' && !color.startsWith('url(')) {
-        const hexColor = colorToHex(color)
-        if (!colorMap.has(hexColor)) {
-          colorMap.set(hexColor, color)
-        }
-      }
-    }
-  }
-
-  // Ищем цвета в градиентах
-  const stopColorMatches = svgContent.matchAll(/stop-color="([^"]+)"/g)
-  for (const match of stopColorMatches) {
-    const color = match[1].toLowerCase()
-    if (color !== 'none' && color !== 'transparent') {
-      const hexColor = colorToHex(color)
-      if (!colorMap.has(hexColor)) {
-        colorMap.set(hexColor, color)
-      }
-    }
-  }
-
-  const stopStyleMatches = svgContent.matchAll(/<stop[^>]*style="([^"]+)"/g)
-  for (const match of stopStyleMatches) {
-    const styleContent = match[1]
-    const stopColorMatch = styleContent.match(/stop-color\s*:\s*([^;]+)/i)
-    if (stopColorMatch) {
-      const color = stopColorMatch[1].trim().toLowerCase()
-      if (color !== 'none' && color !== 'transparent') {
-        const hexColor = colorToHex(color)
-        if (!colorMap.has(hexColor)) {
-          colorMap.set(hexColor, color)
-        }
-      }
-    }
-  }
-
-  return colorMap
+  return false
 }
 
 /**
  * Определяет, является ли SVG одноцветным
  */
 export function isMonochrome(svgContent) {
-  const colors = extractColors(svgContent)
-
-  // Если нет цветов или только один цвет (черный/белый), то одноцветная
-  if (colors.size === 0) return true
-  if (colors.size === 1) {
-    const color = Array.from(colors)[0]
-    return color === '#000000' || color === '#ffffff'
-  }
-
-  return false
+  return colorsAreMonochrome(extractColors(svgContent))
 }
 
 /**
@@ -267,8 +160,8 @@ export function createColorVariableMapping(colors, varNames = []) {
  * @returns {{colors: Set<string>, mapping: Map<string, string>, originals: Map<string, string>}}
  */
 export function extractColorsWithMapping(svgContent, varNames = []) {
-  const colors = extractColors(svgContent)
-  const originals = extractColorsWithOriginals(svgContent)
+  const originals = collectColors(svgContent)
+  const colors = new Set(originals.keys())
   const mapping = createColorVariableMapping(colors, varNames)
 
   return { colors, mapping, originals }

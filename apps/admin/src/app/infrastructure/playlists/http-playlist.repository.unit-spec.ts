@@ -2,7 +2,7 @@ import { provideHttpClient } from '@angular/common/http'
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing'
 import { TestBed } from '@angular/core/testing'
 import { PlaylistRepository } from '@domain/playlist'
-import { ResourceWriteError } from '@domain/shared'
+import { ResourceNotFoundError, ResourceWriteError } from '@domain/shared'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { ADMIN_API } from '../http/api.config'
 import { HttpPlaylistRepository } from './http-playlist.repository'
@@ -168,5 +168,16 @@ describe('HttpPlaylistRepository', () => {
 
     const error = await done.catch((caught: unknown) => caught)
     expect((error as ResourceWriteError).reason).toBe('not-found')
+  })
+
+  it('maps a 404 on load to ResourceNotFoundError and passes any other failure through', async () => {
+    const missing = repository.getById(ID)
+    http.expectOne(`${BASE}/${ID}`).flush(null, { status: 404, statusText: 'Not Found' })
+    await expect(missing).rejects.toBeInstanceOf(ResourceNotFoundError)
+
+    const broken = repository.getById(ID)
+    http.expectOne(`${BASE}/${ID}`).flush(null, { status: 500, statusText: 'Server Error' })
+    const error = await broken.catch((caught: unknown) => caught)
+    expect(error).not.toBeInstanceOf(ResourceNotFoundError)
   })
 })

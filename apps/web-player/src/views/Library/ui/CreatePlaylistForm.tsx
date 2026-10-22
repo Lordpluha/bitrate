@@ -22,23 +22,29 @@ export const CreatePlaylistForm = ({
   const [description, setDescription] = useState('')
   const [isPublic, setIsPublic] = useState(true)
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  /** Failures are toasted by the query client's mutation cache. */
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const normalizedTitle = title.trim()
     if (!normalizedTitle) return
 
-    const playlist = await createPlaylist.mutateAsync({
-      description: description.trim() || undefined,
-      isPublic,
-      title: normalizedTitle,
-    })
-
-    showApiSuccessToast('Playlist created')
-    setTitle('')
-    setDescription('')
-    setIsPublic(true)
-    onClose()
-    router.push(ROUTES.playlist(playlist.id))
+    createPlaylist.mutate(
+      {
+        description: description.trim() || undefined,
+        isPublic,
+        title: normalizedTitle,
+      },
+      {
+        onSuccess: (playlist) => {
+          showApiSuccessToast('Playlist created')
+          setTitle('')
+          setDescription('')
+          setIsPublic(true)
+          onClose()
+          router.push(ROUTES.playlist(playlist.id))
+        },
+      },
+    )
   }
 
   if (!isOpen) return null

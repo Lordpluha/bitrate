@@ -5,7 +5,12 @@ import {
   LOCALE_ID,
   provideBrowserGlobalErrorListeners,
 } from '@angular/core'
-import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router'
+import {
+  provideRouter,
+  TitleStrategy,
+  withComponentInputBinding,
+  withInMemoryScrolling,
+} from '@angular/router'
 import { DEFAULT_LOCALE, INTL_LOCALE_TAG, readPersistedLocale } from '@domain/locale'
 import {
   authInterceptor,
@@ -15,6 +20,7 @@ import {
 } from '@infrastructure'
 import { provideTransloco } from '@jsverse/transloco'
 import { provideTranslocoMessageformat } from '@jsverse/transloco-messageformat'
+import { OperatorTitleStrategy } from '@presentation/navigation'
 import { routes } from './app.routes'
 
 /**
@@ -42,6 +48,7 @@ export const appConfig: ApplicationConfig = {
       withComponentInputBinding(),
       withInMemoryScrolling({ anchorScrolling: 'enabled' }),
     ),
+    { provide: TitleStrategy, useClass: OperatorTitleStrategy },
     provideHttpClient(withFetch(), withInterceptors([authInterceptor, localeInterceptor])),
     provideAdminInfrastructure(),
     { provide: LOCALE_ID, useValue: INTL_LOCALE_TAG[readPersistedLocale()] },

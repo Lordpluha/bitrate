@@ -35,6 +35,7 @@ jest.mock(
 
 jest.mock('node:fs/promises', () => ({
   rm: jest.fn().mockResolvedValue(undefined as never),
+  stat: jest.fn().mockResolvedValue({ size: 9_000 } as never),
 }))
 
 jest.mock('./audio-master', () => ({
@@ -60,7 +61,6 @@ describe('TrackUploadService', () => {
     prisma = prismaMock
     queue = makeQueueMock()
     storage = makeStorageMock()
-    storage.getObjectMeta.mockResolvedValue({ contentLength: 9_000 } as never)
     storage.deleteObject.mockResolvedValue(undefined as never)
     service = new TrackUploadService(prisma, queue, makeCacheMock(), recorder, storage)
   })
@@ -268,6 +268,25 @@ describe('TrackUploadService', () => {
       expect(storage.deleteObject).toHaveBeenCalledWith(`masters/${audioFile.filename}`)
     })
 
+    it('removes the stored master when the cover upload fails alongside it', async () => {
+      const audioFile = buildAudioFile()
+      storage.upload.mockRejectedValue(new Error('cover upload failed') as never)
+
+      await expect(
+        service.create(
+          'artist-1',
+          { title: 'Track title' } as CreateTrackDto,
+          audioFile,
+          buildCoverFile(),
+        ),
+      ).rejects.toThrow('cover upload failed')
+
+      expect(storeMasterMock).toHaveBeenCalled()
+      expect(storage.deleteObject).toHaveBeenCalledTimes(1)
+      expect(storage.deleteObject).toHaveBeenCalledWith(`masters/${audioFile.filename}`)
+      expect(prisma.track.create).not.toHaveBeenCalled()
+    })
+
     it('rejects a source bitrate below the converter minimum before creating a track', async () => {
       const audioFile = buildAudioFile()
       parseFileMock.mockResolvedValueOnce({
@@ -446,7 +465,7 @@ describe('TrackUploadService', () => {
         }),
         expect.objectContaining({ attempts: 5 }),
       )
-      expect(storage.getObjectMeta).toHaveBeenCalledWith(`masters/${track.audioUrl}`)
+      expect(storage.getObjectMeta).not.toHaveBeenCalled()
       expect(downloadMock).toHaveBeenCalledWith(
         storage,
         `masters/${track.audioUrl}`,

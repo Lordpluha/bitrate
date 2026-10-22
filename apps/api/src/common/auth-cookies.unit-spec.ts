@@ -1,7 +1,11 @@
 import { afterEach, describe, expect, it, jest } from '@jest/globals'
-import type { CookieOptions, Response } from 'express'
+import type { CookieOptions, Request, Response } from 'express'
 import { mock } from 'jest-mock-extended'
-import { clearPendingTwoFactorCookie, setPendingTwoFactorCookie } from './auth-cookies'
+import {
+  clearPendingTwoFactorCookie,
+  readPendingTwoFactorToken,
+  setPendingTwoFactorCookie,
+} from './auth-cookies'
 
 function createResponse() {
   const response: Response = mock<Response>()
@@ -55,5 +59,18 @@ describe('pending two-factor cookie scope', () => {
       maxAge: 600_000,
     })
     expect(response.clearCookie).toHaveBeenCalledWith('pending_2fa_token', { path: '/' })
+  })
+})
+
+describe('readPendingTwoFactorToken', () => {
+  it('reads the token the pending two-factor cookie holds', () => {
+    const request = { cookies: { pending_2fa_token: 'pending' } } as unknown as Request
+
+    expect(readPendingTwoFactorToken(request)).toBe('pending')
+  })
+
+  it('returns nothing without the cookie', () => {
+    expect(readPendingTwoFactorToken({} as Request)).toBeUndefined()
+    expect(readPendingTwoFactorToken({ cookies: {} } as Request)).toBeUndefined()
   })
 })

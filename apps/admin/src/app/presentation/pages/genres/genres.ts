@@ -1,5 +1,4 @@
-import { Component, effect, inject, signal } from '@angular/core'
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core'
 import { RouterLink } from '@angular/router'
 import { DeleteGenreUseCase, ListGenresUseCase } from '@application/genres'
 import { SessionStore } from '@application/session'
@@ -11,17 +10,13 @@ import {
   SortHeader,
   sortHeaderAriaSort,
 } from '@presentation/components'
-import { bindQueryState, createCollection } from '@presentation/state'
+import { bindQueryState, bindSearchDraft, createCollection } from '@presentation/state'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmDialogImports } from '@spartan-ng/helm/dialog'
 import { HlmInputImports } from '@spartan-ng/helm/input'
 import { HlmTableImports } from '@spartan-ng/helm/table'
-import { debounceTime, skip } from 'rxjs'
 import { genreDeleteErrorMessage } from './genre-write-error.message'
 import { genresQueryCodec } from './genres.query'
-
-/** How long to wait after the last keystroke before a text filter reaches the URL. */
-const SEARCH_DEBOUNCE_MS = 300
 
 @Component({
   selector: 'app-genres',
@@ -35,6 +30,7 @@ const SEARCH_DEBOUNCE_MS = 300
     HlmInputImports,
     HlmTableImports,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './genres.html',
 })
 export class GenresPage {
@@ -47,7 +43,11 @@ export class GenresPage {
   protected readonly ariaSort = sortHeaderAriaSort<GenreSortField>
 
   protected readonly query = bindQueryState({ codec: genresQueryCodec })
-  protected readonly draft = signal(this.query.state().query)
+  protected readonly draft = bindSearchDraft({
+    query: this.query,
+    read: (state) => state.query,
+    toPatch: (query) => ({ query, page: 1 }),
+  })
   protected readonly pendingDelete = signal<Genre | null>(null)
   protected readonly deleting = signal(false)
 
@@ -68,15 +68,6 @@ export class GenresPage {
       const { page } = this.query.state()
       void this.collection.show(page)
     })
-
-    /** Keeps the box in sync with the URL, e.g. after back/forward changes the filter. */
-    effect(() => {
-      this.draft.set(this.query.state().query)
-    })
-
-    toObservable(this.draft)
-      .pipe(debounceTime(SEARCH_DEBOUNCE_MS), skip(1), takeUntilDestroyed())
-      .subscribe((value) => this.query.patch({ query: value, page: 1 }, { replaceUrl: true }))
   }
 
   protected applyFilters(): void {

@@ -1,6 +1,6 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { clientFetchClient } from '@/shared/api/client'
 import { ensureOkResponse } from '@/shared/api/errors'
 import { apiQueryKeys } from '@/shared/api/queryKeys'
@@ -142,6 +142,8 @@ export const useTopTracks = (
       ensureOkResponse(response, 'Failed to load top tracks')
       return topTracksSchema.parse(data)
     },
+    /** Switching the range keeps the old list up instead of flashing a skeleton. */
+    placeholderData: keepPreviousData,
     staleTime: 5 * 60 * 1000,
   })
 
@@ -160,5 +162,7 @@ export const useTopArtists = (
       ensureOkResponse(response, 'Failed to load top artists')
       return topArtistsSchema.parse(data)
     },
+    /** Switching the range keeps the old list up instead of flashing a skeleton. */
+    placeholderData: keepPreviousData,
     staleTime: 5 * 60 * 1000,
   })

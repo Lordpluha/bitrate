@@ -1,6 +1,7 @@
 import type { ApiSchemas } from '@bitrate/contracts'
 import { artistMusicKeys } from '@shared/api/artistMusicKeys'
 import { clientFetchClient } from '@shared/api/fetchClient'
+import { writeSignal } from '@shared/api/writeTimeout'
 import {
   keepPreviousData,
   useMutation,
@@ -12,8 +13,6 @@ import {
   distributionPageSchema,
   releaseDeliverySchema,
 } from '../model/delivery.schema'
-
-const WRITE_TIMEOUT_MS = 30_000
 
 const deliveryKeys = {
   all: (artistId: string | undefined) =>
@@ -86,7 +85,7 @@ async function saveDeliveryPlan({ id, input }: DeliveryPlanRequest) {
     clientFetchClient.PUT('/api/v1/releases/{id}/delivery-plan', {
       params: { path: { id } },
       body: input,
-      signal: AbortSignal.timeout(WRITE_TIMEOUT_MS),
+      signal: writeSignal(),
     })
   let result: Awaited<ReturnType<typeof send>>
   try {

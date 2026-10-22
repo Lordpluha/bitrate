@@ -19,6 +19,7 @@ import { AdminModerationController } from './moderation/admin-moderation.control
 import { AdminModerationService } from './moderation/admin-moderation.service'
 import { buildTrack, buildTrackWithArtist } from './tracks/__tests__/fixtures/admin-tracks.fixtures'
 import { AdminTrackAudioService } from './tracks/admin-track-audio.service'
+import { AdminTrackListService } from './tracks/admin-track-list.service'
 import { AdminTracksController } from './tracks/admin-tracks.controller'
 import { AdminTracksService } from './tracks/admin-tracks.service'
 import { AdminUsersController } from './users/admin-users.controller'
@@ -95,8 +96,11 @@ const buildApp = async (route: BatchRoute, permissions: Permission[]) => {
   const module = await Test.createTestingModule({
     controllers: [route.controller],
     providers: [
-      { provide: route.service, useValue: service },
       { provide: AdminTrackAudioService, useValue: {} },
+      { provide: AdminTrackListService, useValue: {} },
+      { provide: AdminTracksService, useValue: {} },
+      // Last, so the route's own service mock wins over the empty tracks stubs above.
+      { provide: route.service, useValue: service },
     ],
   })
     .overrideGuard(AdminAuthGuard)
@@ -232,7 +236,11 @@ describe('batch audit trail (int)', () => {
       if (id === ID_B) return Promise.resolve(buildTrack({ id, deletedAt: new Date() })) as never
       return Promise.resolve(buildTrack({ id, deletedAt: null })) as never
     }) as never)
-    transaction.track.updateMany.mockResolvedValue({ count: 1 })
+    // The guarded write matches nothing for ID_B, which is already taken down.
+    transaction.track.updateMany.mockImplementation(((args: unknown) => {
+      const id = (args as { where: { id: string } }).where.id
+      return Promise.resolve({ count: id === ID_B ? 0 : 1 }) as never
+    }) as never)
     transaction.track.findFirstOrThrow.mockImplementation(((args: unknown) => {
       const id = (args as { where: { id: string } }).where.id
       return Promise.resolve(buildTrackWithArtist({ id, deletedAt: new Date() })) as never

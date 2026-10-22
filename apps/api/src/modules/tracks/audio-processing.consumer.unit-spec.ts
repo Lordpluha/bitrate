@@ -119,7 +119,7 @@ describe('AudioProcessingConsumer', () => {
       recorder,
       notifications as never,
     )
-    prisma.track.findUnique.mockResolvedValue({ id: 'track-1', audioUrl: 'track.mp3' } as never)
+    prisma.track.count.mockResolvedValue(1)
     prisma.track.update.mockResolvedValue({ id: 'track-1' } as never)
     prisma.track.updateMany.mockResolvedValue({ count: 1 } as never)
     prisma.trackFile.upsert.mockResolvedValue({ id: 'tf-1' } as never)
@@ -144,16 +144,19 @@ describe('AudioProcessingConsumer', () => {
   it('returns early when job name is not convert-audio', async () => {
     await consumer.process(buildJob('other-job'))
 
-    expect(prisma.track.findUnique).not.toHaveBeenCalled()
+    expect(prisma.track.updateMany).not.toHaveBeenCalled()
   })
 
   it('skips a stale job when the track points to a newer upload', async () => {
-    prisma.track.findUnique.mockResolvedValue({ id: 'track-1', audioUrl: 'new.mp3' } as never)
+    prisma.track.updateMany.mockResolvedValue({ count: 0 } as never)
 
     await consumer.process(buildJob('convert-audio', jobData))
 
+    expect(prisma.track.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { id: 'track-1', audioUrl: 'track.mp3' } }),
+    )
     expect(convertAudioMock).not.toHaveBeenCalled()
-    expect(prisma.track.updateMany).not.toHaveBeenCalled()
+    expect(recorder.start).not.toHaveBeenCalled()
   })
 
   it('prepares every variant, publishes it, and marks the track ready atomically', async () => {
@@ -343,10 +346,7 @@ describe('AudioProcessingConsumer', () => {
   })
 
   it('removes uploaded immutable objects when a newer source wins before publish', async () => {
-    prisma.track.findUnique
-      .mockResolvedValueOnce({ id: 'track-1', audioUrl: 'track.mp3' } as never)
-      .mockResolvedValueOnce({ id: 'track-1', audioUrl: 'track.mp3' } as never)
-      .mockResolvedValueOnce({ id: 'track-1', audioUrl: 'new.mp3' } as never)
+    prisma.track.count.mockResolvedValueOnce(1).mockResolvedValueOnce(0)
 
     await consumer.process(buildJob('convert-audio', jobData))
 
@@ -479,7 +479,7 @@ describe('AudioProcessingConsumer', () => {
       expect.objectContaining({ reason: expect.stringContaining('masterKey'), payload: legacy }),
       expect.objectContaining({ jobId: 'unrecognised-job-1' }),
     )
-    expect(prisma.track.findUnique).not.toHaveBeenCalled()
+    expect(prisma.track.updateMany).not.toHaveBeenCalled()
     expect(convertAudioMock).not.toHaveBeenCalled()
   })
 

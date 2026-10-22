@@ -297,9 +297,9 @@ describe('AdminModerationService', () => {
         const id = (args as { where: { id: string } }).where.id
         return Promise.resolve({ ...REPORT, id }) as never
       }) as never)
-      transaction.moderationReport.update.mockImplementation(((args: unknown) => {
+      transaction.moderationReport.updateManyAndReturn.mockImplementation(((args: unknown) => {
         const id = (args as { where: { id: string } }).where.id
-        return Promise.resolve({ ...REPORT, id, status: 'RESOLVED' }) as never
+        return Promise.resolve([{ ...REPORT, id, status: 'RESOLVED' }]) as never
       }) as never)
 
       const result = await service.advanceMany(['r-1', 'r-2'], 'RESOLVED', 'staff-1', {
@@ -330,10 +330,9 @@ describe('AdminModerationService', () => {
         const id = (args as { where: { id: string } }).where.id
         return Promise.resolve(id === 'missing' ? null : { ...REPORT, id }) as never
       }) as never)
-      transaction.moderationReport.update.mockResolvedValue({
-        ...REPORT,
-        status: 'REJECTED',
-      } as never)
+      transaction.moderationReport.updateManyAndReturn.mockResolvedValue([
+        { ...REPORT, status: 'REJECTED' },
+      ] as never)
 
       const result = await service.advanceMany(['r-1', 'missing'], 'REJECTED', 'staff-1')
 
@@ -342,6 +341,21 @@ describe('AdminModerationService', () => {
         ['missing', 'failed', 'NOT_FOUND'],
       ])
       expect(transaction.auditLog.create).toHaveBeenCalledTimes(1)
+    })
+
+    it('guards the write on the status it read, so the audited "before" is never stale', async () => {
+      prisma.moderationReport.findFirst.mockResolvedValue(REPORT as never)
+      transaction.moderationReport.updateManyAndReturn.mockResolvedValue([] as never)
+
+      const result = await service.advanceMany(['report-1'], 'RESOLVED', 'staff-1')
+
+      expect(transaction.moderationReport.updateManyAndReturn).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { id: 'report-1', status: 'OPEN' } }),
+      )
+      expect(result.results.map((r) => [r.id, r.status, r.error?.code])).toEqual([
+        ['report-1', 'failed', 'CONFLICT'],
+      ])
+      expect(transaction.auditLog.create).not.toHaveBeenCalled()
     })
   })
 })

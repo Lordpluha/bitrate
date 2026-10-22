@@ -147,7 +147,72 @@ describe('createPlaybackEngine', () => {
     })
   })
 
+  describe('overlapping requests', () => {
+    it('lets the latest play() win when an earlier resolve settles last', async () => {
+      let settleFirst: (url: string) => void = () => undefined
+      const resolveSource = vi
+        .fn()
+        .mockImplementationOnce(
+          () =>
+            new Promise<string>((resolve) => {
+              settleFirst = resolve
+            }),
+        )
+        .mockResolvedValueOnce('https://cdn.test/192.m4a')
+      engine = createPlaybackEngine({ media, resolveSource })
+
+      const first = engine.play(320)
+      await engine.play(192)
+      settleFirst('https://cdn.test/320.m4a')
+      await first
+
+      expect(media.src).toBe('https://cdn.test/192.m4a')
+      expect(engine.getState().bitrate).toBe(192)
+      expect(play).toHaveBeenCalledTimes(1)
+    })
+
+    it('ignores a resolver failure from a superseded play()', async () => {
+      let failFirst: (error: Error) => void = () => undefined
+      const resolveSource = vi
+        .fn()
+        .mockImplementationOnce(
+          () =>
+            new Promise<string>((_, reject) => {
+              failFirst = reject
+            }),
+        )
+        .mockResolvedValueOnce('https://cdn.test/192.m4a')
+      engine = createPlaybackEngine({ media, resolveSource })
+
+      const first = engine.play(320)
+      await engine.play(192)
+      failFirst(new Error('stale probe failed'))
+
+      await expect(first).resolves.toBeUndefined()
+      expect(engine.getState().error).toBeNull()
+    })
+  })
+
   describe('teardown', () => {
+    it('does not load or play a source that resolves after destroy', async () => {
+      let settle: (url: string) => void = () => undefined
+      const resolveSource = vi.fn(
+        () =>
+          new Promise<string>((resolve) => {
+            settle = resolve
+          }),
+      )
+      engine = createPlaybackEngine({ media, resolveSource })
+
+      const pending = engine.play(320)
+      engine.destroy()
+      settle('https://cdn.test/320.m4a')
+      await pending
+
+      expect(media.hasAttribute('src')).toBe(false)
+      expect(play).not.toHaveBeenCalled()
+    })
+
     it('pauses, clears the source, and stops notifying subscribers on destroy', async () => {
       const resolveSource = vi.fn().mockResolvedValue('https://cdn.test/320.m4a')
       engine = createPlaybackEngine({ media, resolveSource })

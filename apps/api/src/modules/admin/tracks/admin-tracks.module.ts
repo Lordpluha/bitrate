@@ -4,12 +4,13 @@ import { AdminAuthModule } from '@modules/admin-auth'
 import { TracksModule } from '@modules/tracks'
 import { Module } from '@nestjs/common'
 import { AdminTrackAudioService } from './admin-track-audio.service'
+import { AdminTrackListService } from './admin-track-list.service'
 import { AdminTracksController } from './admin-tracks.controller'
 import { AdminTracksService } from './admin-tracks.service'
 
 @Module({
   imports: [PrismaModule, AdminAuthModule, TracksModule, StorageModule],
   controllers: [AdminTracksController],
-  providers: [AdminTracksService, AdminTrackAudioService],
+  providers: [AdminTrackListService, AdminTracksService, AdminTrackAudioService],
 })
 export class AdminTracksModule {}

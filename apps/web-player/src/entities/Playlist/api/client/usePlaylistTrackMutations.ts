@@ -11,6 +11,7 @@ export const useAddTracksToPlaylist = () => {
   const queryClient = useQueryClient()
 
   return useMutation('post', '/api/v1/playlists/{id}/tracks', {
+    meta: { errorMessage: 'Failed to add track to playlist' },
     onSuccess: async (_data, variables) => {
       await Promise.all([
         invalidateMyPlaylists(queryClient),
@@ -24,6 +25,7 @@ export const useRemoveTrackFromPlaylist = () => {
   const queryClient = useQueryClient()
 
   return useMutation('delete', '/api/v1/playlists/{id}/tracks/{trackId}', {
+    meta: { errorMessage: 'Failed to remove track from playlist' },
     onSuccess: async (_data, variables) => {
       await Promise.all([
         invalidateMyPlaylists(queryClient),

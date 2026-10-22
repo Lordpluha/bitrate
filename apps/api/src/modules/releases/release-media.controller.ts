@@ -1,3 +1,4 @@
+import { pipeToResponse } from '@common/utils/stream'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
 import type { ArtistAuthRequest } from '@modules/artists-auth/types'
 import {
@@ -8,6 +9,7 @@ import {
   Header,
   Headers,
   HttpCode,
+  Logger,
   Param,
   ParseUUIDPipe,
   Post,
@@ -38,14 +40,20 @@ import {
   type UploadReleaseTrackDto,
   UploadReleaseTrackSchema,
 } from './dtos/release-media.dto'
+import { ReleaseCoverService } from './release-cover.service'
 import { ReleaseAudioInterceptor, ReleaseCoverInterceptor } from './release-media.interceptors'
 import { ReleaseMediaService } from './release-media.service'
+
+const logger = new Logger('ReleaseMediaController')
 
 /** Artwork and master audio of an owned draft; files stay private until a later delivery stage. */
 @ApiTags('Releases')
 @Controller({ path: 'releases', version: '1' })
 export class ReleaseMediaController {
-  constructor(private readonly media: ReleaseMediaService) {}
+  constructor(
+    private readonly media: ReleaseMediaService,
+    private readonly covers: ReleaseCoverService,
+  ) {}
 
   @UploadReleaseCoverSwagger()
   @ArtistAuth()
@@ -58,7 +66,7 @@ export class ReleaseMediaController {
     @UploadedFile() file: Express.Multer.File | undefined,
     @Body(new ZodValidationPipe(UploadReleaseCoverSchema)) input: UploadReleaseCoverDto,
   ) {
-    return this.media.uploadCover(request.artist.id, id, file, input)
+    return this.covers.uploadCover(request.artist.id, id, file, input)
   }
 
   @RemoveReleaseCoverSwagger()
@@ -70,7 +78,7 @@ export class ReleaseMediaController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(ReleaseDraftVersionSchema)) input: ReleaseDraftVersionDto,
   ) {
-    return this.media.removeCover(request.artist.id, id, input)
+    return this.covers.removeCover(request.artist.id, id, input)
   }
 
   @UploadReleaseTrackSwagger()
@@ -149,7 +157,6 @@ export class ReleaseMediaController {
       'Cache-Control': 'private, no-store',
       'X-Content-Type-Options': 'nosniff',
     })
-    audio.stream.on('error', () => response.destroy())
-    audio.stream.pipe(response)
+    pipeToResponse(audio.stream, response, logger, `Release ${id} audio`)
   }
 }

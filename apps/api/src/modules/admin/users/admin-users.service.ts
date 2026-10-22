@@ -2,7 +2,16 @@ import { DEFAULT_LIMIT, DEFAULT_PAGE, type PaginationInput } from '@common/pagin
 import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { AdminResourceStatus, AuditContextValue, CsvExport } from '@modules/admin/shared'
-import { isoOrNull, openCsvExport, runBatch, writeTakeDownAudit } from '@modules/admin/shared'
+import {
+  type AdminRevokeSessionsResultEntity,
+  openCsvExport,
+  revokeAccountSessions,
+  runBatch,
+  runTakeDownTransition,
+  statusWhere,
+  type TakeDownActor,
+  type TakeDownDirection,
+} from '@modules/admin/shared'
 import { Injectable } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import type { ADMIN_USERS_SORT_FIELDS } from './dtos'
@@ -28,22 +37,18 @@ type ListUsersInput = {
   q?: string
 } & SortInput<AdminUsersSortField>
 
+/** A user as the operator sees it — the safe columns only. */
+type AdminUserRow = Prisma.UserGetPayload<{ select: typeof ADMIN_USER_SAFE_SELECT }>
+
 /** Handles the operator-facing user directory. */
 @Injectable()
 export class AdminUsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  /** Builds the `deletedAt` half of the `where` clause for the `status` take-down filter. */
-  private buildStatusWhere(status: AdminResourceStatus = 'active') {
-    if (status === 'all') return {}
-    if (status === 'deactivated') return { deletedAt: { not: null } }
-    return { deletedAt: null }
-  }
-
   /** Builds the shared `where` clause for listing and counting. */
   private buildWhere({ status, q }: Omit<ListUsersInput, 'page' | 'limit'>) {
     return {
-      ...this.buildStatusWhere(status),
+      ...statusWhere(status),
       ...(q && {
         OR: [
           { username: { contains: q, mode: 'insensitive' } },
@@ -53,7 +58,7 @@ export class AdminUsersService {
     } satisfies Prisma.UserWhereInput
   }
 
-  /** Runs the find all operation, paginated and optionally filtered. */
+  /** Lists users, paginated and optionally filtered. */
   async findAll({
     page = DEFAULT_PAGE,
     limit = DEFAULT_LIMIT,
@@ -63,14 +68,17 @@ export class AdminUsersService {
     order,
   }: ListUsersInput) {
     const where = this.buildWhere({ status, q })
-    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const orderBy = buildSortOrderBy<Prisma.UserOrderByWithRelationInput>({ sort, order }, [
+      { createdAt: 'desc' },
+      { id: 'desc' },
+    ])
     const [data, total] = await Promise.all([
       this.prisma.user.findMany({
         where,
         select: ADMIN_USER_SAFE_SELECT,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: orderBy as unknown as Prisma.UserOrderByWithRelationInput[],
+        orderBy,
       }),
       this.prisma.user.count({ where }),
     ])
@@ -89,7 +97,10 @@ export class AdminUsersService {
     auditContext: AuditContextValue = {},
   ): Promise<CsvExport> {
     const where = this.buildWhere({ status, q })
-    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const orderBy = buildSortOrderBy<Prisma.UserOrderByWithRelationInput>({ sort, order }, [
+      { createdAt: 'desc' },
+      { id: 'desc' },
+    ])
     const total = await this.prisma.user.count({ where })
 
     return openCsvExport({
@@ -104,7 +115,7 @@ export class AdminUsersService {
         this.prisma.user.findMany({
           where,
           select: ADMIN_USER_EXPORT_SELECT,
-          orderBy: orderBy as unknown as Prisma.UserOrderByWithRelationInput[],
+          orderBy,
           skip,
           take,
         }),
@@ -112,7 +123,7 @@ export class AdminUsersService {
   }
 
   /**
-   * Runs the find by id operation, with activity counts for the detail page. Deliberately does
+   * Finds one user by id, with activity counts for the detail page. Deliberately does
    * not filter `deletedAt` — a deactivated listener must stay reachable by id so the operator
    * can review the account before deciding to restore it.
    */
@@ -147,7 +158,7 @@ export class AdminUsersService {
   }
 
   /**
-   * Runs the list listening history operation, newest first. Deliberately does not filter
+   * Lists a user's listening history, newest first. Deliberately does not filter
    * `deletedAt` — a deactivated listener's history stays reachable, matching {@link findById}.
    * An empty history is a valid empty page, not a 404; a missing user is.
    */
@@ -155,10 +166,8 @@ export class AdminUsersService {
     id: string,
     { page = DEFAULT_PAGE, limit = DEFAULT_LIMIT }: PaginationInput,
   ) {
-    const existing = await this.prisma.user.findFirst({ where: { id } })
-    if (!existing) throw new UserNotFoundException(id)
-
-    const [rows, total] = await Promise.all([
+    const [existing, rows, total] = await Promise.all([
+      this.prisma.user.findFirst({ where: { id }, select: { id: true } }),
       this.prisma.listeningHistory.findMany({
         where: { userId: id },
         select: {
@@ -172,6 +181,7 @@ export class AdminUsersService {
       }),
       this.prisma.listeningHistory.count({ where: { userId: id } }),
     ])
+    if (!existing) throw new UserNotFoundException(id)
 
     return {
       data: rows.map((row) => ({
@@ -200,43 +210,13 @@ export class AdminUsersService {
    * existing sessions live would let the account keep acting until every token happened to
    * expire on its own; see `UserAuthGuard` for the request-time half of this fix.
    */
-  async softDelete(
+  softDelete(
     id: string,
     staffId: string,
     reason?: string,
     auditContext: AuditContextValue = {},
-  ) {
-    const existing = await this.prisma.user.findFirst({ where: { id } })
-    if (!existing) throw new UserNotFoundException(id)
-    if (existing.deletedAt) throw new UserAlreadyDeletedException(id)
-
-    return await this.prisma.$transaction(async (tx) => {
-      const { count } = await tx.user.updateMany({
-        where: { id, deletedAt: null },
-        data: { deletedAt: new Date() },
-      })
-      if (count === 0) throw new UserAlreadyDeletedException(id)
-
-      const { count: sessionsRevoked } = await tx.userSession.deleteMany({
-        where: { userId: id },
-      })
-      const updated = await tx.user.findFirstOrThrow({
-        where: { id },
-        select: ADMIN_USER_SAFE_SELECT,
-      })
-      await writeTakeDownAudit({
-        tx,
-        entityType: 'admin-users',
-        entityId: id,
-        action: 'admin-users.delete',
-        staffId,
-        reason,
-        before: { deletedAt: isoOrNull(existing.deletedAt) },
-        after: { deletedAt: isoOrNull(updated.deletedAt), sessionsRevoked },
-        ...auditContext,
-      })
-      return updated
-    })
+  ): Promise<AdminUserRow> {
+    return this.transition('take-down', id, { staffId, reason, ...auditContext })
   }
 
   /** Deactivates every id independently via {@link softDelete}; per-id results, same rules. */
@@ -249,70 +229,57 @@ export class AdminUsersService {
    * Uses the same `updateMany` + count-guard pattern as {@link softDelete} for the same
    * concurrent-request reason.
    */
-  async restore(
+  restore(
     id: string,
     staffId: string,
     reason?: string,
     auditContext: AuditContextValue = {},
-  ) {
-    const existing = await this.prisma.user.findFirst({ where: { id } })
-    if (!existing) throw new UserNotFoundException(id)
-    if (!existing.deletedAt) throw new UserNotDeletedException(id)
+  ): Promise<AdminUserRow> {
+    return this.transition('restore', id, { staffId, reason, ...auditContext })
+  }
 
-    return await this.prisma.$transaction(async (tx) => {
-      const { count } = await tx.user.updateMany({
-        where: { id, deletedAt: { not: null } },
-        data: { deletedAt: null },
-      })
-      if (count === 0) throw new UserNotDeletedException(id)
-
-      const updated = await tx.user.findFirstOrThrow({
-        where: { id },
-        select: ADMIN_USER_SAFE_SELECT,
-      })
-      await writeTakeDownAudit({
-        tx,
-        entityType: 'admin-users',
-        entityId: id,
-        action: 'admin-users.restore',
-        staffId,
-        reason,
-        before: { deletedAt: isoOrNull(existing.deletedAt) },
-        after: { deletedAt: isoOrNull(updated.deletedAt) },
-        ...auditContext,
-      })
-      return updated
+  /** Revokes every session of a user — see {@link revokeAccountSessions}. */
+  revokeSessions(
+    id: string,
+    staffId: string,
+    reason?: string,
+    auditContext: AuditContextValue = {},
+  ): Promise<AdminRevokeSessionsResultEntity> {
+    return revokeAccountSessions({
+      prisma: this.prisma,
+      exists: async () =>
+        !!(await this.prisma.user.findFirst({ where: { id }, select: { id: true } })),
+      notFound: () => new UserNotFoundException(id),
+      revoke: (tx) => tx.userSession.deleteMany({ where: { userId: id } }),
+      entityType: 'admin-users',
+      entityId: id,
+      actor: { staffId, reason, ...auditContext },
     })
   }
 
-  /**
-   * Revokes every active session for a user, signing them out on their next request — an
-   * already-open WebSocket connection is unaffected until it disconnects; see the changeset
-   * for that known limitation.
-   */
-  async revokeSessions(
+  /** Takes a user down or restores it, with its audit row — see {@link runTakeDownTransition}. */
+  private transition(
+    direction: TakeDownDirection,
     id: string,
-    staffId: string,
-    reason?: string,
-    auditContext: AuditContextValue = {},
-  ) {
-    const existing = await this.prisma.user.findFirst({ where: { id } })
-    if (!existing) throw new UserNotFoundException(id)
-
-    return await this.prisma.$transaction(async (tx) => {
-      const { count } = await tx.userSession.deleteMany({ where: { userId: id } })
-      await writeTakeDownAudit({
-        tx,
-        entityType: 'admin-users',
-        entityId: id,
-        action: 'admin-users.revoke-sessions',
-        staffId,
-        reason,
-        before: {},
-        after: { sessionsRevoked: count },
-        ...auditContext,
-      })
-      return { revoked: count }
+    actor: TakeDownActor,
+  ): Promise<AdminUserRow> {
+    const takeDown = direction === 'take-down'
+    return runTakeDownTransition({
+      prisma: this.prisma,
+      direction,
+      current: () => this.prisma.user.findFirst({ where: { id }, select: { deletedAt: true } }),
+      mark: (tx, guard, data) => tx.user.updateMany({ where: { id, ...guard }, data }),
+      extra: takeDown
+        ? async (tx) => {
+            const { count } = await tx.userSession.deleteMany({ where: { userId: id } })
+            return { sessionsRevoked: count }
+          }
+        : undefined,
+      load: (tx) => tx.user.findFirstOrThrow({ where: { id }, select: ADMIN_USER_SAFE_SELECT }),
+      notFound: () => new UserNotFoundException(id),
+      conflict: () =>
+        takeDown ? new UserAlreadyDeletedException(id) : new UserNotDeletedException(id),
+      audit: { entityType: 'admin-users', entityId: id, ...actor },
     })
   }
 }

@@ -1,6 +1,6 @@
 import { websocketConfig } from '@common/config/connections'
 import { WsUserAuthGuard } from '@modules/users-auth/users-auth.ws.guard'
-import { Inject, Logger, UseGuards } from '@nestjs/common'
+import { Logger, UseGuards } from '@nestjs/common'
 import { ExecutionContextHost } from '@nestjs/core/helpers/execution-context-host'
 import {
   ConnectedSocket,
@@ -23,31 +23,26 @@ import type { AuthenticatedSocket, StreamTrackPayload } from './audio-gateway.ty
 import { AudioSessionRegistry } from './audio-session.registry'
 import type { PauseTrackDto, StartTrackDto, UpdateStreamingDto } from './dtos'
 import { TrackStreamingService } from './track-streaming.service'
-import * as TracksServiceModule from './tracks.service'
+import { TracksService } from './tracks.service'
 
 /** The payload one WebSocket handler contributes to its success response. */
 type HandlerResult = Record<string, unknown>
 
-/** Represents the audio gateway. */
 @WebSocketGateway(websocketConfig)
 @UseGuards(WsUserAuthGuard)
 export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  /** The server value. */
   @WebSocketServer()
   server: Server
 
-  /** The logger value. */
   private readonly logger = new Logger(AudioGateway.name, { timestamp: true })
 
   /** Connection, playback, and in-flight audio state for every live socket. */
   private readonly sessions = new AudioSessionRegistry()
 
-  /** Creates a new instance. */
   constructor(
-    @Inject(TracksServiceModule.TracksService)
-    private tracksService: TracksServiceModule.TracksService,
-    @Inject(TrackStreamingService) private trackStreamingService: TrackStreamingService,
-    @Inject(WsUserAuthGuard) private wsAuthGuard: WsUserAuthGuard,
+    private tracksService: TracksService,
+    private trackStreamingService: TrackStreamingService,
+    private wsAuthGuard: WsUserAuthGuard,
   ) {}
 
   /**
@@ -80,14 +75,12 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.server.to(`user_${userId}`).emit(event, data)
   }
 
-  /** Runs the create ws context operation. */
   private createWsContext(client: AuthenticatedSocket) {
     const context = new ExecutionContextHost([client])
     context.setType('ws')
     return context
   }
 
-  /** Runs the handle connection operation. */
   async handleConnection(client: AuthenticatedSocket) {
     try {
       await this.wsAuthGuard.canActivate(this.createWsContext(client))
@@ -115,7 +108,6 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  /** Runs the handle disconnect operation. */
   handleDisconnect(client: AuthenticatedSocket): void {
     this.sessions.stopStream(client.id)
     if (!client.userId) return
@@ -124,7 +116,6 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.logger.log(`User ${client.userId} disconnected`)
   }
 
-  /** Runs the handle stream track operation. */
   @SubscribeMessage('streamTrack')
   async handleStreamTrack(
     @ConnectedSocket() client: AuthenticatedSocket,
@@ -140,14 +131,12 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     })
   }
 
-  /** Runs the handle stop track stream operation. */
   @SubscribeMessage('stopTrackStream')
   handleStopTrackStream(@ConnectedSocket() client: AuthenticatedSocket): WsResponse {
     const stopped = this.sessions.stopStream(client.id)
     return { event: 'stopTrackStream', data: { success: true, stopped } }
   }
 
-  /** Runs the handle play track operation. */
   @SubscribeMessage('playTrack')
   async handlePlayTrack(
     @ConnectedSocket() client: AuthenticatedSocket,
@@ -159,9 +148,7 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const parsed = playPayloadSchema.safeParse(payload)
       if (!parsed.success) throw new Error('Invalid payload')
 
-      const track = await this.tracksService.findTrackById(parsed.data.trackId)
-      if (!track) throw new Error('Track not found')
-
+      // Opening the stream refuses a missing, deleted or unready track.
       const { trackId, currentTime } = parsed.data
       const audio = await this.startAudioStream(client, parsed.data)
       this.sessions.startPlaying(userId, trackId, currentTime)
@@ -178,7 +165,6 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     })
   }
 
-  /** Runs the handle pause track operation. */
   @SubscribeMessage('pauseTrack')
   async handlePauseTrack(
     @ConnectedSocket() client: AuthenticatedSocket,
@@ -198,7 +184,6 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     })
   }
 
-  /** Runs the handle update streaming operation. */
   @SubscribeMessage('updateStreaming')
   async handleUpdateStreaming(
     @ConnectedSocket() client: AuthenticatedSocket,
@@ -225,7 +210,6 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     })
   }
 
-  /** Runs the handle get current state operation. */
   @SubscribeMessage('getCurrentState')
   handleGetCurrentState(@ConnectedSocket() client: AuthenticatedSocket): WsResponse {
     if (!client.userId) {

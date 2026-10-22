@@ -2,6 +2,7 @@ import { provideHttpClient } from '@angular/common/http'
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing'
 import { TestBed } from '@angular/core/testing'
 import { TrackRepository } from '@domain/track'
+import { ResourceNotFoundError } from '@domain/shared'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { ADMIN_API } from '../http/api.config'
 import { HttpTrackRepository } from './http-track.repository'
@@ -210,5 +211,38 @@ describe('HttpTrackRepository detail and take-down writes', () => {
       succeeded: 1,
       failed: 1,
     })
+  })
+})
+
+describe('HttpTrackRepository.getById failures', () => {
+  const LOAD_ID = '3f2504e0-4f89-41d3-9a0c-0305e82c33ff'
+  let repository: TrackRepository
+  let http: HttpTestingController
+
+  beforeEach(() => {
+    TestBed.resetTestingModule()
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: TrackRepository, useClass: HttpTrackRepository },
+      ],
+    })
+
+    repository = TestBed.inject(TrackRepository)
+    http = TestBed.inject(HttpTestingController)
+  })
+
+  afterEach(() => http.verify())
+
+  it('maps a 404 on load to ResourceNotFoundError and passes any other failure through', async () => {
+    const missing = repository.getById(LOAD_ID)
+    http.expectOne(`${BASE}/${LOAD_ID}`).flush(null, { status: 404, statusText: 'Not Found' })
+    await expect(missing).rejects.toBeInstanceOf(ResourceNotFoundError)
+
+    const broken = repository.getById(LOAD_ID)
+    http.expectOne(`${BASE}/${LOAD_ID}`).flush(null, { status: 500, statusText: 'Server Error' })
+    const error = await broken.catch((caught: unknown) => caught)
+    expect(error).not.toBeInstanceOf(ResourceNotFoundError)
   })
 })

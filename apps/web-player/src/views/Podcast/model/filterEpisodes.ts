@@ -4,31 +4,33 @@ export type EpisodeFilter = 'newest' | 'saved'
 type FilterableEpisode = {
   description: string | null
   id: string
+  podcastId: string
   releaseDate: string | null
   title: string
 }
 
-type FilterEpisodesInput<TEpisode extends FilterableEpisode> = {
+type FilterSavedEpisodesInput<TEpisode extends FilterableEpisode> = {
   episodes: TEpisode[]
-  filter: EpisodeFilter
+  podcastId: string
   query: string
-  savedIds: ReadonlySet<string>
 }
 
 const releaseTime = ({ releaseDate }: FilterableEpisode) =>
   releaseDate ? new Date(releaseDate).getTime() : Number.MIN_SAFE_INTEGER
 
-/** Newest first (undated last), optionally only the saved ones, matching the search in title or description. */
-export const filterEpisodes = <TEpisode extends FilterableEpisode>({
+/**
+ * The Saved filter: this show's episodes from the listener's whole saved library, newest first
+ * (undated last), matching the search in title or description like the server does for Newest.
+ */
+export const filterSavedEpisodes = <TEpisode extends FilterableEpisode>({
   episodes,
-  filter,
+  podcastId,
   query,
-  savedIds,
-}: FilterEpisodesInput<TEpisode>): TEpisode[] => {
+}: FilterSavedEpisodesInput<TEpisode>): TEpisode[] => {
   const needle = query.trim().toLowerCase()
 
   return episodes
-    .filter((episode) => filter !== 'saved' || savedIds.has(episode.id))
+    .filter((episode) => episode.podcastId === podcastId)
     .filter(
       (episode) =>
         !needle ||

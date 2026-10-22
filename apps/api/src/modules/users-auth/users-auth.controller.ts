@@ -1,5 +1,10 @@
-import { clearPendingTwoFactorCookie, setPendingTwoFactorCookie } from '@common/auth-cookies'
-import { AUTH_ROUTE_THROTTLE } from '@common/config'
+import {
+  clearPendingTwoFactorCookie,
+  readPendingTwoFactorToken,
+  setPendingTwoFactorCookie,
+} from '@common/auth-cookies'
+import { AUTH_ROUTE_THROTTLE, SESSION_ROUTE_THROTTLE } from '@common/config'
+import { readAccessToken, readRefreshToken } from '@modules/auth-core'
 import { SelfUserEntity, UserEntity } from '@modules/users'
 import { UsersService } from '@modules/users/users.service'
 import {
@@ -64,7 +69,6 @@ import type { UserAuthRequest } from './types'
 import { UserAuthService } from './user-auth.service'
 import { UserAuth } from './users-auth.guard'
 
-/** Represents the users auth controller. */
 @ApiExtraModels(UserSessionEntity, SelfUserEntity)
 @ApiTags('Users Auth')
 @Throttle(AUTH_ROUTE_THROTTLE)
@@ -77,7 +81,6 @@ export class UsersAuthController {
     private tokenService: TokenService,
   ) {}
 
-  /** Runs the login operation. */
   @AuthLoginSwagger()
   @Post('login')
   async login(
@@ -92,7 +95,6 @@ export class UsersAuthController {
     this.tokenService.setAuthCookies(res, result.access_token, result.refresh_token)
   }
 
-  /** Runs the registration operation. */
   @AuthRegistrationSwagger()
   @Post('registration')
   async registration(
@@ -102,30 +104,27 @@ export class UsersAuthController {
     await this.authService.registerUser(registrationDto)
   }
 
-  /** Runs the logout operation. */
   @AuthLogoutSwagger()
   @UserAuth()
   @Post('logout')
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const user = req.user as UserEntity
-    const access_token = req[process.env.ACCESS_TOKEN_NAME!] as string
-    await this.authService.logout(user.id, access_token)
+    await this.authService.logout(user.id, readAccessToken(req))
     this.tokenService.clearAuthCookies(res)
   }
 
-  /** Runs the refresh operation. */
   @AuthRefreshSwagger()
   @UserAuth('refresh')
+  @Throttle(SESSION_ROUTE_THROTTLE)
   @Post('refresh')
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const refresh_token = req[process.env.REFRESH_TOKEN_NAME!] as string
-    const tokens = await this.authService.refresh(refresh_token)
+    const tokens = await this.authService.refresh(readRefreshToken(req))
     this.tokenService.setAuthCookies(res, tokens.access_token, tokens.refresh_token)
   }
 
-  /** Runs the get me operation. */
   @AuthMeSwagger()
   @UserAuth()
+  @Throttle(SESSION_ROUTE_THROTTLE)
   @Get('me')
   async getMe(@Req() req: Request) {
     const user = req.user as UserEntity
@@ -145,7 +144,6 @@ export class UsersAuthController {
     return await this.userService.acceptLegal(user.id)
   }
 
-  /** Runs the forgot password operation. */
   @AuthForgotPasswordSwagger()
   @HttpCode(200)
   @Post('forgot-password')
@@ -155,7 +153,6 @@ export class UsersAuthController {
     await this.authService.forgotPassword(dto.email)
   }
 
-  /** Runs the reset password operation. */
   @AuthResetPasswordSwagger()
   @HttpCode(200)
   @Post('reset-password')
@@ -186,8 +183,7 @@ export class UsersAuthController {
   @UserAuth()
   @Get('sessions')
   getSessions(@Req() req: UserAuthRequest) {
-    const accessToken = req[this.tokenService.getTokenName('access')] as string | undefined
-    return this.authService.getSessions(req.user.id, accessToken)
+    return this.authService.getSessions(req.user.id, readAccessToken(req))
   }
 
   /** Revokes an individual session owned by the current user. */
@@ -203,11 +199,9 @@ export class UsersAuthController {
   @UserAuth()
   @Delete('sessions')
   async revokeOtherSessions(@Req() req: UserAuthRequest) {
-    const accessToken = req[this.tokenService.getTokenName('access')] as string
-    await this.authService.revokeOtherSessions(req.user.id, accessToken)
+    await this.authService.revokeOtherSessions(req.user.id, readAccessToken(req))
   }
 
-  /** Runs the two factor setup operation. */
   @TwoFactorSetupSwagger()
   @UserAuth()
   @Post('2fa/setup')
@@ -215,7 +209,6 @@ export class UsersAuthController {
     return await this.twoFactorService.setupTwoFactor(req.user.id)
   }
 
-  /** Runs the two factor enable operation. */
   @TwoFactorEnableSwagger()
   @UserAuth()
   @HttpCode(200)
@@ -227,7 +220,6 @@ export class UsersAuthController {
     await this.twoFactorService.enableTwoFactor(req.user.id, dto.code)
   }
 
-  /** Runs the two factor disable operation. */
   @TwoFactorDisableSwagger()
   @UserAuth()
   @HttpCode(200)
@@ -239,7 +231,6 @@ export class UsersAuthController {
     await this.twoFactorService.disableTwoFactor(req.user.id, dto.code)
   }
 
-  /** Runs the two factor verify login operation. */
   @TwoFactorVerifyLoginSwagger()
   @HttpCode(200)
   @Post('2fa/verify-login')
@@ -248,7 +239,7 @@ export class UsersAuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const pendingToken = req.cookies?.pending_2fa_token ?? dto.pendingToken
+    const pendingToken = readPendingTwoFactorToken(req) ?? dto.pendingToken
     const user = await this.twoFactorService.verifyLoginCode(pendingToken, dto.code)
     const { access_token, refresh_token } = await this.authService.completeTwoFactorLogin(user.id)
     clearPendingTwoFactorCookie(res)

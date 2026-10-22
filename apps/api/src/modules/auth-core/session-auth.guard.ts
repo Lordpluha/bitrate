@@ -17,7 +17,7 @@ import {
 import { Reflector } from '@nestjs/core'
 import { ApiCookieAuth, ApiResponse } from '@nestjs/swagger'
 import type { Request } from 'express'
-import type { AuthAudience } from './account-auth.core'
+import type { AuthAudience } from './account-auth.types'
 import { UNAUTHORIZED_ERRORS } from './unauthorized.errors'
 
 /** Defines the token requirement. */

@@ -74,5 +74,7 @@ paths:
   (`fit_content` shell; the sidebar stays one 968px screen): tiles sharing a row get the row height
   from `estimate()` in `admin-resource.mjs` and fill it, so new block types need an estimate.
 - `pnpm design:pages` regenerates the library blocks and every page from
-  `scripts/pencil-pages/` (content per route in `pages*.mjs`). Folders named `archive/` hold
+  `scripts/pencil-pages/`: library blocks in `build-lib.mjs` + `lib/blocks/*.mjs`, player
+  routes in `pages/player/*.mjs`, other routes in `pages-*.mjs`. Node ids are stable hashes,
+  so unchanged pages regenerate byte-identically. Folders named `archive/` hold
   historical references and are skipped by the checks.

@@ -1,6 +1,6 @@
 import { readdir, rm } from 'node:fs/promises'
 import { extname, join } from 'node:path'
-import * as PrismaServiceModule from '@infra/prisma/prisma.service'
+import { PrismaService } from '@infra/prisma/prisma.service'
 import {
   AUDIO_PROCESSING_DEAD_LETTER_QUEUE,
   AUDIO_PROCESSING_QUEUE,
@@ -13,6 +13,7 @@ import type { StorageService } from '@infra/storage/storage.types'
 import { NotificationsProducer } from '@modules/notifications'
 import { InjectQueue, OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq'
 import { Inject, Logger, type OnModuleInit } from '@nestjs/common'
+import type { TrackProcessingStep, TrackProcessingTrigger } from '@prisma/client'
 import * as Sentry from '@sentry/nestjs'
 import type { Job, Queue } from 'bullmq'
 import { StaleAudioJobError } from './audio-artifact.types'
@@ -27,7 +28,26 @@ import { PROCESSING_LOG_LIMITS } from './processing-log/limits'
 import { processingLogSuffix } from './processing-log/log-context'
 import { redactProcessingText } from './processing-log/redact'
 
-/** Represents the audio processing consumer. */
+/** Facts one claimed conversion attempt carries through its steps. */
+type ConversionRun = {
+  job: Job<ConvertAudioJob>
+  data: ConvertAudioJob
+  jobId: string
+  attempt: number
+  maxAttempts: number
+  trigger: TrackProcessingTrigger
+  /** The job's owner-only scratch directory. */
+  temporaryRoot: string
+}
+
+/** Identifies the final attempt in a permanent-failure report. */
+type PermanentFailureContext = {
+  jobId: string
+  attempt: number
+  failedStep: TrackProcessingStep | null | undefined
+}
+
+/** BullMQ worker that converts uploaded masters into playable renditions. */
 @Processor(AUDIO_PROCESSING_QUEUE, {
   concurrency: 2,
   lockDuration: 600_000,
@@ -36,23 +56,18 @@ import { redactProcessingText } from './processing-log/redact'
   autorun: isAudioProcessingWorkerAutorunEnabled(),
 })
 export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit {
-  /** Creates a new instance. */
   constructor(
-    @Inject(PrismaServiceModule.PrismaService)
-    private readonly prisma: PrismaServiceModule.PrismaService,
+    private readonly prisma: PrismaService,
     @Inject(STORAGE_SERVICE)
     private readonly storage: StorageService,
     @InjectQueue(AUDIO_PROCESSING_DEAD_LETTER_QUEUE)
     private readonly deadLetterQueue: Queue<ConvertAudioJob | UnrecognisedAudioJob>,
-    @Inject(ProcessingAttemptRecorder)
     private readonly recorder: ProcessingAttemptRecorder,
-    @Inject(NotificationsProducer)
     private readonly notifications: NotificationsProducer,
   ) {
     super()
   }
 
-  /** The logger value. */
   private readonly logger = new Logger(AudioProcessingConsumer.name, { timestamp: true })
 
   /**
@@ -81,13 +96,6 @@ export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit 
    */
   private async claimJob(job: Job, data: ConvertAudioJob) {
     const { trackId, sourceFileName } = data
-    const track = await this.prisma.track.findUnique({ where: { id: trackId } })
-
-    if (!track || track.audioUrl !== sourceFileName) {
-      this.logger.warn(`Skipping stale audio conversion job ${job.id} for track ${trackId}`)
-      return false
-    }
-
     const started = await this.prisma.track.updateMany({
       where: { id: trackId, audioUrl: sourceFileName },
       data: {
@@ -106,11 +114,13 @@ export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit 
 
   /** Reports whether this job's source is still the track's current source. */
   private async isStillCurrent(data: ConvertAudioJob) {
-    const track = await this.prisma.track.findUnique({ where: { id: data.trackId } })
-    return Boolean(track && track.audioUrl === data.sourceFileName)
+    const matching = await this.prisma.track.count({
+      where: { id: data.trackId, audioUrl: data.sourceFileName },
+    })
+    return matching > 0
   }
 
-  /** Runs the process operation. */
+  /** Converts one claimed upload, recording the attempt either way. */
   async process(job: Job) {
     if (job.name !== 'convert-audio') return
 
@@ -122,18 +132,35 @@ export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit 
     const data = parsed.data
     if (!(await this.claimJob(job, data))) return
 
-    const { trackId, sourceFileName, masterKey } = data
+    const run = await this.startRun(job as Job<ConvertAudioJob>, data)
+    const ctx: ConversionStepContext = { step: 'PREPARE_TEMP' }
+
+    try {
+      await this.convert(run, ctx)
+    } catch (error) {
+      if (error instanceof StaleAudioJobError) {
+        await this.discardStaleGeneration(run, ctx)
+        return
+      }
+      await this.recordAttemptFailure(run, ctx, error)
+      throw error
+    } finally {
+      await this.removeScratchDir(run)
+    }
+  }
+
+  /** Prepares the job's scratch directory and opens its attempt row. */
+  private async startRun(job: Job<ConvertAudioJob>, data: ConvertAudioJob): Promise<ConversionRun> {
+    const { trackId, sourceFileName } = data
     const jobId = String(job.id)
     const attempt = job.attemptsMade + 1
     const maxAttempts = job.opts.attempts ?? 1
     const trigger = data.trigger ?? 'UPLOAD'
 
     const scratchBase = getJobScratchBase()
-
     await this.cleanupOrphanedTemporaryDirs(scratchBase, trackId, jobId)
     // An unpredictable, owner-only directory; every path below derives from it.
     const temporaryRoot = await createJobScratchDir(scratchBase, `${trackId}-${jobId}-${attempt}-`)
-    const inputPath = join(temporaryRoot, `source${extname(sourceFileName)}`)
 
     await this.recorder.start({
       trackId,
@@ -145,85 +172,103 @@ export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit 
       input: data.input,
     })
 
-    const ctx: ConversionStepContext = { step: 'PREPARE_TEMP' }
+    return { job, data, jobId, attempt, maxAttempts, trigger, temporaryRoot }
+  }
 
+  /** Fetches the master, runs the conversion phases and publishes the result. */
+  private async convert(run: ConversionRun, ctx: ConversionStepContext) {
+    const { job, data, jobId, attempt, temporaryRoot } = run
+    const { trackId, sourceFileName, masterKey } = data
+    const inputPath = join(temporaryRoot, `source${extname(sourceFileName)}`)
+
+    await downloadObjectToFile(this.storage, masterKey, inputPath)
+
+    const outcome = await runConversionPhases(ctx, {
+      job,
+      inputPath,
+      temporaryRoot,
+      storage: this.storage,
+      prisma: this.prisma,
+      recorder: this.recorder,
+      trackId,
+      sourceFileName,
+      jobId,
+      attempt,
+      isStillCurrent: () => this.isStillCurrent(data),
+    })
+
+    if (outcome === 'SUPERSEDED') {
+      this.logger.warn(
+        `Discarded superseded audio generation from job ${job.id} ${processingLogSuffix({ trackId, jobId, attempt, step: ctx.step })}`,
+      )
+      return
+    }
+
+    await this.recorder.succeed({ trackId, jobId, attempt })
+    this.logger.log(
+      `Audio conversion + storage upload completed for track ${trackId}, job ${job.id}`,
+    )
+    if (run.trigger === 'UPLOAD') await this.notifyTrackPublished(trackId)
+  }
+
+  /** A first upload is a new release for the artist's followers; best effort, never fails the job. */
+  private async notifyTrackPublished(trackId: string) {
     try {
-      await downloadObjectToFile(this.storage, masterKey, inputPath)
-
-      const outcome = await runConversionPhases(ctx, {
-        job: job as Job<ConvertAudioJob>,
-        inputPath,
-        temporaryRoot,
-        storage: this.storage,
-        prisma: this.prisma,
-        recorder: this.recorder,
-        trackId,
-        sourceFileName,
-        jobId,
-        attempt,
-        isStillCurrent: () => this.isStillCurrent(data),
-      })
-
-      if (outcome === 'SUPERSEDED') {
-        this.logger.warn(
-          `Discarded superseded audio generation from job ${job.id} ${processingLogSuffix({ trackId, jobId, attempt, step: ctx.step })}`,
-        )
-        return
-      }
-
-      await this.recorder.succeed({ trackId, jobId, attempt })
-      this.logger.log(
-        `Audio conversion + storage upload completed for track ${trackId}, job ${job.id}`,
-      )
-      /* a first upload is a new release for the artist's followers; best effort, never fails the job */
-      if (trigger === 'UPLOAD') {
-        try {
-          await this.notifications.trackPublished({ trackId })
-        } catch (error) {
-          this.logger.warn(
-            `Could not queue the release notification for track ${trackId}: ${errorMessageOf(error)}`,
-          )
-        }
-      }
+      await this.notifications.trackPublished({ trackId })
     } catch (error) {
-      if (error instanceof StaleAudioJobError) {
-        await this.storage.deletePrefix(getAudioGenerationRoot(trackId, sourceFileName))
-        await this.recorder.supersede({ trackId, jobId, attempt, step: ctx.step })
-        this.logger.warn(`Discarded superseded audio generation from job ${job.id}`)
-        return
-      }
-
-      const willRetry = attempt < maxAttempts
-      await this.recorder.fail({
-        trackId,
-        jobId,
-        attempt,
-        step: ctx.step,
-        stepDetail: ctx.stepDetail,
-        error,
-        willRetry,
-      })
-      await this.markAttemptFailed(
-        data,
-        redactProcessingText(errorMessageOf(error), {
-          keep: 'head',
-          maxBytes: PROCESSING_LOG_LIMITS.errorMessage,
-        }),
+      this.logger.warn(
+        `Could not queue the release notification for track ${trackId}: ${errorMessageOf(error)}`,
       )
-      throw error
-    } finally {
-      try {
-        await rm(temporaryRoot, { recursive: true, force: true })
-      } catch (cleanupError) {
-        this.logger.error(
-          `Failed to clean up temporary directory for job ${job.id} ${processingLogSuffix({ trackId, jobId, attempt, step: 'CLEANUP' })}`,
-          cleanupError instanceof Error ? cleanupError.stack : undefined,
-        )
-      }
     }
   }
 
-  /** Runs the on failed operation. */
+  /** Drops the generation a superseded job wrote and closes its attempt as superseded. */
+  private async discardStaleGeneration(run: ConversionRun, ctx: ConversionStepContext) {
+    const { job, data, jobId, attempt } = run
+    await this.storage.deletePrefix(getAudioGenerationRoot(data.trackId, data.sourceFileName))
+    await this.recorder.supersede({ trackId: data.trackId, jobId, attempt, step: ctx.step })
+    this.logger.warn(`Discarded superseded audio generation from job ${job.id}`)
+  }
+
+  /** Records a failed attempt on its attempt row and on the track. */
+  private async recordAttemptFailure(
+    run: ConversionRun,
+    ctx: ConversionStepContext,
+    error: unknown,
+  ) {
+    const { data, jobId, attempt, maxAttempts } = run
+    await this.recorder.fail({
+      trackId: data.trackId,
+      jobId,
+      attempt,
+      step: ctx.step,
+      stepDetail: ctx.stepDetail,
+      error,
+      willRetry: attempt < maxAttempts,
+    })
+    await this.markAttemptFailed(
+      data,
+      redactProcessingText(errorMessageOf(error), {
+        keep: 'head',
+        maxBytes: PROCESSING_LOG_LIMITS.errorMessage,
+      }),
+    )
+  }
+
+  /** Removes the job's scratch directory; a cleanup failure is logged, never thrown. */
+  private async removeScratchDir(run: ConversionRun) {
+    const { job, data, jobId, attempt, temporaryRoot } = run
+    try {
+      await rm(temporaryRoot, { recursive: true, force: true })
+    } catch (cleanupError) {
+      this.logger.error(
+        `Failed to clean up temporary directory for job ${job.id} ${processingLogSuffix({ trackId: data.trackId, jobId, attempt, step: 'CLEANUP' })}`,
+        cleanupError instanceof Error ? cleanupError.stack : undefined,
+      )
+    }
+  }
+
+  /** After the final attempt: marks the track FAILED and dead-letters the job. */
   @OnWorkerEvent('failed')
   async onFailed(job: Job<ConvertAudioJob> | undefined, error: Error) {
     if (job?.name !== 'convert-audio') return
@@ -235,29 +280,8 @@ export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit 
     const attempt = job.attemptsMade
     const deadLetterJobId = `failed-${jobId}-${job.attemptsMade}`
 
-    const failed = await this.prisma.track.updateMany({
-      where: { id: job.data.trackId, audioUrl: job.data.sourceFileName },
-      data: {
-        processingStatus: 'FAILED',
-        processingError: redactProcessingText(error.message, {
-          keep: 'head',
-          maxBytes: PROCESSING_LOG_LIMITS.errorMessage,
-        }),
-        processingFinishedAt: new Date(),
-      },
-    })
-    if (failed.count !== 1) return
-
-    try {
-      await this.storage.deletePrefix(
-        getAudioGenerationRoot(job.data.trackId, job.data.sourceFileName),
-      )
-    } catch (cleanupError) {
-      this.logger.error(
-        `Unable to clean failed audio generation for track ${job.data.trackId}`,
-        cleanupError instanceof Error ? cleanupError.stack : undefined,
-      )
-    }
+    if (!(await this.markTrackFailed(job.data, error))) return
+    await this.removeFailedGeneration(job.data)
 
     await this.deadLetterQueue.add('convert-audio-failed', job.data, {
       jobId: deadLetterJobId,
@@ -274,25 +298,62 @@ export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit 
       error,
     })
 
+    this.reportPermanentFailure(job.data, { jobId, attempt, failedStep }, error)
+  }
+
+  /** Marks the track FAILED while this job's source is still current; false once superseded. */
+  private async markTrackFailed(data: ConvertAudioJob, error: Error) {
+    const failed = await this.prisma.track.updateMany({
+      where: { id: data.trackId, audioUrl: data.sourceFileName },
+      data: {
+        processingStatus: 'FAILED',
+        processingError: redactProcessingText(error.message, {
+          keep: 'head',
+          maxBytes: PROCESSING_LOG_LIMITS.errorMessage,
+        }),
+        processingFinishedAt: new Date(),
+      },
+    })
+    return failed.count === 1
+  }
+
+  /** Deletes a permanently failed job's partial generation; a failure is only logged. */
+  private async removeFailedGeneration(data: ConvertAudioJob) {
+    try {
+      await this.storage.deletePrefix(getAudioGenerationRoot(data.trackId, data.sourceFileName))
+    } catch (cleanupError) {
+      this.logger.error(
+        `Unable to clean failed audio generation for track ${data.trackId}`,
+        cleanupError instanceof Error ? cleanupError.stack : undefined,
+      )
+    }
+  }
+
+  /** Sends a permanent failure to Sentry and the log, grouped by error code and step. */
+  private reportPermanentFailure(
+    data: ConvertAudioJob,
+    { jobId, attempt, failedStep }: PermanentFailureContext,
+    error: Error,
+  ) {
     const classified = classifyProcessingError(error)
     Sentry.captureException(error, {
       tags: {
-        trackId: job.data.trackId,
+        trackId: data.trackId,
         jobId,
         step: failedStep ?? 'unknown',
         errorCode: classified.code,
-        trigger: job.data.trigger ?? 'UPLOAD',
+        trigger: data.trigger ?? 'UPLOAD',
       },
       fingerprint: ['audio-processing', classified.code, failedStep ?? 'unknown'],
     })
 
     this.logger.error(
-      `Audio conversion permanently failed for track ${job.data.trackId} ${processingLogSuffix({ trackId: job.data.trackId, jobId, attempt, errorCode: classified.code })}`,
+      `Audio conversion permanently failed for track ${data.trackId} ${processingLogSuffix({ trackId: data.trackId, jobId, attempt, errorCode: classified.code })}`,
       error.stack,
     )
   }
 
-  /** Runs the on stalled operation. */
+  /** Closes a stalled job's RUNNING attempt row. */
   @OnWorkerEvent('stalled')
   async onStalled(jobId: string) {
     this.logger.warn(`Audio conversion job ${jobId} stalled and will be recovered by BullMQ`)
@@ -346,7 +407,6 @@ export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit 
     })
   }
 
-  /** Runs the is missing file error operation. */
   private isMissingFileError(error: unknown): error is NodeJS.ErrnoException {
     return error instanceof Error && 'code' in error && error.code === 'ENOENT'
   }

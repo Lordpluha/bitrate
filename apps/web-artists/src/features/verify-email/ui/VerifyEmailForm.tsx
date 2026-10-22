@@ -4,14 +4,11 @@ import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import { useEmailVerification } from '../api/useEmailVerification'
-
-const verificationSchema = z.object({
-  email: z.email('Please enter a valid email address'),
-  code: z.string().regex(/^\d{6}$/, 'Enter the six-digit code'),
-})
-type VerificationFormData = z.infer<typeof verificationSchema>
+import {
+  type VerificationFormData,
+  verificationSchema,
+} from '../model/verification.schema'
 
 interface VerifyEmailFormProps {
   token?: string

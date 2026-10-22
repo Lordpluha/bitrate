@@ -231,12 +231,14 @@ describe('AdminArtistsService', () => {
   describe('softDelete', () => {
     it('throws ArtistNotFoundException when the artist does not exist', async () => {
       prisma.artist.findFirst.mockResolvedValue(null)
+      transaction.artist.updateMany.mockResolvedValue({ count: 0 })
 
       await expect(service.softDelete('missing', STAFF_ID)).rejects.toThrow(ArtistNotFoundException)
     })
 
     it('throws ArtistAlreadyDeletedException when the artist is already deleted', async () => {
       prisma.artist.findFirst.mockResolvedValue(buildArtist({ deletedAt: new Date() }) as never)
+      transaction.artist.updateMany.mockResolvedValue({ count: 0 })
 
       await expect(service.softDelete('artist-1', STAFF_ID)).rejects.toThrow(
         ArtistAlreadyDeletedException,

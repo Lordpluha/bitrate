@@ -1,3 +1,4 @@
+import { pipeToResponse } from '@common/utils/stream'
 import { SkipAudit } from '@infra/observability/skip-audit.decorator'
 import {
   AuditContext,
@@ -19,6 +20,7 @@ import {
   Head,
   HttpCode,
   HttpStatus,
+  Logger,
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
@@ -33,6 +35,7 @@ import { Throttle } from '@nestjs/throttler'
 import type { Request, Response } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { AdminTrackAudioService } from './admin-track-audio.service'
+import { AdminTrackListService } from './admin-track-list.service'
 import { AdminTracksService } from './admin-tracks.service'
 import {
   DeleteTrackSwagger,
@@ -58,12 +61,29 @@ import {
 /** No CDN sits in front of this route — it is a review surface, not a distribution path. */
 const AUDIO_CACHE_CONTROL = 'private, no-store'
 
+/** Playback issues many Range requests per track, so both audio routes get a higher limit. */
+const AUDIO_THROTTLE = { default: { ttl: 60_000, limit: 1_200 } }
+
+/** The headers every audio response carries, for a body of `contentLength` bytes. */
+function audioHeaders(contentType: string, contentLength: number): Record<string, string> {
+  return {
+    'Content-Type': contentType,
+    'Accept-Ranges': 'bytes',
+    'Content-Length': String(contentLength),
+    'Cache-Control': AUDIO_CACHE_CONTROL,
+    'Content-Disposition': 'inline',
+  }
+}
+
+const logger = new Logger('AdminTracksController')
+
 /** Operator-facing track processing pipeline. */
 @ApiTags('Admin Tracks')
 @AdminAuth()
 @Controller({ path: 'admin/tracks', version: '1' })
 export class AdminTracksController {
   constructor(
+    private readonly trackList: AdminTrackListService,
     private readonly tracks: AdminTracksService,
     private readonly trackAudio: AdminTrackAudioService,
   ) {}
@@ -73,7 +93,7 @@ export class AdminTracksController {
   @ListTracksSwagger()
   @Get('')
   list(@Query(new ZodValidationPipe(ListAdminTracksQuerySchema)) query: ListAdminTracksQueryDto) {
-    return this.tracks.findAll(query)
+    return this.trackList.findAll(query)
   }
 
   /** Runs the CSV export operation. */
@@ -88,7 +108,11 @@ export class AdminTracksController {
     @AuditContext() auditContext: AuditContextValue,
     @Res({ passthrough: true }) res: Response,
   ): Promise<StreamableFile> {
-    return sendCsvExport(res, 'tracks', await this.tracks.exportCsv(query, staff.id, auditContext))
+    return sendCsvExport(
+      res,
+      'tracks',
+      await this.trackList.exportCsv(query, staff.id, auditContext),
+    )
   }
 
   /** Runs the get track operation. */
@@ -106,7 +130,7 @@ export class AdminTracksController {
    */
   @RequirePermission('tracks:read')
   @ProbeTrackAudioSwagger()
-  @Throttle({ default: { ttl: 60_000, limit: 1_200 } })
+  @Throttle(AUDIO_THROTTLE)
   @Head(':id/audio')
   async probeAudio(
     @Param('id', ParseUUIDPipe) id: string,
@@ -114,20 +138,14 @@ export class AdminTracksController {
     @Res() res: Response,
   ) {
     const meta = await this.trackAudio.head(id, bitrate)
-    res.set({
-      'Content-Type': meta.contentType,
-      'Accept-Ranges': 'bytes',
-      'Content-Length': String(meta.fileSize),
-      'Cache-Control': AUDIO_CACHE_CONTROL,
-      'Content-Disposition': 'inline',
-    })
+    res.set(audioHeaders(meta.contentType, meta.fileSize))
     res.status(HttpStatus.OK).send()
   }
 
   /** Runs the stream audio operation. */
   @RequirePermission('tracks:read')
   @StreamTrackAudioSwagger()
-  @Throttle({ default: { ttl: 60_000, limit: 1_200 } })
+  @Throttle(AUDIO_THROTTLE)
   @Get(':id/audio')
   async streamAudio(
     @Param('id', ParseUUIDPipe) id: string,
@@ -149,17 +167,13 @@ export class AdminTracksController {
 
     res.status(audio.isPartial ? HttpStatus.PARTIAL_CONTENT : HttpStatus.OK)
     res.set({
-      'Content-Type': audio.contentType,
-      'Accept-Ranges': 'bytes',
-      'Content-Length': String(audio.contentLength),
-      'Cache-Control': AUDIO_CACHE_CONTROL,
-      'Content-Disposition': 'inline',
+      ...audioHeaders(audio.contentType, audio.contentLength),
       ...(audio.isPartial
         ? { 'Content-Range': `bytes ${audio.start}-${audio.end}/${audio.fileSize}` }
         : {}),
     })
 
-    audio.stream.pipe(res)
+    pipeToResponse(audio.stream, res, logger, `Audio for track ${id}`)
   }
 
   /** Runs the list processing attempts operation. */
