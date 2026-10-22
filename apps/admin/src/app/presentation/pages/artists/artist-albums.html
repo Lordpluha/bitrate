@@ -1,23 +1,25 @@
 <div class="space-y-3">
   <app-collection-status
     [loading]="collection.loading()"
-    [failure]="collection.failure()"
+    [failure]="collection.failure() ? ('artist.albums.error' | transloco) : null"
     [isEmpty]="collection.items().length === 0"
-    emptyMessage="No albums published yet."
+    [emptyMessage]="'artist.albums.empty' | transloco"
   />
 
   @if (collection.items().length > 0) {
     <div hlmTableContainer>
       <table hlmTable>
         <caption hlmCaption class="sr-only">
-          Albums, newest first
+          {{
+            'artist.albums.caption' | transloco
+          }}
         </caption>
         <thead hlmTHead>
           <tr hlmTr>
-            <th hlmTh scope="col">Album</th>
-            <th hlmTh scope="col">Type</th>
-            <th hlmTh scope="col">Tracks</th>
-            <th hlmTh scope="col">Released</th>
+            <th hlmTh scope="col">{{ 'artist.albums.album' | transloco }}</th>
+            <th hlmTh scope="col">{{ 'artist.albums.type' | transloco }}</th>
+            <th hlmTh scope="col">{{ 'artist.albums.tracks' | transloco }}</th>
+            <th hlmTh scope="col">{{ 'artist.albums.released' | transloco }}</th>
           </tr>
         </thead>
         <tbody hlmTBody>
@@ -26,10 +28,12 @@
               <td hlmTd>
                 {{ album.title }}
                 @if (album.takenDownAt) {
-                  <span hlmBadge variant="destructive" class="ml-2">taken down</span>
+                  <span hlmBadge variant="secondary" class="ms-2">{{
+                    'content.takenDown' | transloco
+                  }}</span>
                 }
               </td>
-              <td hlmTd class="text-muted-foreground">{{ album.type }}</td>
+              <td hlmTd class="text-muted-foreground">{{ typeKey[album.type] | transloco }}</td>
               <td hlmTd class="tabular-nums text-muted-foreground">{{ album.totalTracks }}</td>
               <td hlmTd class="tabular-nums text-muted-foreground">
                 {{ album.releaseDate ? (album.releaseDate | localizedDate: 'dd.MM.yyyy') : '—' }}

@@ -241,7 +241,51 @@
   },
   "users": {
     "batch": {
-      "items": "{count, plural, one {# listener} other {# listeners}}"
+      "items": "{count, plural, one {# listener} other {# listeners}}",
+      "deactivate": "Deactivate",
+      "deactivateConfirm": "Deactivate listeners",
+      "deactivateConsequence": "Sets a deletion date and signs each listener out. Playlists and history are kept."
+    },
+    "eyebrow": "Accounts · Listeners",
+    "title": "Listeners",
+    "subtitle": "Listener accounts: who they are, whether they confirmed their email, how they use Bitrate.",
+    "kpi": {
+      "listeners": "Listeners",
+      "listenersSub": "Active accounts"
+    },
+    "search": "Search username or email",
+    "filter": {
+      "status": "Status"
+    },
+    "email": {
+      "confirmed": "Confirmed",
+      "pending": "Not confirmed"
+    },
+    "table": {
+      "caption": "Listener accounts",
+      "listener": "Listener",
+      "email": "Email",
+      "emailState": "Email",
+      "joined": "Joined",
+      "selectAll": "Select all listeners on this page",
+      "select": "Select {name}"
+    },
+    "action": {
+      "deactivate": "Deactivate"
+    },
+    "empty": {
+      "title": "No listeners yet",
+      "desc": "Listener accounts appear here as people sign up."
+    },
+    "noResults": {
+      "title": "No listeners match these filters",
+      "titleQuery": "No listeners match “{query}”",
+      "desc": "Try another username or email, or clear the filter."
+    },
+    "error": {
+      "load": "Couldn’t load listeners",
+      "deactivate": "Couldn’t deactivate {name}.",
+      "batch": "Couldn’t deactivate the selected listeners."
     }
   },
   "catalog": {
@@ -966,6 +1010,165 @@
     "notFound": {
       "title": "Genre not found",
       "desc": "This genre doesn’t exist or was deleted. Go back to genres."
+    }
+  },
+  "account": {
+    "status": {
+      "active": "Active",
+      "deactivated": "Deactivated",
+      "all": "Any"
+    },
+    "kpi": {
+      "deactivated": "Deactivated",
+      "deactivatedSub": "Restorable at any time"
+    },
+    "action": {
+      "revokeSessions": "Revoke sessions",
+      "deactivate": "Deactivate",
+      "restore": "Restore"
+    },
+    "confirm": {
+      "revokeSessions": "Revoke every active session for {name}? They will be signed out on their next request.",
+      "revokeSessionsAction": "Yes, revoke sessions",
+      "deactivate": "Deactivate {name}? This signs them out and blocks sign-in until restored.",
+      "deactivateAction": "Yes, deactivate",
+      "restore": "Restore {name}? This reinstates sign-in immediately.",
+      "restoreAction": "Yes, restore"
+    },
+    "done": {
+      "revokedSessions": "{count, plural, one {Revoked # session} other {Revoked # sessions}} for {name}.",
+      "deactivated": "{name} was deactivated.",
+      "restored": "{name} was restored."
+    },
+    "joined": "joined {date}",
+    "tile": {
+      "activity": "Activity",
+      "activityMeta": "Since joining",
+      "sessions": "Active sessions",
+      "openReports": "Open reports",
+      "audit": "View audit history"
+    }
+  },
+  "artists": {
+    "eyebrow": "Accounts · Artists",
+    "title": "Artists",
+    "subtitle": "Artist accounts, their verification and what they have released.",
+    "kpi": {
+      "artists": "Artists",
+      "artistsSub": "Active accounts",
+      "verified": "Verified",
+      "verifiedSub": "{share}% of artists",
+      "waiting": "Waiting for verification",
+      "waitingSub": "Active, not verified yet"
+    },
+    "search": "Search name or email",
+    "filter": {
+      "status": "Status",
+      "verified": "Verified"
+    },
+    "verifiedFilter": {
+      "all": "Any",
+      "verified": "Verified",
+      "unverified": "Not verified"
+    },
+    "badge": {
+      "verified": "Verified",
+      "unverified": "Not verified"
+    },
+    "table": {
+      "caption": "Artist accounts",
+      "artist": "Artist",
+      "email": "Email",
+      "verified": "Verification",
+      "listeners": "Monthly listeners",
+      "joined": "Joined"
+    },
+    "action": {
+      "verify": "Verify",
+      "unverify": "Unverify",
+      "deactivate": "Deactivate"
+    },
+    "empty": {
+      "title": "No artists yet",
+      "desc": "Artist accounts appear here as people sign up."
+    },
+    "noResults": {
+      "title": "No artists match these filters",
+      "titleQuery": "No artists match “{query}”",
+      "desc": "Try another name or email, or clear the filters."
+    },
+    "error": {
+      "load": "Couldn’t load artists",
+      "verify": "Couldn’t change verification for {name}.",
+      "deactivate": "Couldn’t deactivate {name}."
+    }
+  },
+  "artist": {
+    "eyebrow": "Artists · Account",
+    "loadingTitle": "Artist",
+    "tile": {
+      "profile": "Profile",
+      "profileMeta": "Account and verification",
+      "email": "Email",
+      "country": "Country",
+      "listeners": "Monthly listeners",
+      "verification": "Verification",
+      "tracks": "Tracks",
+      "albums": "Albums",
+      "albumsMeta": "{count, plural, one {# album} other {# albums}}"
+    },
+    "tracks": {
+      "caption": "Tracks",
+      "track": "Track",
+      "state": "Pipeline",
+      "plays": "Plays",
+      "uploaded": "Uploaded",
+      "empty": "No tracks published yet.",
+      "error": "Couldn’t load tracks"
+    },
+    "albums": {
+      "caption": "Albums",
+      "album": "Album",
+      "type": "Type",
+      "tracks": "Tracks",
+      "released": "Released",
+      "empty": "No albums published yet.",
+      "error": "Couldn’t load albums"
+    },
+    "notFound": {
+      "title": "Artist not found",
+      "desc": "This account doesn’t exist or was deleted. Go back to artists."
+    },
+    "error": {
+      "load": "Couldn’t load this artist",
+      "verify": "Couldn’t change verification for {name}."
+    }
+  },
+  "user": {
+    "eyebrow": "Listeners · Account",
+    "loadingTitle": "Listener",
+    "tile": {
+      "playlists": "Playlists",
+      "liked": "Liked tracks",
+      "history": "Listening history",
+      "historyMeta": "Latest first",
+      "reportsFiled": "Reports filed",
+      "emailState": "Email"
+    },
+    "history": {
+      "caption": "Listening history",
+      "track": "Track",
+      "artist": "Artist",
+      "listened": "Listened",
+      "empty": "No listening history recorded yet.",
+      "error": "Couldn’t load listening history"
+    },
+    "notFound": {
+      "title": "Listener not found",
+      "desc": "This account doesn’t exist or was deleted. Go back to listeners."
+    },
+    "error": {
+      "load": "Couldn’t load this listener"
     }
   }
 }

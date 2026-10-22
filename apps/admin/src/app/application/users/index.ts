@@ -1,6 +1,7 @@
 export * from './deactivate-user.use-case'
 export * from './deactivate-users-batch.use-case'
 export * from './get-user.use-case'
+export * from './get-user-stats.use-case'
 export * from './list-listening-history.use-case'
 export * from './list-users.use-case'
 export * from './restore-user.use-case'

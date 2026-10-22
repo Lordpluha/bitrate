@@ -64,7 +64,7 @@ describe('ListeningHistory', () => {
 
     const host = fixture.nativeElement as HTMLElement
     expect(host.querySelector('[role="alert"]')?.textContent).toContain(
-      'Could not load listening history.',
+      'Couldn’t load listening history',
     )
   })
 

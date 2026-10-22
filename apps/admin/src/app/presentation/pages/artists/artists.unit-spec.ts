@@ -120,7 +120,7 @@ describe('ArtistsPage', () => {
   it('patches the URL with the sort and resets to page one, and reloads with it', async () => {
     await harness.navigateByUrl('/artists?page=3', ArtistsPage)
     await harness.fixture.whenStable()
-    expect(list).toHaveBeenCalledTimes(1)
+    expect(list.mock.calls.filter(([query]) => query.limit !== 1)).toHaveLength(1)
 
     harness.routeNativeElement?.querySelector<HTMLButtonElement>('app-sort-header button')?.click()
     await harness.fixture.whenStable()
