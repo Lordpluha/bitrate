@@ -1,0 +1,56 @@
+<header
+  class="sticky top-2.5 z-30 flex h-14 items-center gap-2 rounded-full border border-glass-line bg-glass-strong pl-3.5 pr-2 shadow-glass backdrop-blur-[22px] backdrop-saturate-150 lg:hidden"
+>
+  <a
+    class="flex min-w-0 flex-1 items-center gap-2.5 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+    routerLink="/"
+  >
+    <img class="size-[30px] shrink-0" src="/logo.svg" alt="" width="30" height="30" />
+    <span class="flex min-w-0 flex-col leading-none">
+      <span class="truncate font-display text-[0.9375rem] font-bold tracking-tight">Bitrate</span>
+      <span class="mt-0.5 truncate text-[0.6875rem] text-muted-foreground">{{
+        'nav.brand.operators' | transloco
+      }}</span>
+    </span>
+  </a>
+  <app-profile-menu />
+</header>
+
+<nav
+  class="fixed bottom-3.5 left-1/2 z-40 flex -translate-x-1/2 gap-0.5 rounded-full border border-glass-line bg-glass-strong p-1.5 shadow-glass backdrop-blur-[22px] backdrop-saturate-150 lg:hidden"
+  [attr.aria-label]="'shell.tabs.label' | transloco"
+>
+  @if (canOverview()) {
+    <a
+      class="grid h-12 w-[58px] place-items-center rounded-full text-muted-foreground transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+      routerLink="/"
+      routerLinkActive="bg-primary text-primary-foreground shadow-glow"
+      [routerLinkActiveOptions]="{ exact: true }"
+      ariaCurrentWhenActive="page"
+      [attr.aria-label]="'nav.overview' | transloco"
+    >
+      <ng-icon class="text-xl" name="lucideLayoutDashboard" aria-hidden="true" />
+    </a>
+  }
+  <button
+    class="grid h-12 w-[58px] place-items-center rounded-full text-muted-foreground transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+    type="button"
+    aria-haspopup="dialog"
+    [attr.aria-label]="'shell.tabs.search' | transloco"
+    (click)="openPalette()"
+  >
+    <ng-icon class="text-xl" name="lucideSearch" aria-hidden="true" />
+  </button>
+  <button
+    class="grid h-12 w-[58px] place-items-center rounded-full text-muted-foreground transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+    [class.bg-primary]="menuOpen()"
+    [class.text-primary-foreground]="menuOpen()"
+    type="button"
+    aria-haspopup="dialog"
+    [attr.aria-expanded]="menuOpen()"
+    [attr.aria-label]="'shell.tabs.menu' | transloco"
+    (click)="toggleMenu()"
+  >
+    <ng-icon class="text-xl" name="lucideMenu" aria-hidden="true" />
+  </button>
+</nav>

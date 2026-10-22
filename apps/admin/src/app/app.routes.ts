@@ -1,5 +1,6 @@
 import type { Routes } from '@angular/router'
 import { requirePermission, requireStaffSession } from '@presentation/guards'
+import { CRUMB_DATA_KEY } from '@presentation/navigation'
 
 export const routes: Routes = [
   {
@@ -206,5 +207,15 @@ export const routes: Routes = [
     loadComponent: () =>
       import('@presentation/pages/staff/staff-detail').then((m) => m.StaffDetailPage),
   },
-  { path: '**', redirectTo: '' },
+  {
+    // Any address the console does not know: its own page inside the shell, not a silent
+    // redirect to `/` that hid typos and stale links. Staff session only — signed out, the
+    // session guard sends the operator to sign in first.
+    path: '**',
+    title: 'Not found · Bitrate operators',
+    data: { [CRUMB_DATA_KEY]: 'notFound.crumb' },
+    canActivate: [requireStaffSession],
+    loadComponent: () =>
+      import('@presentation/pages/not-found/not-found').then((m) => m.NotFoundPage),
+  },
 ]
