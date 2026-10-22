@@ -5,34 +5,35 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import type { ClassValue } from 'clsx'
 import { injectBrnButtonConfig } from './hlm-button.token'
 
+/**
+ * The console's pill buttons. `default` is the one primary action on a surface (it glows),
+ * `secondary` and `ghost` sit on glass, `destructive` is the solid error pill for an
+ * irreversible decision.
+ */
 export const buttonVariants = cva(
-  "focus-visible:border-ring focus-visible:ring-ring/50 data-[matches-spartan-invalid=true]:ring-destructive/20 dark:data-[matches-spartan-invalid=true]:ring-destructive/40 data-[matches-spartan-invalid=true]:border-destructive dark:data-[matches-spartan-invalid=true]:border-destructive/50 rounded-md border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-3 active:not-aria-[haspopup]:translate-y-px data-[matches-spartan-invalid=true]:ring-3 [&_ng-icon:not([class*='text-'])]:text-[length:--spacing(4)] group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap transition-all outline-none select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_ng-icon]:pointer-events-none [&_ng-icon]:shrink-0",
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring data-[matches-spartan-invalid=true]:ring-3 data-[matches-spartan-invalid=true]:ring-error/20 rounded-full border border-transparent bg-clip-padding text-[0.8125rem] font-semibold active:not-aria-[haspopup]:translate-y-px [&_ng-icon:not([class*='text-'])]:text-base group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap transition-[background-color,color,box-shadow,opacity] select-none disabled:cursor-not-allowed disabled:opacity-45 data-disabled:pointer-events-none data-disabled:opacity-45 [&_ng-icon]:pointer-events-none [&_ng-icon]:shrink-0",
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground hover:bg-primary/80',
+        default: 'bg-primary text-primary-foreground shadow-glow hover:bg-primary-hover',
         outline:
-          'border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground shadow-xs',
+          'border-glass-line bg-transparent text-foreground hover:bg-glass-hover aria-expanded:bg-glass-hover',
         secondary:
-          'bg-secondary text-secondary-foreground aria-expanded:bg-secondary aria-expanded:text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)]',
-        ghost:
-          'hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground',
-        destructive:
-          'bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30',
-        link: 'text-primary underline-offset-4 hover:underline',
+          'bg-foreground/7 text-foreground hover:bg-foreground/10 aria-expanded:bg-foreground/10',
+        ghost: 'text-foreground hover:bg-glass-hover aria-expanded:bg-glass-hover',
+        destructive: 'bg-error text-error-foreground hover:bg-error/85 focus-visible:outline-error',
+        link: 'text-accent underline-offset-4 hover:underline',
       },
       size: {
         default:
-          'h-9 gap-1.5 px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2',
-        xs: "h-6 gap-1 rounded-[min(var(--radius-md),8px)] px-2 text-xs in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_ng-icon:not([class*='text-'])]:text-[length:--spacing(3)]",
-        sm: 'h-8 gap-1 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5',
-        lg: 'h-10 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2',
-        icon: 'size-9',
-        'icon-xs':
-          "size-6 rounded-[min(var(--radius-md),8px)] in-data-[slot=button-group]:rounded-md [&_ng-icon:not([class*='text-'])]:text-[length:--spacing(3)]",
-        'icon-sm':
-          'size-8 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-md',
-        'icon-lg': 'size-10',
+          'h-[38px] gap-2 px-4 has-data-[icon=inline-start]:ps-3.5 has-data-[icon=inline-end]:pe-3.5',
+        xs: "h-6 gap-1 px-2.5 text-xs [&_ng-icon:not([class*='text-'])]:text-xs",
+        sm: 'h-8 gap-1.5 px-3 text-xs',
+        lg: 'h-11 gap-2 px-5 text-sm',
+        icon: 'size-10',
+        'icon-xs': "size-6 [&_ng-icon:not([class*='text-'])]:text-xs",
+        'icon-sm': 'size-8',
+        'icon-lg': 'size-11',
       },
     },
     defaultVariants: {
