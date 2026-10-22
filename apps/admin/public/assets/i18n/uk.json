@@ -95,5 +95,64 @@
       "users": "Акаунти слухачів",
       "audit": "Останні дії персоналу"
     }
+  },
+  "ui": {
+    "loading": "Завантаження…",
+    "working": "Виконується…",
+    "cancel": "Скасувати",
+    "close": "Закрити",
+    "tryAgain": "Спробувати ще раз",
+    "clearFilters": "Скинути фільтри",
+    "pagination": {
+      "label": "Сторінки",
+      "summary": "Сторінка {page} з {pages} · усього {total}",
+      "range": "{from}–{to} з {total}",
+      "previous": "Назад",
+      "next": "Далі"
+    },
+    "sort": {
+      "label": "Сортувати за «{column}», {state}",
+      "ascending": "за зростанням",
+      "descending": "за спаданням",
+      "none": "без сортування"
+    },
+    "batch": {
+      "region": "Дії з вибраним",
+      "selected": "Вибрано: {items}",
+      "clear": "Зняти вибір",
+      "confirmTitle": "{action}: {items}",
+      "affected": "Рядки, яких це стосується",
+      "finished": "{action}: готово",
+      "summary": "Успішно: {succeeded}, з помилкою: {failed}.",
+      "perRow": "Результат для кожного рядка",
+      "outcome": {
+        "succeeded": "успішно",
+        "failed": "помилка"
+      }
+    },
+    "export": {
+      "action": "Експорт CSV",
+      "busy": "Експортуємо…",
+      "failed": "Експорт не завершився. Спробуйте ще раз.",
+      "truncated": "У файлі лише перші {max} рядків. Звузьте фільтри, щоб експортувати решту."
+    },
+    "confirm": {
+      "reason": "Причина (необовʼязково)"
+    }
+  },
+  "moderation": {
+    "batch": {
+      "items": "{count, plural, one {# скарга} few {# скарги} many {# скарг} other {# скарги}}"
+    }
+  },
+  "users": {
+    "batch": {
+      "items": "{count, plural, one {# слухач} few {# слухачі} many {# слухачів} other {# слухача}}"
+    }
+  },
+  "catalog": {
+    "batch": {
+      "items": "{count, plural, one {# трек} few {# треки} many {# треків} other {# трека}}"
+    }
   }
 }

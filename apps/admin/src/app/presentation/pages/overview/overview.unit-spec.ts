@@ -9,6 +9,7 @@ import { SessionStore } from '@application/session'
 import type { Overview, OverviewSeries } from '@domain/overview'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { OverviewPage } from './overview'
+import { provideTestTransloco } from '@testing/transloco'
 
 const ADMIN_STAFF = {
   id: '3f2504e0-4f89-41d3-9a0c-0305e82c3301',
@@ -72,6 +73,7 @@ describe('OverviewPage', () => {
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
       providers: [
+        ...provideTestTransloco(),
         provideZonelessChangeDetection(),
         provideRouter(routes),
         provideLocationMocks(),

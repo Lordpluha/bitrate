@@ -4,6 +4,7 @@ import type { CsvDownload } from '@domain/shared'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ExportCsvButton } from './export-csv-button'
 import { FileSaver } from './file-saver'
+import { provideTestTransloco } from '@testing/transloco'
 
 const download = (truncated = false): CsvDownload => ({
   blob: new Blob(['id\r\n']),
@@ -29,7 +30,11 @@ describe('ExportCsvButton', () => {
     exporter.mockReset()
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
-      providers: [provideZonelessChangeDetection(), { provide: FileSaver, useValue: { save } }],
+      providers: [
+        ...provideTestTransloco(),
+        provideZonelessChangeDetection(),
+        { provide: FileSaver, useValue: { save } },
+      ],
     })
   })
 

@@ -13,6 +13,7 @@ import { emptyPage, type Page, ResourceNotFoundError, ResourceWriteError } from 
 import type { ProcessingAttempt, TrackDetail } from '@domain/track'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { TrackDetailPage } from './track-detail'
+import { provideTestTransloco } from '@testing/transloco'
 
 const ADMIN_STAFF = {
   id: '3f2504e0-4f89-41d3-9a0c-0305e82c3301',
@@ -57,6 +58,7 @@ function create(): void {
   TestBed.resetTestingModule()
   TestBed.configureTestingModule({
     providers: [
+      ...provideTestTransloco(),
       provideZonelessChangeDetection(),
       provideRouter([]),
       { provide: GetTrackUseCase, useValue: { execute: getTrack } },
