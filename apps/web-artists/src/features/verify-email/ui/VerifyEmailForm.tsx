@@ -60,14 +60,14 @@ export function VerifyEmailForm({ token, email, next }: VerifyEmailFormProps) {
   return (
     <section
       aria-labelledby="verify-email-title"
-      className="w-full max-w-120 px-14 py-20 max-lg:px-0 max-lg:py-8"
+      className="w-full max-w-120 rounded-[10px] px-14 py-20 text-white max-lg:px-0 max-lg:py-8"
     >
       <div className="mb-8 flex flex-col items-center gap-2 text-center">
         <LogoIcon height={64} width={64} />
         <Typography as="h1" id="verify-email-title" size="heading2">
           Verify your email
         </Typography>
-        <p className="text-lg text-text-secondary">
+        <p className="text-lg text-neutral-400">
           {verify.isSuccess
             ? 'You’re ready to make some noise.'
             : 'One more step to your artist workspace.'}
@@ -75,7 +75,7 @@ export function VerifyEmailForm({ token, email, next }: VerifyEmailFormProps) {
       </div>
       {verify.isSuccess ? (
         <div
-          className="mb-6 rounded-lg border border-border p-5 text-center"
+          className="mb-6 rounded-lg border border-neutral-600 p-5 text-center"
           role="status"
         >
           Your email has been verified. You can now sign in.
@@ -115,11 +115,11 @@ export function VerifyEmailForm({ token, email, next }: VerifyEmailFormProps) {
               }
               aria-invalid={Boolean(errors.email)}
               autoComplete="email"
-              className="text-xl! hover:border-foreground focus-visible:ring-ring"
+              className="text-xl! hover:border-white focus-visible:ring-ring"
               disabled={busy}
               id="verification-email"
               type="email"
-              variant="default"
+              variant="black"
               {...form.register('email', {
                 onChange: () => {
                   verify.reset()
@@ -129,7 +129,7 @@ export function VerifyEmailForm({ token, email, next }: VerifyEmailFormProps) {
             />
             {errors.email && (
               <p
-                className="text-sm text-destructive"
+                className="text-sm text-red-500"
                 id="verification-email-error"
                 role="alert"
               >
@@ -147,25 +147,22 @@ export function VerifyEmailForm({ token, email, next }: VerifyEmailFormProps) {
               }
               aria-invalid={Boolean(errors.code)}
               autoComplete="one-time-code"
-              className="h-16 text-center text-3xl! tracking-widest tabular-nums hover:border-foreground focus-visible:ring-ring"
+              className="h-16 text-center text-3xl! tracking-widest tabular-nums hover:border-white focus-visible:ring-ring"
               disabled={busy}
               id="verification-code"
               inputMode="numeric"
               maxLength={6}
               placeholder="000000"
               type="text"
-              variant="default"
+              variant="black"
               {...form.register('code', { onChange: () => verify.reset() })}
             />
-            <p
-              className="text-sm text-text-secondary"
-              id="verification-code-hint"
-            >
+            <p className="text-sm text-neutral-400" id="verification-code-hint">
               Six digits. You can paste the entire code.
             </p>
             {errors.code && (
               <p
-                className="text-sm text-destructive"
+                className="text-sm text-red-500"
                 id="verification-code-error"
                 role="alert"
               >
@@ -173,7 +170,7 @@ export function VerifyEmailForm({ token, email, next }: VerifyEmailFormProps) {
               </p>
             )}
             {verify.error && (
-              <p className="text-destructive" role="alert">
+              <p className="text-red-500" role="alert">
                 {verify.error.message}
               </p>
             )}
@@ -203,13 +200,13 @@ export function VerifyEmailForm({ token, email, next }: VerifyEmailFormProps) {
             </Button>
           </form>
           {resend.error && (
-            <p className="mt-4 text-destructive" role="alert">
+            <p className="mt-4 text-red-500" role="alert">
               {resend.error.message}
             </p>
           )}
           {resend.isSuccess && (
             <p
-              className="mt-4 text-center text-text-secondary"
+              className="mt-4 text-center text-neutral-400"
               role={resend.data === 'unavailable' ? 'alert' : 'status'}
             >
               {resend.data === 'development'
