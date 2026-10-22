@@ -67,7 +67,7 @@ const blob = (color, clear, x, y, w, h, opacity) => ({
     { color: clear, position: 1 },
   ],
 })
-export const aurora = (scrim = 0) => [
+const aurora = (scrim = 0) => [
   C.background,
   blob(C.primary, CLEAR.primary, 0.18, 0.02, 1.0, 0.55, 0.5),
   blob(C.blue500, CLEAR.blue, 0.95, 1.0, 1.1, 0.75, 0.42),
@@ -99,7 +99,7 @@ export const frame = (name, w, h, child, scrim = 0) => ({
 })
 
 /* ---------- Ukrainian copy ---------- */
-export const UK = {
+const UK = {
   Overview: 'Огляд',
   Moderation: 'Модерація',
   Releases: 'Релізи',
@@ -281,7 +281,7 @@ const islandParts = (page, pocket, unread = true) => ({
   ...(unread ? {} : { 'island.bell.badge': { enabled: false } }),
 })
 /* getters: tokens resolve when used, after the library alias is set */
-export const TONE = {
+const TONE = {
   get success() {
     return [C.successSurface, C.successText]
   },

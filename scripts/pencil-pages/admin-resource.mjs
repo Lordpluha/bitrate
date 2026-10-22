@@ -10,7 +10,7 @@ import {
   RESOURCES,
   STATE_LABEL,
 } from './admin-resources.mjs'
-import { A, Btn, IconBtn, MShell, Pill, Shell, Tx, frame } from './admin-ui.mjs'
+import { A, Btn, MShell, Pill, Shell, Tx, frame } from './admin-ui.mjs'
 import { C } from './kit.mjs'
 import { L, Row, state } from './ui.mjs'
 
@@ -73,7 +73,7 @@ const perms = (groups) =>
       ),
     ),
   ])
-const cell = (c, w, m) => {
+const cell = (c, w) => {
   const size = w ? { width: w, textGrowth: 'fixed-width' } : WRAP
   if (typeof c === 'string') return Tx('Body', c, size)
   if (c.tone) return L({ name: 'Cell', width: w ?? 'fill_container' }, [chip(c)])
@@ -98,7 +98,7 @@ const tableRows = (b, m) => {
       A('Admin/Table/Row', W, {
         cells: L(
           { name: 'Cells', gap: 12, alignItems: 'center', width: 'fill_container' },
-          keep.map(([c, i]) => cell(r[i], c.w, m)),
+          keep.map(([c, i]) => cell(r[i], c.w)),
         ),
       }),
     ),
@@ -474,7 +474,7 @@ const listBody = (sp, st, m) => {
             sp.select
               ? A(sel.has(r.id) ? 'Checkbox/On' : 'Checkbox/Off', { name: 'Select' })
               : null,
-            ...c.map((col) => cell(r[col.k], col.w, m)),
+            ...c.map((col) => cell(r[col.k], col.w)),
             sp.detail ? A('Admin/Cell/Chevron', { name: 'Open' }) : null,
           ].filter(Boolean),
         ),

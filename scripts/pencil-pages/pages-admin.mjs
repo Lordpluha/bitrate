@@ -516,7 +516,7 @@ const NOTICES = [
     false,
   ],
 ]
-export const popover = (m) =>
+const popover = (m) =>
   A(
     'Admin/Popover',
     { name: 'Notifications', ...(m ? { width: 'fill_container' } : {}) },
