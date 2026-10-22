@@ -120,7 +120,7 @@ describe('ProcessingHistory', () => {
 
     const host = fixture.nativeElement as HTMLElement
     expect(host.querySelector('[role="alert"]')?.textContent).toContain(
-      'Could not load processing history.',
+      'Couldn’t load processing history',
     )
   })
 

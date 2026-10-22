@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core'
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco'
+import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core'
 import type { ProcessingAttempt } from '@domain/track'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { buildDiagnosticsText } from './processing-attempt-diagnostics.lib'
@@ -12,7 +13,7 @@ let nextDiagnosticsId = 0
  */
 @Component({
   selector: 'app-processing-attempt-diagnostics',
-  imports: [HlmButtonImports],
+  imports: [HlmButtonImports, TranslocoPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <button
@@ -22,34 +23,36 @@ let nextDiagnosticsId = 0
       [attr.aria-controls]="contentId"
       (click)="toggle()"
     >
-      {{ expanded() ? 'Hide diagnostics' : 'Show diagnostics' }}
+      {{ (expanded() ? 'attempt.diagnostics.hide' : 'attempt.diagnostics.show') | transloco }}
     </button>
     @if (expanded()) {
       <div [id]="contentId" class="mt-2 space-y-2">
         @if (attempt().commandSummary) {
-          <pre class="whitespace-pre-wrap break-all rounded bg-muted p-2 font-mono text-xs">{{
-            attempt().commandSummary
-          }}</pre>
+          <pre
+            class="whitespace-pre-wrap break-all rounded-xl bg-foreground/5 p-2.5 font-mono text-xs"
+            >{{ attempt().commandSummary }}</pre>
         }
         @if (attempt().stderrTail) {
-          <pre class="whitespace-pre-wrap break-all rounded bg-muted p-2 font-mono text-xs">{{
-            attempt().stderrTail
-          }}</pre>
+          <pre
+            class="whitespace-pre-wrap break-all rounded-xl bg-foreground/5 p-2.5 font-mono text-xs"
+            >{{ attempt().stderrTail }}</pre>
         }
         @if (attempt().errorStack) {
-          <pre class="whitespace-pre-wrap break-all rounded bg-muted p-2 font-mono text-xs">{{
-            attempt().errorStack
-          }}</pre>
+          <pre
+            class="whitespace-pre-wrap break-all rounded-xl bg-foreground/5 p-2.5 font-mono text-xs"
+            >{{ attempt().errorStack }}</pre>
         }
         <button
           hlmBtn
           size="sm"
           variant="outline"
           type="button"
-          [attr.aria-label]="'Copy diagnostics for attempt ' + attempt().attempt"
+          [attr.aria-label]="
+            'attempt.diagnostics.copyLabel' | transloco: { attempt: attempt().attempt }
+          "
           (click)="copy()"
         >
-          Copy diagnostics
+          {{ 'attempt.diagnostics.copy' | transloco }}
         </button>
         <p class="text-xs text-muted-foreground" role="status" aria-live="polite">
           {{ announcement() }}
@@ -59,6 +62,7 @@ let nextDiagnosticsId = 0
   `,
 })
 export class ProcessingAttemptDiagnostics {
+  private readonly transloco = inject(TranslocoService)
   readonly attempt = input.required<ProcessingAttempt>()
 
   protected readonly contentId = `processing-attempt-diagnostics-${nextDiagnosticsId++}`
@@ -73,9 +77,9 @@ export class ProcessingAttemptDiagnostics {
     const text = buildDiagnosticsText(this.attempt())
     try {
       await navigator.clipboard.writeText(text)
-      this.announcement.set('Copied diagnostics to the clipboard.')
+      this.announcement.set(this.transloco.translate('attempt.diagnostics.copied'))
     } catch {
-      this.announcement.set('Could not copy — clipboard access is unavailable.')
+      this.announcement.set(this.transloco.translate('attempt.diagnostics.copyFailed'))
     }
   }
 }

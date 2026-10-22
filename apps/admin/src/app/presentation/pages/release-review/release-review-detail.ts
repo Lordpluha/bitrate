@@ -245,7 +245,7 @@ export class ReleaseReviewDetailPage {
     return FAILURE.other
   }
 
-  private t(key: string, params: Record<string, string> = {}): string {
+  private t(key: string, params: Record<string, string | number> = {}): string {
     return this.transloco.translate(key, params, this.locale())
   }
 }

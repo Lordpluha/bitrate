@@ -5,6 +5,7 @@ import { PrepareTrackAudioUseCase } from '@application/catalog'
 import type { TrackAudioFile, TrackAudioSource, TrackDetail } from '@domain/track'
 import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
 import { TrackAudioPlayer } from './track-audio-player'
+import { provideTestTransloco } from '@testing/transloco'
 
 const TRACK_ID = '9f2504e0-4f89-41d3-9a0c-0305e82c3301'
 
@@ -110,6 +111,7 @@ describe('TrackAudioPlayer', () => {
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
       providers: [
+        ...provideTestTransloco(),
         provideZonelessChangeDetection(),
         { provide: PrepareTrackAudioUseCase, useValue: { execute } },
       ],
@@ -194,7 +196,7 @@ describe('TrackAudioPlayer', () => {
       const { player } = await render()
 
       await expect(player.resolveSource({ bitrate: 320 })).rejects.toThrow(
-        'Could not start playback — press Play to continue.',
+        'Couldn’t start playback — press Play to continue.',
       )
     })
   })

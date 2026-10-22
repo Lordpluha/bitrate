@@ -1,3 +1,4 @@
+import { CountOpenReportsUseCase } from '@application/moderation'
 import { provideLocationMocks } from '@angular/common/testing'
 import { provideZonelessChangeDetection } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
@@ -71,6 +72,7 @@ describe('AlbumsPage', () => {
     TestBed.configureTestingModule({
       providers: [
         ...provideTestTransloco(),
+        { provide: CountOpenReportsUseCase, useValue: { execute: () => Promise.resolve(2) } },
         provideZonelessChangeDetection(),
         provideRouter(routes),
         provideLocationMocks(),
@@ -90,8 +92,8 @@ describe('AlbumsPage', () => {
     const rows = harness.routeNativeElement?.querySelectorAll('tbody tr') ?? []
     expect(rows).toHaveLength(2)
     expect(rows[0]?.textContent).toContain('Night Signal')
-    expect(rows[0]?.textContent).not.toContain('taken down')
-    expect(rows[1]?.textContent).toContain('taken down')
+    expect(rows[0]?.textContent).not.toContain('Taken down')
+    expect(rows[1]?.textContent).toContain('Taken down')
   })
 
   it('links each album to its detail page', async () => {
@@ -139,7 +141,7 @@ describe('AlbumsPage', () => {
     await harness.navigateByUrl('/albums', AlbumsPage)
     await harness.fixture.whenStable()
 
-    expect(harness.routeNativeElement?.textContent).toContain('No albums match this filter.')
+    expect(harness.routeNativeElement?.textContent).toContain('No albums yet')
   })
 
   it('reports a failed load instead of an empty list', async () => {
@@ -148,6 +150,6 @@ describe('AlbumsPage', () => {
     await harness.navigateByUrl('/albums', AlbumsPage)
     await harness.fixture.whenStable()
 
-    expect(harness.routeNativeElement?.textContent).toContain('Could not load albums.')
+    expect(harness.routeNativeElement?.textContent).toContain('Couldn’t load albums')
   })
 })

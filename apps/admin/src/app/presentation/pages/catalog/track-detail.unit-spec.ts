@@ -91,7 +91,7 @@ describe('TrackDetailPage', () => {
 
     const host = fixture.nativeElement as HTMLElement
     expect(host.textContent).toContain('Night Drive')
-    expect(host.textContent).toContain('READY')
+    expect(host.textContent).toContain('Ready')
   })
 
   it('shows the not-found message when the track does not exist', async () => {
@@ -103,7 +103,7 @@ describe('TrackDetailPage', () => {
 
     expect(
       (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent,
-    ).toContain('could not be found')
+    ).toContain('Track not found')
   })
 
   it('shows a load failure, not not-found, when the load fails for another reason', async () => {
@@ -114,8 +114,8 @@ describe('TrackDetailPage', () => {
     await fixture.whenStable()
 
     const alert = (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')
-    expect(alert?.textContent).toContain('Could not load this track.')
-    expect(alert?.textContent).not.toContain('could not be found')
+    expect(alert?.textContent).toContain('Couldn’t load this track')
+    expect(alert?.textContent).not.toContain('Track not found')
   })
 
   it('hides the restore button for a track that is not taken down', async () => {

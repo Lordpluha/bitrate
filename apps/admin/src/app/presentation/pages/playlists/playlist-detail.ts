@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core'
 import { ActivatedRoute, RouterLink } from '@angular/router'
 import {
   GetPlaylistUseCase,
@@ -15,9 +15,23 @@ import {
   type PlaylistDetail,
 } from '@domain/playlist'
 import { TAKE_DOWN_REASON_MAX_LENGTH } from '@domain/shared'
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco'
+import { NgIcon, provideIcons } from '@ng-icons/core'
+import {
+  lucideArrowRight,
+  lucideCheck,
+  lucideEye,
+  lucideEyeOff,
+  lucideList,
+  lucideListMusic,
+  lucideRotateCcw,
+  lucideX,
+} from '@ng-icons/lucide'
+import { KvRow, PageHeader, Skeleton, StateMessage, Tile, TileGrid } from '@presentation/components'
+import { LocaleStore } from '@presentation/navigation'
 import {
   isStaleStateError,
-  resourceWriteErrorMessage,
+  resourceWriteError,
 } from '@presentation/pages/shared/resource-write-error.message'
 import { LocalizedDatePipe } from '@presentation/pipes'
 import { type ConfirmedWrite, createConfirmAction, createDetailResource } from '@presentation/state'
@@ -30,52 +44,79 @@ import { HlmTableImports } from '@spartan-ng/helm/table'
 /** The write the open dialog will perform. */
 type PendingAction = 'hide' | 'unhide' | 'take-down' | 'restore'
 
-/** What each confirm dialog says; the action is the only thing the template switches on. */
+/** What each confirm dialog says, as keys; the action is the only thing the template switches on. */
 const DIALOG_COPY = {
   hide: {
-    title: 'Hide playlist',
-    confirm: 'Yes, hide',
+    title: 'playlist.dialog.hideTitle',
+    body: 'playlist.dialog.hideDesc',
+    confirm: 'playlist.dialog.hideAction',
     destructive: true,
-    body: (title: string) =>
-      `Hide "${title}"? It becomes private and leaves the public list. It is not deleted, and can be un-hidden.`,
   },
   unhide: {
-    title: 'Un-hide playlist',
-    confirm: 'Yes, un-hide',
+    title: 'playlist.dialog.unhideTitle',
+    body: 'playlist.dialog.unhideDesc',
+    confirm: 'playlist.dialog.unhideAction',
     destructive: false,
-    body: (title: string) => `Make "${title}" public again? Its take-down state is not changed.`,
   },
   'take-down': {
-    title: 'Take down playlist',
-    confirm: 'Yes, take down',
+    title: 'playlist.dialog.takeDownTitle',
+    body: 'playlist.dialog.takeDownDesc',
+    confirm: 'content.yesTakeDown',
     destructive: true,
-    body: (title: string) =>
-      `Take down "${title}"? It is soft-deleted until restored. Its visibility is not changed.`,
   },
   restore: {
-    title: 'Restore playlist',
-    confirm: 'Yes, restore',
+    title: 'playlist.dialog.restoreTitle',
+    body: 'playlist.dialog.restoreDesc',
+    confirm: 'content.yesRestore',
     destructive: false,
-    body: (title: string) =>
-      `Restore "${title}"? Its visibility is not changed, so a hidden playlist stays hidden.`,
   },
 } as const satisfies Record<
   PendingAction,
-  { title: string; confirm: string; destructive: boolean; body: (title: string) => string }
+  { title: string; body: string; confirm: string; destructive: boolean }
 >
+
+const DONE_KEY: Record<PendingAction, string> = {
+  hide: 'playlist.done.hide',
+  unhide: 'playlist.done.unhide',
+  'take-down': 'playlist.done.takeDown',
+  restore: 'playlist.done.restore',
+}
+
+const LOAD_ERROR = 'playlist.error.load'
 
 @Component({
   selector: 'app-playlist-detail',
   imports: [
-    LocalizedDatePipe,
-    RouterLink,
     HlmBadgeImports,
     HlmButtonImports,
     HlmDialogImports,
     HlmLabelImports,
     HlmTableImports,
+    KvRow,
+    LocalizedDatePipe,
+    NgIcon,
+    PageHeader,
+    RouterLink,
+    Skeleton,
+    StateMessage,
+    Tile,
+    TileGrid,
+    TranslocoPipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    provideIcons({
+      lucideArrowRight,
+      lucideCheck,
+      lucideEye,
+      lucideEyeOff,
+      lucideList,
+      lucideListMusic,
+      lucideRotateCcw,
+      lucideX,
+    }),
+  ],
+  host: { class: 'flex flex-col gap-5 lg:gap-[22px]' },
   templateUrl: './playlist-detail.html',
 })
 export class PlaylistDetailPage {
@@ -84,6 +125,8 @@ export class PlaylistDetailPage {
   private readonly setVisibility = inject(SetPlaylistVisibilityUseCase)
   private readonly takeDownPlaylist = inject(TakeDownPlaylistUseCase)
   private readonly restorePlaylist = inject(RestorePlaylistUseCase)
+  private readonly transloco = inject(TranslocoService)
+  private readonly locale = inject(LocaleStore).locale
 
   private readonly session = inject(SessionStore)
   protected readonly canHideOrUnhide = this.session.can('playlists:hide')
@@ -95,7 +138,7 @@ export class PlaylistDetailPage {
 
   private readonly record = createDetailResource({
     load: () => this.getPlaylist.execute(this.playlistId),
-    errorMessage: 'Could not load this playlist.',
+    errorMessage: LOAD_ERROR,
   })
   private readonly action = createConfirmAction<PendingAction, PlaylistDetail>({
     record: this.record.value,
@@ -103,13 +146,15 @@ export class PlaylistDetailPage {
     reload: this.record.reload,
     isStale: isStaleStateError,
     perform: (write) => this.perform(write),
-    describe: (error, { pending, record }) =>
-      resourceWriteErrorMessage({
+    describe: (error, { pending, record }) => {
+      const notice = resourceWriteError({
         error,
         action: pending === 'take-down' ? 'take down' : pending,
-        label: `"${record.title}"`,
+        label: `“${record.title}”`,
         resource: 'playlist',
-      }),
+      })
+      return this.t(notice.key, notice.params)
+    },
   })
 
   protected readonly playlist = this.record.value
@@ -124,7 +169,22 @@ export class PlaylistDetailPage {
   protected readonly cancel = this.action.cancel
   protected readonly confirm = this.action.confirm
 
+  protected readonly back = computed(() => ({
+    link: '/playlists',
+    label: this.t('playlists.title'),
+  }))
+  /** The load failure is a key; a failed write is already in the operator's language. */
+  protected readonly failureText = computed(() => {
+    const failure = this.failure()
+    return failure === LOAD_ERROR ? this.t(failure) : failure
+  })
+
   constructor() {
+    void this.record.reload()
+  }
+
+  protected reload(): void {
+    this.failure.set(null)
     void this.record.reload()
   }
 
@@ -152,16 +212,21 @@ export class PlaylistDetailPage {
     switch (pending) {
       case 'hide':
         await this.setVisibility.execute({ playlist, isPublic: false, reason })
-        return `"${playlist.title}" was hidden. It is private now, not deleted.`
+        break
       case 'unhide':
         await this.setVisibility.execute({ playlist, isPublic: true, reason })
-        return `"${playlist.title}" is public again.`
+        break
       case 'take-down':
         await this.takeDownPlaylist.execute({ playlist, reason })
-        return `"${playlist.title}" was taken down. Its visibility was not changed.`
+        break
       case 'restore':
         await this.restorePlaylist.execute({ playlist, reason })
-        return `"${playlist.title}" was restored. Its visibility was not changed.`
+        break
     }
+    return this.t(DONE_KEY[pending], { title: playlist.title })
+  }
+
+  private t(key: string, params: Record<string, string | number> = {}): string {
+    return this.transloco.translate(key, params, this.locale())
   }
 }

@@ -74,19 +74,6 @@ export type ProcessingAttempt = {
   createdAt: Date
 }
 
-const OUTCOME_LABEL: Record<ProcessingAttemptStatus, string> = {
-  RUNNING: 'Running',
-  SUCCEEDED: 'Succeeded',
-  FAILED: 'Failed',
-  SUPERSEDED: 'Superseded',
-  STALLED: 'Stalled',
-}
-
-/** The operator-facing word for an attempt's outcome. */
-export function attemptOutcomeLabel(attempt: ProcessingAttempt): string {
-  return OUTCOME_LABEL[attempt.status]
-}
-
 /** Whether this attempt carries anything worth a diagnostics disclosure. */
 export function hasDiagnostics(attempt: ProcessingAttempt): boolean {
   return (
