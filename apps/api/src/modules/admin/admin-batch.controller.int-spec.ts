@@ -236,7 +236,11 @@ describe('batch audit trail (int)', () => {
       if (id === ID_B) return Promise.resolve(buildTrack({ id, deletedAt: new Date() })) as never
       return Promise.resolve(buildTrack({ id, deletedAt: null })) as never
     }) as never)
-    transaction.track.updateMany.mockResolvedValue({ count: 1 })
+    // The guarded write matches nothing for ID_B, which is already taken down.
+    transaction.track.updateMany.mockImplementation(((args: unknown) => {
+      const id = (args as { where: { id: string } }).where.id
+      return Promise.resolve({ count: id === ID_B ? 0 : 1 }) as never
+    }) as never)
     transaction.track.findFirstOrThrow.mockImplementation(((args: unknown) => {
       const id = (args as { where: { id: string } }).where.id
       return Promise.resolve(buildTrackWithArtist({ id, deletedAt: new Date() })) as never

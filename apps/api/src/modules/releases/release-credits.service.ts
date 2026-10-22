@@ -15,6 +15,18 @@ const CLEARED_CONFIRMATIONS = {
   accuracyConfirmedAt: null,
 } as const satisfies Prisma.ReleaseUpdateManyMutationInput
 
+/** A credit as the API returns it: identity, name and roles, never its release or artist link. */
+type ReleaseParticipant = Prisma.ReleaseContributorGetPayload<{
+  select: typeof RELEASE_CONTRIBUTOR_SELECT
+}>
+
+/** Projects a credit onto the wire shape, whatever else the row carries. */
+const toParticipant = ({ id, displayName, roles }: ReleaseParticipant): ReleaseParticipant => ({
+  id,
+  displayName,
+  roles,
+})
+
 /** Credits, rights confirmations and royalty splits of an owned draft release. */
 @Injectable()
 export class ReleaseCreditsService {
@@ -33,7 +45,7 @@ export class ReleaseCreditsService {
         data: { releaseId: id, displayName: input.displayName, roles: input.roles },
         select: RELEASE_CONTRIBUTOR_SELECT,
       })
-      return { release, participant }
+      return { release, participant: toParticipant(participant) }
     })
   }
 
@@ -49,7 +61,7 @@ export class ReleaseCreditsService {
     const { contributors, ...release } = record
     const participant = contributors[0]
     if (!participant) throw new NotFoundException(RELEASE_ERRORS.CREDIT_NOT_FOUND)
-    return { release, participant }
+    return { release, participant: toParticipant(participant) }
   }
 
   updateContributor(
@@ -72,7 +84,7 @@ export class ReleaseCreditsService {
         select: RELEASE_CONTRIBUTOR_SELECT,
       })
       if (!participant) throw new NotFoundException(RELEASE_ERRORS.CREDIT_NOT_FOUND)
-      return { release, participant }
+      return { release, participant: toParticipant(participant) }
     })
   }
 
