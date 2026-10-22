@@ -1,26 +1,36 @@
 import { Component, inject } from '@angular/core'
-import { Router, RouterOutlet } from '@angular/router'
-import { NgIcon, provideIcons } from '@ng-icons/core'
-import { lucideLogOut } from '@ng-icons/lucide'
-import { SessionStore, SignOutUseCase } from '@application/session'
-import { AppSidebar } from '@presentation/navigation'
-import { HlmBadgeImports } from '@spartan-ng/helm/badge'
-import { HlmButtonImports } from '@spartan-ng/helm/button'
+import { RouterOutlet } from '@angular/router'
+import { SessionStore } from '@application/session'
+import {
+  AppMobileBars,
+  AppSidebar,
+  AppTopBar,
+  CommandPaletteLauncher,
+} from '@presentation/navigation'
 
+/**
+ * The shell, after pencil/web-admin-design: on desktop a floating glass sidebar beside a column
+ * with the top bar (centred search, status island with the profile menu) over the page; on phones
+ * a glass top bar and an island tab bar. Signed out, only the outlet renders — the login card
+ * stands alone on the aurora.
+ */
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, AppSidebar, NgIcon, HlmBadgeImports, HlmButtonImports],
-  providers: [provideIcons({ lucideLogOut })],
+  imports: [RouterOutlet, AppMobileBars, AppSidebar, AppTopBar],
+  host: { '(document:keydown)': 'onKeydown($event)' },
   templateUrl: './app.html',
 })
 export class App {
-  private readonly signOutUseCase = inject(SignOutUseCase)
-  private readonly router = inject(Router)
+  private readonly palette = inject(CommandPaletteLauncher)
 
   protected readonly staff = inject(SessionStore).currentStaff
 
-  protected async signOut(): Promise<void> {
-    await this.signOutUseCase.execute()
-    await this.router.navigate(['/login'])
+  /** ⌘K / Ctrl K opens the command palette from anywhere in the console; pressed again, closes it. */
+  protected onKeydown(event: KeyboardEvent): void {
+    if (!this.staff()) return
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+      event.preventDefault()
+      this.palette.toggle()
+    }
   }
 }
