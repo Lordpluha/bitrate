@@ -324,7 +324,7 @@ add(
   ...[
     ['On', C.primary, 21, C.primaryForeground],
     ['Off', soft(0.16), 3, C.foreground],
-  ].map(([v, track, left, knob]) =>
+  ].map(([v, track, , knob]) =>
     comp(
       `Switch/${v}`,
       Row(
@@ -3893,5 +3893,5 @@ writeFileSync(
     2,
   ),
 )
-writeFileSync(regF, JSON.stringify(reg, null, 2))
+writeFileSync(regF, `${JSON.stringify(reg, null, 2)}\n`)
 console.log('admin components', Object.keys(reg).length)
