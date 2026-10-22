@@ -1,5 +1,6 @@
 import type { ApiSchemas } from '@bitrate/contracts'
 import { clientFetchClient } from '@shared/api/fetchClient'
+import { writeSignal } from '@shared/api/writeTimeout'
 import { z } from 'zod'
 import {
   type CreateReleaseValues,
@@ -18,7 +19,6 @@ export function identifierConflict(error: unknown): string | undefined {
   const parsed = identifierConflictSchema.safeParse(error)
   return parsed.success ? parsed.data.message : undefined
 }
-const CREATE_RELEASE_TIMEOUT_MS = 30_000
 
 export async function getRelease(id: string, signal: AbortSignal) {
   const result = await clientFetchClient.GET('/api/v1/releases/{id}', {
@@ -82,7 +82,7 @@ function sendUpdate(id: string, input: ApiSchemas['UpdateReleaseDto']) {
   return clientFetchClient.PATCH('/api/v1/releases/{id}', {
     params: { path: { id } },
     body: input,
-    signal: AbortSignal.timeout(CREATE_RELEASE_TIMEOUT_MS),
+    signal: writeSignal(),
   })
 }
 
@@ -114,6 +114,6 @@ export async function createRelease(input: CreateReleaseValues) {
 function sendDraft(input: CreateReleaseValues) {
   return clientFetchClient.POST('/api/v1/releases', {
     body: input,
-    signal: AbortSignal.timeout(CREATE_RELEASE_TIMEOUT_MS),
+    signal: writeSignal(),
   })
 }

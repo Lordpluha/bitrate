@@ -1,4 +1,5 @@
 import type { ApiSchemas } from '@bitrate/contracts'
+import { TAKE_DOWN_REASON_MAX_LENGTH } from '@domain/shared'
 import * as z from 'zod'
 
 /**
@@ -9,7 +10,7 @@ import * as z from 'zod'
 type ContractTakeDownReason = ApiSchemas['TakeDownReasonDto']
 
 const takeDownReasonBodyDto = z.object({
-  reason: z.string().trim().min(1).max(500).optional(),
+  reason: z.string().trim().min(1).max(TAKE_DOWN_REASON_MAX_LENGTH).optional(),
 }) satisfies z.ZodType<ContractTakeDownReason>
 
 export type TakeDownReasonBodyDto = z.infer<typeof takeDownReasonBodyDto>

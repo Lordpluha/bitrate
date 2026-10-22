@@ -41,7 +41,7 @@ export const ProfileDetailsSection = () => {
       </form>
       <AvatarUploadField
         isPending={profile.isAvatarPending}
-        onFileSelected={(file) => void profile.handleAvatarChange(file)}
+        onFileSelected={profile.handleAvatarChange}
       />
     </SettingsSection>
   )

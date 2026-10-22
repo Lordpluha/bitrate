@@ -11,6 +11,7 @@ import type { Page, TakeDownInput } from '@domain/shared'
 import { firstValueFrom } from 'rxjs'
 import { ADMIN_API } from '../http/api.config'
 import { buildTakeDownBody } from '../http/take-down.dto'
+import { toReadError } from '../http/to-read-error'
 import { toResourceWriteError } from '../http/to-resource-write-error'
 import { fetchPage } from '../http/wire-page'
 import { playlistDetailDto, playlistPageDto, setPlaylistVisibilityBodyDto } from './playlist.dto'
@@ -45,7 +46,12 @@ export class HttpPlaylistRepository extends PlaylistRepository {
   }
 
   override async getById(id: string): Promise<PlaylistDetail> {
-    const response = await firstValueFrom(this.http.get<unknown>(`${this.base}/${id}`))
+    let response: unknown
+    try {
+      response = await firstValueFrom(this.http.get<unknown>(`${this.base}/${id}`))
+    } catch (error) {
+      throw toReadError(error)
+    }
 
     return toPlaylistDetail(playlistDetailDto.parse(response))
   }

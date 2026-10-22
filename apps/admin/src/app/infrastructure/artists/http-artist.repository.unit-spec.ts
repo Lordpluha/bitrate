@@ -2,6 +2,7 @@ import { provideHttpClient } from '@angular/common/http'
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing'
 import { TestBed } from '@angular/core/testing'
 import { ArtistRepository } from '@domain/artist'
+import { ResourceNotFoundError } from '@domain/shared'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { ADMIN_API } from '../http/api.config'
 import { HttpArtistRepository } from './http-artist.repository'
@@ -206,5 +207,38 @@ describe('HttpArtistRepository take-down writes', () => {
     http.expectOne((req) => req.url === `${BASE}/a1/albums`).flush({ data: [] })
 
     await expect(result).rejects.toThrow()
+  })
+})
+
+describe('HttpArtistRepository.getById failures', () => {
+  const LOAD_ID = '3f2504e0-4f89-41d3-9a0c-0305e82c33ff'
+  let repository: ArtistRepository
+  let http: HttpTestingController
+
+  beforeEach(() => {
+    TestBed.resetTestingModule()
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: ArtistRepository, useClass: HttpArtistRepository },
+      ],
+    })
+
+    repository = TestBed.inject(ArtistRepository)
+    http = TestBed.inject(HttpTestingController)
+  })
+
+  afterEach(() => http.verify())
+
+  it('maps a 404 on load to ResourceNotFoundError and passes any other failure through', async () => {
+    const missing = repository.getById(LOAD_ID)
+    http.expectOne(`${BASE}/${LOAD_ID}`).flush(null, { status: 404, statusText: 'Not Found' })
+    await expect(missing).rejects.toBeInstanceOf(ResourceNotFoundError)
+
+    const broken = repository.getById(LOAD_ID)
+    http.expectOne(`${BASE}/${LOAD_ID}`).flush(null, { status: 500, statusText: 'Server Error' })
+    const error = await broken.catch((caught: unknown) => caught)
+    expect(error).not.toBeInstanceOf(ResourceNotFoundError)
   })
 })

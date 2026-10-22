@@ -1,6 +1,3 @@
-import { removePublicImage, storePublicImage } from '@infra/storage/public-images'
-import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
-import type { StorageService } from '@infra/storage/storage.types'
 import { SafeUserEntity } from '@modules/users'
 import type { OptionalUserAuthRequest } from '@modules/users-auth/types'
 import { OptionalUserAuth, UserAuth } from '@modules/users-auth/users-auth.guard'
@@ -11,7 +8,6 @@ import {
   Delete,
   Get,
   HttpCode,
-  Inject,
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
@@ -42,25 +38,18 @@ import {
 } from './decorators'
 import { UpdateUserDto, UpdateUserSchema } from './dtos'
 import { UserEntity } from './entities'
-import { UsersService } from './users.service'
+import { UserFollowsService } from './user-follows.service'
+import { MAX_AVATAR_BYTES, UsersService } from './users.service'
 
-/** Avatars are held in memory up to this size, then uploaded to storage. */
-const MAX_AVATAR_BYTES = 5 * 1024 * 1024
-
-/** Where avatars live in storage; the first part of their public `/static/...` URL. */
-const AVATAR_FOLDER = 'users/avatars'
-
-/** Represents the users controller. */
 @ApiExtraModels(UserEntity, SafeUserEntity)
 @ApiTags('Users')
 @Controller({ path: 'users', version: '1' })
 export class UsersController {
   constructor(
     private usersService: UsersService,
-    @Inject(STORAGE_SERVICE) private readonly storage: StorageService,
+    private userFollowsService: UserFollowsService,
   ) {}
 
-  /** Runs the get all operation. */
   @GetUsersSwagger()
   @Get('')
   async getAll(
@@ -78,7 +67,6 @@ export class UsersController {
     })
   }
 
-  /** Runs the get by username operation. */
   @GetUserByUsernameSwagger()
   @Get('username/:username')
   async getByUsername(
@@ -88,14 +76,12 @@ export class UsersController {
     return await this.usersService.getByUsername(username)
   }
 
-  /** Runs the get by id operation. */
   @GetUserSwagger()
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: UserEntity['id']) {
     return await this.usersService.findById(id)
   }
 
-  /** Runs the put by id operation. */
   @PutUserSwagger()
   @UserAuth()
   @Put('')
@@ -107,7 +93,6 @@ export class UsersController {
     return await this.usersService.updateById(user.id, userData)
   }
 
-  /** Runs the upload avatar operation. */
   @UploadAvatarSwagger()
   @UserAuth()
   @Post('avatar')
@@ -126,17 +111,7 @@ export class UsersController {
   )
   async uploadAvatar(@Req() req: Request, @UploadedFile() file?: Express.Multer.File) {
     if (!file) throw new BadRequestException('Avatar file is required')
-
-    const name = await storePublicImage(this.storage, AVATAR_FOLDER, file, {
-      maxBytes: MAX_AVATAR_BYTES,
-    })
-    const user = req.user as UserEntity
-    try {
-      return await this.usersService.uploadAvatar(user.id, name)
-    } catch (error) {
-      await removePublicImage(this.storage, AVATAR_FOLDER, name)
-      throw error
-    }
+    return await this.usersService.uploadAvatar((req.user as UserEntity).id, file)
   }
 
   @FollowUserSwagger()
@@ -144,7 +119,7 @@ export class UsersController {
   @HttpCode(204)
   @Post(':id/follow')
   follow(@Req() req: Request, @Param('id', ParseUUIDPipe) id: string) {
-    return this.usersService.followUser((req.user as UserEntity).id, id)
+    return this.userFollowsService.followUser((req.user as UserEntity).id, id)
   }
 
   @UnfollowUserSwagger()
@@ -152,7 +127,7 @@ export class UsersController {
   @HttpCode(204)
   @Delete(':id/follow')
   unfollow(@Req() req: Request, @Param('id', ParseUUIDPipe) id: string) {
-    return this.usersService.unfollowUser((req.user as UserEntity).id, id)
+    return this.userFollowsService.unfollowUser((req.user as UserEntity).id, id)
   }
 
   @GetFollowingSwagger()
@@ -163,7 +138,7 @@ export class UsersController {
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    return this.usersService.getFollowing((req.user as UserEntity).id, page, limit)
+    return this.userFollowsService.getFollowing((req.user as UserEntity).id, page, limit)
   }
 
   /** What the people the caller follows last played. Declared after `me/following`, before `:id/…`. */
@@ -174,7 +149,7 @@ export class UsersController {
     @Req() req: Request,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    return this.usersService.getFollowingActivity((req.user as UserEntity).id, limit)
+    return this.userFollowsService.getFollowingActivity((req.user as UserEntity).id, limit)
   }
 
   @GetFollowListSwagger('followers')
@@ -186,7 +161,7 @@ export class UsersController {
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    return this.usersService.listFollows('followers', id, req.user?.id, page, limit)
+    return this.userFollowsService.listFollows('followers', id, req.user?.id, page, limit)
   }
 
   @GetFollowListSwagger('following')
@@ -198,6 +173,6 @@ export class UsersController {
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    return this.usersService.listFollows('following', id, req.user?.id, page, limit)
+    return this.userFollowsService.listFollows('following', id, req.user?.id, page, limit)
   }
 }

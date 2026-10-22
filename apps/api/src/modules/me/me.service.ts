@@ -1,6 +1,6 @@
 import { normalizePagination } from '@common/pagination'
 import { USER_SETTINGS_DEFAULTS } from '@common/user-settings'
-import { isPrismaP2002 } from '@common/utils/prisma'
+import { isPrismaP2002, isPrismaP2034 } from '@common/utils/prisma'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import {
   BadRequestException,
@@ -135,9 +135,7 @@ export class MeService {
           isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
         })
       } catch (error) {
-        const code =
-          error && typeof error === 'object' && 'code' in error ? String(error.code) : undefined
-        if (code !== 'P2002' && code !== 'P2034') throw error
+        if (!(isPrismaP2002(error) || isPrismaP2034(error))) throw error
         if (attempt === 3) {
           if (isPrismaP2002(error)) throw new ConflictException('Device is already active')
           throw error

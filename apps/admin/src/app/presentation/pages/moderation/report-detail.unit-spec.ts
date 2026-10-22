@@ -4,6 +4,7 @@ import { provideRouter } from '@angular/router'
 import { AdvanceReportUseCase, GetReportUseCase } from '@application/moderation'
 import { SessionStore } from '@application/session'
 import type { ReportDetail } from '@domain/moderation'
+import { ResourceNotFoundError } from '@domain/shared'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ReportDetailPage } from './report-detail'
 import { TranslocoTestingModule } from '@jsverse/transloco'
@@ -183,8 +184,8 @@ describe('ReportDetailPage', () => {
     expect((fixture.nativeElement as HTMLElement).textContent).toContain('Subject no longer exists')
   })
 
-  it('shows the not-found message when the load rejects', async () => {
-    getReport.mockRejectedValue(new Error('404'))
+  it('shows the not-found message when the report does not exist', async () => {
+    getReport.mockRejectedValue(new ResourceNotFoundError())
     create()
 
     const fixture = TestBed.createComponent(ReportDetailPage)
@@ -193,6 +194,18 @@ describe('ReportDetailPage', () => {
     expect(
       (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent,
     ).toContain('could not be found')
+  })
+
+  it('shows a load failure, not not-found, when the load fails for another reason', async () => {
+    getReport.mockRejectedValue(new Error('500'))
+    create()
+
+    const fixture = TestBed.createComponent(ReportDetailPage)
+    await fixture.whenStable()
+
+    const alert = (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')
+    expect(alert?.textContent).toContain('Could not load this report.')
+    expect(alert?.textContent).not.toContain('could not be found')
   })
 
   it('advances the report and updates the displayed status', async () => {

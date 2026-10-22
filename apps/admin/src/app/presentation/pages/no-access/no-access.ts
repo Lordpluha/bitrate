@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component } from '@angular/core'
 
 /**
  * Where `requirePermission` sends an operator who cannot reach any of the five guarded
@@ -7,6 +7,7 @@ import { Component } from '@angular/core'
  */
 @Component({
   selector: 'app-no-access',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './no-access.html',
 })
 export class NoAccessPage {}

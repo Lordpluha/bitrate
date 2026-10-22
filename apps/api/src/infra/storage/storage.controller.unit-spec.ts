@@ -1,3 +1,4 @@
+import { PassThrough, Readable } from 'node:stream'
 import { describe, expect, it, jest } from '@jest/globals'
 import { NotFoundException } from '@nestjs/common'
 import type { ConfigService } from '@nestjs/config'
@@ -8,11 +9,16 @@ import type { StorageService } from './storage.types'
 
 const SECRET = 'controller-test-secret'
 
+/** A writable response double that records status/headers and collects the streamed bytes. */
 function buildResponse() {
-  const res = { status: jest.fn(), set: jest.fn() }
+  const res = Object.assign(new PassThrough(), { status: jest.fn(), set: jest.fn() })
   res.status.mockReturnValue(res)
-  return res
+  const chunks: Buffer[] = []
+  res.on('data', (chunk: Buffer) => chunks.push(chunk))
+  return Object.assign(res, { body: () => Buffer.concat(chunks).toString() })
 }
+
+const settle = () => new Promise((resolve) => setImmediate(resolve))
 
 function buildController(storage: Partial<StorageService>) {
   const config = { getOrThrow: () => SECRET } as unknown as ConfigService<never>
@@ -21,9 +27,8 @@ function buildController(storage: Partial<StorageService>) {
 
 describe('StorageController.streamSignedObject', () => {
   it('reads the object through STORAGE_SERVICE and preserves Range and caching headers', async () => {
-    const pipe = jest.fn()
     const getObjectStream = jest.fn().mockResolvedValue({
-      stream: { pipe },
+      stream: Readable.from([Buffer.from('abcd')]),
       contentLength: 4,
       contentType: 'audio/mp4',
       contentRange: 'bytes 2-5/10',
@@ -41,7 +46,8 @@ describe('StorageController.streamSignedObject', () => {
     )
 
     expect(getObjectStream).toHaveBeenCalledWith('tracks/t/cmaf/128.m4a', 'bytes=2-5')
-    expect(pipe).toHaveBeenCalledWith(res)
+    await settle()
+    expect(res.body()).toBe('abcd')
     expect(res.status).toHaveBeenCalledWith(206)
     expect(res.set).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -52,6 +58,28 @@ describe('StorageController.streamSignedObject', () => {
         'Cache-Control': 'private, max-age=3600, no-transform',
       }),
     )
+  })
+
+  it('tears the response down when storage fails mid-transfer instead of hanging', async () => {
+    const source = new PassThrough()
+    const controller = buildController({
+      getObjectStream: jest.fn().mockResolvedValue({
+        stream: source,
+        contentType: 'audio/mp4',
+      } as never) as StorageService['getObjectStream'],
+    })
+    const res = buildResponse()
+    const token = createSignedStorageToken('tracks/t/cmaf/128.m4a', 60, SECRET)
+
+    await controller.streamSignedObject(
+      token,
+      { headers: {} } as Request,
+      res as unknown as Response,
+    )
+    source.destroy(new Error('storage reset'))
+    await settle()
+
+    expect(res.destroyed).toBe(true)
   })
 
   it('rejects an invalid token and a missing object', async () => {

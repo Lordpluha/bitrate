@@ -30,6 +30,7 @@ export const useUpdateMeSettings = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
+    meta: { errorMessage: 'Unable to save this preference.' },
     mutationFn: async (settings: UpdateMeSettings) => {
       const body = updateMeSettingsSchema.parse(settings)
       const { data, response } = await clientFetchClient.PUT(
@@ -64,6 +65,9 @@ const useNotificationMutation = (readAll: boolean) => {
   const queryClient = useQueryClient()
 
   return useMutation({
+    meta: readAll
+      ? { errorMessage: 'Unable to mark notifications as read.' }
+      : undefined,
     mutationFn: async (notificationId?: string) => {
       const { response } = readAll
         ? await clientFetchClient.PUT('/api/v1/me/notifications/read-all')

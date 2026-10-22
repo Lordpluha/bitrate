@@ -13,6 +13,7 @@ import {
   Req,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
+import { ZodValidationPipe } from 'nestjs-zod'
 import {
   GetPodcastByIdSwagger,
   GetPodcastsSwagger,
@@ -20,6 +21,7 @@ import {
   SaveEpisodeSwagger,
   UnsaveEpisodeSwagger,
 } from './decorators'
+import { EpisodeSearchSchema } from './dtos/episode-search.dto'
 import { PodcastsService } from './podcasts.service'
 
 @ApiTags('Podcasts')
@@ -43,8 +45,9 @@ export class PodcastsController {
     @Param('id', ParseUUIDPipe) id: string,
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+    @Query('q', new ZodValidationPipe(EpisodeSearchSchema)) query?: string,
   ) {
-    return this.podcasts.getById(id, page, limit)
+    return this.podcasts.getById(id, page, limit, query)
   }
 
   @GetSavedEpisodesSwagger()

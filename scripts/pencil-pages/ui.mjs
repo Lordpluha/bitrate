@@ -13,7 +13,6 @@ import {
   Switch,
   Badge,
   Tab,
-  Otp,
   Progress,
   Alert,
 } from './kit.mjs'
@@ -49,6 +48,12 @@ export const L = (o = {}, children = []) => {
 }
 export const Row = (o, ch) => L({ name: 'Row', gap: 12, alignItems: 'center', ...o }, ch)
 export const Col = (o, ch) => L({ name: 'Column', layout: 'vertical', gap: 12, ...o }, ch)
+/** A row of kit tabs, the one at `active` selected. */
+export const Tabs = (labels, active = 0) =>
+  Row(
+    { name: 'Tabs', gap: 4 },
+    labels.map((l, i) => Tab(l, i === active)),
+  )
 export const Fill = (ch, o = {}) =>
   L(
     {
@@ -160,12 +165,6 @@ export const MobileTrack = (title, meta, art) =>
     'Y2h8VV',
     { name: `Track / ${title}`, width: 'fill_container' },
     { fjPYf: { fill: img(ART[art]) }, RJ2go: { content: title }, rFh9q: { content: meta } },
-  )
-const LibraryItem = (title, meta) =>
-  Ref(
-    'ZUzZL',
-    { name: `Library / ${title}` },
-    { lJ0RS: { content: title }, FTmtd: { content: meta } },
   )
 
 /* states — the library's State/Message family, centred in the available space */

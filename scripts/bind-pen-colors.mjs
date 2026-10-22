@@ -18,10 +18,9 @@
  * semantic roles preferred over raw palette steps. It is a migration aid: review the result.
  */
 import { readFileSync, writeFileSync } from 'node:fs'
-import { dirname, join, relative } from 'node:path'
+import { dirname, relative, resolve as resolvePath } from 'node:path'
+import { HEX, isTransparent, LIBRARY, parseHex, ROOT, rgbToOklab } from './lib/pen-colour.mjs'
 
-const ROOT = join(dirname(new URL(import.meta.url).pathname), '..')
-const LIBRARY = join(ROOT, 'pencil/web-player-design/design-system/bitrate.lib.pen')
 const THEMES = ['Dark', 'Light', 'Dim']
 const BACKGROUND = { Dark: '#0B0D12', Light: '#FFFFFF', Dim: '#0E1117' }
 
@@ -29,29 +28,11 @@ const lib = JSON.parse(readFileSync(LIBRARY, 'utf8')).variables
 
 /* ---------- colour maths ---------- */
 
-const parse = (hex) => {
-  let h = hex.slice(1)
-  if (h.length <= 4) h = [...h].map((c) => c + c).join('')
-  const n = (i) => parseInt(h.slice(i, i + 2), 16) / 255
-  return { r: n(0), g: n(2), b: n(4), a: h.length === 8 ? n(6) : 1 }
-}
 const over = (c, bg) => ({
   r: c.r * c.a + bg.r * (1 - c.a),
   g: c.g * c.a + bg.g * (1 - c.a),
   b: c.b * c.a + bg.b * (1 - c.a),
 })
-const lin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)
-const oklab = ({ r, g, b }) => {
-  const [R, G, B] = [r, g, b].map(lin)
-  const l = Math.cbrt(0.4122214708 * R + 0.5363325363 * G + 0.0514459929 * B)
-  const m = Math.cbrt(0.2119034982 * R + 0.6806995451 * G + 0.1073969566 * B)
-  const s = Math.cbrt(0.0883024619 * R + 0.2817188376 * G + 0.6299787005 * B)
-  return [
-    0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
-    1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
-    0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
-  ]
-}
 const distance = (a, b) => Math.hypot(a[0] - b[0], 2 * (a[1] - b[1]), 2 * (a[2] - b[2]))
 
 /* ---------- library tokens per theme ---------- */
@@ -67,13 +48,17 @@ const resolve = (name, theme) => {
 const PALETTE = /^--(neutral|purple|blue|green|amber|red|grey|magenta|white|black)(-|$)/
 const EXCLUDED = /^--(auth-|brand-|scrollbar|chart-|browse-|sidebar)/
 const TOKENS = {}
+/** Page background per theme, parsed once: every token and every matched hex is composited over it. */
+const BACKGROUND_RGB = Object.fromEntries(
+  THEMES.map((theme) => [theme, parseHex(BACKGROUND[theme])]),
+)
 for (const theme of THEMES) {
-  const bg = parse(BACKGROUND[theme])
+  const bg = BACKGROUND_RGB[theme]
   TOKENS[theme] = Object.keys(lib)
     .filter((k) => lib[k].type === 'color' && !EXCLUDED.test(k))
     .map((k) => {
-      const c = parse(resolve(k, theme))
-      return { name: k, alpha: c.a, lab: oklab(over(c, bg)), palette: PALETTE.test(k) }
+      const c = parseHex(resolve(k, theme))
+      return { name: k, alpha: c.a, lab: rgbToOklab(over(c, bg)), palette: PALETTE.test(k) }
     })
 }
 
@@ -89,8 +74,8 @@ const POOLS = {
 const PALETTE_PENALTY = 0.05
 
 function nearest(hex, pool, theme) {
-  const c = parse(hex)
-  const target = oklab(over(c, parse(BACKGROUND[theme])))
+  const c = parseHex(hex)
+  const target = rgbToOklab(over(c, BACKGROUND_RGB[theme]))
   let best = null
   for (const t of TOKENS[theme]) {
     const inPool = POOLS[pool].test(t.name)
@@ -106,8 +91,6 @@ function nearest(hex, pool, theme) {
 
 /* ---------- one file ---------- */
 
-const HEX = /^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/
-const isTransparent = (hex) => hex.length === 9 && /00$/i.test(hex)
 const themeOf = (theme) => {
   const v = theme?.Mode ?? theme?.mode ?? theme?.['ds:Mode']
   return v ? v[0].toUpperCase() + v.slice(1).toLowerCase() : undefined
@@ -130,12 +113,14 @@ function bindFile(file, report) {
 
   const bindHex = (hex, pool, theme) => {
     if (isTransparent(hex)) return hex
-    const hit = nearest(hex.toUpperCase(), pool, theme)
     const key = `${hex.toUpperCase()} ${pool} ${theme}`
-    const s = stats.get(key) ?? { ...hit, n: 0 }
+    let s = stats.get(key)
+    if (!s) {
+      s = { ...nearest(hex.toUpperCase(), pool, theme), n: 0 }
+      stats.set(key, s)
+    }
     s.n++
-    stats.set(key, s)
-    return `${prefix}${hit.name}`
+    return `${prefix}${s.name}`
   }
 
   /* file-local colour variables → library variables */
@@ -201,9 +186,9 @@ function bindFile(file, report) {
       node.fill?.type === 'gradient'
         ? node.fill.colors.map((s) => toHex(s.color))
         : [toHex(node.fill)]
-    const opaque = stops.filter((h) => h && parse(h).a >= 0.95)
+    const opaque = stops.filter((h) => h && parseHex(h).a >= 0.95)
     if (opaque.length === 0 || opaque.length < stops.length) return undefined
-    const L = opaque.reduce((sum, h) => sum + oklab(parse(h))[0], 0) / opaque.length
+    const L = opaque.reduce((sum, h) => sum + rgbToOklab(parseHex(h))[0], 0) / opaque.length
     return L > 0.75 ? 'Light' : L < 0.3 ? 'Dark' : undefined
   }
   const walk = (node, type, theme, explicit) => {
@@ -272,5 +257,4 @@ if (files.length === 0) {
   console.error('usage: node scripts/bind-pen-colors.mjs <file.pen> [...] [--report]')
   process.exit(2)
 }
-for (const f of files)
-  bindFile(join(process.cwd(), f) === LIBRARY ? LIBRARY : join(process.cwd(), f), report)
+for (const f of files) bindFile(resolvePath(f), report)

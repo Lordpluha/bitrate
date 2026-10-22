@@ -10,9 +10,16 @@ import {
   releaseStatusLabels,
   releaseTypeLabels,
 } from '@entities/release'
+import { formatDuration } from '@shared/lib/format'
 import { Circle, Ellipsis, Music2, Pause, Play } from 'lucide-react'
 
 export type CatalogueItem = MusicTrack | MusicRelease
+
+const shortDate = new Intl.DateTimeFormat('en', {
+  month: 'short',
+  day: '2-digit',
+  timeZone: 'UTC',
+})
 
 function catalogueDate(value: string) {
   const date = new Date(value)
@@ -30,11 +37,7 @@ function catalogueDate(value: string) {
   if (elapsed === 0) return 'Today'
   if (elapsed === 1) return 'Yesterday'
   if (elapsed === 2) return '2 days ago'
-  return new Intl.DateTimeFormat('en', {
-    month: 'short',
-    day: '2-digit',
-    timeZone: 'UTC',
-  }).format(date)
+  return shortDate.format(date)
 }
 
 function catalogueStatus(item: CatalogueItem) {
@@ -55,9 +58,7 @@ export function CatalogueStatus({ item }: { item: CatalogueItem }) {
 }
 
 export function trackDuration(seconds: number | null) {
-  return seconds === null
-    ? '—'
-    : `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`
+  return seconds === null ? '—' : formatDuration(seconds)
 }
 
 interface CatalogueTableProps {
@@ -80,7 +81,7 @@ export function CatalogueTable({
   return (
     <table className="artist-music-table" data-tab={tab}>
       <caption className="sr-only">Your {tab}</caption>
-      <thead>
+      <thead className="sr-only @min-[900px]:not-sr-only">
         <tr>
           {tab === 'tracks' && (
             <th className="artist-music-play-cell">

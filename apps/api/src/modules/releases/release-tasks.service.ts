@@ -64,10 +64,7 @@ export class ReleaseTasksService {
   }
 
   async create(ownerArtistId: string, releaseId: string, input: CreateReleaseTaskDto) {
-    await this.ownedRelease(ownerArtistId, releaseId)
-    if (input.assigneeContributorId) {
-      await this.assertAssignee(releaseId, input.assigneeContributorId)
-    }
+    await this.assertWritable(ownerArtistId, releaseId, input.assigneeContributorId)
     return this.prisma.releaseTask.create({
       data: {
         releaseId,
@@ -86,10 +83,7 @@ export class ReleaseTasksService {
     taskId: string,
     input: UpdateReleaseTaskDto,
   ) {
-    await this.ownedRelease(ownerArtistId, releaseId)
-    if (input.assigneeContributorId) {
-      await this.assertAssignee(releaseId, input.assigneeContributorId)
-    }
+    await this.assertWritable(ownerArtistId, releaseId, input.assigneeContributorId)
     const expected = new Date(input.expectedUpdatedAt)
     const [task] = await this.prisma.releaseTask.updateManyAndReturn({
       where: { id: taskId, releaseId, updatedAt: expected },
@@ -110,10 +104,9 @@ export class ReleaseTasksService {
             }),
         updatedAt: new Date(Math.max(Date.now(), expected.getTime() + 1)),
       },
-      select: { id: true },
+      select: TASK_SELECT,
     })
-    if (!task) await this.missOrConflict(releaseId, taskId)
-    return this.read(releaseId, taskId)
+    return task ?? (await this.missOrConflict(releaseId, taskId))
   }
 
   async remove(
@@ -165,13 +158,21 @@ export class ReleaseTasksService {
     return { data, total, page, limit, counts }
   }
 
-  private async read(releaseId: string, taskId: string) {
-    const task = await this.prisma.releaseTask.findFirst({
-      where: { id: taskId, releaseId },
-      select: TASK_SELECT,
-    })
-    if (!task) throw new NotFoundException(RELEASE_ERRORS.TASK_NOT_FOUND)
-    return task
+  /**
+   * Checks release ownership and, when one is named, that the assignee is credited on it.
+   * Both run at once, but a missing release still wins over an invalid assignee.
+   */
+  private async assertWritable(
+    ownerArtistId: string,
+    releaseId: string,
+    assigneeContributorId: string | null | undefined,
+  ) {
+    const [owned, assignee] = await Promise.allSettled([
+      this.ownedRelease(ownerArtistId, releaseId),
+      assigneeContributorId ? this.assertAssignee(releaseId, assigneeContributorId) : undefined,
+    ])
+    if (owned.status === 'rejected') throw owned.reason
+    if (assignee.status === 'rejected') throw assignee.reason
   }
 
   private async ownedRelease(ownerArtistId: string, releaseId: string) {

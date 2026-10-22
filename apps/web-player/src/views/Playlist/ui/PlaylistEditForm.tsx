@@ -3,7 +3,7 @@
 import { type FormEvent, useEffect, useState } from 'react'
 import type { PlaylistWithTracks } from '@/entities/Playlist'
 import { useUpdatePlaylist } from '@/entities/Playlist'
-import { showApiErrorToast, showApiSuccessToast } from '@/shared/api/feedback'
+import { showApiSuccessToast } from '@/shared/api/feedback'
 
 type PlaylistEditFormProps = {
   isOpen: boolean
@@ -25,22 +25,25 @@ export const PlaylistEditForm = ({
     setDescription(playlist.description ?? '')
   }, [playlist.description, playlist.title])
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  /** Failures are toasted by the query client's mutation cache. */
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    try {
-      await updatePlaylist.mutateAsync({
+    updatePlaylist.mutate(
+      {
         body: {
           description: description.trim() || undefined,
           title: title.trim(),
         },
         playlistId: playlist.id,
-      })
-      showApiSuccessToast('Playlist updated')
-      onClose()
-    } catch (error) {
-      showApiErrorToast(error, 'Failed to update playlist')
-    }
+      },
+      {
+        onSuccess: () => {
+          showApiSuccessToast('Playlist updated')
+          onClose()
+        },
+      },
+    )
   }
 
   if (!isOpen) return null

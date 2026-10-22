@@ -52,7 +52,7 @@ export class AdminGenresService {
     return Array.isArray(target) ? target.includes('slug') : String(target ?? '').includes('slug')
   }
 
-  /** Runs the find all operation, paginated and optionally searched by name or slug. */
+  /** Lists genres, paginated and optionally searched by name or slug. */
   async findAll({ page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, q, sort, order }: ListGenresInput) {
     const where = {
       ...(q && {
@@ -62,7 +62,10 @@ export class AdminGenresService {
         ],
       }),
     } satisfies Prisma.GenreWhereInput
-    const orderBy = buildSortOrderBy({ sort, order }, [{ name: 'asc' }, { id: 'asc' }])
+    const orderBy = buildSortOrderBy<Prisma.GenreOrderByWithRelationInput>({ sort, order }, [
+      { name: 'asc' },
+      { id: 'asc' },
+    ])
 
     const [rows, total] = await Promise.all([
       this.prisma.genre.findMany({
@@ -70,14 +73,14 @@ export class AdminGenresService {
         select: ADMIN_GENRE_SELECT,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: orderBy as unknown as Prisma.GenreOrderByWithRelationInput[],
+        orderBy,
       }),
       this.prisma.genre.count({ where }),
     ])
     return { data: rows.map((row) => this.toEntity(row)), total, page, limit }
   }
 
-  /** Runs the find by id operation, with reference counts. */
+  /** Finds one genre by id, with reference counts. */
   async findById(id: string) {
     const genre = await this.prisma.genre.findUnique({ where: { id }, select: ADMIN_GENRE_SELECT })
     if (!genre) throw new GenreNotFoundException(id)

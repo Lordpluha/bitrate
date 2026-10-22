@@ -25,6 +25,9 @@ export const trackVersionLabels = {
   DEMO: 'Demo',
 } satisfies Record<ApiSchemas['ArtistTrackVersion'], string>
 
+/** Rows per catalogue page; the API echoes it back as `limit`. */
+export const CATALOGUE_PAGE_SIZE = 6
+
 export const catalogueSearchSchema = z.object({
   tab: z.enum(['tracks', 'releases']).optional().catch(undefined),
   page: z.coerce.number().int().min(1).optional().catch(undefined),

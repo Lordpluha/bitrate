@@ -1,7 +1,7 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { type FormEvent, useEffect, useState } from 'react'
 import { useSearchHistory } from '@/features/Search'
-import { useAuth } from '@/shared/hooks'
+import { useAuth, useDebouncedValue } from '@/shared/hooks'
 import { useI18n } from '@/shared/i18n'
 import { ROUTES } from '@/shared/routes'
 import type {
@@ -11,18 +11,24 @@ import type {
 import { useRecentSearches } from '@/widgets/MainHeader/ui/HeaderSearch/model/useRecentSearches'
 import { useSearchSuggestions } from '@/widgets/MainHeader/ui/HeaderSearch/model/useSearchSuggestions'
 
+/** Suggestions wait until typing pauses this long. */
+const SUGGESTIONS_DEBOUNCE_MS = 300
+
 export const useHeaderSearch = () => {
   const { isAuthenticated } = useAuth()
   const { t } = useI18n()
   const router = useRouter()
   const searchParams = useSearchParams()
   const [query, setQuery] = useState(searchParams.get('q') ?? '')
-  const [debouncedQuery, setDebouncedQuery] = useState(query.trim())
   const [isFocused, setIsFocused] = useState(false)
   const { recentSearches: localRecentSearches, rememberSearch } =
     useRecentSearches()
   const { data: serverHistory } = useSearchHistory(1, 8, isAuthenticated)
   const trimmedQuery = query.trim()
+  const debouncedQuery = useDebouncedValue({
+    delayMs: SUGGESTIONS_DEBOUNCE_MS,
+    value: trimmedQuery,
+  })
   /* signed-in users see their account's search history; guests see this browser's */
   const recentSearches = (
     isAuthenticated
@@ -51,14 +57,6 @@ export const useHeaderSearch = () => {
   useEffect(() => {
     setQuery(searchParams.get('q') ?? '')
   }, [searchParams])
-
-  useEffect(() => {
-    const timeoutId = window.setTimeout(
-      () => setDebouncedQuery(trimmedQuery),
-      300,
-    )
-    return () => window.clearTimeout(timeoutId)
-  }, [trimmedQuery])
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()

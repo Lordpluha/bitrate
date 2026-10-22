@@ -2,7 +2,6 @@
 
 import { useSettingsStore } from '@entities/Settings'
 import { useUpdateMeSettings } from '@/entities/Me'
-import { showApiErrorToast } from '@/shared/api/feedback'
 import { useI18n } from '@/shared/i18n'
 import {
   SettingsRow,
@@ -25,12 +24,7 @@ export const LibraryDisplaySettings = () => {
     toggleSetting(localKey)
     updateSettings.mutate(
       { [serverKey]: !currentValue },
-      {
-        onError: (error) => {
-          toggleSetting(localKey)
-          showApiErrorToast(error, 'Unable to save this preference.')
-        },
-      },
+      { onError: () => toggleSetting(localKey) },
     )
   }
 
