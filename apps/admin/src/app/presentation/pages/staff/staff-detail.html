@@ -1,41 +1,143 @@
-<section class="w-full space-y-8 p-8">
-  <header class="space-y-1">
-    <a routerLink="/staff" class="text-sm text-muted-foreground hover:underline">&larr; Staff</a>
-    @if (loading()) {
-      <h1 class="text-xl font-semibold text-foreground">Operator</h1>
-    } @else if (member(); as m) {
-      <h1 class="text-xl font-semibold text-foreground">
-        {{ m.username }}
-        @if (m.role.name === builtInAdminRoleName) {
-          <span hlmBadge variant="outline" class="ml-2 align-middle">built-in administrator</span>
-        }
-        @if (m.deactivatedAt) {
-          <span hlmBadge variant="destructive" class="ml-2 align-middle">deactivated</span>
-        }
-      </h1>
-      <p class="text-sm text-muted-foreground">{{ m.email }}</p>
-    }
-  </header>
-
-  @if (loading()) {
-    <p class="text-sm text-muted-foreground" role="status">Loading…</p>
-  } @else if (member(); as m) {
-    @if (failure(); as message) {
-      <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
-        {{ message }}
-      </p>
-    }
-
-    <section class="space-y-3">
-      <h2 class="text-lg font-semibold text-foreground">Permissions</h2>
-      @if (divergenceLabel(m); as label) {
-        <span hlmBadge variant="secondary">{{ label }}</span>
-      }
-
+<app-page-header
+  [back]="back()"
+  [eyebrow]="'operator.eyebrow' | transloco"
+  [title]="member()?.username ?? ('operator.loadingTitle' | transloco)"
+  [subtitle]="member()?.email ?? null"
+>
+  <ng-container ngProjectAs="[headerStatus]">
+    @if (member(); as m) {
       @if (m.role.name === builtInAdminRoleName) {
-        <p class="text-sm text-muted-foreground">
-          All permissions — built-in administrator. This cannot be edited individually.
-        </p>
+        <span hlmBadge variant="info">{{ 'operator.builtInAdmin' | transloco }}</span>
+      }
+      @if (m.deactivatedAt) {
+        <span hlmBadge variant="destructive">{{ 'staff.deactivated' | transloco }}</span>
+      }
+    }
+  </ng-container>
+  @if (deactivatable()) {
+    <button headerActions hlmBtn variant="secondary" type="button" (click)="armDeactivate()">
+      <ng-icon name="lucideUserX" aria-hidden="true" />
+      {{ 'staff.deactivate' | transloco }}
+    </button>
+  }
+</app-page-header>
+
+@if (loading()) {
+  <app-tile-grid role="status" [attr.aria-label]="'ui.loading' | transloco">
+    @for (tile of [1, 2]; track tile) {
+      <app-tile [title]="'ui.loading' | transloco" [span]="2">
+        <app-skeleton class="h-5 w-full rounded-lg" />
+        <app-skeleton class="h-5 w-3/4 rounded-lg" />
+        <app-skeleton class="h-5 w-1/2 rounded-lg" />
+      </app-tile>
+    }
+    <app-tile [title]="'ui.loading' | transloco" [span]="4">
+      <app-skeleton class="h-48 w-full rounded-xl" />
+    </app-tile>
+  </app-tile-grid>
+} @else if (loadFailed()) {
+  <app-state-message
+    class="min-h-[340px] rounded-tile border border-glass-line bg-glass p-5 shadow-glass backdrop-blur-[22px]"
+    kind="error"
+    [title]="'operator.error.load' | transloco"
+    [actionLabel]="'ui.tryAgain' | transloco"
+    (action)="reload()"
+  />
+} @else if (member(); as m) {
+  @if (failureText(); as message) {
+    <app-state-message
+      class="rounded-tile border border-error/40 bg-glass p-4 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="message"
+      [compact]="true"
+    />
+  }
+
+  <app-tile-grid>
+    <app-tile
+      icon="lucideUser"
+      [title]="'operator.tile.account' | transloco"
+      [meta]="'operator.tile.accountMeta' | transloco"
+      [span]="2"
+    >
+      <div>
+        <app-kv-row [label]="'operator.field.email' | transloco">{{ m.email }}</app-kv-row>
+        <app-kv-row [label]="'operator.field.username' | transloco">{{ m.username }}</app-kv-row>
+        <app-kv-row [label]="'operator.field.status' | transloco">
+          @if (m.deactivatedAt) {
+            <span hlmBadge variant="destructive">{{ 'staff.deactivated' | transloco }}</span>
+          } @else {
+            <span hlmBadge variant="success">{{ 'operator.active' | transloco }}</span>
+          }
+        </app-kv-row>
+        <app-kv-row [label]="'operator.field.added' | transloco">{{
+          m.createdAt | localizedDate: 'dd.MM.yyyy'
+        }}</app-kv-row>
+      </div>
+    </app-tile>
+
+    <app-tile
+      icon="lucideShieldCheck"
+      [title]="'operator.tile.role' | transloco"
+      [meta]="'operator.tile.roleMeta' | transloco"
+      [span]="2"
+    >
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="font-semibold">{{ m.role.name }}</span>
+        @if (divergenceLabel(m); as diff) {
+          <span hlmBadge variant="warning">{{
+            'staff.divergence' | transloco: { diff, role: m.role.name }
+          }}</span>
+        }
+      </div>
+      @if (canWrite() && !m.deactivatedAt) {
+        <div class="flex flex-col gap-1.5">
+          <label hlmLabel for="staff-reassign">{{ 'operator.field.role' | transloco }}</label>
+          <div class="flex flex-wrap gap-2">
+            <select
+              #roleSelect
+              hlmInput
+              id="staff-reassign"
+              class="min-w-0 flex-1"
+              aria-describedby="staff-reassign-hint"
+              [value]="selectedRoleId()"
+              (change)="onSelectRole(roleSelect.value)"
+            >
+              @for (role of roles(); track role.id) {
+                <option [value]="role.id" [selected]="role.id === selectedRoleId()">
+                  {{ role.name }}
+                </option>
+              }
+            </select>
+            <button
+              hlmBtn
+              variant="secondary"
+              type="button"
+              [disabled]="reassigning() || selectedRoleId() === m.role.id"
+              (click)="confirmReassign()"
+            >
+              {{ (reassigning() ? 'operator.reassigning' : 'operator.reassign') | transloco }}
+            </button>
+          </div>
+        </div>
+      }
+      <p class="text-xs text-muted-foreground" id="staff-reassign-hint">
+        {{ 'operator.reassignHint' | transloco }}
+      </p>
+    </app-tile>
+
+    <app-tile
+      icon="lucideKeyRound"
+      [title]="'operator.tile.permissions' | transloco"
+      [meta]="'operator.tile.permissionsMeta' | transloco"
+      [span]="4"
+    >
+      @if (m.role.name === builtInAdminRoleName) {
+        <app-state-message
+          kind="locked"
+          [title]="'operator.adminAll' | transloco"
+          [compact]="true"
+        />
       } @else {
         <app-permission-grid
           [selected]="permissions()"
@@ -44,84 +146,44 @@
           (selectedChange)="setPermissions($event)"
         />
         @if (editable(m)) {
-          <button
-            hlmBtn
-            size="sm"
-            type="button"
-            [disabled]="savingPermissions()"
-            (click)="savePermissions()"
-          >
-            {{ savingPermissions() ? 'Saving…' : 'Save permissions' }}
-          </button>
-        }
-      }
-    </section>
-
-    <section class="space-y-3">
-      <h2 class="text-lg font-semibold text-foreground">Role</h2>
-      <p class="text-sm text-muted-foreground">
-        Reassigning replaces this operator's current permissions with the new role's template — any
-        override made here or on the permissions above is discarded.
-      </p>
-      @if (canWrite()) {
-        <select
-          hlmInput
-          class="w-full max-w-xs"
-          [value]="selectedRoleId()"
-          (change)="onSelectRole($any($event.target).value)"
-        >
-          @for (role of roles(); track role.id) {
-            <option [value]="role.id">{{ role.name }}</option>
-          }
-        </select>
-        <div>
-          <button
-            hlmBtn
-            size="sm"
-            type="button"
-            [disabled]="reassigning() || selectedRoleId() === m.role.id"
-            (click)="confirmReassign()"
-          >
-            {{ reassigning() ? 'Reassigning…' : 'Reassign role' }}
-          </button>
-        </div>
-      }
-    </section>
-
-    <section class="space-y-3">
-      <h2 class="text-lg font-semibold text-foreground">Deactivate</h2>
-      @if (m.deactivatedAt) {
-        <p class="text-sm text-muted-foreground">This operator is already deactivated.</p>
-      } @else if (canWrite()) {
-        @if (deactivation(m); as decision) {
-          @if (!decision.allowed) {
-            <p class="text-sm text-muted-foreground">{{ decision.reason }}</p>
-          } @else if (!confirmingDeactivate()) {
-            <button hlmBtn size="sm" variant="ghost" type="button" (click)="armDeactivate()">
-              Deactivate
+          <div>
+            <button
+              hlmBtn
+              type="button"
+              [disabled]="savingPermissions()"
+              (click)="savePermissions()"
+            >
+              <ng-icon name="lucideCheck" aria-hidden="true" />
+              {{ (savingPermissions() ? 'ui.working' : 'operator.savePermissions') | transloco }}
             </button>
-          } @else {
-            <p class="text-sm text-destructive" role="alert">
-              Deactivate {{ m.username }}? This revokes their sessions immediately.
-            </p>
-            <div class="flex gap-2">
-              <button
-                hlmBtn
-                size="sm"
-                variant="destructive"
-                type="button"
-                [disabled]="deactivating()"
-                (click)="deactivate()"
-              >
-                {{ deactivating() ? 'Deactivating…' : 'Yes, deactivate' }}
-              </button>
-              <button hlmBtn size="sm" variant="outline" type="button" (click)="cancelDeactivate()">
-                Cancel
-              </button>
-            </div>
-          }
+          </div>
         }
       }
-    </section>
-  }
-</section>
+    </app-tile>
+  </app-tile-grid>
+}
+
+<hlm-dialog [state]="confirmingDeactivate() ? 'open' : 'closed'" (closed)="cancelDeactivate()">
+  <hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-md">
+    <hlm-dialog-header>
+      <h2 hlmDialogTitle>{{ 'operator.deactivateTitle' | transloco }}</h2>
+      <p hlmDialogDescription>
+        {{ 'operator.deactivateConfirm' | transloco: { name: member()?.username ?? '' } }}
+      </p>
+    </hlm-dialog-header>
+    <hlm-dialog-footer>
+      <button hlmBtn variant="ghost" type="button" (click)="cancelDeactivate()">
+        {{ 'ui.cancel' | transloco }}
+      </button>
+      <button
+        hlmBtn
+        variant="destructive"
+        type="button"
+        [disabled]="deactivating()"
+        (click)="deactivate()"
+      >
+        {{ (deactivating() ? 'operator.deactivating' : 'operator.deactivateAction') | transloco }}
+      </button>
+    </hlm-dialog-footer>
+  </hlm-dialog-content>
+</hlm-dialog>

@@ -1170,5 +1170,229 @@
     "error": {
       "load": "Couldn’t load this listener"
     }
+  },
+  "audit": {
+    "eyebrow": "System · Audit log",
+    "title": "Audit log",
+    "subtitle": "Every change staff make, who made it and from where, newest first. Entries can’t be edited or removed.",
+    "search": "Filter by entity type, e.g. Track",
+    "entityFilter": "One record only",
+    "clearEntity": "Show every record",
+    "system": "System",
+    "table": {
+      "caption": "Recorded operator actions",
+      "when": "When",
+      "who": "Who",
+      "action": "Action",
+      "entity": "Entity",
+      "from": "From"
+    },
+    "empty": {
+      "title": "No actions recorded yet",
+      "desc": "Operator changes appear here as they happen."
+    },
+    "noResults": {
+      "title": "No entries match these filters",
+      "desc": "Try another entity type, or clear the filter."
+    },
+    "error": {
+      "load": "Couldn’t load the audit log"
+    }
+  },
+  "permissions": {
+    "group": {
+      "albums": "Albums",
+      "artists": "Artists",
+      "audit": "Audit log",
+      "genres": "Genres",
+      "overview": "Overview",
+      "playlists": "Playlists",
+      "podcasts": "Podcasts",
+      "releases": "Releases",
+      "reports": "Moderation",
+      "roles": "Roles",
+      "staff": "Staff",
+      "tracks": "Catalog",
+      "users": "Listeners"
+    },
+    "holders": "{count, plural, one {# holder} other {# holders}}",
+    "unheld": "Unheld",
+    "protected": "Protected"
+  },
+  "roles": {
+    "eyebrow": "System · Roles",
+    "title": "Roles",
+    "subtitle": "Roles are templates: an operator holds permissions, a role is a starting set. Editing a template later doesn’t reach anyone already assigned it.",
+    "new": "New role",
+    "kpi": {
+      "roles": "Roles",
+      "rolesSub": "{count, plural, =0 {None built in} one {# built in} other {# built in}}",
+      "operators": "Operators",
+      "operatorsSub": "Holding a role",
+      "divergent": "Divergent",
+      "divergentSub": "Differ from their role",
+      "permissions": "Permissions",
+      "permissionsSub": "{count, plural, one {In # area} other {In # areas}}"
+    },
+    "table": {
+      "caption": "Role templates",
+      "role": "Role",
+      "holders": "Holders",
+      "divergent": "Divergent"
+    },
+    "builtIn": "Built-in",
+    "delete": "Delete",
+    "deleteLabel": "Delete {name}",
+    "cannotDelete": {
+      "builtIn": "Built-in roles can’t be deleted.",
+      "inUse": "{count, plural, one {# active operator still holds this role.} other {# active operators still hold this role.}}"
+    },
+    "catalogue": {
+      "title": "Permission catalogue",
+      "meta": "Every permission a template can grant, and how many active operators hold it",
+      "caption": "Every permission, with how many operators hold it",
+      "permission": "Permission",
+      "heldBy": "Held by"
+    },
+    "empty": {
+      "title": "No roles yet",
+      "desc": "Create the first template to give operators a starting set."
+    },
+    "error": {
+      "load": "Couldn’t load roles",
+      "delete": "Couldn’t delete this role.",
+      "inUse": "This role is still assigned to active operators.",
+      "builtIn": "Built-in roles can’t be deleted.",
+      "gone": "This role no longer exists."
+    }
+  },
+  "role": {
+    "eyebrowEdit": "Roles · Edit",
+    "eyebrowNew": "Roles · New",
+    "loadingTitle": "Role",
+    "subtitle": "Assigning this template copies its permissions onto an operator. Editing it later doesn’t change anyone already assigned it.",
+    "save": "Save role",
+    "create": "Create role",
+    "saving": "Saving…",
+    "renameLocked": "A built-in role’s name can’t be changed.",
+    "readOnly": "Your role can view roles but not change them.",
+    "adminLocked": "The built-in ADMIN role always holds every permission and can’t be edited.",
+    "tile": {
+      "details": "Role",
+      "detailsMeta": "Name and what it is for",
+      "permissions": "Permissions",
+      "permissionsMeta": "{count, plural, =0 {None selected} one {# selected} other {# selected}}",
+      "holders": "Holders",
+      "holdersMeta": "Operators with this role",
+      "divergent": "Divergent"
+    },
+    "field": {
+      "name": "Name",
+      "namePlaceholder": "e.g. Curator",
+      "description": "Description",
+      "descriptionPlaceholder": "What operators with this role do"
+    },
+    "invalid": {
+      "nameRequired": "Name is required",
+      "nameTooLong": "Name must be 100 characters or fewer",
+      "descriptionTooLong": "Description must be 500 characters or fewer",
+      "protected": "A protected permission can’t be granted through a role template"
+    },
+    "error": {
+      "load": "Couldn’t load this role",
+      "save": "Couldn’t save this role.",
+      "duplicate": "A role named “{name}” already exists.",
+      "builtIn": "Built-in roles can’t be edited this way.",
+      "ungrantable": "This template includes a permission that can’t be granted.",
+      "gone": "This role no longer exists."
+    }
+  },
+  "staff": {
+    "eyebrow": "System · Staff",
+    "title": "Staff",
+    "subtitle": "Operators who can sign in to the admin console. Permissions live on the operator — assigning a role copies its template, then the two can drift.",
+    "new": "New operator",
+    "table": {
+      "caption": "Operators",
+      "operator": "Operator",
+      "email": "Email",
+      "role": "Role"
+    },
+    "divergence": "{diff} vs {role}",
+    "deactivate": "Deactivate",
+    "alreadyDeactivated": "{name} is already deactivated.",
+    "empty": {
+      "title": "No operators yet",
+      "desc": "Invite the first operator to share the work."
+    },
+    "error": {
+      "load": "Couldn’t load staff"
+    },
+    "deactivated": "Deactivated"
+  },
+  "operator": {
+    "eyebrow": "Staff · Operator",
+    "eyebrowNew": "Staff · New",
+    "loadingTitle": "Operator",
+    "builtInAdmin": "Built-in administrator",
+    "createSubtitle": "Choosing a role copies its permissions as a starting point — adjust them before saving and that adjusted set is what this operator gets, not the template.",
+    "create": "Create operator",
+    "creating": "Creating…",
+    "tile": {
+      "account": "Account",
+      "accountMeta": "How they sign in",
+      "role": "Role",
+      "roleMeta": "The template their access started from",
+      "permissions": "Permissions",
+      "permissionsMeta": "What this operator can do"
+    },
+    "field": {
+      "email": "Email",
+      "username": "Username",
+      "password": "Password",
+      "passwordHint": "At least {min} characters.",
+      "role": "Role",
+      "chooseRole": "Choose a role",
+      "loadingRoles": "Loading roles…",
+      "status": "Status",
+      "added": "Added",
+      "adminRole": "{name} — grants every permission"
+    },
+    "permissionsHint": "Starts as the chosen role’s template. Change anything here and that becomes an override sent instead of the template.",
+    "adminAll": "All permissions — built-in administrator. They can’t be edited one by one.",
+    "savePermissions": "Save permissions",
+    "reassignHint": "Reassigning replaces this operator’s permissions with the new role’s template — any override is discarded.",
+    "reassign": "Reassign role",
+    "reassigning": "Reassigning…",
+    "deactivateConfirm": "Deactivate {name}? This revokes their sessions immediately.",
+    "deactivating": "Deactivating…",
+    "invalid": {
+      "email": "Enter a valid email address",
+      "usernameRequired": "Username is required",
+      "passwordShort": "Password must be at least {min} characters",
+      "roleRequired": "Choose a role",
+      "protected": "A protected permission can’t be granted"
+    },
+    "error": {
+      "load": "Couldn’t load this operator",
+      "loadRoles": "Couldn’t load roles",
+      "create": "Couldn’t create this operator.",
+      "assignRole": "Couldn’t reassign this role.",
+      "updatePermissions": "Couldn’t update permissions.",
+      "deactivate": "Couldn’t deactivate this operator.",
+      "ungrantable": "This permission set includes one that can’t be granted.",
+      "adminLocked": "The built-in ADMIN role always holds every permission and can’t have its permissions edited one by one.",
+      "conflict": "That email or username is already in use.",
+      "lastAdmin": "This would leave no active operator holding the ADMIN role.",
+      "roleGone": "That role no longer exists.",
+      "gone": "This operator no longer exists."
+    },
+    "notFound": {
+      "title": "Operator not found",
+      "desc": "This operator doesn’t exist or was removed. Go back to staff."
+    },
+    "active": "Active",
+    "deactivateTitle": "Deactivate operator?",
+    "deactivateAction": "Deactivate"
   }
 }

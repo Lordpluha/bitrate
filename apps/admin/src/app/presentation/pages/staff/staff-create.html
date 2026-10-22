@@ -1,109 +1,144 @@
-<section class="w-full space-y-6 p-8">
-  <header class="space-y-1">
-    <a routerLink="/staff" class="text-sm text-muted-foreground hover:underline">&larr; Staff</a>
-    <h1 class="text-xl font-semibold text-foreground">New operator</h1>
-    <p class="text-sm text-muted-foreground">
-      Choosing a role copies its permissions below as a starting point — adjust them before saving
-      and that adjusted set is what this operator gets, not the template.
-    </p>
-  </header>
+<app-page-header
+  [back]="back()"
+  [eyebrow]="'operator.eyebrowNew' | transloco"
+  [title]="'staff.new' | transloco"
+  [subtitle]="'operator.createSubtitle' | transloco"
+>
+  <button headerActions hlmBtn type="submit" form="staff-form" [disabled]="submitting()">
+    <ng-icon name="lucideCheck" aria-hidden="true" />
+    {{ (submitting() ? 'operator.creating' : 'operator.create') | transloco }}
+  </button>
+</app-page-header>
 
-  @if (failure(); as message) {
-    <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
-      {{ message }}
-    </p>
-  }
+@if (failureText(); as message) {
+  <app-state-message
+    class="rounded-tile border border-error/40 bg-glass p-4 shadow-glass backdrop-blur-[22px]"
+    kind="error"
+    [title]="message"
+    [compact]="true"
+  />
+}
 
-  <form class="space-y-6" [formGroup]="form" (ngSubmit)="submit()">
-    <div class="space-y-2">
-      <label hlmLabel for="staff-email">Email</label>
-      <input
-        hlmInput
-        class="w-full"
-        id="staff-email"
-        type="email"
-        autocomplete="off"
-        formControlName="email"
-        [attr.aria-invalid]="errorFor('email') !== null"
-        [attr.aria-describedby]="errorFor('email') ? 'staff-email-error' : null"
-      />
-      @if (errorFor('email'); as message) {
-        <p class="text-sm text-destructive" id="staff-email-error" role="alert">{{ message }}</p>
-      }
-    </div>
-
-    <div class="space-y-2">
-      <label hlmLabel for="staff-username">Username</label>
-      <input
-        hlmInput
-        class="w-full"
-        id="staff-username"
-        type="text"
-        autocomplete="off"
-        formControlName="username"
-        [attr.aria-invalid]="errorFor('username') !== null"
-        [attr.aria-describedby]="errorFor('username') ? 'staff-username-error' : null"
-      />
-      @if (errorFor('username'); as message) {
-        <p class="text-sm text-destructive" id="staff-username-error" role="alert">{{ message }}</p>
-      }
-    </div>
-
-    <div class="space-y-2">
-      <label hlmLabel for="staff-password">Password</label>
-      <input
-        hlmInput
-        class="w-full"
-        id="staff-password"
-        type="password"
-        autocomplete="new-password"
-        formControlName="password"
-        [attr.aria-invalid]="errorFor('password') !== null"
-        [attr.aria-describedby]="errorFor('password') ? 'staff-password-error' : null"
-      />
-      @if (errorFor('password'); as message) {
-        <p class="text-sm text-destructive" id="staff-password-error" role="alert">{{ message }}</p>
-      }
-    </div>
-
-    <div class="space-y-2">
-      <label hlmLabel for="staff-role">Role</label>
-      <select
-        hlmInput
-        class="w-full"
-        id="staff-role"
-        [value]="form.controls.roleId.value"
-        [attr.aria-invalid]="errorFor('roleId') !== null"
-        [attr.aria-describedby]="errorFor('roleId') ? 'staff-role-error' : null"
-        (change)="onRoleChange($any($event.target).value)"
-      >
-        <option value="" disabled>{{ loadingRoles() ? 'Loading roles…' : 'Choose a role' }}</option>
-        @for (role of roles(); track role.id) {
-          <option [value]="role.id">
-            {{ role.name }}{{ role.name === 'ADMIN' ? ' — grants every permission' : '' }}
-          </option>
+<form id="staff-form" [formGroup]="form" (ngSubmit)="submit()">
+  <app-tile-grid>
+    <app-tile
+      icon="lucideUser"
+      [title]="'operator.tile.account' | transloco"
+      [meta]="'operator.tile.accountMeta' | transloco"
+      [span]="2"
+    >
+      <div class="flex flex-col gap-1.5">
+        <label hlmLabel for="staff-email">{{ 'operator.field.email' | transloco }}</label>
+        <input
+          hlmInput
+          id="staff-email"
+          type="email"
+          autocomplete="off"
+          formControlName="email"
+          [attr.aria-invalid]="errorFor('email') !== null"
+          [attr.aria-describedby]="errorFor('email') ? 'staff-email-error' : null"
+        />
+        @if (errorFor('email'); as key) {
+          <p class="text-xs text-error-text" id="staff-email-error" role="alert">
+            {{ key | transloco }}
+          </p>
         }
-      </select>
-      @if (errorFor('roleId'); as message) {
-        <p class="text-sm text-destructive" id="staff-role-error" role="alert">{{ message }}</p>
-      }
-    </div>
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <label hlmLabel for="staff-username">{{ 'operator.field.username' | transloco }}</label>
+        <input
+          hlmInput
+          id="staff-username"
+          type="text"
+          autocomplete="off"
+          formControlName="username"
+          [attr.aria-invalid]="errorFor('username') !== null"
+          [attr.aria-describedby]="errorFor('username') ? 'staff-username-error' : null"
+        />
+        @if (errorFor('username'); as key) {
+          <p class="text-xs text-error-text" id="staff-username-error" role="alert">
+            {{ key | transloco }}
+          </p>
+        }
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <label hlmLabel for="staff-password">{{ 'operator.field.password' | transloco }}</label>
+        <input
+          hlmInput
+          id="staff-password"
+          type="password"
+          autocomplete="new-password"
+          formControlName="password"
+          [attr.aria-invalid]="errorFor('password') !== null"
+          [attr.aria-describedby]="
+            errorFor('password') ? 'staff-password-error' : 'staff-password-hint'
+          "
+        />
+        @if (errorFor('password'); as key) {
+          <p class="text-xs text-error-text" id="staff-password-error" role="alert">
+            {{ key | transloco: { min: minPassword } }}
+          </p>
+        } @else {
+          <p class="text-xs text-muted-foreground" id="staff-password-hint">
+            {{ 'operator.field.passwordHint' | transloco: { min: minPassword } }}
+          </p>
+        }
+      </div>
+    </app-tile>
 
-    <div class="space-y-2">
-      <span class="text-sm font-medium text-foreground">Permissions</span>
-      <p class="text-sm text-muted-foreground">
-        Starts as the chosen role's template. Change anything here and that becomes an override sent
-        instead of the template.
-      </p>
+    <app-tile
+      icon="lucideShieldCheck"
+      [title]="'operator.tile.role' | transloco"
+      [meta]="'operator.tile.roleMeta' | transloco"
+      [span]="2"
+    >
+      <div class="flex flex-col gap-1.5">
+        <label hlmLabel for="staff-role">{{ 'operator.field.role' | transloco }}</label>
+        <select
+          #roleSelect
+          hlmInput
+          id="staff-role"
+          [value]="form.controls.roleId.value"
+          [attr.aria-invalid]="errorFor('roleId') !== null"
+          [attr.aria-describedby]="errorFor('roleId') ? 'staff-role-error' : null"
+          (change)="onRoleChange(roleSelect.value)"
+        >
+          <option value="" disabled>
+            {{
+              (loadingRoles() ? 'operator.field.loadingRoles' : 'operator.field.chooseRole')
+                | transloco
+            }}
+          </option>
+          @for (role of roles(); track role.id) {
+            <option [value]="role.id" [selected]="role.id === form.controls.roleId.value">
+              {{
+                role.name === 'ADMIN'
+                  ? ('operator.field.adminRole' | transloco: { name: role.name })
+                  : role.name
+              }}
+            </option>
+          }
+        </select>
+        @if (errorFor('roleId'); as key) {
+          <p class="text-xs text-error-text" id="staff-role-error" role="alert">
+            {{ key | transloco }}
+          </p>
+        }
+      </div>
+      <p class="text-xs text-muted-foreground">{{ 'operator.permissionsHint' | transloco }}</p>
+    </app-tile>
+
+    <app-tile
+      icon="lucideKeyRound"
+      [title]="'operator.tile.permissions' | transloco"
+      [meta]="'operator.tile.permissionsMeta' | transloco"
+      [span]="4"
+    >
       <app-permission-grid
         [selected]="form.controls.permissions.value"
         [hideProtected]="true"
         (selectedChange)="setPermissions($event)"
       />
-    </div>
-
-    <button hlmBtn type="submit" [disabled]="submitting()">
-      {{ submitting() ? 'Creating…' : 'Create operator' }}
-    </button>
-  </form>
-</section>
+    </app-tile>
+  </app-tile-grid>
+</form>
