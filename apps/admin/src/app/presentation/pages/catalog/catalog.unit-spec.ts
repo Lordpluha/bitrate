@@ -19,8 +19,7 @@ import { ExportRepository } from '@domain/export'
 import { FileSaver } from '@presentation/components'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { CatalogPage } from './catalog'
-import { TranslocoTestingModule } from '@jsverse/transloco'
-import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
+import { provideTestTransloco } from '@testing/transloco'
 
 function track(overrides: Partial<Track> = {}): Track {
   return {
@@ -113,13 +112,8 @@ describe('CatalogPage — attention-first default', () => {
 
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
-      imports: [
-        TranslocoTestingModule.forRoot({
-          langs: { en: {}, uk: {} },
-          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-        }),
-      ],
       providers: [
+        ...provideTestTransloco(),
         provideZonelessChangeDetection(),
         provideRouter(routes),
         provideLocationMocks(),
@@ -174,13 +168,8 @@ describe('CatalogPage — search box', () => {
 
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
-      imports: [
-        TranslocoTestingModule.forRoot({
-          langs: { en: {}, uk: {} },
-          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-        }),
-      ],
       providers: [
+        ...provideTestTransloco(),
         provideZonelessChangeDetection(),
         provideRouter(routes),
         provideLocationMocks(),
@@ -254,13 +243,8 @@ describe('CatalogPage — batch take-down', () => {
 
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
-      imports: [
-        TranslocoTestingModule.forRoot({
-          langs: { en: {}, uk: {} },
-          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-        }),
-      ],
       providers: [
+        ...provideTestTransloco(),
         provideZonelessChangeDetection(),
         provideRouter(routes),
         provideLocationMocks(),
@@ -343,13 +327,8 @@ describe('CatalogPage — CSV export', () => {
 
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
-      imports: [
-        TranslocoTestingModule.forRoot({
-          langs: { en: {}, uk: {} },
-          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-        }),
-      ],
       providers: [
+        ...provideTestTransloco(),
         provideZonelessChangeDetection(),
         provideRouter(routes),
         provideLocationMocks(),

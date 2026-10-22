@@ -1,21 +1,21 @@
-<div class="flex flex-wrap items-center gap-3">
+<div class="flex flex-wrap items-center justify-end gap-3">
+  @if (failure()) {
+    <p role="alert" class="text-sm text-error-text">{{ 'ui.export.failed' | transloco }}</p>
+  }
+  @if (truncated()) {
+    <p role="status" class="text-sm text-muted-foreground">
+      {{ 'ui.export.truncated' | transloco: { max: maxRows } }}
+    </p>
+  }
   <button
     hlmBtn
-    size="sm"
-    variant="outline"
+    variant="secondary"
     type="button"
     [disabled]="pending()"
     [attr.aria-busy]="pending()"
     (click)="run()"
   >
-    {{ pending() ? 'Exporting…' : 'Export CSV' }}
+    <ng-icon name="lucideDownload" aria-hidden="true" />
+    {{ (pending() ? 'ui.export.busy' : 'ui.export.action') | transloco }}
   </button>
-  @if (failure()) {
-    <p role="alert" class="text-sm text-destructive">{{ failure() }}</p>
-  }
-  @if (truncated()) {
-    <p role="status" class="text-sm text-muted-foreground">
-      The file holds the first {{ maxRows }} rows only. Narrow the filters to export the rest.
-    </p>
-  }
 </div>

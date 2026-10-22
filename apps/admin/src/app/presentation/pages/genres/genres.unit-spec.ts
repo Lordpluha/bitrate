@@ -14,6 +14,7 @@ import {
 import type { Page } from '@domain/shared'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { GenresPage } from './genres'
+import { provideTestTransloco } from '@testing/transloco'
 
 function genre(overrides: Partial<Genre> = {}): Genre {
   return {
@@ -81,6 +82,7 @@ describe('GenresPage', () => {
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
       providers: [
+        ...provideTestTransloco(),
         provideZonelessChangeDetection(),
         provideRouter(routes),
         provideLocationMocks(),

@@ -15,6 +15,7 @@ import type { ArtistDetail } from '@domain/artist'
 import { ResourceNotFoundError } from '@domain/shared'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ArtistDetailPage } from './artist-detail'
+import { provideTestTransloco } from '@testing/transloco'
 
 const ADMIN_STAFF = {
   id: '3f2504e0-4f89-41d3-9a0c-0305e82c3301',
@@ -46,6 +47,7 @@ function create(): void {
   TestBed.resetTestingModule()
   TestBed.configureTestingModule({
     providers: [
+      ...provideTestTransloco(),
       provideZonelessChangeDetection(),
       provideRouter([]),
       { provide: GetArtistUseCase, useValue: { execute: getArtist } },

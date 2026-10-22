@@ -11,10 +11,9 @@ import {
   type SetPlaylistVisibilityInput,
 } from '@domain/playlist'
 import type { Page, TakeDownInput } from '@domain/shared'
-import { TranslocoTestingModule } from '@jsverse/transloco'
-import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { PlaylistsPage } from './playlists'
+import { provideTestTransloco } from '@testing/transloco'
 
 function playlist(overrides: Partial<Playlist> = {}): Playlist {
   return {
@@ -79,13 +78,8 @@ describe('PlaylistsPage', () => {
 
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
-      imports: [
-        TranslocoTestingModule.forRoot({
-          langs: { en: {}, uk: {} },
-          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-        }),
-      ],
       providers: [
+        ...provideTestTransloco(),
         provideZonelessChangeDetection(),
         provideRouter(routes),
         provideLocationMocks(),

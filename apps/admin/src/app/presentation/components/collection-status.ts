@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core'
+import { TranslocoPipe } from '@jsverse/transloco'
 import { SkeletonRows, StateMessage } from './surface'
 
 /**
@@ -9,7 +10,7 @@ import { SkeletonRows, StateMessage } from './surface'
  */
 @Component({
   selector: 'app-collection-status',
-  imports: [SkeletonRows, StateMessage],
+  imports: [SkeletonRows, StateMessage, TranslocoPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'contents' },
   template: `
@@ -22,7 +23,7 @@ import { SkeletonRows, StateMessage } from './surface'
         (action)="retry.emit()"
       />
     } @else if (loading()) {
-      <app-skeleton-rows [label]="loadingLabel()" />
+      <app-skeleton-rows [label]="loadingLabel() ?? ('ui.loading' | transloco)" />
     } @else if (isEmpty()) {
       <app-state-message class="min-h-[340px] p-5" kind="empty" [title]="emptyMessage()" />
     }
@@ -33,7 +34,8 @@ export class CollectionStatus {
   readonly failure = input.required<string | null>()
   readonly isEmpty = input.required<boolean>()
   readonly emptyMessage = input('Nothing to show here.')
-  readonly loadingLabel = input('Loading…')
+  /** Defaults to the shared "Loading…". */
+  readonly loadingLabel = input<string | null>(null)
   /** Label of the error's recovery button; without one the error shows no button. */
   readonly retryLabel = input<string | null>(null)
 

@@ -95,5 +95,64 @@
       "users": "Listener accounts",
       "audit": "Latest staff actions"
     }
+  },
+  "ui": {
+    "loading": "Loading…",
+    "working": "Working…",
+    "cancel": "Cancel",
+    "close": "Close",
+    "tryAgain": "Try again",
+    "clearFilters": "Clear filters",
+    "pagination": {
+      "label": "Pagination",
+      "summary": "Page {page} of {pages} · {total} total",
+      "range": "{from}–{to} of {total}",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "sort": {
+      "label": "Sort by {column}, {state}",
+      "ascending": "ascending",
+      "descending": "descending",
+      "none": "not sorted"
+    },
+    "batch": {
+      "region": "Batch actions",
+      "selected": "{items} selected",
+      "clear": "Clear",
+      "confirmTitle": "{action} {items}",
+      "affected": "Affected rows",
+      "finished": "{action} finished",
+      "summary": "{succeeded} succeeded, {failed} failed.",
+      "perRow": "Result per row",
+      "outcome": {
+        "succeeded": "succeeded",
+        "failed": "failed"
+      }
+    },
+    "export": {
+      "action": "Export CSV",
+      "busy": "Exporting…",
+      "failed": "Could not export the CSV. Try again.",
+      "truncated": "The file holds the first {max} rows only. Narrow the filters to export the rest."
+    },
+    "confirm": {
+      "reason": "Reason (optional)"
+    }
+  },
+  "moderation": {
+    "batch": {
+      "items": "{count, plural, one {# report} other {# reports}}"
+    }
+  },
+  "users": {
+    "batch": {
+      "items": "{count, plural, one {# listener} other {# listeners}}"
+    }
+  },
+  "catalog": {
+    "batch": {
+      "items": "{count, plural, one {# track} other {# tracks}}"
+    }
   }
 }

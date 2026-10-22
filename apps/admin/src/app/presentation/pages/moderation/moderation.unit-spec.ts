@@ -12,12 +12,11 @@ import {
   type ReportDetail,
 } from '@domain/moderation'
 import type { BatchResult, Page } from '@domain/shared'
-import { TranslocoTestingModule } from '@jsverse/transloco'
-import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
 import { ExportRepository } from '@domain/export'
 import { FileSaver } from '@presentation/components'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ModerationQueue } from './moderation'
+import { provideTestTransloco } from '@testing/transloco'
 
 const FIRST = '3f2504e0-4f89-41d3-9a0c-0305e82c3301'
 const SECOND = '3f2504e0-4f89-41d3-9a0c-0305e82c3302'
@@ -119,13 +118,8 @@ describe('ModerationQueue — batch actions', () => {
 
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
-      imports: [
-        TranslocoTestingModule.forRoot({
-          langs: { en: {}, uk: {} },
-          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-        }),
-      ],
       providers: [
+        ...provideTestTransloco(),
         provideZonelessChangeDetection(),
         provideRouter(routes),
         provideLocationMocks(),
@@ -222,13 +216,8 @@ describe('ModerationQueue — CSV export', () => {
 
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
-      imports: [
-        TranslocoTestingModule.forRoot({
-          langs: { en: {}, uk: {} },
-          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-        }),
-      ],
       providers: [
+        ...provideTestTransloco(),
         provideZonelessChangeDetection(),
         provideRouter(routes),
         provideLocationMocks(),

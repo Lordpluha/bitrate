@@ -1,5 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core'
 import { CSV_EXPORT_MAX_ROWS, type CsvDownload } from '@domain/shared'
+import { TranslocoPipe } from '@jsverse/transloco'
+import { NgIcon, provideIcons } from '@ng-icons/core'
+import { lucideDownload } from '@ng-icons/lucide'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { FileSaver } from './file-saver'
 
@@ -11,8 +14,9 @@ import { FileSaver } from './file-saver'
  */
 @Component({
   selector: 'app-export-csv-button',
-  imports: [HlmButtonImports],
+  imports: [HlmButtonImports, NgIcon, TranslocoPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideIcons({ lucideDownload })],
   templateUrl: './export-csv-button.html',
 })
 export class ExportCsvButton {
@@ -23,19 +27,19 @@ export class ExportCsvButton {
 
   protected readonly maxRows = CSV_EXPORT_MAX_ROWS.toLocaleString('en-US')
   protected readonly pending = signal(false)
-  protected readonly failure = signal<string | null>(null)
+  protected readonly failure = signal(false)
   protected readonly truncated = signal(false)
 
   protected async run(): Promise<void> {
     this.pending.set(true)
-    this.failure.set(null)
+    this.failure.set(false)
     this.truncated.set(false)
     try {
       const file = await this.exporter()()
       this.saver.save(file)
       this.truncated.set(file.truncated)
     } catch {
-      this.failure.set('Could not export the CSV. Try again.')
+      this.failure.set(true)
     } finally {
       this.pending.set(false)
     }

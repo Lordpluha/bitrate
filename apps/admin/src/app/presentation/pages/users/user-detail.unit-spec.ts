@@ -13,6 +13,7 @@ import { ResourceNotFoundError, ResourceWriteError } from '@domain/shared'
 import type { UserDetail } from '@domain/user'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { UserDetailPage } from './user-detail'
+import { provideTestTransloco } from '@testing/transloco'
 
 const ADMIN_STAFF = {
   id: '3f2504e0-4f89-41d3-9a0c-0305e82c3301',
@@ -51,6 +52,7 @@ function create(): void {
   TestBed.resetTestingModule()
   TestBed.configureTestingModule({
     providers: [
+      ...provideTestTransloco(),
       provideZonelessChangeDetection(),
       provideRouter([]),
       { provide: GetUserUseCase, useValue: { execute: getUser } },

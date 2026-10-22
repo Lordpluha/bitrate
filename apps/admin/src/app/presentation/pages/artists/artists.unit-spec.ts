@@ -20,8 +20,7 @@ import { ExportRepository } from '@domain/export'
 import { FileSaver } from '@presentation/components'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ArtistsPage } from './artists'
-import { TranslocoTestingModule } from '@jsverse/transloco'
-import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
+import { provideTestTransloco } from '@testing/transloco'
 
 function artist(overrides: Partial<Artist> = {}): Artist {
   return {
@@ -106,13 +105,8 @@ describe('ArtistsPage', () => {
 
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
-      imports: [
-        TranslocoTestingModule.forRoot({
-          langs: { en: {}, uk: {} },
-          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-        }),
-      ],
       providers: [
+        ...provideTestTransloco(),
         provideZonelessChangeDetection(),
         provideRouter(routes),
         provideLocationMocks(),
@@ -192,13 +186,8 @@ describe('ArtistsPage — CSV export', () => {
 
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
-      imports: [
-        TranslocoTestingModule.forRoot({
-          langs: { en: {}, uk: {} },
-          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-        }),
-      ],
       providers: [
+        ...provideTestTransloco(),
         provideZonelessChangeDetection(),
         provideRouter(routes),
         provideLocationMocks(),

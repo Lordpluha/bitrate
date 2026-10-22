@@ -5,8 +5,7 @@ import type { ArtistAlbum } from '@domain/artist'
 import type { Page } from '@domain/shared'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ArtistAlbums } from './artist-albums'
-import { TranslocoTestingModule } from '@jsverse/transloco'
-import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
+import { provideTestTransloco } from '@testing/transloco'
 
 function album(overrides: Partial<ArtistAlbum> = {}): ArtistAlbum {
   return {
@@ -27,13 +26,8 @@ const execute = vi.fn<() => Promise<Page<ArtistAlbum>>>()
 function create() {
   TestBed.resetTestingModule()
   TestBed.configureTestingModule({
-    imports: [
-      TranslocoTestingModule.forRoot({
-        langs: { en: {}, uk: {} },
-        translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-      }),
-    ],
     providers: [
+      ...provideTestTransloco(),
       provideZonelessChangeDetection(),
       { provide: ListArtistAlbumsUseCase, useValue: { execute } },
     ],

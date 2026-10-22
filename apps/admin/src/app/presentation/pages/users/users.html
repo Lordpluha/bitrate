@@ -56,7 +56,7 @@
 
   @if (collection.items().length > 0) {
     <app-batch-action-bar
-      noun="listener"
+      itemsKey="users.batch.items"
       [rows]="batchRows()"
       [actions]="batchActions()"
       [pending]="batchPending()"

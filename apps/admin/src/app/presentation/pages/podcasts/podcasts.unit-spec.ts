@@ -11,10 +11,9 @@ import {
   PodcastRepository,
 } from '@domain/podcast'
 import type { Page, TakeDownInput } from '@domain/shared'
-import { TranslocoTestingModule } from '@jsverse/transloco'
-import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { PodcastsPage } from './podcasts'
+import { provideTestTransloco } from '@testing/transloco'
 
 function podcast(overrides: Partial<Podcast> = {}): Podcast {
   return {
@@ -83,13 +82,8 @@ describe('PodcastsPage', () => {
 
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
-      imports: [
-        TranslocoTestingModule.forRoot({
-          langs: { en: {}, uk: {} },
-          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-        }),
-      ],
       providers: [
+        ...provideTestTransloco(),
         provideZonelessChangeDetection(),
         provideRouter(routes),
         provideLocationMocks(),

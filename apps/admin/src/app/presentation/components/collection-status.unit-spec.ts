@@ -2,6 +2,7 @@ import { Component, provideZonelessChangeDetection, signal } from '@angular/core
 import { TestBed } from '@angular/core/testing'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { CollectionStatus } from './collection-status'
+import { provideTestTransloco } from '@testing/transloco'
 
 @Component({
   imports: [CollectionStatus],
@@ -27,7 +28,9 @@ class Host {
 describe('CollectionStatus', () => {
   beforeEach(() => {
     TestBed.resetTestingModule()
-    TestBed.configureTestingModule({ providers: [provideZonelessChangeDetection()] })
+    TestBed.configureTestingModule({
+      providers: [...provideTestTransloco(), provideZonelessChangeDetection()],
+    })
   })
 
   async function render(change: (host: Host) => void) {
