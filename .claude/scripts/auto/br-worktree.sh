@@ -154,27 +154,37 @@ cmd_state() {
   local key="${1:?issue number required}"
   check_key "$key"
   local path="$WT_ROOT/$key" branch remote_exists=no dirty=no commits=0 unpushed=0
+  local remote_heads remote_sha=""
 
+  # One round-trip lists every remote branch for the key; it answers both which
+  # branch to use and whether it exists remotely, and carries the remote head's sha.
+  remote_heads="$(git ls-remote --heads origin "*/$key-*" "*/$key" 2>/dev/null || true)"
   branch="$(local_branch_for "$key")"
-  [[ -n "$branch" ]] || branch="$(remote_branch_for "$key")"
+  [[ -n "$branch" ]] || branch="$(printf '%s\n' "$remote_heads" | sed -nE 's#.*refs/heads/##p' | head -n1)"
 
-  if [[ -n "$branch" ]] && git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
-    remote_exists=yes
+  if [[ -n "$branch" ]]; then
+    remote_sha="$(printf '%s\n' "$remote_heads" \
+      | awk -v ref="refs/heads/$branch" '$2 == ref { print $1; exit }')"
+    if [[ -n "$remote_sha" ]]; then remote_exists=yes; fi
   fi
 
   if [[ -d "$path" ]]; then
     if [[ -n "$(git -C "$path" status --porcelain 2>/dev/null)" ]]; then dirty=yes; fi
     commits="$(git -C "$path" rev-list --count "origin/$BASE_BRANCH..HEAD" 2>/dev/null || echo 0)"
     if [[ "$remote_exists" == yes ]]; then
-      git -C "$path" fetch --quiet origin "$branch" 2>/dev/null || true
-      unpushed="$(git -C "$path" rev-list --count "origin/$branch..HEAD" 2>/dev/null || echo 0)"
+      # Fetch only when the remote head is not already local.
+      git -C "$path" cat-file -e "$remote_sha^{commit}" 2>/dev/null \
+        || git -C "$path" fetch --quiet origin "$branch" 2>/dev/null || true
+      unpushed="$(git -C "$path" rev-list --count "$remote_sha..HEAD" 2>/dev/null \
+        || git -C "$path" rev-list --count "origin/$branch..HEAD" 2>/dev/null || echo 0)"
     else
       unpushed="$commits"
     fi
   elif [[ -n "$branch" ]] && git show-ref --verify --quiet "refs/heads/$branch"; then
     commits="$(git rev-list --count "origin/$BASE_BRANCH..$branch" 2>/dev/null || echo 0)"
     if [[ "$remote_exists" == yes ]]; then
-      unpushed="$(git rev-list --count "origin/$branch..$branch" 2>/dev/null || echo 0)"
+      unpushed="$(git rev-list --count "$remote_sha..$branch" 2>/dev/null \
+        || git rev-list --count "origin/$branch..$branch" 2>/dev/null || echo 0)"
     else
       unpushed="$commits"
     fi

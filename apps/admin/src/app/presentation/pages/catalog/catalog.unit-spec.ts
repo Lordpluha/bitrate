@@ -1,7 +1,7 @@
 import { provideLocationMocks } from '@angular/common/testing'
 import { provideZonelessChangeDetection } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
-import { provideRouter, type Routes } from '@angular/router'
+import { provideRouter, Router, type Routes } from '@angular/router'
 import { RouterTestingHarness } from '@angular/router/testing'
 import { SessionStore } from '@application/session'
 import type { Permission } from '@domain/access'
@@ -158,6 +158,62 @@ describe('CatalogPage — attention-first default', () => {
     expect(list).toHaveBeenLastCalledWith(
       expect.objectContaining({ filter: expect.objectContaining({ sort: undefined }) }),
     )
+  })
+})
+
+/** Longer than the page's search debounce, so a pending keystroke would have reached the URL. */
+const AFTER_DEBOUNCE_MS = 350
+const afterDebounce = () => new Promise((resolve) => setTimeout(resolve, AFTER_DEBOUNCE_MS))
+
+describe('CatalogPage — search box', () => {
+  let harness: RouterTestingHarness
+
+  beforeEach(async () => {
+    list.mockReset()
+    list.mockResolvedValue({ items: [track()], total: 1, page: 1, limit: 20 })
+
+    TestBed.resetTestingModule()
+    TestBed.configureTestingModule({
+      imports: [
+        TranslocoTestingModule.forRoot({
+          langs: { en: {}, uk: {} },
+          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
+        }),
+      ],
+      providers: [
+        provideZonelessChangeDetection(),
+        provideRouter(routes),
+        provideLocationMocks(),
+        { provide: TrackRepository, useClass: StubTrackRepository },
+        { provide: ExportRepository, useClass: StubExportRepository },
+      ],
+    })
+    harness = await RouterTestingHarness.create()
+  })
+
+  it('keeps the page of a history entry whose search differs, instead of resetting it', async () => {
+    await harness.navigateByUrl('/catalog?q=first&page=3', CatalogPage)
+    await afterDebounce()
+
+    await harness.navigateByUrl('/catalog?q=second&page=2', CatalogPage)
+    await afterDebounce()
+    await harness.fixture.whenStable()
+
+    expect(TestBed.inject(Router).url).toBe('/catalog?q=second&page=2')
+  })
+
+  it('still sends a typed search to the URL from page one', async () => {
+    await harness.navigateByUrl('/catalog?page=3', CatalogPage)
+    await afterDebounce()
+
+    const box = harness.routeNativeElement?.querySelector<HTMLInputElement>('#track-search')
+    if (!box) throw new Error('search box not rendered')
+    box.value = 'drive'
+    box.dispatchEvent(new Event('input'))
+    await afterDebounce()
+    await harness.fixture.whenStable()
+
+    expect(TestBed.inject(Router).url).toBe('/catalog?q=drive')
   })
 })
 

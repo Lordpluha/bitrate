@@ -2,9 +2,9 @@ import { cn } from '@bitrate/ui-react'
 import {
   availabilityLabels,
   type DestinationAvailability,
-  destinationLabels,
   type ReleaseDelivery,
 } from '@entities/delivery'
+import { destinationLabels } from '@shared/constants/destinations'
 
 /** Live and failed carry meaning; everything else is neutral so nothing looks sent by accident. */
 const tone: Record<DestinationAvailability, string> = {

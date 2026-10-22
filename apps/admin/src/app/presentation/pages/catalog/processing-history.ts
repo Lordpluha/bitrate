@@ -8,11 +8,11 @@ import {
   type TrackProcessingStatus,
 } from '@domain/track'
 import { CollectionStatus, Paginator } from '@presentation/components'
+import { humaniseDurationMs } from '@presentation/pages/shared/duration.formatter'
 import { LocalizedDatePipe } from '@presentation/pipes'
 import { createCollection } from '@presentation/state'
 import { HlmBadgeImports, type BadgeVariants } from '@spartan-ng/helm/badge'
 import { HlmTableImports } from '@spartan-ng/helm/table'
-import { humaniseDurationMs } from './duration.formatter'
 import { ProcessingAttemptDiagnostics } from './processing-attempt-diagnostics'
 
 const BADGE_VARIANT: Record<ProcessingAttempt['status'], NonNullable<BadgeVariants['variant']>> = {

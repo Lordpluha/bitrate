@@ -10,6 +10,36 @@ const MAX_SIDX_BYTES = 16 * 1024 * 1024
 /** Prevents a malicious file from forcing an unbounded top-level scan. */
 const MAX_TOP_LEVEL_BOXES = 4096
 
+/** Longest box header: 32-bit size + type + 64-bit extended size. */
+const MAX_BOX_HEADER_BYTES = 16
+
+/**
+ * Decodes the box header at `pos`, validating its size against `end`.
+ * @param {Buffer|Uint8Array} data
+ * @param {number} pos
+ * @param {number} end
+ * @returns {{type: string, size: number, headerSize: number}}
+ */
+function decodeBoxHeader(data, pos, end) {
+  const view = new DataView(data.buffer, data.byteOffset, data.byteLength)
+  let size = view.getUint32(pos)
+  const type = String.fromCharCode(data[pos + 4], data[pos + 5], data[pos + 6], data[pos + 7])
+  let headerSize = 8
+
+  if (size === 1) {
+    if (pos + MAX_BOX_HEADER_BYTES > end) throw new Error('Truncated extended MP4 box header')
+    size = view.getUint32(pos + 8) * 2 ** 32 + view.getUint32(pos + 12)
+    headerSize = MAX_BOX_HEADER_BYTES
+  } else if (size === 0) {
+    size = end - pos
+  }
+
+  if (!Number.isSafeInteger(size) || size < headerSize || pos + size > end) {
+    throw new Error(`Invalid ${type || 'unknown'} MP4 box size`)
+  }
+  return { type, size, headerSize }
+}
+
 /**
  * Reads top-level boxes in [start, end).
  * @param {Buffer|Uint8Array} data
@@ -23,30 +53,12 @@ export function readBoxes(data, start = 0, end = data.length) {
   ) {
     throw new Error('Invalid MP4 box scan bounds')
   }
-  const view = new DataView(data.buffer, data.byteOffset, data.byteLength)
   const boxes = []
   let pos = start
 
   while (pos + 8 <= end) {
-    let size = view.getUint32(pos)
-    const type = String.fromCharCode(data[pos + 4], data[pos + 5], data[pos + 6], data[pos + 7])
-    let payload = pos + 8
-
-    if (size === 1) {
-      if (pos + 16 > end) throw new Error('Truncated extended MP4 box header')
-      const high = view.getUint32(pos + 8)
-      const low = view.getUint32(pos + 12)
-      size = high * 2 ** 32 + low
-      payload = pos + 16
-    } else if (size === 0) {
-      size = end - pos
-    }
-
-    if (!Number.isSafeInteger(size) || size < payload - pos || pos + size > end) {
-      throw new Error(`Invalid ${type || 'unknown'} MP4 box size`)
-    }
-
-    boxes.push({ type, start: pos, end: pos + size, payload })
+    const { type, size, headerSize } = decodeBoxHeader(data, pos, end)
+    boxes.push({ type, start: pos, end: pos + size, payload: pos + headerSize })
     if (boxes.length > MAX_TOP_LEVEL_BOXES) throw new Error('Too many top-level MP4 boxes')
     pos += size
   }
@@ -61,6 +73,14 @@ export function readBoxes(data, start = 0, end = data.length) {
  * @returns {{timescale: number, fragments: {startTicks: number, durationTicks: number, offset: number, length: number}[]}}
  */
 export function parseSidx(data, box) {
+  return parseSidxAt(data, box, 0)
+}
+
+/**
+ * {@link parseSidx} for a sidx read out of a larger file: `data` starts at file byte
+ * `baseOffset`, so fragment offsets come out absolute without a second pass.
+ */
+function parseSidxAt(data, box, baseOffset) {
   const view = new DataView(data.buffer, data.byteOffset, data.byteLength)
   let pos = box.payload
 
@@ -108,7 +128,7 @@ export function parseSidx(data, box) {
   if (pos + referenceCount * 12 > box.end) throw new Error('Truncated sidx references')
 
   /** `first_offset` is measured from the end of the sidx box. */
-  let offset = box.end + firstOffset
+  let offset = baseOffset + box.end + firstOffset
   let ticks = earliestPresentationTime
   const fragments = []
 
@@ -140,8 +160,7 @@ export function parseSidx(data, box) {
 function finalizeIndex({ moovEnd, sidxStart, sidxEnd, timescale, fragments, fileSize }) {
   if (fragments.length === 0) throw new Error('sidx contains no fragment references')
   const first = fragments[0]
-  const last = fragments.at(-1)
-  if (!(first && last)) throw new Error('sidx contains no fragment references')
+  const last = fragments[fragments.length - 1]
   if (fragments.some((fragment) => fragment.offset + fragment.length > fileSize)) {
     throw new Error('sidx fragment points outside the rendition file')
   }
@@ -185,12 +204,11 @@ export function buildFragmentIndex(data) {
   })
 }
 
-/** Reads exactly one byte window from a Node file handle. */
-async function readWindow(handle, length, position) {
-  const data = Buffer.alloc(length)
-  const { bytesRead } = await handle.read(data, 0, length, position)
+/** Fills `buffer[0, length)` from a Node file handle at `position`; fails on a short read. */
+async function readInto(handle, buffer, length, position) {
+  const { bytesRead } = await handle.read(buffer, 0, length, position)
   if (bytesRead !== length) throw new Error('Unexpected end of CMAF rendition')
-  return data
+  return buffer.subarray(0, length)
 }
 
 /**
@@ -207,24 +225,18 @@ export async function buildFragmentIndexFromFile(handle, fileSize) {
   let boxCount = 0
   let moovEnd = null
   let sidxBox = null
+  /** One header buffer reused for every top-level box. */
+  const headerBuffer = Buffer.alloc(MAX_BOX_HEADER_BYTES)
 
   while (position + 8 <= fileSize) {
-    const header = await readWindow(handle, Math.min(16, fileSize - position), position)
-    const type = header.subarray(4, 8).toString('latin1')
-    let size = header.readUInt32BE(0)
-    let headerSize = 8
-
-    if (size === 1) {
-      if (header.length < 16) throw new Error('Truncated extended MP4 box header')
-      size = Number(header.readBigUInt64BE(8))
-      headerSize = 16
-    } else if (size === 0) {
-      size = fileSize - position
-    }
-
-    if (!Number.isSafeInteger(size) || size < headerSize || position + size > fileSize) {
-      throw new Error(`Invalid ${type || 'unknown'} MP4 box size`)
-    }
+    const remaining = fileSize - position
+    const header = await readInto(
+      handle,
+      headerBuffer,
+      Math.min(MAX_BOX_HEADER_BYTES, remaining),
+      position,
+    )
+    const { type, size, headerSize } = decodeBoxHeader(header, 0, remaining)
 
     boxCount += 1
     if (boxCount > MAX_TOP_LEVEL_BOXES) throw new Error('Too many top-level MP4 boxes')
@@ -240,21 +252,18 @@ export async function buildFragmentIndexFromFile(handle, fileSize) {
   if (moovEnd === null) throw new Error('No moov box: input is not an MP4')
   if (!sidxBox) throw new Error('No sidx box: re-encode with -movflags +global_sidx')
 
-  const data = await readWindow(handle, sidxBox.size, sidxBox.start)
-  const parsed = parseSidx(data, {
-    payload: sidxBox.headerSize,
-    end: sidxBox.size,
-  })
-  const fragments = parsed.fragments.map((fragment) => ({
-    ...fragment,
-    offset: fragment.offset + sidxBox.start,
-  }))
+  const data = await readInto(handle, Buffer.alloc(sidxBox.size), sidxBox.size, sidxBox.start)
+  const { timescale, fragments } = parseSidxAt(
+    data,
+    { payload: sidxBox.headerSize, end: sidxBox.size },
+    sidxBox.start,
+  )
 
   return finalizeIndex({
     moovEnd,
     sidxStart: sidxBox.start,
     sidxEnd: sidxBox.end,
-    timescale: parsed.timescale,
+    timescale,
     fragments,
     fileSize,
   })

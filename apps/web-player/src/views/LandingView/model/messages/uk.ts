@@ -2,6 +2,9 @@ import type { LandingCatalog } from './en'
 
 /** Ukrainian landing copy. Keys left out (track, artist and people names) fall back to English. */
 export const uk: LandingCatalog = {
+  'common.music_lives_on': 'МУЗИКА ЖИВЕ',
+  'common.feature_concept_demo_content': 'Концепт функції · Демоконтент',
+  'common.demo_artist': 'Демоартист',
   'hero.your_music_already_where_you_are': 'Ваша музика вже там, де ви',
   'hero.web_player': 'Вебплеєр',
   'hero.your_music': 'Ваша музика',
@@ -17,7 +20,6 @@ export const uk: LandingCatalog = {
   'hero.now_playing': 'ЗАРАЗ ГРАЄ',
   'hero.preview_session': 'ДЕМОСЕАНС',
   'hero.signal_stable': 'СИГНАЛ СТАБІЛЬНИЙ',
-  'hero.demo_artist': 'Демоартист',
   'hero.up_next': 'ДАЛІ',
   'hero.clear': 'Очистити',
   'hero.source': 'ДЖЕРЕЛО',
@@ -34,7 +36,6 @@ export const uk: LandingCatalog = {
   'loop.interface_preview': 'ПЕРЕГЛЯД ІНТЕРФЕЙСУ',
   'loop.play_without_losing_focus': 'Слухайте, не втрачаючи фокус',
   'loop.the_controls_you_need_within_reach': 'Потрібне керування — під рукою.',
-  'loop.demo_artist': 'Демоартист',
   'loop.save_what_matters': 'Зберігайте важливе',
   'loop.build_a_library_that_sounds_more_like_yo':
     'Збирайте бібліотеку, яка звучить як ви.',
@@ -52,7 +53,6 @@ export const uk: LandingCatalog = {
   'loop.album': 'Альбом',
   'loop.product_preview_demonstration_library':
     'Перегляд продукту · Демобібліотека',
-  'loop.music_lives_on': 'МУЗИКА ЖИВЕ',
   'workshop.start_with_a_feeling_finish_with_your_pl':
     'Почніть із настрою, завершіть плейлистом',
   'workshop.more_music_more_you': 'Більше музики. Більше вас.',
@@ -104,13 +104,11 @@ export const uk: LandingCatalog = {
     'Менше зайвого. Більше того, чим ви користуєтеся.',
   'rules.change_the_layout_choose_your_tools_find':
     'Змініть розкладку. Оберіть інструменти. Знайдіть свій ритм.',
-  'rules.music_lives_on': 'МУЗИКА ЖИВЕ',
   'rules.home': 'Головна',
   'rules.library': 'Бібліотека',
   'rules.discover': 'Відкриття',
   'rules.search': 'Пошук…',
   'rules.now_playing': 'ЗАРАЗ ГРАЄ',
-  'rules.demo_artist': 'Демоартист',
   'rules.library_2': 'БІБЛІОТЕКА',
   'rules.liked_songs': 'Улюблені пісні',
   'rules.128_tracks': '128 треків',
@@ -135,7 +133,6 @@ export const uk: LandingCatalog = {
   'rules.saved_to_this_device_reset_any_time':
     'Збережено на цьому пристрої. Скинути можна будь-коли.',
   'rules.floating_queue_2': 'ПЛАВАЮЧА ЧЕРГА',
-  'rules.feature_concept_demo_content': 'Концепт функції · Демоконтент',
   'library.a_library_with_a_memory': "Бібліотека з пам'яттю",
   'library.your_collection_connected': "Ваша колекція, пов'язана",
   'library.a_library_with': 'Бібліотека',
@@ -174,8 +171,6 @@ export const uk: LandingCatalog = {
   'library.restore_this_version': 'Відновити цю версію',
   'library.your_current_version_stays_in_history':
     'Поточна версія залишиться в історії.',
-  'library.music_lives_on': 'МУЗИКА ЖИВЕ',
-  'library.feature_concept_demo_content': 'Концепт функції · Демоконтент',
   'discover.follow_the_sound': 'Ідіть за звуком',
   'discover.home': 'Головна',
   'discover.discover': 'Відкриття',
@@ -201,8 +196,6 @@ export const uk: LandingCatalog = {
   'discover.explore_this_artist': 'Дослідити артиста',
   'discover.your_explored_route': 'Ваш маршрут',
   'discover.3_steps_follow_the_journey': '3 кроки · Ідіть маршрутом',
-  'discover.music_lives_on': 'МУЗИКА ЖИВЕ',
-  'discover.feature_concept_demo_content': 'Концепт функції · Демоконтент',
   'devices.same_queue_new_scene': 'Та сама черга, нова сцена',
   'devices.keep_the_session_going': 'Продовжуйте сесію',
   'devices.same_queue': 'Та сама черга.',
@@ -217,7 +210,6 @@ export const uk: LandingCatalog = {
   'devices.library': 'Бібліотека',
   'devices.jam_after_hours': 'Jam: After hours',
   'devices.now_playing_in_sync': 'ЗАРАЗ ГРАЄ · СИНХРОННО',
-  'devices.demo_artist': 'Демоартист',
   'devices.up_next_shared_queue': 'ДАЛІ · СПІЛЬНА ЧЕРГА',
   'devices.added_by_maya': 'Додала Maya',
   'devices.added_by_jonah': 'Додав Jonah',
@@ -225,8 +217,6 @@ export const uk: LandingCatalog = {
   'devices.ready_to_play': 'Готовий грати',
   'devices.desktop_playing': "Комп'ютер · Грає",
   'devices.move_playback_to_this_phone': 'Перенести відтворення на цей телефон',
-  'devices.music_lives_on': 'МУЗИКА ЖИВЕ',
-  'devices.feature_concept_demo_content': 'Концепт функції · Демоконтент',
   'social.beyond_the_play_button': 'Більше, ніж кнопка відтворення',
   'social.music_is_a_conversation': 'Музика — це розмова',
   'social.beyond_the': 'Більше, ніж',
@@ -249,14 +239,11 @@ export const uk: LandingCatalog = {
     'Цей синтезаторний наплив — саме тут усе відкривається.',
   'social.sounds_like_the_whole_city_at_2_am':
     'Звучить як усе місто о 2-й ночі.',
-  'social.demo_artist': 'Демоартист',
   'social.artist': 'Артист',
   'social.recorded_that_part_in_one_take_glad_it_l':
     'Записав цю частину з одного дубля. Радий, що зайшло.',
   'social.comment_at_1_38': 'Коментар на 1:38…',
   'social.post': 'Надіслати',
-  'social.music_lives_on': 'МУЗИКА ЖИВЕ',
-  'social.feature_concept_demo_content': 'Концепт функції · Демоконтент',
   'partners.our_partners': 'Наші партнери',
   'partners.partners_who_keep': 'Партнери, які тримають',
   'partners.the': '',
@@ -265,7 +252,6 @@ export const uk: LandingCatalog = {
     'Лейбли, студії й сервіси, з якими ми працюємо. Схопіть будь-який і киньте — він відскочить.',
   'partners.drag_throw_squeeze': 'ТЯГНІТЬ · КИДАЙТЕ · СТИСКАЙТЕ',
   'partners.become_a_partner': 'Стати партнером',
-  'partners.music_lives_on': 'МУЗИКА ЖИВЕ',
   'partners.placeholder_marks_replace_with_real_part':
     'Тимчасові знаки — замініть на справжні логотипи партнерів',
   'team.about_our_team': 'Про нашу команду',
@@ -278,7 +264,6 @@ export const uk: LandingCatalog = {
   'team.palette': 'палітра',
   'team.join_us': 'Приєднатися',
   'team.how_we_work': 'Як ми працюємо',
-  'team.music_lives_on': 'МУЗИКА ЖИВЕ',
   'team.stack_bubbles_show_where_each_technology':
     'Бульбашки стеку показують, де в репозиторії живе кожна технологія',
   'cta.pick_up_where_the_last_track_left_off':
@@ -293,15 +278,10 @@ export const uk: LandingCatalog = {
   'cta.energy_carries_on_so_does_your_queue':
     'ЕНЕРГІЯ НЕ ЗУПИНЯЄТЬСЯ. ВАША ЧЕРГА ТЕЖ.',
   'cta.playback_is_the_product': 'Відтворення — це і є продукт.',
-  'cta.music_lives_on': 'МУЗИКА ЖИВЕ',
   'cta.log_in': 'Увійти',
   'cta.create_account': 'Створити акаунт',
   'cta.player_preview': 'Перегляд плеєра',
   'cta.legal': 'Правова інформація',
-  'cta.system_status': 'Стан системи',
-  'cta.operational': 'Працює',
-  'cta.status_page': 'Сторінка стану ↗',
-  'cta.all_systems_operational': 'Усі системи працюють',
   'chrome.home': 'Головна Bitrate',
   'chrome.nav': 'Основна',
   'chrome.web_player': 'Вебплеєр',
@@ -315,7 +295,6 @@ export const uk: LandingCatalog = {
   'chrome.scenes': 'Сцени',
   'chrome.go_to': 'Перейти до: {scene}',
   'chrome.tuning_in': 'НАЛАШТОВУЄМОСЬ…',
-  'chrome.menu': 'Меню',
   'status.label': 'Стан системи',
   'status.checking': 'Перевіряємо…',
   'status.operational': 'Усі системи працюють',
@@ -327,7 +306,6 @@ export const uk: LandingCatalog = {
   'status.state_checking': 'Перевірка',
   'status.checked': 'Перевірено о {time}',
   'status.never': 'Ще не перевірено',
-  'status.page': 'Сторінка стану ↗',
   'status.toggle': 'Показати стан системи',
   'assistant.open': 'Відкрити асистента Bitrate',
   'assistant.close': 'Закрити асистента',

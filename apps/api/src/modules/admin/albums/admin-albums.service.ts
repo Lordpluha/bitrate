@@ -2,7 +2,12 @@ import { DEFAULT_LIMIT, DEFAULT_PAGE } from '@common/pagination'
 import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { AdminResourceStatus, AuditContextValue } from '@modules/admin/shared'
-import { isoOrNull, writeTakeDownAudit } from '@modules/admin/shared'
+import {
+  runTakeDownTransition,
+  statusWhere,
+  type TakeDownActor,
+  type TakeDownDirection,
+} from '@modules/admin/shared'
 import { Injectable } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import type { ADMIN_ALBUMS_SORT_FIELDS } from './dtos'
@@ -64,17 +69,10 @@ type AlbumDetailRecord = Prisma.AlbumGetPayload<{ select: typeof ALBUM_DETAIL_SE
 export class AdminAlbumsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  /** Builds the `deletedAt` half of the `where` clause for the `status` take-down filter. */
-  private buildStatusWhere(status: AdminResourceStatus = 'active') {
-    if (status === 'all') return {}
-    if (status === 'deactivated') return { deletedAt: { not: null } }
-    return { deletedAt: null }
-  }
-
   /** Builds the shared `where` clause for listing and counting. */
   private buildWhere({ status, artistId, q }: Omit<ListAlbumsInput, 'page' | 'limit'>) {
     return {
-      ...this.buildStatusWhere(status),
+      ...statusWhere(status),
       ...(artistId && { artistId }),
       ...(q && { title: { contains: q, mode: 'insensitive' } }),
     } satisfies Prisma.AlbumWhereInput
@@ -85,7 +83,7 @@ export class AdminAlbumsService {
     return { ...album, artistUsername: artist.username }
   }
 
-  /** Runs the find all operation, paginated, newest first by default. */
+  /** Lists albums, paginated, newest first by default. */
   async findAll({
     page = DEFAULT_PAGE,
     limit = DEFAULT_LIMIT,
@@ -96,14 +94,17 @@ export class AdminAlbumsService {
     order,
   }: ListAlbumsInput) {
     const where = this.buildWhere({ status, artistId, q })
-    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const orderBy = buildSortOrderBy<Prisma.AlbumOrderByWithRelationInput>({ sort, order }, [
+      { createdAt: 'desc' },
+      { id: 'desc' },
+    ])
     const [rows, total] = await Promise.all([
       this.prisma.album.findMany({
         where,
         select: ALBUM_ROW_SELECT,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: orderBy as unknown as Prisma.AlbumOrderByWithRelationInput[],
+        orderBy,
       }),
       this.prisma.album.count({ where }),
     ])
@@ -111,7 +112,7 @@ export class AdminAlbumsService {
   }
 
   /**
-   * Runs the find by id operation, with the album's tracks ordered by disc then track number.
+   * Finds one album by id, with the album's tracks ordered by disc then track number.
    * Deliberately does not filter `deletedAt` — a taken-down album must stay reachable by id so
    * the operator can review it before deciding to restore it. Each track carries its own
    * `deletedAt`: an album's take-down never cascades to them.
@@ -148,79 +149,46 @@ export class AdminAlbumsService {
    * `admin/tracks`. The write is an `updateMany` scoped to `deletedAt: null` so a concurrent
    * take-down loses with a 409 rather than re-stamping the row.
    */
-  async softDelete(
+  softDelete(
     id: string,
     staffId: string,
     reason?: string,
     auditContext: AuditContextValue = {},
-  ) {
-    const existing = await this.prisma.album.findFirst({ where: { id } })
-    if (!existing) throw new AlbumNotFoundException(id)
-    if (existing.deletedAt) throw new AlbumAlreadyDeletedException(id)
-
-    return await this.prisma.$transaction(async (tx) => {
-      const { count } = await tx.album.updateMany({
-        where: { id, deletedAt: null },
-        data: { deletedAt: new Date() },
-      })
-      if (count === 0) throw new AlbumAlreadyDeletedException(id)
-
-      const updated = await tx.album.findFirstOrThrow({
-        where: { id },
-        select: ALBUM_ROW_SELECT,
-      })
-      await writeTakeDownAudit({
-        tx,
-        entityType: 'admin-albums',
-        entityId: id,
-        action: 'admin-albums.delete',
-        staffId,
-        reason,
-        before: { deletedAt: isoOrNull(existing.deletedAt) },
-        after: { deletedAt: isoOrNull(updated.deletedAt) },
-        ...auditContext,
-      })
-      return this.toRow(updated)
-    })
+  ): Promise<AdminAlbumEntity> {
+    return this.transition('take-down', id, { staffId, reason, ...auditContext })
   }
 
   /**
    * Restores a soft-deleted album, recording the operator's stated reason in an audit row.
    * Uses the same `updateMany` + count-guard pattern as {@link softDelete}.
    */
-  async restore(
+  restore(
     id: string,
     staffId: string,
     reason?: string,
     auditContext: AuditContextValue = {},
-  ) {
-    const existing = await this.prisma.album.findFirst({ where: { id } })
-    if (!existing) throw new AlbumNotFoundException(id)
-    if (!existing.deletedAt) throw new AlbumNotDeletedException(id)
+  ): Promise<AdminAlbumEntity> {
+    return this.transition('restore', id, { staffId, reason, ...auditContext })
+  }
 
-    return await this.prisma.$transaction(async (tx) => {
-      const { count } = await tx.album.updateMany({
-        where: { id, deletedAt: { not: null } },
-        data: { deletedAt: null },
-      })
-      if (count === 0) throw new AlbumNotDeletedException(id)
-
-      const updated = await tx.album.findFirstOrThrow({
-        where: { id },
-        select: ALBUM_ROW_SELECT,
-      })
-      await writeTakeDownAudit({
-        tx,
-        entityType: 'admin-albums',
-        entityId: id,
-        action: 'admin-albums.restore',
-        staffId,
-        reason,
-        before: { deletedAt: isoOrNull(existing.deletedAt) },
-        after: { deletedAt: isoOrNull(updated.deletedAt) },
-        ...auditContext,
-      })
-      return this.toRow(updated)
+  /** Takes an album down or restores it, with its audit row — see {@link runTakeDownTransition}. */
+  private transition(
+    direction: TakeDownDirection,
+    id: string,
+    actor: TakeDownActor,
+  ): Promise<AdminAlbumEntity> {
+    const takeDown = direction === 'take-down'
+    return runTakeDownTransition({
+      prisma: this.prisma,
+      direction,
+      current: () => this.prisma.album.findFirst({ where: { id }, select: { deletedAt: true } }),
+      mark: (tx, guard, data) => tx.album.updateMany({ where: { id, ...guard }, data }),
+      load: async (tx) =>
+        this.toRow(await tx.album.findFirstOrThrow({ where: { id }, select: ALBUM_ROW_SELECT })),
+      notFound: () => new AlbumNotFoundException(id),
+      conflict: () =>
+        takeDown ? new AlbumAlreadyDeletedException(id) : new AlbumNotDeletedException(id),
+      audit: { entityType: 'admin-albums', entityId: id, ...actor },
     })
   }
 }

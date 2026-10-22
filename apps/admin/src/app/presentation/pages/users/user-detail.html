@@ -145,5 +145,9 @@
         <p class="text-sm text-muted-foreground">No actions available.</p>
       }
     </section>
+  } @else if (failure(); as message) {
+    <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+      {{ message }}
+    </p>
   }
 </section>

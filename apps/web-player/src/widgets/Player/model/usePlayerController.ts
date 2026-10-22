@@ -76,7 +76,7 @@ export const usePlayerController = ({
     duration: player.duration,
     isLiked: trackLike.isLiked,
     isPlaying: player.isPlaying,
-    onLikeToggle: () => void trackLike.toggleLike(),
+    onLikeToggle: trackLike.toggleLike,
     onNext: () => audio.changeTrack('next'),
     onPlayPause: audio.togglePlayPause,
     onPrevious: () => audio.changeTrack('prev'),

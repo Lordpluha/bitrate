@@ -27,7 +27,7 @@ export const LikePlaylistButton = ({ playlist }: LikePlaylistButtonProps) => {
       disabled={isPending}
       onClick={(event) => {
         event.stopPropagation()
-        void toggleLike()
+        toggleLike()
       }}
       title={isLiked ? 'Remove from Your Library' : 'Save to Your Library'}
       type="button"

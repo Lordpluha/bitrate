@@ -6,7 +6,7 @@ import {
   useRevokeAuthSession,
   useRevokeOtherAuthSessions,
 } from '@/entities/AuthSession'
-import { showApiErrorToast, showApiSuccessToast } from '@/shared/api/feedback'
+import { showApiSuccessToast } from '@/shared/api/feedback'
 import { useAuth } from '@/shared/hooks'
 import { SettingsSection } from './controls/SettingsSection'
 
@@ -23,23 +23,16 @@ export const ActiveSessionsSection = () => {
   const revokeOtherSessions = useRevokeOtherAuthSessions()
   const sessions = sessionsQuery.data ?? []
 
-  const handleRevoke = async (sessionId: string) => {
-    try {
-      await revokeSession.mutateAsync(sessionId)
-      showApiSuccessToast('Session revoked')
-    } catch (error) {
-      showApiErrorToast(error, 'Could not revoke session')
-    }
-  }
+  /** Failures are toasted by the query client's mutation cache. */
+  const handleRevoke = (sessionId: string) =>
+    revokeSession.mutate(sessionId, {
+      onSuccess: () => showApiSuccessToast('Session revoked'),
+    })
 
-  const handleRevokeOthers = async () => {
-    try {
-      await revokeOtherSessions.mutateAsync(undefined)
-      showApiSuccessToast('Other sessions revoked')
-    } catch (error) {
-      showApiErrorToast(error, 'Could not revoke other sessions')
-    }
-  }
+  const handleRevokeOthers = () =>
+    revokeOtherSessions.mutate(undefined, {
+      onSuccess: () => showApiSuccessToast('Other sessions revoked'),
+    })
 
   return (
     <SettingsSection title="Active sessions">
@@ -75,7 +68,7 @@ export const ActiveSessionsSection = () => {
                   aria-label="Revoke session"
                   className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-surface hover:text-foreground"
                   disabled={revokeSession.isPending}
-                  onClick={() => void handleRevoke(session.id)}
+                  onClick={() => handleRevoke(session.id)}
                   type="button"
                 >
                   <Trash2 size={18} />
@@ -87,7 +80,7 @@ export const ActiveSessionsSection = () => {
             <button
               className="inline-flex h-9 shrink-0 items-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-surface disabled:opacity-60"
               disabled={revokeOtherSessions.isPending}
-              onClick={() => void handleRevokeOthers()}
+              onClick={handleRevokeOthers}
               type="button"
             >
               Log out all other sessions

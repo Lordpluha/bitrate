@@ -3,7 +3,11 @@ import path from 'node:path'
 import { promisify } from 'node:util'
 import { transform } from '@svgr/core'
 import { createSvgrConfig } from '../config/svgr-config.mjs'
-import { extractColorsWithMapping, isMonochrome } from '../utils/color-detection.mjs'
+import {
+  collectColors,
+  colorsAreMonochrome,
+  createColorVariableMapping,
+} from '../utils/color-detection.mjs'
 import { toPascalCase } from '../utils/naming.mjs'
 
 const readFile = promisify(fs.readFile)
@@ -21,18 +25,16 @@ export async function convertSvgToComponent(svgPath, outputDir, colorVarNames = 
   const filename = path.basename(svgPath)
   const componentName = toPascalCase(filename)
 
-  // Определяем тип иконки и создаем соответствующую конфигурацию
-  const monochromeIcon = isMonochrome(svgContent)
+  // Один проход по цветам: тип иконки и mapping к переменным
+  const originalColors = collectColors(svgContent)
+  const colors = new Set(originalColors.keys())
+  const monochromeIcon = colorsAreMonochrome(colors)
 
-  // Извлекаем цвета и создаем mapping, если указаны имена переменных
-  let colorMapping = null
-  let originalColors = null
-
-  if (colorVarNames.length > 0 && !monochromeIcon) {
-    const { mapping, originals } = extractColorsWithMapping(svgContent, colorVarNames)
-    colorMapping = mapping
-    originalColors = originals
-  }
+  // Создаем mapping, если указаны имена переменных
+  const colorMapping =
+    colorVarNames.length > 0 && !monochromeIcon
+      ? createColorVariableMapping(colors, colorVarNames)
+      : null
 
   const svgrConfig = createSvgrConfig(monochromeIcon, colorMapping)
 

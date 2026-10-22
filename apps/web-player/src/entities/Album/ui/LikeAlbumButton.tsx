@@ -6,7 +6,7 @@ import {
   useLikedAlbums,
   useUnlikeAlbum,
 } from '@entities/Album/api/client'
-import { showApiErrorToast, showApiSuccessToast } from '@shared/api/feedback'
+import { showApiSuccessToast } from '@shared/api/feedback'
 import { useAuth } from '@shared/hooks'
 import { Heart } from 'lucide-react'
 
@@ -29,21 +29,21 @@ export const LikeAlbumButton = ({
   const unlikeAlbum = useUnlikeAlbum()
   const isPending = likeAlbum.isPending || unlikeAlbum.isPending
 
-  const handleToggle = async () => {
+  /** Failures are toasted by the query client's mutation cache. */
+  const handleToggle = () => {
     if (isPending) return
 
-    try {
-      if (isLiked) {
-        await unlikeAlbum.mutateAsync({ params: { path: { id: albumId } } })
-        showApiSuccessToast('Album removed from library')
-        return
-      }
-
-      await likeAlbum.mutateAsync({ params: { path: { id: albumId } } })
-      showApiSuccessToast('Album saved to library')
-    } catch (error) {
-      showApiErrorToast(error, 'Could not update your library')
+    const variables = { params: { path: { id: albumId } } }
+    if (isLiked) {
+      unlikeAlbum.mutate(variables, {
+        onSuccess: () => showApiSuccessToast('Album removed from library'),
+      })
+      return
     }
+
+    likeAlbum.mutate(variables, {
+      onSuccess: () => showApiSuccessToast('Album saved to library'),
+    })
   }
 
   return (
@@ -60,7 +60,7 @@ export const LikeAlbumButton = ({
       disabled={isPending}
       onClick={(event) => {
         event.stopPropagation()
-        void handleToggle()
+        handleToggle()
       }}
       type="button"
     >

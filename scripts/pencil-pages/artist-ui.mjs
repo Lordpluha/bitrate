@@ -1,6 +1,6 @@
 // Artist-workspace composition helpers — library instances only.
 import { id, C } from './kit.mjs'
-import { R, L, Row, Col, Tx } from './ui.mjs'
+import { R, L, Row, Col, Tx, Panel, state } from './ui.mjs'
 
 const NAV = {
   dashboard: ['layout-dashboard', 'Dashboard'],
@@ -264,3 +264,50 @@ export const two = (m, left, right, rightW = 380) =>
           Col({ name: 'Side Column', width: rightW, gap: 20 }, [right].flat()),
         ]),
       ]
+export const stat = (label, value, sub) =>
+  R(
+    'Stat Tile',
+    {},
+    { label: { content: label }, value: { content: value }, sub: { content: sub } },
+  )
+export const stats = (m, items) =>
+  m
+    ? Col(
+        { name: 'Stats', gap: 12, width: 'fill_container' },
+        items.map((s) => stat(...s)),
+      )
+    : Row(
+        { name: 'Stats', gap: 16, width: 'fill_container' },
+        items.map((s) => stat(...s)),
+      )
+/** A panel with an optional `title` row (`o.right` beside it) and an optional fixed width `o.w`. */
+export const panel = (title, children, o = {}) =>
+  Panel(
+    [
+      title &&
+        Row({ width: 'fill_container', justifyContent: 'space_between' }, [
+          Tx('H4', title),
+          o.right,
+        ]),
+      ...children,
+    ],
+    o.w ? { width: o.w } : {},
+  )
+/**
+ * Page and state spec builders sharing one `build(mobile)` between the desktop Shell and the mobile
+ * MShell; `pageHeight` / `stateHeight` are the default mobile frame heights of a page and a state.
+ */
+export const artistSpecs = ({ pageHeight, stateHeight }) => ({
+  pair: (name, opts, build, more = []) => ({
+    ...opts,
+    desktop: () => Shell(name, opts.shell, build(false)),
+    mobile: () => MShell(name, build(true), opts.mHeight ?? pageHeight),
+    states: [...(opts.states ?? []), ...more],
+  }),
+  st: (label, shell, build, mh = stateHeight) =>
+    state(
+      label,
+      () => Shell(label, shell, build(false)),
+      () => MShell(label, build(true), mh),
+    ),
+})

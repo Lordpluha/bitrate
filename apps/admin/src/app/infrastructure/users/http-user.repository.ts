@@ -13,6 +13,7 @@ import {
 import { ADMIN_API } from '../http/api.config'
 import { batchResultDto, buildBatchBody, toBatchResult } from '../http/batch-result.dto'
 import { buildTakeDownBody, revokeSessionsResultDto } from '../http/take-down.dto'
+import { toReadError } from '../http/to-read-error'
 import { toResourceWriteError } from '../http/to-resource-write-error'
 import { fetchPage } from '../http/wire-page'
 import { listeningHistoryPageDto } from './listening-history.dto'
@@ -38,7 +39,12 @@ export class HttpUserRepository extends UserRepository {
   }
 
   override async getById(id: string): Promise<UserDetail> {
-    const response = await firstValueFrom(this.http.get<unknown>(`${this.base}/${id}`))
+    let response: unknown
+    try {
+      response = await firstValueFrom(this.http.get<unknown>(`${this.base}/${id}`))
+    } catch (error) {
+      throw toReadError(error)
+    }
 
     return toUserDetail(userDetailDto.parse(response))
   }

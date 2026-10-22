@@ -1,8 +1,8 @@
 import { PassThrough, Readable } from 'node:stream'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { WsUserAuthGuard } from '@modules/users-auth/users-auth.ws.guard'
+import { NotFoundException } from '@nestjs/common'
 import type { Server } from 'socket.io'
-import { buildTrack } from './__tests__/fixtures/tracks.fixtures'
 import { AudioGateway } from './audio.gateway'
 import { TrackStreamingService } from './track-streaming.service'
 import { TracksService } from './tracks.service'
@@ -166,20 +166,24 @@ describe('AudioGateway', () => {
       expect(result.data.success).toBe(false)
     })
 
+    /** The streaming service already refuses a missing, deleted or unready track; the gateway
+     * relies on that check instead of looking the track up a second time. */
     it('should return error when track not found', async () => {
-      tracksService.findTrackById.mockResolvedValue(null as never)
+      streamingService.getTrackAudioStream.mockRejectedValue(
+        new NotFoundException('Track not found') as never,
+      )
       const client = makeSocket('user-1')
       const result = await gateway.handlePlayTrack(client as never, {
         trackId: validTrackId,
         currentTime: 0,
       })
 
-      expect(result.data.success).toBe(false)
+      expect(result.data).toEqual({ success: false, error: 'Track not found' })
+      expect(tracksService.findTrackById).not.toHaveBeenCalled()
+      expect(gateway.server.to).not.toHaveBeenCalled()
     })
 
     it('should emit trackPlaying and return success on valid play', async () => {
-      const track = buildTrack({ id: validTrackId })
-      tracksService.findTrackById.mockResolvedValue(track as never)
       streamingService.getTrackAudioStream.mockResolvedValue({
         stream: Readable.from([]),
         trackId: validTrackId,

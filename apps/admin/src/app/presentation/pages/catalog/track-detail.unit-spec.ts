@@ -9,7 +9,7 @@ import {
   TakeDownTrackUseCase,
 } from '@application/catalog'
 import { SessionStore } from '@application/session'
-import { emptyPage, type Page, ResourceWriteError } from '@domain/shared'
+import { emptyPage, type Page, ResourceNotFoundError, ResourceWriteError } from '@domain/shared'
 import type { ProcessingAttempt, TrackDetail } from '@domain/track'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { TrackDetailPage } from './track-detail'
@@ -92,8 +92,8 @@ describe('TrackDetailPage', () => {
     expect(host.textContent).toContain('READY')
   })
 
-  it('shows the not-found message when the load rejects', async () => {
-    getTrack.mockRejectedValue(new Error('404'))
+  it('shows the not-found message when the track does not exist', async () => {
+    getTrack.mockRejectedValue(new ResourceNotFoundError())
     create()
 
     const fixture = TestBed.createComponent(TrackDetailPage)
@@ -102,6 +102,18 @@ describe('TrackDetailPage', () => {
     expect(
       (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent,
     ).toContain('could not be found')
+  })
+
+  it('shows a load failure, not not-found, when the load fails for another reason', async () => {
+    getTrack.mockRejectedValue(new Error('500'))
+    create()
+
+    const fixture = TestBed.createComponent(TrackDetailPage)
+    await fixture.whenStable()
+
+    const alert = (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')
+    expect(alert?.textContent).toContain('Could not load this track.')
+    expect(alert?.textContent).not.toContain('could not be found')
   })
 
   it('hides the restore button for a track that is not taken down', async () => {

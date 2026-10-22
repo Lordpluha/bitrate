@@ -18,3 +18,17 @@ export const ADMIN_STAFF_SAFE_SELECT = {
   createdAt: true,
   updatedAt: true,
 } as const satisfies Prisma.StaffSelect
+
+/** The role columns that decide what an operator is granted. */
+export const ROLE_GRANT_SELECT = {
+  name: true,
+  builtIn: true,
+  permissions: true,
+} as const satisfies Prisma.RoleSelect
+
+/** What the role/permission writes read off the target operator — never its credentials. */
+export const STAFF_ROLE_CHECK_SELECT = {
+  roleId: true,
+  permissions: true,
+  role: { select: { name: true, builtIn: true } },
+} as const satisfies Prisma.StaffSelect

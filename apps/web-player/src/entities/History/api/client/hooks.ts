@@ -70,6 +70,7 @@ export const useRemoveListeningHistoryTrack = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
+    meta: { errorMessage: 'Unable to remove this track from history.' },
     mutationFn: async (trackId: string) => {
       const { response } = await clientFetchClient.DELETE(
         '/api/v1/history/tracks/{trackId}',
@@ -97,6 +98,7 @@ export const useClearListeningHistory = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
+    meta: { errorMessage: 'Unable to clear listening history.' },
     mutationFn: async () => {
       const { response } = await clientFetchClient.DELETE('/api/v1/history')
 

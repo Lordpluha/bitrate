@@ -85,38 +85,34 @@ export const mountCursor = (ctx: EngineContext) => {
     follow(dot, 0.05),
   ]
   let mode: Mode = 'default'
-  window.addEventListener(
-    'pointermove',
-    (e) => {
-      if (e.pointerType !== 'mouse') return
-      cur.classList.remove('is-out')
-      const [m, el] = modeOf(e.target)
-      if (m !== mode) {
-        cur.classList.replace(`m-${mode}`, `m-${m}`)
-        mode = m
+  ctx.pointer.listen((e) => {
+    if (e.pointerType !== 'mouse') return
+    cur.classList.remove('is-out')
+    const [m, el] = modeOf(e.target)
+    if (m !== mode) {
+      cur.classList.replace(`m-${mode}`, `m-${m}`)
+      mode = m
+    }
+    let x = e.clientX
+    let y = e.clientY
+    if (m === 'hover' && el) {
+      const r = el.getBoundingClientRect()
+      if (r.width < MAGNET_MAX.width && r.height < MAGNET_MAX.height) {
+        x += (r.left + r.width / 2 - x) * MAGNET_PULL
+        y += (r.top + r.height / 2 - y) * MAGNET_PULL
       }
-      let x = e.clientX
-      let y = e.clientY
-      if (m === 'hover' && el) {
-        const r = el.getBoundingClientRect()
-        if (r.width < MAGNET_MAX.width && r.height < MAGNET_MAX.height) {
-          x += (r.left + r.width / 2 - x) * MAGNET_PULL
-          y += (r.top + r.height / 2 - y) * MAGNET_PULL
-        }
-      }
-      if (m === 'play' && label)
-        label.textContent =
-          (el instanceof HTMLElement ? el.dataset.cursorLabel : undefined) ??
-          playLabel
-      ring[0](x)
-      ring[1](y)
-      for (const [fx, fy] of exact) {
-        fx(e.clientX)
-        fy(e.clientY)
-      }
-    },
-    { passive: true, signal },
-  )
+    }
+    if (m === 'play' && label)
+      label.textContent =
+        (el instanceof HTMLElement ? el.dataset.cursorLabel : undefined) ??
+        playLabel
+    ring[0](x)
+    ring[1](y)
+    for (const [fx, fy] of exact) {
+      fx(e.clientX)
+      fy(e.clientY)
+    }
+  })
   window.addEventListener('pointerdown', () => cur.classList.add('is-press'), {
     signal,
   })

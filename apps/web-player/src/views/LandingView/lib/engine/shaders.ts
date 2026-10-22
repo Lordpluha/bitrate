@@ -66,11 +66,17 @@ export const SKIN_FRAG = `
       uniform vec3 uCa, uCb; uniform float uAlpha; varying vec2 vUv; varying float vBurst;
       void main(){ float d = length(gl_PointCoord - .5); float a = smoothstep(.5, .0, d); gl_FragColor = vec4(mix(uCa, uCb, vUv.x), a * (.55 + vBurst * .4) * uAlpha); }`
 
+/**
+ * How the field morph staggers: particle progress is `smoothstep(uT * speed - seed * spread)`.
+ * The stage repeats it on the CPU to freeze the field mid-morph, so both read these numbers.
+ */
+export const FIELD_MORPH = { speed: 1.4, spread: 0.4 } as const
+
 /** The structured particle field: per-scene layouts in board pixels, morphed by uT. */
 export const FIELD_VERT = `
         attribute vec3 aFrom; attribute vec3 aTo; attribute float aSeed; uniform float uT, uTime, uSize; uniform vec4 uBoard; uniform vec2 uView; varying float vSeed;
         void main(){
-          float t = smoothstep(0.0, 1.0, clamp(uT * 1.4 - aSeed * .4, 0.0, 1.0));
+          float t = smoothstep(0.0, 1.0, clamp(uT * ${FIELD_MORPH.speed} - aSeed * ${FIELD_MORPH.spread}, 0.0, 1.0));
           vec3 b = mix(aFrom, aTo, t);
           float lift = sin(t * 3.14159) * 140.0 * (aSeed - .5);
           vec2 sp = uBoard.xy + (b.xy + vec2(lift, -abs(lift) * .6)) * uBoard.z;

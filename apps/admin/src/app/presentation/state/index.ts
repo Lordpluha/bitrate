@@ -1,4 +1,7 @@
 export * from './collection'
+export * from './confirm-action'
+export * from './detail-resource'
 export * from './query-codec'
 export * from './query-state'
+export * from './search-draft'
 export * from './selection'

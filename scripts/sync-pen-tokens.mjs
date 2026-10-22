@@ -25,64 +25,15 @@
  */
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, relative } from 'node:path'
+import { HEX, isTransparent, LIBRARY, parseHex, ROOT, rgbToOklab } from './lib/pen-colour.mjs'
 
-const ROOT = join(dirname(new URL(import.meta.url).pathname), '..')
 const THEMES_ENTRY = join(ROOT, 'packages/tailwind/src/themes.css')
-const LIBRARY = join(ROOT, 'pencil/web-player-design/design-system/bitrate.lib.pen')
 const DESIGNS = join(ROOT, 'pencil')
-/**
- * Designs drawn before the "assembled from library components only" rule. They are reported as
- * warnings until they are rebuilt from library instances; every other design must comply.
- */
-const LEGACY = []
 /** Archived designs are historical references, not live designs: the checks skip them. */
 const ARCHIVED = /\/archive\//
 const SHAPES = new Set(['text', 'icon', 'rectangle', 'ellipse', 'path', 'polygon', 'line'])
 const VISUAL = ['fill', 'stroke', 'effect', 'cornerRadius']
 
-/** Counts children placed by coordinates instead of flex: free frames, groups, absolute nodes. */
-function absoluteLayout(doc) {
-  let count = 0
-  const visit = (node) => {
-    if (Array.isArray(node)) {
-      for (const n of node) visit(n)
-      return
-    }
-    if (!node || typeof node !== 'object') return
-    if (
-      (node.type === 'frame' && node.layout === 'none' && node.children?.length) ||
-      node.type === 'group'
-    )
-      count++
-    if (node.layoutPosition === 'absolute') count++
-    for (const c of node.children ?? []) visit(c)
-    if (node.type === 'ref')
-      for (const v of Object.values(node.descendants ?? {})) if (v?.type) visit(v)
-  }
-  for (const t of doc.children) visit(t.children ?? [])
-  return count
-}
-
-/** Counts elements a screen draws itself instead of instancing a library component. */
-function localElements(doc) {
-  let count = 0
-  const visit = (node, top) => {
-    if (Array.isArray(node)) {
-      for (const n of node) visit(n, false)
-      return
-    }
-    if (!node || typeof node !== 'object') return
-    if (node.type === 'ref') {
-      for (const v of Object.values(node.descendants ?? {})) if (v?.type) visit(v, false)
-      return
-    }
-    if (SHAPES.has(node.type)) count++
-    else if (!top && VISUAL.some((k) => k in node)) count++
-    for (const c of node.children ?? []) visit(c, false)
-  }
-  for (const t of doc.children) visit(t, true)
-  return count
-}
 const LIBRARY_ALIAS = 'ds'
 const THEMES = ['Dark', 'Light', 'Dim']
 const SELECTORS = { '@theme': 'Dark', ':root.light': 'Light', ':root.dim': 'Dim' }
@@ -122,13 +73,6 @@ function lookup(decls, theme, name) {
 
 const clamp01 = (x) => Math.min(1, Math.max(0, x))
 
-function parseHex(hex) {
-  let h = hex.slice(1)
-  if (h.length <= 4) h = [...h].map((c) => c + c).join('')
-  const n = (i) => parseInt(h.slice(i, i + 2), 16) / 255
-  return { r: n(0), g: n(2), b: n(4), a: h.length === 8 ? n(6) : 1 }
-}
-
 function toHex({ r, g, b, a }) {
   const byte = (x) =>
     Math.round(clamp01(x) * 255)
@@ -138,7 +82,6 @@ function toHex({ r, g, b, a }) {
   return `#${byte(r)}${byte(g)}${byte(b)}${a >= 0.999 ? '' : byte(a)}`
 }
 
-const toLinear = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)
 const fromLinear = (c) => (c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055)
 
 function oklabToRgb(L, A, B, alpha) {
@@ -151,18 +94,6 @@ function oklabToRgb(L, A, B, alpha) {
     b: fromLinear(-0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s),
     a: alpha,
   }
-}
-
-function rgbToOklab({ r, g, b }) {
-  const [lr, lg, lb] = [r, g, b].map(toLinear)
-  const l = Math.cbrt(0.4122214708 * lr + 0.5363325363 * lg + 0.0514459929 * lb)
-  const m = Math.cbrt(0.2119034982 * lr + 0.6806995451 * lg + 0.1073969566 * lb)
-  const s = Math.cbrt(0.0883024619 * lr + 0.2817188376 * lg + 0.6299787005 * lb)
-  return [
-    0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
-    1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
-    0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
-  ]
 }
 
 const parseAlpha = (s) =>
@@ -277,10 +208,6 @@ function buildVariables() {
 
 /* ---------- design-file scan ---------- */
 
-const HEX = /^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/
-/** Fully transparent stops (`#rrggbb00`) carry no colour, only the fade — they need no token. */
-const isTransparent = (hex) => hex.length === 9 && hex.endsWith('00')
-
 function* penFiles(dir) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     const path = join(dir, entry.name)
@@ -289,29 +216,68 @@ function* penFiles(dir) {
   }
 }
 
+/**
+ * Scans one design in a single walk. Every value is checked for hardcoded hex colours, unknown
+ * `$ds:` references and themes on the wrong axis; nodes of the layer tree (reached through
+ * `children` and a ref's `descendants`) are also counted for two layout rules:
+ * - absolute: below a top-level frame, children placed by coordinates instead of flex (free
+ *   frames, groups, absolute nodes);
+ * - local: elements a screen draws itself instead of instancing a library component (refs and
+ *   their own children are instances, but overridden descendants count).
+ */
 function scanDesign(file, libraryNames, refPattern) {
   const doc = JSON.parse(readFileSync(file, 'utf8'))
   const hex = new Map()
   const unknown = new Map()
   let wrongAxis = 0
-  const visit = (node, frame) => {
-    if (Array.isArray(node)) {
-      for (const n of node) visit(n, frame)
+  let local = 0
+  let absolute = 0
+  /**
+   * @param tree `{ top, local, absolute }` when `value` is a layer-tree node, else null.
+   * @param descendants Tree flags for the typed values of `value` (a ref's `descendants` map).
+   */
+  const visit = (value, frame, tree, descendants = null) => {
+    if (Array.isArray(value)) {
+      for (const n of value) visit(n, frame, descendants && n?.type ? descendants : tree)
       return
     }
-    if (!node || typeof node !== 'object') return
+    if (!value || typeof value !== 'object') return
+    const node = value
     if (node.theme && (node.theme.Mode || node.theme.mode)) wrongAxis++
-    for (const [key, value] of Object.entries(node)) {
-      if (typeof value === 'string') {
-        if (key !== 'url' && key !== 'content' && HEX.test(value) && !isTransparent(value)) {
+    if (tree?.absolute) {
+      if (
+        (node.type === 'frame' && node.layout === 'none' && node.children?.length) ||
+        node.type === 'group'
+      )
+        absolute++
+      if (node.layoutPosition === 'absolute') absolute++
+    }
+    if (tree?.local && node.type !== 'ref') {
+      if (SHAPES.has(node.type)) local++
+      else if (!tree.top && VISUAL.some((k) => k in node)) local++
+    }
+    for (const [key, child] of Object.entries(node)) {
+      if (typeof child === 'string') {
+        if (key !== 'url' && key !== 'content' && HEX.test(child) && !isTransparent(child)) {
           hex.set(frame, (hex.get(frame) ?? 0) + 1)
         }
-        const ref = value.match(refPattern)
+        const ref = child.match(refPattern)
         if (ref && !libraryNames.has(ref[1])) unknown.set(ref[1], (unknown.get(ref[1]) ?? 0) + 1)
-      } else visit(value, frame)
+      } else if (descendants) {
+        visit(child, frame, child?.type ? descendants : null)
+      } else if (tree && key === 'children') {
+        visit(child, frame, {
+          top: false,
+          local: tree.local && node.type !== 'ref',
+          absolute: tree.absolute || tree.top,
+        })
+      } else if (tree && key === 'descendants' && node.type === 'ref') {
+        visit(child, frame, null, { top: false, local: tree.local, absolute: tree.absolute })
+      } else visit(child, frame, null)
     }
   }
-  for (const top of doc.children) visit(top, `${top.id} ${top.name ?? ''}`.trim())
+  for (const top of doc.children)
+    visit(top, `${top.id} ${top.name ?? ''}`.trim(), { top: true, local: true, absolute: false })
   const ownColours = Object.entries(doc.variables ?? {}).filter(([, v]) => v.type === 'color')
   return {
     hex,
@@ -319,8 +285,8 @@ function scanDesign(file, libraryNames, refPattern) {
     imports: doc.imports ?? {},
     ownColours: ownColours.length,
     wrongAxis,
-    local: localElements(doc),
-    absolute: absoluteLayout(doc),
+    local,
+    absolute,
   }
 }
 
@@ -347,7 +313,6 @@ if (!check) {
 }
 
 const problems = []
-const warnings = []
 const drift = Object.keys(generated).filter(
   (k) => JSON.stringify(current[k]?.value) !== JSON.stringify(generated[k].value),
 )
@@ -357,10 +322,9 @@ if (designOnly.length) problems.push(`library colours with no code token: ${desi
 
 const libraryNames = new Set(Object.keys(generated).concat(Object.keys(current)))
 for (const name of designOnly) libraryNames.delete(name)
-const designs = [...penFiles(DESIGNS)]
+const designs = [...penFiles(DESIGNS)].filter((path) => !ARCHIVED.test(relative(ROOT, path)))
 for (const path of designs) {
   const file = relative(ROOT, path)
-  if (ARCHIVED.test(file)) continue
   const isLibrary = path === LIBRARY
   const pattern = isLibrary
     ? /^\$(--[a-z0-9-]+)$/
@@ -370,16 +334,14 @@ for (const path of designs) {
     libraryNames,
     pattern,
   )
-  if (absolute) {
-    const line = `${file}: ${absolute} element(s) positioned by coordinates — lay them out with flex`
-    if (LEGACY.some((r) => r.test(file))) warnings.push(line)
-    else problems.push(line)
-  }
-  if (!isLibrary && local) {
-    const line = `${file}: ${local} element(s) drawn locally instead of instancing a library component`
-    if (LEGACY.some((r) => r.test(file))) warnings.push(line)
-    else problems.push(line)
-  }
+  if (absolute)
+    problems.push(
+      `${file}: ${absolute} element(s) positioned by coordinates — lay them out with flex`,
+    )
+  if (!isLibrary && local)
+    problems.push(
+      `${file}: ${local} element(s) drawn locally instead of instancing a library component`,
+    )
   if (!isLibrary && wrongAxis)
     problems.push(
       `${file}: ${wrongAxis} theme(s) set on "Mode" — an importing file must use "ds:Mode"`,
@@ -394,10 +356,6 @@ for (const path of designs) {
     problems.push(`${file}: ${count} hardcoded hex colour(s) in "${frame}"`)
 }
 
-if (warnings.length)
-  console.warn(
-    `⚠ legacy designs to rebuild from library components with flex layout:\n${warnings.map((w) => `  ${w}`).join('\n')}`,
-  )
 if (problems.length === 0) {
   console.log(
     `✅ pen tokens: library matches code; ${designs.length} designs use one palette, three themes`,

@@ -3,19 +3,15 @@ import { all, type EngineContext, isMobile } from './context'
 
 /** Cursor glow, magnetic buttons, hero window parallax and card tilt — transforms only. */
 export const mountPointer = (ctx: EngineContext) => {
-  const { root, signal, state } = ctx
+  const { root, signal, state, pointer } = ctx
   const glow = root.querySelector('.cursor-glow')
   if (glow) {
     const gx = gsap.quickTo(glow, 'x', { duration: 0.6, ease: 'power3' })
     const gy = gsap.quickTo(glow, 'y', { duration: 0.6, ease: 'power3' })
-    window.addEventListener(
-      'pointermove',
-      (e) => {
-        gx(e.clientX)
-        gy(e.clientY)
-      },
-      { passive: true, signal },
-    )
+    pointer.listen((e) => {
+      gx(e.clientX)
+      gy(e.clientY)
+    })
   }
   if (ctx.reduce || !matchMedia('(hover: hover)').matches) return
   for (const el of all({ root, selector: '.magnetic', type: HTMLElement })) {
@@ -46,44 +42,46 @@ export const mountPointer = (ctx: EngineContext) => {
     )
   }
   const heroWin = root.querySelector('#heroWin')
-  window.addEventListener(
-    'pointermove',
-    (e) => {
-      if (
-        !heroWin ||
-        ctx.scenes[state.index]?.id !== 'hero' ||
-        state.animating ||
-        isMobile()
-      )
-        return
-      const mx = e.clientX / window.innerWidth - 0.5
-      const my = e.clientY / window.innerHeight - 0.5
-      gsap.to(heroWin, {
-        rotateY: -14 + mx * 10,
-        rotateX: 6 - my * 8,
-        duration: 0.8,
-        overwrite: 'auto',
-      })
-    },
-    { passive: true, signal },
-  )
+  /* overwrite takes the window over from the scene entrance's own tilt */
+  pointer.listen(() => {
+    if (
+      !heroWin ||
+      ctx.scenes[state.index]?.id !== 'hero' ||
+      state.animating ||
+      isMobile()
+    )
+      return
+    gsap.to(heroWin, {
+      rotateY: -14 + pointer.nx * 10,
+      rotateX: 6 - pointer.ny * 8,
+      duration: 0.8,
+      overwrite: 'auto',
+    })
+  })
   for (const el of all({ root, selector: '.tiltable', type: HTMLElement })) {
+    /* one retargeted tween per axis instead of a new tween per pointer event */
+    const tilt = { duration: 0.4 }
+    const yTo = gsap.quickTo(el, 'rotateY', tilt)
+    const xTo = gsap.quickTo(el, 'rotateX', tilt)
+    const perspectiveTo = gsap.quickTo(el, 'transformPerspective', tilt)
+    let settle: gsap.core.Tween | null = null
     el.addEventListener(
       'pointermove',
       (e) => {
+        settle?.kill()
+        settle = null
         const r = el.getBoundingClientRect()
-        gsap.to(el, {
-          rotateY: ((e.clientX - r.left) / r.width - 0.5) * 10,
-          rotateX: -((e.clientY - r.top) / r.height - 0.5) * 10,
-          transformPerspective: 1000,
-          duration: 0.4,
-        })
+        yTo(((e.clientX - r.left) / r.width - 0.5) * 10)
+        xTo(-((e.clientY - r.top) / r.height - 0.5) * 10)
+        perspectiveTo(1000)
       },
       { signal },
     )
     el.addEventListener(
       'pointerleave',
-      () => gsap.to(el, { rotateX: 0, rotateY: 0, duration: 0.6 }),
+      () => {
+        settle = gsap.to(el, { rotateX: 0, rotateY: 0, duration: 0.6 })
+      },
       { signal },
     )
   }

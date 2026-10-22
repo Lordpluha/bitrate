@@ -13,6 +13,7 @@ import {
 import type { Page } from '@domain/shared'
 import { firstValueFrom } from 'rxjs'
 import { ADMIN_API } from '../http/api.config'
+import { toReadError } from '../http/to-read-error'
 import { fetchPage } from '../http/wire-page'
 import {
   type ApproveReleaseBody,
@@ -68,7 +69,13 @@ export class HttpReleaseReviewRepository extends ReleaseReviewRepository {
   }
 
   override async getById(id: string): Promise<ReleaseSubmissionDetail> {
-    const response = await firstValueFrom(this.http.get<unknown>(`${this.base}/${id}`))
+    let response: unknown
+    try {
+      response = await firstValueFrom(this.http.get<unknown>(`${this.base}/${id}`))
+    } catch (error) {
+      throw toReadError(error)
+    }
+
     return toReleaseSubmissionDetail(releaseDetailDto.parse(response))
   }
 

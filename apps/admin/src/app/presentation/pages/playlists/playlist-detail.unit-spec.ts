@@ -9,7 +9,7 @@ import {
 } from '@application/playlists'
 import { SessionStore } from '@application/session'
 import type { PlaylistDetail } from '@domain/playlist'
-import { ResourceWriteError } from '@domain/shared'
+import { ResourceNotFoundError, ResourceWriteError } from '@domain/shared'
 import { TranslocoTestingModule } from '@jsverse/transloco'
 import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -124,13 +124,24 @@ describe('PlaylistDetailPage', () => {
     expect(host.textContent).toContain('Showing the first 2 of 120 tracks.')
   })
 
-  it('shows the not-found message when the load rejects', async () => {
-    getPlaylist.mockRejectedValue(new Error('404'))
+  it('shows the not-found message when the playlist does not exist', async () => {
+    getPlaylist.mockRejectedValue(new ResourceNotFoundError())
     create()
 
     const { host } = await render()
 
     expect(host.querySelector('[role="alert"]')?.textContent).toContain('could not be found')
+  })
+
+  it('shows a load failure, not not-found, when the load fails for another reason', async () => {
+    getPlaylist.mockRejectedValue(new Error('500'))
+    create()
+
+    const { host } = await render()
+
+    const alert = host.querySelector('[role="alert"]')
+    expect(alert?.textContent).toContain('Could not load this playlist.')
+    expect(alert?.textContent).not.toContain('could not be found')
   })
 
   it('offers Hide and Take down, not Un-hide or Restore, for an active public playlist', async () => {

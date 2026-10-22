@@ -1,5 +1,6 @@
 import type { ApiSchemas } from '@bitrate/contracts'
 import { clientFetchClient } from '@shared/api/fetchClient'
+import { writeSignal as signal } from '@shared/api/writeTimeout'
 import { z } from 'zod'
 import {
   artistTaskPageSchema,
@@ -7,9 +8,6 @@ import {
   releaseTaskSchema,
   type TaskFilter,
 } from '../model/task.schema'
-
-const WRITE_TIMEOUT_MS = 30_000
-const signal = () => AbortSignal.timeout(WRITE_TIMEOUT_MS)
 
 /** Shown for a task that changed or disappeared since it was read; the form keeps its input. */
 const STALE =

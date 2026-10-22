@@ -9,7 +9,7 @@ import {
   RestoreUserUseCase,
   RevokeUserSessionsUseCase,
 } from '@application/users'
-import { ResourceWriteError } from '@domain/shared'
+import { ResourceNotFoundError, ResourceWriteError } from '@domain/shared'
 import type { UserDetail } from '@domain/user'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { UserDetailPage } from './user-detail'
@@ -90,8 +90,8 @@ describe('UserDetailPage', () => {
     expect(host.querySelector('dd')?.textContent?.trim()).toBe('2')
   })
 
-  it('shows the not-found message when the load rejects', async () => {
-    getUser.mockRejectedValue(new Error('404'))
+  it('shows the not-found message when the listener does not exist', async () => {
+    getUser.mockRejectedValue(new ResourceNotFoundError())
     create()
 
     const fixture = TestBed.createComponent(UserDetailPage)
@@ -100,6 +100,18 @@ describe('UserDetailPage', () => {
     expect(
       (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent,
     ).toContain('could not be found')
+  })
+
+  it('shows a load failure, not not-found, when the load fails for another reason', async () => {
+    getUser.mockRejectedValue(new Error('500'))
+    create()
+
+    const fixture = TestBed.createComponent(UserDetailPage)
+    await fixture.whenStable()
+
+    const alert = (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')
+    expect(alert?.textContent).toContain('Could not load this listener.')
+    expect(alert?.textContent).not.toContain('could not be found')
   })
 
   it('hides the restore button for an active account', async () => {

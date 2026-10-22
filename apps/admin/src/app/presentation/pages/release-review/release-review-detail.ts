@@ -10,45 +10,25 @@ import {
   type ReleaseSubmissionDetail,
 } from '@domain/release-review'
 import { ActionNotAllowedError } from '@domain/shared'
+import { formatClockDuration } from '@presentation/pages/shared/duration.formatter'
 import { LocalizedDatePipe } from '@presentation/pipes'
+import { createDetailResource } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmLabelImports } from '@spartan-ng/helm/label'
 import { HlmTableImports } from '@spartan-ng/helm/table'
-import { RELEASE_KIND_LABELS, RELEASE_STATUS_BADGES, RELEASE_STATUS_LABELS } from './release-labels'
+import {
+  RELEASE_BLOCKER_LABELS,
+  RELEASE_DESTINATION_LABELS,
+  RELEASE_KIND_LABELS,
+  RELEASE_NOTICE_LABELS,
+  RELEASE_RIGHT_LABELS,
+  RELEASE_STATUS_BADGES,
+  RELEASE_STATUS_LABELS,
+} from './release-labels'
 
 /** The decision form currently open; `null` while the reviewer is only reading. */
 type DecisionMode = 'approve' | 'changes' | null
-
-const BLOCKER_LABELS: Record<string, string> = {
-  NO_TRACKS: 'No recordings',
-  COVER_MISSING: 'No artwork',
-  TRACK_AUDIO_MISSING: 'A recording has no audio',
-  MASTER_OWNER_MISSING: 'Master owner not set',
-  WRITERS_NOT_CONFIRMED: 'Writers not confirmed',
-  ACCURACY_NOT_CONFIRMED: 'Accuracy not confirmed',
-  CONTRIBUTOR_ROLES_MISSING: 'A contributor has no role',
-  SPLITS_INCOMPLETE: 'Splits do not add up to 100%',
-}
-
-const NOTICE_LABELS: Record<string, string> = {
-  UPC_MISSING: 'No UPC yet',
-  ISRC_MISSING: 'A recording has no ISRC yet',
-}
-
-const DESTINATION_LABELS: Record<string, string> = {
-  SPOTIFY: 'Spotify',
-  APPLE_MUSIC: 'Apple Music',
-  YOUTUBE_MUSIC: 'YouTube Music',
-  AMAZON_MUSIC: 'Amazon Music',
-  DEEZER: 'Deezer',
-  TIDAL: 'TIDAL',
-}
-
-const RIGHT_LABELS: Record<string, string> = {
-  RECORDING: 'Recording (master)',
-  COMPOSITION: 'Composition (publishing)',
-}
 
 const BASIS_POINTS_PER_PERCENT = 100
 
@@ -56,15 +36,9 @@ function lines(value: string): string[] {
   return normalizeReviewItems(value.split('\n'))
 }
 
-function formatDuration(seconds: number | null): string {
-  if (seconds === null) return '—'
-  const minutes = Math.floor(seconds / 60)
-  return `${minutes}:${String(seconds % 60).padStart(2, '0')}`
-}
-
 /**
- * Over 100 lines: loading, the decision form's armed state and failure reporting describe one
- * reviewer action on one submission — the same reason `album-detail.ts` gives for its size.
+ * Over 100 lines: the decision form's armed state and failure reporting describe one reviewer
+ * action on one submission, so they stay together.
  */
 @Component({
   selector: 'app-release-review-detail',
@@ -91,16 +65,21 @@ export class ReleaseReviewDetailPage {
   protected readonly kindLabels = RELEASE_KIND_LABELS
   protected readonly statusLabels = RELEASE_STATUS_LABELS
   protected readonly statusBadges = RELEASE_STATUS_BADGES
-  protected readonly blockerLabels = BLOCKER_LABELS
-  protected readonly noticeLabels = NOTICE_LABELS
-  protected readonly destinationLabels = DESTINATION_LABELS
-  protected readonly rightLabels = RIGHT_LABELS
-  protected readonly formatDuration = formatDuration
+  protected readonly blockerLabels = RELEASE_BLOCKER_LABELS
+  protected readonly noticeLabels = RELEASE_NOTICE_LABELS
+  protected readonly destinationLabels = RELEASE_DESTINATION_LABELS
+  protected readonly rightLabels = RELEASE_RIGHT_LABELS
+  protected readonly formatDuration = formatClockDuration
 
-  protected readonly release = signal<ReleaseSubmissionDetail | null>(null)
-  protected readonly loading = signal(true)
-  protected readonly notFound = signal(false)
-  protected readonly failure = signal<string | null>(null)
+  private readonly record = createDetailResource({
+    load: () => this.getRelease.execute(this.releaseId),
+    errorMessage: 'Could not load this release.',
+  })
+
+  protected readonly release = this.record.value
+  protected readonly loading = this.record.loading
+  protected readonly notFound = this.record.notFound
+  protected readonly failure = this.record.failure
   protected readonly status = signal<string | null>(null)
   protected readonly mode = signal<DecisionMode>(null)
   protected readonly message = signal('')
@@ -117,7 +96,7 @@ export class ReleaseReviewDetailPage {
   )
 
   constructor() {
-    void this.load()
+    void this.record.reload()
   }
 
   protected decidable(release: ReleaseSubmissionDetail): boolean {
@@ -166,10 +145,11 @@ export class ReleaseReviewDetailPage {
       this.message.set('')
       this.requiredText.set('')
       this.recommendationText.set('')
-      await this.load()
+      await this.record.reload()
     } catch (error) {
       this.failure.set(this.describe(error))
-      if (error instanceof ReleaseReviewError && error.reason === 'stale') await this.load()
+      if (error instanceof ReleaseReviewError && error.reason === 'stale')
+        await this.record.reload()
     } finally {
       this.working.set(false)
     }
@@ -190,17 +170,5 @@ export class ReleaseReviewDetailPage {
       }
     }
     return 'Could not save the decision. Please try again.'
-  }
-
-  private async load(): Promise<void> {
-    this.loading.set(true)
-    try {
-      this.release.set(await this.getRelease.execute(this.releaseId))
-      this.notFound.set(false)
-    } catch {
-      this.notFound.set(true)
-    } finally {
-      this.loading.set(false)
-    }
   }
 }

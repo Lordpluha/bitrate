@@ -1,11 +1,9 @@
 import { artistMusicKeys } from '@shared/api/artistMusicKeys'
 import { clientFetchClient } from '@shared/api/fetchClient'
+import { writeSignal as signal } from '@shared/api/writeTimeout'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { z } from 'zod'
 import { artistSessionSchema } from '../model/session'
-
-const WRITE_TIMEOUT_MS = 30_000
-const signal = () => AbortSignal.timeout(WRITE_TIMEOUT_MS)
 
 const sessionKeys = {
   all: (artistId: string) =>

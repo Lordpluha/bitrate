@@ -99,6 +99,25 @@ describe('ArtistsAuthService', () => {
     )
   })
 
+  describe('isEmailAvailable', () => {
+    it('looks the address up trimmed and lower-cased', async () => {
+      artists.findByEmail.mockResolvedValue(null)
+
+      await expect(service.isEmailAvailable('  New@Example.COM ')).resolves.toEqual({
+        available: true,
+      })
+      expect(artists.findByEmail).toHaveBeenCalledWith('new@example.com')
+    })
+
+    it('reports a registered address as taken', async () => {
+      artists.findByEmail.mockResolvedValue({ id: 'artist-1' } as never)
+
+      await expect(service.isEmailAvailable('taken@example.com')).resolves.toEqual({
+        available: false,
+      })
+    })
+  })
+
   describe('email verification', () => {
     it('verifies the code for the selected artist and consumes legacy links', async () => {
       const artist = buildArtist({ emailVerifiedAt: null })

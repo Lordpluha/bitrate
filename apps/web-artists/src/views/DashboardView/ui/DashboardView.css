@@ -1,0 +1,73 @@
+/* Dashboard home, including the first-release empty state. */
+@layer utilities {
+  .artist-workspace-dashboard {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .artist-workspace-first-release {
+    min-height: 22rem;
+    padding-block: 1.75rem;
+    background: linear-gradient(
+      calc(180deg + atan2(22rem, 100cqw)),
+      var(--color-artist-panel-start) var(--artist-diagonal-stop-start),
+      var(--color-artist-panel-end) var(--artist-diagonal-stop-end)
+    );
+    box-shadow: var(--shadow-artist-panel);
+  }
+
+  .artist-workspace-upload {
+    color: var(--color-artist-icon);
+  }
+
+  .artist-workspace-empty-title {
+    margin-top: 2rem;
+    line-height: 1.5;
+  }
+
+  .artist-workspace-empty-description {
+    margin-top: 1rem;
+    line-height: 1.5;
+  }
+
+  @variant lg {
+    .artist-workspace-dashboard {
+      min-height: calc(100dvh - 13.25rem);
+    }
+
+    .artist-workspace-first-release {
+      height: 26.875rem;
+      min-height: 26.875rem;
+      padding-top: 3.8125rem;
+      margin-top: 2.96875rem;
+      text-align: center;
+      background-image: linear-gradient(
+        calc(180deg + atan2(26.875rem, 100cqw)),
+        var(--color-artist-panel-start) var(--artist-diagonal-stop-start),
+        var(--color-artist-panel-end) var(--artist-diagonal-stop-end)
+      );
+    }
+
+    .artist-workspace-upload {
+      position: relative;
+      left: -0.625rem;
+      margin-inline: auto;
+    }
+
+    .artist-workspace-empty-title {
+      margin-top: 1.75rem;
+    }
+
+    .artist-workspace-empty-description {
+      margin-top: 0.75rem;
+    }
+
+    .artist-workspace-empty-action {
+      margin-top: 2.375rem;
+    }
+
+    .artist-workspace-empty-reassurance {
+      margin-top: 1.3125rem;
+    }
+  }
+}

@@ -1,5 +1,6 @@
 import { artistMusicKeys } from '@shared/api/artistMusicKeys'
 import { clientFetchClient } from '@shared/api/fetchClient'
+import { writeSignal } from '@shared/api/writeTimeout'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { notificationListSchema } from '../model/notification.schema'
 import {
@@ -77,7 +78,7 @@ export function useSaveNotificationPreferences(artistId: string) {
       const result = await clientFetchClient
         .PUT('/api/v1/artist-notifications/preferences', {
           body: input,
-          signal: AbortSignal.timeout(30_000),
+          signal: writeSignal(),
         })
         .catch(() => undefined)
       const parsed = notificationPreferencesSchema.safeParse(result?.data)
