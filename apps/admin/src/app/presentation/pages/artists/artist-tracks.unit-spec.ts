@@ -57,8 +57,8 @@ describe('ArtistTracks', () => {
 
     const host = fixture.nativeElement as HTMLElement
     expect(host.querySelectorAll('tbody tr')).toHaveLength(2)
-    expect(host.textContent).toContain('READY')
-    expect(host.textContent).toContain('FAILED')
+    expect(host.textContent).toContain('Ready')
+    expect(host.textContent).toContain('Failed')
   })
 
   it('flags a taken-down track', async () => {
@@ -72,7 +72,7 @@ describe('ArtistTracks', () => {
     const fixture = create()
     await fixture.whenStable()
 
-    expect((fixture.nativeElement as HTMLElement).textContent).toContain('taken down')
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain('Taken down')
   })
 
   it('shows the collection error state when the request rejects', async () => {
@@ -83,7 +83,7 @@ describe('ArtistTracks', () => {
 
     expect(
       (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent,
-    ).toContain('Could not load tracks.')
+    ).toContain('Couldn’t load tracks')
   })
 
   it('shows the empty message when the artist has no tracks', async () => {

@@ -1,49 +1,44 @@
 <div class="space-y-3">
   <app-collection-status
     [loading]="collection.loading()"
-    [failure]="collection.failure()"
+    [failure]="collection.failure() ? ('artist.tracks.error' | transloco) : null"
     [isEmpty]="collection.items().length === 0"
-    emptyMessage="No tracks published yet."
+    [emptyMessage]="'artist.tracks.empty' | transloco"
   />
 
   @if (collection.items().length > 0) {
     <div hlmTableContainer>
       <table hlmTable>
         <caption hlmCaption class="sr-only">
-          Tracks, newest first
+          {{
+            'artist.tracks.caption' | transloco
+          }}
         </caption>
         <thead hlmTHead>
           <tr hlmTr>
-            <th hlmTh scope="col">Track</th>
-            <th hlmTh scope="col">State</th>
-            <th hlmTh scope="col">Plays</th>
-            <th hlmTh scope="col">Uploaded</th>
+            <th hlmTh scope="col">{{ 'artist.tracks.track' | transloco }}</th>
+            <th hlmTh scope="col">{{ 'artist.tracks.state' | transloco }}</th>
+            <th hlmTh scope="col">{{ 'artist.tracks.plays' | transloco }}</th>
+            <th hlmTh scope="col">{{ 'artist.tracks.uploaded' | transloco }}</th>
           </tr>
         </thead>
         <tbody hlmTBody>
           @for (track of collection.items(); track track.id) {
             <tr hlmTr>
               <td hlmTd>
-                <a [routerLink]="['/catalog', track.id]" class="hover:underline">{{
+                <a [routerLink]="['/catalog', track.id]" class="font-semibold hover:underline">{{
                   track.title
                 }}</a>
                 @if (track.takenDownAt) {
-                  <span hlmBadge variant="destructive" class="ml-2">taken down</span>
+                  <span hlmBadge variant="secondary" class="ms-2">{{
+                    'content.takenDown' | transloco
+                  }}</span>
                 }
               </td>
               <td hlmTd>
-                <span
-                  hlmBadge
-                  [variant]="
-                    track.processingStatus === 'FAILED'
-                      ? 'destructive'
-                      : track.processingStatus === 'READY'
-                        ? 'default'
-                        : 'outline'
-                  "
-                >
-                  {{ track.processingStatus }}
-                </span>
+                <span hlmBadge [variant]="pipelineBadge[track.processingStatus]">{{
+                  pipelineKey[track.processingStatus] | transloco
+                }}</span>
               </td>
               <td hlmTd class="tabular-nums text-muted-foreground">{{ track.playCount }}</td>
               <td hlmTd class="tabular-nums text-muted-foreground">

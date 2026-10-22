@@ -127,7 +127,7 @@ describe('ArtistDetailPage', () => {
 
     expect(
       (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent,
-    ).toContain('could not be found')
+    ).toContain('Artist not found')
   })
 
   it('shows a load failure, not not-found, when the load fails for another reason', async () => {
@@ -138,7 +138,7 @@ describe('ArtistDetailPage', () => {
     await fixture.whenStable()
 
     const alert = (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')
-    expect(alert?.textContent).toContain('Could not load this artist.')
-    expect(alert?.textContent).not.toContain('could not be found')
+    expect(alert?.textContent).toContain('Couldn’t load this artist')
+    expect(alert?.textContent).not.toContain('Artist not found')
   })
 })
