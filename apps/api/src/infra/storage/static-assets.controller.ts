@@ -1,9 +1,11 @@
+import { pipeToResponse } from '@common/utils/stream'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
 import {
   Controller,
   Get,
   Inject,
+  Logger,
   NotFoundException,
   Req,
   Res,
@@ -13,6 +15,8 @@ import { ApiExcludeEndpoint } from '@nestjs/swagger'
 import { SkipThrottle } from '@nestjs/throttler'
 import type { Request, Response } from 'express'
 import { isPublicAssetKey } from './public-images'
+
+const logger = new Logger('StaticAssetsController')
 
 /**
  * Public images at `/static/<folder>/<file>`, read from STORAGE_SERVICE.
@@ -52,7 +56,6 @@ export class StaticAssetsController {
       'Cache-Control': 'public, max-age=31536000, immutable',
       'X-Content-Type-Options': 'nosniff',
     })
-    data.stream.on('error', () => res.destroy())
-    return data.stream.pipe(res)
+    pipeToResponse(data.stream, res, logger, 'Static asset')
   }
 }

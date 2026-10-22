@@ -11,6 +11,7 @@ import { AdminArtistsService } from './artists/admin-artists.service'
 import { AdminModerationController } from './moderation/admin-moderation.controller'
 import { AdminModerationService } from './moderation/admin-moderation.service'
 import { AdminTrackAudioService } from './tracks/admin-track-audio.service'
+import { AdminTrackListService } from './tracks/admin-track-list.service'
 import { AdminTracksController } from './tracks/admin-tracks.controller'
 import { AdminTracksService } from './tracks/admin-tracks.service'
 import { AdminUsersController } from './users/admin-users.controller'
@@ -59,7 +60,7 @@ const CASES: ExportCase[] = [
     path: '/admin/tracks/export.csv',
     permission: 'tracks:export',
     controller: AdminTracksController,
-    service: AdminTracksService,
+    service: AdminTrackListService,
     query: { processingStatus: 'FAILED', q: 'x', sort: 'title', order: 'asc' },
     expected: { processingStatus: 'FAILED', q: 'x', sort: 'title', order: 'asc' },
     filePrefix: 'tracks-',
@@ -82,8 +83,11 @@ const buildApp = async (testCase: ExportCase, permissions: Permission[]) => {
   const module = await Test.createTestingModule({
     controllers: [testCase.controller],
     providers: [
-      { provide: testCase.service, useValue: { exportCsv } },
       { provide: AdminTrackAudioService, useValue: {} },
+      { provide: AdminTrackListService, useValue: {} },
+      { provide: AdminTracksService, useValue: {} },
+      // Last, so the route's own service mock wins over the empty tracks stubs above.
+      { provide: testCase.service, useValue: { exportCsv } },
     ],
   })
     .overrideGuard(AdminAuthGuard)

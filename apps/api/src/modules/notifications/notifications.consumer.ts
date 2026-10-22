@@ -1,5 +1,5 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq'
-import { Inject, Injectable, Logger } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import { type Job, UnrecoverableError } from 'bullmq'
 import {
   NOTIFICATION_JOBS,
@@ -17,10 +17,7 @@ import { NotificationsService } from './notifications.service'
 export class NotificationsConsumer extends WorkerHost {
   private readonly logger = new Logger(NotificationsConsumer.name)
 
-  constructor(
-    /* explicit token: a consumer file may import the class as a type, which DI cannot resolve */
-    @Inject(NotificationsService) private readonly notifications: NotificationsService,
-  ) {
+  constructor(private readonly notifications: NotificationsService) {
     super()
   }
 

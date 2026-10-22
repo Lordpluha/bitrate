@@ -1,13 +1,15 @@
 import { gsap } from 'gsap'
 import type { LandingCopy } from '../../model/copy'
 import { createCanvases } from './canvases'
-import { all, BOARD, type EngineContext } from './context'
+import { all, BOARD, createPointerStore, type EngineContext } from './context'
 import { mountCursor } from './cursor'
 import { mountParticles2d, mountPartners2d } from './fallback2d'
 import { mountHeadings } from './headings'
 import { playIntro } from './intro'
+import { clearTokenCache } from './palette'
 import { mountPointer } from './pointer'
 import { mountScenes } from './scenes'
+import { mountWorkshopShuffle } from './scenes/enter'
 import { createStage, hasWebGL, type Stage } from './stage'
 import { mountTeam } from './team'
 
@@ -32,7 +34,8 @@ export const mountLanding = ({
     scenes: all({ root, selector: '.scene', type: HTMLElement }),
     copy,
     reduce: matchMedia('(prefers-reduced-motion: reduce)').matches,
-    state: { index: 0, animating: false, dragging: false },
+    state: { index: 0, animating: false, dragging: false, intro: false },
+    pointer: createPointerStore({ signal: controller.signal }),
     signal: controller.signal,
     onDispose: (fn) => {
       disposers.push(fn)
@@ -75,12 +78,16 @@ export const mountLanding = ({
     },
     drawWaves: canvases.drawWaves,
     glitch: headings.glitch,
-    resetTeam,
-    resetPartners,
+    onEnter: {
+      workshop: mountWorkshopShuffle(ctx),
+      team: resetTeam,
+      ...(resetPartners && { partners: resetPartners }),
+    },
   })
 
   /* the app theme lives as a class on <html>: repaint highlights and the stage when it changes */
   const themeWatch = new MutationObserver(() => {
+    clearTokenCache()
     headings.paint()
     stage?.retheme()
   })

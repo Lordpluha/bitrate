@@ -344,22 +344,25 @@ describe('PlaylistsService', () => {
     })
   })
 
-  it('addTracks should return 409 after exhausting retries on a unique-constraint race', async () => {
-    const playlist = buildPlaylistWithTracks({ userId: 'user-1' })
-    prisma.playlist.findFirst.mockResolvedValue(playlist)
-    prisma.track.count.mockResolvedValue(1)
-    prisma.$transaction.mockRejectedValue(
-      new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
-        code: 'P2002',
-        clientVersion: 'test',
-      }) as never,
-    )
+  it.each(['P2002', 'P2034'])(
+    'addTracks reports a concurrent edit after exhausting retries on %s',
+    async (code) => {
+      const playlist = buildPlaylistWithTracks({ userId: 'user-1' })
+      prisma.playlist.findFirst.mockResolvedValue(playlist)
+      prisma.track.count.mockResolvedValue(1)
+      prisma.$transaction.mockRejectedValue(
+        new Prisma.PrismaClientKnownRequestError('Write conflict', {
+          code,
+          clientVersion: 'test',
+        }) as never,
+      )
 
-    await expect(
-      service.addTracks('user-1', 'playlist-1', {
+      const request = service.addTracks('user-1', 'playlist-1', {
         trackIds: ['00000000-0000-0000-0000-000000000001'],
-      }),
-    ).rejects.toThrow(ConflictException)
-    expect(prisma.$transaction).toHaveBeenCalledTimes(3)
-  })
+      })
+      await expect(request).rejects.toThrow(ConflictException)
+      await expect(request).rejects.toThrow('Playlist was changed concurrently, please retry')
+      expect(prisma.$transaction).toHaveBeenCalledTimes(3)
+    },
+  )
 })

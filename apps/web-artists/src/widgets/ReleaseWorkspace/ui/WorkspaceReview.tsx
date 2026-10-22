@@ -1,11 +1,6 @@
 import type { ReleaseWorkspace } from '@entities/release'
+import { formatDateTimeUtc } from '@shared/lib/date'
 import { CircleAlert, CircleCheck, Lightbulb } from 'lucide-react'
-
-const reviewDate = new Intl.DateTimeFormat('en-US', {
-  dateStyle: 'medium',
-  timeStyle: 'short',
-  timeZone: 'UTC',
-})
 
 interface WorkspaceReviewProps {
   release: ReleaseWorkspace
@@ -36,7 +31,7 @@ export function WorkspaceReview({ release }: WorkspaceReviewProps) {
           {approved ? 'Approved by Bitrate' : 'Changes requested'}
         </h2>
         <p className="text-xs text-text-secondary">
-          Reviewed {reviewDate.format(new Date(review.createdAt))} UTC
+          Reviewed {formatDateTimeUtc(review.createdAt)} UTC
         </p>
       </div>
       {review.message && (

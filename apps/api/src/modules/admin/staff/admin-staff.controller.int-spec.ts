@@ -7,6 +7,7 @@ import { StubAdminAuthGuard } from '@test/mocks/stub-admin-auth.guard'
 import request from 'supertest'
 import { AdminStaffController } from './admin-staff.controller'
 import { AdminStaffService } from './admin-staff.service'
+import { AdminStaffPermissionsService } from './admin-staff-permissions.service'
 import { StaffNotFoundException } from './errors'
 
 const STAFF_ID = 'f47ac10b-58cc-4372-a567-0e02b2c3d479'
@@ -16,18 +17,26 @@ const makeServiceMock = () =>
     findAll: jest.fn(),
     findById: jest.fn(),
     create: jest.fn(),
-    assignRole: jest.fn(),
-    updatePermissions: jest.fn(),
     softDelete: jest.fn(),
   }) as unknown as jest.Mocked<AdminStaffService>
 
+const makePermissionsServiceMock = () =>
+  ({
+    assignRole: jest.fn(),
+    updatePermissions: jest.fn(),
+  }) as unknown as jest.Mocked<AdminStaffPermissionsService>
+
 const buildApp = async (permissions: Permission[]) => {
   const service = makeServiceMock()
+  const permissionsService = makePermissionsServiceMock()
   const reflector = new Reflector()
 
   const module: TestingModule = await Test.createTestingModule({
     controllers: [AdminStaffController],
-    providers: [{ provide: AdminStaffService, useValue: service }],
+    providers: [
+      { provide: AdminStaffService, useValue: service },
+      { provide: AdminStaffPermissionsService, useValue: permissionsService },
+    ],
   })
     .overrideGuard(AdminAuthGuard)
     .useValue(new StubAdminAuthGuard(reflector, permissions))
@@ -35,16 +44,17 @@ const buildApp = async (permissions: Permission[]) => {
 
   const app = module.createNestApplication()
   await app.init()
-  return { app, service }
+  return { app, service, permissionsService }
 }
 
 describe('AdminStaffController (int)', () => {
   describe('with staff:read only', () => {
     let app: INestApplication
     let service: jest.Mocked<AdminStaffService>
+    let permissionsService: jest.Mocked<AdminStaffPermissionsService>
 
     beforeAll(async () => {
-      ;({ app, service } = await buildApp(['staff:read']))
+      ;({ app, service, permissionsService } = await buildApp(['staff:read']))
     })
 
     afterAll(() => app.close())
@@ -102,7 +112,7 @@ describe('AdminStaffController (int)', () => {
         .send({ roleId: STAFF_ID })
 
       expect(res.status).toBe(403)
-      expect(service.assignRole).not.toHaveBeenCalled()
+      expect(permissionsService.assignRole).not.toHaveBeenCalled()
     })
 
     it('PATCH /admin/staff/:id/permissions returns 403 — missing staff:write', async () => {
@@ -111,7 +121,7 @@ describe('AdminStaffController (int)', () => {
         .send({ permissions: [] })
 
       expect(res.status).toBe(403)
-      expect(service.updatePermissions).not.toHaveBeenCalled()
+      expect(permissionsService.updatePermissions).not.toHaveBeenCalled()
     })
 
     it('DELETE /admin/staff/:id returns 403 — missing staff:write', async () => {
@@ -125,9 +135,10 @@ describe('AdminStaffController (int)', () => {
   describe('with staff:write', () => {
     let app: INestApplication
     let service: jest.Mocked<AdminStaffService>
+    let permissionsService: jest.Mocked<AdminStaffPermissionsService>
 
     beforeAll(async () => {
-      ;({ app, service } = await buildApp(['staff:read', 'staff:write']))
+      ;({ app, service, permissionsService } = await buildApp(['staff:read', 'staff:write']))
     })
 
     afterAll(() => app.close())
@@ -137,7 +148,7 @@ describe('AdminStaffController (int)', () => {
     })
 
     it('PATCH /admin/staff/:id/permissions returns 400 for a protected permission', async () => {
-      service.updatePermissions.mockRejectedValue(
+      permissionsService.updatePermissions.mockRejectedValue(
         new ProtectedPermissionException(['staff:write']) as never,
       )
 
@@ -149,14 +160,14 @@ describe('AdminStaffController (int)', () => {
     })
 
     it('PATCH /admin/staff/:id/permissions returns 200 and delegates', async () => {
-      service.updatePermissions.mockResolvedValue({ id: STAFF_ID } as never)
+      permissionsService.updatePermissions.mockResolvedValue({ id: STAFF_ID } as never)
 
       const res = await request(app.getHttpServer())
         .patch(`/admin/staff/${STAFF_ID}/permissions`)
         .send({ permissions: ['tracks:read'] })
 
       expect(res.status).toBe(200)
-      expect(service.updatePermissions).toHaveBeenCalledWith(
+      expect(permissionsService.updatePermissions).toHaveBeenCalledWith(
         STAFF_ID,
         { permissions: ['tracks:read'] },
         'staff-1',

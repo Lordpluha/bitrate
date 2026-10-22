@@ -24,7 +24,7 @@ import {
   Select,
   Switch,
   Badge,
-  Tab,
+  Tabs,
   Alert,
   C,
   ART,
@@ -90,11 +90,6 @@ const title = (t, right) =>
     Row({ gap: 10 }, [Tx('H1', t), Concept()]),
     right,
   ])
-const tabs = (items, active) =>
-  Row(
-    { name: 'Tabs', gap: 4 },
-    items.map((t, i) => Tab(t, i === active)),
-  )
 const privacyNote = () =>
   R(
     'Note',
@@ -183,7 +178,7 @@ export const friends = {
   desktop: () =>
     D('Friends', [
       title('Friends', findBtn(false)),
-      tabs(['All · 6', 'Online · 4', 'Requests · 2'], 0),
+      Tabs(['All · 6', 'Online · 4', 'Requests · 2'], 0),
       onlineStrip(4),
       Col({ name: 'List', gap: 12, width: 760 }, list(false)),
     ]),
@@ -199,7 +194,7 @@ export const friends = {
       () =>
         D('Online filter', [
           title('Friends', findBtn(false)),
-          tabs(['All · 6', 'Online · 4', 'Requests · 2'], 1),
+          Tabs(['All · 6', 'Online · 4', 'Requests · 2'], 1),
           Col({ name: 'List', gap: 12, width: 760 }, [
             ...list(false, { offline: false }),
             privacyNote(),
@@ -221,7 +216,7 @@ export const friends = {
       () =>
         D('Nobody online', [
           title('Friends', findBtn(false)),
-          tabs(['All · 6', 'Online · 0', 'Requests · 2'], 1),
+          Tabs(['All · 6', 'Online · 0', 'Requests · 2'], 1),
           EmptyState(
             'Nobody is online right now',
             'When a friend comes online, they appear here first.',
@@ -421,6 +416,7 @@ const findD = (name, main, side = [suggested(false), invite()]) =>
 const findM = (name, q, body) => M(name, [search(q), ...body], MHeader('Find friends'))
 
 export const friendsFind = {
+  more: ['people', '4 of 38 people'],
   title: 'Find friends',
   route: 'concept — /friends/find',
   context:
@@ -516,7 +512,7 @@ const received = (m) =>
 const reqD = (name, active, body) =>
   D(name, [
     title('Friend requests', null),
-    tabs(['Received · 2', 'Sent · 1'], active),
+    Tabs(['Received · 2', 'Sent · 1'], active),
     Col({ name: 'List', gap: 16, width: 760 }, body),
   ])
 const reqM = (name, active, body) =>

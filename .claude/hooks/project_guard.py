@@ -4,6 +4,7 @@ Denies secret access, environment dumps, force pushes and pushes to develop. Ask
 one-call approval only when an operation can lose data outside an agent worktree or
 changes the developer's main checkout; ordinary shell syntax stays quiet.
 """
+import functools
 import glob
 import json
 import os
@@ -297,14 +298,27 @@ def short_flags(flags):
     return {c for f in flags if f.startswith('-') and not f.startswith('--') for c in f[1:]}
 
 
+@functools.lru_cache(maxsize=None)
 def checkout_context(cwd):
-    """'main' (developer checkout), 'agent' (.claude/worktrees/*) or 'linked' (other worktree)."""
-    git_dir = Path(git_probe(cwd, 'rev-parse', '--absolute-git-dir')).resolve()
-    common = Path(git_probe(cwd, 'rev-parse', '--path-format=absolute', '--git-common-dir')).resolve()
+    """'main' (developer checkout), 'agent' (.claude/worktrees/*) or 'linked' (other worktree).
+
+    One `git rev-parse` answers all three questions; it fails where there is no work tree
+    (inside `.git`), so that case falls back to asking without `--show-toplevel`.
+    """
+    try:
+        git_dir, common, top = git_probe(
+            cwd, 'rev-parse', '--path-format=absolute', '--absolute-git-dir', '--git-common-dir',
+            '--show-toplevel').splitlines()
+    except (subprocess.CalledProcessError, ValueError):
+        git_dir, common = git_probe(
+            cwd, 'rev-parse', '--path-format=absolute', '--absolute-git-dir', '--git-common-dir').splitlines()
+        top = None
+    git_dir, common = Path(git_dir).resolve(), Path(common).resolve()
     if git_dir == common:
         return 'main'
-    top = Path(git_probe(cwd, 'rev-parse', '--show-toplevel')).resolve()
-    return 'agent' if top.is_relative_to(common.parent / '.claude' / 'worktrees') else 'linked'
+    if top is None:
+        top = git_probe(cwd, 'rev-parse', '--show-toplevel')
+    return 'agent' if Path(top).resolve().is_relative_to(common.parent / '.claude' / 'worktrees') else 'linked'
 
 
 def by_context(category, cwd):
@@ -468,17 +482,25 @@ def rm_roots():
     return roots
 
 
-def holds_uncommitted_work(path):
-    """True when deleting `path` outside an agent worktree loses modified or untracked files."""
-    anchor = path if path.is_dir() and not path.is_symlink() else path.parent
-    if not anchor.is_dir():
-        return False
-    try:
-        if checkout_context(anchor) == 'agent':
-            return False
-    except subprocess.CalledProcessError:
-        return False
-    return bool(git_probe(anchor, 'status', '--porcelain', '--untracked-files=all', '--', str(path)))
+def holds_uncommitted_work(paths):
+    """True when deleting `paths` outside an agent worktree loses modified or untracked files.
+
+    Paths sharing an anchor directory are checked with one `git status`.
+    """
+    by_anchor = {}
+    for path in paths:
+        anchor = path if path.is_dir() and not path.is_symlink() else path.parent
+        if anchor.is_dir():
+            by_anchor.setdefault(anchor, []).append(str(path))
+    for anchor, group in by_anchor.items():
+        try:
+            if checkout_context(anchor) == 'agent':
+                continue
+        except subprocess.CalledProcessError:
+            continue
+        if git_probe(anchor, 'status', '--porcelain', '--untracked-files=all', '--', *group):
+            return True
+    return False
 
 
 def rm_guard(words, cwd):
@@ -521,7 +543,7 @@ def rm_guard(words, cwd):
             return ASK
         paths.append(path)
     try:
-        return ASK if any(holds_uncommitted_work(path) for path in paths) else None
+        return ASK if holds_uncommitted_work(paths) else None
     except subprocess.SubprocessError:
         return ASK
 
@@ -660,21 +682,10 @@ def guard(command, cwd, depth=0):
                     verdict = git_guard(words, known_cwd)
                 except subprocess.CalledProcessError:
                     verdict = ASK
-        elif executable in {'rm', 'unlink', 'shred'}:
-            verdict = rm_guard(words, known_cwd)
-        elif executable == 'find':
-            verdict = find_guard(words, known_cwd, depth)
-        elif executable in SHELLS:
-            verdict = shell_guard(words, cwd, depth, stdin_redirect)
+        elif executable in PROGRAM_GUARDS:
+            verdict = PROGRAM_GUARDS[executable](words, known_cwd, cwd, depth, stdin_redirect)
         elif INTERPRETER.fullmatch(executable):
-            flag = next((i for i, w in enumerate(words) if w in {'-c', '-e', '-p', '-r', '--eval'}), None)
-            if flag is not None and flag + 1 < len(words):
-                verdict = code_guard(words[flag + 1], cwd, depth)
-        elif executable == 'eval':
-            body = ' '.join(words[1:])
-            verdict = ASK if '$' in body or '`' in body else guard(body, cwd, depth + 1)
-        elif executable in {'sudo', 'su', 'doas', 'pkexec'}:
-            verdict = ASK
+            verdict = interpreter_guard(words, known_cwd, cwd, depth, stdin_redirect)
         if verdict and verdict[0] == 'deny':
             return verdict
         pending = verdict or pending
@@ -699,6 +710,30 @@ def shell_guard(words, cwd, depth, stdin_redirect):
     else:
         reads_stdin = True
     return ASK if reads_stdin and not stdin_redirect else None
+
+
+def interpreter_guard(words, _known_cwd, cwd, depth, _stdin_redirect):
+    """Inline code passed to an interpreter (`python -c`, `node -e`, …)."""
+    flag = next((i for i, w in enumerate(words) if w in {'-c', '-e', '-p', '-r', '--eval'}), None)
+    return code_guard(words[flag + 1], cwd, depth) if flag is not None and flag + 1 < len(words) else None
+
+
+def eval_guard(words, _known_cwd, cwd, depth, _stdin_redirect):
+    body = ' '.join(words[1:])
+    return ASK if '$' in body or '`' in body else guard(body, cwd, depth + 1)
+
+
+# Program-specific inspectors, keyed by executable name. Each takes
+# (words, known_cwd, cwd, depth, stdin_redirect); known_cwd is None once `cd` made cwd uncertain.
+# git and the shell builtins that change cwd or variables stay inline in `guard`.
+PROGRAM_GUARDS = {
+    **dict.fromkeys(('rm', 'unlink', 'shred'), lambda words, known_cwd, *_: rm_guard(words, known_cwd)),
+    'find': lambda words, known_cwd, _cwd, depth, _stdin: find_guard(words, known_cwd, depth),
+    **dict.fromkeys(SHELLS, lambda words, _known_cwd, cwd, depth, stdin_redirect:
+                    shell_guard(words, cwd, depth, stdin_redirect)),
+    'eval': eval_guard,
+    **dict.fromkeys(('sudo', 'su', 'doas', 'pkexec'), lambda *_: ASK),
+}
 
 
 def main():

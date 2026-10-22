@@ -306,10 +306,12 @@ const assertTestMapMatchesDisk = () => {
   }
 
   const onDisk = discoverSpecsOnDisk()
-  const missingFromMap = onDisk.filter((spec) => !mapped.includes(spec))
-  const missingFromDisk = mapped.filter((spec) => !onDisk.includes(spec))
+  const mappedTests = new Set(mapped)
+  const onDiskTests = new Set(onDisk)
+  const missingFromMap = onDisk.filter((spec) => !mappedTests.has(spec))
+  const missingFromDisk = mapped.filter((spec) => !onDiskTests.has(spec))
 
-  return { missingFromMap, missingFromDisk, total: onDisk.length }
+  return { mappedTests, missingFromMap, missingFromDisk, total: onDisk.length }
 }
 
 const resolveSnifflerCli = () => {
@@ -384,9 +386,8 @@ const main = () => {
     runFull(`git diff ${base}..${head} reported no changed files`)
   }
 
-  const opaque = changed.filter(
-    (file) => classifyChangedFile(file) === 'opaque',
-  )
+  const changedByKind = Map.groupBy(changed, classifyChangedFile)
+  const opaque = changedByKind.get('opaque') ?? []
 
   if (opaque.length > 0) {
     runFull(
@@ -394,9 +395,7 @@ const main = () => {
     )
   }
 
-  const analysable = changed.filter(
-    (file) => classifyChangedFile(file) === 'analysable',
-  )
+  const analysable = changedByKind.get('analysable') ?? []
 
   if (analysable.length === 0) {
     runFull('the diff contains no analysable web-player source file')
@@ -494,10 +493,7 @@ const main = () => {
     )
   }
 
-  const known = JSON.parse(readFileSync(TEST_MAP_PATH, 'utf8')).map(
-    (entry) => entry.test,
-  )
-  const unknown = selected.filter((test) => !known.includes(test))
+  const unknown = selected.filter((test) => !mapCheck.mappedTests.has(test))
 
   if (unknown.length > 0) {
     runFull(`sniffler recommended unrecognised spec(s): ${unknown.join(', ')}`)

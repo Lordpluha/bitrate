@@ -159,7 +159,14 @@
   },
   "overrides": [
     {
-      "includes": ["**/*.service.ts", "**/*.guard.ts", "**/*.controller.ts"],
+      "includes": [
+        "**/*.service.ts",
+        "**/*.guard.ts",
+        "**/*.controller.ts",
+        "**/*.consumer.ts",
+        "**/*.recorder.ts",
+        "**/*.gateway.ts"
+      ],
       "linter": {
         "rules": {
           "style": {

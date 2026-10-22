@@ -1,4 +1,4 @@
-import { Button, Input } from '@bitrate/ui-react'
+import { Input } from '@bitrate/ui-react'
 import {
   formatIsrc,
   normalizeIsrc,
@@ -6,7 +6,7 @@ import {
   useSaveTrackIsrc,
   useUpdateRelease,
 } from '@entities/release'
-import { WorkspaceModal } from '@shared/ui/WorkspaceModal/WorkspaceModal'
+import { WorkspaceFormModal } from '@shared/ui/WorkspaceFormModal/WorkspaceFormModal'
 import { useId, useState } from 'react'
 import { isrcError, upcError } from '../model/rights.schema'
 
@@ -53,78 +53,47 @@ function IdentifierDialog({
     }
   }
   return (
-    <WorkspaceModal
-      canClose={!pending}
-      className="artist-release-credit-modal"
+    <WorkspaceFormModal
+      error={error}
       onClose={onClose}
+      onSubmit={submit}
+      pending={pending}
+      submitLabel="Save code"
       title={title}
     >
-      <form
-        aria-busy={pending}
-        className="space-y-6"
-        noValidate
-        onSubmit={(event) => {
-          event.preventDefault()
-          void submit()
-        }}
-      >
-        <div className="space-y-2">
-          <label className="block text-sm font-medium" htmlFor={`${id}-code`}>
-            {label}
-          </label>
-          <Input
-            aria-describedby={invalid ? `${id}-error` : `${id}-hint`}
-            aria-invalid={Boolean(invalid)}
-            autoComplete="off"
-            data-initial-focus
-            disabled={pending}
-            id={`${id}-code`}
-            maxLength={15}
-            onChange={(event) => {
-              setInvalid(null)
-              onReset()
-              setValue(event.target.value)
-            }}
-            value={value}
-          />
-          <p className="text-sm text-text-secondary" id={`${id}-hint`}>
-            {hint}
-          </p>
-          {invalid && (
-            <p
-              className="text-sm text-destructive"
-              id={`${id}-error`}
-              role="alert"
-            >
-              {invalid}
-            </p>
-          )}
-        </div>
-        {error && (
-          <p className="text-sm text-destructive" role="alert">
-            {error.message}
+      <div className="space-y-2">
+        <label className="block text-sm font-medium" htmlFor={`${id}-code`}>
+          {label}
+        </label>
+        <Input
+          aria-describedby={invalid ? `${id}-error` : `${id}-hint`}
+          aria-invalid={Boolean(invalid)}
+          autoComplete="off"
+          data-initial-focus
+          disabled={pending}
+          id={`${id}-code`}
+          maxLength={15}
+          onChange={(event) => {
+            setInvalid(null)
+            onReset()
+            setValue(event.target.value)
+          }}
+          value={value}
+        />
+        <p className="text-sm text-text-secondary" id={`${id}-hint`}>
+          {hint}
+        </p>
+        {invalid && (
+          <p
+            className="text-sm text-destructive"
+            id={`${id}-error`}
+            role="alert"
+          >
+            {invalid}
           </p>
         )}
-        <div className="flex flex-wrap justify-end gap-3">
-          <Button
-            disabled={pending}
-            onClick={onClose}
-            type="button"
-            variant="outline"
-          >
-            Cancel
-          </Button>
-          <Button
-            className="artist-workspace-primary"
-            disabled={pending}
-            type="submit"
-            variant="primary"
-          >
-            {pending ? 'Saving…' : 'Save code'}
-          </Button>
-        </div>
-      </form>
-    </WorkspaceModal>
+      </div>
+    </WorkspaceFormModal>
   )
 }
 

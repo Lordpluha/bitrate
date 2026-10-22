@@ -16,10 +16,14 @@ const useInvalidateTrackLikes = () => {
   }
 }
 
+/** Fallback for the mutation cache's error toast. */
+const LIKED_SONGS_ERROR_MESSAGE = 'Unable to update Liked Songs.'
+
 export const useLikeTrack = () => {
   const invalidateTrackLikes = useInvalidateTrackLikes()
 
   return useMutation('post', '/api/v1/tracks/{id}/like', {
+    meta: { errorMessage: LIKED_SONGS_ERROR_MESSAGE },
     onSuccess: (_data, variables) =>
       invalidateTrackLikes(variables.params.path.id),
   })
@@ -29,6 +33,7 @@ export const useUnlikeTrack = () => {
   const invalidateTrackLikes = useInvalidateTrackLikes()
 
   return useMutation('delete', '/api/v1/tracks/{id}/like', {
+    meta: { errorMessage: LIKED_SONGS_ERROR_MESSAGE },
     onSuccess: (_data, variables) =>
       invalidateTrackLikes(variables.params.path.id),
   })

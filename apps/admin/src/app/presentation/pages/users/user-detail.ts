@@ -18,6 +18,7 @@ import {
   isStaleStateError,
   resourceWriteErrorMessage,
 } from '@presentation/pages/shared/resource-write-error.message'
+import { createDetailResource } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { ListeningHistory } from './listening-history'
@@ -48,16 +49,21 @@ export class UserDetailPage {
   protected readonly canRevokeSessions = inject(SessionStore).can('users:revoke-sessions')
   protected readonly userId = this.route.snapshot.paramMap.get('id') ?? ''
 
-  protected readonly user = signal<UserDetail | null>(null)
-  protected readonly loading = signal(true)
-  protected readonly notFound = signal(false)
-  protected readonly failure = signal<string | null>(null)
+  private readonly record = createDetailResource({
+    load: () => this.getUser.execute(this.userId),
+    errorMessage: 'Could not load this listener.',
+  })
+
+  protected readonly user = this.record.value
+  protected readonly loading = this.record.loading
+  protected readonly notFound = this.record.notFound
+  protected readonly failure = this.record.failure
   protected readonly status = signal<string | null>(null)
   protected readonly armed = signal<ArmedAction>(null)
   protected readonly pending = signal(false)
 
   constructor() {
-    void this.load()
+    void this.record.reload()
   }
 
   protected deactivation(user: UserDetail) {
@@ -98,7 +104,7 @@ export class UserDetailPage {
           `Revoked ${revoked} session${revoked === 1 ? '' : 's'} for ${current.username}.`,
         )
       }
-      await this.load()
+      await this.record.reload()
     } catch (error) {
       this.failure.set(
         resourceWriteErrorMessage({
@@ -107,22 +113,10 @@ export class UserDetailPage {
           label: current.username,
         }),
       )
-      if (isStaleStateError(error)) await this.load()
+      if (isStaleStateError(error)) await this.record.reload()
     } finally {
       this.pending.set(false)
       this.armed.set(null)
-    }
-  }
-
-  private async load(): Promise<void> {
-    this.loading.set(true)
-    try {
-      this.user.set(await this.getUser.execute(this.userId))
-      this.notFound.set(false)
-    } catch {
-      this.notFound.set(true)
-    } finally {
-      this.loading.set(false)
     }
   }
 }

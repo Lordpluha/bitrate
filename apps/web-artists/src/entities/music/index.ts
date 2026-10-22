@@ -5,6 +5,7 @@ export type {
   MusicTrack,
 } from './model/catalogue'
 export {
+  CATALOGUE_PAGE_SIZE,
   catalogueSearchSchema,
   trackStatuses,
   trackStatusLabels,

@@ -70,6 +70,13 @@ export const useAudioPlayer = () => {
           nextTransition.playbackSequence,
         )
       : null
+  const currentPlaybackKey = useMemo(
+    () =>
+      currentTrack
+        ? getPlaybackKey(currentTrack.id, currentPlaylistId, playbackSequence)
+        : null,
+    [currentPlaylistId, currentTrack, playbackSequence],
+  )
   const resolveManifest = useManifestResolver()
   const slots = useAudioSlots({ resolveManifest, volume })
   const {
@@ -87,7 +94,7 @@ export const useAudioPlayer = () => {
   } = slots
 
   useEffect(() => {
-    if (!currentTrack) {
+    if (!currentTrack || !currentPlaybackKey) {
       pendingPlayRef.current = false
       pendingPrefetchRef.current = null
       destroySlot(0)
@@ -100,11 +107,6 @@ export const useAudioPlayer = () => {
     const standbyIndex = activeIndex === 0 ? 1 : 0
     const active = slotsRef.current[activeIndex]
     const standby = slotsRef.current[standbyIndex]
-    const currentPlaybackKey = getPlaybackKey(
-      currentTrack.id,
-      currentPlaylistId,
-      playbackSequence,
-    )
 
     if (standby.playbackKey === currentPlaybackKey) {
       switchToSlot(standbyIndex)
@@ -135,12 +137,11 @@ export const useAudioPlayer = () => {
   }, [
     activeSlotRef,
     attachTrack,
-    currentPlaylistId,
+    currentPlaybackKey,
     currentTrack,
     destroySlot,
     nextPlaybackKey,
     nextTrack,
-    playbackSequence,
     pendingPlayRef,
     pendingPrefetchRef,
     prefetchTrackWhenBuffered,
@@ -150,12 +151,7 @@ export const useAudioPlayer = () => {
 
   useEffect(() => {
     const active = getActiveElement()
-    if (!active || !currentTrack) return
-    const currentPlaybackKey = getPlaybackKey(
-      currentTrack.id,
-      currentPlaylistId,
-      playbackSequence,
-    )
+    if (!active || !currentPlaybackKey) return
     if (slotsRef.current[activeSlot].playbackKey !== currentPlaybackKey) return
 
     if (isPlaying) {
@@ -171,21 +167,18 @@ export const useAudioPlayer = () => {
     }
   }, [
     activeSlot,
-    currentPlaylistId,
-    currentTrack,
+    currentPlaybackKey,
     getActiveElement,
     isPlaying,
-    playbackSequence,
     pendingPlayRef,
     slotsRef,
   ])
 
   const events = useAudioPlayerEvents({
+    currentPlaybackKey,
     currentPlaylistId,
-    currentTrack,
     isPlaying,
     nextTransition,
-    playbackSequence,
     slots,
   })
 

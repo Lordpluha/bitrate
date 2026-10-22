@@ -1,17 +1,16 @@
 import { Button } from '@bitrate/ui-react'
 import { participantRoleLabels, type ReleaseWorkspace } from '@entities/release'
 import { CircleAlert, Pencil } from 'lucide-react'
+import type { WorkspaceActionHandler } from '../model/workspaceAction'
 
 interface WorkspaceParticipantsProps {
   release: ReleaseWorkspace
-  onAddContributor: () => void
-  onEditContributor: (id: string) => void
+  onAction: WorkspaceActionHandler
 }
 
 export function WorkspaceParticipants({
   release,
-  onAddContributor,
-  onEditContributor,
+  onAction,
 }: WorkspaceParticipantsProps) {
   const draft = release.status === 'DRAFT'
   return (
@@ -25,7 +24,7 @@ export function WorkspaceParticipants({
       {draft && (
         <Button
           className="my-3 rounded-full"
-          onClick={onAddContributor}
+          onClick={() => onAction({ kind: 'contributor-add' })}
           size="sm"
           variant="outline"
         >
@@ -71,7 +70,12 @@ export function WorkspaceParticipants({
                           : `Edit contributor ${person.displayName}`
                       }
                       className="min-h-11 min-w-11 shrink-0"
-                      onClick={() => onEditContributor(person.id)}
+                      onClick={() =>
+                        onAction({
+                          kind: 'contributor-edit',
+                          contributorId: person.id,
+                        })
+                      }
                       size={missingRole ? 'sm' : 'icon'}
                       variant="ghost"
                     >

@@ -125,7 +125,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Runs the login operation. */
+    /** User login */
     post: operations['UsersAuthController_login_v1']
     delete?: never
     options?: never
@@ -142,7 +142,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Runs the registration operation. */
+    /** User registration */
     post: operations['UsersAuthController_registration_v1']
     delete?: never
     options?: never
@@ -159,7 +159,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Runs the logout operation. */
+    /** User logout */
     post: operations['UsersAuthController_logout_v1']
     delete?: never
     options?: never
@@ -176,7 +176,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Runs the refresh operation. */
+    /** Refresh access token */
     post: operations['UsersAuthController_refresh_v1']
     delete?: never
     options?: never
@@ -191,7 +191,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Runs the get me operation. */
+    /** Get current authenticated user */
     get: operations['UsersAuthController_getMe_v1']
     put?: never
     post?: never
@@ -230,7 +230,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Runs the forgot password operation. */
+    /** Send password reset email */
     post: operations['UsersAuthController_forgotPassword_v1']
     delete?: never
     options?: never
@@ -247,7 +247,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Runs the reset password operation. */
+    /** Reset password using a one-time token */
     post: operations['UsersAuthController_resetPassword_v1']
     delete?: never
     options?: never
@@ -339,7 +339,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Runs the two factor setup operation. */
+    /** Start 2FA enrollment — returns QR code and manual secret */
     post: operations['UsersAuthController_twoFactorSetup_v1']
     delete?: never
     options?: never
@@ -356,7 +356,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Runs the two factor enable operation. */
+    /** Confirm 2FA enrollment with a TOTP code */
     post: operations['UsersAuthController_twoFactorEnable_v1']
     delete?: never
     options?: never
@@ -374,7 +374,7 @@ export interface paths {
     get?: never
     put?: never
     post?: never
-    /** Runs the two factor disable operation. */
+    /** Disable 2FA — requires current TOTP code to confirm */
     delete: operations['UsersAuthController_twoFactorDisable_v1']
     options?: never
     head?: never
@@ -391,7 +391,7 @@ export interface paths {
     get?: never
     put?: never
     /**
-     * Runs the two factor verify login operation.
+     * Complete 2FA login
      * @description Exchange the pending 2FA session token and a TOTP code for full session cookies.
      */
     post: operations['UsersAuthController_twoFactorVerifyLogin_v1']
@@ -488,9 +488,9 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Runs the get all operation. */
+    /** Get all users with filters and pagination */
     get: operations['UsersController_getAll_v1']
-    /** Runs the put by id operation. */
+    /** Update user by id */
     put: operations['UsersController_putById_v1']
     post?: never
     delete?: never
@@ -506,7 +506,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Runs the get by username operation. */
+    /** Get user by username */
     get: operations['UsersController_getByUsername_v1']
     put?: never
     post?: never
@@ -523,7 +523,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Runs the get by id operation. */
+    /** Get user by id */
     get: operations['UsersController_getById_v1']
     put?: never
     post?: never
@@ -542,7 +542,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Runs the upload avatar operation. */
+    /** Upload avatar for user */
     post: operations['UsersController_uploadAvatar_v1']
     delete?: never
     options?: never
@@ -777,10 +777,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Runs the get all operation. */
+    /** Get all tracks with pagination */
     get: operations['TracksController_getAll_v1']
     put?: never
-    /** Runs the post track operation. */
+    /** Create track */
     post: operations['TracksController_postTrack_v1']
     delete?: never
     options?: never
@@ -796,7 +796,7 @@ export interface paths {
       cookie?: never
     }
     /**
-     * Runs the get hls master playlist operation.
+     * Get the HLS master playlist for a track
      * @description Returns `application/vnd.apple.mpegurl`, listing every available bitrate variant.
      */
     get: operations['TracksController_getHlsMasterPlaylist_v1']
@@ -816,7 +816,7 @@ export interface paths {
       cookie?: never
     }
     /**
-     * Runs the get hls asset operation.
+     * Get one HLS asset for a track rendition
      * @description Segments are served with an immutable cache header; the variant `.m3u8` playlist is not.
      */
     get: operations['TracksController_getHlsAsset_v1']
@@ -836,7 +836,7 @@ export interface paths {
       cookie?: never
     }
     /**
-     * Runs the stream track operation.
+     * Stream audio file
      * @description Returns the track audio as a binary stream. Supports HTTP range requests for partial content.
      */
     get: operations['TracksController_streamTrack_v1']
@@ -855,9 +855,9 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Runs the get by id operation. */
+    /** Get track by id */
     get: operations['TracksController_getById_v1']
-    /** Runs the put track operation. */
+    /** Update track by id */
     put: operations['TracksController_putTrack_v1']
     post?: never
     delete?: never
@@ -873,7 +873,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Runs the get liked tracks operation. */
+    /** Get liked user tracks with pagination */
     get: operations['TracksController_getLikedTracks_v1']
     put?: never
     post?: never
@@ -891,7 +891,7 @@ export interface paths {
       cookie?: never
     }
     /**
-     * Runs the get manifest operation.
+     * Get the byte-range playback manifest for a track
      * @description Returns the fragment index every CMAF rendition is addressed by. Immutable for a given track, so it can be cached indefinitely. See ADR-0020.
      */
     get: operations['TracksController_getManifest_v1']
@@ -911,7 +911,7 @@ export interface paths {
       cookie?: never
     }
     /**
-     * Runs the stream rendition operation.
+     * Stream bytes of one CMAF rendition
      * @description Serves the rendition file, honoring an inclusive `bytes=` Range. The player asks for one fragment at a time using offsets from the manifest.
      */
     get: operations['TracksController_streamRendition_v1']
@@ -932,9 +932,9 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Runs the like track operation. */
+    /** Like a track */
     post: operations['TracksController_likeTrack_v1']
-    /** Runs the unlike track operation. */
+    /** Unlike a track */
     delete: operations['TracksController_unlikeTrack_v1']
     options?: never
     head?: never
@@ -1168,7 +1168,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Runs the login operation. */
+    /** Artist login */
     post: operations['AuthController_login_v1']
     delete?: never
     options?: never
@@ -1185,7 +1185,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Runs the registration operation. */
+    /** Artist registration */
     post: operations['AuthController_registration_v1']
     delete?: never
     options?: never
@@ -1219,7 +1219,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Runs the logout operation. */
+    /** Artist logout */
     post: operations['AuthController_logout_v1']
     delete?: never
     options?: never
@@ -1236,7 +1236,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Runs the refresh operation. */
+    /** Refresh access token */
     post: operations['AuthController_refresh_v1']
     delete?: never
     options?: never
@@ -1251,7 +1251,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Runs the get me operation. */
+    /** Get current authenticated artist */
     get: operations['AuthController_getMe_v1']
     put?: never
     post?: never
@@ -1270,7 +1270,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Runs the forgot password operation. */
+    /** Send artist password reset email */
     post: operations['AuthController_forgotPassword_v1']
     delete?: never
     options?: never
@@ -1287,7 +1287,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Runs the reset password operation. */
+    /** Reset artist password using a one-time token */
     post: operations['AuthController_resetPassword_v1']
     delete?: never
     options?: never
@@ -1358,7 +1358,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Runs the two factor setup operation. */
+    /** Start 2FA enrollment — returns QR code and manual secret */
     post: operations['AuthController_twoFactorSetup_v1']
     delete?: never
     options?: never
@@ -1375,7 +1375,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Runs the two factor enable operation. */
+    /** Confirm 2FA enrollment with a TOTP code */
     post: operations['AuthController_twoFactorEnable_v1']
     delete?: never
     options?: never
@@ -1393,7 +1393,7 @@ export interface paths {
     get?: never
     put?: never
     post?: never
-    /** Runs the two factor disable operation. */
+    /** Disable 2FA — requires current TOTP code to confirm */
     delete: operations['AuthController_twoFactorDisable_v1']
     options?: never
     head?: never
@@ -1410,7 +1410,7 @@ export interface paths {
     get?: never
     put?: never
     /**
-     * Runs the two factor verify login operation.
+     * Complete 2FA login
      * @description Exchange the pending 2FA session token and a TOTP code for full session cookies.
      */
     post: operations['AuthController_twoFactorVerifyLogin_v1']
@@ -25872,6 +25872,8 @@ export interface operations {
         page?: number
         /** @description Episodes page size */
         limit?: number
+        /** @description Case-insensitive episode title or description search */
+        q?: string
       }
       header?: never
       path: {
@@ -36005,7 +36007,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': components['schemas']['AdminRevokeSessionsResultEntity']
+        }
       }
     }
   }
@@ -37209,7 +37213,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': components['schemas']['AdminRevokeSessionsResultEntity']
+        }
       }
     }
   }

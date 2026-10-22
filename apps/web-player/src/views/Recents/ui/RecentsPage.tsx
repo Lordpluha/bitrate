@@ -53,22 +53,6 @@ export const RecentsPage = () => {
     }
   }
 
-  const removeHistoryTrack = async (trackId: string) => {
-    try {
-      await removeTrack.mutateAsync(trackId)
-    } catch (error) {
-      showApiErrorToast(error, 'Unable to remove this track from history.')
-    }
-  }
-
-  const clearListeningHistory = async () => {
-    try {
-      await clearHistory.mutateAsync()
-    } catch (error) {
-      showApiErrorToast(error, 'Unable to clear listening history.')
-    }
-  }
-
   return (
     <div className="h-full overflow-y-auto custom-scrollbar">
       <div className="flex flex-col gap-7 px-4 pt-2 pb-3 md:px-8 md:py-6">
@@ -78,7 +62,7 @@ export const RecentsPage = () => {
               <Button
                 className="h-9 px-4 text-sm font-medium"
                 disabled={clearHistory.isPending}
-                onClick={() => void clearListeningHistory()}
+                onClick={() => clearHistory.mutate()}
                 variant="ghost"
               >
                 {t('recents.clear')}
@@ -127,7 +111,7 @@ export const RecentsPage = () => {
                       isRemoving={removeTrack.isPending}
                       key={entry.id}
                       onPlay={(trackId) => void playTrack(trackId)}
-                      onRemove={(trackId) => void removeHistoryTrack(trackId)}
+                      onRemove={(trackId) => removeTrack.mutate(trackId)}
                     />
                   ))}
                 </ul>

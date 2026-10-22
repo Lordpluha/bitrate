@@ -7,12 +7,12 @@ import {
   socialLinkLabels,
   useArtistProfile,
 } from '@entities/artist-account'
-import { countryName } from '@entities/delivery'
 import {
   ProfileForm,
   ProfileImageField,
   profileImageUrl,
 } from '@features/edit-profile'
+import { countryName } from '@shared/constants/countries'
 import { BadgeCheck, UserRound } from 'lucide-react'
 import { useState } from 'react'
 

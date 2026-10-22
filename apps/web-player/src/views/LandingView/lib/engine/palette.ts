@@ -32,12 +32,36 @@ export type PaletteToken =
 /** Fallback when a token is missing (unstyled test DOM): the brand violet. */
 const FALLBACK = 'rgb(124, 58, 237)'
 
-/** The computed colour of a palette token, e.g. `#7c3aed`. */
-export const token = (name: PaletteToken) => {
-  const v = getComputedStyle(document.documentElement)
+type Rgb = [number, number, number]
+
+const readToken = (name: PaletteToken) =>
+  getComputedStyle(document.documentElement)
     .getPropertyValue(`--color-${name}`)
     .trim()
-  return v || FALLBACK
+
+/** The computed colour of a palette token, e.g. `#7c3aed`. */
+export const token = (name: PaletteToken) => readToken(name) || FALLBACK
+
+/** Resolved channels per token, so per-frame canvas fills skip style recalculation and parsing. */
+const rgbCache = new Map<PaletteToken, Rgb>()
+
+/** Forgets resolved token colours; call when the theme (and so the computed tokens) may change. */
+export const clearTokenCache = () => rgbCache.clear()
+
+/** 0–255 channels of a token; cached once the token resolves (an unstyled DOM is not cached). */
+const tokenRgb = (name: PaletteToken): Rgb => {
+  const hit = rgbCache.get(name)
+  if (hit) return hit
+  const v = readToken(name)
+  const rgb = rgbOf(v || FALLBACK)
+  if (v) rgbCache.set(name, rgb)
+  return rgb
+}
+
+/** `rgb()` of a token, for canvas fills that vary `globalAlpha` instead of the colour. */
+export const tokenSolid = (name: PaletteToken) => {
+  const [r, g, b] = tokenRgb(name)
+  return `rgb(${r},${g},${b})`
 }
 
 /** `rgba()` of a token with an alpha, for 2D canvas fills. */
@@ -48,12 +72,12 @@ export const tokenAlpha = ({
   name: PaletteToken
   alpha: number
 }) => {
-  const [r, g, b] = rgbOf(token(name))
+  const [r, g, b] = tokenRgb(name)
   return `rgba(${r},${g},${b},${alpha})`
 }
 
 /** Parses `#rgb`, `#rrggbb` or `rgb()/rgba()` into 0–255 channels. */
-export const rgbOf = (color: string): [number, number, number] => {
+export const rgbOf = (color: string): Rgb => {
   const hex = color.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i)?.[1]
   if (hex) {
     const full = hex.length === 3 ? [...hex].map((c) => c + c).join('') : hex

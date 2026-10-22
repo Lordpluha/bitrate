@@ -2,7 +2,15 @@ import { DEFAULT_LIMIT, DEFAULT_PAGE, type PaginationInput } from '@common/pagin
 import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { AdminResourceStatus, AuditContextValue, CsvExport } from '@modules/admin/shared'
-import { isoOrNull, openCsvExport, writeTakeDownAudit } from '@modules/admin/shared'
+import {
+  type AdminRevokeSessionsResultEntity,
+  openCsvExport,
+  revokeAccountSessions,
+  runTakeDownTransition,
+  statusWhere,
+  type TakeDownActor,
+  type TakeDownDirection,
+} from '@modules/admin/shared'
 import { Injectable } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import {
@@ -29,22 +37,21 @@ type ListArtistsInput = {
   q?: string
 } & SortInput<AdminArtistsSortField>
 
+/** What the existence/state pre-checks read — never the credential columns. */
+const EXISTENCE_SELECT = { id: true, deletedAt: true } as const satisfies Prisma.ArtistSelect
+
+/** An artist as the operator sees it — the safe columns only. */
+type AdminArtistRow = Prisma.ArtistGetPayload<{ select: typeof ADMIN_ARTIST_SAFE_SELECT }>
+
 /** Handles the operator-facing artist directory. */
 @Injectable()
 export class AdminArtistsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  /** Builds the `deletedAt` half of the `where` clause for the `status` take-down filter. */
-  private buildStatusWhere(status: AdminResourceStatus = 'active') {
-    if (status === 'all') return {}
-    if (status === 'deactivated') return { deletedAt: { not: null } }
-    return { deletedAt: null }
-  }
-
   /** Builds the shared `where` clause for listing and counting. */
   private buildWhere({ verified, status, q }: Omit<ListArtistsInput, 'page' | 'limit'>) {
     return {
-      ...this.buildStatusWhere(status),
+      ...statusWhere(status),
       ...(verified !== undefined && { verified }),
       ...(q && {
         OR: [
@@ -55,7 +62,7 @@ export class AdminArtistsService {
     } satisfies Prisma.ArtistWhereInput
   }
 
-  /** Runs the find all operation, paginated and optionally filtered. */
+  /** Lists artists, paginated and optionally filtered. */
   async findAll({
     page = DEFAULT_PAGE,
     limit = DEFAULT_LIMIT,
@@ -66,14 +73,17 @@ export class AdminArtistsService {
     order,
   }: ListArtistsInput) {
     const where = this.buildWhere({ verified, status, q })
-    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const orderBy = buildSortOrderBy<Prisma.ArtistOrderByWithRelationInput>({ sort, order }, [
+      { createdAt: 'desc' },
+      { id: 'desc' },
+    ])
     const [data, total] = await Promise.all([
       this.prisma.artist.findMany({
         where,
         select: ADMIN_ARTIST_SAFE_SELECT,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: orderBy as unknown as Prisma.ArtistOrderByWithRelationInput[],
+        orderBy,
       }),
       this.prisma.artist.count({ where }),
     ])
@@ -91,7 +101,10 @@ export class AdminArtistsService {
     auditContext: AuditContextValue = {},
   ): Promise<CsvExport> {
     const where = this.buildWhere({ verified, status, q })
-    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const orderBy = buildSortOrderBy<Prisma.ArtistOrderByWithRelationInput>({ sort, order }, [
+      { createdAt: 'desc' },
+      { id: 'desc' },
+    ])
     const total = await this.prisma.artist.count({ where })
 
     return openCsvExport({
@@ -106,7 +119,7 @@ export class AdminArtistsService {
         this.prisma.artist.findMany({
           where,
           select: ADMIN_ARTIST_EXPORT_SELECT,
-          orderBy: orderBy as unknown as Prisma.ArtistOrderByWithRelationInput[],
+          orderBy,
           skip,
           take,
         }),
@@ -114,7 +127,7 @@ export class AdminArtistsService {
   }
 
   /**
-   * Runs the find by id operation, with tracks/albums/session summaries for the detail page.
+   * Finds one artist by id, with tracks/albums/session summaries for the detail page.
    * Deliberately does not filter `deletedAt` — a deactivated artist must stay reachable by id
    * so the operator can review the account before deciding to restore it.
    */
@@ -145,9 +158,9 @@ export class AdminArtistsService {
     }
   }
 
-  /** Runs the update verification operation. */
+  /** Sets an artist's verified flag. */
   async updateVerification(id: string, dto: UpdateArtistVerificationDto) {
-    const existing = await this.prisma.artist.findFirst({ where: { id } })
+    const existing = await this.prisma.artist.findFirst({ where: { id }, select: EXISTENCE_SELECT })
     if (!existing) throw new ArtistNotFoundException(id)
     if (existing.deletedAt) throw new ArtistAlreadyDeletedException(id)
 
@@ -158,7 +171,7 @@ export class AdminArtistsService {
     })
   }
 
-  /** Runs the list artist tracks operation, newest first with a stable `id` tie-break. */
+  /** Lists an artist's tracks, newest first with a stable `id` tie-break. */
   async findTracks(
     artistId: string,
     {
@@ -167,15 +180,13 @@ export class AdminArtistsService {
       status,
     }: PaginationInput & { status?: AdminResourceStatus },
   ) {
-    const existing = await this.prisma.artist.findFirst({ where: { id: artistId } })
-    if (!existing) throw new ArtistNotFoundException(artistId)
-
     const where = {
       artistId,
-      ...this.buildStatusWhere(status),
+      ...statusWhere(status),
     } satisfies Prisma.TrackWhereInput
 
-    const [data, total] = await Promise.all([
+    const [existing, data, total] = await Promise.all([
+      this.prisma.artist.findFirst({ where: { id: artistId }, select: { id: true } }),
       this.prisma.track.findMany({
         where,
         select: {
@@ -193,10 +204,11 @@ export class AdminArtistsService {
       }),
       this.prisma.track.count({ where }),
     ])
+    if (!existing) throw new ArtistNotFoundException(artistId)
     return { data, total, page, limit }
   }
 
-  /** Runs the list artist albums operation, newest first with a stable `id` tie-break. */
+  /** Lists an artist's albums, newest first with a stable `id` tie-break. */
   async findAlbums(
     artistId: string,
     {
@@ -205,15 +217,13 @@ export class AdminArtistsService {
       status,
     }: PaginationInput & { status?: AdminResourceStatus },
   ) {
-    const existing = await this.prisma.artist.findFirst({ where: { id: artistId } })
-    if (!existing) throw new ArtistNotFoundException(artistId)
-
     const where = {
       artistId,
-      ...this.buildStatusWhere(status),
+      ...statusWhere(status),
     } satisfies Prisma.AlbumWhereInput
 
-    const [data, total] = await Promise.all([
+    const [existing, data, total] = await Promise.all([
+      this.prisma.artist.findFirst({ where: { id: artistId }, select: { id: true } }),
       this.prisma.album.findMany({
         where,
         select: {
@@ -232,6 +242,7 @@ export class AdminArtistsService {
       }),
       this.prisma.album.count({ where }),
     ])
+    if (!existing) throw new ArtistNotFoundException(artistId)
     return { data, total, page, limit }
   }
 
@@ -248,43 +259,13 @@ export class AdminArtistsService {
    * existing sessions live would let the account keep acting until every token happened to
    * expire on its own; see `ArtistsAuthGuard` for the request-time half of this fix.
    */
-  async softDelete(
+  softDelete(
     id: string,
     staffId: string,
     reason?: string,
     auditContext: AuditContextValue = {},
-  ) {
-    const existing = await this.prisma.artist.findFirst({ where: { id } })
-    if (!existing) throw new ArtistNotFoundException(id)
-    if (existing.deletedAt) throw new ArtistAlreadyDeletedException(id)
-
-    return await this.prisma.$transaction(async (tx) => {
-      const { count } = await tx.artist.updateMany({
-        where: { id, deletedAt: null },
-        data: { deletedAt: new Date() },
-      })
-      if (count === 0) throw new ArtistAlreadyDeletedException(id)
-
-      const { count: sessionsRevoked } = await tx.artistSession.deleteMany({
-        where: { artistId: id },
-      })
-      const updated = await tx.artist.findFirstOrThrow({
-        where: { id },
-        select: ADMIN_ARTIST_SAFE_SELECT,
-      })
-      await writeTakeDownAudit({
-        tx,
-        entityType: 'admin-artists',
-        entityId: id,
-        action: 'admin-artists.delete',
-        staffId,
-        reason,
-        before: { deletedAt: isoOrNull(existing.deletedAt) },
-        after: { deletedAt: isoOrNull(updated.deletedAt), sessionsRevoked },
-        ...auditContext,
-      })
-      return updated
-    })
+  ): Promise<AdminArtistRow> {
+    return this.transition('take-down', id, { staffId, reason, ...auditContext })
   }
 
   /**
@@ -292,70 +273,57 @@ export class AdminArtistsService {
    * Uses the same `updateMany` + count-guard pattern as {@link softDelete} for the same
    * concurrent-request reason.
    */
-  async restore(
+  restore(
     id: string,
     staffId: string,
     reason?: string,
     auditContext: AuditContextValue = {},
-  ) {
-    const existing = await this.prisma.artist.findFirst({ where: { id } })
-    if (!existing) throw new ArtistNotFoundException(id)
-    if (!existing.deletedAt) throw new ArtistNotDeletedException(id)
+  ): Promise<AdminArtistRow> {
+    return this.transition('restore', id, { staffId, reason, ...auditContext })
+  }
 
-    return await this.prisma.$transaction(async (tx) => {
-      const { count } = await tx.artist.updateMany({
-        where: { id, deletedAt: { not: null } },
-        data: { deletedAt: null },
-      })
-      if (count === 0) throw new ArtistNotDeletedException(id)
-
-      const updated = await tx.artist.findFirstOrThrow({
-        where: { id },
-        select: ADMIN_ARTIST_SAFE_SELECT,
-      })
-      await writeTakeDownAudit({
-        tx,
-        entityType: 'admin-artists',
-        entityId: id,
-        action: 'admin-artists.restore',
-        staffId,
-        reason,
-        before: { deletedAt: isoOrNull(existing.deletedAt) },
-        after: { deletedAt: isoOrNull(updated.deletedAt) },
-        ...auditContext,
-      })
-      return updated
+  /** Revokes every session of an artist — see {@link revokeAccountSessions}. */
+  revokeSessions(
+    id: string,
+    staffId: string,
+    reason?: string,
+    auditContext: AuditContextValue = {},
+  ): Promise<AdminRevokeSessionsResultEntity> {
+    return revokeAccountSessions({
+      prisma: this.prisma,
+      exists: async () =>
+        !!(await this.prisma.artist.findFirst({ where: { id }, select: { id: true } })),
+      notFound: () => new ArtistNotFoundException(id),
+      revoke: (tx) => tx.artistSession.deleteMany({ where: { artistId: id } }),
+      entityType: 'admin-artists',
+      entityId: id,
+      actor: { staffId, reason, ...auditContext },
     })
   }
 
-  /**
-   * Revokes every active session for an artist, signing them out on their next request — an
-   * already-open WebSocket connection is unaffected until it disconnects; see the changeset
-   * for that known limitation.
-   */
-  async revokeSessions(
+  /** Takes an artist down or restores it, with its audit row — see {@link runTakeDownTransition}. */
+  private transition(
+    direction: TakeDownDirection,
     id: string,
-    staffId: string,
-    reason?: string,
-    auditContext: AuditContextValue = {},
-  ) {
-    const existing = await this.prisma.artist.findFirst({ where: { id } })
-    if (!existing) throw new ArtistNotFoundException(id)
-
-    return await this.prisma.$transaction(async (tx) => {
-      const { count } = await tx.artistSession.deleteMany({ where: { artistId: id } })
-      await writeTakeDownAudit({
-        tx,
-        entityType: 'admin-artists',
-        entityId: id,
-        action: 'admin-artists.revoke-sessions',
-        staffId,
-        reason,
-        before: {},
-        after: { sessionsRevoked: count },
-        ...auditContext,
-      })
-      return { revoked: count }
+    actor: TakeDownActor,
+  ): Promise<AdminArtistRow> {
+    const takeDown = direction === 'take-down'
+    return runTakeDownTransition({
+      prisma: this.prisma,
+      direction,
+      current: () => this.prisma.artist.findFirst({ where: { id }, select: { deletedAt: true } }),
+      mark: (tx, guard, data) => tx.artist.updateMany({ where: { id, ...guard }, data }),
+      extra: takeDown
+        ? async (tx) => {
+            const { count } = await tx.artistSession.deleteMany({ where: { artistId: id } })
+            return { sessionsRevoked: count }
+          }
+        : undefined,
+      load: (tx) => tx.artist.findFirstOrThrow({ where: { id }, select: ADMIN_ARTIST_SAFE_SELECT }),
+      notFound: () => new ArtistNotFoundException(id),
+      conflict: () =>
+        takeDown ? new ArtistAlreadyDeletedException(id) : new ArtistNotDeletedException(id),
+      audit: { entityType: 'admin-artists', entityId: id, ...actor },
     })
   }
 }
