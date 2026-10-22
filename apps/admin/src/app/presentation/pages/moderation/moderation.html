@@ -1,71 +1,65 @@
-<section class="space-y-6 p-8">
-  <header class="space-y-1">
-    <h1 class="text-xl font-semibold text-foreground">Moderation queue</h1>
-    <p class="text-sm text-muted-foreground">
-      Reports filed by listeners. Taking one marks it as being reviewed so two operators do not work
-      the same row.
-    </p>
-  </header>
-
+<app-page-header
+  [eyebrow]="'moderation.eyebrow' | transloco"
+  [title]="'moderation.title' | transloco"
+  [subtitle]="'moderation.subtitle' | transloco"
+>
   @if (canExport()) {
-    <app-export-csv-button [exporter]="exportCsv" />
+    <app-export-csv-button headerActions [exporter]="exportCsv" />
   }
+</app-page-header>
 
-  <div class="flex flex-wrap gap-2">
-    <button
-      hlmBtn
-      size="sm"
-      type="button"
-      [variant]="query.state().status === null ? 'default' : 'outline'"
-      (click)="setFilter(null)"
-    >
-      All
-    </button>
-    @for (status of statuses; track status) {
-      <button
-        hlmBtn
-        size="sm"
-        type="button"
-        [variant]="query.state().status === status ? 'default' : 'outline'"
-        (click)="setFilter(status)"
-      >
-        {{ status }}
-      </button>
-    }
-  </div>
-
-  <div class="flex flex-wrap gap-2" role="group" aria-label="Filter by content type">
-    <button
-      hlmBtn
-      size="sm"
-      type="button"
-      [variant]="query.state().entityType === null ? 'default' : 'outline'"
-      (click)="setEntityType(null)"
-    >
-      All types
-    </button>
-    @for (entityType of entityTypes; track entityType) {
-      <button
-        hlmBtn
-        size="sm"
-        type="button"
-        [variant]="query.state().entityType === entityType ? 'default' : 'outline'"
-        (click)="setEntityType(entityType)"
-      >
-        {{ entityType }}
-      </button>
-    }
-  </div>
-
-  <app-collection-status
-    [loading]="collection.loading()"
-    [failure]="collection.failure()"
-    [isEmpty]="collection.items().length === 0"
-    emptyMessage="Nothing to review in this filter."
+<app-metric-strip>
+  <app-metric-tile
+    icon="lucideInbox"
+    tone="warning"
+    [label]="'moderation.kpi.open' | transloco"
+    [value]="stats()?.open ?? null"
+    [sub]="
+      stats() === null
+        ? null
+        : stats()?.oldestOpenAt
+          ? ('moderation.kpi.openOldest' | transloco: { age: (stats()?.oldestOpenAt | elapsed) })
+          : ('moderation.kpi.openNone' | transloco)
+    "
+    [loading]="statsLoading()"
   />
+  <app-metric-tile
+    icon="lucideEye"
+    tone="info"
+    [label]="'moderation.kpi.reviewing' | transloco"
+    [value]="stats()?.reviewing ?? null"
+    [sub]="stats() === null ? null : ('moderation.kpi.reviewingSub' | transloco)"
+    [loading]="statsLoading()"
+  />
+</app-metric-strip>
 
-  @if (collection.items().length > 0) {
+<app-table-panel>
+  <app-panel-bar panelBar>
+    @if (selection.count() === 0) {
+      <app-filter-menu
+        [label]="'moderation.filter.status' | transloco"
+        [options]="statusOptions()"
+        [value]="query.state().status"
+        [defaultValue]="'OPEN'"
+        [disabled]="collection.loading() && collection.items().length === 0"
+        (valueChange)="setFilter($event)"
+      />
+      <app-filter-menu
+        [label]="'moderation.filter.type' | transloco"
+        [options]="typeOptions()"
+        [value]="query.state().entityType"
+        [defaultValue]="null"
+        [disabled]="collection.loading() && collection.items().length === 0"
+        (valueChange)="setEntityType($event)"
+      />
+      @if (range(); as r) {
+        <span class="ms-auto text-[0.8125rem] tabular-nums text-muted-foreground">
+          {{ 'ui.pagination.range' | transloco: r }}
+        </span>
+      }
+    }
     <app-batch-action-bar
+      class="contents"
       itemsKey="moderation.batch.items"
       [rows]="batchRows()"
       [actions]="batchActions()"
@@ -75,58 +69,93 @@
       (cleared)="selection.clear()"
       (closed)="closeBatch()"
     />
+  </app-panel-bar>
 
-    <div hlmTableContainer>
+  @if (
+    collection.items().length === 0 && !collection.loading() && !collection.failure() && narrowed()
+  ) {
+    <app-state-message
+      class="min-h-[340px] p-5"
+      kind="noResults"
+      [title]="'moderation.noResults.title' | transloco"
+      [description]="'moderation.noResults.desc' | transloco"
+      [actionLabel]="'ui.clearFilters' | transloco"
+      (action)="clearFilters()"
+    />
+  } @else {
+    <app-collection-status
+      [loading]="collection.loading() && collection.items().length === 0"
+      [failure]="failureText()"
+      [isEmpty]="collection.items().length === 0"
+      [emptyMessage]="'moderation.empty.title' | transloco"
+      [retryLabel]="'ui.tryAgain' | transloco"
+      (retry)="retry()"
+    />
+  }
+
+  @if (collection.items().length > 0 && !collection.failure()) {
+    <div hlmTableContainer class="hidden md:block">
       <table hlmTable>
         <caption hlmCaption class="sr-only">
-          Reported content awaiting operator review
+          {{
+            'moderation.table.caption' | transloco
+          }}
         </caption>
         <thead hlmTHead>
           <tr hlmTr>
             @if (batchActions().length > 0) {
               <th hlmTh scope="col" class="w-8">
                 <input
+                  class="size-4 accent-primary"
                   type="checkbox"
-                  aria-label="Select all reports on this page"
+                  [attr.aria-label]="'moderation.table.selectAll' | transloco"
                   [checked]="selection.allSelected(selectableIds())"
                   (change)="selection.toggleAll(selectableIds())"
                 />
               </th>
             }
-            <th hlmTh scope="col">Reported</th>
-            <th hlmTh scope="col">Reason</th>
+            <th hlmTh scope="col">{{ 'moderation.table.reported' | transloco }}</th>
+            <th hlmTh scope="col">{{ 'moderation.table.reason' | transloco }}</th>
             <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'status')">
               <app-sort-header
-                [field]="'status'"
-                label="Status"
+                field="status"
+                [label]="'moderation.table.status' | transloco"
                 [sort]="query.state().sort"
                 (sortChange)="setSort($event)"
               >
-                Status
+                {{ 'moderation.table.status' | transloco }}
               </app-sort-header>
             </th>
             <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'createdAt')">
               <app-sort-header
-                [field]="'createdAt'"
-                label="Opened"
+                field="createdAt"
+                [label]="'moderation.table.opened' | transloco"
                 [sort]="query.state().sort"
                 (sortChange)="setSort($event)"
               >
-                Opened
+                {{ 'moderation.table.opened' | transloco }}
               </app-sort-header>
             </th>
-            <th hlmTh scope="col">Actions</th>
+            @if (canAdvance()) {
+              <th hlmTh scope="col">
+                <span class="sr-only">{{ 'moderation.table.actions' | transloco }}</span>
+              </th>
+            }
+            <th hlmTh scope="col" class="w-11"></th>
           </tr>
         </thead>
         <tbody hlmTBody>
           @for (report of collection.items(); track report.id) {
-            <tr hlmTr>
+            <tr hlmTr [attr.data-state]="selection.has(report.id) ? 'selected' : null">
               @if (batchActions().length > 0) {
                 <td hlmTd>
                   <input
+                    class="size-4 accent-primary"
                     type="checkbox"
                     [attr.aria-label]="
-                      'Select ' + report.entityType + ' report ' + report.id.slice(0, 8)
+                      'moderation.table.select'
+                        | transloco
+                          : { type: typeName(report.entityType), id: report.id.slice(0, 8) }
                     "
                     [checked]="selection.has(report.id)"
                     (change)="selection.toggle(report.id)"
@@ -134,18 +163,20 @@
                 </td>
               }
               <td hlmTd>
-                <a [routerLink]="['/moderation', report.id]" class="block hover:underline">{{
-                  report.entityType
-                }}</a>
+                <a
+                  class="block font-semibold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                  [routerLink]="['/moderation', report.id]"
+                  >{{ typeName(report.entityType) }}</a
+                >
                 <span class="font-mono text-xs text-muted-foreground">
                   {{ report.entityId.slice(0, 8) }}
                 </span>
               </td>
-              <td hlmTd>
+              <td hlmTd class="max-w-md whitespace-normal">
                 <span class="block">{{ report.reason }}</span>
                 @if (report.details) {
                   <span
-                    class="mt-1 block max-w-md truncate text-xs text-muted-foreground"
+                    class="mt-1 block truncate text-xs text-muted-foreground"
                     [title]="report.details"
                   >
                     {{ report.details }}
@@ -153,44 +184,39 @@
                 }
               </td>
               <td hlmTd>
-                <span
-                  hlmBadge
-                  [variant]="
-                    report.status === 'OPEN'
-                      ? 'destructive'
-                      : report.status === 'RESOLVED'
-                        ? 'default'
-                        : 'outline'
-                  "
-                >
-                  {{ report.status }}
+                <span hlmBadge [variant]="statusBadge[report.status]">
+                  {{ statusLabel[report.status] | transloco }}
                 </span>
               </td>
               <td hlmTd class="tabular-nums text-muted-foreground">
-                {{ report.createdAt | localizedDate: 'dd.MM.yyyy HH:mm' }}
+                <time
+                  [attr.datetime]="report.createdAt.toISOString()"
+                  [title]="report.createdAt | localizedDate: 'dd.MM.yyyy HH:mm'"
+                  >{{ report.createdAt | elapsed }}</time
+                >
               </td>
-              <td hlmTd>
-                @if (canAdvance()) {
-                  <div class="flex gap-2">
+              @if (canAdvance()) {
+                <td hlmTd>
+                  <div class="flex gap-1">
                     <button
                       hlmBtn
                       size="sm"
-                      variant="outline"
+                      variant="ghost"
                       type="button"
-                      [disabled]="busyId() === report.id"
+                      [disabled]="busyId() === report.id || report.status === 'REVIEWING'"
                       (click)="advance(report, 'REVIEWING')"
                     >
-                      Take
+                      {{ 'moderation.action.take' | transloco }}
                     </button>
                     <button
                       hlmBtn
                       size="sm"
-                      variant="outline"
+                      variant="ghost"
                       type="button"
                       [disabled]="busyId() === report.id"
                       (click)="advance(report, 'RESOLVED')"
                     >
-                      Resolve
+                      {{ 'moderation.action.resolve' | transloco }}
                     </button>
                     <button
                       hlmBtn
@@ -200,10 +226,13 @@
                       [disabled]="busyId() === report.id"
                       (click)="advance(report, 'REJECTED')"
                     >
-                      Reject
+                      {{ 'moderation.action.reject' | transloco }}
                     </button>
                   </div>
-                }
+                </td>
+              }
+              <td hlmTd class="text-muted-foreground">
+                <ng-icon class="text-base" name="lucideChevronRight" aria-hidden="true" />
               </td>
             </tr>
           }
@@ -211,12 +240,39 @@
       </table>
     </div>
 
-    <app-paginator
-      [page]="collection.page()"
-      [pageCount]="collection.pageCount()"
-      [total]="collection.total()"
-      [disabled]="collection.loading()"
-      (goTo)="goToPage($event)"
-    />
+    <ul class="flex flex-col gap-2.5 p-3 md:hidden">
+      @for (report of collection.items(); track report.id) {
+        <li>
+          <a
+            class="flex flex-col gap-2 rounded-[18px] border border-glass-line bg-card/50 p-3.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            [routerLink]="['/moderation', report.id]"
+          >
+            <span class="flex items-start gap-2.5">
+              <span class="flex min-w-0 flex-1 flex-col">
+                <span class="font-semibold">{{ typeName(report.entityType) }}</span>
+                <span class="font-mono text-xs text-muted-foreground">{{
+                  report.entityId.slice(0, 8)
+                }}</span>
+              </span>
+              <span hlmBadge [variant]="statusBadge[report.status]">
+                {{ statusLabel[report.status] | transloco }}
+              </span>
+            </span>
+            <span class="text-xs text-muted-foreground"
+              >{{ report.reason }} · {{ report.createdAt | elapsed }}</span
+            >
+          </a>
+        </li>
+      }
+    </ul>
   }
-</section>
+
+  <app-paginator
+    panelFooter
+    [page]="collection.page()"
+    [pageCount]="collection.pageCount()"
+    [total]="collection.total()"
+    [disabled]="collection.loading()"
+    (goTo)="goToPage($event)"
+  />
+</app-table-panel>

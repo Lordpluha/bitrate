@@ -1,7 +1,7 @@
 import { provideLocationMocks } from '@angular/common/testing'
 import { provideZonelessChangeDetection } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
-import { provideRouter, type Routes } from '@angular/router'
+import { provideRouter, Router, type Routes } from '@angular/router'
 import { RouterTestingHarness } from '@angular/router/testing'
 import { SessionStore } from '@application/session'
 import type { Permission } from '@domain/access'
@@ -257,5 +257,113 @@ describe('ModerationQueue — CSV export', () => {
     expect(exportReports).toHaveBeenCalledWith(
       expect.objectContaining({ sort: { field: 'status', direction: 'asc' } }),
     )
+  })
+})
+
+describe('ModerationQueue — figures and states', () => {
+  let harness: RouterTestingHarness
+
+  const host = () => harness.routeNativeElement as HTMLElement
+  const tile = (label: string) =>
+    Array.from(host().querySelectorAll('app-metric-tile')).find((candidate) =>
+      candidate.textContent?.includes(label),
+    )
+  const buttonWith = (text: string) =>
+    Array.from(host().querySelectorAll('button')).find((button) =>
+      button.textContent?.includes(text),
+    )
+  const open = async (url = '/moderation') => {
+    await harness.navigateByUrl(url, ModerationQueue)
+    await harness.fixture.whenStable()
+  }
+
+  beforeEach(async () => {
+    list.mockReset()
+    TestBed.resetTestingModule()
+    TestBed.configureTestingModule({
+      providers: [
+        ...provideTestTransloco(),
+        provideZonelessChangeDetection(),
+        provideRouter(routes),
+        provideLocationMocks(),
+        { provide: ModerationReportRepository, useClass: StubReportRepository },
+        { provide: ExportRepository, useClass: StubExportRepository },
+      ],
+    })
+    TestBed.inject(SessionStore).set({
+      id: '3f2504e0-4f89-41d3-9a0c-0305e82c3399',
+      email: 'ops@bitrate.me',
+      username: 'ops',
+      roleId: 'c1b1d2e3-4f5a-4b6c-8d7e-9f0a1b2c3d4e',
+      roleName: 'MODERATOR',
+      permissions: ['reports:read'],
+    })
+    harness = await RouterTestingHarness.create()
+  })
+
+  it('counts the open and in-review reports above the queue', async () => {
+    list.mockImplementation(({ limit, filter }) =>
+      Promise.resolve({
+        items: [report()],
+        total: limit === 1 ? (filter.status === 'OPEN' ? 12 : 4) : 1,
+        page: 1,
+        limit: limit ?? 20,
+      }),
+    )
+    await open()
+
+    expect(tile('Open')?.textContent).toContain('12')
+    expect(tile('Open')?.textContent).toContain('Oldest')
+    expect(tile('Reviewing')?.textContent).toContain('4')
+  })
+
+  it('shows a dash, not a zero, when the figures cannot be read', async () => {
+    list.mockImplementation(({ limit }) =>
+      limit === 1
+        ? Promise.reject(new Error('down'))
+        : Promise.resolve({ items: [report()], total: 1, page: 1, limit: limit ?? 20 }),
+    )
+    await open()
+
+    expect(tile('Open')?.textContent).toContain('—')
+  })
+
+  it('offers Clear filters when a narrowed view is empty, and returns to the open queue', async () => {
+    list.mockImplementation(({ limit }) =>
+      Promise.resolve({ items: [], total: 0, page: 1, limit: limit ?? 20 }),
+    )
+    await open('/moderation?status=RESOLVED')
+
+    expect(host().textContent).toContain('No reports match these filters')
+    buttonWith('Clear filters')?.click()
+    await harness.fixture.whenStable()
+
+    expect(TestBed.inject(Router).url).toBe('/moderation')
+  })
+
+  it('says the queue is clear when the default view is empty', async () => {
+    list.mockImplementation(({ limit }) =>
+      Promise.resolve({ items: [], total: 0, page: 1, limit: limit ?? 20 }),
+    )
+    await open()
+
+    expect(host().textContent).toContain('The queue is clear')
+    expect(buttonWith('Clear filters')).toBeUndefined()
+  })
+
+  it('reports a failed load as an alert whose Try again loads the queue again', async () => {
+    list.mockRejectedValue(new Error('down'))
+    await open()
+
+    expect(host().querySelector('[role="alert"]')?.textContent).toContain('Couldn’t load the queue')
+    list.mockReset()
+    list.mockImplementation(({ limit }) =>
+      Promise.resolve({ items: [report()], total: 1, page: 1, limit: limit ?? 20 }),
+    )
+    buttonWith('Try again')?.click()
+    await harness.fixture.whenStable()
+
+    expect(host().querySelector('[role="alert"]')).toBeNull()
+    expect(host().querySelector('table')?.textContent).toContain('Copyright')
   })
 })

@@ -1,115 +1,250 @@
-<section class="w-full space-y-8 p-8">
-  <header class="space-y-1">
-    <a routerLink="/moderation" class="text-sm text-muted-foreground hover:underline"
-      >&larr; Moderation queue</a
+@if (report(); as r) {
+  <app-page-header
+    [back]="back()"
+    [eyebrow]="'report.eyebrow' | transloco: { id: shortId(r.id) }"
+    [title]="r.subject?.title ?? kindName(r.entityType)"
+    [subtitle]="'report.subtitle' | transloco: { reason: r.reason, age: (r.createdAt | elapsed) }"
+  >
+    <span headerStatus hlmBadge [variant]="statusBadge[r.status]">
+      {{ statusLabel[r.status] | transloco }}
+    </span>
+    <ng-container ngProjectAs="[headerActions]">
+      @if (canAdvance()) {
+        @if (advanceable(r, 'REVIEWING') && !closed(r)) {
+          <button
+            hlmBtn
+            variant="secondary"
+            type="button"
+            [disabled]="pending()"
+            (click)="advance('REVIEWING')"
+          >
+            <ng-icon name="lucideEye" aria-hidden="true" />
+            {{ 'report.action.start' | transloco }}
+          </button>
+        }
+        @if (advanceable(r, 'REJECTED')) {
+          <button
+            hlmBtn
+            variant="secondary"
+            type="button"
+            [disabled]="pending()"
+            (click)="ask('REJECTED')"
+          >
+            <ng-icon name="lucideX" aria-hidden="true" />
+            {{ 'report.action.reject' | transloco }}
+          </button>
+        }
+        @if (advanceable(r, 'RESOLVED')) {
+          <button
+            headerActions
+            hlmBtn
+            type="button"
+            [disabled]="pending()"
+            (click)="ask('RESOLVED')"
+          >
+            <ng-icon name="lucideCheck" aria-hidden="true" />
+            {{ 'report.action.resolve' | transloco }}
+          </button>
+        }
+      }
+    </ng-container>
+  </app-page-header>
+
+  @if (failureText(); as message) {
+    <app-state-message
+      class="rounded-tile border border-error/40 bg-glass p-4 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="message"
+      [compact]="true"
+    />
+  }
+
+  <app-tile-grid>
+    <app-tile
+      icon="lucideFlag"
+      [title]="'report.tile.report' | transloco"
+      [meta]="'report.tile.reportMeta' | transloco"
+      [span]="2"
     >
-    @if (loading()) {
-      <h1 class="text-xl font-semibold text-foreground">Report</h1>
-    } @else if (report(); as r) {
-      <h1 class="text-xl font-semibold text-foreground">
-        {{ r.reason }}
-        <span
-          hlmBadge
-          [variant]="
-            r.status === 'OPEN' ? 'destructive' : r.status === 'RESOLVED' ? 'default' : 'outline'
-          "
-          class="ml-2 align-middle"
+      <div>
+        <app-kv-row [label]="'report.tile.reason' | transloco">{{ r.reason }}</app-kv-row>
+        <app-kv-row [label]="'report.tile.reporter' | transloco">
+          <span class="font-mono">{{ shortId(r.reporterId) }}</span>
+        </app-kv-row>
+        <app-kv-row [label]="'report.tile.filed' | transloco">
+          {{ r.createdAt | localizedDate: 'dd.MM.yyyy HH:mm' }}
+        </app-kv-row>
+        <app-kv-row [label]="'report.tile.status' | transloco">
+          <span hlmBadge [variant]="statusBadge[r.status]">
+            {{ statusLabel[r.status] | transloco }}
+          </span>
+        </app-kv-row>
+        @if (r.resolvedAt) {
+          <app-kv-row [label]="'report.tile.resolvedAt' | transloco">
+            {{ r.resolvedAt | localizedDate: 'dd.MM.yyyy HH:mm' }}
+          </app-kv-row>
+        }
+      </div>
+      @if (r.details) {
+        <blockquote
+          class="mt-1.5 rounded-s-[4px] rounded-e-[14px] border-s-[3px] border-primary bg-foreground/4 px-3.5 py-3 text-[0.8125rem] italic text-muted-foreground"
         >
-          {{ r.status }}
-        </span>
-      </h1>
-      <p class="text-sm text-muted-foreground">
-        Filed {{ r.createdAt | localizedDate: 'dd.MM.yyyy HH:mm' }} · reporter
-        {{ r.reporterId.slice(0, 8) }}
-      </p>
-    }
-  </header>
+          {{ r.details }}
+        </blockquote>
+      }
+    </app-tile>
 
-  @if (loading()) {
-    <p class="text-sm text-muted-foreground" role="status">Loading…</p>
-  } @else if (notFound()) {
-    <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
-      This report could not be found.
-    </p>
-  } @else if (report(); as r) {
-    @if (failure(); as message) {
-      <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
-        {{ message }}
-      </p>
-    }
-
-    @if (r.details) {
-      <section class="space-y-1">
-        <h2 class="text-lg font-semibold text-foreground">Details</h2>
-        <p class="text-sm text-foreground">{{ r.details }}</p>
-      </section>
-    }
-
-    <section class="space-y-3">
-      <h2 class="text-lg font-semibold text-foreground">Reported content</h2>
+    <app-tile
+      icon="lucideAudioLines"
+      [title]="'report.tile.content' | transloco"
+      [meta]="kindName(r.subject?.kind ?? r.entityType)"
+      [span]="2"
+    >
       @if (r.subject; as subject) {
-        <div class="space-y-1 rounded-md border border-border p-3">
-          <p class="text-sm text-foreground">
-            <span class="text-xs uppercase text-muted-foreground">{{ subject.kind }}</span>
+        <div class="flex items-center gap-3 rounded-2xl bg-foreground/5 p-3">
+          <span
+            class="grid size-11 shrink-0 place-items-center rounded-xl bg-info-surface text-lg text-info-text"
+            aria-hidden="true"
+          >
+            <ng-icon name="lucideAudioLines" />
+          </span>
+          <span class="min-w-0 flex-1">
             @if (subjectLink(subject); as link) {
-              <a [routerLink]="link" class="ml-2 hover:underline">{{ subject.title }}</a>
+              <a
+                class="block truncate font-semibold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                [routerLink]="link"
+                >{{ subject.title }}</a
+              >
             } @else {
-              <span class="ml-2">{{ subject.title }}</span>
+              <span class="block truncate font-semibold">{{ subject.title }}</span>
             }
-            @if (subject.deletedAt) {
-              <span hlmBadge variant="destructive" class="ml-2">deleted</span>
-            }
-          </p>
-          @if (subject.kind === 'episode' && subject.parentId) {
-            <p class="text-xs text-muted-foreground">Podcast: {{ subject.parentId }}</p>
+            <span class="text-xs text-muted-foreground">{{ kindName(subject.kind) }}</span>
+          </span>
+          @if (subject.deletedAt) {
+            <span hlmBadge variant="destructive">{{ 'report.tile.deleted' | transloco }}</span>
           }
         </div>
+        @if (subject.kind === 'episode' && subject.parentId) {
+          <p class="text-xs text-muted-foreground">
+            {{ 'report.tile.podcast' | transloco: { id: shortId(subject.parentId) } }}
+          </p>
+        }
+        @if (subjectLink(subject); as link) {
+          <a
+            class="mt-auto inline-flex items-center gap-1.5 text-[0.8125rem] font-semibold text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            [routerLink]="link"
+          >
+            {{ 'report.tile.open' | transloco }}
+            <ng-icon name="lucideArrowRight" aria-hidden="true" />
+          </a>
+        }
       } @else {
-        <p class="text-sm text-muted-foreground">Subject no longer exists.</p>
+        <app-state-message
+          kind="info"
+          [title]="'report.tile.gone' | transloco"
+          [description]="'report.tile.goneDesc' | transloco"
+          [compact]="true"
+        />
       }
-    </section>
+    </app-tile>
 
     @if (r.siblingReports.length > 0) {
-      <section class="space-y-2">
-        <h2 class="text-lg font-semibold text-foreground">Other reports on this subject</h2>
-        <ul class="space-y-1">
-          @for (sibling of r.siblingReports; track sibling.id) {
-            <li>
-              <a [routerLink]="['/moderation', sibling.id]" class="text-sm hover:underline">
-                {{ sibling.reason }} — {{ sibling.status }} ({{
-                  sibling.createdAt | localizedDate: 'dd.MM.yyyy'
-                }})
-              </a>
-            </li>
-          }
-        </ul>
-      </section>
-    }
-
-    <section class="space-y-3">
-      <h2 class="text-lg font-semibold text-foreground">Actions</h2>
-      @if (canAdvance()) {
-        <div class="flex gap-2">
-          @for (target of targets; track target.status) {
-            @if (advanceable(r, target.status)) {
-              <button
-                hlmBtn
-                size="sm"
-                variant="outline"
-                type="button"
-                [disabled]="pending()"
-                (click)="advance(target.status)"
-              >
-                {{ target.label }}
-              </button>
+      <app-tile
+        icon="lucideList"
+        [title]="'report.tile.siblings' | transloco"
+        [meta]="'report.tile.siblingsMeta' | transloco: { count: r.siblingReports.length }"
+        [span]="4"
+      >
+        <table hlmTable>
+          <tbody hlmTBody>
+            @for (sibling of r.siblingReports; track sibling.id) {
+              <tr hlmTr>
+                <td hlmTd>
+                  <a
+                    class="font-semibold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                    [routerLink]="['/moderation', sibling.id]"
+                    >{{ 'report.tile.siblingReport' | transloco }} {{ shortId(sibling.id) }}</a
+                  >
+                  <span class="block text-xs text-muted-foreground">{{ sibling.reason }}</span>
+                </td>
+                <td hlmTd>
+                  <span hlmBadge [variant]="statusBadge[sibling.status]">
+                    {{ statusLabel[sibling.status] | transloco }}
+                  </span>
+                </td>
+                <td hlmTd class="text-right tabular-nums text-muted-foreground">
+                  {{ sibling.createdAt | elapsed }}
+                </td>
+              </tr>
             }
-          }
-        </div>
+          </tbody>
+        </table>
+      </app-tile>
+    }
+  </app-tile-grid>
+
+  <hlm-dialog [state]="confirming() ? 'open' : 'closed'" (closed)="dismissDialog()">
+    <hlm-dialog-content *hlmDialogPortal="let ctx">
+      @if (confirming(); as decision) {
+        <hlm-dialog-header>
+          <h2 hlmDialogTitle>{{ decisionCopy[decision].title | transloco }}</h2>
+          <p hlmDialogDescription>{{ decisionCopy[decision].desc | transloco }}</p>
+        </hlm-dialog-header>
+        <hlm-dialog-footer>
+          <button
+            hlmBtn
+            variant="ghost"
+            type="button"
+            [disabled]="pending()"
+            (click)="dismissDialog()"
+          >
+            {{ 'ui.cancel' | transloco }}
+          </button>
+          <button
+            hlmBtn
+            [variant]="decision === 'REJECTED' ? 'destructive' : 'default'"
+            type="button"
+            [disabled]="pending()"
+            (click)="confirm()"
+          >
+            {{
+              pending() ? ('ui.working' | transloco) : (decisionCopy[decision].action | transloco)
+            }}
+          </button>
+        </hlm-dialog-footer>
       }
-    </section>
-  } @else if (failure(); as message) {
-    <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
-      {{ message }}
-    </p>
+    </hlm-dialog-content>
+  </hlm-dialog>
+} @else {
+  <app-page-header
+    [back]="back()"
+    [eyebrow]="'report.eyebrow' | transloco: { id: shortId(reportId) }"
+    [title]="'report.loadingTitle' | transloco"
+  />
+  @if (loading()) {
+    <app-tile-grid role="status" [attr.aria-label]="'ui.loading' | transloco">
+      @for (tile of [2, 2, 4]; track $index) {
+        <app-tile [title]="'ui.loading' | transloco" [span]="tile === 4 ? 4 : 2">
+          <app-skeleton class="h-3.5 w-full" />
+          <app-skeleton class="h-3.5 w-4/5" />
+          <app-skeleton class="h-3.5 w-3/5" />
+        </app-tile>
+      }
+    </app-tile-grid>
+  } @else if (notFound()) {
+    <app-state-message
+      class="min-h-[340px] rounded-tile border border-glass-line bg-glass p-5 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="'report.notFound.title' | transloco"
+      [description]="'report.notFound.desc' | transloco"
+    />
+  } @else if (failureText(); as message) {
+    <app-state-message
+      class="min-h-[340px] rounded-tile border border-glass-line bg-glass p-5 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="message"
+      [actionLabel]="'ui.tryAgain' | transloco"
+      (action)="reload()"
+    />
   }
-</section>
+}

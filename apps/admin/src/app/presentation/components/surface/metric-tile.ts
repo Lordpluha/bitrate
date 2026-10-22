@@ -16,18 +16,18 @@ import { TONE_ICON_CLASS, type Tone } from './tone'
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
-      'flex items-center gap-3.5 rounded-tile border border-glass-line bg-glass p-[18px] shadow-glass backdrop-blur-[22px] backdrop-saturate-150 animate-rise motion-reduce:animate-none',
+      'flex flex-col items-start gap-2.5 rounded-tile border border-glass-line bg-glass p-3.5 shadow-glass sm:flex-row sm:items-center sm:gap-3.5 sm:p-[18px] backdrop-blur-[22px] backdrop-saturate-150 animate-rise motion-reduce:animate-none',
   },
   template: `
     @if (loading()) {
-      <app-skeleton class="size-[42px] shrink-0 rounded-[13px]" />
+      <app-skeleton class="size-[34px] shrink-0 rounded-[11px] sm:size-[42px] sm:rounded-[13px]" />
       <span class="flex flex-1 flex-col gap-2">
         <app-skeleton class="h-2.5 w-3/5" />
         <app-skeleton class="h-[22px] w-2/5" />
       </span>
     } @else {
       <span
-        class="grid size-[42px] shrink-0 place-items-center rounded-[13px] text-lg"
+        class="grid size-[34px] shrink-0 place-items-center rounded-[11px] text-base sm:size-[42px] sm:rounded-[13px] sm:text-lg"
         [class]="iconClass()"
         aria-hidden="true"
       >
@@ -60,11 +60,17 @@ export class MetricTile {
   })
 }
 
-/** The strip of KPI tiles above a list: four across on desktop, two on tablets, one on phones. */
+/**
+ * The strip of KPI tiles above a list. Columns auto-fit, so a tile hidden for want of data
+ * leaves no hole: four across on desktop when all are there, two per row on phones.
+ */
 @Component({
   selector: 'app-metric-strip',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'grid gap-3 sm:grid-cols-2 lg:gap-4 xl:grid-cols-4' },
+  host: {
+    class:
+      'grid grid-cols-2 gap-2.5 sm:grid-cols-[repeat(auto-fit,minmax(220px,1fr))] sm:gap-3 lg:gap-4',
+  },
   template: `<ng-content />`,
 })
 export class MetricStrip {}
