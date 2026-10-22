@@ -142,7 +142,72 @@
   },
   "moderation": {
     "batch": {
-      "items": "{count, plural, one {# report} other {# reports}}"
+      "items": "{count, plural, one {# report} other {# reports}}",
+      "resolve": "Resolve",
+      "resolveConfirm": "Resolve reports",
+      "resolveConsequence": "Marks each report resolved and stamps its resolution time.",
+      "dismiss": "Dismiss",
+      "dismissConfirm": "Dismiss reports",
+      "dismissConsequence": "Marks each report rejected and stamps its resolution time."
+    },
+    "eyebrow": "Operations · Moderation",
+    "title": "Moderation",
+    "subtitle": "Reports from listeners and artists. Taking one marks it in review, so two operators never work the same report.",
+    "kpi": {
+      "open": "Open",
+      "openOldest": "Oldest {age}",
+      "openNone": "Nothing waiting",
+      "reviewing": "Reviewing",
+      "reviewingSub": "Taken by an operator"
+    },
+    "filter": {
+      "status": "Status",
+      "type": "Type"
+    },
+    "status": {
+      "all": "All statuses",
+      "OPEN": "Open",
+      "REVIEWING": "Reviewing",
+      "RESOLVED": "Resolved",
+      "REJECTED": "Rejected"
+    },
+    "type": {
+      "all": "All types",
+      "track": "Track",
+      "album": "Album",
+      "playlist": "Playlist",
+      "artist": "Artist",
+      "podcast": "Podcast",
+      "episode": "Episode",
+      "user": "Listener"
+    },
+    "table": {
+      "caption": "Reported content awaiting operator review",
+      "reported": "Reported",
+      "reason": "Reason",
+      "status": "Status",
+      "opened": "Opened",
+      "actions": "Actions",
+      "selectAll": "Select all reports on this page",
+      "select": "Select {type} report {id}"
+    },
+    "action": {
+      "take": "Take",
+      "resolve": "Resolve",
+      "reject": "Reject"
+    },
+    "empty": {
+      "title": "The queue is clear",
+      "desc": "No open reports. New ones appear here as they arrive."
+    },
+    "noResults": {
+      "title": "No reports match these filters",
+      "desc": "Clear the filters to see the whole queue."
+    },
+    "error": {
+      "load": "Couldn’t load the queue",
+      "advance": "Couldn’t move that report. Nothing was changed.",
+      "batch": "Couldn’t update the selected reports."
     }
   },
   "users": {
@@ -153,6 +218,228 @@
   "catalog": {
     "batch": {
       "items": "{count, plural, one {# track} other {# tracks}}"
+    }
+  },
+  "report": {
+    "eyebrow": "Moderation · Report {id}",
+    "loadingTitle": "Report",
+    "subtitle": "{reason} · filed {age} ago",
+    "action": {
+      "start": "Start review",
+      "resolve": "Resolve",
+      "reject": "Reject"
+    },
+    "dialog": {
+      "resolveTitle": "Resolve this report?",
+      "resolveDesc": "The reported content stays as it is unless you take it down from its own page. The report closes as resolved.",
+      "resolveAction": "Resolve report",
+      "rejectTitle": "Reject this report?",
+      "rejectDesc": "Nothing changes on the reported content. The report closes as rejected.",
+      "rejectAction": "Reject report"
+    },
+    "tile": {
+      "report": "Report",
+      "reportMeta": "What the reporter said",
+      "reason": "Reason",
+      "reporter": "Reporter",
+      "filed": "Filed",
+      "status": "Status",
+      "resolvedAt": "Closed",
+      "content": "Reported content",
+      "deleted": "Deleted",
+      "gone": "Subject no longer exists",
+      "goneDesc": "It was removed after the report was filed.",
+      "open": "Open its page",
+      "podcast": "Podcast {id}",
+      "siblings": "Other reports on this subject",
+      "siblingsMeta": "{count, plural, one {# more} other {# more}}",
+      "siblingReport": "Report"
+    },
+    "notFound": {
+      "title": "Report not found",
+      "desc": "This report doesn’t exist or was removed. Check the link, or go back to the queue."
+    },
+    "error": {
+      "load": "Couldn’t load this report",
+      "advance": "Couldn’t change this report’s status. Nothing was changed."
+    }
+  },
+  "releases": {
+    "eyebrow": "Operations · Releases",
+    "title": "Releases",
+    "subtitle": "Releases artists sent for review before they go live. Approving lets the artist’s delivery plan go ahead; it does not deliver the release.",
+    "kpi": {
+      "awaiting": "Awaiting review",
+      "awaitingOldest": "Oldest {age}",
+      "awaitingNone": "Nothing waiting",
+      "changes": "Changes requested",
+      "changesSub": "Waiting on artists"
+    },
+    "search": "Search title or artist",
+    "filter": {
+      "status": "Status"
+    },
+    "queueStatus": {
+      "SUBMITTED": "Awaiting review",
+      "REJECTED": "Changes requested",
+      "READY": "Approved",
+      "ALL": "All statuses"
+    },
+    "table": {
+      "caption": "Release submissions",
+      "release": "Release",
+      "type": "Type",
+      "tracks": "Tracks",
+      "status": "Status",
+      "submitted": "Submitted",
+      "artwork": "No artwork"
+    },
+    "empty": {
+      "title": "Nothing to review",
+      "desc": "No releases are waiting. New submissions appear here."
+    },
+    "noResults": {
+      "title": "No releases match these filters",
+      "titleQuery": "No releases match “{query}”",
+      "desc": "Try another title or artist, or clear the status filter."
+    },
+    "error": {
+      "load": "Couldn’t load releases"
+    }
+  },
+  "release": {
+    "kind": {
+      "ALBUM": "Album",
+      "SINGLE": "Single",
+      "EP": "EP",
+      "COMPILATION": "Compilation"
+    },
+    "status": {
+      "DRAFT": "Draft",
+      "SUBMITTED": "Awaiting review",
+      "READY": "Approved",
+      "REJECTED": "Changes requested",
+      "RELEASED": "Released"
+    },
+    "eyebrow": "Releases · Review",
+    "loadingTitle": "Release",
+    "subtitle": "{kind} by {artist} · {count, plural, one {# recording} other {# recordings}}",
+    "submitted": "submitted {age} ago",
+    "action": {
+      "approve": "Approve",
+      "changes": "Request changes"
+    },
+    "plan": {
+      "title": "Release plan",
+      "meta": "Set by the artist",
+      "date": "Planned date",
+      "notSet": "Not set",
+      "upc": "UPC",
+      "kind": "Type",
+      "stores": "Stores",
+      "noStores": "None chosen yet",
+      "territories": "Territories",
+      "worldwide": "Worldwide",
+      "audit": "View audit history"
+    },
+    "rights": {
+      "title": "Rights confirmations",
+      "meta": "{done} of {all} confirmed",
+      "master": "Master owner set",
+      "masterArtist": "The artist owns the master",
+      "masterOther": "Owned by {name}",
+      "masterOtherUnnamed": "Owned by someone else",
+      "writers": "Writers confirmed",
+      "accuracy": "Accuracy confirmed",
+      "confirmedOn": "Confirmed {date}",
+      "notYet": "Not confirmed yet",
+      "blockers": "Still blocking",
+      "notices": "Worth knowing"
+    },
+    "blocker": {
+      "NO_TRACKS": "No recordings",
+      "COVER_MISSING": "No artwork",
+      "TRACK_AUDIO_MISSING": "A recording has no audio",
+      "MASTER_OWNER_MISSING": "Master owner not set",
+      "WRITERS_NOT_CONFIRMED": "Writers not confirmed",
+      "ACCURACY_NOT_CONFIRMED": "Accuracy not confirmed",
+      "CONTRIBUTOR_ROLES_MISSING": "A contributor has no role",
+      "SPLITS_INCOMPLETE": "Splits do not add up to 100%"
+    },
+    "notice": {
+      "UPC_MISSING": "No UPC yet",
+      "ISRC_MISSING": "A recording has no ISRC yet"
+    },
+    "right": {
+      "RECORDING": "Recording (master)",
+      "COMPOSITION": "Composition (publishing)"
+    },
+    "tracks": {
+      "title": "Recordings",
+      "meta": "{count, plural, one {# recording} other {# recordings}}",
+      "caption": "Recordings in release order",
+      "number": "#",
+      "recording": "Recording",
+      "isrc": "ISRC",
+      "length": "Length",
+      "master": "Master",
+      "noAudio": "No audio",
+      "play": "Play {title}",
+      "none": "This release lists no recordings."
+    },
+    "contributors": {
+      "title": "Contributors",
+      "meta": "{count, plural, one {# person} other {# people}}",
+      "caption": "Contributors and their shares",
+      "name": "Contributor",
+      "roles": "Roles",
+      "shares": "Shares",
+      "none": "No contributors listed."
+    },
+    "history": {
+      "title": "Review history",
+      "meta": "{count, plural, =0 {First submission} one {# decision} other {# decisions}}",
+      "none": "First submission — no earlier decisions.",
+      "approved": "Approved",
+      "changes": "Changes requested",
+      "formerOperator": "former operator"
+    },
+    "decision": {
+      "needsPermission": "Deciding on releases needs the releases:review permission.",
+      "notAwaiting": "This release isn’t awaiting review. A decision is possible once the artist submits it.",
+      "approveTitle": "Approve “{title}”?",
+      "approveDesc": "The artist sees the decision in their workspace, and their delivery plan can go ahead. Approval does not deliver the release.",
+      "approveAction": "Approve release",
+      "changesTitle": "Request changes",
+      "changesDesc": "The artist sees each line as a task and resubmits when every one is done.",
+      "changesAction": "Send to artist",
+      "required": "Required changes",
+      "requiredHint": "{count} of up to {max} · one change per line, up to {length} characters each.",
+      "requiredPlaceholder": "Replace the artwork: it contains a third-party logo",
+      "requiredMissing": "Add at least one change",
+      "recommendations": "Recommendations (optional), one per line",
+      "message": "Note to the artist (optional)",
+      "saving": "Saving…",
+      "approved": "“{title}” was approved. The artist sees the decision now.",
+      "changesSent": "Changes were requested on “{title}”."
+    },
+    "notFound": {
+      "title": "Release not found",
+      "desc": "This release doesn’t exist, is still a draft, or the artist withdrew it. Go back to the queue."
+    },
+    "error": {
+      "load": "Couldn’t load this release",
+      "stale": "The release changed or was already decided. It was reloaded; check it again.",
+      "gone": "This release no longer exists.",
+      "invalid": "The API refused the review. Check the lengths and that no item repeats.",
+      "save": "Couldn’t save the decision. Nothing was changed."
+    },
+    "role": {
+      "PERFORMER": "Performer",
+      "PRODUCER": "Producer",
+      "COMPOSER": "Composer",
+      "LYRICIST": "Lyricist",
+      "OTHER": "Other"
     }
   }
 }

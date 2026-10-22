@@ -41,7 +41,7 @@ export type PageBack = {
           </p>
         }
         <h1
-          class="mb-1 mt-1.5 flex flex-wrap items-center gap-3 font-display text-[clamp(1.625rem,3vw,2.375rem)] font-semibold leading-[1.1] tracking-[-0.05rem] text-foreground"
+          class="mb-1 mt-1.5 flex flex-wrap items-center gap-3 font-display text-[clamp(1.625rem,3vw,2.375rem)] font-semibold leading-[1.1] tracking-[-0.05rem] text-foreground [&_[data-slot=badge]]:h-7 [&_[data-slot=badge]]:px-3 [&_[data-slot=badge]]:font-sans [&_[data-slot=badge]]:text-[0.8125rem] [&_[data-slot=badge]]:tracking-normal"
         >
           <span class="min-w-0 break-words">{{ title() }}</span>
           <ng-content select="[headerStatus]" />
