@@ -1,4 +1,5 @@
-import type { Routes } from '@angular/router'
+import { inject } from '@angular/core'
+import { Router, type Routes } from '@angular/router'
 import { requirePermission, requireStaffSession } from '@presentation/guards'
 import { CRUMB_DATA_KEY } from '@presentation/navigation'
 
@@ -23,14 +24,12 @@ export const routes: Routes = [
           import('@presentation/pages/overview/overview').then((m) => m.OverviewPage),
       },
       {
-        // Literal path, declared ahead of any `:id` sibling — there is none under `overview`.
+        // The old drill-down is now Overview's "Reports by type" panel; old links open it there.
         path: 'overview/reports',
-        title: 'Reports by entity type',
-        canActivate: [requirePermission('overview:read')],
-        loadComponent: () =>
-          import('@presentation/pages/overview/overview-reports').then(
-            (m) => m.OverviewReportsPage,
-          ),
+        redirectTo: ({ queryParams }) =>
+          inject(Router).createUrlTree(['/'], {
+            queryParams: { ...queryParams, panel: 'reports' },
+          }),
       },
       {
         path: 'no-access',

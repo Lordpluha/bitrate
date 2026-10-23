@@ -1412,5 +1412,146 @@
     "checkAgain": "Check again",
     "checking": "Checking…",
     "signOut": "Sign out"
+  },
+  "overview": {
+    "eyebrow": "Overview · {date}",
+    "title": "Overview",
+    "subtitle": "What needs attention across Bitrate today.",
+    "range": "Chart range",
+    "days": "{days, plural, other {#d}}",
+    "noData": "No data yet for this range.",
+    "openPanel": "Open analysis: {tile}",
+    "tile": {
+      "action": "Needs action",
+      "listeners": "Listeners",
+      "artists": "Artists",
+      "listens": "Listens per day",
+      "pipeline": "Track pipeline",
+      "reports": "Reports by type",
+      "accounts": "Accounts",
+      "audit": "Audit log"
+    },
+    "action": {
+      "meta": "{count, plural, one {# item} other {# items}} waiting on staff",
+      "clear": "All clear",
+      "clearDesc": "No reports, releases or failed tracks are waiting.",
+      "reports": "Reports to review",
+      "reportsSub": "{open} open · {reviewing} in review",
+      "releases": "Releases awaiting review",
+      "releasesSub": "Submitted by artists, oldest first",
+      "tracks": "Tracks failed processing",
+      "tracksSub": "{failed} failed · {stuck} stuck",
+      "latest": "Latest reports"
+    },
+    "kpi": {
+      "newInRange": "{count} new in {days} days",
+      "waiting": "{count} waiting for verification"
+    },
+    "listens": {
+      "meta": "{count} listens"
+    },
+    "pipeline": {
+      "meta": "{count} tracks right now",
+      "ready": "Ready",
+      "processing": "Processing",
+      "failed": "Failed",
+      "stuck": "Stuck > {minutes} min"
+    },
+    "reports": {
+      "meta": "Filed in {days} days · {count}"
+    },
+    "accounts": {
+      "meta": "New accounts and uploads",
+      "new": "New accounts, {days} days",
+      "uploads": "Uploads, {days} days",
+      "deactivated": "Deactivated accounts"
+    },
+    "audit": {
+      "meta": "Latest staff actions"
+    },
+    "locked": {
+      "title": "Not in your role",
+      "desc": "Needs {permission}. Ask a super admin for access."
+    },
+    "error": {
+      "title": "We couldn’t load the overview",
+      "desc": "The admin API didn’t respond. Queues and actions are unchanged.",
+      "tile": "Couldn’t load this tile",
+      "range": "Couldn’t load the charts for this range."
+    },
+    "panel": {
+      "range": "Last {days} days"
+    },
+    "series": {
+      "listens": "Listens",
+      "listeners": "Listeners",
+      "artists": "Artists",
+      "ready": "Ready",
+      "failed": "Failed",
+      "stuck": "Stuck",
+      "filed": "Reports filed"
+    },
+    "chart": {
+      "listensDesc": "Listens recorded each UTC day over the last {days} days.",
+      "reportsFiled": "Reports filed per day",
+      "reportsFiledDesc": "Moderation reports filed each UTC day over the last {days} days.",
+      "reportsByStatus": "Reports by current status",
+      "newListeners": "New listeners per day",
+      "newArtists": "New artists per day",
+      "newAccounts": "New accounts per day",
+      "newAccountsDesc": "Accounts created each UTC day over the last {days} days.",
+      "verification": "Verification",
+      "outcomes": "Uploads by outcome",
+      "outcomesDesc": "Tracks uploaded each UTC day over the last {days} days, by processing outcome.",
+      "reportsByTypeDesc": "Reports filed each UTC day over the last {days} days, by what was reported.",
+      "share": "Share by type"
+    },
+    "stat": {
+      "openReports": "Open reports",
+      "inReview": "In review",
+      "releasesAwaiting": "Releases awaiting",
+      "failedTracks": "Failed tracks",
+      "stuckTracks": "Stuck tracks",
+      "listeners": "Listeners",
+      "artists": "Artists",
+      "newInRange": "New in range",
+      "deactivated": "Deactivated",
+      "verified": "Verified",
+      "waiting": "Waiting for verification",
+      "totalListens": "Total listens",
+      "dailyAverage": "Daily average",
+      "peakDay": "Peak day",
+      "uploaded": "Uploads",
+      "ready": "Ready",
+      "failed": "Failed",
+      "processingNow": "Processing now",
+      "filed": "Filed",
+      "topType": "Most reported",
+      "newListeners": "New listeners",
+      "newArtists": "New artists",
+      "deactivatedAccounts": "Deactivated accounts"
+    },
+    "status": {
+      "open": "Open",
+      "reviewing": "In review",
+      "resolved": "Resolved",
+      "rejected": "Rejected"
+    },
+    "entity": {
+      "track": "Tracks",
+      "album": "Albums",
+      "playlist": "Playlists",
+      "artist": "Artists",
+      "podcast": "Podcasts",
+      "episode": "Episodes",
+      "user": "Listeners"
+    },
+    "link": {
+      "moderation": "Open moderation",
+      "listeners": "Open listeners",
+      "artists": "Open artists",
+      "catalog": "Open catalog",
+      "audit": "Open audit log"
+    }
   }
 }
