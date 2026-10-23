@@ -39,9 +39,10 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     images: [
       {
-        url: '/opengraph-image.png',
-        width: 1187,
-        height: 636,
+        /** Bump `v` when the image changes: Telegram and other scrapers cache previews by URL. */
+        url: '/opengraph-image.png?v=2',
+        width: 1536,
+        height: 1024,
         alt: SITE_NAME,
         type: 'image/png',
       },
@@ -51,7 +52,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: SITE_NAME,
     description: SITE_DESCRIPTION,
-    images: ['/twitter-image.png'],
+    images: ['/twitter-image.png?v=2'],
   },
 }
 
