@@ -1,8 +1,10 @@
-import { Component, inject, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
 import { Router } from '@angular/router'
 import { SignInUseCase } from '@application/session'
-import { translate, TranslocoPipe } from '@jsverse/transloco'
+import { TranslocoPipe } from '@jsverse/transloco'
+import { NgIcon, provideIcons } from '@ng-icons/core'
+import { lucideArrowRight, lucideCircleAlert, lucideLoader2 } from '@ng-icons/lucide'
 import { zodErrorMessage, zodValidator } from '@presentation/forms'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmInputImports } from '@spartan-ng/helm/input'
@@ -12,12 +14,15 @@ import { credentialsSchema } from './credentials.schema'
 @Component({
   selector: 'app-login',
   imports: [
-    ReactiveFormsModule,
     HlmButtonImports,
     HlmInputImports,
     HlmLabelImports,
+    NgIcon,
+    ReactiveFormsModule,
     TranslocoPipe,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideIcons({ lucideArrowRight, lucideCircleAlert, lucideLoader2 })],
   templateUrl: './login.html',
 })
 export class LoginPage {
@@ -25,7 +30,8 @@ export class LoginPage {
   private readonly router = inject(Router)
 
   protected readonly submitting = signal(false)
-  protected readonly failure = signal<string | null>(null)
+  /** Whether the last attempt was refused — the page words it, so the language can change. */
+  protected readonly failed = signal(false)
 
   protected readonly form = new FormGroup(
     {
@@ -35,6 +41,7 @@ export class LoginPage {
     { validators: zodValidator(credentialsSchema) },
   )
 
+  /** The field's error as a transloco key, once the operator has touched it. */
   protected errorFor(field: 'email' | 'password'): string | null {
     const control = this.form.get(field)
     if (!control || !control.touched) return null
@@ -44,7 +51,7 @@ export class LoginPage {
 
   protected async submit(): Promise<void> {
     this.form.markAllAsTouched()
-    this.failure.set(null)
+    this.failed.set(false)
 
     if (this.form.invalid || this.submitting()) return
 
@@ -57,7 +64,7 @@ export class LoginPage {
        */
       await this.router.navigate(['/'])
     } catch {
-      this.failure.set(translate('login.failure'))
+      this.failed.set(true)
     } finally {
       this.submitting.set(false)
     }

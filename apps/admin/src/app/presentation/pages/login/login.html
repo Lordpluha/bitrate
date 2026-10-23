@@ -1,56 +1,82 @@
-<main class="flex min-h-screen items-center justify-center p-8">
+<main class="grid min-h-dvh place-items-center px-4 py-10">
   <form
-    class="w-full max-w-sm space-y-6 rounded-lg border border-border bg-card p-8"
+    class="flex w-full max-w-[420px] flex-col gap-4 rounded-tile border border-glass-line bg-glass p-6 shadow-glass backdrop-blur-[22px] backdrop-saturate-150 animate-rise motion-reduce:animate-none sm:p-8"
+    novalidate
     [formGroup]="form"
     (ngSubmit)="submit()"
   >
-    <div class="space-y-1">
-      <h1 class="text-xl font-semibold text-card-foreground">{{ 'login.title' | transloco }}</h1>
+    <div class="flex items-center gap-2.5">
+      <img class="size-[30px] shrink-0" src="/logo.svg" alt="" width="30" height="30" />
+      <span class="flex flex-col leading-none">
+        <span class="font-display text-[0.9375rem] font-bold tracking-tight">Bitrate</span>
+        <span class="mt-0.5 text-[0.6875rem] text-muted-foreground">{{
+          'nav.brand.operators' | transloco
+        }}</span>
+      </span>
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <h1 class="font-display text-2xl font-semibold tracking-tight">
+        {{ 'login.title' | transloco }}
+      </h1>
       <p class="text-sm text-muted-foreground">{{ 'login.subtitle' | transloco }}</p>
     </div>
 
-    @if (failure(); as message) {
-      <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
-        {{ message }}
+    @if (failed()) {
+      <p
+        class="flex items-start gap-2.5 rounded-xl border border-error/40 bg-error-surface px-3.5 py-2.5 text-[0.8125rem] text-error-text"
+        role="alert"
+      >
+        <ng-icon class="mt-0.5 shrink-0 text-base" name="lucideCircleAlert" aria-hidden="true" />
+        <span>{{ 'login.failure' | transloco }}</span>
       </p>
     }
 
-    <div class="space-y-2">
+    <div class="flex flex-col gap-1.5">
       <label hlmLabel for="email">{{ 'login.email' | transloco }}</label>
       <input
         hlmInput
-        class="w-full"
         id="email"
         type="email"
         autocomplete="username"
         formControlName="email"
+        [placeholder]="'login.emailPlaceholder' | transloco"
         [attr.aria-invalid]="errorFor('email') !== null"
         [attr.aria-describedby]="errorFor('email') ? 'email-error' : null"
       />
-      @if (errorFor('email'); as message) {
-        <p class="text-sm text-destructive" id="email-error" role="alert">{{ message }}</p>
+      @if (errorFor('email'); as key) {
+        <p class="text-xs text-error-text" id="email-error" role="alert">{{ key | transloco }}</p>
       }
     </div>
 
-    <div class="space-y-2">
+    <div class="flex flex-col gap-1.5">
       <label hlmLabel for="password">{{ 'login.password' | transloco }}</label>
       <input
         hlmInput
-        class="w-full"
         id="password"
         type="password"
         autocomplete="current-password"
         formControlName="password"
+        [placeholder]="'login.passwordPlaceholder' | transloco"
         [attr.aria-invalid]="errorFor('password') !== null"
         [attr.aria-describedby]="errorFor('password') ? 'password-error' : null"
       />
-      @if (errorFor('password'); as message) {
-        <p class="text-sm text-destructive" id="password-error" role="alert">{{ message }}</p>
+      @if (errorFor('password'); as key) {
+        <p class="text-xs text-error-text" id="password-error" role="alert">
+          {{ key | transloco }}
+        </p>
       }
     </div>
 
-    <button hlmBtn class="w-full" type="submit" [disabled]="submitting()">
+    <button hlmBtn class="mt-1 w-full" type="submit" [disabled]="submitting()">
+      <ng-icon
+        [class.animate-spin]="submitting()"
+        [name]="submitting() ? 'lucideLoader2' : 'lucideArrowRight'"
+        aria-hidden="true"
+      />
       {{ (submitting() ? 'login.submitting' : 'login.submit') | transloco }}
     </button>
+
+    <p class="text-center text-xs text-muted-foreground">{{ 'login.footer' | transloco }}</p>
   </form>
 </main>

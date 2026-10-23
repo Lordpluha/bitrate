@@ -39,13 +39,21 @@
     "ariaLabel": "{{label}}. Activate to switch theme."
   },
   "login": {
-    "title": "Operator sign-in",
-    "subtitle": "Bitrate staff accounts only.",
-    "email": "Email",
+    "title": "Sign in to Bitrate Admin",
+    "subtitle": "For Bitrate staff. Use your work account.",
+    "email": "Work email",
+    "emailPlaceholder": "name@bitrate.fm",
     "password": "Password",
+    "passwordPlaceholder": "Your password",
     "submit": "Sign in",
     "submitting": "Signing in…",
-    "failure": "Sign-in failed. Check the address and password, then try again."
+    "failure": "Email or password is wrong, or this account can’t sign in. Check them and try again.",
+    "footer": "Trouble signing in? Ask a super admin to reset your password.",
+    "invalid": {
+      "emailRequired": "Enter your work email",
+      "emailFormat": "Enter a valid email address",
+      "passwordRequired": "Enter your password"
+    }
   },
   "shell": {
     "search": "Search or jump to…",
@@ -1394,5 +1402,15 @@
     "active": "Active",
     "deactivateTitle": "Deactivate operator?",
     "deactivateAction": "Deactivate"
+  },
+  "noAccess": {
+    "title": "No sections yet",
+    "subtitle": "You’re signed in, but your account doesn’t include any section of the console yet. A super admin can give you a role.",
+    "signedInAs": "Signed in as",
+    "role": "Role",
+    "noRole": "None",
+    "checkAgain": "Check again",
+    "checking": "Checking…",
+    "signOut": "Sign out"
   }
 }
