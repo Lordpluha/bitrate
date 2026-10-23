@@ -1,0 +1,128 @@
+<hlm-dialog [state]="model() ? 'open' : 'closed'" (closed)="closed.emit()">
+  <hlm-dialog-content
+    *hlmDialogPortal="let ctx"
+    class="max-h-[calc(100dvh-2rem)] w-[calc(100vw-2rem)] overflow-y-auto sm:max-w-4xl"
+  >
+    @if (model(); as m) {
+      <hlm-dialog-header>
+        <div class="flex items-center gap-3">
+          <span
+            class="grid size-10 shrink-0 place-items-center rounded-xl bg-foreground/8 text-lg"
+            aria-hidden="true"
+          >
+            <ng-icon [name]="m.icon" />
+          </span>
+          <div class="min-w-0">
+            <h2 hlmDialogTitle>{{ m.title }}</h2>
+            @if (m.subtitle) {
+              <p hlmDialogDescription>{{ m.subtitle }}</p>
+            }
+          </div>
+        </div>
+      </hlm-dialog-header>
+
+      @if (m.stats.length > 0) {
+        <dl class="grid grid-cols-2 gap-2.5 lg:grid-cols-4">
+          @for (stat of m.stats; track stat.label) {
+            <div
+              class="flex flex-col gap-1 rounded-2xl border border-glass-line bg-foreground/3 p-3.5"
+            >
+              <dt class="text-xs text-muted-foreground">{{ stat.label }}</dt>
+              <dd class="font-display text-xl font-semibold tabular-nums">{{ stat.value }}</dd>
+            </div>
+          }
+        </dl>
+      }
+
+      @for (chart of m.charts; track chart.title) {
+        <div class="rounded-2xl border border-glass-line bg-foreground/3 p-3.5">
+          @if (chart.kind === 'line') {
+            <app-line-chart
+              [title]="chart.title"
+              [description]="chart.description"
+              [categories]="chart.categories"
+              [series]="chart.series"
+              [emptyMessage]="emptyMessage()"
+              [loadingLabel]="'ui.loading' | transloco"
+              [loading]="loading()"
+              [failure]="failure()"
+            />
+          } @else {
+            <app-bar-chart
+              [title]="chart.title"
+              [description]="chart.description"
+              [categories]="chart.categories"
+              [series]="chart.series"
+              [stacked]="chart.stacked ?? false"
+              [emptyMessage]="emptyMessage()"
+              [loadingLabel]="'ui.loading' | transloco"
+              [loading]="loading()"
+              [failure]="failure()"
+            />
+          }
+        </div>
+      }
+
+      @if (m.meters; as meters) {
+        <section
+          class="flex flex-col gap-2.5 rounded-2xl border border-glass-line bg-foreground/3 p-3.5"
+        >
+          <h3 class="text-sm font-semibold">{{ meters.title }}</h3>
+          @for (row of meters.rows; track row.label) {
+            <div class="flex flex-col gap-1.5">
+              <div class="flex justify-between text-[0.8125rem]">
+                <span>{{ row.label }}</span>
+                <b class="tabular-nums">{{ row.value }}</b>
+              </div>
+              <div class="h-1.5 overflow-hidden rounded-full bg-foreground/8" aria-hidden="true">
+                <i
+                  class="block h-full rounded-full"
+                  [style.width.%]="row.width"
+                  [style.background]="row.color"
+                ></i>
+              </div>
+            </div>
+          }
+        </section>
+      }
+
+      @if (m.activity; as entries) {
+        @if (entries.length === 0) {
+          <p class="text-sm text-muted-foreground">{{ emptyMessage() }}</p>
+        } @else {
+          <ul class="flex flex-col">
+            @for (entry of entries; track entry.id) {
+              <li
+                class="flex items-center justify-between gap-3 border-b border-glass-line py-2.5 text-[0.8125rem] last:border-b-0"
+              >
+                <span class="min-w-0">
+                  <b class="font-semibold">{{
+                    entry.actorUsername ?? ('audit.system' | transloco)
+                  }}</b>
+                  <span class="ms-2 font-mono text-xs text-muted-foreground">{{
+                    entry.action
+                  }}</span>
+                </span>
+                <span class="shrink-0 text-xs tabular-nums text-muted-foreground">{{
+                  entry.createdAt | elapsed
+                }}</span>
+              </li>
+            }
+          </ul>
+        }
+      }
+
+      <hlm-dialog-footer>
+        <button hlmBtn variant="ghost" type="button" (click)="closed.emit()">
+          {{ 'ui.close' | transloco }}
+        </button>
+        @if (m.link; as link) {
+          <a hlmBtn [routerLink]="link.path" [queryParams]="link.queryParams ?? null">
+            {{ link.label }}
+            <ng-icon name="lucideArrowUpRight" aria-hidden="true" />
+          </a>
+        }
+      </hlm-dialog-footer>
+    }
+  </hlm-dialog-content>
+</hlm-dialog>

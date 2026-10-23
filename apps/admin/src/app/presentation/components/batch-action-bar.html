@@ -1,24 +1,26 @@
 @if (rows().length > 0 && actions().length > 0) {
   <div
-    class="flex flex-wrap items-center gap-2 rounded-md border bg-muted/40 px-3 py-2"
+    class="flex flex-wrap items-center gap-2.5 rounded-2xl bg-primary/16 px-4 py-3 motion-safe:animate-rise [--i:0]"
     role="region"
-    aria-label="Batch actions"
+    [attr.aria-label]="'ui.batch.region' | transloco"
   >
-    <span class="text-sm tabular-nums" aria-live="polite">
-      {{ rows().length }} {{ pluralNoun(rows().length) }} selected
+    <span class="me-auto text-sm font-semibold tabular-nums" aria-live="polite">
+      {{ 'ui.batch.selected' | transloco: { items: items(rows().length) } }}
     </span>
     @for (action of actions(); track action.key) {
       <button
         hlmBtn
         size="sm"
-        [variant]="action.destructive ? 'destructive' : 'outline'"
+        [variant]="action.destructive ? 'destructive' : 'secondary'"
         type="button"
         (click)="arm(action)"
       >
         {{ action.label }}
       </button>
     }
-    <button hlmBtn size="sm" variant="ghost" type="button" (click)="cleared.emit()">Clear</button>
+    <button hlmBtn size="sm" variant="ghost" type="button" (click)="cleared.emit()">
+      {{ 'ui.batch.clear' | transloco }}
+    </button>
   </div>
 }
 
@@ -26,51 +28,59 @@
   <hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-lg">
     @if (result(); as summary) {
       <hlm-dialog-header>
-        <h2 hlmDialogTitle>{{ armed()?.label }} finished</h2>
+        <h2 hlmDialogTitle>
+          {{ 'ui.batch.finished' | transloco: { action: armed()?.label } }}
+        </h2>
         <p hlmDialogDescription data-testid="batch-summary">
-          {{ summary.succeeded }} succeeded, {{ summary.failed }} failed.
+          {{
+            'ui.batch.summary' | transloco: { succeeded: summary.succeeded, failed: summary.failed }
+          }}
         </p>
       </hlm-dialog-header>
-      <ul class="max-h-64 space-y-1 overflow-y-auto text-sm" aria-label="Result per row">
+      <ul
+        class="max-h-64 space-y-1 overflow-y-auto text-sm"
+        [attr.aria-label]="'ui.batch.perRow' | transloco"
+      >
         @for (item of summary.items; track item.id) {
           <li class="flex flex-col" [attr.data-outcome]="item.outcome">
             <span>
               {{ labelFor()(item.id) }}
               <span
-                [class]="
-                  item.outcome === 'succeeded' ? 'text-muted-foreground' : 'text-destructive'
-                "
+                [class]="item.outcome === 'succeeded' ? 'text-muted-foreground' : 'text-error-text'"
               >
-                — {{ item.outcome }}
+                — {{ OUTCOME_KEY[item.outcome] | transloco }}
               </span>
             </span>
             @if (item.failure) {
-              <span class="text-xs text-destructive">{{ item.failure.message }}</span>
+              <span class="text-xs text-error-text">{{ item.failure.message }}</span>
             }
           </li>
         }
       </ul>
       <hlm-dialog-footer>
-        <button hlmBtn type="button" (click)="dismiss()">Close</button>
+        <button hlmBtn type="button" (click)="dismiss()">{{ 'ui.close' | transloco }}</button>
       </hlm-dialog-footer>
     } @else {
       <hlm-dialog-header>
         <h2 hlmDialogTitle>
-          {{ armed()?.label }} {{ dialogRows().length }} {{ pluralNoun(dialogRows().length) }}
+          {{
+            'ui.batch.confirmTitle'
+              | transloco: { action: armed()?.label, items: items(dialogRows().length) }
+          }}
         </h2>
         <p hlmDialogDescription>{{ armed()?.consequence }}</p>
       </hlm-dialog-header>
       <ul
         class="max-h-64 list-disc space-y-1 overflow-y-auto pl-5 text-sm"
-        aria-label="Affected rows"
+        [attr.aria-label]="'ui.batch.affected' | transloco"
       >
         @for (row of dialogRows(); track row.id) {
           <li>{{ row.label }}</li>
         }
       </ul>
       <hlm-dialog-footer>
-        <button hlmBtn variant="outline" type="button" [disabled]="pending()" (click)="dismiss()">
-          Cancel
+        <button hlmBtn variant="ghost" type="button" [disabled]="pending()" (click)="dismiss()">
+          {{ 'ui.cancel' | transloco }}
         </button>
         <button
           hlmBtn
@@ -79,7 +89,7 @@
           [disabled]="pending()"
           (click)="confirm()"
         >
-          {{ pending() ? 'Working…' : armed()?.confirmLabel }}
+          {{ pending() ? ('ui.working' | transloco) : armed()?.confirmLabel }}
         </button>
       </hlm-dialog-footer>
     }

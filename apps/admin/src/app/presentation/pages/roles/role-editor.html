@@ -1,68 +1,139 @@
-<section class="w-full space-y-6 p-8">
-  <header class="space-y-1">
-    <a routerLink="/roles" class="text-sm text-muted-foreground hover:underline">&larr; Roles</a>
-    <h1 class="text-xl font-semibold text-foreground">
-      {{ roleId === null ? 'New role' : (role()?.name ?? 'Role') }}
-      @if (role()?.builtIn) {
-        <span hlmBadge variant="outline" class="ml-2 align-middle">built-in</span>
+<app-page-header
+  [back]="back()"
+  [eyebrow]="(roleId === null ? 'role.eyebrowNew' : 'role.eyebrowEdit') | transloco"
+  [title]="
+    roleId === null
+      ? ('roles.new' | transloco)
+      : (role()?.name ?? ('role.loadingTitle' | transloco))
+  "
+  [subtitle]="'role.subtitle' | transloco"
+>
+  @if (role()?.builtIn) {
+    <span headerStatus hlmBadge variant="secondary">{{ 'roles.builtIn' | transloco }}</span>
+  }
+  @if (!loading() && !loadFailed() && !form.disabled) {
+    <button headerActions hlmBtn type="submit" form="role-form" [disabled]="submitting()">
+      <ng-icon name="lucideCheck" aria-hidden="true" />
+      {{
+        (submitting() ? 'role.saving' : roleId === null ? 'role.create' : 'role.save') | transloco
+      }}
+    </button>
+  }
+</app-page-header>
+
+@if (loading()) {
+  <app-tile-grid role="status" [attr.aria-label]="'ui.loading' | transloco">
+    <app-tile [title]="'ui.loading' | transloco" [span]="2">
+      <app-skeleton class="h-[38px] w-full rounded-xl" />
+      <app-skeleton class="h-[38px] w-full rounded-xl" />
+    </app-tile>
+    <app-tile [title]="'ui.loading' | transloco" [span]="2">
+      <app-skeleton class="h-20 w-full rounded-xl" />
+    </app-tile>
+    <app-tile [title]="'ui.loading' | transloco" [span]="4">
+      <app-skeleton class="h-48 w-full rounded-xl" />
+    </app-tile>
+  </app-tile-grid>
+} @else if (loadFailed()) {
+  <app-state-message
+    class="min-h-[340px] rounded-tile border border-glass-line bg-glass p-5 shadow-glass backdrop-blur-[22px]"
+    kind="error"
+    [title]="'role.error.load' | transloco"
+    [actionLabel]="'ui.tryAgain' | transloco"
+    (action)="reload()"
+  />
+} @else {
+  @if (failureText(); as message) {
+    <app-state-message
+      class="rounded-tile border border-error/40 bg-glass p-4 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="message"
+      [compact]="true"
+    />
+  }
+  @if (form.disabled) {
+    <app-state-message
+      class="rounded-tile border border-glass-line bg-glass p-4 shadow-glass backdrop-blur-[22px]"
+      kind="locked"
+      [title]="(canWrite() ? 'role.adminLocked' : 'role.readOnly') | transloco"
+      [compact]="true"
+    />
+  }
+
+  <form id="role-form" [formGroup]="form" (ngSubmit)="submit()">
+    <app-tile-grid>
+      <app-tile
+        icon="lucideShieldCheck"
+        [title]="'role.tile.details' | transloco"
+        [meta]="'role.tile.detailsMeta' | transloco"
+        [span]="role() === null ? 4 : 2"
+      >
+        <div class="flex flex-col gap-1.5">
+          <label hlmLabel for="role-name">{{ 'role.field.name' | transloco }}</label>
+          <input
+            hlmInput
+            id="role-name"
+            type="text"
+            formControlName="name"
+            [placeholder]="'role.field.namePlaceholder' | transloco"
+            [attr.aria-invalid]="errorFor('name') !== null"
+            [attr.aria-describedby]="
+              errorFor('name') ? 'role-name-error' : !renamable() ? 'role-name-hint' : null
+            "
+          />
+          @if (errorFor('name'); as key) {
+            <p class="text-xs text-error-text" id="role-name-error" role="alert">
+              {{ key | transloco }}
+            </p>
+          } @else if (!renamable()) {
+            <p class="text-xs text-muted-foreground" id="role-name-hint">
+              {{ 'role.renameLocked' | transloco }}
+            </p>
+          }
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label hlmLabel for="role-description">{{ 'role.field.description' | transloco }}</label>
+          <input
+            hlmInput
+            id="role-description"
+            type="text"
+            formControlName="description"
+            [placeholder]="'role.field.descriptionPlaceholder' | transloco"
+            [attr.aria-invalid]="errorFor('description') !== null"
+            [attr.aria-describedby]="errorFor('description') ? 'role-description-error' : null"
+          />
+          @if (errorFor('description'); as key) {
+            <p class="text-xs text-error-text" id="role-description-error" role="alert">
+              {{ key | transloco }}
+            </p>
+          }
+        </div>
+      </app-tile>
+
+      @if (role(); as current) {
+        <app-tile
+          icon="lucideUsers"
+          [title]="'role.tile.holders' | transloco"
+          [meta]="'role.tile.holdersMeta' | transloco"
+          [span]="2"
+        >
+          <app-kv-row [label]="'role.tile.holders' | transloco">{{ current.holders }}</app-kv-row>
+          <app-kv-row [label]="'role.tile.divergent' | transloco">
+            @if (current.divergentHolders > 0) {
+              <span hlmBadge variant="warning">{{ current.divergentHolders }}</span>
+            } @else {
+              0
+            }
+          </app-kv-row>
+        </app-tile>
       }
-    </h1>
-    <p class="text-sm text-muted-foreground">
-      Assigning this template copies its permissions onto an operator. Editing it later does not
-      change anyone already assigned it.
-    </p>
-  </header>
 
-  @if (loading()) {
-    <p class="text-sm text-muted-foreground" role="status">Loading…</p>
-  } @else {
-    @if (failure(); as message) {
-      <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
-        {{ message }}
-      </p>
-    }
-
-    <form class="space-y-6" [formGroup]="form" (ngSubmit)="submit()">
-      @if (!renamable() && roleId !== null) {
-        <p class="text-sm text-muted-foreground">A built-in role's name cannot be changed.</p>
-      }
-
-      <div class="space-y-2">
-        <label hlmLabel for="role-name">Name</label>
-        <input
-          hlmInput
-          class="w-full"
-          id="role-name"
-          type="text"
-          formControlName="name"
-          [attr.aria-invalid]="errorFor('name') !== null"
-          [attr.aria-describedby]="errorFor('name') ? 'role-name-error' : null"
-        />
-        @if (errorFor('name'); as message) {
-          <p class="text-sm text-destructive" id="role-name-error" role="alert">{{ message }}</p>
-        }
-      </div>
-
-      <div class="space-y-2">
-        <label hlmLabel for="role-description">Description</label>
-        <input
-          hlmInput
-          class="w-full"
-          id="role-description"
-          type="text"
-          formControlName="description"
-          [attr.aria-invalid]="errorFor('description') !== null"
-          [attr.aria-describedby]="errorFor('description') ? 'role-description-error' : null"
-        />
-        @if (errorFor('description'); as message) {
-          <p class="text-sm text-destructive" id="role-description-error" role="alert">
-            {{ message }}
-          </p>
-        }
-      </div>
-
-      <div class="space-y-2">
-        <span class="text-sm font-medium text-foreground">Permissions</span>
+      <app-tile
+        icon="lucideKeyRound"
+        [title]="'role.tile.permissions' | transloco"
+        [meta]="'role.tile.permissionsMeta' | transloco: { count: selectedCount() }"
+        [span]="4"
+      >
         <app-permission-grid
           [selected]="form.controls.permissions.value"
           [heldBy]="heldBy()"
@@ -70,21 +141,7 @@
           [disabled]="form.controls.permissions.disabled"
           (selectedChange)="setPermissions($event)"
         />
-      </div>
-
-      @if (form.disabled) {
-        <p class="text-sm text-muted-foreground">
-          @if (!canWrite()) {
-            You do not have permission to change roles.
-          } @else {
-            The built-in ADMIN role always holds every permission and cannot be edited.
-          }
-        </p>
-      } @else {
-        <button hlmBtn type="submit" [disabled]="submitting()">
-          {{ submitting() ? 'Saving…' : 'Save role' }}
-        </button>
-      }
-    </form>
-  }
-</section>
+      </app-tile>
+    </app-tile-grid>
+  </form>
+}

@@ -10,7 +10,7 @@
  * i18n-key equivalent of `scripts/check-design-tokens.mjs`: a source scan that catches what the
  * mechanical gates (lint/types/tests) structurally cannot.
  *
- * Three extraction patterns, because this codebase carries keys three ways:
+ * Four extraction patterns, because this codebase carries keys four ways:
  *  - Direct: `'nav.overview' | transloco`, `translate('login.failure')`,
  *    `translateSignal('locale.ariaLabel', ...)`, and a ternary of two literal keys piped through
  *    `transloco` (`(a() ? 'x.y' : 'x.z') | transloco`).
@@ -22,6 +22,8 @@
  *    keys, fed to `translateSignal(this.someComputedKey)` rather than a literal — e.g.
  *    `theme-toggle.ts`'s `THEME_LABEL_KEY`. Every string value inside such a block is a
  *    candidate key.
+ *  - Attribute: a static `…Key="x.y"` template attribute handing a key to a shared block, e.g.
+ *    the batch action bar's `itemsKey`.
  * A string is only ever treated as a key candidate when it matches the dotted-path shape; plain
  * display text (no dot, or containing a space) is never mistaken for one.
  */
@@ -54,7 +56,8 @@ const DIRECT_PATTERNS = [
 ]
 
 /** Catches both arms of `(cond ? 'a.b' : 'c.d') | transloco` on one line. */
-const TERNARY_PATTERN = /\?\s*'([a-zA-Z][a-zA-Z0-9.]*)'\s*:\s*'([a-zA-Z][a-zA-Z0-9.]*)'\s*\)\s*\|\s*transloco/g
+const TERNARY_PATTERN =
+  /\?\s*'([a-zA-Z][a-zA-Z0-9.]*)'\s*:\s*'([a-zA-Z][a-zA-Z0-9.]*)'\s*\)\s*\|\s*transloco/g
 
 /** `label: 'nav.foo'` / `label?: 'nav.foo'` in a data file — see the file header. */
 const LABEL_PROPERTY_PATTERN = /\blabel\??:\s*'([a-zA-Z][a-zA-Z0-9.]*)'/g
@@ -62,6 +65,9 @@ const LABEL_PROPERTY_PATTERN = /\blabel\??:\s*'([a-zA-Z][a-zA-Z0-9.]*)'/g
 /** `const X: Record<SomeUnion, string> = { ... }` — a key lookup table, not display text. */
 const RECORD_KEY_TABLE_PATTERN = /:\s*Record<[^>]+,\s*string>\s*=\s*\{([\s\S]*?)\n\}/g
 const QUOTED_STRING_PATTERN = /'([a-zA-Z][a-zA-Z0-9.]*)'/g
+
+/** A static template attribute named `…Key` that hands a key to a shared block — `itemsKey="x.y"`. */
+const KEY_ATTRIBUTE_PATTERN = /\b[a-z][a-zA-Z]*Key="([a-zA-Z][a-zA-Z0-9.]*)"/g
 
 function extractKeys(source) {
   const keys = new Set()
@@ -72,6 +78,9 @@ function extractKeys(source) {
   for (const match of source.matchAll(TERNARY_PATTERN)) {
     keys.add(match[1])
     keys.add(match[2])
+  }
+  for (const match of source.matchAll(KEY_ATTRIBUTE_PATTERN)) {
+    if (KEY_LIKE.test(match[1])) keys.add(match[1])
   }
   for (const match of source.matchAll(LABEL_PROPERTY_PATTERN)) {
     if (KEY_LIKE.test(match[1])) keys.add(match[1])
@@ -137,17 +146,22 @@ for (const lang of restLangs) {
 }
 
 if (missing.length === 0 && mismatched.length === 0) {
-  console.log(`✅ i18n keys: ${usedKeys.size} key(s) referenced, all defined in ${LANGS.join('/')}.json`)
+  console.log(
+    `✅ i18n keys: ${usedKeys.size} key(s) referenced, all defined in ${LANGS.join('/')}.json`,
+  )
   process.exit(0)
 }
 
 if (missing.length > 0) {
   console.error(`✗ ${missing.length} referenced key(s) missing from a translation file:\n`)
-  for (const m of missing) console.error(`  ${m.key}  (used in ${m.file}, missing from ${m.lang}.json)`)
+  for (const m of missing)
+    console.error(`  ${m.key}  (used in ${m.file}, missing from ${m.lang}.json)`)
 }
 
 if (mismatched.length > 0) {
-  console.error(`\n✗ ${mismatched.length} key(s) defined in one translation file but not the other:\n`)
+  console.error(
+    `\n✗ ${mismatched.length} key(s) defined in one translation file but not the other:\n`,
+  )
   for (const m of mismatched) console.error(`  ${m.key}  (missing from ${m.missingFrom}.json)`)
 }
 

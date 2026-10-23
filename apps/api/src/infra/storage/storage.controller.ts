@@ -1,4 +1,5 @@
 import type { AppConfig } from '@common/config'
+import { pipeToResponse } from '@common/utils/stream'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
@@ -7,6 +8,7 @@ import {
   Controller,
   Get,
   Inject,
+  Logger,
   NotFoundException,
   Param,
   Query,
@@ -19,6 +21,8 @@ import type { Request, Response } from 'express'
 import { GetImagePresignedUrlSwagger, StreamSignedStorageObjectSwagger } from './decorators'
 import { verifySignedStorageToken } from './signed-storage-token'
 import type { StorageObjectStream } from './storage.types'
+
+const logger = new Logger('StorageController')
 
 const COVER_KEY_PATTERN = /^(tracks|albums|playlists)\/[^/]+\/cover\.(gif|jpe?g|png|webp)$/i
 const PROFILE_IMAGE_KEY_PATTERN =
@@ -74,6 +78,6 @@ export class StorageController {
       ...(data.contentRange ? { 'Content-Range': data.contentRange } : {}),
       'Cache-Control': 'private, max-age=3600, no-transform',
     })
-    return data.stream.pipe(res)
+    pipeToResponse(data.stream, res, logger, 'Signed storage object')
   }
 }

@@ -8,9 +8,22 @@ import {
   submitRelease,
   withdrawRelease,
 } from './rights'
+import { releaseWorkspaceKey } from './useReleaseWorkspace'
 
-/** Every confirmed write refreshes the artist's Music and workspace caches. */
-export function useReleaseWrite<Request, Result>(
+/**
+ * Artist caches that show release state a draft write can change. Analytics, tasks,
+ * notifications, profile and sessions do not depend on it, so they are left alone.
+ */
+const RELEASE_LISTING_SCOPES = [
+  'catalogue',
+  'counts',
+  'dashboard',
+  'delivery',
+  'search',
+] as const
+
+/** A confirmed write refreshes this release's workspace and the listings that show it. */
+export function useReleaseWrite<Request extends { id: string }, Result>(
   artistId: string,
   write: (request: Request) => Promise<Result>,
 ) {
@@ -18,10 +31,17 @@ export function useReleaseWrite<Request, Result>(
   return useMutation({
     mutationFn: write,
     retry: false,
-    onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: artistMusicKeys.artist(artistId),
-      }),
+    onSuccess: (_result, request) =>
+      Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: releaseWorkspaceKey(artistId, request.id),
+        }),
+        ...RELEASE_LISTING_SCOPES.map((scope) =>
+          queryClient.invalidateQueries({
+            queryKey: [...artistMusicKeys.artist(artistId), scope],
+          }),
+        ),
+      ]),
   })
 }
 

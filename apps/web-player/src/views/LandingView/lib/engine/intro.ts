@@ -8,12 +8,14 @@ const SPINE_A =
 const SPINE_B =
   'M 860 493 C 1000 493 1050 560 1050 650 C 1050 750 990 805 900 805 L 640 805 C 580 805 540 830 512 868'
 /** The flourish between the two ribbons runs through the open counter of the lower bowl. */
-const CONNECT = 'M 425 780 C 470 660 640 610 760 560 C 820 535 845 505 860 493'
+const CONNECT_PATH = 'C 470 660 640 610 760 560 C 820 535 845 505 860 493'
+const CONNECT = `M 425 780 ${CONNECT_PATH}`
 /** The route skips the bars' pointed tips: the ribbons themselves cover them. */
 const A_REST =
   'L 900 211 C 1010 211 1050 280 1050 350 C 1050 430 990 493 900 493 L 720 493 C 560 493 470 600 425 780'
-const B_HEAD =
-  'M 860 493 C 1000 493 1050 560 1050 650 C 1050 750 990 805 900 805 L 640 805'
+const B_HEAD_PATH =
+  'C 1000 493 1050 560 1050 650 C 1050 750 990 805 900 805 L 640 805'
+const B_HEAD = `M 860 493 ${B_HEAD_PATH}`
 /** Brand-mark gradient stops (brand asset, same as the logo symbol in LandingIcons). */
 const STOPS: readonly (readonly [string, string])[] = [
   ['0', '#490AE5'],
@@ -64,12 +66,9 @@ const clamp = (v: number) => Math.min(1, Math.max(0, v))
  * Draws the logo in one gesture inside `el`: a ribbon in the brand gradient flies in past the edge,
  * reveals the mark exactly where it passes and leaves past the opposite edge.
  */
-const drawLogo = ({ el, onDone }: { el: HTMLElement; onDone: () => void }) => {
+const drawLogo = ({ el }: { el: HTMLElement }) => {
   const logo = document.getElementById('bitrate-logo')
-  if (!(logo instanceof SVGGeometryElement)) {
-    onDone()
-    return () => {}
-  }
+  if (!(logo instanceof SVGGeometryElement)) return () => {}
   const svg = svgEl('svg', {
     class: lc('ll-draw'),
     width: '100%',
@@ -77,19 +76,22 @@ const drawLogo = ({ el, onDone }: { el: HTMLElement; onDone: () => void }) => {
     'aria-hidden': 'true',
   })
   const defs = svgEl('defs', {})
+  /* the ribbons' gradients follow their paths: re-aimed on every layout */
+  const gi = gradient({
+    id: 'gi-intro',
+    stops: [...STOPS]
+      .reverse()
+      .map(([o, c]) => [String(1 - Number(o)), c] as const),
+  })
+  const go = gradient({ id: 'go-intro', stops: STOPS })
   defs.append(
     gradient({
       id: 'lg-intro',
       stops: STOPS,
       attrs: { x1: '371', y1: '0', x2: '1166', y2: '0' },
     }),
-    gradient({
-      id: 'gi-intro',
-      stops: [...STOPS]
-        .reverse()
-        .map(([o, c]) => [String(1 - Number(o)), c] as const),
-    }),
-    gradient({ id: 'go-intro', stops: STOPS }),
+    gi,
+    go,
   )
   const mask = svgEl('mask', {
     id: 'lm-intro',
@@ -209,12 +211,11 @@ const drawLogo = ({ el, onDone }: { el: HTMLElement; onDone: () => void }) => {
     svg.setAttribute('viewBox', `${vx} ${vy} ${vw} ${vh}`)
     const pad = RIBBON * 2
     const ld = `M ${vx - pad} ${vy - pad} C ${vx + vw * 0.16} ${vy + vh * 0.02} 430 211 560 211`
-    const od = `M 640 805 C 520 805 ${vx + vw * 0.1} ${vy + vh * 0.92} ${vx - pad * 1.4} ${vy + vh + pad}`
-    const gi = svg.querySelector('#gi-intro')
-    const go = svg.querySelector('#go-intro')
-    const set4 = (n: Element | null, v: readonly number[]) => {
+    const outPath = `C 520 805 ${vx + vw * 0.1} ${vy + vh * 0.92} ${vx - pad * 1.4} ${vy + vh + pad}`
+    const od = `M 640 805 ${outPath}`
+    const set4 = (n: Element, v: readonly number[]) => {
       for (const [i, k] of ['x1', 'y1', 'x2', 'y2'].entries())
-        n?.setAttribute(k, String(v[i]))
+        n.setAttribute(k, String(v[i]))
     }
     set4(gi, [vx - pad, vy - pad, 560, 211])
     set4(go, [640, 805, vx - pad * 1.4, vy + vh + pad])
@@ -226,7 +227,7 @@ const drawLogo = ({ el, onDone }: { el: HTMLElement; onDone: () => void }) => {
     out.setAttribute('stroke-dasharray', `${g.lout} ${g.lout}`)
     route.setAttribute(
       'd',
-      `${ld} ${A_REST} ${CONNECT.replace(/^M 425 780/, '')} L 860 493 ${B_HEAD.replace(/^M 860 493/, '')} ${od.replace(/^M 640 805/, '')}`,
+      `${ld} ${A_REST} ${CONNECT_PATH} L 860 493 ${B_HEAD_PATH} ${outPath}`,
     )
     g.total = route.getTotalLength()
     paint()
@@ -234,7 +235,7 @@ const drawLogo = ({ el, onDone }: { el: HTMLElement; onDone: () => void }) => {
   layout()
   const ro = new ResizeObserver(layout)
   ro.observe(el)
-  const tl = gsap.timeline({ onComplete: onDone })
+  const tl = gsap.timeline()
   tl.set(mark, { opacity: 1 }, 0)
   tl.set(g, { P: 0, T: 0, onComplete: paint }, 0)
   tl.to(head, { attr: { opacity: 0.8 }, duration: 0.2 }, 0)
@@ -295,7 +296,8 @@ export const playIntro = (ctx: EngineContext) =>
       return
     }
     markSeen()
-    const stop = drawLogo({ el: canvas, onDone: () => {} })
+    ctx.state.intro = true
+    const stop = drawLogo({ el: canvas })
     ctx.onDispose(stop)
     gsap.from(intro.querySelectorAll('b, .mono'), {
       opacity: 0,
@@ -313,6 +315,7 @@ export const playIntro = (ctx: EngineContext) =>
       onComplete: () => {
         stop()
         intro.hidden = true
+        ctx.state.intro = false
       },
     })
   })

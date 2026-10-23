@@ -92,6 +92,27 @@ type PlaybackTransitionState = Pick<
 const isPlaylistIndex = (playlist: PlayerTrack[], index: number) =>
   index >= 0 && index < playlist.length
 
+type ContextIndexInput = Pick<
+  PlaybackTransitionState,
+  'currentQueueId' | 'currentTrackIndex' | 'playlist'
+> & { currentTrack: PlayerTrack }
+
+/**
+ * The playlist position playback continues from: the kept cursor while a queue item
+ * plays (-1 when it is out of range), otherwise where the current track sits.
+ */
+const resolveContextIndex = ({
+  currentQueueId,
+  currentTrack,
+  currentTrackIndex,
+  playlist,
+}: ContextIndexInput) => {
+  if (!currentQueueId) {
+    return resolveCurrentIndex(playlist, currentTrack, currentTrackIndex)
+  }
+  return isPlaylistIndex(playlist, currentTrackIndex) ? currentTrackIndex : -1
+}
+
 /**
  * Resolves the exact action that playback, prefetch and navigation previews must
  * agree on. While an ad-hoc queue item is playing, `currentTrackIndex` remains
@@ -119,14 +140,13 @@ export const resolvePlaybackTransition = (
 
   const queuedNext = queue[0]
   if (direction === 'next' && queuedNext) {
-    const playlistIndex = currentQueueId
-      ? isPlaylistIndex(playlist, currentTrackIndex)
-        ? currentTrackIndex
-        : -1
-      : resolveCurrentIndex(playlist, currentTrack, currentTrackIndex)
-
     return {
-      currentTrackIndex: playlistIndex,
+      currentTrackIndex: resolveContextIndex({
+        currentQueueId,
+        currentTrack,
+        currentTrackIndex,
+        playlist,
+      }),
       currentQueueId: queuedNext.queueId,
       kind: 'track',
       playbackSequence: playbackSequence + 1,
@@ -138,11 +158,12 @@ export const resolvePlaybackTransition = (
   const currentTrackIsAtCursor =
     isPlaylistIndex(playlist, currentTrackIndex) &&
     playlist[currentTrackIndex]?.id === currentTrack.id
-  const contextIndex = currentQueueId
-    ? isPlaylistIndex(playlist, currentTrackIndex)
-      ? currentTrackIndex
-      : -1
-    : resolveCurrentIndex(playlist, currentTrack, currentTrackIndex)
+  const contextIndex = resolveContextIndex({
+    currentQueueId,
+    currentTrack,
+    currentTrackIndex,
+    playlist,
+  })
 
   if (playlist.length === 0 || contextIndex === -1) return null
 
@@ -211,12 +232,4 @@ export const getTransitionState = (
     progress: 0,
     queue: transition.queue,
   }
-}
-
-export const getTrackChange = (
-  state: PlayerState,
-  direction: 'next' | 'prev',
-): Partial<TrackChangeState> | null => {
-  const transition = resolvePlaybackTransition(state, direction)
-  return transition ? getTransitionState(transition) : null
 }

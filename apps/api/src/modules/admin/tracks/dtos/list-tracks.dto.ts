@@ -7,7 +7,7 @@ import { z } from 'zod'
 
 export const TRACK_PROCESSING_STATUSES = ['PROCESSING', 'READY', 'FAILED'] as const
 
-/** Choosing a sort here replaces the attention-first default (see `AdminTracksService`) with
+/** Choosing a sort here replaces the attention-first default (see `AdminTrackListService`) with
  * a plain ordering — these three are what the catalog screen displays and are cheap columns
  * to order by. */
 export const ADMIN_TRACKS_SORT_FIELDS = [

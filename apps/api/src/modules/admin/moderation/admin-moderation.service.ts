@@ -11,8 +11,9 @@ import {
 import { Injectable } from '@nestjs/common'
 import type { ModerationReport, ModerationStatus, Prisma } from '@prisma/client'
 import type { ADMIN_REPORTS_SORT_FIELDS, UpdateReportDto } from './dtos'
-import { ReportNotFoundException } from './errors'
+import { ReportNotFoundException, ReportStatusChangedException } from './errors'
 import { ADMIN_REPORT_EXPORT_COLUMNS, ADMIN_REPORT_EXPORT_SELECT } from './report-export.columns'
+import { type ModerationSubject, SUBJECT_RESOLVERS } from './report-subjects'
 
 /** One of the moderation queue's allowed sort fields. */
 type AdminReportsSortField = (typeof ADMIN_REPORTS_SORT_FIELDS)[number]
@@ -25,15 +26,13 @@ type ListReportsInput = {
   entityType?: string
 } & SortInput<AdminReportsSortField>
 
-/** The reported entity, resolved to what the operator needs to link to and judge it. `null`
- * when the entity type is unrecognised or the row no longer exists — never a 500. */
-type ModerationSubject = {
-  kind: string
-  id: string
-  title: string
-  deletedAt: Date | null
-  parentId: string | null
-} | null
+/** The queue's `where` clause, shared by the list and its export. */
+function buildWhere({
+  status,
+  entityType,
+}: Pick<ListReportsInput, 'status' | 'entityType'>): Prisma.ModerationReportWhereInput {
+  return { ...(status && { status }), ...(entityType && { entityType }) }
+}
 
 /** How many sibling reports on the same subject the detail response includes. */
 const SIBLING_REPORTS_LIMIT = 20
@@ -43,12 +42,15 @@ type ReportAdvanceAudit = { staffId: string } & AuditContextValue
 
 const RESOLVED_STATUSES: ModerationStatus[] = ['RESOLVED', 'REJECTED']
 
+/** A report's new status with the matching `resolvedAt`. */
+type ReportStatusChange = { status: ModerationStatus; resolvedAt: Date | null }
+
 /** Handles the operator-facing moderation report queue. */
 @Injectable()
 export class AdminModerationService {
   constructor(private readonly prisma: PrismaService) {}
 
-  /** Runs the find all operation, paginated and optionally filtered by status/entity type. */
+  /** Lists reports, paginated and optionally filtered by status/entity type. */
   async findAll({
     page = DEFAULT_PAGE,
     limit = DEFAULT_LIMIT,
@@ -57,17 +59,17 @@ export class AdminModerationService {
     sort,
     order,
   }: ListReportsInput) {
-    const where = {
-      ...(status && { status }),
-      ...(entityType && { entityType }),
-    } satisfies Prisma.ModerationReportWhereInput
-    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const where = buildWhere({ status, entityType })
+    const orderBy = buildSortOrderBy<Prisma.ModerationReportOrderByWithRelationInput>(
+      { sort, order },
+      [{ createdAt: 'desc' }, { id: 'desc' }],
+    )
     const [data, total] = await Promise.all([
       this.prisma.moderationReport.findMany({
         where,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: orderBy as unknown as Prisma.ModerationReportOrderByWithRelationInput[],
+        orderBy,
       }),
       this.prisma.moderationReport.count({ where }),
     ])
@@ -84,11 +86,11 @@ export class AdminModerationService {
     staffId: string,
     auditContext: AuditContextValue = {},
   ): Promise<CsvExport> {
-    const where = {
-      ...(status && { status }),
-      ...(entityType && { entityType }),
-    } satisfies Prisma.ModerationReportWhereInput
-    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const where = buildWhere({ status, entityType })
+    const orderBy = buildSortOrderBy<Prisma.ModerationReportOrderByWithRelationInput>(
+      { sort, order },
+      [{ createdAt: 'desc' }, { id: 'desc' }],
+    )
     const total = await this.prisma.moderationReport.count({ where })
 
     return openCsvExport({
@@ -103,14 +105,14 @@ export class AdminModerationService {
         this.prisma.moderationReport.findMany({
           where,
           select: ADMIN_REPORT_EXPORT_SELECT,
-          orderBy: orderBy as unknown as Prisma.ModerationReportOrderByWithRelationInput[],
+          orderBy,
           skip,
           take,
         }),
     })
   }
 
-  /** Runs the find by id operation, resolving the reported subject and its sibling reports. */
+  /** Finds one report, resolving the reported subject and its sibling reports. */
   async findById(id: string) {
     const report = await this.prisma.moderationReport.findFirst({ where: { id } })
     if (!report) throw new ReportNotFoundException(id)
@@ -124,30 +126,47 @@ export class AdminModerationService {
   }
 
   /**
-   * Runs the update status operation. Sets/clears `resolvedAt` to match the new status.
+   * Moves a report to a new status, setting/clearing `resolvedAt` to match.
    * With `audit`, the update and an explicit per-report audit row share one transaction — the
-   * batch route passes it because it opts out of the interceptor's request-level row.
+   * batch route passes it because it opts out of the interceptor's request-level row. That write
+   * is guarded on the status just read, so the audited `before` is the status actually replaced:
+   * a concurrent change in between is a 409, never an audit row recording a stale transition.
    */
   async updateStatus(id: string, dto: UpdateReportDto, audit?: ReportAdvanceAudit) {
-    const existing = await this.prisma.moderationReport.findFirst({ where: { id } })
+    const existing = await this.prisma.moderationReport.findFirst({
+      where: { id },
+      select: { status: true },
+    })
     if (!existing) throw new ReportNotFoundException(id)
 
-    const data = {
+    const data: ReportStatusChange = {
       status: dto.status,
       resolvedAt: RESOLVED_STATUSES.includes(dto.status) ? new Date() : null,
     }
     if (!audit) return await this.prisma.moderationReport.update({ where: { id }, data })
+    return await this.updateStatusAudited(id, existing.status, data, audit)
+  }
 
-    const { staffId, ...auditContext } = audit
-    return await this.prisma.$transaction(async (tx) => {
-      const updated = await tx.moderationReport.update({ where: { id }, data })
+  /** The audited path of {@link updateStatus}: a status-guarded write plus its audit row. */
+  private updateStatusAudited(
+    id: string,
+    before: ModerationStatus,
+    data: ReportStatusChange,
+    { staffId, ...auditContext }: ReportAdvanceAudit,
+  ): Promise<ModerationReport> {
+    return this.prisma.$transaction(async (tx) => {
+      const [updated] = await tx.moderationReport.updateManyAndReturn({
+        where: { id, status: before },
+        data,
+      })
+      if (!updated) throw new ReportStatusChangedException()
       await writeTakeDownAudit({
         tx,
         entityType: 'admin-moderation',
         entityId: id,
         action: 'admin-moderation.update',
         staffId,
-        before: { status: existing.status },
+        before: { status: before },
         after: { status: updated.status },
         ...auditContext,
       })
@@ -185,79 +204,7 @@ export class AdminModerationService {
    */
   private async resolveSubject(entityType: string, entityId: string): Promise<ModerationSubject> {
     const kind = entityType.toLowerCase()
-
-    switch (kind) {
-      case 'track': {
-        const row = await this.prisma.track.findUnique({
-          where: { id: entityId },
-          select: { id: true, title: true, deletedAt: true },
-        })
-        return row
-          ? { kind, id: row.id, title: row.title, deletedAt: row.deletedAt, parentId: null }
-          : null
-      }
-      case 'album': {
-        const row = await this.prisma.album.findUnique({
-          where: { id: entityId },
-          select: { id: true, title: true, deletedAt: true },
-        })
-        return row
-          ? { kind, id: row.id, title: row.title, deletedAt: row.deletedAt, parentId: null }
-          : null
-      }
-      case 'playlist': {
-        const row = await this.prisma.playlist.findUnique({
-          where: { id: entityId },
-          select: { id: true, title: true, deletedAt: true },
-        })
-        return row
-          ? { kind, id: row.id, title: row.title, deletedAt: row.deletedAt, parentId: null }
-          : null
-      }
-      case 'artist': {
-        const row = await this.prisma.artist.findUnique({
-          where: { id: entityId },
-          select: { id: true, username: true, deletedAt: true },
-        })
-        return row
-          ? { kind, id: row.id, title: row.username, deletedAt: row.deletedAt, parentId: null }
-          : null
-      }
-      case 'podcast': {
-        const row = await this.prisma.podcast.findUnique({
-          where: { id: entityId },
-          select: { id: true, title: true, deletedAt: true },
-        })
-        return row
-          ? { kind, id: row.id, title: row.title, deletedAt: row.deletedAt, parentId: null }
-          : null
-      }
-      case 'episode': {
-        const row = await this.prisma.episode.findUnique({
-          where: { id: entityId },
-          select: { id: true, title: true, deletedAt: true, podcastId: true },
-        })
-        return row
-          ? {
-              kind,
-              id: row.id,
-              title: row.title,
-              deletedAt: row.deletedAt,
-              parentId: row.podcastId,
-            }
-          : null
-      }
-      case 'user': {
-        const row = await this.prisma.user.findUnique({
-          where: { id: entityId },
-          select: { id: true, username: true, deletedAt: true },
-        })
-        return row
-          ? { kind, id: row.id, title: row.username, deletedAt: row.deletedAt, parentId: null }
-          : null
-      }
-      default:
-        return null
-    }
+    const row = await SUBJECT_RESOLVERS.get(kind)?.(this.prisma, entityId)
+    return row ? { kind, ...row } : null
   }
 }

@@ -1,3 +1,5 @@
+import { TranslocoPipe } from '@jsverse/transloco'
+import { ALBUM_TYPE_KEY } from '@presentation/pages/albums/album-labels'
 import { ChangeDetectionStrategy, Component, effect, inject, input, untracked } from '@angular/core'
 import { ListArtistAlbumsUseCase } from '@application/artists'
 import type { ArtistAlbum } from '@domain/artist'
@@ -14,7 +16,14 @@ import { HlmTableImports } from '@spartan-ng/helm/table'
  */
 @Component({
   selector: 'app-artist-albums',
-  imports: [LocalizedDatePipe, CollectionStatus, Paginator, HlmBadgeImports, HlmTableImports],
+  imports: [
+    CollectionStatus,
+    HlmBadgeImports,
+    HlmTableImports,
+    LocalizedDatePipe,
+    Paginator,
+    TranslocoPipe,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './artist-albums.html',
 })
@@ -22,9 +31,10 @@ export class ArtistAlbums {
   private readonly listAlbums = inject(ListArtistAlbumsUseCase)
 
   readonly artistId = input.required<string>()
+  protected readonly typeKey = ALBUM_TYPE_KEY
 
   protected readonly collection = createCollection<ArtistAlbum>({
-    errorMessage: 'Could not load albums.',
+    errorMessage: 'artist.albums.error',
     load: (page) => this.listAlbums.execute({ artistId: this.artistId(), page }),
   })
 

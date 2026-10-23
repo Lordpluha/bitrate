@@ -6,7 +6,7 @@ import {
   useFollowUser,
   useUnfollowUser,
 } from '@/entities/User/api/client'
-import { showApiErrorToast, showApiSuccessToast } from '@/shared/api/feedback'
+import { showApiSuccessToast } from '@/shared/api/feedback'
 import { useAuth } from '@/shared/hooks'
 
 type FollowUserButtonProps = {
@@ -31,19 +31,19 @@ export const FollowUserButton = ({
 
   if (!isAuthenticated || user?.id === userId) return null
 
-  const handleToggle = async () => {
-    try {
-      if (isFollowing) {
-        await unfollowUser.mutateAsync({ params: { path: { id: userId } } })
-        showApiSuccessToast(`Unfollowed ${username}`)
-        return
-      }
-
-      await followUser.mutateAsync({ params: { path: { id: userId } } })
-      showApiSuccessToast(`Following ${username}`)
-    } catch (error) {
-      showApiErrorToast(error, 'Could not update follow state')
+  /** Failures are toasted by the query client's mutation cache. */
+  const handleToggle = () => {
+    const variables = { params: { path: { id: userId } } }
+    if (isFollowing) {
+      unfollowUser.mutate(variables, {
+        onSuccess: () => showApiSuccessToast(`Unfollowed ${username}`),
+      })
+      return
     }
+
+    followUser.mutate(variables, {
+      onSuccess: () => showApiSuccessToast(`Following ${username}`),
+    })
   }
 
   return (
@@ -54,7 +54,7 @@ export const FollowUserButton = ({
         className,
       )}
       disabled={isPending}
-      onClick={() => void handleToggle()}
+      onClick={handleToggle}
       type="button"
     >
       {isFollowing ? 'Following' : 'Follow'}

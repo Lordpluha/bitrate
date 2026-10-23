@@ -1,0 +1,79 @@
+<div
+  class="w-[min(620px,calc(100vw-2rem))] overflow-hidden rounded-panel border border-glass-line bg-glass-strong shadow-glass backdrop-blur-[22px] backdrop-saturate-150"
+>
+  <div class="flex h-15 items-center gap-3 border-b border-glass-line px-4.5">
+    <ng-icon
+      class="shrink-0 text-lg text-muted-foreground"
+      name="lucideSearch"
+      aria-hidden="true"
+    />
+    <input
+      #input
+      class="h-full min-w-0 flex-1 bg-transparent text-base font-medium text-foreground outline-none placeholder:text-muted-foreground"
+      type="text"
+      role="combobox"
+      aria-autocomplete="list"
+      aria-controls="palette-list"
+      aria-expanded="true"
+      [attr.aria-activedescendant]="activeId()"
+      [attr.aria-label]="'shell.palette.label' | transloco"
+      [placeholder]="'shell.palette.placeholder' | transloco"
+      [value]="query()"
+      (input)="onInput(input.value)"
+      (keydown)="onKeydown($event)"
+    />
+    <kbd
+      class="rounded-md bg-glass-hover px-1.5 py-0.5 text-[0.6875rem] font-semibold text-muted-foreground"
+      >Esc</kbd
+    >
+  </div>
+
+  <div
+    class="max-h-[50vh] overflow-y-auto p-2"
+    id="palette-list"
+    role="listbox"
+    [attr.aria-label]="'shell.palette.results' | transloco"
+  >
+    @for (entry of groups(); track entry.group) {
+      <p
+        class="px-3 pb-1.5 pt-2.5 text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-muted-foreground"
+        role="presentation"
+      >
+        {{ 'shell.palette.group.' + entry.group | transloco }}
+      </p>
+      @for (command of entry.items; track command.id) {
+        @let index = indexOf(command);
+        <!-- An option, not a button: focus stays in the input (combobox pattern); the pointer
+             runs it on click, the keyboard with Enter on the active row. -->
+        <div
+          class="flex h-[42px] cursor-pointer items-center gap-3 rounded-xl px-3 text-sm text-foreground"
+          [class.bg-primary-soft]="index === active()"
+          role="option"
+          [id]="'palette-' + command.id"
+          [attr.aria-selected]="index === active()"
+          tabindex="-1"
+          (mousedown)="keepFocus($event)"
+          (mouseenter)="active.set(index)"
+          (click)="run(command)"
+          (keydown.enter)="run(command)"
+        >
+          <ng-icon
+            class="shrink-0 text-lg text-muted-foreground"
+            [name]="command.icon"
+            aria-hidden="true"
+          />
+          <span class="flex-1 truncate">{{ command.label | transloco }}</span>
+          <ng-icon
+            class="shrink-0 text-base text-muted-foreground"
+            name="lucideArrowRight"
+            aria-hidden="true"
+          />
+        </div>
+      }
+    } @empty {
+      <p class="px-3 py-6 text-center text-sm text-muted-foreground" role="status">
+        {{ 'shell.palette.empty' | transloco }}
+      </p>
+    }
+  </div>
+</div>

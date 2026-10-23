@@ -1,0 +1,71 @@
+@if (staff(); as operator) {
+  <button
+    class="grid size-10 shrink-0 place-items-center rounded-full bg-linear-135 from-primary to-blue-500 text-[0.8125rem] font-bold text-primary-foreground transition-shadow hover:ring-3 hover:ring-primary-line focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring aria-expanded:ring-3 aria-expanded:ring-primary-line"
+    type="button"
+    [cdkMenuTriggerFor]="menu"
+    [cdkMenuPosition]="positions"
+    [attr.aria-label]="'shell.profile.open' | transloco"
+  >
+    {{ initials() }}
+  </button>
+
+  <ng-template #menu>
+    <div
+      class="w-[300px] overflow-hidden rounded-[1.375rem] border border-glass-line bg-popover/90 text-popover-foreground shadow-glass backdrop-blur-[24px] backdrop-saturate-150"
+      cdkMenu
+    >
+      <div class="flex items-center gap-3 border-b border-glass-line p-4">
+        <span
+          class="grid size-10 shrink-0 place-items-center rounded-full bg-linear-135 from-primary to-blue-500 text-[0.8125rem] font-bold text-primary-foreground"
+          aria-hidden="true"
+          >{{ initials() }}</span
+        >
+        <span class="min-w-0">
+          <span class="block truncate font-semibold">{{ operator.username }}</span>
+          <span class="block truncate text-xs text-muted-foreground"
+            >{{ operator.roleName }} · {{ operator.email }}</span
+          >
+        </span>
+      </div>
+
+      <div class="flex flex-col gap-0.5 p-2">
+        <button
+          class="flex h-10 w-full items-center gap-3 rounded-xl px-2.5 text-left text-sm text-muted-foreground outline-none hover:bg-glass-hover hover:text-foreground focus:bg-glass-hover focus:text-foreground"
+          type="button"
+          cdkMenuItem
+          (cdkMenuItemTriggered)="cycleLocale()"
+        >
+          <ng-icon class="shrink-0 text-lg" name="lucideLanguages" aria-hidden="true" />
+          <span class="flex-1">{{ 'shell.profile.language' | transloco }}</span>
+          <span class="rounded-full bg-glass-hover px-2 py-0.5 text-xs font-semibold">{{
+            localeName()
+          }}</span>
+        </button>
+        <button
+          class="flex h-10 w-full items-center gap-3 rounded-xl px-2.5 text-left text-sm text-muted-foreground outline-none hover:bg-glass-hover hover:text-foreground focus:bg-glass-hover focus:text-foreground"
+          type="button"
+          cdkMenuItem
+          (cdkMenuItemTriggered)="cycleTheme()"
+        >
+          <ng-icon class="shrink-0 text-lg" [name]="themeIcon()" aria-hidden="true" />
+          <span class="flex-1">{{ 'shell.profile.theme' | transloco }}</span>
+          <span class="rounded-full bg-glass-hover px-2 py-0.5 text-xs font-semibold">{{
+            'shell.profile.themeName.' + theme() | transloco
+          }}</span>
+        </button>
+      </div>
+
+      <div class="border-t border-glass-line p-2">
+        <button
+          class="flex h-10 w-full items-center gap-3 rounded-xl px-2.5 text-left text-sm text-error-text outline-none hover:bg-error-surface focus:bg-error-surface"
+          type="button"
+          cdkMenuItem
+          (cdkMenuItemTriggered)="signOut()"
+        >
+          <ng-icon class="shrink-0 text-lg" name="lucideLogOut" aria-hidden="true" />
+          {{ 'shell.profile.signOut' | transloco }}
+        </button>
+      </div>
+    </div>
+  </ng-template>
+}

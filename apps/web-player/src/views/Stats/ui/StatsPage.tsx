@@ -10,15 +10,23 @@ import {
   useTopTracks,
 } from '@entities/Discovery'
 import { ROUTES } from '@shared/routes'
-import { PageTitle, Skeleton, StateMessage } from '@shared/ui'
+import {
+  PageShell,
+  PageTitle,
+  RetryState,
+  type SegmentedTab,
+  SegmentedTabs,
+  Skeleton,
+  StateMessage,
+} from '@shared/ui'
 import { MediaImage } from '@shared/ui/MediaImage'
 import { getArtistAvatarUrl, getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import { ChartColumn, TriangleAlert } from 'lucide-react'
+import { ChartColumn } from 'lucide-react'
 import Link from 'next/link'
 import { type ReactNode, useState } from 'react'
 import { usePlayCollection } from '@/features/PlayCollection'
 
-const RANGES: ReadonlyArray<{ id: DiscoveryRange; label: string }> = [
+const RANGES: ReadonlyArray<SegmentedTab<DiscoveryRange>> = [
   { id: 'short', label: 'Last 4 weeks' },
   { id: 'medium', label: 'Last 6 months' },
   { id: 'long', label: 'All time' },
@@ -78,18 +86,12 @@ const StatsContent = ({ range }: { range: DiscoveryRange }) => {
   if (tracks.isPending || artists.isPending) return <StatsLoading />
   if (tracks.isError || artists.isError) {
     return (
-      <StateMessage
-        description="Try again in a moment."
-        icon={TriangleAlert}
-        primary={{
-          label: 'Try again',
-          onClick: () => {
-            void tracks.refetch()
-            void artists.refetch()
-          },
+      <RetryState
+        onRetry={() => {
+          void tracks.refetch()
+          void artists.refetch()
         }}
         title="Statistics are unavailable"
-        tone="error"
       />
     )
   }
@@ -109,8 +111,16 @@ const StatsContent = ({ range }: { range: DiscoveryRange }) => {
     )
   }
 
+  const isSwitchingRange = tracks.isPlaceholderData || artists.isPlaceholderData
+
   return (
-    <div className="flex flex-col gap-4">
+    <div
+      aria-busy={isSwitchingRange}
+      className={cn(
+        'flex flex-col gap-4 transition-opacity',
+        isSwitchingRange && 'opacity-60',
+      )}
+    >
       <div className="grid grid-cols-2 gap-3 md:gap-4 xl:grid-cols-4">
         {stats.map((stat) => (
           <StatTile key={stat.label} {...stat} />
@@ -204,37 +214,19 @@ export const StatsPage = () => {
   const [range, setRange] = useState<DiscoveryRange>('short')
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar">
-      <div className="flex flex-col gap-5 px-4 pt-2 pb-3 md:gap-6 md:px-8 md:py-6">
-        <div className="flex flex-col gap-1.5">
-          <PageTitle title="Your listening" />
-          <p className="text-sm text-muted-foreground">Only visible to you.</p>
-        </div>
-        <div
-          aria-label="Time range"
-          className="-mx-4 flex gap-1 overflow-x-auto px-4 md:mx-0 md:px-0"
-          role="tablist"
-        >
-          {RANGES.map(({ id, label }) => (
-            <button
-              aria-selected={range === id}
-              className={cn(
-                'h-9 shrink-0 rounded-md px-3 text-sm font-medium transition-colors',
-                range === id
-                  ? 'bg-secondary text-foreground'
-                  : 'text-muted-foreground hover:bg-surface hover:text-foreground',
-              )}
-              key={id}
-              onClick={() => setRange(id)}
-              role="tab"
-              type="button"
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-        <StatsContent range={range} />
+    <PageShell width="full">
+      <div className="flex flex-col gap-1.5">
+        <PageTitle title="Your listening" />
+        <p className="text-sm text-muted-foreground">Only visible to you.</p>
       </div>
-    </div>
+      <SegmentedTabs
+        ariaLabel="Time range"
+        className="-mx-4 overflow-x-auto px-4 md:mx-0 md:px-0"
+        onChange={setRange}
+        tabs={RANGES}
+        value={range}
+      />
+      <StatsContent range={range} />
+    </PageShell>
   )
 }

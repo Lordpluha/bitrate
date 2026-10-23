@@ -14,6 +14,7 @@ import {
 import type { Page } from '@domain/shared'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { GenresPage } from './genres'
+import { provideTestTransloco } from '@testing/transloco'
 
 function genre(overrides: Partial<Genre> = {}): Genre {
   return {
@@ -81,6 +82,7 @@ describe('GenresPage', () => {
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
       providers: [
+        ...provideTestTransloco(),
         provideZonelessChangeDetection(),
         provideRouter(routes),
         provideLocationMocks(),
@@ -106,7 +108,10 @@ describe('GenresPage', () => {
     expect(rows).toHaveLength(2)
     expect(rows[0]?.textContent).toContain('Delete')
     expect(rows[1]?.textContent).not.toContain('Delete')
-    expect(rows[1]?.textContent).toContain('Still referenced by 4 tracks')
+    expect(rows[1]?.textContent).toContain('In use')
+    expect(rows[1]?.querySelector('[title]')?.getAttribute('title')).toContain(
+      'Still used by 4 tracks',
+    )
   })
 
   it('does not delete until the dialog is confirmed', async () => {
@@ -120,7 +125,7 @@ describe('GenresPage', () => {
     await harness.fixture.whenStable()
 
     expect(remove).not.toHaveBeenCalled()
-    expect(document.body.textContent).toContain('Permanently delete "Synthwave"')
+    expect(document.body.textContent).toContain('Permanently delete “Synthwave”')
 
     const confirm = [...document.body.querySelectorAll<HTMLButtonElement>('button')].find(
       (candidate) => candidate.textContent?.includes('Delete genre'),

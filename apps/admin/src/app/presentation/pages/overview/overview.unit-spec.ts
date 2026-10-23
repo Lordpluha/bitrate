@@ -4,13 +4,23 @@ import { provideZonelessChangeDetection } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { provideRouter, type Routes } from '@angular/router'
 import { RouterTestingHarness } from '@angular/router/testing'
-import { GetOverviewSeriesUseCase, GetOverviewUseCase } from '@application/overview'
+import { GetArtistStatsUseCase } from '@application/artists'
+import { ListReportsUseCase } from '@application/moderation'
+import {
+  GetOverviewReportsByTypeUseCase,
+  GetOverviewSeriesUseCase,
+  GetOverviewUseCase,
+} from '@application/overview'
+import { GetReleaseQueueStatsUseCase } from '@application/release-review'
 import { SessionStore } from '@application/session'
-import type { Overview, OverviewSeries } from '@domain/overview'
+import { GetUserStatsUseCase } from '@application/users'
+import type { Overview, OverviewReportsByType, OverviewSeries } from '@domain/overview'
+import type { Staff } from '@domain/staff'
+import { provideTestTransloco } from '@testing/transloco'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { OverviewPage } from './overview'
 
-const ADMIN_STAFF = {
+const ADMIN_STAFF: Staff = {
   id: '3f2504e0-4f89-41d3-9a0c-0305e82c3301',
   email: 'ops@bitrate.me',
   username: 'ops',
@@ -18,6 +28,8 @@ const ADMIN_STAFF = {
   roleName: 'ADMIN',
   permissions: [],
 }
+
+const DAY = new Date('2026-09-17T00:00:00.000Z')
 
 function overview(overrides: Partial<Overview> = {}): Overview {
   return {
@@ -40,263 +52,188 @@ function overview(overrides: Partial<Overview> = {}): Overview {
   }
 }
 
-function series(overrides: Partial<OverviewSeries> = {}): OverviewSeries {
+function series(): OverviewSeries {
   return {
     from: new Date('2026-08-19T00:00:00.000Z'),
-    to: new Date('2026-09-17T00:00:00.000Z'),
+    to: DAY,
     days: 30,
-    uploads: [
-      { date: new Date('2026-09-17T00:00:00.000Z'), uploaded: 4, ready: 3, failed: 1, stuck: 0 },
-    ],
-    signups: [{ date: new Date('2026-09-17T00:00:00.000Z'), listeners: 2, artists: 1 }],
-    listens: [{ date: new Date('2026-09-17T00:00:00.000Z'), count: 40 }],
-    reports: [{ date: new Date('2026-09-17T00:00:00.000Z'), count: 1 }],
+    uploads: [{ date: DAY, uploaded: 4, ready: 3, failed: 1, stuck: 0 }],
+    signups: [{ date: DAY, listeners: 2, artists: 1 }],
+    listens: [{ date: DAY, count: 40 }],
+    reports: [{ date: DAY, count: 1 }],
     reportsByStatus: { open: 3, reviewing: 1, resolved: 2, rejected: 0 },
-    ...overrides,
+  }
+}
+
+function byType(): OverviewReportsByType {
+  return {
+    from: new Date('2026-08-19T00:00:00.000Z'),
+    to: DAY,
+    days: 30,
+    dates: [DAY],
+    series: [
+      { entityType: 'track', counts: [5], total: 5 },
+      { entityType: 'playlist', counts: [2], total: 2 },
+    ],
+    total: 7,
   }
 }
 
 const execute = vi.fn<() => Promise<Overview>>()
 const executeSeries = vi.fn<(days: number) => Promise<OverviewSeries>>()
+const executeByType = vi.fn<(days: number) => Promise<OverviewReportsByType>>()
 
 const routes: Routes = [{ path: '', component: OverviewPage }]
 
+async function configure(staff: Staff = ADMIN_STAFF): Promise<RouterTestingHarness> {
+  TestBed.resetTestingModule()
+  TestBed.configureTestingModule({
+    providers: [
+      ...provideTestTransloco(),
+      provideZonelessChangeDetection(),
+      provideRouter(routes),
+      provideLocationMocks(),
+      { provide: GetOverviewUseCase, useValue: { execute } },
+      { provide: GetOverviewSeriesUseCase, useValue: { execute: executeSeries } },
+      { provide: GetOverviewReportsByTypeUseCase, useValue: { execute: executeByType } },
+      {
+        provide: GetUserStatsUseCase,
+        useValue: { execute: () => Promise.resolve({ live: 1200, takenDown: 9 }) },
+      },
+      {
+        provide: GetArtistStatsUseCase,
+        useValue: {
+          execute: () => Promise.resolve({ live: 80, takenDown: 1, verified: 60, unverified: 20 }),
+        },
+      },
+      {
+        provide: GetReleaseQueueStatsUseCase,
+        useValue: {
+          execute: () =>
+            Promise.resolve({ awaiting: 7, changesRequested: 2, oldestAwaitingAt: null }),
+        },
+      },
+      {
+        provide: ListReportsUseCase,
+        useValue: {
+          execute: () => Promise.resolve({ items: [], total: 0, page: 1, limit: 20 }),
+        },
+      },
+    ],
+  })
+  TestBed.inject(SessionStore).set(staff)
+  return RouterTestingHarness.create()
+}
+
+/** Lets the range requests, started by an effect after the first render, settle too. */
+async function settle(harness: RouterTestingHarness): Promise<void> {
+  await harness.fixture.whenStable()
+  await new Promise((resolve) => setTimeout(resolve))
+  await harness.fixture.whenStable()
+}
+
+function text(harness: RouterTestingHarness): string {
+  return (harness.routeNativeElement as HTMLElement).textContent ?? ''
+}
+
 describe('OverviewPage', () => {
-  let harness: RouterTestingHarness
+  beforeEach(() => {
+    execute.mockReset().mockResolvedValue(overview())
+    executeSeries.mockReset().mockResolvedValue(series())
+    executeByType.mockReset().mockResolvedValue(byType())
+  })
 
-  beforeEach(async () => {
-    execute.mockReset()
-    executeSeries.mockReset()
-    executeSeries.mockResolvedValue(series())
+  it('sums what waits on staff across the queues the role can see', async () => {
+    const harness = await configure()
+    await harness.navigateByUrl('/', OverviewPage)
+    await settle(harness)
 
-    TestBed.resetTestingModule()
-    TestBed.configureTestingModule({
-      providers: [
-        provideZonelessChangeDetection(),
-        provideRouter(routes),
-        provideLocationMocks(),
-        { provide: GetOverviewUseCase, useValue: { execute } },
-        { provide: GetOverviewSeriesUseCase, useValue: { execute: executeSeries } },
-      ],
+    /** 3 open + 1 in review + 7 releases + 4 failed + 1 stuck. */
+    expect(text(harness)).toContain('16 items waiting on staff')
+    expect(text(harness)).toContain('Releases awaiting review')
+    expect(text(harness)).toContain('1,200')
+  })
+
+  it('locks a tile whose source the role cannot read, instead of showing a zero', async () => {
+    const harness = await configure({
+      ...ADMIN_STAFF,
+      roleName: 'MODERATOR',
+      permissions: ['overview:read', 'reports:read'],
     })
-    /** ADMIN sees every guarded tile by identity — see `hasPermission`. */
-    TestBed.inject(SessionStore).set(ADMIN_STAFF)
-    harness = await RouterTestingHarness.create()
-  })
-
-  it('folds each status count into its chart card, with a link where the target list can filter for it', async () => {
-    execute.mockResolvedValue(overview())
-
-    const host = await harness.navigateByUrl('/', OverviewPage)
-    await harness.fixture.whenStable()
-
-    expect(host).not.toBeNull()
-    const root = harness.routeNativeElement as HTMLElement
-
-    expect(root.querySelectorAll('app-overview-status-strip').length).toBe(3)
-    expect(root.textContent).toContain('Open')
-    expect(root.textContent).toContain('Failed tracks')
-    expect(root.textContent).toContain('Stuck')
-
-    const openReportsLink = Array.from(root.querySelectorAll('a')).find(
-      (a) => a.getAttribute('href') === '/moderation',
-    )
-    /** `OPEN` is the moderation codec's own default, so the canonical link carries no query params. */
-    expect(openReportsLink).not.toBeUndefined()
-  })
-
-  it('links the reports card to the by-entity-type drill-down, preserving the range', async () => {
-    execute.mockResolvedValue(overview())
-
-    await harness.navigateByUrl('/?days=7', OverviewPage)
-    await harness.fixture.whenStable()
-
-    const root = harness.routeNativeElement as HTMLElement
-    const drillDown = Array.from(root.querySelectorAll('a')).find((a) =>
-      a.textContent?.includes('Reports by entity type over time'),
-    )
-
-    expect(drillDown?.getAttribute('href')).toBe('/overview/reports?days=7')
-    /** The existing filtered-list link keeps working alongside it. */
-    expect(
-      Array.from(root.querySelectorAll('a')).some((a) => a.getAttribute('href') === '/moderation'),
-    ).toBe(true)
-  })
-
-  it('renders no standalone tile grid — the summary numbers live inside the charts', async () => {
-    execute.mockResolvedValue(overview())
-
     await harness.navigateByUrl('/', OverviewPage)
-    await harness.fixture.whenStable()
+    await settle(harness)
 
-    const root = harness.routeNativeElement as HTMLElement
-
-    expect(root.querySelector('[aria-labelledby="dashboard-summary-heading"]')).toBeNull()
+    expect(text(harness)).toContain('Needs users:read')
+    expect(text(harness)).not.toContain('Releases awaiting review')
   })
 
-  it('keeps h1 -> h2 heading order', async () => {
-    execute.mockResolvedValue(overview())
-
+  it('shows a retryable error when the overview fails, then the tiles once it loads', async () => {
+    execute.mockRejectedValueOnce(new Error('down'))
+    const harness = await configure()
     await harness.navigateByUrl('/', OverviewPage)
-    await harness.fixture.whenStable()
+    await settle(harness)
 
-    const root = harness.routeNativeElement as HTMLElement
-    const h1 = root.querySelector('h1')
-    const headings = Array.from(root.querySelectorAll('h1, h2, h3'))
+    expect(text(harness)).toContain('We couldn’t load the overview')
 
-    expect(h1?.textContent).toContain('Overview')
-    expect(headings.map((heading) => heading.tagName)[0]).toBe('H1')
+    Array.from((harness.routeNativeElement as HTMLElement).querySelectorAll('button'))
+      .find((button) => button.textContent?.includes('Try again'))
+      ?.click()
+    await settle(harness)
+
+    expect(text(harness)).not.toContain('We couldn’t load the overview')
+    expect(text(harness)).toContain('Reports to review')
   })
 
-  it('shows a headline total on the signups and uploads charts, following the selected range', async () => {
-    execute.mockResolvedValue(overview())
-
+  it('re-requests the charts at the newly selected range, through the URL', async () => {
+    const harness = await configure()
     await harness.navigateByUrl('/', OverviewPage)
-    await harness.fixture.whenStable()
+    await settle(harness)
+    expect(executeSeries).toHaveBeenLastCalledWith(30)
 
-    const root = harness.routeNativeElement as HTMLElement
+    Array.from((harness.routeNativeElement as HTMLElement).querySelectorAll('button'))
+      .find((button) => button.textContent?.trim() === '7d')
+      ?.click()
+    await settle(harness)
 
-    expect(root.textContent).toContain('New accounts, 30d')
-    expect(root.textContent).toContain('Uploads, 30d')
-  })
-
-  it('shows a failure message when the load rejects, instead of throwing', async () => {
-    execute.mockRejectedValue(new Error('network down'))
-
-    await harness.navigateByUrl('/', OverviewPage)
-    await harness.fixture.whenStable()
-
-    const root = harness.routeNativeElement as HTMLElement
-
-    expect(root.querySelector('[role="alert"]')?.textContent).toContain(
-      'Could not load the dashboard.',
-    )
-  })
-
-  it('keeps the previously loaded status counts on screen when a reload fails, alongside the alert', async () => {
-    execute.mockResolvedValueOnce(overview())
-
-    await harness.navigateByUrl('/', OverviewPage)
-    await harness.fixture.whenStable()
-
-    const root = harness.routeNativeElement as HTMLElement
-
-    execute.mockRejectedValueOnce(new Error('network down'))
-    const reloadButton = Array.from(root.querySelectorAll('button')).find((button) =>
-      button.textContent?.includes('Reload'),
-    )
-    reloadButton?.click()
-    await harness.fixture.whenStable()
-
-    expect(root.querySelector('[role="alert"]')?.textContent).toContain(
-      'Could not load the dashboard.',
-    )
-    expect(root.textContent).toContain('Open')
-    expect(root.querySelectorAll('app-overview-status-strip').length).toBe(3)
-  })
-
-  it('renders the activity charts once the series loads, with the range summary', async () => {
-    execute.mockResolvedValue(overview())
-
-    await harness.navigateByUrl('/', OverviewPage)
-    await harness.fixture.whenStable()
-
-    const root = harness.routeNativeElement as HTMLElement
-
-    expect(executeSeries).toHaveBeenCalledWith(30)
-    expect(root.querySelectorAll('app-line-chart, app-bar-chart').length).toBe(5)
-    expect(root.textContent).toContain('30 days')
-  })
-
-  it('re-requests the series at the newly selected range when a range button is clicked', async () => {
-    execute.mockResolvedValue(overview())
-
-    await harness.navigateByUrl('/', OverviewPage)
-    await harness.fixture.whenStable()
-
-    const root = harness.routeNativeElement as HTMLElement
-    const sevenDayButton = Array.from(root.querySelectorAll('button')).find(
-      (button) => button.textContent?.trim() === '7d',
-    )
-    sevenDayButton?.click()
-    await harness.fixture.whenStable()
-
-    expect(executeSeries).toHaveBeenCalledWith(7)
     expect(TestBed.inject(Location).path()).toBe('/?days=7')
+    expect(executeSeries).toHaveBeenLastCalledWith(7)
+    expect(executeByType).toHaveBeenLastCalledWith(7)
   })
 
-  it('shows a failure message when the series load rejects, instead of throwing', async () => {
-    execute.mockResolvedValue(overview())
-    executeSeries.mockReset()
-    executeSeries.mockRejectedValue(new Error('network down'))
-
+  it('keeps the overview tiles when only the range charts fail', async () => {
+    executeSeries.mockRejectedValue(new Error('series down'))
+    const harness = await configure()
     await harness.navigateByUrl('/', OverviewPage)
-    await harness.fixture.whenStable()
+    await settle(harness)
 
-    const root = harness.routeNativeElement as HTMLElement
-
-    expect(root.textContent).toContain('Could not load the activity charts.')
+    expect(text(harness)).toContain('Couldn’t load this tile')
+    expect(text(harness)).toContain('Reports to review')
   })
 
-  it('keeps every status strip, with its links, when the series request fails — a different request', async () => {
-    execute.mockResolvedValue(overview())
-    executeSeries.mockReset()
-    executeSeries.mockRejectedValue(new Error('network down'))
+  it('opens a tile’s analysis panel from the URL, with figures from the range', async () => {
+    const harness = await configure()
+    await harness.navigateByUrl('/?panel=reports', OverviewPage)
+    await settle(harness)
 
-    await harness.navigateByUrl('/', OverviewPage)
-    await harness.fixture.whenStable()
-
-    const root = harness.routeNativeElement as HTMLElement
-
-    expect(root.querySelectorAll('app-overview-status-strip').length).toBe(3)
-    expect(root.textContent).toContain('Open')
-    expect(root.textContent).toContain('Failed tracks')
-    expect(root.textContent).toContain('Stuck')
-    expect(root.textContent).toContain('Deactivated listeners')
-
-    const openReportsLink = Array.from(root.querySelectorAll('a')).find(
-      (a) => a.getAttribute('href') === '/moderation',
-    )
-    expect(openReportsLink).not.toBeUndefined()
-
-    const failedTracksLink = Array.from(root.querySelectorAll('a')).find((a) =>
-      a.textContent?.includes('Failed tracks'),
-    )
-    expect(failedTracksLink?.getAttribute('href')).toBe('/catalog?status=FAILED')
+    const dialog = document.body.querySelector('[role="dialog"]')
+    expect(dialog?.textContent).toContain('Reports by type')
+    expect(dialog?.textContent).toContain('Most reported')
+    expect(dialog?.textContent).toContain('Tracks')
   })
 
-  it('shows no headline on the signups/uploads charts when the series request fails', async () => {
-    execute.mockResolvedValue(overview())
-    executeSeries.mockReset()
-    executeSeries.mockRejectedValue(new Error('network down'))
-
+  it('opens a panel from its tile button and writes it to the URL', async () => {
+    const harness = await configure()
     await harness.navigateByUrl('/', OverviewPage)
-    await harness.fixture.whenStable()
+    await settle(harness)
 
-    const root = harness.routeNativeElement as HTMLElement
+    ;(
+      (harness.routeNativeElement as HTMLElement).querySelector(
+        'button[aria-label="Open analysis: Listens per day"]',
+      ) as HTMLButtonElement
+    ).click()
+    await settle(harness)
 
-    expect(root.textContent).not.toContain('New accounts, ')
-    expect(root.textContent).not.toContain('Uploads, ')
-  })
-
-  it('keeps every status strip visible, with no headline, while the series is still loading', async () => {
-    execute.mockResolvedValue(overview())
-    executeSeries.mockReset()
-    executeSeries.mockImplementation(() => new Promise(() => undefined))
-
-    await harness.navigateByUrl('/', OverviewPage)
-    await harness.fixture.whenStable()
-
-    const root = harness.routeNativeElement as HTMLElement
-
-    expect(root.querySelectorAll('app-overview-status-strip').length).toBe(3)
-    expect(root.textContent).toContain('Open')
-    expect(root.textContent).toContain('Stuck')
-    const openReportsLink = Array.from(root.querySelectorAll('a')).find(
-      (a) => a.getAttribute('href') === '/moderation',
-    )
-    expect(openReportsLink).not.toBeUndefined()
-    expect(root.textContent).not.toContain('New accounts, ')
-    expect(root.textContent).not.toContain('Uploads, ')
+    expect(TestBed.inject(Location).path()).toBe('/?panel=listens')
+    expect(document.body.querySelector('[role="dialog"]')?.textContent).toContain('Total listens')
   })
 })

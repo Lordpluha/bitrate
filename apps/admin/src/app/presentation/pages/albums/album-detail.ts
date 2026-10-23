@@ -1,41 +1,71 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core'
 import { ActivatedRoute, RouterLink } from '@angular/router'
 import { GetAlbumUseCase, RestoreAlbumUseCase, TakeDownAlbumUseCase } from '@application/albums'
 import { SessionStore } from '@application/session'
 import { type AlbumDetail, canRestoreAlbum, canTakeDownAlbum } from '@domain/album'
-import { LocalizedDatePipe } from '@presentation/pipes'
+import { TAKE_DOWN_REASON_MAX_LENGTH } from '@domain/shared'
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco'
+import { NgIcon, provideIcons } from '@ng-icons/core'
+import {
+  lucideArrowRight,
+  lucideCheck,
+  lucideDisc3,
+  lucideList,
+  lucideRotateCcw,
+  lucideX,
+} from '@ng-icons/lucide'
+import { KvRow, PageHeader, Skeleton, StateMessage, Tile, TileGrid } from '@presentation/components'
+import { LocaleStore } from '@presentation/navigation'
+import { PIPELINE_BADGE, PIPELINE_KEY } from '@presentation/pages/catalog/catalog-labels'
 import {
   isStaleStateError,
-  resourceWriteErrorMessage,
+  resourceWriteError,
 } from '@presentation/pages/shared/resource-write-error.message'
+import { LocalizedDatePipe } from '@presentation/pipes'
+import { type ConfirmedWrite, createConfirmAction, createDetailResource } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmDialogImports } from '@spartan-ng/helm/dialog'
 import { HlmLabelImports } from '@spartan-ng/helm/label'
 import { HlmTableImports } from '@spartan-ng/helm/table'
+import { ALBUM_TYPE_KEY } from './album-labels'
 
-/** Mirrors the API's `TakeDownReasonSchema` limit. */
-const REASON_MAX_LENGTH = 500
+/** The write the open dialog will perform. */
+type PendingAction = 'take-down' | 'restore'
 
-/** The write the open dialog will perform; `null` while it is closed. */
-type PendingAction = 'take-down' | 'restore' | null
+const LOAD_ERROR = 'album.error.load'
 
-/**
- * Over 100 lines: load state, the confirm dialog's armed state and failure reporting share one
- * operator record — the same justification `track-detail.ts` gives for its own size.
- */
 @Component({
   selector: 'app-album-detail',
   imports: [
-    LocalizedDatePipe,
-    RouterLink,
     HlmBadgeImports,
     HlmButtonImports,
     HlmDialogImports,
     HlmLabelImports,
     HlmTableImports,
+    KvRow,
+    LocalizedDatePipe,
+    NgIcon,
+    PageHeader,
+    RouterLink,
+    Skeleton,
+    StateMessage,
+    Tile,
+    TileGrid,
+    TranslocoPipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    provideIcons({
+      lucideArrowRight,
+      lucideCheck,
+      lucideDisc3,
+      lucideList,
+      lucideRotateCcw,
+      lucideX,
+    }),
+  ],
+  host: { class: 'flex flex-col gap-5 lg:gap-[22px]' },
   templateUrl: './album-detail.html',
 })
 export class AlbumDetailPage {
@@ -43,24 +73,65 @@ export class AlbumDetailPage {
   private readonly getAlbum = inject(GetAlbumUseCase)
   private readonly takeDownAlbum = inject(TakeDownAlbumUseCase)
   private readonly restoreAlbum = inject(RestoreAlbumUseCase)
+  private readonly transloco = inject(TranslocoService)
+  private readonly locale = inject(LocaleStore).locale
 
   private readonly session = inject(SessionStore)
   protected readonly canTakeDown = this.session.can('albums:delete')
   protected readonly canRestore = this.session.can('albums:restore')
   protected readonly albumId = this.route.snapshot.paramMap.get('id') ?? ''
-  protected readonly reasonMaxLength = REASON_MAX_LENGTH
+  protected readonly reasonMaxLength = TAKE_DOWN_REASON_MAX_LENGTH
+  protected readonly typeKey = ALBUM_TYPE_KEY
+  protected readonly pipelineBadge = PIPELINE_BADGE
+  protected readonly pipelineKey = PIPELINE_KEY
 
-  protected readonly album = signal<AlbumDetail | null>(null)
-  protected readonly loading = signal(true)
-  protected readonly notFound = signal(false)
-  protected readonly failure = signal<string | null>(null)
-  protected readonly status = signal<string | null>(null)
-  protected readonly pendingAction = signal<PendingAction>(null)
-  protected readonly reason = signal('')
-  protected readonly working = signal(false)
+  private readonly record = createDetailResource({
+    load: () => this.getAlbum.execute(this.albumId),
+    errorMessage: LOAD_ERROR,
+  })
+  private readonly action = createConfirmAction<PendingAction, AlbumDetail>({
+    record: this.record.value,
+    failure: this.record.failure,
+    reload: this.record.reload,
+    isStale: isStaleStateError,
+    perform: (write) => this.perform(write),
+    describe: (error, { pending, record }) => {
+      const notice = resourceWriteError({
+        error,
+        action: pending === 'take-down' ? 'take down' : 'restore',
+        label: `“${record.title}”`,
+        resource: 'album',
+      })
+      return this.t(notice.key, notice.params)
+    },
+  })
+
+  protected readonly album = this.record.value
+  protected readonly loading = this.record.loading
+  protected readonly notFound = this.record.notFound
+  protected readonly failure = this.record.failure
+  protected readonly status = this.action.status
+  protected readonly pendingAction = this.action.pending
+  protected readonly reason = this.action.reason
+  protected readonly working = this.action.working
+  protected readonly ask = this.action.arm
+  protected readonly cancel = this.action.cancel
+  protected readonly confirm = this.action.confirm
+
+  protected readonly back = computed(() => ({ link: '/albums', label: this.t('albums.title') }))
+  /** The load failure is a key; a failed write is already in the operator's language. */
+  protected readonly failureText = computed(() => {
+    const failure = this.failure()
+    return failure === LOAD_ERROR ? this.t(failure) : failure
+  })
 
   constructor() {
-    void this.load()
+    void this.record.reload()
+  }
+
+  protected reload(): void {
+    this.failure.set(null)
+    void this.record.reload()
   }
 
   protected takeDownable(album: AlbumDetail): boolean {
@@ -71,60 +142,20 @@ export class AlbumDetailPage {
     return canRestoreAlbum(album).allowed
   }
 
-  protected ask(action: PendingAction): void {
-    this.reason.set('')
-    this.failure.set(null)
-    this.status.set(null)
-    this.pendingAction.set(action)
-  }
-
-  /** Closing mid-write is ignored so the dialog cannot vanish under an in-flight request. */
-  protected cancel(): void {
-    if (!this.working()) this.pendingAction.set(null)
-  }
-
-  protected async confirm(): Promise<void> {
-    const current = this.album()
-    const action = this.pendingAction()
-    if (!current || !action || this.working()) return
-
-    const reason = this.reason().trim() || undefined
-    this.working.set(true)
-    this.failure.set(null)
-    try {
-      if (action === 'take-down') {
-        await this.takeDownAlbum.execute({ album: current, reason })
-        this.status.set(`"${current.title}" was taken down. Its tracks were not changed.`)
-      } else {
-        await this.restoreAlbum.execute({ album: current, reason })
-        this.status.set(`"${current.title}" was restored.`)
-      }
-      await this.load()
-    } catch (error) {
-      this.failure.set(
-        resourceWriteErrorMessage({
-          error,
-          action: action === 'take-down' ? 'take down' : 'restore',
-          label: `"${current.title}"`,
-          resource: 'album',
-        }),
-      )
-      if (isStaleStateError(error)) await this.load()
-    } finally {
-      this.working.set(false)
-      this.pendingAction.set(null)
+  private async perform({
+    pending,
+    record: album,
+    reason,
+  }: ConfirmedWrite<PendingAction, AlbumDetail>): Promise<string> {
+    if (pending === 'take-down') {
+      await this.takeDownAlbum.execute({ album, reason })
+      return this.t('album.done.takeDown', { title: album.title })
     }
+    await this.restoreAlbum.execute({ album, reason })
+    return this.t('album.done.restore', { title: album.title })
   }
 
-  private async load(): Promise<void> {
-    this.loading.set(true)
-    try {
-      this.album.set(await this.getAlbum.execute(this.albumId))
-      this.notFound.set(false)
-    } catch {
-      this.notFound.set(true)
-    } finally {
-      this.loading.set(false)
-    }
+  private t(key: string, params: Record<string, string | number> = {}): string {
+    return this.transloco.translate(key, params, this.locale())
   }
 }

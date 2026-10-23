@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
+import type { Prisma } from '@prisma/client'
 import * as Sentry from '@sentry/nestjs'
 import { mockTransaction, type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
@@ -17,8 +18,7 @@ describe('ProcessingAttemptRecorder', () => {
     prisma = prismaMock
     recorder = new ProcessingAttemptRecorder(prisma)
     mockTransaction(prisma)
-    prisma.trackProcessingAttempt.findMany.mockResolvedValue([] as never)
-    prisma.trackProcessingAttempt.deleteMany.mockResolvedValue({ count: 0 } as never)
+    prisma.$executeRaw.mockResolvedValue(0 as never)
   })
 
   describe('start', () => {
@@ -83,10 +83,6 @@ describe('ProcessingAttemptRecorder', () => {
         startedAt,
       } as never)
       prisma.trackProcessingAttempt.update.mockResolvedValue({} as never)
-      prisma.trackProcessingAttempt.findMany.mockResolvedValue([
-        { id: 'old-1' },
-        { id: 'old-2' },
-      ] as never)
 
       await recorder.succeed({ trackId: 'track-1', jobId: 'job-1', attempt: 1 })
 
@@ -94,12 +90,9 @@ describe('ProcessingAttemptRecorder', () => {
         where: { id: 'row-1' },
         data: expect.objectContaining({ status: 'SUCCEEDED', durationMs: expect.any(Number) }),
       })
-      expect(prisma.trackProcessingAttempt.findMany).toHaveBeenCalledWith(
-        expect.objectContaining({ where: { trackId: 'track-1' }, skip: 25 }),
-      )
-      expect(prisma.trackProcessingAttempt.deleteMany).toHaveBeenCalledWith({
-        where: { id: { in: ['old-1', 'old-2'] } },
-      })
+      const prune = prisma.$executeRaw.mock.calls[0]?.[0] as unknown as Prisma.Sql
+      expect(prune.strings.join('?')).toMatch(/DELETE FROM "TrackProcessingAttempt"[\s\S]*OFFSET/)
+      expect(prune.values).toEqual(['track-1', 25])
     })
 
     it('does nothing to update but still prunes when no RUNNING row is found', async () => {
@@ -108,7 +101,7 @@ describe('ProcessingAttemptRecorder', () => {
       await recorder.succeed({ trackId: 'track-1', jobId: 'job-1', attempt: 1 })
 
       expect(prisma.trackProcessingAttempt.update).not.toHaveBeenCalled()
-      expect(prisma.trackProcessingAttempt.findMany).toHaveBeenCalled()
+      expect(prisma.$executeRaw).toHaveBeenCalled()
     })
 
     it('swallows a Prisma rejection and reports it to Sentry', async () => {

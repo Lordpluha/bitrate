@@ -161,6 +161,7 @@ describe('AdminAlbumsService', () => {
   describe('softDelete', () => {
     it('throws AlbumNotFoundException when the album does not exist', async () => {
       prisma.album.findFirst.mockResolvedValue(null)
+      transaction.album.updateMany.mockResolvedValue({ count: 0 })
 
       await expect(service.softDelete('missing', STAFF_ID)).rejects.toThrow(AlbumNotFoundException)
     })
@@ -169,6 +170,7 @@ describe('AdminAlbumsService', () => {
       prisma.album.findFirst.mockResolvedValue(
         buildAlbumWithArtist({ deletedAt: new Date() }) as never,
       )
+      transaction.album.updateMany.mockResolvedValue({ count: 0 })
 
       await expect(service.softDelete('album-1', STAFF_ID)).rejects.toThrow(
         AlbumAlreadyDeletedException,

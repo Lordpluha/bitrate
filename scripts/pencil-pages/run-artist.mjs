@@ -5,6 +5,7 @@ import { artistPages2 } from './pages-artist2.mjs'
 
 setLibDir('../../web-player-design/design-system/')
 const root = process.argv[2]
+const only = process.argv.slice(3)
 const wizard = Object.fromEntries(
   Object.entries(releaseWizard).map(([dir, w]) => [
     dir,
@@ -17,10 +18,11 @@ const wizard = Object.fromEntries(
   ]),
 )
 const all = { ...artistPages, ...wizard, ...releasePages, ...artistPages2 }
+let written = 0
 let frames = 0
 for (const [dir, spec] of Object.entries(all)) {
-  writePage(root, dir, spec)
-  frames +=
-    4 + (spec.states ?? []).reduce((n, s) => n + (s.desktop ? 1 : 0) + (s.mobile ? 1 : 0), 0)
+  if (only.length && !only.includes(dir)) continue
+  frames += writePage(root, dir, spec).frames
+  written++
 }
-console.log(Object.keys(all).length, 'artist pages,', frames, 'frames')
+console.log(written, 'artist pages,', frames, 'frames')

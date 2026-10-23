@@ -1,5 +1,34 @@
 # @bitrate/admin
 
+## 0.4.0
+
+### Minor Changes
+
+- a5d2f1c: Redesigned Artists and Listeners on the glass building blocks, in English and Ukrainian. The artists list gained KPI tiles (active, verified with their share, waiting for verification, deactivated) and status and verification filter menus; the listeners list shows active and deactivated counts with email confirmation as a pill. Artist and listener pages became bentos with profile and activity tiles, the artist's tracks and albums, and the listener's history; revoke-sessions, deactivate and restore confirm inline as before, and a failed verification change now says so instead of reporting a deactivation failure.
+- 74626fc: Moved the admin console onto the glass shell: a floating sidebar that collapses to a 76px rail, a centred search that opens a ⌘K / Ctrl K command palette, a top island with the current section and a profile menu (language, theme, sign out), a mobile top bar with a tab bar and menu sheet, self-hosted Inter and Unbounded fonts, an aurora background, and a 404 page with shortcuts filtered by the operator's permissions.
+- 04dd591: Redesigned sign-in and the no-access screen on the glass look, in English and Ukrainian. Sign-in shows the brand, field errors in the operator's language, a spinner while signing in and a help line; the no-access screen shows who is signed in and their role, and offers Check again, which re-reads the session so a role granted meanwhile takes effect, and Sign out.
+- ee02cc9: Redesigned Catalog, Albums, Playlists, Podcasts and Genres on the glass building blocks, in English and Ukrainian. Each list gained KPI tiles read from the list endpoints (pipeline states for tracks; live and taken-down counts and, for operators who can read the moderation queue, open reports for albums, playlists and podcast episodes), filter menus, a search box, phone cards and distinct empty, no-results and failed states. Track, album, playlist and podcast pages became bentos of tiles; the genre editor shows a live preview and its usage, and can delete an unused genre. Write failures, processing history, audio errors and form validation are translated too.
+- b8b551c: Redesigned Moderation and Releases on the glass building blocks, in English and Ukrainian. The queues gained KPI tiles read from the list endpoints (open and in-review reports with the oldest wait; releases awaiting review and waiting on artists), filter menus, a search box for releases, phone cards, and distinct empty, no-results (with Clear filters) and failed (with Try again) states. A report and a release open as a bento of tiles; resolving or rejecting a report and approving a release or requesting changes now ask for confirmation in a dialog.
+- 4b5ea5a: Redesigned Overview as a glass bento, in English and Ukrainian: Needs action (reports, releases and failed tracks the role can see, with the latest reports), Listeners and Artists with sparklines, Listens per day, Track pipeline, Reports by type, Accounts and the latest audit entries. Every tile opens an analysis panel with the range's figures and charts; the open panel and the 7/30/90-day range live in the URL. A tile whose source the operator's role cannot read shows a lock instead of a zero, and a failed range request no longer hides the rest of the page. The old `/overview/reports` page now opens the Reports by type panel. Chart axes use compact numbers (240K).
+- dfa7542: Redesigned the Audit log, Roles and Staff on the glass building blocks, in English and Ukrainian. Roles gained KPI tiles (roles and how many are built in, operators holding a role, divergent holders, permissions and their areas) and shows the permission catalogue as its own tile; the role editor, the new-operator form and the operator page became bentos with account, role and permission tiles, and the permission grid names its groups. Deactivating an operator now asks for confirmation in a dialog. The audit log filters by entity type in the panel bar, shows a removable chip when it is scoped to one record, and offers Clear filters when nothing matches.
+
+### Patch Changes
+
+- e97e6c7: A code-health pass fixed bugs found in review and removed duplicated and wasteful work across
+  the stack. The API created OAuth accounts atomically, deleted replaced avatars, closed storage
+  streams on failure, kept muted notification categories from crowding out releases, reported
+  playlist position races as conflicts and re-checked websocket sessions on a timer instead of on
+  every message, with narrower reads and shared admin take-down, OAuth and ranking helpers. The
+  landing page gave every scene its own particle layout again and stopped per-frame style reads;
+  the player stopped rewriting the store on every progress tick and mutation errors were toasted
+  once. The admin panel told load failures apart from missing records and kept the page when
+  navigating search history; the artist dashboard themed its verify-email page and refreshed only
+  the caches a release write changed. The carousel released its re-init listener and honoured
+  consumer gaps, the player engine ignored superseded play requests, and the MP4 indexer and SVG
+  colour detection did less work per file.
+- Updated dependencies [e97e6c7]
+  - @bitrate/player@1.1.1
+
 ## 0.3.0
 
 ### Minor Changes

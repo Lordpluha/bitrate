@@ -4,39 +4,31 @@ import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
 import { type AuditContextValue, writeTakeDownAudit } from '@modules/admin/shared'
 import { RELEASE_ERRORS } from '@modules/releases/errors'
-import { releaseReadiness } from '@modules/releases/release-readiness'
+import { type ReleaseReadiness, releaseReadiness } from '@modules/releases/release-readiness'
 import { readinessFromRecord, releaseReadinessSelect } from '@modules/releases/releases.select'
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { type Prisma, ReleaseReviewDecision, ReleaseStatus } from '@prisma/client'
+import {
+  DECIDED_SELECT,
+  DETAIL_SELECT,
+  type DecidedRelease,
+  type DetailRecord,
+  REVIEW_SELECT,
+  type ReviewRecord,
+  ROW_SELECT,
+  type RowRecord,
+} from './admin-releases.select'
 import type {
   ApproveReleaseDto,
   ListAdminReleasesQueryDto,
   RequestReleaseChangesDto,
 } from './dtos/release-review.dto'
 
-const ROW_SELECT = {
-  id: true,
-  title: true,
-  type: true,
-  status: true,
-  cover: true,
-  submittedAt: true,
-  updatedAt: true,
-  owner: { select: { id: true, username: true } },
-  _count: { select: { trackDrafts: { where: { deletedAt: null } } } },
-} as const satisfies Prisma.ReleaseSelect
-
-const REVIEW_SELECT = {
-  id: true,
-  decision: true,
-  message: true,
-  requiredChanges: true,
-  recommendations: true,
-  createdAt: true,
-  staff: { select: { username: true } },
-} as const satisfies Prisma.ReleaseReviewSelect
-
-type RowRecord = Prisma.ReleaseGetPayload<{ select: typeof ROW_SELECT }>
+/** What a review decision moves the release to, and the review it stores. */
+type DecisionOutcome = {
+  status: ReleaseStatus
+  review: Omit<Prisma.ReleaseReviewUncheckedCreateInput, 'releaseId' | 'staffId'>
+}
 
 /**
  * Bitrate's reviewer side of artist submissions. A decision is only possible on a release
@@ -52,21 +44,7 @@ export class AdminReleasesService {
 
   async list(query: ListAdminReleasesQueryDto) {
     const { page, limit, skip } = normalizePagination(query.page, query.limit)
-    const where: Prisma.ReleaseWhereInput = {
-      deletedAt: null,
-      status:
-        query.status === 'ALL'
-          ? { in: [ReleaseStatus.SUBMITTED, ReleaseStatus.READY, ReleaseStatus.REJECTED] }
-          : query.status,
-      ...(query.q
-        ? {
-            OR: [
-              { title: { contains: query.q, mode: 'insensitive' } },
-              { owner: { username: { contains: query.q, mode: 'insensitive' } } },
-            ],
-          }
-        : {}),
-    }
+    const where = listWhere(query)
     const [rows, total] = await Promise.all([
       this.prisma.release.findMany({
         where,
@@ -84,60 +62,10 @@ export class AdminReleasesService {
   async detail(id: string) {
     const release = await this.prisma.release.findFirst({
       where: { id, deletedAt: null, status: { not: ReleaseStatus.DRAFT } },
-      select: {
-        ...ROW_SELECT,
-        upc: true,
-        scheduledAt: true,
-        masterOwnerType: true,
-        masterOwnerName: true,
-        writersConfirmedAt: true,
-        accuracyConfirmedAt: true,
-        trackDrafts: {
-          where: { deletedAt: null },
-          orderBy: [{ position: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
-          select: {
-            id: true,
-            title: true,
-            duration: true,
-            isrc: true,
-            audioKey: true,
-            audioFileName: true,
-          },
-        },
-        contributors: {
-          orderBy: [{ displayName: 'asc' }, { id: 'asc' }],
-          select: { id: true, displayName: true, roles: true },
-        },
-        splits: { select: { contributorId: true, rightType: true, shareBasisPoints: true } },
-        territories: { select: { countryCode: true }, orderBy: { countryCode: 'asc' } },
-        destinations: { select: { destination: true } },
-        reviews: { orderBy: { createdAt: 'desc' }, take: 20, select: REVIEW_SELECT },
-      },
+      select: DETAIL_SELECT,
     })
     if (!release) throw new NotFoundException(RELEASE_ERRORS.NOT_FOUND)
-    const readiness = await this.prisma.release.findFirstOrThrow({
-      where: { id },
-      select: releaseReadinessSelect(release.owner.id),
-    })
-    const { trackDrafts, territories, destinations, reviews, ...rest } = release
-    return {
-      ...toRow(rest),
-      upc: rest.upc,
-      scheduledAt: rest.scheduledAt,
-      rights: {
-        masterOwnerType: rest.masterOwnerType,
-        masterOwnerName: rest.masterOwnerName,
-        writersConfirmedAt: rest.writersConfirmedAt,
-        accuracyConfirmedAt: rest.accuracyConfirmedAt,
-      },
-      tracks: trackDrafts.map(({ audioKey, ...track }) => ({ ...track, hasAudio: !!audioKey })),
-      contributors: rest.contributors,
-      splits: rest.splits,
-      territories: territories.map((item) => item.countryCode),
-      destinations: destinations.map((item) => item.destination),
-      readiness: releaseReadiness(readinessFromRecord(readiness)),
-      reviews: reviews.map(toReview),
-    }
+    return toDetail(release, await this.loadReadiness(id, release.owner.id))
   }
 
   approve(id: string, staffId: string, input: ApproveReleaseDto, audit: AuditContextValue) {
@@ -185,56 +113,104 @@ export class AdminReleasesService {
     return { ...object, contentType: draft.audioContentType ?? object.contentType }
   }
 
+  /** Loads what the submission rules read and evaluates them for the reviewer. */
+  private async loadReadiness(id: string, ownerId: string): Promise<ReleaseReadiness> {
+    const record = await this.prisma.release.findFirstOrThrow({
+      where: { id },
+      select: releaseReadinessSelect(ownerId),
+    })
+    return releaseReadiness(readinessFromRecord(record))
+  }
+
   private decide(
     id: string,
     staffId: string,
     expectedUpdatedAt: string,
     audit: AuditContextValue,
-    outcome: {
-      status: ReleaseStatus
-      review: Omit<Prisma.ReleaseReviewUncheckedCreateInput, 'releaseId' | 'staffId'>
-    },
+    outcome: DecisionOutcome,
   ) {
     return this.prisma.$transaction(async (tx) => {
-      const [release] = await tx.release.updateManyAndReturn({
-        where: {
-          id,
-          deletedAt: null,
-          status: ReleaseStatus.SUBMITTED,
-          updatedAt: new Date(expectedUpdatedAt),
-        },
-        data: { status: outcome.status },
-        select: { id: true, status: true, updatedAt: true },
-      })
-      if (!release) {
-        const exists = await tx.release.findFirst({
-          where: { id, deletedAt: null },
-          select: { id: true },
-        })
-        if (!exists) throw new NotFoundException(RELEASE_ERRORS.NOT_FOUND)
-        throw new ConflictException(RELEASE_ERRORS.CHANGED_OR_NOT_SUBMITTED)
-      }
+      const release = await this.claimSubmitted(tx, id, expectedUpdatedAt, outcome.status)
       const review = await tx.releaseReview.create({
         data: { ...outcome.review, releaseId: id, staffId },
         select: REVIEW_SELECT,
       })
-      await writeTakeDownAudit({
-        tx,
-        entityType: 'release',
-        entityId: id,
-        action:
-          outcome.review.decision === ReleaseReviewDecision.APPROVED
-            ? 'release.approve'
-            : 'release.request-changes',
-        staffId,
-        reason: outcome.review.message ?? undefined,
-        before: { status: ReleaseStatus.SUBMITTED },
-        after: { status: outcome.status },
-        requestId: audit.requestId,
-        ipAddress: audit.ipAddress,
-      })
+      await this.writeDecisionAudit(tx, id, staffId, audit, outcome)
       return { release, review: toReview(review) }
     })
+  }
+
+  /**
+   * Moves the release to `status` only if it is still SUBMITTED at `expectedUpdatedAt`; when
+   * nothing matched, tells a missing release (404) from a changed or decided one (409).
+   */
+  private async claimSubmitted(
+    tx: Prisma.TransactionClient,
+    id: string,
+    expectedUpdatedAt: string,
+    status: ReleaseStatus,
+  ): Promise<DecidedRelease> {
+    const [release] = await tx.release.updateManyAndReturn({
+      where: {
+        id,
+        deletedAt: null,
+        status: ReleaseStatus.SUBMITTED,
+        updatedAt: new Date(expectedUpdatedAt),
+      },
+      data: { status },
+      select: DECIDED_SELECT,
+    })
+    if (release) return release
+
+    const exists = await tx.release.findFirst({
+      where: { id, deletedAt: null },
+      select: { id: true },
+    })
+    if (!exists) throw new NotFoundException(RELEASE_ERRORS.NOT_FOUND)
+    throw new ConflictException(RELEASE_ERRORS.CHANGED_OR_NOT_SUBMITTED)
+  }
+
+  private writeDecisionAudit(
+    tx: Prisma.TransactionClient,
+    id: string,
+    staffId: string,
+    audit: AuditContextValue,
+    outcome: DecisionOutcome,
+  ): Promise<void> {
+    return writeTakeDownAudit({
+      tx,
+      entityType: 'release',
+      entityId: id,
+      action:
+        outcome.review.decision === ReleaseReviewDecision.APPROVED
+          ? 'release.approve'
+          : 'release.request-changes',
+      staffId,
+      reason: outcome.review.message ?? undefined,
+      before: { status: ReleaseStatus.SUBMITTED },
+      after: { status: outcome.status },
+      requestId: audit.requestId,
+      ipAddress: audit.ipAddress,
+    })
+  }
+}
+
+/** The queue filter: not deleted, the chosen status (or every reviewed one), title/handle search. */
+function listWhere(query: ListAdminReleasesQueryDto): Prisma.ReleaseWhereInput {
+  return {
+    deletedAt: null,
+    status:
+      query.status === 'ALL'
+        ? { in: [ReleaseStatus.SUBMITTED, ReleaseStatus.READY, ReleaseStatus.REJECTED] }
+        : query.status,
+    ...(query.q
+      ? {
+          OR: [
+            { title: { contains: query.q, mode: 'insensitive' } },
+            { owner: { username: { contains: query.q, mode: 'insensitive' } } },
+          ],
+        }
+      : {}),
   }
 }
 
@@ -247,9 +223,29 @@ function toRow({ owner, _count, ...release }: RowRecord) {
   }
 }
 
-function toReview({
-  staff,
-  ...review
-}: Prisma.ReleaseReviewGetPayload<{ select: typeof REVIEW_SELECT }>) {
+function toReview({ staff, ...review }: ReviewRecord) {
   return { ...review, reviewerUsername: staff?.username ?? null }
+}
+
+/** The reviewer's detail shape: the row, rights grouped, audio reduced to `hasAudio`. */
+function toDetail(release: DetailRecord, readiness: ReleaseReadiness) {
+  const { trackDrafts, territories, destinations, reviews, ...rest } = release
+  return {
+    ...toRow(rest),
+    upc: rest.upc,
+    scheduledAt: rest.scheduledAt,
+    rights: {
+      masterOwnerType: rest.masterOwnerType,
+      masterOwnerName: rest.masterOwnerName,
+      writersConfirmedAt: rest.writersConfirmedAt,
+      accuracyConfirmedAt: rest.accuracyConfirmedAt,
+    },
+    tracks: trackDrafts.map(({ audioKey, ...track }) => ({ ...track, hasAudio: !!audioKey })),
+    contributors: rest.contributors,
+    splits: rest.splits,
+    territories: territories.map((item) => item.countryCode),
+    destinations: destinations.map((item) => item.destination),
+    readiness,
+    reviews: reviews.map(toReview),
+  }
 }

@@ -8,7 +8,6 @@ import {
   usePlayerStore,
 } from '@entities/Player'
 import { useTrackLike } from '@entities/Track'
-import { showApiErrorToast } from '@shared/api/feedback'
 import { ROUTES } from '@shared/routes'
 import { MediaImage } from '@shared/ui/MediaImage'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
@@ -88,11 +87,7 @@ export const CurrentPlaylist = ({ onCollapse }: CurrentPlaylistProps) => {
           aria-pressed={isLiked}
           className="shrink-0 rounded-full p-1 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
           disabled={isPending}
-          onClick={() =>
-            void toggleLike().catch((error: unknown) =>
-              showApiErrorToast(error, 'Unable to update Liked Songs.'),
-            )
-          }
+          onClick={toggleLike}
           type="button"
         >
           <Heart

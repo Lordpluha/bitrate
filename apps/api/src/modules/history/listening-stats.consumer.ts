@@ -1,5 +1,5 @@
 import { InjectQueue, Processor, WorkerHost } from '@nestjs/bullmq'
-import { Inject, Injectable, Logger, type OnModuleInit } from '@nestjs/common'
+import { Injectable, Logger, type OnModuleInit } from '@nestjs/common'
 import type { Job, Queue } from 'bullmq'
 import { ListeningStatsService } from './listening-stats.service'
 
@@ -20,8 +20,7 @@ export class ListeningStatsConsumer extends WorkerHost implements OnModuleInit {
   private readonly logger = new Logger(ListeningStatsConsumer.name)
 
   constructor(
-    /* explicit token: a consumer file may import the class as a type, which DI cannot resolve */
-    @Inject(ListeningStatsService) private readonly stats: ListeningStatsService,
+    private readonly stats: ListeningStatsService,
     @InjectQueue(LISTENING_STATS_QUEUE) private readonly queue: Queue,
   ) {
     super()

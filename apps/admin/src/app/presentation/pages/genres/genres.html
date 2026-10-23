@@ -1,107 +1,150 @@
-<section class="space-y-6 p-8">
-  <header class="flex items-center justify-between gap-4">
-    <div class="space-y-1">
-      <h1 class="text-xl font-semibold text-foreground">Genres</h1>
-      <p class="text-sm text-muted-foreground">
-        Reference data behind browse categories. A genre can be deleted only while nothing
-        references it.
-      </p>
-    </div>
-    @if (canWrite()) {
-      <a hlmBtn size="sm" routerLink="/genres/new">New genre</a>
-    }
-  </header>
+<app-page-header
+  [eyebrow]="'genres.eyebrow' | transloco"
+  [title]="'genres.title' | transloco"
+  [subtitle]="'genres.subtitle' | transloco"
+>
+  @if (canWrite()) {
+    <a headerActions hlmBtn routerLink="/genres/new">
+      <ng-icon name="lucidePlus" aria-hidden="true" />
+      {{ 'genres.new' | transloco }}
+    </a>
+  }
+</app-page-header>
 
-  <form class="flex gap-2" (ngSubmit)="applyFilters()">
-    <label class="sr-only" for="genre-search">Search genres</label>
-    <input
-      hlmInput
-      class="w-64"
-      id="genre-search"
-      type="search"
-      placeholder="Name or slug"
-      [value]="draft()"
-      (input)="draft.set($any($event.target).value)"
-    />
-    <button hlmBtn size="sm" variant="outline" type="submit">Search</button>
-  </form>
-
-  <app-collection-status
-    [loading]="collection.loading()"
-    [failure]="collection.failure()"
-    [isEmpty]="collection.items().length === 0"
-    emptyMessage="No genres match this filter."
+@if (deleteErrorText(); as message) {
+  <app-state-message
+    class="rounded-tile border border-error/40 bg-glass p-4 shadow-glass backdrop-blur-[22px]"
+    kind="error"
+    [title]="message"
+    [compact]="true"
   />
+}
 
-  @if (collection.items().length > 0) {
-    <div hlmTableContainer>
+<app-table-panel>
+  <app-panel-bar panelBar>
+    <app-search-field
+      [label]="'genres.search' | transloco"
+      [value]="draft()"
+      (valueChange)="draft.set($event)"
+    />
+    @if (range(); as r) {
+      <span class="ms-auto text-[0.8125rem] tabular-nums text-muted-foreground">
+        {{ 'ui.pagination.range' | transloco: r }}
+      </span>
+    }
+  </app-panel-bar>
+
+  @if (
+    collection.items().length === 0 &&
+    !collection.loading() &&
+    !collection.failure() &&
+    query.state().query
+  ) {
+    <app-state-message
+      class="min-h-[340px] p-5"
+      kind="noResults"
+      [title]="'genres.noResults.title' | transloco: { query: query.state().query }"
+      [description]="'genres.noResults.desc' | transloco"
+      [actionLabel]="'ui.clearFilters' | transloco"
+      (action)="clearSearch()"
+    />
+  } @else {
+    <app-collection-status
+      [loading]="collection.loading() && collection.items().length === 0"
+      [failure]="failureText()"
+      [isEmpty]="collection.items().length === 0"
+      [emptyMessage]="'genres.empty.title' | transloco"
+      [retryLabel]="'ui.tryAgain' | transloco"
+      (retry)="collection.reload()"
+    />
+  }
+
+  @if (collection.items().length > 0 && !collection.failure()) {
+    <div hlmTableContainer class="hidden md:block">
       <table hlmTable>
         <caption hlmCaption class="sr-only">
-          Genres
+          {{
+            'genres.table.caption' | transloco
+          }}
         </caption>
         <thead hlmTHead>
           <tr hlmTr>
             <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'name')">
               <app-sort-header
-                [field]="'name'"
-                label="Name"
+                field="name"
+                [label]="'genres.table.name' | transloco"
                 [sort]="query.state().sort"
                 (sortChange)="setSort($event)"
               >
-                Name
+                {{ 'genres.table.name' | transloco }}
               </app-sort-header>
             </th>
             <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'slug')">
               <app-sort-header
-                [field]="'slug'"
-                label="Slug"
+                field="slug"
+                [label]="'genres.table.slug' | transloco"
                 [sort]="query.state().sort"
                 (sortChange)="setSort($event)"
               >
-                Slug
+                {{ 'genres.table.slug' | transloco }}
               </app-sort-header>
             </th>
-            <th hlmTh scope="col">Tracks</th>
-            <th hlmTh scope="col">Albums</th>
-            <th hlmTh scope="col">Artists</th>
-            <th hlmTh scope="col">Actions</th>
+            <th hlmTh scope="col">{{ 'genres.table.tracks' | transloco }}</th>
+            <th hlmTh scope="col">{{ 'genres.table.albums' | transloco }}</th>
+            <th hlmTh scope="col">{{ 'genres.table.artists' | transloco }}</th>
+            @if (canDelete()) {
+              <th hlmTh scope="col"></th>
+            }
+            <th hlmTh scope="col" class="w-11"></th>
           </tr>
         </thead>
         <tbody hlmTBody>
           @for (genre of collection.items(); track genre.id) {
             <tr hlmTr>
               <td hlmTd>
-                @if (genre.color) {
+                <span class="flex items-center gap-2.5">
                   <span
-                    class="mr-2 inline-block size-3 rounded-full border border-border align-middle"
+                    class="size-3 shrink-0 rounded-full border border-glass-line"
                     [style.background-color]="genre.color"
                     aria-hidden="true"
                   ></span>
-                }
-                <a [routerLink]="['/genres', genre.id]" class="text-primary hover:underline">{{
-                  genre.name
-                }}</a>
+                  <a
+                    class="font-semibold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                    [routerLink]="['/genres', genre.id]"
+                    >{{ genre.name }}</a
+                  >
+                </span>
               </td>
-              <td hlmTd class="text-muted-foreground">{{ genre.slug }}</td>
+              <td hlmTd class="font-mono text-xs text-muted-foreground">{{ genre.slug }}</td>
               <td hlmTd class="tabular-nums">{{ genre.counts.tracks }}</td>
               <td hlmTd class="tabular-nums">{{ genre.counts.albums }}</td>
               <td hlmTd class="tabular-nums">{{ genre.counts.artists }}</td>
-              <td hlmTd>
-                @if (canDelete()) {
-                  @if (blockedReason(genre); as reason) {
-                    <span class="text-xs text-muted-foreground">{{ reason }}</span>
+              @if (canDelete()) {
+                <td hlmTd class="text-right">
+                  @if (inUse(genre)) {
+                    <span
+                      hlmBadge
+                      variant="secondary"
+                      [title]="'genres.usedBy' | transloco: genre.counts"
+                      >{{ 'genres.inUse' | transloco }}</span
+                    >
                   } @else {
                     <button
                       hlmBtn
                       size="sm"
                       variant="ghost"
                       type="button"
+                      [attr.aria-label]="'genres.deleteLabel' | transloco: { name: genre.name }"
                       (click)="askDelete(genre)"
                     >
-                      Delete
+                      <ng-icon name="lucideTrash2" aria-hidden="true" />
+                      {{ 'genres.delete' | transloco }}
                     </button>
                   }
-                }
+                </td>
+              }
+              <td hlmTd class="text-muted-foreground">
+                <ng-icon class="text-base" name="lucideChevronRight" aria-hidden="true" />
               </td>
             </tr>
           }
@@ -109,36 +152,62 @@
       </table>
     </div>
 
-    <app-paginator
-      [page]="collection.page()"
-      [pageCount]="collection.pageCount()"
-      [total]="collection.total()"
-      [disabled]="collection.loading()"
-      (goTo)="goToPage($event)"
-    />
+    <ul class="flex flex-col gap-2.5 p-3 md:hidden">
+      @for (genre of collection.items(); track genre.id) {
+        <li>
+          <a
+            class="flex flex-col gap-2 rounded-[18px] border border-glass-line bg-card/50 p-3.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            [routerLink]="['/genres', genre.id]"
+          >
+            <span class="flex items-center gap-2.5">
+              <span
+                class="size-3 shrink-0 rounded-full border border-glass-line"
+                [style.background-color]="genre.color"
+                aria-hidden="true"
+              ></span>
+              <span class="truncate font-semibold">{{ genre.name }}</span>
+            </span>
+            <span class="text-xs text-muted-foreground">
+              {{ 'genres.table.tracks' | transloco }} {{ genre.counts.tracks }} ·
+              {{ 'genres.table.artists' | transloco }} {{ genre.counts.artists }}
+            </span>
+          </a>
+        </li>
+      }
+    </ul>
   }
 
-  <hlm-dialog [state]="pendingDelete() ? 'open' : 'closed'" (closed)="cancelDelete()">
-    <hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-md">
-      <hlm-dialog-header>
-        <h2 hlmDialogTitle>Delete genre</h2>
-        <p hlmDialogDescription>
-          Permanently delete "{{ pendingDelete()?.name }}"? Nothing references it, but this cannot
-          be undone.
-        </p>
-      </hlm-dialog-header>
-      <hlm-dialog-footer>
-        <button hlmBtn variant="outline" type="button" (click)="cancelDelete()">Cancel</button>
-        <button
-          hlmBtn
-          variant="destructive"
-          type="button"
-          [disabled]="deleting()"
-          (click)="confirmDelete()"
-        >
-          {{ deleting() ? 'Deleting…' : 'Delete genre' }}
-        </button>
-      </hlm-dialog-footer>
-    </hlm-dialog-content>
-  </hlm-dialog>
-</section>
+  <app-paginator
+    panelFooter
+    [page]="collection.page()"
+    [pageCount]="collection.pageCount()"
+    [total]="collection.total()"
+    [disabled]="collection.loading()"
+    (goTo)="goToPage($event)"
+  />
+</app-table-panel>
+
+<hlm-dialog [state]="pendingDelete() ? 'open' : 'closed'" (closed)="cancelDelete()">
+  <hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-md">
+    <hlm-dialog-header>
+      <h2 hlmDialogTitle>{{ 'genres.dialog.title' | transloco }}</h2>
+      <p hlmDialogDescription>
+        {{ 'genres.dialog.desc' | transloco: { name: pendingDelete()?.name ?? '' } }}
+      </p>
+    </hlm-dialog-header>
+    <hlm-dialog-footer>
+      <button hlmBtn variant="ghost" type="button" (click)="cancelDelete()">
+        {{ 'ui.cancel' | transloco }}
+      </button>
+      <button
+        hlmBtn
+        variant="destructive"
+        type="button"
+        [disabled]="deleting()"
+        (click)="confirmDelete()"
+      >
+        {{ (deleting() ? 'genres.dialog.busy' : 'genres.dialog.action') | transloco }}
+      </button>
+    </hlm-dialog-footer>
+  </hlm-dialog-content>
+</hlm-dialog>

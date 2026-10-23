@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing'
 import type { ProcessingAttempt } from '@domain/track'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { ProcessingAttemptDiagnostics } from './processing-attempt-diagnostics'
+import { provideTestTransloco } from '@testing/transloco'
 
 function attempt(overrides: Partial<ProcessingAttempt> = {}): ProcessingAttempt {
   return {
@@ -46,7 +47,9 @@ function attempt(overrides: Partial<ProcessingAttempt> = {}): ProcessingAttempt 
 
 function create(a: ProcessingAttempt) {
   TestBed.resetTestingModule()
-  TestBed.configureTestingModule({ providers: [provideZonelessChangeDetection()] })
+  TestBed.configureTestingModule({
+    providers: [...provideTestTransloco(), provideZonelessChangeDetection()],
+  })
 
   const fixture = TestBed.createComponent(ProcessingAttemptDiagnostics)
   fixture.componentRef.setInput('attempt', a)
@@ -133,6 +136,6 @@ describe('ProcessingAttemptDiagnostics', () => {
     copyButton?.click()
     await fixture.whenStable()
 
-    expect(host.querySelector('[aria-live="polite"]')?.textContent).toContain('Could not copy')
+    expect(host.querySelector('[aria-live="polite"]')?.textContent).toContain('Couldn’t copy')
   })
 })

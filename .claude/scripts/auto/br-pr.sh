@@ -6,7 +6,7 @@
 # token: never pass one on the command line, never echo one, never write one to a
 # file. If `run_gh auth status` fails, that is the user's to fix — see `verify`.
 #
-# Every subcommand is idempotent. `create` is a no-op when a PR already exists for
+# Every subcommand is idempotent. `create` is a no-op when an open PR already exists for
 # the branch, because a re-run of the pipeline must never open a second PR.
 #
 # Usage:
@@ -49,8 +49,6 @@ The /br-auto pipeline cannot run without it."
 
 run_gh() { resolve_gh; "${GH_BIN[@]}" "$@"; }
 
-need_gh() { resolve_gh; }
-
 # A file passed to host gh must exist on the HOST filesystem. Under the Flatpak
 # sandbox the repo is shared with the host but /tmp is NOT, so a body file
 # written to a sandbox temp dir is invisible to host gh and gh fails with a
@@ -68,13 +66,17 @@ check_body_file() {
   esac
 }
 
-pr_number_for() {
-  local branch="${1:?}"
-  run_gh pr list --head "$branch" --state all --limit 1 --json number -q '.[0].number // empty' 2>/dev/null
+# Prints "<number> <url>" of the branch's newest PR in <state> (default: open), or nothing.
+# create/update/comment must only see an OPEN PR: a reused branch name would otherwise
+# resolve to an old merged/closed PR and the write would land on it.
+pr_for() {
+  local branch="${1:?}" state="${2:-open}"
+  run_gh pr list --head "$branch" --state "$state" --limit 1 --json number,url \
+    -q '.[0] | select(. != null) | "\(.number) \(.url)"' 2>/dev/null
 }
 
 cmd_verify() {
-  need_gh
+  resolve_gh
   run_gh auth status >/dev/null 2>&1 || die "gh is not authenticated — run 'gh auth login'"
   # read:project is what the board queries need; gh reports granted scopes here.
   local scopes
@@ -90,7 +92,7 @@ cmd_verify() {
 }
 
 cmd_state() {
-  need_gh
+  resolve_gh
   local branch="${1:?branch required}" json
   json="$(run_gh pr list --head "$branch" --state all --limit 1 \
     --json number,url,state,isDraft,mergeable,reviewDecision,statusCheckRollup \
@@ -115,9 +117,10 @@ cmd_state() {
 # Reviewer feedback. Unresolved review threads come first because those are the
 # ones that actually block the PR; general issue-comments follow as context.
 cmd_notes() {
-  need_gh
-  local branch="${1:?branch required}" num
-  num="$(pr_number_for "$branch")"
+  resolve_gh
+  local branch="${1:?branch required}" pr num
+  pr="$(pr_for "$branch" all)"
+  num="${pr%% *}"
   [[ -n "$num" ]] || { printf 'no PR for %s\n' "$branch"; return 0; }
 
   local repo owner name
@@ -156,48 +159,47 @@ cmd_notes() {
 }
 
 cmd_comment() {
-  need_gh
-  local branch="${1:?branch required}" file="${2:?body file required}" num
+  resolve_gh
+  local branch="${1:?branch required}" file="${2:?body file required}" pr num
   check_body_file "$file"
-  num="$(pr_number_for "$branch")"
-  [[ -n "$num" ]] || die "no PR for $branch"
+  pr="$(pr_for "$branch")"
+  num="${pr%% *}"
+  [[ -n "$num" ]] || die "no open PR for $branch"
   run_gh pr comment "$num" --body-file "$file" >/dev/null
   printf 'commented on PR #%s\n' "$num"
 }
 
 cmd_create() {
-  need_gh
+  resolve_gh
   local branch="${1:?branch required}" title="${2:?title required}" file="${3:?body file required}"
   check_body_file "$file"
 
   local existing
-  existing="$(pr_number_for "$branch")"
+  existing="$(pr_for "$branch")"
   if [[ -n "$existing" ]]; then
-    printf 'PR_NUMBER=%s\nPR_URL=%s\nPR_STATE=existing\n' \
-      "$existing" "$(run_gh pr view "$existing" --json url -q .url)"
+    printf 'PR_NUMBER=%s\nPR_URL=%s\nPR_STATE=existing\n' "${existing%% *}" "${existing#* }"
     return 0
   fi
 
-  run_gh pr create --head "$branch" --base "$BASE_BRANCH" \
-    --title "$title" --body-file "$file" >/dev/null \
+  # gh prints the new PR's URL on stdout; its last path segment is the number.
+  local url
+  url="$(run_gh pr create --head "$branch" --base "$BASE_BRANCH" \
+    --title "$title" --body-file "$file")" \
     || die "gh pr create failed for $branch"
-
-  local num
-  num="$(pr_number_for "$branch")"
-  printf 'PR_NUMBER=%s\nPR_URL=%s\nPR_STATE=created\n' \
-    "$num" "$(run_gh pr view "$num" --json url -q .url)"
+  url="$(printf '%s\n' "$url" | tail -n 1)"
+  printf 'PR_NUMBER=%s\nPR_URL=%s\nPR_STATE=created\n' "${url##*/}" "$url"
 }
 
 cmd_update() {
-  need_gh
+  resolve_gh
   local branch="${1:?branch required}" title="${2:?title required}" file="${3:?body file required}"
   check_body_file "$file"
-  local num
-  num="$(pr_number_for "$branch")"
-  [[ -n "$num" ]] || die "no PR for $branch — use 'create'"
+  local pr num
+  pr="$(pr_for "$branch")"
+  num="${pr%% *}"
+  [[ -n "$num" ]] || die "no open PR for $branch — use 'create'"
   run_gh pr edit "$num" --title "$title" --body-file "$file" >/dev/null
-  printf 'PR_NUMBER=%s\nPR_URL=%s\nPR_STATE=updated\n' \
-    "$num" "$(run_gh pr view "$num" --json url -q .url)"
+  printf 'PR_NUMBER=%s\nPR_URL=%s\nPR_STATE=updated\n' "$num" "${pr#* }"
 }
 
 case "${1:-}" in

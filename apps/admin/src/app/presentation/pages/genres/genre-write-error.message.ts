@@ -1,43 +1,44 @@
 import { GenreWriteError } from '@domain/genre'
+import type { Notice } from '@presentation/pages/shared/resource-write-error.message'
 
-type GenreWriteErrorMessageInput = {
+type GenreWriteErrorInput = {
   error: unknown
   /** The slug the operator typed or the API derived, for the slug-taken message. */
   slug: string
 }
 
 /** Turns a rejected create/update into a sentence an operator can act on. */
-export function genreWriteErrorMessage({ error, slug }: GenreWriteErrorMessageInput): string {
-  if (!(error instanceof GenreWriteError)) return 'Could not save this genre.'
+export function genreWriteError({ error, slug }: GenreWriteErrorInput): Notice {
+  if (!(error instanceof GenreWriteError)) return { key: 'genre.error.save' }
 
   switch (error.reason) {
     case 'slug-taken':
       return slug
-        ? `The slug "${slug}" is already used by another genre.`
-        : 'A genre with this slug already exists.'
+        ? { key: 'genre.error.slugTaken', params: { slug } }
+        : { key: 'genre.error.slugTakenUnnamed' }
     case 'invalid':
-      return 'The API rejected the name, slug or colour.'
+      return { key: 'genre.error.invalid' }
     case 'not-found':
-      return 'This genre no longer exists.'
+      return { key: 'genre.error.gone' }
     default:
-      return 'Could not save this genre.'
+      return { key: 'genre.error.save' }
   }
 }
 
 /** The delete counterpart. Names the references that block the delete when the API sent them. */
-export function genreDeleteErrorMessage(error: unknown): string {
-  if (!(error instanceof GenreWriteError)) return 'Could not delete this genre.'
+export function genreDeleteError(error: unknown): Notice {
+  if (!(error instanceof GenreWriteError)) return { key: 'genre.error.delete' }
 
   switch (error.reason) {
     case 'in-use': {
       const counts = error.counts
       return counts
-        ? `Still referenced by ${counts.tracks} tracks, ${counts.albums} albums and ${counts.artists} artists.`
-        : 'This genre is still referenced by tracks, albums or artists.'
+        ? { key: 'genres.usedBy', params: { ...counts } }
+        : { key: 'genre.error.inUseUnknown' }
     }
     case 'not-found':
-      return 'This genre no longer exists.'
+      return { key: 'genre.error.gone' }
     default:
-      return 'Could not delete this genre.'
+      return { key: 'genre.error.delete' }
   }
 }

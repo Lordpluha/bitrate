@@ -94,9 +94,9 @@ const NODES: readonly (readonly [number, number])[] = [
 ]
 export const LUMA = [672, 534] as const
 
-const TAU = 6.283
+const TAU = Math.PI * 2
 
-/** One particle layout per scene, in board pixels (x, y, depth). */
+/** One particle layout per scene (same order as LANDING_SCENES), in board pixels (x, y, depth). */
 export const createLayouts = (): Float32Array[] => [
   /* 01 fibonacci shell around the signal + two tilted orbits */
   make((i, f) =>
@@ -124,19 +124,7 @@ export const createLayouts = (): Float32Array[] => [
     const x = rnd(i, 3) * BOARD.width
     return [x, 230 + Math.sin(x * 0.02) * 12, (rnd(i, 4) - 0.5) * 60]
   }),
-  /* 03 release timeline: one line, five milestone clusters */
-  make((i, f) => {
-    if (f < 0.5) return [100 + rnd(i, 5) * 1240, 322 + (rnd(i, 6) - 0.5) * 5, 0]
-    const k = i % 5
-    const r = 8 + rnd(i, 7) * 34
-    const t = rnd(i, 8) * TAU
-    return [
-      200 + k * 260 + Math.cos(t) * r,
-      322 + Math.sin(t) * r,
-      (rnd(i, 9) - 0.5) * 30,
-    ]
-  }),
-  /* 04 four concentric orbits — one per workshop step */
+  /* 03 four concentric orbits — one per workshop step */
   make((i) => {
     const ring = i % 4
     return ellipse({
@@ -148,14 +136,14 @@ export const createLayouts = (): Float32Array[] => [
       tilt: 0.7 + ring * 0.12,
     })
   }),
-  /* 05 a perspective floor grid running to the horizon */
+  /* 04 a perspective floor grid running to the horizon */
   make((i) => {
     const cols = 64
     const row = Math.floor(i / cols) % 50
     const col = i % cols
     return [col * (BOARD.width / (cols - 1)), 650 + row * 5, -900 + row * 26]
   }),
-  /* 06 three stacked version rings */
+  /* 05 three stacked version rings */
   make((i) => {
     const k = i % 3
     return ellipse({
@@ -167,7 +155,7 @@ export const createLayouts = (): Float32Array[] => [
       tilt: 1.15,
     })
   }),
-  /* 07 the discovery graph: links from Luma Vale + clusters on every node */
+  /* 06 the discovery graph: links from Luma Vale + clusters on every node */
   make((i) => {
     const a = NODES[i % 8] ?? LUMA
     if (i % 3 === 0) {
@@ -183,7 +171,7 @@ export const createLayouts = (): Float32Array[] => [
       (rnd(i, 15) - 0.5) * 40,
     ]
   }),
-  /* 08 outlines of the desktop window and the phone, joined by an arc */
+  /* 07 outlines of the desktop window and the phone, joined by an arc */
   make((i, f) => {
     if (f < 0.45) {
       const [x, y] = rect({ x: 553, y: 116, w: 855, h: 716, t: rnd(i, 16) })
@@ -196,7 +184,7 @@ export const createLayouts = (): Float32Array[] => [
     const t = rnd(i, 18)
     return [568 + 114 * t + Math.sin(t * 3.1) * 30, 728 - 150 * t * t, 10]
   }),
-  /* 09 conversation ripples from Maya's card */
+  /* 08 conversation ripples from Maya's card */
   make((i) => {
     const ring = i % 9
     const t = (rnd(i, 19) - 0.5) * Math.PI * 1.2
@@ -207,9 +195,9 @@ export const createLayouts = (): Float32Array[] => [
       (rnd(i, 20) - 0.5) * 20,
     ]
   }),
-  /* 10 a loose shell around the partner spheres */
+  /* 09 a loose shell around the partner spheres */
   make((i) => fib({ i, n: FIELD_COUNT, r: 470, cx: 970, cy: 460 })),
-  /* 11 gravity rain over the team pit + its floor line */
+  /* 10 gravity rain over the team pit + its floor line */
   make((i, f) =>
     f < 0.75
       ? [
@@ -219,7 +207,7 @@ export const createLayouts = (): Float32Array[] => [
         ]
       : [520 + rnd(i, 26) * 880, 849, 0],
   ),
-  /* 12 a dome lattice rising from the footer + a wide halo */
+  /* 11 a dome lattice rising from the footer + a wide halo */
   make((i, f) =>
     f < 0.7
       ? fib({

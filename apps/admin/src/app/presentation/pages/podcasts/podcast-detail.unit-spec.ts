@@ -10,11 +10,10 @@ import {
 } from '@application/podcasts'
 import { SessionStore } from '@application/session'
 import type { PodcastDetail, PodcastEpisode } from '@domain/podcast'
-import { ResourceWriteError } from '@domain/shared'
-import { TranslocoTestingModule } from '@jsverse/transloco'
-import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
+import { ResourceNotFoundError, ResourceWriteError } from '@domain/shared'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { PodcastDetailPage } from './podcast-detail'
+import { provideTestTransloco } from '@testing/transloco'
 
 const ADMIN_STAFF = {
   id: '3f2504e0-4f89-41d3-9a0c-0305e82c3301',
@@ -75,13 +74,8 @@ const restoreEpisode = vi.fn<(input: unknown) => Promise<void>>()
 function create(permissions: string[] = []): void {
   TestBed.resetTestingModule()
   TestBed.configureTestingModule({
-    imports: [
-      TranslocoTestingModule.forRoot({
-        langs: { en: {}, uk: {} },
-        translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-      }),
-    ],
     providers: [
+      ...provideTestTransloco(),
       provideZonelessChangeDetection(),
       provideRouter([]),
       { provide: GetPodcastUseCase, useValue: { execute: getPodcast } },
@@ -130,7 +124,7 @@ describe('PodcastDetailPage', () => {
     getPodcast.mockReset()
   })
 
-  it('lists every episode on the Episodes tab, each with its own take-down state', async () => {
+  it('lists every episode, each with its own take-down state', async () => {
     getPodcast.mockResolvedValue(detail())
     create()
 
@@ -139,33 +133,39 @@ describe('PodcastDetailPage', () => {
     const rows = host.querySelectorAll('tbody tr')
     expect(rows).toHaveLength(2)
     expect(rows[0]?.textContent).toContain('Intro Episode')
-    expect(rows[0]?.textContent).not.toContain('taken down')
-    expect(rows[1]?.textContent).toContain('taken down')
-    const panels = Array.from(host.querySelectorAll<HTMLElement>('[role="tabpanel"]'))
-    expect(panels.map((panel) => panel.hidden)).toEqual([false, true])
+    expect(rows[0]?.textContent).not.toContain('Taken down')
+    expect(rows[1]?.textContent).toContain('Taken down')
   })
 
-  it('shows the description and facts when the Metadata tab is opened', async () => {
+  it('shows the description and facts beside the episodes', async () => {
     getPodcast.mockResolvedValue(detail())
-    create()
-
-    const { host, settle } = await render()
-    buttonLabelled(host, 'Metadata')?.click()
-    await settle()
-
-    const panels = Array.from(host.querySelectorAll<HTMLElement>('[role="tabpanel"]'))
-    expect(panels.map((panel) => panel.hidden)).toEqual([true, false])
-    expect(panels[1]?.textContent).toContain('Late night radio about signals.')
-    expect(panels[1]?.textContent).toContain('Bitrate FM')
-  })
-
-  it('shows the not-found message when the load rejects', async () => {
-    getPodcast.mockRejectedValue(new Error('404'))
     create()
 
     const { host } = await render()
 
-    expect(host.querySelector('[role="alert"]')?.textContent).toContain('could not be found')
+    const about = host.querySelector('app-tile')
+    expect(about?.textContent).toContain('Late night radio about signals.')
+    expect(about?.textContent).toContain('Bitrate FM')
+  })
+
+  it('shows the not-found message when the podcast does not exist', async () => {
+    getPodcast.mockRejectedValue(new ResourceNotFoundError())
+    create()
+
+    const { host } = await render()
+
+    expect(host.querySelector('[role="alert"]')?.textContent).toContain('Podcast not found')
+  })
+
+  it('shows a load failure, not not-found, when the load fails for another reason', async () => {
+    getPodcast.mockRejectedValue(new Error('500'))
+    create()
+
+    const { host } = await render()
+
+    const alert = host.querySelector('[role="alert"]')
+    expect(alert?.textContent).toContain('Couldn’t load this podcast')
+    expect(alert?.textContent).not.toContain('Podcast not found')
   })
 
   it('offers each episode the action its own state allows, independent of the podcast', async () => {
@@ -191,7 +191,6 @@ describe('PodcastDetailPage', () => {
     expect(host.querySelectorAll('button[aria-label^="Take down episode"]')).toHaveLength(0)
     expect(host.querySelectorAll('button[aria-label^="Restore episode"]')).toHaveLength(0)
     expect(podcastButton(host, 'Take down')).toBeUndefined()
-    expect(host.textContent).toContain('No actions available.')
   })
 
   /** AC2: the podcast take-down calls the podcast use case only, never an episode one. */

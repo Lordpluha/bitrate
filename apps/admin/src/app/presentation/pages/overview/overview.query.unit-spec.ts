@@ -4,27 +4,54 @@ import { overviewQueryCodec } from './overview.query'
 
 describe('overviewQueryCodec', () => {
   it('decodes a missing days parameter to the 30-day default', () => {
-    expect(overviewQueryCodec.decode(convertToParamMap({}))).toEqual({ days: 30 })
+    expect(overviewQueryCodec.decode(convertToParamMap({}))).toEqual({ days: 30, panel: null })
   })
 
   it('decodes a recognised range value', () => {
-    expect(overviewQueryCodec.decode(convertToParamMap({ days: '7' }))).toEqual({ days: 7 })
-    expect(overviewQueryCodec.decode(convertToParamMap({ days: '90' }))).toEqual({ days: 90 })
+    expect(overviewQueryCodec.decode(convertToParamMap({ days: '7' }))).toEqual({
+      days: 7,
+      panel: null,
+    })
+    expect(overviewQueryCodec.decode(convertToParamMap({ days: '90' }))).toEqual({
+      days: 90,
+      panel: null,
+    })
   })
 
   it('falls back to the default for a value outside the 7/30/90 allowlist', () => {
-    expect(overviewQueryCodec.decode(convertToParamMap({ days: '365' }))).toEqual({ days: 30 })
+    expect(overviewQueryCodec.decode(convertToParamMap({ days: '365' }))).toEqual({
+      days: 30,
+      panel: null,
+    })
   })
 
   it('falls back to the default for a non-numeric value', () => {
-    expect(overviewQueryCodec.decode(convertToParamMap({ days: 'abc' }))).toEqual({ days: 30 })
+    expect(overviewQueryCodec.decode(convertToParamMap({ days: 'abc' }))).toEqual({
+      days: 30,
+      panel: null,
+    })
   })
 
   it('omits the default from the serialised query string', () => {
-    expect(overviewQueryCodec.serialize({ days: 30 })).toEqual({})
+    expect(overviewQueryCodec.serialize({ days: 30, panel: null })).toEqual({})
   })
 
   it('serialises a non-default range explicitly', () => {
-    expect(overviewQueryCodec.serialize({ days: 7 })).toEqual({ days: '7' })
+    expect(overviewQueryCodec.serialize({ days: 7, panel: null })).toEqual({ days: '7' })
+  })
+
+  it('decodes a known panel and ignores an unknown one', () => {
+    expect(overviewQueryCodec.decode(convertToParamMap({ panel: 'listens' }))).toEqual({
+      days: 30,
+      panel: 'listens',
+    })
+    expect(overviewQueryCodec.decode(convertToParamMap({ panel: 'nope' }))).toEqual({
+      days: 30,
+      panel: null,
+    })
+  })
+
+  it('serialises an open panel', () => {
+    expect(overviewQueryCodec.serialize({ days: 30, panel: 'audit' })).toEqual({ panel: 'audit' })
   })
 })

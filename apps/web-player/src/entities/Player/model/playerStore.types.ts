@@ -9,6 +9,12 @@ export type QueuedTrack = {
   track: PlayerTrack
 }
 
+/** Where the audio element is; progress is derived when the duration is known. */
+type PlaybackTimeInput = {
+  currentTime: number
+  duration: number
+}
+
 type PlayPlaylistInput = {
   currentPlaylistId: string | null
   currentPlaylistName: string | null
@@ -34,8 +40,8 @@ export type PlayerState = PlayerSnapshot & {
   setCurrentTime: (currentTime: number) => void
   setDuration: (duration: number) => void
   setIsPlaying: (isPlaying: boolean) => void
+  setPlaybackTime: (input: PlaybackTimeInput) => void
   setPlaylistTracks: (playlist: PlayerTrack[]) => void
-  setProgress: (progress: number) => void
   setRepeatMode: (repeatMode: RepeatMode) => void
   setShuffleEnabled: (isShuffled: boolean) => void
   setVolume: (volume: number) => void

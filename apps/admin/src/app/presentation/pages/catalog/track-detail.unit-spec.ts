@@ -9,10 +9,11 @@ import {
   TakeDownTrackUseCase,
 } from '@application/catalog'
 import { SessionStore } from '@application/session'
-import { emptyPage, type Page, ResourceWriteError } from '@domain/shared'
+import { emptyPage, type Page, ResourceNotFoundError, ResourceWriteError } from '@domain/shared'
 import type { ProcessingAttempt, TrackDetail } from '@domain/track'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { TrackDetailPage } from './track-detail'
+import { provideTestTransloco } from '@testing/transloco'
 
 const ADMIN_STAFF = {
   id: '3f2504e0-4f89-41d3-9a0c-0305e82c3301',
@@ -57,6 +58,7 @@ function create(): void {
   TestBed.resetTestingModule()
   TestBed.configureTestingModule({
     providers: [
+      ...provideTestTransloco(),
       provideZonelessChangeDetection(),
       provideRouter([]),
       { provide: GetTrackUseCase, useValue: { execute: getTrack } },
@@ -89,11 +91,11 @@ describe('TrackDetailPage', () => {
 
     const host = fixture.nativeElement as HTMLElement
     expect(host.textContent).toContain('Night Drive')
-    expect(host.textContent).toContain('READY')
+    expect(host.textContent).toContain('Ready')
   })
 
-  it('shows the not-found message when the load rejects', async () => {
-    getTrack.mockRejectedValue(new Error('404'))
+  it('shows the not-found message when the track does not exist', async () => {
+    getTrack.mockRejectedValue(new ResourceNotFoundError())
     create()
 
     const fixture = TestBed.createComponent(TrackDetailPage)
@@ -101,7 +103,19 @@ describe('TrackDetailPage', () => {
 
     expect(
       (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent,
-    ).toContain('could not be found')
+    ).toContain('Track not found')
+  })
+
+  it('shows a load failure, not not-found, when the load fails for another reason', async () => {
+    getTrack.mockRejectedValue(new Error('500'))
+    create()
+
+    const fixture = TestBed.createComponent(TrackDetailPage)
+    await fixture.whenStable()
+
+    const alert = (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')
+    expect(alert?.textContent).toContain('Couldn’t load this track')
+    expect(alert?.textContent).not.toContain('Track not found')
   })
 
   it('hides the restore button for a track that is not taken down', async () => {

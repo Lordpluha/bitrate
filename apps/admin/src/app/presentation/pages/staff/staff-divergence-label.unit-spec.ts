@@ -28,7 +28,7 @@ describe('staffDivergenceLabel', () => {
       }),
     )
 
-    expect(label).toBe('+2 / −1 vs MODERATOR')
+    expect(label).toBe('+2 / −1')
   })
 
   it('is null for a built-in ADMIN holder', () => {

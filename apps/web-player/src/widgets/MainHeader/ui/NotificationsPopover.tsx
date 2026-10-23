@@ -13,7 +13,6 @@ import {
   useNotifications,
   useReadAllNotifications,
 } from '@/entities/Me'
-import { showApiErrorToast } from '@/shared/api/feedback'
 import { Z_INDEX_CLASS } from '@/shared/constants'
 import { ROUTES } from '@/shared/routes'
 
@@ -22,10 +21,7 @@ export const NotificationsPopover = () => {
   const readAll = useReadAllNotifications()
 
   const markAllAsRead = () => {
-    readAll.mutate(undefined, {
-      onError: (error) =>
-        showApiErrorToast(error, 'Unable to mark notifications as read.'),
-    })
+    readAll.mutate(undefined)
   }
 
   return (

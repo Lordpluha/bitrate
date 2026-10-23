@@ -1,7 +1,37 @@
-<section class="flex min-h-full flex-col items-center justify-center gap-2 p-8 text-center">
-  <h1 class="text-xl font-semibold text-foreground">No access</h1>
-  <p class="max-w-sm text-sm text-muted-foreground">
-    Your account is not granted any section of this panel. Ask an administrator to update your role,
-    or sign out from the header above.
-  </p>
+<section
+  class="mx-auto mt-6 flex w-full max-w-[460px] flex-col gap-4 rounded-tile border border-glass-line bg-glass p-6 shadow-glass backdrop-blur-[22px] backdrop-saturate-150 animate-rise motion-reduce:animate-none sm:p-8 lg:mt-16"
+  aria-labelledby="no-access-title"
+>
+  <span
+    class="grid size-11 place-items-center rounded-2xl bg-foreground/8 text-xl"
+    aria-hidden="true"
+  >
+    <ng-icon name="lucideLock" />
+  </span>
+  <div class="flex flex-col gap-1.5">
+    <h1 class="font-display text-2xl font-semibold tracking-tight" id="no-access-title">
+      {{ 'noAccess.title' | transloco }}
+    </h1>
+    <p class="text-sm text-muted-foreground">{{ 'noAccess.subtitle' | transloco }}</p>
+  </div>
+
+  @if (staff(); as me) {
+    <div>
+      <app-kv-row [label]="'noAccess.signedInAs' | transloco"
+        >{{ me.username }} · {{ me.email }}</app-kv-row
+      >
+      <app-kv-row [label]="'noAccess.role' | transloco">{{
+        me.roleName || ('noAccess.noRole' | transloco)
+      }}</app-kv-row>
+    </div>
+  }
+
+  <button hlmBtn class="w-full" type="button" [disabled]="checking()" (click)="checkAgain()">
+    <ng-icon [class.animate-spin]="checking()" name="lucideRefreshCw" aria-hidden="true" />
+    {{ (checking() ? 'noAccess.checking' : 'noAccess.checkAgain') | transloco }}
+  </button>
+  <button hlmBtn class="w-full" variant="ghost" type="button" (click)="signOut()">
+    <ng-icon name="lucideLogOut" aria-hidden="true" />
+    {{ 'noAccess.signOut' | transloco }}
+  </button>
 </section>

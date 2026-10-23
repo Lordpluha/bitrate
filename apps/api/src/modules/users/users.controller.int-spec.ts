@@ -1,11 +1,10 @@
-import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
-import type { StorageService } from '@infra/storage/storage.types'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { OptionalUserAuthGuard, UserAuthGuard } from '@modules/users-auth/users-auth.guard'
 import type { INestApplication } from '@nestjs/common'
 import { Test, type TestingModule } from '@nestjs/testing'
 import request from 'supertest'
 import { buildUser } from './__tests__/fixtures/users.fixtures'
+import { UserFollowsService } from './user-follows.service'
 import { UsersController } from './users.controller'
 import { UsersService } from './users.service'
 
@@ -16,29 +15,30 @@ const makeServiceMock = () =>
     getByUsername: jest.fn(),
     updateById: jest.fn(),
     uploadAvatar: jest.fn(),
+  }) as unknown as jest.Mocked<UsersService>
+
+const makeFollowsMock = () =>
+  ({
     listFollows: jest.fn(),
     getFollowingActivity: jest.fn(),
     getFollowing: jest.fn(),
-  }) as unknown as jest.Mocked<UsersService>
+  }) as unknown as jest.Mocked<UserFollowsService>
 
 describe('UsersController (int)', () => {
   let app: INestApplication
   let service: jest.Mocked<UsersService>
-  let storage: jest.Mocked<StorageService>
+  let follows: jest.Mocked<UserFollowsService>
   const user = buildUser()
 
   beforeAll(async () => {
     service = makeServiceMock()
-    storage = {
-      upload: jest.fn().mockImplementation(async (key: unknown) => key as never),
-      deleteObject: jest.fn(),
-    } as unknown as jest.Mocked<StorageService>
+    follows = makeFollowsMock()
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
       providers: [
         { provide: UsersService, useValue: service },
-        { provide: STORAGE_SERVICE, useValue: storage },
+        { provide: UserFollowsService, useValue: follows },
       ],
     })
       .overrideGuard(OptionalUserAuthGuard)
@@ -70,13 +70,12 @@ describe('UsersController (int)', () => {
   beforeEach(() => {
     service.findAll.mockReset()
     service.findById.mockReset()
-    service.listFollows.mockReset()
-    service.getFollowingActivity.mockReset()
-    service.getFollowing.mockReset()
+    follows.listFollows.mockReset()
+    follows.getFollowingActivity.mockReset()
+    follows.getFollowing.mockReset()
     service.getByUsername.mockReset()
     service.updateById.mockReset()
     service.uploadAvatar.mockReset()
-    storage.upload.mockClear()
   })
 
   it('GET /users/username/:username should return 200', async () => {
@@ -136,11 +135,8 @@ describe('UsersController (int)', () => {
     expect(res.status).toBe(400)
   })
 
-  it('POST /users/avatar should call uploadAvatar and return 201', async () => {
+  it('POST /users/avatar should hand the uploaded file to uploadAvatar and return 201', async () => {
     service.uploadAvatar.mockResolvedValue(user as never)
-
-    // A real PNG signature: the handler compares the file's magic bytes against
-    // the declared content type, so a placeholder string is rejected as spoofed.
     const pngBytes = Buffer.from([
       0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d,
     ])
@@ -153,58 +149,55 @@ describe('UsersController (int)', () => {
       })
 
     expect(res.status).toBe(201)
-    expect(storage.upload).toHaveBeenCalledWith(
-      expect.stringMatching(/^users\/avatars\/[0-9a-f-]{36}\.png$/),
-      pngBytes,
-      'image/png',
+    expect(service.uploadAvatar).toHaveBeenCalledWith(
+      user.id,
+      expect.objectContaining({ buffer: pngBytes, mimetype: 'image/png' }),
     )
-    expect(service.uploadAvatar).toHaveBeenCalledWith(user.id, expect.any(String))
   })
 
-  it('POST /users/avatar rejects spoofed image content and stores nothing', async () => {
+  it('POST /users/avatar rejects a disallowed type before reaching the service', async () => {
     const res = await request(app.getHttpServer())
       .post('/users/avatar')
       .attach('avatar', Buffer.from('<script>alert(1)</script>'), {
-        filename: 'evil.png',
-        contentType: 'image/png',
+        filename: 'evil.html',
+        contentType: 'text/html',
       })
 
     expect(res.status).toBe(400)
-    expect(storage.upload).not.toHaveBeenCalled()
     expect(service.uploadAvatar).not.toHaveBeenCalled()
   })
 
   const friendId = '0199d0c1-6c2a-7b3e-9a4f-1c2d3e4f5a6b'
 
   it('GET /users/me/following/activity should return the caller friend activity', async () => {
-    service.getFollowingActivity.mockResolvedValue([] as never)
+    follows.getFollowingActivity.mockResolvedValue([] as never)
 
     const res = await request(app.getHttpServer())
       .get('/users/me/following/activity')
       .query({ limit: 5 })
 
     expect(res.status).toBe(200)
-    expect(service.getFollowingActivity).toHaveBeenCalledWith(user.id, 5)
-    expect(service.listFollows).not.toHaveBeenCalled()
+    expect(follows.getFollowingActivity).toHaveBeenCalledWith(user.id, 5)
+    expect(follows.listFollows).not.toHaveBeenCalled()
   })
 
   it('GET /users/me/following should still list the caller follows, not parse me as an id', async () => {
-    service.getFollowing.mockResolvedValue({ data: [], total: 0, page: 1, limit: 20 } as never)
+    follows.getFollowing.mockResolvedValue({ data: [], total: 0, page: 1, limit: 20 } as never)
 
     const res = await request(app.getHttpServer()).get('/users/me/following')
 
     expect(res.status).toBe(200)
-    expect(service.getFollowing).toHaveBeenCalled()
-    expect(service.listFollows).not.toHaveBeenCalled()
+    expect(follows.getFollowing).toHaveBeenCalled()
+    expect(follows.listFollows).not.toHaveBeenCalled()
   })
 
   it('GET /users/:id/followers should pass the viewer through', async () => {
-    service.listFollows.mockResolvedValue({ data: [], total: 0, page: 1, limit: 20 } as never)
+    follows.listFollows.mockResolvedValue({ data: [], total: 0, page: 1, limit: 20 } as never)
 
     const res = await request(app.getHttpServer()).get(`/users/${friendId}/followers`)
 
     expect(res.status).toBe(200)
-    expect(service.listFollows).toHaveBeenCalledWith(
+    expect(follows.listFollows).toHaveBeenCalledWith(
       'followers',
       friendId,
       user.id,
@@ -217,6 +210,6 @@ describe('UsersController (int)', () => {
     const res = await request(app.getHttpServer()).get('/users/nope/following')
 
     expect(res.status).toBe(400)
-    expect(service.listFollows).not.toHaveBeenCalled()
+    expect(follows.listFollows).not.toHaveBeenCalled()
   })
 })

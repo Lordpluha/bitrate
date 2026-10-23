@@ -6,6 +6,7 @@ import {
   releaseTypeLabels,
 } from '@entities/release'
 import { formatDue, isOverdue } from '@entities/task'
+import { formatDateTimeUtc } from '@shared/lib/date'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
 import {
@@ -16,12 +17,6 @@ import {
   ListChecks,
   Music2,
 } from 'lucide-react'
-
-const dateFormatter = new Intl.DateTimeFormat('en-US', {
-  dateStyle: 'medium',
-  timeStyle: 'short',
-  timeZone: 'UTC',
-})
 
 interface DashboardOverviewProps {
   dashboard: ArtistDashboard
@@ -39,6 +34,24 @@ export function DashboardOverview({ dashboard }: DashboardOverviewProps) {
       <Analytics />
     </div>
   )
+}
+
+type CurrentReleaseSummary = NonNullable<ArtistDashboard['currentRelease']>
+
+/** What the current release is waiting on, in the artist's words. */
+function currentReleaseText({ status, blockerCount }: CurrentReleaseSummary) {
+  switch (status) {
+    case 'DRAFT':
+      return blockerCount > 0
+        ? `${blockerCount} ${blockerCount === 1 ? 'step' : 'steps'} left before review`
+        : 'Ready to submit for review'
+    case 'SUBMITTED':
+      return 'Waiting for Bitrate review'
+    case 'REJECTED':
+      return 'Changes requested by the reviewer'
+    default:
+      return 'Nothing to do right now'
+  }
 }
 
 function CurrentRelease({
@@ -71,7 +84,7 @@ function CurrentRelease({
               {releaseTypeLabels[release.type]} ·{' '}
               {releaseStatusLabels[release.status]}
               {release.scheduledAt &&
-                ` · Planned ${dateFormatter.format(new Date(release.scheduledAt))} UTC`}
+                ` · Planned ${formatDateTimeUtc(release.scheduledAt)} UTC`}
             </p>
             <p
               className={cn(
@@ -81,15 +94,7 @@ function CurrentRelease({
                   : 'text-text-secondary',
               )}
             >
-              {release.status === 'DRAFT'
-                ? release.blockerCount > 0
-                  ? `${release.blockerCount} ${release.blockerCount === 1 ? 'step' : 'steps'} left before review`
-                  : 'Ready to submit for review'
-                : release.status === 'SUBMITTED'
-                  ? 'Waiting for Bitrate review'
-                  : release.status === 'REJECTED'
-                    ? 'Changes requested by the reviewer'
-                    : 'Nothing to do right now'}
+              {currentReleaseText(release)}
             </p>
           </div>
           <Button
@@ -290,7 +295,7 @@ function Upcoming({ upcoming }: { upcoming: ArtistDashboard['upcoming'] }) {
                 {release.title}
               </Link>
               <span className="text-text-secondary">
-                {dateFormatter.format(new Date(release.scheduledAt))} UTC ·{' '}
+                {formatDateTimeUtc(release.scheduledAt)} UTC ·{' '}
                 {releaseStatusLabels[release.status]}
               </span>
             </li>

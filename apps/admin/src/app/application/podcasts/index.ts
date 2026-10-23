@@ -1,3 +1,4 @@
+export * from './get-podcast-stats.use-case'
 export * from './get-podcast.use-case'
 export * from './list-podcasts.use-case'
 export * from './restore-podcast.use-case'

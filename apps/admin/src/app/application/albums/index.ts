@@ -1,3 +1,4 @@
+export * from './get-album-stats.use-case'
 export * from './get-album.use-case'
 export * from './list-albums.use-case'
 export * from './restore-album.use-case'

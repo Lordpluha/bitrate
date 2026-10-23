@@ -5,7 +5,7 @@
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT"
 
-DC="docker compose -f infra/docker-compose.preprod.yaml"
+DC=(docker compose -f infra/docker-compose.preprod.yaml)
 
 # Colors
 GREEN='\033[0;32m'
@@ -20,7 +20,7 @@ print_header() {
 # Check Docker health
 check_health() {
     print_header "Service Health Status"
-    $DC ps
+    "${DC[@]}" ps
 
     # Docker-stack ports (see infra/docker-compose.preprod.yaml). They differ
     # from the native `pnpm dev` ports for web-artists and admin.
@@ -58,26 +58,39 @@ disk_usage() {
     docker system df -v
 }
 
+# Prints the last error lines of one service's recent logs, or a fallback when there are none.
+# Extra arguments go to compose before `logs` (e.g. `--profile worker`).
+print_errors() {
+    local service="$1" found
+    shift
+    found="$("${DC[@]}" "$@" logs --tail=50 "$service" 2>&1 | grep -i "error" | tail -10)"
+    if [ -n "$found" ]; then
+        echo "$found"
+    else
+        echo "  No errors found"
+    fi
+}
+
 # Container logs summary
 logs_summary() {
     print_header "Recent Errors in Logs"
 
     echo -e "${YELLOW}API Errors:${NC}"
-    $DC logs --tail=50 api 2>&1 | grep -i "error" | tail -10 || echo "  No errors found"
+    print_errors api
 
     # The transcode worker is a separate, profile-gated container (task worker:up). Without the
     # profile compose does not know the service, so it prints nothing here until it is running.
     echo -e "\n${YELLOW}Worker Errors:${NC}"
-    $DC --profile worker logs --tail=50 worker 2>&1 | grep -i "error" | tail -10 || echo "  No errors found"
+    print_errors worker --profile worker
 
     echo -e "\n${YELLOW}Web Player Errors:${NC}"
-    $DC logs --tail=50 web-player 2>&1 | grep -i "error" | tail -10 || echo "  No errors found"
+    print_errors web-player
 
     echo -e "\n${YELLOW}Web Artists Errors:${NC}"
-    $DC logs --tail=50 web-artists 2>&1 | grep -i "error" | tail -10 || echo "  No errors found"
+    print_errors web-artists
 
     echo -e "\n${YELLOW}Admin Errors:${NC}"
-    $DC logs --tail=50 admin 2>&1 | grep -i "error" | tail -10 || echo "  No errors found"
+    print_errors admin
 }
 
 # Network info
@@ -100,7 +113,7 @@ database_info() {
     # psql reads the credentials from the container's own environment, so an
     # overridden POSTGRES_USER/POSTGRES_DB in .env keeps working.
     psql_q() {
-        $DC exec -T postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "$0"' "$1" \
+        "${DC[@]}" exec -T postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "$0"' "$1" \
             2>/dev/null || echo "  Database not accessible"
     }
 
@@ -123,12 +136,37 @@ full_report() {
     logs_summary
 }
 
+# Ids of this stack's containers whose healthcheck reports `unhealthy`. Compose's own
+# `ps --filter status=` knows container states only, never health, so docker filters them.
+unhealthy_ids() {
+    local id filters=()
+    for id in $("${DC[@]}" ps -q); do
+        filters+=(--filter "id=$id")
+    done
+    [ "${#filters[@]}" -eq 0 ] && return 0
+    docker ps -q --filter health=unhealthy "${filters[@]}"
+}
+
+# Polls the given containers until none is still starting (health `starting` or no
+# healthcheck and not yet running), for at most SETTLE_TIMEOUT seconds (default 60).
+wait_until_settled() {
+    local deadline=$((SECONDS + ${SETTLE_TIMEOUT:-60}))
+    while [ "$SECONDS" -lt "$deadline" ]; do
+        docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' "$@" 2>/dev/null \
+            | grep -qE '^(starting|created|restarting)$' || return 0
+        sleep 2
+    done
+    echo -e "  ${YELLOW}Some services are still starting after ${SETTLE_TIMEOUT:-60}s${NC}"
+}
+
 # Quick fix common issues
 quick_fix() {
     print_header "Running Quick Fix"
 
     echo "1. Restarting unhealthy containers..."
-    $DC ps --filter "status=unhealthy" -q | xargs -r docker restart
+    local restarted
+    restarted="$(unhealthy_ids)"
+    [ -n "$restarted" ] && echo "$restarted" | xargs docker restart
 
     echo "2. Pruning unused networks..."
     docker network prune -f
@@ -138,8 +176,12 @@ quick_fix() {
 
     echo -e "\n${GREEN}Quick fix completed!${NC}"
 
-    echo -e "\nWaiting 10 seconds for services to stabilize..."
-    sleep 10
+    if [ -n "$restarted" ]; then
+        echo -e "\nWaiting for restarted services to stabilize..."
+        local ids
+        read -r -d "" -a ids <<<"$restarted" || true
+        wait_until_settled "${ids[@]}"
+    fi
 
     check_health
 }
@@ -179,7 +221,7 @@ if [ "$1" != "" ]; then
 else
     while true; do
         show_menu
-        read choice
+        read -r choice
 
         case $choice in
             1) check_health ;;
@@ -196,6 +238,6 @@ else
 
         echo ""
         echo -n "Press Enter to continue..."
-        read
+        read -r
     done
 fi

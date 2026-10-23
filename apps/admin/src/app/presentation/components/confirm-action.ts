@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core'
+import { TAKE_DOWN_REASON_MAX_LENGTH } from '@domain/shared'
+import { TranslocoPipe } from '@jsverse/transloco'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmLabelImports } from '@spartan-ng/helm/label'
-
-const REASON_MAX_LENGTH = 500
 
 /**
  * An inline destructive-action confirmation with an optional reason. Used by every
@@ -17,7 +17,7 @@ const REASON_MAX_LENGTH = 500
  */
 @Component({
   selector: 'app-confirm-action',
-  imports: [HlmButtonImports, HlmLabelImports],
+  imports: [HlmButtonImports, HlmLabelImports, TranslocoPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './confirm-action.html',
 })
@@ -30,7 +30,7 @@ export class ConfirmAction {
   readonly cancelled = output<void>()
 
   protected readonly reason = signal('')
-  protected readonly maxLength = REASON_MAX_LENGTH
+  protected readonly maxLength = TAKE_DOWN_REASON_MAX_LENGTH
 
   protected setReason(value: string): void {
     this.reason.set(value)

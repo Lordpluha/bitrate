@@ -12,6 +12,7 @@ import {
   releaseTypes,
 } from '@entities/release'
 import { ArrowDownUp, Disc3, ListFilter, RotateCcw, Search } from 'lucide-react'
+import { catalogueSortLabels } from '../model/sort'
 
 interface CatalogueFiltersProps {
   tab: 'tracks' | 'releases'
@@ -134,9 +135,11 @@ export function CatalogueFilters({
           }
           value={search.sort ?? 'updated'}
         >
-          <option value="updated">Recently updated</option>
-          <option value="title">Title A–Z</option>
-          <option value="oldest">Oldest updated</option>
+          {Object.entries(catalogueSortLabels).map(([value, { label }]) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
         </select>
       </label>
       <Button

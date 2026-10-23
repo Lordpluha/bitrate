@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core'
 import { ActivatedRoute, RouterLink } from '@angular/router'
 import { SessionStore } from '@application/session'
 import {
@@ -13,17 +13,49 @@ import {
   canRevokeUserSessions,
   type UserDetail,
 } from '@domain/user'
-import { ConfirmAction } from '@presentation/components'
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco'
+import { NgIcon, provideIcons } from '@ng-icons/core'
+import {
+  lucideActivity,
+  lucideArrowRight,
+  lucideCheck,
+  lucideHistory,
+  lucideLogOut,
+  lucideRotateCcw,
+  lucideX,
+} from '@ng-icons/lucide'
+import {
+  ConfirmAction,
+  KvRow,
+  PageHeader,
+  Skeleton,
+  StateMessage,
+  Tile,
+  TileGrid,
+} from '@presentation/components'
+import { LocaleStore } from '@presentation/navigation'
 import {
   isStaleStateError,
-  resourceWriteErrorMessage,
+  type Notice,
+  resourceWriteError,
 } from '@presentation/pages/shared/resource-write-error.message'
+import { LocalizedDatePipe } from '@presentation/pipes'
+import { createDetailResource } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { ListeningHistory } from './listening-history'
 
 /** The one action armed at a time — at most one confirm panel is ever open. */
 type ArmedAction = 'deactivate' | 'restore' | 'revoke-sessions' | null
+
+const CONFIRM: Record<Exclude<ArmedAction, null>, { body: string; action: string }> = {
+  deactivate: { body: 'account.confirm.deactivate', action: 'account.confirm.deactivateAction' },
+  restore: { body: 'account.confirm.restore', action: 'account.confirm.restoreAction' },
+  'revoke-sessions': {
+    body: 'account.confirm.revokeSessions',
+    action: 'account.confirm.revokeSessionsAction',
+  },
+}
 
 /**
  * Over 100 lines: three related take-down actions (deactivate/restore/revoke-sessions) share
@@ -32,8 +64,35 @@ type ArmedAction = 'deactivate' | 'restore' | 'revoke-sessions' | null
  */
 @Component({
   selector: 'app-user-detail',
-  imports: [RouterLink, ConfirmAction, ListeningHistory, HlmBadgeImports, HlmButtonImports],
+  imports: [
+    ConfirmAction,
+    HlmBadgeImports,
+    HlmButtonImports,
+    KvRow,
+    ListeningHistory,
+    LocalizedDatePipe,
+    NgIcon,
+    PageHeader,
+    RouterLink,
+    Skeleton,
+    StateMessage,
+    Tile,
+    TileGrid,
+    TranslocoPipe,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    provideIcons({
+      lucideActivity,
+      lucideArrowRight,
+      lucideCheck,
+      lucideHistory,
+      lucideLogOut,
+      lucideRotateCcw,
+      lucideX,
+    }),
+  ],
+  host: { class: 'flex flex-col gap-5 lg:gap-[22px]' },
   templateUrl: './user-detail.html',
 })
 export class UserDetailPage {
@@ -42,22 +101,45 @@ export class UserDetailPage {
   private readonly deactivateUser = inject(DeactivateUserUseCase)
   private readonly restoreUser = inject(RestoreUserUseCase)
   private readonly revokeSessionsUseCase = inject(RevokeUserSessionsUseCase)
+  private readonly transloco = inject(TranslocoService)
+  private readonly locale = inject(LocaleStore).locale
 
   protected readonly canDeactivate = inject(SessionStore).can('users:delete')
   protected readonly canRestore = inject(SessionStore).can('users:restore')
   protected readonly canRevokeSessions = inject(SessionStore).can('users:revoke-sessions')
   protected readonly userId = this.route.snapshot.paramMap.get('id') ?? ''
+  protected readonly confirmCopy = CONFIRM
 
-  protected readonly user = signal<UserDetail | null>(null)
-  protected readonly loading = signal(true)
-  protected readonly notFound = signal(false)
-  protected readonly failure = signal<string | null>(null)
-  protected readonly status = signal<string | null>(null)
+  private readonly record = createDetailResource({
+    load: () => this.getUser.execute(this.userId),
+    errorMessage: 'user.error.load',
+  })
+
+  protected readonly user = this.record.value
+  protected readonly loading = this.record.loading
+  protected readonly notFound = this.record.notFound
+  protected readonly failure = this.record.failure
+  /** What the last action did, or why it failed; translated on show. */
+  protected readonly status = signal<Notice | null>(null)
+  protected readonly actionError = signal<Notice | null>(null)
   protected readonly armed = signal<ArmedAction>(null)
   protected readonly pending = signal(false)
 
+  protected readonly back = computed(() => ({ link: '/users', label: this.t('users.title') }))
+  protected readonly failureText = computed(() => {
+    const key = this.failure()
+    return key === null ? null : this.t(key)
+  })
+  protected readonly statusText = computed(() => this.say(this.status()))
+  protected readonly actionErrorText = computed(() => this.say(this.actionError()))
+
   constructor() {
-    void this.load()
+    void this.record.reload()
+  }
+
+  protected reload(): void {
+    this.failure.set(null)
+    void this.record.reload()
   }
 
   protected deactivation(user: UserDetail) {
@@ -74,7 +156,7 @@ export class UserDetailPage {
 
   protected arm(action: ArmedAction): void {
     this.armed.set(action)
-    this.failure.set(null)
+    this.actionError.set(null)
     this.status.set(null)
   }
 
@@ -83,47 +165,38 @@ export class UserDetailPage {
     const action = this.armed()
     if (!current || !action) return
 
+    const name = current.username
     this.pending.set(true)
-    this.failure.set(null)
+    this.actionError.set(null)
     try {
       if (action === 'deactivate') {
         await this.deactivateUser.execute({ user: current, reason })
-        this.status.set(`${current.username} was deactivated.`)
+        this.status.set({ key: 'account.done.deactivated', params: { name } })
       } else if (action === 'restore') {
         await this.restoreUser.execute({ user: current, reason })
-        this.status.set(`${current.username} was restored.`)
+        this.status.set({ key: 'account.done.restored', params: { name } })
       } else {
-        const revoked = await this.revokeSessionsUseCase.execute({ user: current, reason })
-        this.status.set(
-          `Revoked ${revoked} session${revoked === 1 ? '' : 's'} for ${current.username}.`,
-        )
+        const count = await this.revokeSessionsUseCase.execute({ user: current, reason })
+        this.status.set({ key: 'account.done.revokedSessions', params: { name, count } })
       }
-      await this.load()
+      await this.record.reload()
     } catch (error) {
-      this.failure.set(
-        resourceWriteErrorMessage({
-          error,
-          action: toWriteAction(action),
-          label: current.username,
-        }),
+      this.actionError.set(
+        resourceWriteError({ error, action: toWriteAction(action), label: name }),
       )
-      if (isStaleStateError(error)) await this.load()
+      if (isStaleStateError(error)) await this.record.reload()
     } finally {
       this.pending.set(false)
       this.armed.set(null)
     }
   }
 
-  private async load(): Promise<void> {
-    this.loading.set(true)
-    try {
-      this.user.set(await this.getUser.execute(this.userId))
-      this.notFound.set(false)
-    } catch {
-      this.notFound.set(true)
-    } finally {
-      this.loading.set(false)
-    }
+  private say(notice: Notice | null): string | null {
+    return notice === null ? null : this.t(notice.key, notice.params)
+  }
+
+  private t(key: string, params: Record<string, string | number> = {}): string {
+    return this.transloco.translate(key, params, this.locale())
   }
 }
 

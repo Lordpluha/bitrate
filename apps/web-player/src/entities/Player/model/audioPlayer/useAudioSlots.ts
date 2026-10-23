@@ -39,6 +39,44 @@ const emptySlot = (): PlayerSlot => ({
   trackId: null,
 })
 
+/** Tears down the slot's stream and empties its element; the slot keeps its claim. */
+const resetSlotMedia = (slot: PlayerSlot) => {
+  slot.hls?.destroy()
+  slot.hls = null
+  slot.loader?.destroy()
+  slot.loader = null
+  slot.currentBitrate = null
+
+  if (slot.element) {
+    slot.element.pause()
+    slot.element.removeAttribute('src')
+    slot.element.load()
+  }
+}
+
+type RestoreOnMetadataInput = {
+  element: HTMLAudioElement
+  playbackKey: string
+  slot: PlayerSlot
+}
+
+/** Seeks to the saved position once metadata loads, unless another track took the slot. */
+const restorePositionOnMetadata = ({
+  element,
+  playbackKey,
+  slot,
+}: RestoreOnMetadataInput) => {
+  element.addEventListener(
+    'loadedmetadata',
+    () => {
+      if (slot.playbackKey === playbackKey) {
+        restorePlaybackPosition(element, playbackKey)
+      }
+    },
+    { once: true },
+  )
+}
+
 export const useAudioSlots = ({
   volume,
   resolveManifest,
@@ -50,6 +88,8 @@ export const useAudioSlots = ({
   const pendingPrefetchRef = useRef<PendingPrefetch | null>(null)
   const recoveryAttemptsRef = useRef<Record<string, number>>({})
   const [activeSlot, setActiveSlot] = useState<SlotIndex>(0)
+  /** Read at attach/switch time so volume changes don't rebuild the slot callbacks. */
+  const volumeRef = useRef(volume)
 
   const getActiveElement = useCallback(
     () => slotsRef.current[activeSlotRef.current].element,
@@ -58,19 +98,9 @@ export const useAudioSlots = ({
 
   const destroySlot = useCallback((index: SlotIndex) => {
     const slot = slotsRef.current[index]
-    slot.hls?.destroy()
-    slot.hls = null
-    slot.loader?.destroy()
-    slot.loader = null
-    slot.currentBitrate = null
+    resetSlotMedia(slot)
     slot.playbackKey = null
     slot.trackId = null
-
-    if (slot.element) {
-      slot.element.pause()
-      slot.element.removeAttribute('src')
-      slot.element.load()
-    }
   }, [])
 
   const attachTrack = useCallback(
@@ -89,20 +119,13 @@ export const useAudioSlots = ({
       slot.trackId = track.id
       element.preload = 'auto'
       element.crossOrigin = 'use-credentials'
-      element.volume = volume
+      element.volume = volumeRef.current
 
       const stopPlayback = () => {
         if (slot.playbackKey !== playbackKey) return
 
-        slot.hls?.destroy()
-        slot.hls = null
-        slot.loader?.destroy()
-        slot.loader = null
-        slot.currentBitrate = null
+        resetSlotMedia(slot)
         pendingPlayRef.current = false
-        element.pause()
-        element.removeAttribute('src')
-        element.load()
 
         /**
          * `isPrefetch` reflects who attached this slot, not who it is now — a
@@ -153,15 +176,7 @@ export const useAudioSlots = ({
         if (!isPrefetch && activeSlotRef.current === index) {
           pendingPlayRef.current = true
         }
-        element.addEventListener(
-          'loadedmetadata',
-          () => {
-            if (slot.playbackKey === playbackKey) {
-              restorePlaybackPosition(element, playbackKey)
-            }
-          },
-          { once: true },
-        )
+        restorePositionOnMetadata({ element, playbackKey, slot })
         safelyAttachLegacySource()
       }
 
@@ -190,19 +205,9 @@ export const useAudioSlots = ({
         safelyAttachLegacySource()
       }
 
-      if (!isPrefetch) {
-        element.addEventListener(
-          'loadedmetadata',
-          () => {
-            if (slot.playbackKey === playbackKey) {
-              restorePlaybackPosition(element, playbackKey)
-            }
-          },
-          { once: true },
-        )
-      }
+      if (!isPrefetch) restorePositionOnMetadata({ element, playbackKey, slot })
     },
-    [destroySlot, pause, resolveManifest, volume],
+    [destroySlot, pause, resolveManifest],
   )
 
   const bindAudioElement = useCallback(
@@ -212,32 +217,29 @@ export const useAudioSlots = ({
     [],
   )
 
-  const switchToSlot = useCallback(
-    (index: SlotIndex) => {
-      const previousIndex = activeSlotRef.current
-      if (previousIndex === index) return
+  const switchToSlot = useCallback((index: SlotIndex) => {
+    const previousIndex = activeSlotRef.current
+    if (previousIndex === index) return
 
-      const previousElement = slotsRef.current[previousIndex].element
-      const nextElement = slotsRef.current[index].element
-      if (!nextElement) return
+    const previousElement = slotsRef.current[previousIndex].element
+    const nextElement = slotsRef.current[index].element
+    if (!nextElement) return
 
-      activeSlotRef.current = index
-      setActiveSlot(index)
+    activeSlotRef.current = index
+    setActiveSlot(index)
 
-      /**
-       * A slot filled by prefetch carries a deliberately small buffer target
-       * and a "prefetch" label. Now that it is the track being listened to,
-       * promote both — otherwise the buffer stays shallow, the bitrate never
-       * climbs, and console tracing keeps calling the active track "prefetch".
-       */
-      slotsRef.current[index].loader?.promoteToActive(ACTIVE_BUFFER_SECONDS)
-      nextElement.volume = volume
-      nextElement.currentTime = 0
-      void nextElement.play().catch(() => undefined)
-      previousElement?.pause()
-    },
-    [volume],
-  )
+    /**
+     * A slot filled by prefetch carries a deliberately small buffer target
+     * and a "prefetch" label. Now that it is the track being listened to,
+     * promote both — otherwise the buffer stays shallow, the bitrate never
+     * climbs, and console tracing keeps calling the active track "prefetch".
+     */
+    slotsRef.current[index].loader?.promoteToActive(ACTIVE_BUFFER_SECONDS)
+    nextElement.volume = volumeRef.current
+    nextElement.currentTime = 0
+    void nextElement.play().catch(() => undefined)
+    previousElement?.pause()
+  }, [])
 
   const prefetchTrackWhenBuffered = useCallback(
     (index: SlotIndex, track: PlayableTrack, playbackKey: string) => {
@@ -265,6 +267,7 @@ export const useAudioSlots = ({
   )
 
   useEffect(() => {
+    volumeRef.current = volume
     for (const slot of slotsRef.current) {
       if (slot.element) slot.element.volume = volume
     }

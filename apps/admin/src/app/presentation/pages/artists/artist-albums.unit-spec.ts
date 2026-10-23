@@ -5,8 +5,7 @@ import type { ArtistAlbum } from '@domain/artist'
 import type { Page } from '@domain/shared'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ArtistAlbums } from './artist-albums'
-import { TranslocoTestingModule } from '@jsverse/transloco'
-import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
+import { provideTestTransloco } from '@testing/transloco'
 
 function album(overrides: Partial<ArtistAlbum> = {}): ArtistAlbum {
   return {
@@ -27,13 +26,8 @@ const execute = vi.fn<() => Promise<Page<ArtistAlbum>>>()
 function create() {
   TestBed.resetTestingModule()
   TestBed.configureTestingModule({
-    imports: [
-      TranslocoTestingModule.forRoot({
-        langs: { en: {}, uk: {} },
-        translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-      }),
-    ],
     providers: [
+      ...provideTestTransloco(),
       provideZonelessChangeDetection(),
       { provide: ListArtistAlbumsUseCase, useValue: { execute } },
     ],
@@ -62,8 +56,8 @@ describe('ArtistAlbums', () => {
 
     const host = fixture.nativeElement as HTMLElement
     expect(host.querySelectorAll('tbody tr')).toHaveLength(2)
-    expect(host.textContent).toContain('ALBUM')
-    expect(host.textContent).toContain('SINGLE')
+    expect(host.textContent).toContain('Album')
+    expect(host.textContent).toContain('Single')
   })
 
   it('shows an em dash for an album with no release date', async () => {
@@ -91,7 +85,7 @@ describe('ArtistAlbums', () => {
     const fixture = create()
     await fixture.whenStable()
 
-    expect((fixture.nativeElement as HTMLElement).textContent).toContain('taken down')
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain('Taken down')
   })
 
   it('shows the collection error state when the request rejects', async () => {
@@ -102,7 +96,7 @@ describe('ArtistAlbums', () => {
 
     expect(
       (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent,
-    ).toContain('Could not load albums.')
+    ).toContain('Couldn’t load albums')
   })
 
   it('shows the empty message when the artist has no albums', async () => {

@@ -5,8 +5,7 @@ import type { Page } from '@domain/shared'
 import type { ProcessingAttempt } from '@domain/track'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ProcessingHistory } from './processing-history'
-import { TranslocoTestingModule } from '@jsverse/transloco'
-import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
+import { provideTestTransloco } from '@testing/transloco'
 
 function attempt(overrides: Partial<ProcessingAttempt> = {}): ProcessingAttempt {
   return {
@@ -53,13 +52,8 @@ const execute = vi.fn<() => Promise<Page<ProcessingAttempt>>>()
 function create() {
   TestBed.resetTestingModule()
   TestBed.configureTestingModule({
-    imports: [
-      TranslocoTestingModule.forRoot({
-        langs: { en: {}, uk: {} },
-        translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-      }),
-    ],
     providers: [
+      ...provideTestTransloco(),
       provideZonelessChangeDetection(),
       { provide: ListProcessingAttemptsUseCase, useValue: { execute } },
     ],
@@ -126,7 +120,7 @@ describe('ProcessingHistory', () => {
 
     const host = fixture.nativeElement as HTMLElement
     expect(host.querySelector('[role="alert"]')?.textContent).toContain(
-      'Could not load processing history.',
+      'Couldn’t load processing history',
     )
   })
 

@@ -1,103 +1,87 @@
-<section class="space-y-6 p-8">
-  <header class="space-y-1">
-    <h1 class="text-xl font-semibold text-foreground">Catalog pipeline</h1>
-    <p class="text-sm text-muted-foreground">
-      Uploads move through processing and can be slow or fail. Failed and long-running tracks are
-      listed first.
-    </p>
-  </header>
-
+<app-page-header
+  [eyebrow]="'catalog.eyebrow' | transloco"
+  [title]="'catalog.title' | transloco"
+  [subtitle]="'catalog.subtitle' | transloco"
+>
   @if (canExport()) {
-    <app-export-csv-button [exporter]="exportCsv" />
+    <app-export-csv-button headerActions [exporter]="exportCsv" />
   }
+</app-page-header>
 
-  @if (needsAttention() > 0) {
-    <p
-      class="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
-    >
-      {{ needsAttention() }} track(s) on this page failed or have been processing for over half an
-      hour.
-    </p>
-  }
-
-  @if (query.state().sort === null) {
-    <p class="text-sm text-muted-foreground">
-      Ordered by what needs attention: failed tracks first, then the longest-stuck uploads. Choosing
-      a column below replaces this order; clearing it brings this order back.
-    </p>
-  }
-
-  <div class="flex flex-wrap items-center gap-3">
-    <form class="flex gap-2" (ngSubmit)="applyFilters()">
-      <label class="sr-only" for="track-search">Search tracks</label>
-      <input
-        hlmInput
-        class="w-64"
-        id="track-search"
-        type="search"
-        placeholder="Track title"
-        [value]="draft()"
-        (input)="draft.set($any($event.target).value)"
-      />
-      <button hlmBtn size="sm" variant="outline" type="submit">Search</button>
-    </form>
-
-    <div class="flex gap-2">
-      <button
-        hlmBtn
-        size="sm"
-        type="button"
-        [variant]="query.state().status === null ? 'default' : 'outline'"
-        (click)="setStatus(null)"
-      >
-        All
-      </button>
-      @for (option of statuses; track option) {
-        <button
-          hlmBtn
-          size="sm"
-          type="button"
-          [variant]="query.state().status === option ? 'default' : 'outline'"
-          (click)="setStatus(option)"
-        >
-          {{ option }}
-        </button>
-      }
-    </div>
-  </div>
-
-  <div class="flex gap-2" role="group" aria-label="Filter by take-down status">
-    @for (
-      option of [
-        { value: 'active', label: 'Active' },
-        { value: 'deactivated', label: 'Taken down' },
-        { value: 'all', label: 'All' },
-      ];
-      track option.value
-    ) {
-      <button
-        hlmBtn
-        size="sm"
-        [variant]="query.state().resourceStatus === option.value ? 'default' : 'outline'"
-        type="button"
-        [attr.aria-pressed]="query.state().resourceStatus === option.value"
-        (click)="setResourceStatus($any(option.value))"
-      >
-        {{ option.label }}
-      </button>
-    }
-  </div>
-
-  <app-collection-status
-    [loading]="collection.loading()"
-    [failure]="collection.failure()"
-    [isEmpty]="collection.items().length === 0"
-    emptyMessage="No tracks match this filter."
+<app-metric-strip>
+  <app-metric-tile
+    icon="lucideCircleCheck"
+    tone="success"
+    [label]="'catalog.kpi.ready' | transloco"
+    [value]="stats()?.ready ?? null"
+    [sub]="stats() === null ? null : ('catalog.kpi.readySub' | transloco)"
+    [loading]="statsLoading()"
   />
+  <app-metric-tile
+    icon="lucideRefreshCw"
+    tone="info"
+    [label]="'catalog.kpi.processing' | transloco"
+    [value]="stats()?.processing ?? null"
+    [sub]="
+      stats() === null
+        ? null
+        : stats()?.oldestProcessingAt
+          ? ('catalog.kpi.processingOldest'
+            | transloco: { age: (stats()?.oldestProcessingAt | elapsed) })
+          : ('catalog.kpi.processingNone' | transloco)
+    "
+    [loading]="statsLoading()"
+  />
+  <app-metric-tile
+    icon="lucideTriangleAlert"
+    tone="error"
+    [label]="'catalog.kpi.failed' | transloco"
+    [value]="stats()?.failed ?? null"
+    [sub]="stats() === null ? null : ('catalog.kpi.failedSub' | transloco)"
+    [loading]="statsLoading()"
+  />
+</app-metric-strip>
 
-  @if (collection.items().length > 0) {
+@if (reprocessFailed(); as title) {
+  <app-state-message
+    class="rounded-tile border border-error/40 bg-glass p-4 shadow-glass backdrop-blur-[22px]"
+    kind="error"
+    [title]="'catalog.error.reprocess' | transloco: { title }"
+    [compact]="true"
+  />
+}
+
+<app-table-panel>
+  <app-panel-bar panelBar>
+    @if (selection.count() === 0) {
+      <app-search-field
+        [label]="'catalog.search' | transloco"
+        [value]="draft()"
+        (valueChange)="draft.set($event)"
+      />
+      <app-filter-menu
+        [label]="'catalog.filter.pipeline' | transloco"
+        [options]="pipelineOptions()"
+        [value]="query.state().status"
+        [defaultValue]="null"
+        (valueChange)="setStatus($event)"
+      />
+      <app-filter-menu
+        [label]="'catalog.filter.resource' | transloco"
+        [options]="resourceOptions()"
+        [value]="query.state().resourceStatus"
+        [defaultValue]="'active'"
+        (valueChange)="setResourceStatus($event)"
+      />
+      @if (range(); as r) {
+        <span class="ms-auto text-[0.8125rem] tabular-nums text-muted-foreground">
+          {{ 'ui.pagination.range' | transloco: r }}
+        </span>
+      }
+    }
     <app-batch-action-bar
-      noun="track"
+      class="contents"
+      itemsKey="catalog.batch.items"
       [rows]="batchRows()"
       [actions]="batchActions()"
       [pending]="batchPending()"
@@ -106,19 +90,64 @@
       (cleared)="selection.clear()"
       (closed)="closeBatch()"
     />
+  </app-panel-bar>
 
-    <div hlmTableContainer>
+  @if (collection.items().length > 0 && (needsAttention() > 0 || query.state().sort === null)) {
+    <div class="flex flex-col gap-1 border-b border-glass-line px-4 py-3 text-[0.8125rem]">
+      @if (needsAttention() > 0) {
+        <p class="flex items-center gap-2 font-semibold text-error-text">
+          <ng-icon name="lucideCircleAlert" aria-hidden="true" />
+          {{ 'catalog.attention' | transloco: { count: needsAttention() } }}
+        </p>
+      }
+      @if (query.state().sort === null) {
+        <p class="text-muted-foreground">{{ 'catalog.order' | transloco }}</p>
+      }
+    </div>
+  }
+
+  @if (
+    collection.items().length === 0 && !collection.loading() && !collection.failure() && narrowed()
+  ) {
+    <app-state-message
+      class="min-h-[340px] p-5"
+      kind="noResults"
+      [title]="
+        query.state().query
+          ? ('catalog.noResults.titleQuery' | transloco: { query: query.state().query })
+          : ('catalog.noResults.title' | transloco)
+      "
+      [description]="'catalog.noResults.desc' | transloco"
+      [actionLabel]="'ui.clearFilters' | transloco"
+      (action)="clearFilters()"
+    />
+  } @else {
+    <app-collection-status
+      [loading]="collection.loading() && collection.items().length === 0"
+      [failure]="failureText()"
+      [isEmpty]="collection.items().length === 0"
+      [emptyMessage]="'catalog.empty.title' | transloco"
+      [retryLabel]="'ui.tryAgain' | transloco"
+      (retry)="retry()"
+    />
+  }
+
+  @if (collection.items().length > 0 && !collection.failure()) {
+    <div hlmTableContainer class="hidden md:block">
       <table hlmTable>
         <caption hlmCaption class="sr-only">
-          Tracks and their processing state
+          {{
+            'catalog.table.caption' | transloco
+          }}
         </caption>
         <thead hlmTHead>
           <tr hlmTr>
             @if (batchActions().length > 0) {
               <th hlmTh scope="col" class="w-8">
                 <input
+                  class="size-4 accent-primary"
                   type="checkbox"
-                  aria-label="Select all tracks on this page"
+                  [attr.aria-label]="'catalog.table.selectAll' | transloco"
                   [checked]="selection.allSelected(selectableIds())"
                   [disabled]="selectableIds().length === 0"
                   (change)="selection.toggleAll(selectableIds())"
@@ -127,110 +156,122 @@
             }
             <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'title')">
               <app-sort-header
-                [field]="'title'"
-                label="Track"
+                field="title"
+                [label]="'catalog.table.track' | transloco"
                 [sort]="query.state().sort"
                 (sortChange)="setSort($event)"
               >
-                Track
+                {{ 'catalog.table.track' | transloco }}
               </app-sort-header>
             </th>
-            <th hlmTh scope="col">Artist</th>
             <th
               hlmTh
               scope="col"
               [attr.aria-sort]="ariaSort(query.state().sort, 'processingStatus')"
             >
               <app-sort-header
-                [field]="'processingStatus'"
-                label="State"
+                field="processingStatus"
+                [label]="'catalog.table.pipeline' | transloco"
                 [sort]="query.state().sort"
                 (sortChange)="setSort($event)"
               >
-                State
+                {{ 'catalog.table.pipeline' | transloco }}
               </app-sort-header>
             </th>
-            <th hlmTh scope="col">Attempts</th>
-            <th hlmTh scope="col">Started</th>
-            <th hlmTh scope="col">Actions</th>
+            <th hlmTh scope="col">{{ 'catalog.table.attempts' | transloco }}</th>
+            <th hlmTh scope="col">{{ 'catalog.table.started' | transloco }}</th>
+            @if (canReprocess()) {
+              <th hlmTh scope="col">
+                <span class="sr-only">{{ 'catalog.action.reprocess' | transloco }}</span>
+              </th>
+            }
+            <th hlmTh scope="col" class="w-11"></th>
           </tr>
         </thead>
         <tbody hlmTBody>
           @for (track of collection.items(); track track.id) {
-            <tr hlmTr>
+            <tr hlmTr [attr.data-state]="selection.has(track.id) ? 'selected' : null">
               @if (batchActions().length > 0) {
                 <td hlmTd>
                   <input
+                    class="size-4 accent-primary"
                     type="checkbox"
-                    [attr.aria-label]="'Select ' + track.title"
+                    [attr.aria-label]="'catalog.table.select' | transloco: { title: track.title }"
                     [checked]="selection.has(track.id)"
                     [disabled]="!selectableIds().includes(track.id)"
                     (change)="selection.toggle(track.id)"
                   />
                 </td>
               }
-              <td hlmTd>
+              <td hlmTd class="max-w-md whitespace-normal">
                 <a
+                  class="font-semibold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                   [routerLink]="['/catalog', track.id]"
                   [fragment]="
                     track.processingStatus === 'FAILED' || isStuck(track)
                       ? 'processing-history'
                       : undefined
                   "
-                  class="hover:underline"
                   >{{ track.title }}</a
                 >
                 @if (track.takenDownAt) {
-                  <span hlmBadge variant="destructive" class="ml-2">taken down</span>
+                  <span hlmBadge variant="secondary" class="ms-2">{{
+                    'catalog.resource.deactivated' | transloco
+                  }}</span>
                 }
+                <span class="block text-xs text-muted-foreground">{{ track.artistUsername }}</span>
                 @if (track.processingError) {
                   <span
-                    class="mt-1 block max-w-md truncate text-xs text-destructive"
+                    class="mt-1 block truncate text-xs text-error-text"
                     [title]="track.processingError"
                   >
                     {{ track.processingError }}
                   </span>
                 }
               </td>
-              <td hlmTd class="text-muted-foreground">{{ track.artistUsername }}</td>
               <td hlmTd>
-                <span
-                  hlmBadge
-                  [variant]="
-                    track.processingStatus === 'FAILED'
-                      ? 'destructive'
-                      : track.processingStatus === 'READY'
-                        ? 'default'
-                        : 'outline'
-                  "
-                >
-                  {{ track.processingStatus }}
+                <span class="flex flex-wrap gap-1.5">
+                  <span hlmBadge [variant]="pipelineBadge[track.processingStatus]">{{
+                    pipelineKey[track.processingStatus] | transloco
+                  }}</span>
+                  @if (isStuck(track)) {
+                    <span hlmBadge variant="warning">{{
+                      'catalog.pipeline.stuck' | transloco
+                    }}</span>
+                  }
                 </span>
-                @if (isStuck(track)) {
-                  <span hlmBadge variant="destructive" class="ml-2">stuck</span>
-                }
               </td>
               <td hlmTd class="tabular-nums">{{ track.processingAttempts }}</td>
               <td hlmTd class="tabular-nums text-muted-foreground">
-                {{
-                  track.processingStartedAt
-                    ? (track.processingStartedAt | localizedDate: 'dd.MM HH:mm')
-                    : '—'
-                }}
-              </td>
-              <td hlmTd>
-                @if (canReprocess() && reprocessible(track)) {
-                  <button
-                    hlmBtn
-                    size="sm"
-                    variant="outline"
-                    type="button"
-                    [disabled]="busyId() === track.id"
-                    (click)="reprocess(track)"
+                @if (track.processingStartedAt; as started) {
+                  <time
+                    [attr.datetime]="started.toISOString()"
+                    [title]="started | localizedDate: 'dd.MM.yyyy HH:mm'"
+                    >{{ started | elapsed }}</time
                   >
-                    Reprocess
-                  </button>
+                } @else {
+                  —
                 }
+              </td>
+              @if (canReprocess()) {
+                <td hlmTd>
+                  @if (reprocessible(track)) {
+                    <button
+                      hlmBtn
+                      size="sm"
+                      variant="ghost"
+                      type="button"
+                      [disabled]="busyId() === track.id"
+                      (click)="reprocess(track)"
+                    >
+                      <ng-icon name="lucideRefreshCw" aria-hidden="true" />
+                      {{ 'catalog.action.reprocess' | transloco }}
+                    </button>
+                  }
+                </td>
+              }
+              <td hlmTd class="text-muted-foreground">
+                <ng-icon class="text-base" name="lucideChevronRight" aria-hidden="true" />
               </td>
             </tr>
           }
@@ -238,12 +279,45 @@
       </table>
     </div>
 
-    <app-paginator
-      [page]="collection.page()"
-      [pageCount]="collection.pageCount()"
-      [total]="collection.total()"
-      [disabled]="collection.loading()"
-      (goTo)="goToPage($event)"
-    />
+    <ul class="flex flex-col gap-2.5 p-3 md:hidden">
+      @for (track of collection.items(); track track.id) {
+        <li>
+          <a
+            class="flex flex-col gap-2 rounded-[18px] border border-glass-line bg-card/50 p-3.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            [routerLink]="['/catalog', track.id]"
+          >
+            <span class="flex items-start gap-2.5">
+              <span class="flex min-w-0 flex-1 flex-col">
+                <span class="truncate font-semibold">{{ track.title }}</span>
+                <span class="truncate text-xs text-muted-foreground">{{
+                  track.artistUsername
+                }}</span>
+              </span>
+              <span hlmBadge [variant]="pipelineBadge[track.processingStatus]">{{
+                pipelineKey[track.processingStatus] | transloco
+              }}</span>
+            </span>
+            <span class="text-xs text-muted-foreground">
+              {{
+                (track.takenDownAt ? 'catalog.resource.deactivated' : 'catalog.resource.active')
+                  | transloco
+              }}
+              @if (track.processingStartedAt; as started) {
+                · {{ started | elapsed }}
+              }
+            </span>
+          </a>
+        </li>
+      }
+    </ul>
   }
-</section>
+
+  <app-paginator
+    panelFooter
+    [page]="collection.page()"
+    [pageCount]="collection.pageCount()"
+    [total]="collection.total()"
+    [disabled]="collection.loading()"
+    (goTo)="goToPage($event)"
+  />
+</app-table-panel>

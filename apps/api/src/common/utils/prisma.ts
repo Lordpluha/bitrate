@@ -9,3 +9,8 @@ export function isPrismaP2025(error: unknown): boolean {
 export function isPrismaP2002(error: unknown): boolean {
   return error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002'
 }
+
+/** Returns true when `error` is Prisma's write-conflict or deadlock error; the transaction can be retried. */
+export function isPrismaP2034(error: unknown): boolean {
+  return error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2034'
+}
