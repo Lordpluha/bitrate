@@ -26,7 +26,7 @@ const preview: Preview = {
   initialGlobals: { theme: 'dark' },
   decorators: [
     componentWrapperDecorator(
-      (story) => `<div class="min-h-dvh bg-background p-6 text-foreground">${story}</div>`,
+      (story) => `<div class="bg-background p-6 text-foreground">${story}</div>`,
     ),
     (storyFn, context) => {
       const theme = (context.globals['theme'] as string | undefined) ?? 'dark'

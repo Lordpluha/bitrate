@@ -31,10 +31,12 @@ const preview: Preview = {
 
       useEffect(() => {
         document.documentElement.classList.toggle(THEME_CLASS, theme === 'light')
+        // Paint the canvas via <body>, so stories keep their natural height instead of 100dvh.
+        document.body.classList.add('bg-background', 'text-foreground')
       }, [theme])
 
       return (
-        <div className="bg-background text-foreground min-h-dvh">
+        <div className="bg-background text-foreground">
           <Story />
         </div>
       )
