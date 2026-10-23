@@ -1,19 +1,20 @@
 import { StaffWriteError } from '@domain/staff'
+import type { Notice } from '@presentation/pages/shared/resource-write-error.message'
 
 type StaffWriteOperation = 'create' | 'assign-role' | 'update-permissions' | 'deactivate'
 
-type StaffWriteErrorMessageInput = {
+type StaffWriteErrorInput = {
   error: unknown
   operation: StaffWriteOperation
   /** Distinguishes the update-permissions 400's two causes — see `to-staff-write-error.ts`. */
   targetIsBuiltInAdmin?: boolean
 }
 
-const DEFAULT_MESSAGE: Record<StaffWriteOperation, string> = {
-  create: 'Could not create this operator.',
-  'assign-role': 'Could not reassign this role.',
-  'update-permissions': 'Could not update permissions.',
-  deactivate: 'Could not deactivate this operator.',
+const DEFAULT_KEY: Record<StaffWriteOperation, string> = {
+  create: 'operator.error.create',
+  'assign-role': 'operator.error.assignRole',
+  'update-permissions': 'operator.error.updatePermissions',
+  deactivate: 'operator.error.deactivate',
 }
 
 /**
@@ -22,29 +23,32 @@ const DEFAULT_MESSAGE: Record<StaffWriteOperation, string> = {
  * (see `to-staff-write-error.ts` in `infrastructure/staff`); `targetIsBuiltInAdmin` is what
  * lets this pick the right one.
  */
-export function staffWriteErrorMessage({
+export function staffWriteError({
   error,
   operation,
   targetIsBuiltInAdmin,
-}: StaffWriteErrorMessageInput): string {
-  if (!(error instanceof StaffWriteError)) return DEFAULT_MESSAGE[operation]
+}: StaffWriteErrorInput): Notice {
+  if (!(error instanceof StaffWriteError)) return { key: DEFAULT_KEY[operation] }
 
   switch (error.reason) {
     case 'unknown-permission':
-      return 'This permission set includes one that cannot be granted.'
+      return { key: 'operator.error.ungrantable' }
     case 'not-allowed':
-      return targetIsBuiltInAdmin
-        ? 'The built-in ADMIN role always holds every permission and cannot have its permissions edited individually.'
-        : 'This permission set includes one that cannot be granted.'
+      return {
+        key: targetIsBuiltInAdmin ? 'operator.error.adminLocked' : 'operator.error.ungrantable',
+      }
     case 'conflict':
-      return 'That email or username is already in use.'
+      return { key: 'operator.error.conflict' }
     case 'last-admin':
-      return 'This would leave no active operator holding the ADMIN role.'
+      return { key: 'operator.error.lastAdmin' }
     case 'not-found':
-      return operation === 'create' || operation === 'assign-role'
-        ? 'That role no longer exists.'
-        : 'This operator no longer exists.'
+      return {
+        key:
+          operation === 'create' || operation === 'assign-role'
+            ? 'operator.error.roleGone'
+            : 'operator.error.gone',
+      }
     default:
-      return DEFAULT_MESSAGE[operation]
+      return { key: DEFAULT_KEY[operation] }
   }
 }

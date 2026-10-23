@@ -1,6 +1,7 @@
 import { RoleWriteError } from '@domain/role'
+import type { Notice } from '@presentation/pages/shared/resource-write-error.message'
 
-type RoleWriteErrorMessageInput = {
+type RoleWriteErrorInput = {
   error: unknown
   /** The name the operator typed, for the duplicate-name message. */
   name: string
@@ -13,39 +14,33 @@ type RoleWriteErrorMessageInput = {
  * two distinct API refusals the response body does not distinguish (see `to-role-write-error.ts`
  * in `infrastructure/roles`); `builtIn` is what lets this pick the right one.
  */
-export function roleWriteErrorMessage({
-  error,
-  name,
-  builtIn,
-}: RoleWriteErrorMessageInput): string {
-  if (!(error instanceof RoleWriteError)) return 'Could not save this role.'
+export function roleWriteError({ error, name, builtIn }: RoleWriteErrorInput): Notice {
+  if (!(error instanceof RoleWriteError)) return { key: 'role.error.save' }
 
   switch (error.reason) {
     case 'duplicate-name':
-      return `A role named "${name}" already exists.`
+      return { key: 'role.error.duplicate', params: { name } }
     case 'not-allowed':
-      return builtIn
-        ? 'Built-in roles cannot be edited this way.'
-        : 'This template includes a permission that cannot be granted.'
+      return { key: builtIn ? 'role.error.builtIn' : 'role.error.ungrantable' }
     case 'not-found':
-      return 'This role no longer exists.'
+      return { key: 'role.error.gone' }
     default:
-      return 'Could not save this role.'
+      return { key: 'role.error.save' }
   }
 }
 
 /** The delete counterpart — `roles.ts` uses this from the list page. */
-export function roleDeleteErrorMessage(error: unknown): string {
-  if (!(error instanceof RoleWriteError)) return 'Could not delete this role.'
+export function roleDeleteError(error: unknown): Notice {
+  if (!(error instanceof RoleWriteError)) return { key: 'roles.error.delete' }
 
   switch (error.reason) {
     case 'in-use':
-      return 'This role is still assigned to active operators.'
+      return { key: 'roles.error.inUse' }
     case 'not-allowed':
-      return 'Built-in roles cannot be deleted.'
+      return { key: 'roles.error.builtIn' }
     case 'not-found':
-      return 'This role no longer exists.'
+      return { key: 'roles.error.gone' }
     default:
-      return 'Could not delete this role.'
+      return { key: 'roles.error.delete' }
   }
 }

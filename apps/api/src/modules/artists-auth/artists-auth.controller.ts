@@ -1,6 +1,11 @@
-import { clearPendingTwoFactorCookie, setPendingTwoFactorCookie } from '@common/auth-cookies'
+import {
+  clearPendingTwoFactorCookie,
+  readPendingTwoFactorToken,
+  setPendingTwoFactorCookie,
+} from '@common/auth-cookies'
 import { AUTH_ROUTE_THROTTLE, SESSION_ROUTE_THROTTLE } from '@common/config'
 import { ArtistsService } from '@modules/artists/artists.service'
+import { readAccessToken, readRefreshToken } from '@modules/auth-core'
 import { TokenService } from '@modules/tokens/token.service'
 import {
   BadRequestException,
@@ -62,7 +67,6 @@ import { ArtistSessionEntity } from './entities'
 import { sessionClient } from './session-client'
 import type { ArtistAuthRequest } from './types'
 
-/** Represents the auth controller. */
 @ApiExtraModels(ArtistSessionEntity)
 @ApiTags('Artists Auth')
 @Throttle(AUTH_ROUTE_THROTTLE)
@@ -75,7 +79,6 @@ export class AuthController {
     private twoFactorService: ArtistTwoFactorService,
   ) {}
 
-  /** Runs the login operation. */
   @AuthLoginSwagger()
   @Post('login')
   async login(
@@ -95,7 +98,6 @@ export class AuthController {
     this.tokenService.setAuthCookies(res, result.access_token, result.refresh_token)
   }
 
-  /** Runs the registration operation. */
   @AuthRegistrationSwagger()
   @Post('registration')
   async registration(
@@ -116,32 +118,26 @@ export class AuthController {
       throw new BadRequestException('Email is required')
     }
 
-    const artist = await this.artistService.findByEmail(email.trim().toLowerCase())
-    return { available: !artist }
+    return await this.artistAuthService.isEmailAvailable(email)
   }
 
-  /** Runs the logout operation. */
   @AuthLogoutSwagger()
   @ArtistAuth()
   @Post('logout')
   async logout(@Req() req: ArtistAuthRequest & Request, @Res({ passthrough: true }) res: Response) {
-    const access_token = req[process.env.ACCESS_TOKEN_NAME!] as string
-    await this.artistAuthService.logout(req.artist.id, access_token)
+    await this.artistAuthService.logout(req.artist.id, readAccessToken(req))
     this.tokenService.clearAuthCookies(res)
   }
 
-  /** Runs the refresh operation. */
   @AuthRefreshSwagger()
   @ArtistAuth('refresh')
   @Throttle(SESSION_ROUTE_THROTTLE)
   @Post('refresh')
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const refresh_token = req[process.env.REFRESH_TOKEN_NAME!] as string
-    const tokens = await this.artistAuthService.refresh(refresh_token, sessionClient(req))
+    const tokens = await this.artistAuthService.refresh(readRefreshToken(req), sessionClient(req))
     this.tokenService.setAuthCookies(res, tokens.access_token, tokens.refresh_token)
   }
 
-  /** Runs the get me operation. */
   @AuthMeSwagger()
   @ArtistAuth()
   @Throttle(SESSION_ROUTE_THROTTLE)
@@ -150,7 +146,6 @@ export class AuthController {
     return await this.artistService.findById(req.artist.id)
   }
 
-  /** Runs the forgot password operation. */
   @AuthForgotPasswordSwagger()
   @HttpCode(200)
   @Post('forgot-password')
@@ -160,7 +155,6 @@ export class AuthController {
     await this.artistAuthService.forgotPassword(dto.email)
   }
 
-  /** Runs the reset password operation. */
   @AuthResetPasswordSwagger()
   @HttpCode(200)
   @Post('reset-password')
@@ -195,7 +189,6 @@ export class AuthController {
     await this.artistAuthService.verifyEmailCode(dto.email, dto.code)
   }
 
-  /** Runs the two factor setup operation. */
   @TwoFactorSetupSwagger()
   @ArtistAuth()
   @Post('2fa/setup')
@@ -203,7 +196,6 @@ export class AuthController {
     return await this.twoFactorService.setupTwoFactor(req.artist.id)
   }
 
-  /** Runs the two factor enable operation. */
   @TwoFactorEnableSwagger()
   @ArtistAuth()
   @HttpCode(200)
@@ -215,7 +207,6 @@ export class AuthController {
     await this.twoFactorService.enableTwoFactor(req.artist.id, dto.code)
   }
 
-  /** Runs the two factor disable operation. */
   @TwoFactorDisableSwagger()
   @ArtistAuth()
   @HttpCode(200)
@@ -227,7 +218,6 @@ export class AuthController {
     await this.twoFactorService.disableTwoFactor(req.artist.id, dto.code)
   }
 
-  /** Runs the two factor verify login operation. */
   @TwoFactorVerifyLoginSwagger()
   @HttpCode(200)
   @Post('2fa/verify-login')
@@ -236,7 +226,7 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const pendingToken = req.cookies?.pending_2fa_token ?? dto.pendingToken
+    const pendingToken = readPendingTwoFactorToken(req) ?? dto.pendingToken
     const artist = await this.twoFactorService.verifyLoginCode(pendingToken, dto.code)
     const { access_token, refresh_token } = await this.artistAuthService.completeTwoFactorLogin(
       artist.id,

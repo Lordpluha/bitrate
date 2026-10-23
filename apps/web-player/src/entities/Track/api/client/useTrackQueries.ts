@@ -6,6 +6,7 @@ import { ensureOkResponse } from '@shared/api/errors'
 import { apiQueryKeys } from '@shared/api/queryKeys'
 import { useQuery as useTanStackQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
+import { fetchAllPages } from '@/shared/api/fetchAllPages'
 import { tracksPaginatedResponseSchema } from '../trackResponse.schema'
 import {
   normalizeTrackResponse,
@@ -63,17 +64,10 @@ const getArtistTracksPage = async (artistId: string, page: number) => {
 }
 
 export const getAllTracksByArtist = async (artistId: string) => {
-  const firstPage = await getArtistTracksPage(artistId, 1)
-  const pageCount = Math.ceil(firstPage.total / firstPage.limit)
-  const remainingPages = await Promise.all(
-    Array.from({ length: Math.max(pageCount - 1, 0) }, (_, index) =>
-      getArtistTracksPage(artistId, index + 2),
-    ),
-  )
-
-  return [firstPage, ...remainingPages]
-    .flatMap(({ data }) => data)
-    .map(withPlayableUrl)
+  const items = await fetchAllPages({
+    fetchPage: (page) => getArtistTracksPage(artistId, page),
+  })
+  return items.map(withPlayableUrl)
 }
 
 /** The artist's most played tracks (featured credits included), ranked by real listening. */
@@ -112,17 +106,10 @@ const getLikedTracksPage = async (page: number) => {
 }
 
 export const getAllLikedTracks = async () => {
-  const firstPage = await getLikedTracksPage(1)
-  const pageCount = Math.ceil(firstPage.total / firstPage.limit)
-  const remainingPages = await Promise.all(
-    Array.from({ length: Math.max(pageCount - 1, 0) }, (_, index) =>
-      getLikedTracksPage(index + 2),
-    ),
-  )
-
-  return [firstPage, ...remainingPages]
-    .flatMap(({ data }) => data)
-    .map(withPlayableUrl)
+  const items = await fetchAllPages({
+    fetchPage: getLikedTracksPage,
+  })
+  return items.map(withPlayableUrl)
 }
 
 export const useLikedTracks = (

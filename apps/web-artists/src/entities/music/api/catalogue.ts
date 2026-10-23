@@ -3,6 +3,7 @@ import { clientFetchClient } from '@shared/api/fetchClient'
 import { useQuery } from '@tanstack/react-query'
 import { z } from 'zod'
 import {
+  CATALOGUE_PAGE_SIZE,
   type CatalogueSearch,
   musicCountsSchema,
   musicReleasePageSchema,
@@ -18,7 +19,7 @@ async function getTracks(search: CatalogueSearch, signal: AbortSignal) {
       params: {
         query: {
           page: search.page ?? 1,
-          limit: 6,
+          limit: CATALOGUE_PAGE_SIZE,
           search: search.q,
           sort: search.sort ?? 'updated',
           status: z.enum(trackStatuses).safeParse(search.status).data,
@@ -41,7 +42,7 @@ async function getReleases(search: CatalogueSearch, signal: AbortSignal) {
       params: {
         query: {
           page: search.page ?? 1,
-          limit: 6,
+          limit: CATALOGUE_PAGE_SIZE,
           search: search.q,
           sort: search.sort ?? 'updated',
           status: z
@@ -76,6 +77,9 @@ export function useMusicCatalogue(
         ? getTracks(search, signal)
         : getReleases(search, signal),
     enabled: Boolean(artistId),
+    // Keeps the last page while the next loads; another tab has another row shape.
+    placeholderData: (previous, previousQuery) =>
+      previousQuery?.queryKey[3] === tab ? previous : undefined,
     staleTime: 30_000,
   })
 }

@@ -1,3 +1,4 @@
+export * from './get-artist-stats.use-case'
 export * from './deactivate-artist.use-case'
 export * from './get-artist.use-case'
 export * from './list-artist-albums.use-case'

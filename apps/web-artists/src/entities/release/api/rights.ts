@@ -1,70 +1,10 @@
 import type { ApiSchemas } from '@bitrate/contracts'
 import { clientFetchClient } from '@shared/api/fetchClient'
+import { writeSignal as signal } from '@shared/api/writeTimeout'
 import { z } from 'zod'
-import {
-  type ReleaseSummary,
-  releaseSummarySchema,
-} from '../model/release.schema'
+import { releaseSummarySchema } from '../model/release.schema'
 import { releaseBlockerSchema, rightTypes } from '../model/rights'
-import { identifierConflict } from './releases'
-
-const WRITE_TIMEOUT_MS = 30_000
-const STALE =
-  'This release changed or is no longer a draft. Your entries are kept here; close and reopen the form to review the latest version.'
-
-export interface WriteResult {
-  response: Response
-  data?: unknown
-  error?: unknown
-}
-
-export interface WriteMessages {
-  invalid: string
-  unconfirmed: string
-  conflict?: string
-}
-
-/** Maps API failures to recoverable messages; never confirms an unverified write. */
-export async function guardedWrite<T>(
-  send: () => Promise<WriteResult>,
-  confirm: (data: unknown) => T | undefined,
-  messages: WriteMessages,
-): Promise<T> {
-  let result: WriteResult
-  try {
-    result = await send()
-  } catch {
-    throw new Error(messages.unconfirmed)
-  }
-  const { status } = result.response
-  if (status === 409)
-    throw new Error(
-      identifierConflict(result.error) ?? messages.conflict ?? STALE,
-    )
-  if (status === 404) throw new Error('This release is no longer available.')
-  if (status === 400) throw new Error(messages.invalid)
-  const confirmed = result.response.ok ? confirm(result.data) : undefined
-  if (confirmed === undefined) throw new Error(messages.unconfirmed)
-  return confirmed
-}
-
-/** A confirmed write returns this release with a newer version. */
-export function advancedRelease(
-  data: unknown,
-  id: string,
-  expectedUpdatedAt: string,
-): ReleaseSummary | undefined {
-  const parsed = releaseSummarySchema.safeParse(data)
-  if (
-    !parsed.success ||
-    parsed.data.id !== id ||
-    Date.parse(parsed.data.updatedAt) <= Date.parse(expectedUpdatedAt)
-  )
-    return undefined
-  return parsed.data
-}
-
-const signal = () => AbortSignal.timeout(WRITE_TIMEOUT_MS)
+import { advancedRelease, draftRelease, guardedWrite } from './guardedWrite'
 
 export interface RightsRequest {
   id: string
@@ -176,34 +116,32 @@ export interface SubmitRequest {
 
 const blockedSchema = z.object({ blockers: z.array(releaseBlockerSchema) })
 
-export async function submitRelease({ id, input }: SubmitRequest) {
+export function submitRelease({ id, input }: SubmitRequest) {
   const unconfirmed =
     'Review request was not confirmed. Your saved draft remains; check the release and try again.'
-  let result: WriteResult
-  try {
-    result = await clientFetchClient.POST('/api/v1/releases/{id}/submit', {
-      params: { path: { id } },
-      body: input,
-      signal: signal(),
-    })
-  } catch {
-    throw new Error(unconfirmed)
-  }
-  if (result.response.status === 422) {
-    const blocked = blockedSchema.safeParse(result.error)
-    throw new Error(
-      blocked.success
-        ? `Resolve ${blocked.data.blockers.length} ${blocked.data.blockers.length === 1 ? 'blocker' : 'blockers'} before submission.`
-        : unconfirmed,
-    )
-  }
   return guardedWrite(
-    () => Promise.resolve(result),
+    () =>
+      clientFetchClient.POST('/api/v1/releases/{id}/submit', {
+        params: { path: { id } },
+        body: input,
+        signal: signal(),
+      }),
     (data) => {
       const release = advancedRelease(data, id, input.expectedUpdatedAt)
       return release?.status === 'SUBMITTED' ? release : undefined
     },
-    { invalid: 'Confirm that you reviewed this draft.', unconfirmed },
+    {
+      invalid: 'Confirm that you reviewed this draft.',
+      unconfirmed,
+      statusMessages: {
+        422: (error) => {
+          const blocked = blockedSchema.safeParse(error)
+          if (!blocked.success) return unconfirmed
+          const count = blocked.data.blockers.length
+          return `Resolve ${count} ${count === 1 ? 'blocker' : 'blockers'} before submission.`
+        },
+      },
+    },
   )
 }
 
@@ -220,14 +158,7 @@ export function withdrawRelease({ id, input }: WithdrawRequest) {
         body: input,
         signal: signal(),
       }),
-    (data) => {
-      const release = releaseSummarySchema.safeParse(data)
-      return release.success &&
-        release.data.id === id &&
-        release.data.status === 'DRAFT'
-        ? release.data
-        : undefined
-    },
+    (data) => draftRelease(data, id),
     {
       invalid: 'Could not withdraw this release. Please try again.',
       unconfirmed:
@@ -252,14 +183,7 @@ export function reviseRelease({ id, input }: ReviseRequest) {
         body: input,
         signal: signal(),
       }),
-    (data) => {
-      const release = releaseSummarySchema.safeParse(data)
-      return release.success &&
-        release.data.id === id &&
-        release.data.status === 'DRAFT'
-        ? release.data
-        : undefined
-    },
+    (data) => draftRelease(data, id),
     {
       invalid: 'Could not reopen this release. Please try again.',
       unconfirmed:

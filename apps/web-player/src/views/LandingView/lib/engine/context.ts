@@ -8,6 +8,17 @@ type EngineState = {
   animating: boolean
   /** A physics ball is held; scene gestures are ignored. */
   dragging: boolean
+  /** The logo intro covers the page (frames run slow while it loads). */
+  intro: boolean
+}
+
+/** The latest pointer position, shared through one window listener instead of one per module. */
+export type PointerStore = {
+  /** Pointer position as a share of the viewport, -0.5…0.5 from its centre. */
+  nx: number
+  ny: number
+  /** Runs `fn` on every pointer move until unmount. */
+  listen: (fn: (e: PointerEvent) => void) => void
 }
 
 /** Everything an engine module needs: the landing root, its cleanup and shared state. */
@@ -17,10 +28,37 @@ export type EngineContext = {
   copy: LandingCopy
   reduce: boolean
   state: EngineState
+  pointer: PointerStore
   /** Aborted on unmount; pass it to every addEventListener. */
   signal: AbortSignal
   /** Registers a teardown step that runs on unmount. */
   onDispose: (fn: () => void) => void
+}
+
+/** One passive window `pointermove` listener feeding every engine module. */
+export const createPointerStore = ({
+  signal,
+}: {
+  signal: AbortSignal
+}): PointerStore => {
+  const subscribers: ((e: PointerEvent) => void)[] = []
+  const store: PointerStore = {
+    nx: 0,
+    ny: 0,
+    listen: (fn) => {
+      subscribers.push(fn)
+    },
+  }
+  window.addEventListener(
+    'pointermove',
+    (e) => {
+      store.nx = e.clientX / window.innerWidth - 0.5
+      store.ny = e.clientY / window.innerHeight - 0.5
+      for (const fn of subscribers) fn(e)
+    },
+    { passive: true, signal },
+  )
+  return store
 }
 
 /** The archived composition every scene board is laid out on. */

@@ -1,0 +1,98 @@
+<div class="flex flex-col gap-4">
+  <section
+    class="flex flex-col items-center gap-3 rounded-tile border border-glass-line bg-glass px-5 pb-8 pt-10 text-center shadow-glass backdrop-blur-[22px] backdrop-saturate-150 lg:px-6 lg:pb-10 lg:pt-12"
+    aria-labelledby="not-found-title"
+  >
+    <p
+      class="bg-linear-90 from-accent to-blue-500 bg-clip-text font-display text-[5.25rem] font-bold leading-none tracking-[-0.04em] text-transparent lg:text-[8.25rem]"
+      aria-hidden="true"
+    >
+      404
+    </p>
+    <h1
+      class="mt-1.5 font-display text-2xl font-semibold tracking-tight text-foreground lg:text-[2rem]"
+      id="not-found-title"
+    >
+      {{ 'notFound.title' | transloco }}
+    </h1>
+    <p class="max-w-[460px] text-muted-foreground">{{ 'notFound.subtitle' | transloco }}</p>
+
+    <p
+      class="inline-flex max-w-full items-center gap-2 rounded-xl border border-glass-line bg-glass-hover px-3.5 py-2 text-[0.8125rem] text-muted-foreground"
+    >
+      <ng-icon class="shrink-0 text-[15px]" name="lucideSearch" aria-hidden="true" />
+      <span>{{ 'notFound.opened' | transloco }}</span>
+      <code class="truncate font-mono font-semibold text-foreground">{{ path }}</code>
+    </p>
+
+    <div class="mt-2 flex flex-col items-center gap-2 sm:flex-row">
+      @if (canOverview()) {
+        <a
+          class="inline-flex h-[38px] items-center gap-2 rounded-full bg-primary px-4 text-[0.8125rem] font-semibold text-primary-foreground shadow-glow focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+          routerLink="/"
+        >
+          <ng-icon class="text-base" name="lucideLayoutDashboard" aria-hidden="true" />
+          {{ 'notFound.toOverview' | transloco }}
+        </a>
+      }
+      <button
+        class="inline-flex h-[38px] items-center gap-2 rounded-full bg-glass-hover px-4 text-[0.8125rem] font-semibold text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+        type="button"
+        aria-haspopup="dialog"
+        (click)="openPalette()"
+      >
+        <ng-icon class="text-base" name="lucideSearch" aria-hidden="true" />
+        {{ 'notFound.search' | transloco }}
+      </button>
+    </div>
+  </section>
+
+  @if (shortcuts().length) {
+    <section
+      class="flex flex-col gap-3.5 rounded-tile border border-glass-line bg-glass p-5 shadow-glass backdrop-blur-[22px] backdrop-saturate-150"
+      aria-labelledby="not-found-shortcuts"
+    >
+      <div class="flex items-center gap-3">
+        <span class="grid size-9 place-items-center rounded-xl bg-glass-hover" aria-hidden="true">
+          <ng-icon class="text-lg" name="lucideLayoutDashboard" />
+        </span>
+        <span>
+          <span class="block text-[0.9375rem] font-semibold" id="not-found-shortcuts">{{
+            'notFound.shortcutsTitle' | transloco
+          }}</span>
+          <span class="block text-xs text-muted-foreground">{{
+            'notFound.shortcutsMeta' | transloco
+          }}</span>
+        </span>
+      </div>
+      <ul class="grid gap-2.5 sm:grid-cols-2">
+        @for (link of shortcuts(); track link.path) {
+          <li>
+            <a
+              class="flex items-center gap-3.5 rounded-2xl border border-glass-line bg-card/55 px-3.5 py-2.5 transition-transform hover:translate-x-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
+              [routerLink]="link.path"
+            >
+              <span
+                class="grid size-[34px] shrink-0 place-items-center rounded-xl bg-info-surface text-info-text"
+                aria-hidden="true"
+              >
+                <ng-icon class="text-lg" [name]="link.icon" />
+              </span>
+              <span class="min-w-0 flex-1">
+                <span class="block truncate font-semibold">{{ link.label | transloco }}</span>
+                <span class="block truncate text-xs text-muted-foreground">{{
+                  link.hint | transloco
+                }}</span>
+              </span>
+              <ng-icon
+                class="shrink-0 text-base text-muted-foreground"
+                name="lucideChevronRight"
+                aria-hidden="true"
+              />
+            </a>
+          </li>
+        }
+      </ul>
+    </section>
+  }
+</div>

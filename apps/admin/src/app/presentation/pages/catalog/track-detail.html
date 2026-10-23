@@ -1,239 +1,269 @@
-<section class="w-full space-y-8 p-8">
-  <header class="space-y-1">
-    <a routerLink="/catalog" class="text-sm text-muted-foreground hover:underline"
-      >&larr; Catalog pipeline</a
-    >
-    @if (loading()) {
-      <h1 class="text-xl font-semibold text-foreground">Track</h1>
-    } @else if (track(); as t) {
-      <h1 class="text-xl font-semibold text-foreground">
-        {{ t.title }}
-        <span
-          hlmBadge
-          [variant]="
-            t.processingStatus === 'FAILED'
-              ? 'destructive'
-              : t.processingStatus === 'READY'
-                ? 'default'
-                : 'outline'
-          "
-          class="ml-2 align-middle"
+@if (track(); as t) {
+  <app-page-header
+    [back]="back()"
+    [eyebrow]="'track.eyebrow' | transloco"
+    [title]="t.title"
+    [subtitle]="'track.by' | transloco: { artist: t.artistUsername }"
+  >
+    <span headerStatus hlmBadge [variant]="pipelineBadge[t.processingStatus]">
+      {{ pipelineKey[t.processingStatus] | transloco }}
+    </span>
+    @if (isStuck(t)) {
+      <span headerStatus hlmBadge variant="warning">{{ 'track.stuck' | transloco }}</span>
+    }
+    @if (t.takenDownAt) {
+      <span headerStatus hlmBadge variant="secondary">{{ 'track.takenDown' | transloco }}</span>
+    }
+    <ng-container ngProjectAs="[headerActions]">
+      @if (canReprocessTrack() && reprocessible(t)) {
+        <button
+          hlmBtn
+          variant="secondary"
+          type="button"
+          [disabled]="reprocessing()"
+          (click)="reprocess()"
         >
-          {{ t.processingStatus }}
-        </span>
-        @if (isStuck(t)) {
-          <span hlmBadge variant="destructive" class="ml-2 align-middle">stuck</span>
+          <ng-icon name="lucideRefreshCw" aria-hidden="true" />
+          {{ (reprocessing() ? 'track.action.queuing' : 'track.action.reprocess') | transloco }}
+        </button>
+      }
+      @if (canTakeDown() && takeDownable(t) && armed() !== 'take-down') {
+        <button hlmBtn variant="destructive" type="button" (click)="arm('take-down')">
+          <ng-icon name="lucideX" aria-hidden="true" />
+          {{ 'track.action.takeDown' | transloco }}
+        </button>
+      }
+      @if (canRestore() && restorable(t) && armed() !== 'restore') {
+        <button hlmBtn type="button" (click)="arm('restore')">
+          <ng-icon name="lucideRotateCcw" aria-hidden="true" />
+          {{ 'track.action.restore' | transloco }}
+        </button>
+      }
+    </ng-container>
+  </app-page-header>
+
+  @if (armed() === 'take-down') {
+    <app-confirm-action
+      [consequence]="'track.confirm.takeDown' | transloco: { title: t.title }"
+      [confirmLabel]="'track.confirm.takeDownAction' | transloco"
+      [pending]="pending()"
+      (confirmed)="confirm($event)"
+      (cancelled)="arm(null)"
+    />
+  } @else if (armed() === 'restore') {
+    <app-confirm-action
+      [consequence]="'track.confirm.restore' | transloco: { title: t.title }"
+      [confirmLabel]="'track.confirm.restoreAction' | transloco"
+      [pending]="pending()"
+      (confirmed)="confirm($event)"
+      (cancelled)="arm(null)"
+    />
+  }
+
+  @if (statusText(); as text) {
+    <p
+      class="flex items-center gap-3 rounded-tile border border-success/40 bg-glass p-4 text-sm shadow-glass backdrop-blur-[22px]"
+      role="status"
+    >
+      <span
+        class="grid size-9 shrink-0 place-items-center rounded-xl bg-success-surface text-success-text"
+        aria-hidden="true"
+      >
+        <ng-icon name="lucideCheck" />
+      </span>
+      {{ text }}
+    </p>
+  }
+  @if (actionErrorText(); as message) {
+    <app-state-message
+      class="rounded-tile border border-error/40 bg-glass p-4 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="message"
+      [compact]="true"
+    />
+  }
+
+  <app-tile-grid>
+    <app-tile
+      icon="lucideAudioLines"
+      [title]="'track.tile.processing' | transloco"
+      [meta]="'track.tile.processingMeta' | transloco"
+      [span]="2"
+    >
+      <div>
+        <app-kv-row [label]="'track.tile.attempts' | transloco">{{
+          t.processingAttempts
+        }}</app-kv-row>
+        <app-kv-row [label]="'track.tile.started' | transloco">
+          {{
+            t.processingStartedAt
+              ? (t.processingStartedAt | localizedDate: 'dd.MM.yyyy HH:mm')
+              : '—'
+          }}
+        </app-kv-row>
+        <app-kv-row [label]="'track.tile.finished' | transloco">
+          {{
+            t.processingFinishedAt
+              ? (t.processingFinishedAt | localizedDate: 'dd.MM.yyyy HH:mm')
+              : '—'
+          }}
+        </app-kv-row>
+        <app-kv-row [label]="'track.tile.openReports' | transloco">{{
+          t.openReportCount
+        }}</app-kv-row>
+      </div>
+      @if (t.processingError) {
+        <blockquote
+          class="rounded-s-[4px] rounded-e-[14px] border-s-[3px] border-error bg-error-surface/40 px-3.5 py-3 text-[0.8125rem] text-error-text"
+        >
+          <b class="block text-xs font-semibold">{{ 'track.tile.lastError' | transloco }}</b>
+          {{ t.processingError }}
+        </blockquote>
+      }
+      <div class="mt-auto flex flex-wrap gap-x-4 gap-y-1.5">
+        @if (t.openReportCount > 0) {
+          <a
+            class="inline-flex items-center gap-1.5 text-[0.8125rem] font-semibold text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            [routerLink]="['/moderation']"
+            [queryParams]="{ entityType: 'track' }"
+          >
+            {{ 'track.tile.reports' | transloco }}
+            <ng-icon name="lucideArrowRight" aria-hidden="true" />
+          </a>
         }
-        @if (t.takenDownAt) {
-          <span hlmBadge variant="destructive" class="ml-2 align-middle">taken down</span>
-        }
-      </h1>
-      <p class="text-sm text-muted-foreground">
-        by
-        <a [routerLink]="['/artists', t.artistId]" class="hover:underline">{{
-          t.artistUsername
-        }}</a>
-      </p>
+        <a
+          class="inline-flex items-center gap-1.5 text-[0.8125rem] font-semibold text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+          [routerLink]="['/audit']"
+          [queryParams]="{ entityType: 'admin-tracks', entityId: t.id }"
+        >
+          {{ 'track.tile.audit' | transloco }}
+          <ng-icon name="lucideArrowRight" aria-hidden="true" />
+        </a>
+      </div>
+    </app-tile>
+
+    <app-tile
+      icon="lucideHeadphones"
+      [title]="'track.tile.listen' | transloco"
+      [meta]="'track.tile.listenMeta' | transloco"
+      [span]="2"
+    >
       @if (listenable(t)) {
         <app-track-audio-player [track]="t" />
+      } @else {
+        <app-state-message
+          kind="info"
+          [title]="'track.tile.notListenable' | transloco"
+          [compact]="true"
+        />
       }
-    }
-  </header>
+      <div class="flex flex-col gap-1.5">
+        <span class="text-xs text-muted-foreground">{{ 'track.tile.renditions' | transloco }}</span>
+        @for (file of t.audioFiles; track file.id) {
+          <span class="flex items-center gap-2 text-[0.8125rem]">
+            <ng-icon class="text-muted-foreground" name="lucideFileAudio" aria-hidden="true" />
+            <span class="font-mono text-xs">{{ rendition(file) }}</span>
+          </span>
+        } @empty {
+          <span class="text-[0.8125rem] text-muted-foreground">{{
+            'track.tile.renditionsNone' | transloco
+          }}</span>
+        }
+      </div>
+    </app-tile>
 
-  @if (loading()) {
-    <p class="text-sm text-muted-foreground" role="status">Loading…</p>
-  } @else if (notFound()) {
-    <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
-      This track could not be found.
-    </p>
-  } @else if (track(); as t) {
-    @if (status(); as message) {
-      <p class="rounded-md bg-muted px-3 py-2 text-sm text-foreground" role="status">
-        {{ message }}
-      </p>
-    }
-    @if (failure(); as message) {
-      <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
-        {{ message }}
-      </p>
-    }
-
-    <section class="space-y-3">
-      <h2 class="text-lg font-semibold text-foreground">Processing</h2>
-      <dl class="grid grid-cols-2 gap-4 sm:grid-cols-3">
-        <div class="rounded-md border border-border p-3">
-          <dt class="text-xs text-muted-foreground">Attempts</dt>
-          <dd class="text-lg font-semibold tabular-nums text-foreground">
-            {{ t.processingAttempts }}
-          </dd>
-        </div>
-        <div class="rounded-md border border-border p-3">
-          <dt class="text-xs text-muted-foreground">Started</dt>
-          <dd class="text-sm tabular-nums text-foreground">
-            {{ t.processingStartedAt ? t.processingStartedAt.toLocaleString() : '—' }}
-          </dd>
-        </div>
-        <div class="rounded-md border border-border p-3">
-          <dt class="text-xs text-muted-foreground">Finished</dt>
-          <dd class="text-sm tabular-nums text-foreground">
-            {{ t.processingFinishedAt ? t.processingFinishedAt.toLocaleString() : '—' }}
-          </dd>
-        </div>
-        <div class="rounded-md border border-border p-3">
-          <dt class="text-xs text-muted-foreground">Open reports</dt>
-          <dd class="text-lg font-semibold tabular-nums text-foreground">
-            {{ t.openReportCount }}
-          </dd>
-        </div>
-      </dl>
-      @if (t.processingError) {
-        <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
-          {{ t.processingError }}
-        </p>
-      }
-      @if (t.openReportCount > 0) {
-        <a
-          [routerLink]="['/moderation']"
-          [queryParams]="{ entityType: 'track' }"
-          class="text-sm text-muted-foreground hover:underline"
-        >
-          View reports naming this track &rarr;
-        </a>
-      }
-      <a
-        [routerLink]="['/audit']"
-        [queryParams]="{ entityType: 'admin-tracks', entityId: t.id }"
-        class="block text-sm text-muted-foreground hover:underline"
-      >
-        View audit history &rarr;
-      </a>
-    </section>
-
-    <section id="processing-history" class="space-y-3">
-      <h2 class="text-lg font-semibold text-foreground">Processing history</h2>
+    <app-tile
+      id="processing-history"
+      icon="lucideHistory"
+      [title]="'track.tile.history' | transloco"
+      [meta]="'track.tile.historyMeta' | transloco"
+      [span]="4"
+    >
       <app-processing-history
         [trackId]="t.id"
         [legacyStatus]="t.processingStatus"
         [legacyError]="t.processingError"
       />
-    </section>
+    </app-tile>
 
-    <section class="space-y-3">
-      <h2 class="text-lg font-semibold text-foreground">Renditions</h2>
-      @if (t.audioFiles.length === 0) {
-        <p class="text-sm text-muted-foreground">No stored renditions.</p>
-      } @else {
-        <ul class="space-y-1 text-sm text-foreground">
-          @for (file of t.audioFiles; track file.id) {
-            <li>
-              {{ file.format }} · {{ file.bitrate }} kbps
-              @if (file.codec) {
-                · {{ file.codec }}
-              }
-              @if (file.size !== null) {
-                · {{ (file.size / 1024 / 1024).toFixed(1) }} MB
-              }
-            </li>
-          }
-        </ul>
-      }
-    </section>
-
-    <section class="space-y-3">
-      <h2 class="text-lg font-semibold text-foreground">Credits</h2>
-      <ul class="space-y-1 text-sm text-foreground">
+    <app-tile
+      icon="lucideUsers"
+      [title]="'track.tile.credits' | transloco"
+      [meta]="'track.tile.creditsMeta' | transloco: { count: t.artists.length }"
+    >
+      <ul class="flex flex-col gap-2 text-[0.8125rem]">
         @for (credit of t.artists; track credit.artistId) {
-          <li>
-            <a [routerLink]="['/artists', credit.artistId]" class="hover:underline">{{
+          <li class="flex items-center gap-2">
+            <a class="font-semibold hover:underline" [routerLink]="['/artists', credit.artistId]">{{
               credit.username
             }}</a>
             @if (credit.isPrimary) {
-              <span hlmBadge variant="outline" class="ml-2">primary</span>
+              <span hlmBadge variant="secondary">{{ 'track.tile.primary' | transloco }}</span>
             }
           </li>
         }
       </ul>
-    </section>
+    </app-tile>
 
-    <section class="space-y-3">
-      <h2 class="text-lg font-semibold text-foreground">Genres</h2>
-      @if (t.genres.length === 0) {
-        <p class="text-sm text-muted-foreground">No genres attached.</p>
-      } @else {
-        <div class="flex flex-wrap gap-2">
-          @for (genre of t.genres; track genre.id) {
-            <span hlmBadge variant="outline">{{ genre.name }}</span>
-          }
-        </div>
-      }
-    </section>
-
-    <section class="space-y-3">
-      <h2 class="text-lg font-semibold text-foreground">Albums</h2>
-      @if (t.albums.length === 0) {
-        <p class="text-sm text-muted-foreground">Not on any album.</p>
-      } @else {
-        <ul class="space-y-1 text-sm text-foreground">
-          @for (album of t.albums; track album.id) {
-            <li>{{ album.title }} — disc {{ album.discNumber }}, track {{ album.trackNumber }}</li>
-          }
-        </ul>
-      }
-    </section>
-
-    <section class="space-y-3">
-      <h2 class="text-lg font-semibold text-foreground">Actions</h2>
-
-      @if (canReprocessTrack() && reprocessible(t)) {
-        <button
-          hlmBtn
-          size="sm"
-          variant="outline"
-          type="button"
-          [disabled]="reprocessing()"
-          (click)="reprocess()"
-        >
-          {{ reprocessing() ? 'Queuing…' : 'Reprocess' }}
-        </button>
-      }
-
-      @if (canTakeDown() && takeDownable(t)) {
-        @if (armed() === 'take-down') {
-          <app-confirm-action
-            consequence="Take down &quot;{{
-              t.title
-            }}&quot;? It stops appearing in listener apps until restored."
-            confirmLabel="Yes, take down"
-            [pending]="pending()"
-            (confirmed)="confirm($event)"
-            (cancelled)="arm(null)"
-          />
-        } @else {
-          <button hlmBtn size="sm" variant="ghost" type="button" (click)="arm('take-down')">
-            Take down
-          </button>
+    <app-tile icon="lucideTags" [title]="'track.tile.genres' | transloco">
+      <span class="flex flex-wrap gap-1.5">
+        @for (genre of t.genres; track genre.id) {
+          <span hlmBadge variant="secondary">{{ genre.name }}</span>
+        } @empty {
+          <span class="text-[0.8125rem] text-muted-foreground">{{
+            'track.tile.genresNone' | transloco
+          }}</span>
         }
-      }
+      </span>
+    </app-tile>
 
-      @if (canRestore() && restorable(t)) {
-        @if (armed() === 'restore') {
-          <app-confirm-action
-            consequence="Restore &quot;{{ t.title }}&quot;? It becomes visible again immediately."
-            confirmLabel="Yes, restore"
-            [pending]="pending()"
-            (confirmed)="confirm($event)"
-            (cancelled)="arm(null)"
-          />
-        } @else {
-          <button hlmBtn size="sm" variant="outline" type="button" (click)="arm('restore')">
-            Restore
-          </button>
+    <app-tile icon="lucideDisc3" [title]="'track.tile.albums' | transloco" [span]="2">
+      <ul class="flex flex-col">
+        @for (album of t.albums; track album.id) {
+          <li>
+            <app-kv-row [label]="album.title">{{
+              'track.tile.albumPlace'
+                | transloco: { disc: album.discNumber, track: album.trackNumber }
+            }}</app-kv-row>
+          </li>
+        } @empty {
+          <li class="text-[0.8125rem] text-muted-foreground">
+            {{ 'track.tile.albumsNone' | transloco }}
+          </li>
         }
+      </ul>
+    </app-tile>
+  </app-tile-grid>
+} @else {
+  <app-page-header
+    [back]="back()"
+    [eyebrow]="'track.eyebrow' | transloco"
+    [title]="'track.loadingTitle' | transloco"
+  />
+  @if (loading()) {
+    <app-tile-grid role="status" [attr.aria-label]="'ui.loading' | transloco">
+      @for (tile of [2, 2, 4]; track $index) {
+        <app-tile [title]="'ui.loading' | transloco" [span]="tile === 4 ? 4 : 2">
+          <app-skeleton class="h-3.5 w-full" />
+          <app-skeleton class="h-3.5 w-4/5" />
+          <app-skeleton class="h-3.5 w-3/5" />
+        </app-tile>
       }
-
-      @if (!reprocessible(t) && !takeDownable(t) && !restorable(t)) {
-        <p class="text-sm text-muted-foreground">No actions available.</p>
-      }
-    </section>
+    </app-tile-grid>
+  } @else if (notFound()) {
+    <app-state-message
+      class="min-h-[340px] rounded-tile border border-glass-line bg-glass p-5 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="'track.notFound.title' | transloco"
+      [description]="'track.notFound.desc' | transloco"
+    />
+  } @else if (failureText(); as message) {
+    <app-state-message
+      class="min-h-[340px] rounded-tile border border-glass-line bg-glass p-5 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="message"
+      [actionLabel]="'ui.tryAgain' | transloco"
+      (action)="reload()"
+    />
   }
-</section>
+}

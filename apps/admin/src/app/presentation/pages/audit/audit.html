@@ -1,71 +1,103 @@
-<section class="space-y-6 p-8">
-  <header class="space-y-1">
-    <h1 class="text-xl font-semibold text-foreground">Audit log</h1>
-    <p class="text-sm text-muted-foreground">
-      Every operator mutation, newest first. Read-only — entries cannot be edited or removed from
-      here.
-    </p>
-  </header>
+<app-page-header
+  [eyebrow]="'audit.eyebrow' | transloco"
+  [title]="'audit.title' | transloco"
+  [subtitle]="'audit.subtitle' | transloco"
+/>
 
-  <form class="flex gap-2" (ngSubmit)="applyFilters()">
-    <label class="sr-only" for="audit-entity">Filter by entity type</label>
-    <input
-      hlmInput
-      class="w-64"
-      id="audit-entity"
-      type="search"
-      placeholder="Entity type, e.g. Track"
+<app-table-panel>
+  <app-panel-bar panelBar>
+    <app-search-field
+      [label]="'audit.search' | transloco"
       [value]="draft()"
-      (input)="draft.set($any($event.target).value)"
+      (valueChange)="draft.set($event)"
     />
-    <button hlmBtn size="sm" variant="outline" type="submit">Filter</button>
-  </form>
+    @if (query.state().entityId) {
+      <button
+        hlmBtn
+        size="sm"
+        variant="secondary"
+        type="button"
+        [attr.aria-label]="'audit.clearEntity' | transloco"
+        (click)="clearEntity()"
+      >
+        {{ 'audit.entityFilter' | transloco }}
+        <span class="font-mono text-xs text-muted-foreground">{{
+          query.state().entityId.slice(0, 8)
+        }}</span>
+        <ng-icon name="lucideX" aria-hidden="true" />
+      </button>
+    }
+    @if (range(); as r) {
+      <span class="ms-auto text-[0.8125rem] tabular-nums text-muted-foreground">
+        {{ 'ui.pagination.range' | transloco: r }}
+      </span>
+    }
+  </app-panel-bar>
 
-  <app-collection-status
-    [loading]="collection.loading()"
-    [failure]="collection.failure()"
-    [isEmpty]="collection.items().length === 0"
-    emptyMessage="No audit entries match this filter."
-  />
+  @if (
+    collection.items().length === 0 && !collection.loading() && !collection.failure() && filtered()
+  ) {
+    <app-state-message
+      class="min-h-[340px] p-5"
+      kind="noResults"
+      [title]="'audit.noResults.title' | transloco"
+      [description]="'audit.noResults.desc' | transloco"
+      [actionLabel]="'ui.clearFilters' | transloco"
+      (action)="clearFilters()"
+    />
+  } @else {
+    <app-collection-status
+      [loading]="collection.loading() && collection.items().length === 0"
+      [failure]="failureText()"
+      [isEmpty]="collection.items().length === 0"
+      [emptyMessage]="'audit.empty.title' | transloco"
+      [retryLabel]="'ui.tryAgain' | transloco"
+      (retry)="collection.reload()"
+    />
+  }
 
-  @if (collection.items().length > 0) {
-    <div hlmTableContainer>
+  @if (collection.items().length > 0 && !collection.failure()) {
+    <div hlmTableContainer class="hidden md:block">
       <table hlmTable>
         <caption hlmCaption class="sr-only">
-          Recorded operator actions
+          {{
+            'audit.table.caption' | transloco
+          }}
         </caption>
         <thead hlmTHead>
           <tr hlmTr>
             <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'createdAt')">
               <app-sort-header
-                [field]="'createdAt'"
-                label="When"
+                field="createdAt"
+                [label]="'audit.table.when' | transloco"
                 [sort]="query.state().sort"
                 (sortChange)="setSort($event)"
               >
-                When
+                {{ 'audit.table.when' | transloco }}
               </app-sort-header>
             </th>
-            <th hlmTh scope="col">Who</th>
-            <th hlmTh scope="col">Action</th>
-            <th hlmTh scope="col">Entity</th>
-            <th hlmTh scope="col">From</th>
+            <th hlmTh scope="col">{{ 'audit.table.who' | transloco }}</th>
+            <th hlmTh scope="col">{{ 'audit.table.action' | transloco }}</th>
+            <th hlmTh scope="col">{{ 'audit.table.entity' | transloco }}</th>
+            <th hlmTh scope="col">{{ 'audit.table.from' | transloco }}</th>
           </tr>
         </thead>
         <tbody hlmTBody>
           @for (entry of collection.items(); track entry.id) {
             <tr hlmTr>
-              <td hlmTd class="tabular-nums text-muted-foreground">
+              <td hlmTd class="whitespace-nowrap tabular-nums text-muted-foreground">
                 {{ entry.createdAt | localizedDate: 'dd.MM.yyyy HH:mm:ss' }}
               </td>
-              <td hlmTd>{{ actorLabel(entry) }}</td>
-              <td hlmTd>
-                <span hlmBadge variant="outline">{{ entry.action }}</span>
+              <td hlmTd class="font-semibold">
+                {{ entry.actorUsername ?? ('audit.system' | transloco) }}
               </td>
               <td hlmTd>
-                <span class="text-muted-foreground">{{ entry.entityType }}</span>
+                <span hlmBadge variant="secondary" class="font-mono">{{ entry.action }}</span>
+              </td>
+              <td hlmTd>
+                <span>{{ entry.entityType }}</span>
                 @if (entry.entityId) {
-                  <span class="ml-2 font-mono text-xs text-muted-foreground">
+                  <span class="ms-2 font-mono text-xs text-muted-foreground">
                     {{ entry.entityId.slice(0, 8) }}
                   </span>
                 }
@@ -79,12 +111,32 @@
       </table>
     </div>
 
-    <app-paginator
-      [page]="collection.page()"
-      [pageCount]="collection.pageCount()"
-      [total]="collection.total()"
-      [disabled]="collection.loading()"
-      (goTo)="goToPage($event)"
-    />
+    <ul class="flex flex-col gap-2.5 p-3 md:hidden">
+      @for (entry of collection.items(); track entry.id) {
+        <li class="flex flex-col gap-2 rounded-[18px] border border-glass-line bg-card/50 p-3.5">
+          <span class="flex items-center justify-between gap-2">
+            <span class="truncate font-semibold">{{
+              entry.actorUsername ?? ('audit.system' | transloco)
+            }}</span>
+            <span class="shrink-0 text-xs tabular-nums text-muted-foreground">{{
+              entry.createdAt | localizedDate: 'dd.MM HH:mm'
+            }}</span>
+          </span>
+          <span class="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+            <span hlmBadge variant="secondary" class="font-mono">{{ entry.action }}</span>
+            {{ entry.entityType }}
+          </span>
+        </li>
+      }
+    </ul>
   }
-</section>
+
+  <app-paginator
+    panelFooter
+    [page]="collection.page()"
+    [pageCount]="collection.pageCount()"
+    [total]="collection.total()"
+    [disabled]="collection.loading()"
+    (goTo)="goToPage($event)"
+  />
+</app-table-panel>

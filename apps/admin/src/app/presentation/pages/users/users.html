@@ -1,62 +1,64 @@
-<section class="space-y-6 p-8">
-  <header class="space-y-1">
-    <h1 class="text-xl font-semibold text-foreground">Listeners</h1>
-    <p class="text-sm text-muted-foreground">
-      Listener accounts. Deactivating sets a deletion date and keeps the row — playlists and history
-      are not erased here.
-    </p>
-  </header>
-
+<app-page-header
+  [eyebrow]="'users.eyebrow' | transloco"
+  [title]="'users.title' | transloco"
+  [subtitle]="'users.subtitle' | transloco"
+>
   @if (canExport()) {
-    <app-export-csv-button [exporter]="exportCsv" />
+    <app-export-csv-button headerActions [exporter]="exportCsv" />
   }
+</app-page-header>
 
-  <form class="flex gap-2" (ngSubmit)="applyFilters()">
-    <label class="sr-only" for="user-search">Search listeners</label>
-    <input
-      hlmInput
-      class="w-64"
-      id="user-search"
-      type="search"
-      placeholder="Username or email"
-      [value]="draft()"
-      (input)="draft.set($any($event.target).value)"
-    />
-    <button hlmBtn size="sm" variant="outline" type="submit">Search</button>
-  </form>
-
-  <div class="flex gap-2" role="group" aria-label="Filter by status">
-    @for (
-      option of [
-        { value: 'active', label: 'Active' },
-        { value: 'deactivated', label: 'Deactivated' },
-        { value: 'all', label: 'All' },
-      ];
-      track option.value
-    ) {
-      <button
-        hlmBtn
-        size="sm"
-        [variant]="query.state().status === option.value ? 'default' : 'outline'"
-        type="button"
-        [attr.aria-pressed]="query.state().status === option.value"
-        (click)="setStatus($any(option.value))"
-      >
-        {{ option.label }}
-      </button>
-    }
-  </div>
-
-  <app-collection-status
-    [loading]="collection.loading()"
-    [failure]="collection.failure()"
-    [isEmpty]="collection.items().length === 0"
-    emptyMessage="No listeners match this search."
+<app-metric-strip>
+  <app-metric-tile
+    icon="lucideUsers"
+    tone="success"
+    [label]="'users.kpi.listeners' | transloco"
+    [value]="stats()?.live ?? null"
+    [sub]="stats() === null ? null : ('users.kpi.listenersSub' | transloco)"
+    [loading]="statsLoading()"
   />
+  <app-metric-tile
+    icon="lucideX"
+    [label]="'account.kpi.deactivated' | transloco"
+    [value]="stats()?.takenDown ?? null"
+    [sub]="stats() === null ? null : ('account.kpi.deactivatedSub' | transloco)"
+    [loading]="statsLoading()"
+  />
+</app-metric-strip>
 
-  @if (collection.items().length > 0) {
+@if (rowErrorText(); as message) {
+  <app-state-message
+    class="rounded-tile border border-error/40 bg-glass p-4 shadow-glass backdrop-blur-[22px]"
+    kind="error"
+    [title]="message"
+    [compact]="true"
+  />
+}
+
+<app-table-panel>
+  <app-panel-bar panelBar>
+    @if (selection.count() === 0) {
+      <app-search-field
+        [label]="'users.search' | transloco"
+        [value]="draft()"
+        (valueChange)="draft.set($event)"
+      />
+      <app-filter-menu
+        [label]="'users.filter.status' | transloco"
+        [options]="statusOptions()"
+        [value]="query.state().status"
+        [defaultValue]="'active'"
+        (valueChange)="setStatus($event)"
+      />
+      @if (range(); as r) {
+        <span class="ms-auto text-[0.8125rem] tabular-nums text-muted-foreground">
+          {{ 'ui.pagination.range' | transloco: r }}
+        </span>
+      }
+    }
     <app-batch-action-bar
-      noun="listener"
+      class="contents"
+      itemsKey="users.batch.items"
       [rows]="batchRows()"
       [actions]="batchActions()"
       [pending]="batchPending()"
@@ -65,19 +67,50 @@
       (cleared)="selection.clear()"
       (closed)="closeBatch()"
     />
+  </app-panel-bar>
 
-    <div hlmTableContainer>
+  @if (
+    collection.items().length === 0 && !collection.loading() && !collection.failure() && narrowed()
+  ) {
+    <app-state-message
+      class="min-h-[340px] p-5"
+      kind="noResults"
+      [title]="
+        query.state().query
+          ? ('users.noResults.titleQuery' | transloco: { query: query.state().query })
+          : ('users.noResults.title' | transloco)
+      "
+      [description]="'users.noResults.desc' | transloco"
+      [actionLabel]="'ui.clearFilters' | transloco"
+      (action)="clearFilters()"
+    />
+  } @else {
+    <app-collection-status
+      [loading]="collection.loading() && collection.items().length === 0"
+      [failure]="failureText()"
+      [isEmpty]="collection.items().length === 0"
+      [emptyMessage]="'users.empty.title' | transloco"
+      [retryLabel]="'ui.tryAgain' | transloco"
+      (retry)="retry()"
+    />
+  }
+
+  @if (collection.items().length > 0 && !collection.failure()) {
+    <div hlmTableContainer class="hidden md:block">
       <table hlmTable>
         <caption hlmCaption class="sr-only">
-          Listener accounts
+          {{
+            'users.table.caption' | transloco
+          }}
         </caption>
         <thead hlmTHead>
           <tr hlmTr>
             @if (batchActions().length > 0) {
               <th hlmTh scope="col" class="w-8">
                 <input
+                  class="size-4 accent-primary"
                   type="checkbox"
-                  aria-label="Select all listeners on this page"
+                  [attr.aria-label]="'users.table.selectAll' | transloco"
                   [checked]="selection.allSelected(selectableIds())"
                   [disabled]="selectableIds().length === 0"
                   (change)="selection.toggleAll(selectableIds())"
@@ -86,46 +119,49 @@
             }
             <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'username')">
               <app-sort-header
-                [field]="'username'"
-                label="Listener"
+                field="username"
+                [label]="'users.table.listener' | transloco"
                 [sort]="query.state().sort"
                 (sortChange)="setSort($event)"
               >
-                Listener
+                {{ 'users.table.listener' | transloco }}
               </app-sort-header>
             </th>
             <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'email')">
               <app-sort-header
-                [field]="'email'"
-                label="Email"
+                field="email"
+                [label]="'users.table.email' | transloco"
                 [sort]="query.state().sort"
                 (sortChange)="setSort($event)"
               >
-                Email
+                {{ 'users.table.email' | transloco }}
               </app-sort-header>
             </th>
-            <th hlmTh scope="col">Email confirmed</th>
             <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'createdAt')">
               <app-sort-header
-                [field]="'createdAt'"
-                label="Joined"
+                field="createdAt"
+                [label]="'users.table.joined' | transloco"
                 [sort]="query.state().sort"
                 (sortChange)="setSort($event)"
               >
-                Joined
+                {{ 'users.table.joined' | transloco }}
               </app-sort-header>
             </th>
-            <th hlmTh scope="col">Actions</th>
+            @if (canDelete()) {
+              <th hlmTh scope="col"></th>
+            }
+            <th hlmTh scope="col" class="w-11"></th>
           </tr>
         </thead>
         <tbody hlmTBody>
           @for (user of collection.items(); track user.id) {
-            <tr hlmTr>
+            <tr hlmTr [attr.data-state]="selection.has(user.id) ? 'selected' : null">
               @if (batchActions().length > 0) {
                 <td hlmTd>
                   <input
+                    class="size-4 accent-primary"
                     type="checkbox"
-                    [attr.aria-label]="'Select ' + user.username"
+                    [attr.aria-label]="'users.table.select' | transloco: { name: user.username }"
                     [checked]="selection.has(user.id)"
                     [disabled]="!selectableIds().includes(user.id)"
                     (change)="selection.toggle(user.id)"
@@ -133,39 +169,49 @@
                 </td>
               }
               <td hlmTd>
-                <a [routerLink]="['/users', user.id]" class="hover:underline">{{
-                  user.username
-                }}</a>
-                @if (user.deactivatedAt) {
-                  <span hlmBadge variant="destructive" class="ml-2">deactivated</span>
-                }
+                <span class="flex items-center gap-2">
+                  <a
+                    class="font-semibold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                    [routerLink]="['/users', user.id]"
+                    >{{ user.username }}</a
+                  >
+                  @if (user.deactivatedAt) {
+                    <span hlmBadge variant="secondary">{{
+                      'account.status.deactivated' | transloco
+                    }}</span>
+                  }
+                </span>
               </td>
-              <td hlmTd class="text-muted-foreground">{{ user.email }}</td>
               <td hlmTd>
-                @if (user.emailVerifiedAt) {
-                  <span class="tabular-nums text-muted-foreground">
-                    {{ user.emailVerifiedAt | localizedDate: 'dd.MM.yyyy' }}
-                  </span>
-                } @else {
-                  <span hlmBadge variant="outline">pending</span>
-                }
+                <span class="flex items-center gap-2">
+                  <span class="text-muted-foreground">{{ user.email }}</span>
+                  <span hlmBadge [variant]="user.emailVerifiedAt ? 'success' : 'warning'">{{
+                    (user.emailVerifiedAt ? 'users.email.confirmed' : 'users.email.pending')
+                      | transloco
+                  }}</span>
+                </span>
               </td>
               <td hlmTd class="tabular-nums text-muted-foreground">
                 {{ user.createdAt | localizedDate: 'dd.MM.yyyy' }}
               </td>
-              <td hlmTd>
-                @if (!user.deactivatedAt && canDelete()) {
-                  <button
-                    hlmBtn
-                    size="sm"
-                    variant="ghost"
-                    type="button"
-                    [disabled]="busyId() === user.id"
-                    (click)="remove(user)"
-                  >
-                    Deactivate
-                  </button>
-                }
+              @if (canDelete()) {
+                <td hlmTd class="text-right">
+                  @if (!user.deactivatedAt) {
+                    <button
+                      hlmBtn
+                      size="sm"
+                      variant="ghost"
+                      type="button"
+                      [disabled]="busyId() === user.id"
+                      (click)="remove(user)"
+                    >
+                      {{ 'users.action.deactivate' | transloco }}
+                    </button>
+                  }
+                </td>
+              }
+              <td hlmTd class="text-muted-foreground">
+                <ng-icon class="text-base" name="lucideChevronRight" aria-hidden="true" />
               </td>
             </tr>
           }
@@ -173,12 +219,41 @@
       </table>
     </div>
 
-    <app-paginator
-      [page]="collection.page()"
-      [pageCount]="collection.pageCount()"
-      [total]="collection.total()"
-      [disabled]="collection.loading()"
-      (goTo)="goToPage($event)"
-    />
+    <ul class="flex flex-col gap-2.5 p-3 md:hidden">
+      @for (user of collection.items(); track user.id) {
+        <li>
+          <a
+            class="flex flex-col gap-2 rounded-[18px] border border-glass-line bg-card/50 p-3.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            [routerLink]="['/users', user.id]"
+          >
+            <span class="flex items-start gap-2.5">
+              <span class="flex min-w-0 flex-1 flex-col">
+                <span class="truncate font-semibold">{{ user.username }}</span>
+                <span class="truncate text-xs text-muted-foreground">{{ user.email }}</span>
+              </span>
+              <span hlmBadge [variant]="user.emailVerifiedAt ? 'success' : 'warning'">{{
+                (user.emailVerifiedAt ? 'users.email.confirmed' : 'users.email.pending') | transloco
+              }}</span>
+            </span>
+            <span class="text-xs text-muted-foreground">
+              {{
+                (user.deactivatedAt ? 'account.status.deactivated' : 'account.status.active')
+                  | transloco
+              }}
+              · {{ user.createdAt | localizedDate: 'dd.MM.yyyy' }}
+            </span>
+          </a>
+        </li>
+      }
+    </ul>
   }
-</section>
+
+  <app-paginator
+    panelFooter
+    [page]="collection.page()"
+    [pageCount]="collection.pageCount()"
+    [total]="collection.total()"
+    [disabled]="collection.loading()"
+    (goTo)="goToPage($event)"
+  />
+</app-table-panel>

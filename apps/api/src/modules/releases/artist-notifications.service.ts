@@ -4,6 +4,7 @@ import {
   ArtistNotificationCategory,
   type DeliveryDestination,
   DeliveryState,
+  type Prisma,
   ReleaseStatus,
   ReleaseTaskStatus,
 } from '@prisma/client'
@@ -71,134 +72,24 @@ export class ArtistNotificationsService {
     })
     if (!artist) throw new NotFoundException(RELEASE_ERRORS.NOT_FOUND)
     const muted = new Set(artist.notificationPreference?.mutedInApp ?? [])
-    const none = <T>(): Promise<T[]> => Promise.resolve([])
     const now = new Date()
     const since = new Date(now.getTime() - UPDATE_WINDOW_MS)
     const owned = { ownerArtistId: artistId, deletedAt: null }
-    const release = { select: { id: true, title: true } }
 
     // A switched-off category is not queried at all.
     const [tasks, releases, deliveries] = await Promise.all([
-      muted.has(ArtistNotificationCategory.TASKS)
-        ? none<never>()
-        : this.prisma.releaseTask.findMany({
-            where: {
-              release: owned,
-              status: { not: ReleaseTaskStatus.DONE },
-              dueAt: { not: null, lt: new Date(now.getTime() + DUE_SOON_MS) },
-            },
-            orderBy: { dueAt: 'asc' },
-            take: NOTIFICATION_LIMIT,
-            select: { id: true, title: true, dueAt: true, release },
-          }),
-      muted.has(ArtistNotificationCategory.REVIEW) && muted.has(ArtistNotificationCategory.DELIVERY)
-        ? none<never>()
-        : this.prisma.release.findMany({
-            where: {
-              ...owned,
-              OR: [
-                { status: ReleaseStatus.REJECTED },
-                { status: { not: ReleaseStatus.DRAFT }, updatedAt: { gte: since } },
-              ],
-            },
-            orderBy: { updatedAt: 'desc' },
-            take: NOTIFICATION_LIMIT,
-            select: { id: true, title: true, status: true, submittedAt: true, updatedAt: true },
-          }),
+      muted.has(ArtistNotificationCategory.TASKS) ? none<DueTask>() : this.dueTasks(owned, now),
+      this.releaseUpdates(owned, since, muted),
       muted.has(ArtistNotificationCategory.DELIVERY)
-        ? none<never>()
-        : this.prisma.releaseDelivery.findMany({
-            where: {
-              release: owned,
-              OR: [
-                { state: DeliveryState.FAILED },
-                { state: DeliveryState.LIVE, updatedAt: { gte: since } },
-              ],
-            },
-            orderBy: { updatedAt: 'desc' },
-            take: NOTIFICATION_LIMIT,
-            select: { releaseId: true, destination: true, state: true, updatedAt: true, release },
-          }),
+        ? none<DeliveryUpdate>()
+        : this.deliveryUpdates(owned, since),
     ])
-
-    const items: ArtistNotification[] = []
-    for (const task of tasks) {
-      if (!task.dueAt) continue
-      const overdue = task.dueAt < now
-      items.push({
-        id: `task-${task.id}-${overdue ? 'overdue' : 'soon'}`,
-        kind: overdue ? 'TASK_OVERDUE' : 'TASK_DUE_SOON',
-        actionRequired: true,
-        taskTitle: task.title,
-        releaseId: task.release.id,
-        releaseTitle: task.release.title,
-        // A due-soon task notifies from the moment it entered the 48-hour window.
-        at: overdue ? task.dueAt : new Date(task.dueAt.getTime() - DUE_SOON_MS),
-      })
-    }
-    for (const item of releases) {
-      const base = { releaseId: item.id, releaseTitle: item.title }
-      switch (item.status) {
-        case ReleaseStatus.REJECTED:
-          items.push({
-            ...base,
-            id: `release-${item.id}-rejected`,
-            kind: 'CHANGES_REQUESTED',
-            actionRequired: true,
-            at: item.updatedAt,
-          })
-          break
-        case ReleaseStatus.SUBMITTED:
-          items.push({
-            ...base,
-            id: `release-${item.id}-submitted`,
-            kind: 'RELEASE_SUBMITTED',
-            actionRequired: false,
-            at: item.submittedAt ?? item.updatedAt,
-          })
-          break
-        case ReleaseStatus.READY:
-          items.push({
-            ...base,
-            id: `release-${item.id}-approved`,
-            kind: 'RELEASE_APPROVED',
-            actionRequired: false,
-            at: item.updatedAt,
-          })
-          break
-        case ReleaseStatus.RELEASED:
-          items.push({
-            ...base,
-            id: `release-${item.id}-released`,
-            kind: 'RELEASE_RELEASED',
-            actionRequired: false,
-            at: item.updatedAt,
-          })
-          break
-      }
-    }
-    for (const delivery of deliveries) {
-      const failed = delivery.state === DeliveryState.FAILED
-      items.push({
-        id: `delivery-${delivery.releaseId}-${delivery.destination}-${delivery.state}`,
-        kind: failed ? 'DELIVERY_FAILED' : 'DELIVERY_LIVE',
-        actionRequired: failed,
-        destination: delivery.destination,
-        releaseId: delivery.release.id,
-        releaseTitle: delivery.release.title,
-        at: delivery.updatedAt,
-      })
-    }
-
-    const visible = items.filter((item) => !muted.has(CATEGORY_OF[item.kind]))
-    visible.sort((a, b) => b.at.getTime() - a.at.getTime())
-    const data = visible.slice(0, NOTIFICATION_LIMIT)
-    const seenAt = artist.notificationState?.seenAt ?? null
-    return {
-      data: data.map((item) => ({ ...item, unread: seenAt === null || item.at > seenAt })),
-      unread: data.filter((item) => seenAt === null || item.at > seenAt).length,
-      seenAt,
-    }
+    const items = [
+      ...tasks.flatMap((task) => taskNotification(task, now)),
+      ...releases.flatMap(releaseNotification),
+      ...deliveries.map(deliveryNotification),
+    ]
+    return toFeed(items, muted, artist.notificationState?.seenAt ?? null)
   }
 
   /** Marks everything derived up to now as read. */
@@ -229,5 +120,173 @@ export class ArtistNotificationsService {
       select: { mutedInApp: true },
     })
     return { mutedInApp }
+  }
+
+  /** Open tasks that are overdue or due within 48 hours. */
+  private dueTasks(owned: OwnedRelease, now: Date): Promise<DueTask[]> {
+    return this.prisma.releaseTask.findMany({
+      where: {
+        release: owned,
+        status: { not: ReleaseTaskStatus.DONE },
+        dueAt: { not: null, lt: new Date(now.getTime() + DUE_SOON_MS) },
+      },
+      orderBy: { dueAt: 'asc' },
+      take: NOTIFICATION_LIMIT,
+      select: { id: true, title: true, dueAt: true, release: RELEASE_REF },
+    })
+  }
+
+  /** Review and release status changes in the categories the artist has not muted. */
+  private releaseUpdates(
+    owned: OwnedRelease,
+    since: Date,
+    muted: MutedCategories,
+  ): Promise<ReleaseUpdate[]> {
+    // Muted categories are filtered in the query so they never take rows from the limit.
+    const releaseFilters: Prisma.ReleaseWhereInput[] = []
+    if (!muted.has(ArtistNotificationCategory.REVIEW)) {
+      releaseFilters.push(
+        { status: ReleaseStatus.REJECTED },
+        {
+          status: { in: [ReleaseStatus.SUBMITTED, ReleaseStatus.READY] },
+          updatedAt: { gte: since },
+        },
+      )
+    }
+    if (!muted.has(ArtistNotificationCategory.DELIVERY)) {
+      releaseFilters.push({ status: ReleaseStatus.RELEASED, updatedAt: { gte: since } })
+    }
+    if (releaseFilters.length === 0) return none<ReleaseUpdate>()
+    return this.prisma.release.findMany({
+      where: { ...owned, OR: releaseFilters },
+      orderBy: { updatedAt: 'desc' },
+      take: NOTIFICATION_LIMIT,
+      select: { id: true, title: true, status: true, submittedAt: true, updatedAt: true },
+    })
+  }
+
+  /** Failed deliveries and ones that went live recently. */
+  private deliveryUpdates(owned: OwnedRelease, since: Date): Promise<DeliveryUpdate[]> {
+    return this.prisma.releaseDelivery.findMany({
+      where: {
+        release: owned,
+        OR: [
+          { state: DeliveryState.FAILED },
+          { state: DeliveryState.LIVE, updatedAt: { gte: since } },
+        ],
+      },
+      orderBy: { updatedAt: 'desc' },
+      take: NOTIFICATION_LIMIT,
+      select: {
+        releaseId: true,
+        destination: true,
+        state: true,
+        updatedAt: true,
+        release: RELEASE_REF,
+      },
+    })
+  }
+}
+
+const RELEASE_REF = { select: { id: true, title: true } } as const
+
+type OwnedRelease = { ownerArtistId: string; deletedAt: null }
+type MutedCategories = ReadonlySet<ArtistNotificationCategory>
+type ReleaseRef = { id: string; title: string }
+
+interface DueTask {
+  id: string
+  title: string
+  dueAt: Date | null
+  release: ReleaseRef
+}
+
+interface ReleaseUpdate {
+  id: string
+  title: string
+  status: ReleaseStatus
+  submittedAt: Date | null
+  updatedAt: Date
+}
+
+interface DeliveryUpdate {
+  releaseId: string
+  destination: DeliveryDestination
+  state: DeliveryState
+  updatedAt: Date
+  release: ReleaseRef
+}
+
+const none = <T>(): Promise<T[]> => Promise.resolve([])
+
+function taskNotification(task: DueTask, now: Date): ArtistNotification[] {
+  if (!task.dueAt) return []
+  const overdue = task.dueAt < now
+  return [
+    {
+      id: `task-${task.id}-${overdue ? 'overdue' : 'soon'}`,
+      kind: overdue ? 'TASK_OVERDUE' : 'TASK_DUE_SOON',
+      actionRequired: true,
+      taskTitle: task.title,
+      releaseId: task.release.id,
+      releaseTitle: task.release.title,
+      // A due-soon task notifies from the moment it entered the 48-hour window.
+      at: overdue ? task.dueAt : new Date(task.dueAt.getTime() - DUE_SOON_MS),
+    },
+  ]
+}
+
+/** Release states that notify, with the id suffix and kind each one reports. */
+const RELEASE_NOTICES: Partial<
+  Record<ReleaseStatus, { suffix: string; kind: NotificationKind; actionRequired: boolean }>
+> = {
+  [ReleaseStatus.REJECTED]: { suffix: 'rejected', kind: 'CHANGES_REQUESTED', actionRequired: true },
+  [ReleaseStatus.SUBMITTED]: {
+    suffix: 'submitted',
+    kind: 'RELEASE_SUBMITTED',
+    actionRequired: false,
+  },
+  [ReleaseStatus.READY]: { suffix: 'approved', kind: 'RELEASE_APPROVED', actionRequired: false },
+  [ReleaseStatus.RELEASED]: { suffix: 'released', kind: 'RELEASE_RELEASED', actionRequired: false },
+}
+
+function releaseNotification(item: ReleaseUpdate): ArtistNotification[] {
+  const notice = RELEASE_NOTICES[item.status]
+  if (!notice) return []
+  const submitted = item.status === ReleaseStatus.SUBMITTED
+  return [
+    {
+      releaseId: item.id,
+      releaseTitle: item.title,
+      id: `release-${item.id}-${notice.suffix}`,
+      kind: notice.kind,
+      actionRequired: notice.actionRequired,
+      at: submitted ? (item.submittedAt ?? item.updatedAt) : item.updatedAt,
+    },
+  ]
+}
+
+function deliveryNotification(delivery: DeliveryUpdate): ArtistNotification {
+  const failed = delivery.state === DeliveryState.FAILED
+  return {
+    id: `delivery-${delivery.releaseId}-${delivery.destination}-${delivery.state}`,
+    kind: failed ? 'DELIVERY_FAILED' : 'DELIVERY_LIVE',
+    actionRequired: failed,
+    destination: delivery.destination,
+    releaseId: delivery.release.id,
+    releaseTitle: delivery.release.title,
+    at: delivery.updatedAt,
+  }
+}
+
+/** Drops muted kinds, keeps the newest items and marks what arrived after `seenAt`. */
+function toFeed(items: ArtistNotification[], muted: MutedCategories, seenAt: Date | null) {
+  const visible = items.filter((item) => !muted.has(CATEGORY_OF[item.kind]))
+  visible.sort((a, b) => b.at.getTime() - a.at.getTime())
+  const data = visible.slice(0, NOTIFICATION_LIMIT)
+  return {
+    data: data.map((item) => ({ ...item, unread: seenAt === null || item.at > seenAt })),
+    unread: data.filter((item) => seenAt === null || item.at > seenAt).length,
+    seenAt,
   }
 }

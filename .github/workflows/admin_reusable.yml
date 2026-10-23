@@ -110,7 +110,8 @@ jobs:
         run: pnpm --filter @bitrate/admin test
 
       # Builds the UI-kit Storybook (stories under src/app/presentation/ui) as a compile gate:
-      # the Angular builder type-checks every story file. Nothing is published or deployed.
+      # the Angular builder type-checks every story file. The published copy is built by
+      # storybook.yml, as a ref of the composed catalogue at ui.bitrate.me.
       # The script does not run env:gen — Storybook compiles only the UI kit, never the
       # generated env module — so no NG_APP_API_URL is needed here.
       - name: Build admin Storybook

@@ -18,8 +18,7 @@ import { ExportRepository } from '@domain/export'
 import { FileSaver } from '@presentation/components'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { UsersPage } from './users'
-import { TranslocoTestingModule } from '@jsverse/transloco'
-import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
+import { provideTestTransloco } from '@testing/transloco'
 
 function user(overrides: Partial<User> = {}): User {
   return {
@@ -93,6 +92,20 @@ class StubExportRepository extends ExportRepository {
 
 const routes: Routes = [{ path: 'users', component: UsersPage }]
 
+/** Opens the Status filter menu and picks the option with this label. */
+async function chooseStatus(harness: RouterTestingHarness, label: string): Promise<void> {
+  Array.from(
+    harness.routeNativeElement?.querySelectorAll<HTMLButtonElement>('app-filter-menu button') ?? [],
+  )
+    .find((button) => button.textContent?.includes('Status'))
+    ?.click()
+  await harness.fixture.whenStable()
+  Array.from(document.querySelectorAll<HTMLButtonElement>('[role="menuitemradio"]'))
+    .find((item) => item.textContent?.trim() === label)
+    ?.click()
+  await harness.fixture.whenStable()
+}
+
 describe('UsersPage', () => {
   let harness: RouterTestingHarness
 
@@ -102,13 +115,8 @@ describe('UsersPage', () => {
 
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
-      imports: [
-        TranslocoTestingModule.forRoot({
-          langs: { en: {}, uk: {} },
-          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-        }),
-      ],
       providers: [
+        ...provideTestTransloco(),
         provideZonelessChangeDetection(),
         provideRouter(routes),
         provideLocationMocks(),
@@ -133,10 +141,7 @@ describe('UsersPage', () => {
     await harness.navigateByUrl('/users?page=3', UsersPage)
     await harness.fixture.whenStable()
 
-    harness.routeNativeElement
-      ?.querySelectorAll<HTMLButtonElement>('[aria-label="Filter by status"] button')[1]
-      ?.click()
-    await harness.fixture.whenStable()
+    await chooseStatus(harness, 'Deactivated')
 
     const location = TestBed.inject(Location)
     expect(location.path()).toBe('/users?status=deactivated')
@@ -257,7 +262,7 @@ describe('UsersPage', () => {
       await harness.fixture.whenStable()
 
       expect(deactivateMany).toHaveBeenCalledWith([FIRST, SECOND])
-      expect(list).toHaveBeenCalledTimes(1)
+      expect(list.mock.calls.filter(([query]) => query.limit !== 1)).toHaveLength(1)
       const summary = dialog()
       expect(summary?.textContent).toContain('1 succeeded, 1 failed')
       expect(summary?.textContent).toContain('second')
@@ -272,9 +277,9 @@ describe('UsersPage', () => {
       await tick('Select first')
       expect(bar()).not.toBeNull()
 
-      host()
-        .querySelectorAll<HTMLButtonElement>('[aria-label="Filter by status"] button')[2]
-        ?.click()
+      // While rows are ticked the batch bar replaces the filters, so the change arrives by URL
+      // (back/forward, a shared link) — the same path a filter choice takes.
+      await harness.navigateByUrl('/users?status=all', UsersPage)
       await harness.fixture.whenStable()
 
       expect(bar()).toBeNull()
@@ -311,13 +316,8 @@ describe('UsersPage — CSV export', () => {
 
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
-      imports: [
-        TranslocoTestingModule.forRoot({
-          langs: { en: {}, uk: {} },
-          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-        }),
-      ],
       providers: [
+        ...provideTestTransloco(),
         provideZonelessChangeDetection(),
         provideRouter(routes),
         provideLocationMocks(),

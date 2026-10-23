@@ -2,6 +2,7 @@ import { provideHttpClient } from '@angular/common/http'
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing'
 import { TestBed } from '@angular/core/testing'
 import { ModerationReportRepository } from '@domain/moderation'
+import { ResourceNotFoundError } from '@domain/shared'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { ADMIN_API } from '../http/api.config'
 import { HttpModerationReportRepository } from './http-moderation-report.repository'
@@ -125,5 +126,38 @@ describe('HttpModerationReportRepository', () => {
       succeeded: 1,
       failed: 1,
     })
+  })
+})
+
+describe('HttpModerationReportRepository.getById failures', () => {
+  const LOAD_ID = '3f2504e0-4f89-41d3-9a0c-0305e82c33ff'
+  let repository: ModerationReportRepository
+  let http: HttpTestingController
+
+  beforeEach(() => {
+    TestBed.resetTestingModule()
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: ModerationReportRepository, useClass: HttpModerationReportRepository },
+      ],
+    })
+
+    repository = TestBed.inject(ModerationReportRepository)
+    http = TestBed.inject(HttpTestingController)
+  })
+
+  afterEach(() => http.verify())
+
+  it('maps a 404 on load to ResourceNotFoundError and passes any other failure through', async () => {
+    const missing = repository.getById(LOAD_ID)
+    http.expectOne(`${BASE}/${LOAD_ID}`).flush(null, { status: 404, statusText: 'Not Found' })
+    await expect(missing).rejects.toBeInstanceOf(ResourceNotFoundError)
+
+    const broken = repository.getById(LOAD_ID)
+    http.expectOne(`${BASE}/${LOAD_ID}`).flush(null, { status: 500, statusText: 'Server Error' })
+    const error = await broken.catch((caught: unknown) => caught)
+    expect(error).not.toBeInstanceOf(ResourceNotFoundError)
   })
 })

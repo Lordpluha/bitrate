@@ -3,6 +3,7 @@ import { PrismaService } from '@infra/prisma/prisma.service'
 import { PUBLIC_ARTIST_SELECT } from '@modules/artists/artists.select'
 import { Injectable } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
+import { toRankedPage } from './ranked-page'
 
 /** How far back a "top items" window reaches. */
 export type TimeRange = 'short' | 'medium' | 'long'
@@ -15,38 +16,12 @@ const MS_PER_DAY = 24 * 60 * 60 * 1000
 /** One ranked row: an entity id plus how many times the listener played it. */
 type RankedRow = { id: string; plays: bigint }
 
-/** A page of ranked ids, hydrated with the entities they point at. */
-type RankedPageInput<T extends { id: string }> = {
-  rows: RankedRow[]
-  total: bigint | undefined
-  entities: T[]
-  pagination: ReturnType<typeof normalizePagination>
-}
-
-/** Joins ranked ids back to their entities, dropping rows whose entity vanished. */
-function toRankedPage<T extends { id: string }>({
-  rows,
-  total,
-  entities,
-  pagination,
-}: RankedPageInput<T>) {
-  const byId = new Map(entities.map((entity) => [entity.id, entity]))
-
-  return {
-    data: rows.flatMap(({ id, plays }) => {
-      const entity = byId.get(id)
-      return entity ? [{ ...entity, plays: Number(plays) }] : []
-    }),
-    total: Number(total ?? 0n),
-    page: pagination.page,
-    limit: pagination.limit,
-  }
-}
+/** Adds the row's play count to its entity. */
+const withPlays = <T>(entity: T, { plays }: RankedRow) => ({ ...entity, plays: Number(plays) })
 
 /** Returns a listener's most-played tracks and artists over a time window. */
 @Injectable()
 export class PersonalTopService {
-  /** Creates a new instance. */
   constructor(private readonly prisma: PrismaService) {}
 
   /** Returns the earliest `listenedAt` still inside the requested window. */
@@ -54,35 +29,28 @@ export class PersonalTopService {
     return new Date(Date.now() - RANGE_DAYS[range] * MS_PER_DAY)
   }
 
-  /** Runs the get top tracks operation. */
+  /** The listener's most-played ready tracks in the window, most plays first. */
   async getTopTracks(userId: string, range: TimeRange, page = 1, limit = 20) {
     const pagination = normalizePagination(page, limit)
-    const since = this.rangeStart(range)
+    const source = Prisma.sql`
+      FROM "ListeningHistory" h
+      JOIN "Track" t ON t.id = h."trackId"
+      WHERE h."userId" = ${userId}::uuid
+        AND h."listenedAt" >= ${this.rangeStart(range)}
+        AND t."deletedAt" IS NULL
+        AND t."processingStatus" = 'READY'
+    `
 
     const [rows, countRows] = await Promise.all([
       this.prisma.queryRaw<RankedRow[]>(Prisma.sql`
         SELECT h."trackId" AS id, COUNT(*)::bigint AS plays
-        FROM "ListeningHistory" h
-        JOIN "Track" t ON t.id = h."trackId"
-        WHERE h."userId" = ${userId}::uuid
-          AND h."listenedAt" >= ${since}
-          AND t."deletedAt" IS NULL
-          AND t."processingStatus" = 'READY'
+        ${source}
         GROUP BY h."trackId" ORDER BY plays DESC, h."trackId" ASC
         LIMIT ${pagination.limit} OFFSET ${pagination.skip}
       `),
       this.prisma.queryRaw<Array<{ total: bigint }>>(Prisma.sql`
-        SELECT COUNT(*)::bigint AS total
-        FROM (
-          SELECT h."trackId"
-          FROM "ListeningHistory" h
-          JOIN "Track" t ON t.id = h."trackId"
-          WHERE h."userId" = ${userId}::uuid
-            AND h."listenedAt" >= ${since}
-            AND t."deletedAt" IS NULL
-            AND t."processingStatus" = 'READY'
-          GROUP BY h."trackId"
-        ) ranked_tracks
+        SELECT COUNT(DISTINCT h."trackId")::bigint AS total
+        ${source}
       `),
     ])
 
@@ -91,42 +59,39 @@ export class PersonalTopService {
       include: { artist: { select: { id: true, username: true, avatar: true } } },
     })
 
-    return toRankedPage({ rows, total: countRows[0]?.total, entities, pagination })
+    return toRankedPage({
+      rows,
+      total: countRows[0]?.total,
+      entities,
+      pagination,
+      rank: withPlays,
+    })
   }
 
-  /** Runs the get top artists operation. */
+  /** The listener's most-played artists in the window, most plays first. */
   async getTopArtists(userId: string, range: TimeRange, page = 1, limit = 20) {
     const pagination = normalizePagination(page, limit)
-    const since = this.rangeStart(range)
+    const source = Prisma.sql`
+      FROM "ListeningHistory" h
+      JOIN "Track" t ON t.id = h."trackId"
+      JOIN "Artist" a ON a.id = t."artistId"
+      WHERE h."userId" = ${userId}::uuid
+        AND h."listenedAt" >= ${this.rangeStart(range)}
+        AND t."deletedAt" IS NULL
+        AND t."processingStatus" = 'READY'
+        AND a."deletedAt" IS NULL
+    `
 
     const [rows, countRows] = await Promise.all([
       this.prisma.queryRaw<RankedRow[]>(Prisma.sql`
         SELECT t."artistId" AS id, COUNT(*)::bigint AS plays
-        FROM "ListeningHistory" h
-        JOIN "Track" t ON t.id = h."trackId"
-        JOIN "Artist" a ON a.id = t."artistId"
-        WHERE h."userId" = ${userId}::uuid
-          AND h."listenedAt" >= ${since}
-          AND t."deletedAt" IS NULL
-          AND t."processingStatus" = 'READY'
-          AND a."deletedAt" IS NULL
+        ${source}
         GROUP BY t."artistId" ORDER BY plays DESC, t."artistId" ASC
         LIMIT ${pagination.limit} OFFSET ${pagination.skip}
       `),
       this.prisma.queryRaw<Array<{ total: bigint }>>(Prisma.sql`
-        SELECT COUNT(*)::bigint AS total
-        FROM (
-          SELECT t."artistId"
-          FROM "ListeningHistory" h
-          JOIN "Track" t ON t.id = h."trackId"
-          JOIN "Artist" a ON a.id = t."artistId"
-          WHERE h."userId" = ${userId}::uuid
-            AND h."listenedAt" >= ${since}
-            AND t."deletedAt" IS NULL
-            AND t."processingStatus" = 'READY'
-            AND a."deletedAt" IS NULL
-          GROUP BY t."artistId"
-        ) ranked_artists
+        SELECT COUNT(DISTINCT t."artistId")::bigint AS total
+        ${source}
       `),
     ])
 
@@ -135,6 +100,12 @@ export class PersonalTopService {
       select: PUBLIC_ARTIST_SELECT,
     })
 
-    return toRankedPage({ rows, total: countRows[0]?.total, entities, pagination })
+    return toRankedPage({
+      rows,
+      total: countRows[0]?.total,
+      entities,
+      pagination,
+      rank: withPlays,
+    })
   }
 }

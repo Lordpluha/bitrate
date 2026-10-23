@@ -205,12 +205,14 @@ describe('AdminUsersService', () => {
   describe('softDelete', () => {
     it('throws UserNotFoundException when the user does not exist', async () => {
       prisma.user.findFirst.mockResolvedValue(null)
+      transaction.user.updateMany.mockResolvedValue({ count: 0 })
 
       await expect(service.softDelete('missing', STAFF_ID)).rejects.toThrow(UserNotFoundException)
     })
 
     it('throws UserAlreadyDeletedException when the user is already deleted', async () => {
       prisma.user.findFirst.mockResolvedValue(buildUser({ deletedAt: new Date() }) as never)
+      transaction.user.updateMany.mockResolvedValue({ count: 0 })
 
       await expect(service.softDelete('user-1', STAFF_ID)).rejects.toThrow(
         UserAlreadyDeletedException,
@@ -357,7 +359,10 @@ describe('AdminUsersService', () => {
           buildUser({ id, deletedAt: id === 'gone' ? new Date() : null }),
         ) as never
       }) as never)
-      transaction.user.updateMany.mockResolvedValue({ count: 1 })
+      transaction.user.updateMany.mockImplementation(((args: unknown) => {
+        const id = (args as { where: { id: string } }).where.id
+        return Promise.resolve({ count: id === 'ok' ? 1 : 0 }) as never
+      }) as never)
       transaction.userSession.deleteMany.mockResolvedValue({ count: 0 } as never)
       transaction.user.findFirstOrThrow.mockResolvedValue(
         buildAdminUser({ id: 'ok', deletedAt: new Date() }) as never,

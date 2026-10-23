@@ -216,25 +216,27 @@ describe('FriendsService', () => {
   })
 
   describe('listFriends', () => {
-    const friendship = (
+    const friend = (
       other: ReturnType<typeof user>,
       activity: {
         devices?: Array<{ lastSeenAt: Date }>
         playerState?: unknown
         settings?: unknown
       },
-    ) => {
-      const friend = {
-        ...other,
-        deletedAt: null,
-        devices: activity.devices ?? [],
-        playerState: activity.playerState ?? null,
-        settings: activity.settings ?? null,
-      }
-      return other.id < ME
-        ? { createdAt: NOW, userA: friend, userAId: other.id, userB: null, userBId: ME }
-        : { createdAt: NOW, userA: null, userAId: ME, userB: friend, userBId: other.id }
-    }
+    ) => ({
+      ...other,
+      devices: activity.devices ?? [],
+      playerState: activity.playerState ?? null,
+      settings: activity.settings ?? null,
+    })
+
+    /** Answers each side's query: rows where the caller is userA carry userB, and vice versa. */
+    const friendshipsOf = (
+      asUserA: Array<{ createdAt: Date; userB: unknown }>,
+      asUserB: Array<{ createdAt: Date; userA: unknown }>,
+    ) =>
+      prisma.friendship.findMany.mockImplementation(((args: { where: { userAId?: string } }) =>
+        Promise.resolve(args.where.userAId ? asUserA : asUserB)) as never)
 
     it('puts listening friends first, then online, then the rest, with private tracks hidden', async () => {
       jest.useFakeTimers({ now: NOW })
@@ -246,15 +248,26 @@ describe('FriendsService', () => {
         processingStatus: 'READY',
         title: 'Afterglow',
       }
-      prisma.friendship.findMany.mockResolvedValue([
-        friendship(user(ANA, 'ana'), {
-          devices: [{ lastSeenAt: new Date(NOW.getTime() - 3_600_000) }],
-        }),
-        friendship(user(CAI, 'cai'), {
-          playerState: { currentTrack: track, isPlaying: true, updatedAt: NOW },
-          settings: { privateSession: false, showListeningActivity: true },
-        }),
-      ] as never)
+      // ANA < ME < CAI: the caller is userB of the friendship with Ana, userA of Cai's.
+      friendshipsOf(
+        [
+          {
+            createdAt: NOW,
+            userB: friend(user(CAI, 'cai'), {
+              playerState: { currentTrack: track, isPlaying: true, updatedAt: NOW },
+              settings: { privateSession: false, showListeningActivity: true },
+            }),
+          },
+        ],
+        [
+          {
+            createdAt: NOW,
+            userA: friend(user(ANA, 'ana'), {
+              devices: [{ lastSeenAt: new Date(NOW.getTime() - 3_600_000) }],
+            }),
+          },
+        ],
+      )
 
       const friends = await service.listFriends(ME)
 
@@ -266,6 +279,28 @@ describe('FriendsService', () => {
         ['ana', 'offline', undefined],
       ])
       expect(friends[0]?.user).toEqual(user(CAI, 'cai'))
+    })
+
+    it('loads only the other side of each friendship and leaves deleted accounts out in the query', async () => {
+      friendshipsOf([], [])
+
+      await service.listFriends(ME)
+
+      expect(prisma.friendship.findMany).toHaveBeenCalledTimes(2)
+      expect(prisma.friendship.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { userAId: ME, userB: { deletedAt: null } },
+          orderBy: [{ createdAt: 'asc' }, { userBId: 'asc' }],
+          select: { createdAt: true, userB: expect.any(Object) },
+        }),
+      )
+      expect(prisma.friendship.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { userBId: ME, userA: { deletedAt: null } },
+          orderBy: [{ createdAt: 'asc' }, { userAId: 'asc' }],
+          select: { createdAt: true, userA: expect.any(Object) },
+        }),
+      )
     })
   })
 

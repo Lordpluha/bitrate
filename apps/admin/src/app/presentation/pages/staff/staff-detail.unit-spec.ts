@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing'
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router'
 import { RoleRepository, type Role } from '@domain/role'
 import { StaffRepository, type StaffMember } from '@domain/staff'
+import { provideTestTransloco } from '@testing/transloco'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { StaffDetailPage } from './staff-detail'
 
@@ -40,6 +41,7 @@ function configure(input: { member: StaffMember; roles: Role[] }): void {
     providers: [
       provideZonelessChangeDetection(),
       provideRouter([]),
+      ...provideTestTransloco(),
       {
         provide: ActivatedRoute,
         useValue: { snapshot: { paramMap: convertToParamMap({ id: input.member.id }) } },
@@ -70,7 +72,7 @@ describe('StaffDetailPage', () => {
     const host = fixture.nativeElement as HTMLElement
 
     expect(host.querySelector('app-permission-grid')).toBeNull()
-    expect(host.textContent).toContain('built-in administrator')
+    expect(host.textContent).toContain('Built-in administrator')
   })
 
   it('shows an editable permission grid for a non-built-in holder', async () => {
@@ -104,7 +106,7 @@ describe('StaffDetailPage', () => {
     const host = fixture.nativeElement as HTMLElement
 
     expect(host.textContent).toContain(
-      "replaces this operator's current permissions with the new role's template",
+      'replaces this operator’s permissions with the new role’s template',
     )
   })
 })

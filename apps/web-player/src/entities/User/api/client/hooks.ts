@@ -14,6 +14,7 @@ import {
   useMutation as useTanStackMutation,
   useQuery as useTanStackQuery,
 } from '@tanstack/react-query'
+import { fetchAllPages } from '@/shared/api/fetchAllPages'
 import {
   followedUsersResponseSchema,
   followingActivityResponseSchema,
@@ -56,19 +57,18 @@ export const useUsers = ({ username, page = 1, limit = 10 }: UseUsersParams) =>
 export const useUserById = (userId?: string) =>
   useTanStackQuery({
     queryKey: apiQueryKeys.users.byId(userId ?? ''),
+    /**
+     * Raw fetch: the generated contract declares no path params for
+     * `GET /users/{id}`, so the typed client cannot fill `{id}`.
+     */
     queryFn: async () => {
-      const { data, response } = await clientFetchClient.GET(
-        '/api/v1/users/{id}',
-        {
-          params: {
-            path: { id: userId ?? '' },
-          },
-        } as never,
+      const response = await fetchWithAuthRefresh(
+        getApiUrl(`/api/v1/users/${encodeURIComponent(userId ?? '')}`),
       )
 
       ensureOkResponse(response, 'Failed to fetch user')
 
-      return publicUserResponseSchema.parse(data)
+      return publicUserResponseSchema.parse(await response.json())
     },
     enabled: !!userId,
   })
@@ -109,17 +109,8 @@ const getFollowedUsersPage = async (page: number) => {
   return followedUsersResponseSchema.parse(data)
 }
 
-export const getAllFollowedUsers = async () => {
-  const firstPage = await getFollowedUsersPage(1)
-  const pageCount = Math.ceil(firstPage.total / firstPage.limit)
-  const remainingPages = await Promise.all(
-    Array.from({ length: Math.max(pageCount - 1, 0) }, (_, index) =>
-      getFollowedUsersPage(index + 2),
-    ),
-  )
-
-  return [firstPage, ...remainingPages].flatMap(({ data }) => data)
-}
+export const getAllFollowedUsers = () =>
+  fetchAllPages({ fetchPage: getFollowedUsersPage })
 
 const useInvalidateFollowedUsers = () => {
   const queryClient = useQueryClient()
@@ -131,10 +122,14 @@ const useInvalidateFollowedUsers = () => {
   }
 }
 
+/** Fallback for the mutation cache's error toast. */
+const FOLLOW_ERROR_MESSAGE = 'Could not update follow state'
+
 export const useFollowUser = () => {
   const invalidate = useInvalidateFollowedUsers()
 
   return useMutation('post', '/api/v1/users/{id}/follow', {
+    meta: { errorMessage: FOLLOW_ERROR_MESSAGE },
     onSuccess: invalidate,
   })
 }
@@ -143,31 +138,42 @@ export const useUnfollowUser = () => {
   const invalidate = useInvalidateFollowedUsers()
 
   return useMutation('delete', '/api/v1/users/{id}/follow', {
+    meta: { errorMessage: FOLLOW_ERROR_MESSAGE },
     onSuccess: invalidate,
   })
 }
 
-export const useUpdateUser = () => {
+/**
+ * Writes a saved profile into the signed-in user and refetches only that person's
+ * public profile; follow lists and activity show other people, so they stay cached.
+ */
+const useApplyUserUpdate = () => {
   const queryClient = useQueryClient()
 
+  return async (user: PublicUser) => {
+    queryClient.setQueryData(apiQueryKeys.auth.me, (current: unknown) =>
+      mergePublicUserIntoAuthUser(current, user),
+    )
+    await queryClient.invalidateQueries({
+      queryKey: apiQueryKeys.users.byId(user.id),
+    })
+  }
+}
+
+export const useUpdateUser = () => {
+  const applyUserUpdate = useApplyUserUpdate()
+
   return useMutation('put', '/api/v1/users', {
-    onSuccess: async (user) => {
-      const publicUser = publicUserResponseSchema.parse(user)
-      queryClient.setQueryData(apiQueryKeys.auth.me, (current: unknown) =>
-        mergePublicUserIntoAuthUser(current, publicUser),
-      )
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: apiQueryKeys.auth.me }),
-        queryClient.invalidateQueries({ queryKey: apiQueryKeys.users.all }),
-      ])
-    },
+    meta: { errorMessage: 'Failed to update profile' },
+    onSuccess: (user) => applyUserUpdate(publicUserResponseSchema.parse(user)),
   })
 }
 
 export const useUploadUserAvatar = () => {
-  const queryClient = useQueryClient()
+  const applyUserUpdate = useApplyUserUpdate()
 
   return useTanStackMutation({
+    meta: { errorMessage: 'Failed to upload avatar' },
     mutationFn: async (avatar: File) => {
       const formData = new FormData()
       formData.append('avatar', avatar)
@@ -184,15 +190,7 @@ export const useUploadUserAvatar = () => {
 
       return publicUserResponseSchema.parse(await response.json())
     },
-    onSuccess: async (user) => {
-      queryClient.setQueryData(apiQueryKeys.auth.me, (current: unknown) =>
-        mergePublicUserIntoAuthUser(current, user),
-      )
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: apiQueryKeys.auth.me }),
-        queryClient.invalidateQueries({ queryKey: apiQueryKeys.users.all }),
-      ])
-    },
+    onSuccess: applyUserUpdate,
   })
 }
 
@@ -232,6 +230,6 @@ export const useUserFollows = ({
   useTanStackQuery({
     enabled: Boolean(userId),
     queryFn: () => getUserFollowsPage({ kind, limit, userId }),
-    queryKey: apiQueryKeys.users.follows(userId, kind),
+    queryKey: apiQueryKeys.users.follows(userId, kind, limit),
     retry: false,
   })

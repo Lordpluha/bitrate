@@ -13,6 +13,8 @@ import { ROUTE_PERMISSIONS } from './route-permissions'
  * on a cold page load this guard runs while the store is still empty. Reading it synchronously
  * sent every operator to `/no-access` on every refresh, administrators included. So it restores
  * the session itself when needed — sharing the in-flight `/me` request, not issuing a second.
+ * (`app.routes.ts` now runs `requireStaffSession` as the parent's `canActivateChild`, which
+ * resolves first; the self-restore stays so the guard never depends on that ordering.)
  *
  * `/` is itself a guarded route now (the overview dashboard, `overview:read`), not a redirect to
  * `moderation`. On denial this guard looks (in nav order, via `ROUTE_PERMISSIONS`) for the first

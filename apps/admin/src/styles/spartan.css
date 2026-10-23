@@ -1,0 +1,70 @@
+/**
+ * The `spartan-*` hooks the helm dialog, select and tabs carry. Spartan's CLI would generate one
+ * of its stock styles here; the console draws them as glass instead, from the same roles as
+ * every tile, so an overlay reads as part of the page rather than a different product.
+ * Only the parts this app uses are defined.
+ */
+@layer components {
+  .spartan-dialog-overlay {
+    background: color-mix(in oklab, var(--color-background) 45%, transparent);
+    backdrop-filter: blur(6px);
+  }
+  .spartan-dialog-content {
+    @apply grid max-w-[calc(100%-2rem)] gap-4 rounded-panel border border-glass-line bg-glass-strong p-6 text-sm text-foreground shadow-glass backdrop-blur-[22px] backdrop-saturate-150 sm:max-w-md;
+  }
+  .spartan-dialog-close {
+    @apply absolute end-3 top-3;
+  }
+  .spartan-dialog-header {
+    @apply gap-1.5;
+  }
+  .spartan-dialog-footer {
+    @apply -mx-6 -mb-6 rounded-b-panel border-t border-glass-line px-6 py-4;
+  }
+  .spartan-dialog-title {
+    @apply font-display text-lg font-semibold tracking-tight;
+  }
+  .spartan-dialog-description {
+    @apply text-sm text-muted-foreground;
+  }
+
+  .spartan-select-trigger {
+    @apply h-[38px] gap-1.5 rounded-xl border border-glass-line bg-foreground/5 ps-3 pe-2.5 text-sm text-foreground transition-colors data-placeholder:text-muted-foreground hover:bg-glass-hover focus-visible:border-primary/60 focus-visible:ring-3 focus-visible:ring-primary/20 data-[matches-spartan-invalid=true]:border-error data-[matches-spartan-invalid=true]:ring-3 data-[matches-spartan-invalid=true]:ring-error/20 *:data-[slot=select-value]:gap-1.5;
+  }
+  .spartan-select-trigger-icon {
+    @apply text-base text-muted-foreground;
+  }
+  .spartan-select-content {
+    @apply max-h-72 min-w-[210px] flex-col rounded-2xl border border-glass-line bg-card/92 p-1.5 text-foreground shadow-glass backdrop-blur-[22px];
+  }
+  .spartan-select-label {
+    @apply px-2.5 py-1 text-xs text-muted-foreground;
+  }
+  .spartan-select-item {
+    @apply h-9 gap-2 rounded-[10px] ps-2.5 pe-8 text-[0.8125rem] data-highlighted:bg-glass-hover data-[state=checked]:font-semibold data-[state=checked]:text-accent;
+  }
+  .spartan-select-item-indicator {
+    @apply absolute end-2.5 flex items-center justify-center text-[15px];
+  }
+  .spartan-select-group {
+    @apply scroll-my-1;
+  }
+  .spartan-select-separator {
+    @apply -mx-1.5 my-1 h-px bg-glass-line;
+  }
+  .spartan-select-scroll-up-button,
+  .spartan-select-scroll-down-button {
+    @apply z-10 flex cursor-default items-center justify-center bg-card py-1;
+  }
+  .spartan-select-placeholder,
+  .spartan-select-values-content {
+    @apply gap-2;
+  }
+
+  .spartan-tabs-list {
+    @apply rounded-full p-1 group-data-horizontal/tabs:h-11 data-[variant=line]:rounded-none;
+  }
+  .spartan-tabs-trigger {
+    @apply gap-1.5 rounded-full border border-transparent px-3.5 py-1 text-[0.8125rem] font-semibold text-muted-foreground;
+  }
+}

@@ -1,5 +1,6 @@
 import type { ApiSchemas } from '@bitrate/contracts'
 import { clientFetchClient } from '@shared/api/fetchClient'
+import { writeSignal } from '@shared/api/writeTimeout'
 import {
   contributorResultSchema,
   participantSchema,
@@ -76,7 +77,7 @@ function sendContributor(
   { id, input }: ContributorRequest,
   contributorId?: string,
 ) {
-  const signal = AbortSignal.timeout(30_000)
+  const signal = writeSignal()
   if (contributorId)
     return clientFetchClient.PATCH(
       '/api/v1/releases/{id}/contributors/{contributorId}',

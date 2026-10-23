@@ -1,0 +1,180 @@
+/* Workspace chrome shared across slices: the .artist-dashboard theme scope, actions,
+   panels, dialogs and form controls. */
+@layer utilities {
+  .artist-dashboard,
+  .artist-dashboard * {
+    font-family: var(--font-artist-dashboard);
+  }
+
+  .artist-dashboard {
+    --color-background: var(--color-artist-canvas-start);
+    --color-card: var(--color-artist-panel-start);
+    --color-foreground: var(--color-artist-foreground);
+    --color-text-secondary: var(--color-artist-text-secondary);
+    --color-border: var(--color-artist-border);
+    --color-input: var(--color-artist-control-border);
+    --color-secondary: var(--color-artist-control-surface);
+    --color-card-foreground: var(--color-artist-foreground);
+    --color-secondary-foreground: var(--color-artist-foreground);
+    --color-accent: var(--color-artist-icon);
+    --color-ring: var(--color-artist-selection-border);
+    background-image: linear-gradient(
+      /* Pencil rotates in normalized bounds; preserve that angle as the viewport changes. */
+      calc(180deg + atan2(100dvh, 100vw)),
+      var(--color-artist-canvas-start) var(--artist-diagonal-stop-start),
+      var(--color-artist-canvas-middle) var(--artist-diagonal-stop-middle),
+      var(--color-artist-canvas-end) var(--artist-diagonal-stop-end)
+    );
+  }
+
+  .artist-workspace-primary {
+    background-image: linear-gradient(
+      90deg,
+      var(--color-artist-action-start),
+      var(--color-artist-action-end)
+    );
+    box-shadow: var(--shadow-artist-action);
+  }
+
+  .artist-workspace-nav-selected {
+    color: var(--color-foreground);
+    background: var(--color-artist-selection);
+    border-color: var(--color-artist-selection-border);
+  }
+
+  .artist-workspace-nav-selected svg,
+  .artist-workspace-avatar {
+    color: var(--color-artist-icon);
+  }
+
+  .artist-workspace-modal::backdrop {
+    background: color-mix(in srgb, var(--color-black) 70%, transparent);
+  }
+
+  .artist-workspace-modal {
+    background-image: none;
+  }
+
+  .artist-release-workspace {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .artist-release-workspace-panel {
+    min-width: 0;
+    padding: 1rem;
+    background: linear-gradient(
+      120deg,
+      var(--color-artist-release-panel-start),
+      var(--color-artist-release-panel-middle) 55%,
+      var(--color-artist-release-panel-end)
+    );
+    border: 1px solid var(--color-artist-release-border);
+    border-radius: var(--radius-artist-panel);
+    box-shadow: var(--shadow-artist-release-panel);
+  }
+  .artist-release-workspace-panel h2 {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+  .artist-release-workspace-panel h3 {
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
+  .artist-release-workspace-panel p,
+  .artist-release-workspace-panel small,
+  .artist-release-workspace-panel dl {
+    font-size: var(--text-artist-caption);
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
+  .artist-release-inset,
+  .artist-release-tracks li {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+    margin-top: 0.75rem;
+    background: var(--color-background);
+    border: 1px solid var(--color-artist-release-border);
+    border-radius: var(--radius-artist-panel);
+  }
+  .artist-release-inset {
+    align-items: flex-start;
+  }
+  .artist-release-inset p {
+    margin-top: 0.5rem;
+  }
+  .artist-release-schedule-fields {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+  .artist-workspace-modal.artist-release-schedule-modal,
+  .artist-workspace-modal.artist-release-credit-modal {
+    background-image: linear-gradient(
+      145deg,
+      var(--color-artist-release-panel-start),
+      var(--color-artist-release-panel-middle) 55%,
+      var(--color-artist-release-panel-end)
+    );
+    border-color: var(--color-artist-release-border);
+    border-radius: var(--radius-artist-panel);
+    box-shadow: var(--shadow-artist-release-panel);
+  }
+  .artist-release-schedule-fields input {
+    background: var(--color-artist-canvas-start);
+    border-radius: 0.5rem;
+  }
+  .artist-release-schedule-toggle {
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--color-artist-selection-border);
+  }
+  .artist-release-credit-roles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .artist-release-credit-role {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    background: var(--color-artist-canvas-start);
+    border: 1px solid var(--color-artist-release-border);
+    border-radius: 1.375rem;
+  }
+  .artist-release-credit-role:has(:checked) {
+    border-color: var(--color-artist-selection-border);
+  }
+  .artist-release-credit-role input {
+    accent-color: var(--color-artist-selection-border);
+  }
+  @variant sm {
+    .artist-release-schedule-fields {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .artist-music-control {
+    color: var(--color-text-secondary);
+    background: linear-gradient(
+      110deg,
+      var(--color-artist-panel-start),
+      var(--color-artist-panel-end)
+    );
+    border: 1px solid var(--color-artist-border);
+    border-radius: 0.5rem;
+  }
+
+  /* One focus ring for hand-styled controls; inside .artist-dashboard the ring is the selection border. */
+  .artist-release-back:focus-visible,
+  .artist-release-credit-role:focus-within,
+  .artist-music-control:focus-visible,
+  .artist-music-record:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+}

@@ -8,10 +8,16 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { Prisma } from '@prisma/client'
 import { DISCOVERY_ERRORS } from './errors/discovery.errors'
 import { PersonalTopService } from './personal-top.service'
+import { toRankedPage } from './ranked-page'
 
 export type ChartScope = 'global' | 'viral' | 'country'
 /** Chart scopes a request may ask for. */
 export const CHART_SCOPES: readonly ChartScope[] = ['global', 'viral', 'country']
+
+const MS_PER_DAY = 24 * 60 * 60 * 1000
+
+/** Listening history the feed reads to pick preferred genres; bounded so it stays index-backed. */
+const PREFERRED_GENRE_WINDOW_DAYS = 90
 
 @Injectable()
 export class DiscoveryService {
@@ -42,12 +48,11 @@ export class DiscoveryService {
   getCategoryPlaylists(slug: string, page = 1, limit = 20) {
     const pagination = normalizePagination(page, limit)
     return this.cache.wrap(NS.BROWSE, `category:${slug}:${page}:${limit}`, TTL.MEDIUM, async () => {
-      const genre = await this.prisma.genre.findUnique({ where: { slug }, select: { id: true } })
-      if (!genre) throw new NotFoundException(DISCOVERY_ERRORS.CATEGORY_NOT_FOUND)
+      const genreId = await this.requireGenreId(slug)
       const where = {
         isPublic: true,
         deletedAt: null,
-        tracks: { some: { track: { genres: { some: { genreId: genre.id } } } } },
+        tracks: { some: { track: { genres: { some: { genreId } } } } },
       } as const
       const [data, total] = await this.prisma.$transaction([
         this.prisma.playlist.findMany({
@@ -158,65 +163,40 @@ export class DiscoveryService {
     const genreId = genre ? await this.requireGenreId(genre) : undefined
     const key = `history-v2:${scope}:${country ?? 'global'}:${genre ?? 'all'}:${page}:${limit}`
     return this.cache.wrap(NS.CHARTS, key, TTL.MEDIUM, async () => {
-      const since = this.chartRangeStart(scope)
-      const countryFilter = this.countryFilter(scope, country)
       const genreFilter = genreId
         ? Prisma.sql`AND EXISTS (SELECT 1 FROM "TrackGenre" tg WHERE tg."trackId" = t.id AND tg."genreId" = ${genreId}::uuid)`
         : Prisma.empty
+      const source = this.chartSource(scope, country, genreFilter)
       const [rows, countRows] = await Promise.all([
-        this.prisma.queryRaw<Array<{ trackId: string; plays: bigint }>>(Prisma.sql`
-          SELECT h."trackId",
+        this.prisma.queryRaw<Array<{ id: string; plays: bigint }>>(Prisma.sql`
+          SELECT h."trackId" AS id,
                  COUNT(DISTINCT (h."userId", date_trunc('hour', h."listenedAt")))::bigint AS plays
-          FROM "ListeningHistory" h
-          JOIN "Track" t ON t.id = h."trackId"
-          JOIN "Artist" a ON a.id = t."artistId"
-          WHERE h."listenedAt" >= ${since}
-            AND t."deletedAt" IS NULL
-            AND t."processingStatus" = 'READY'
-            AND a."deletedAt" IS NULL
-            ${countryFilter}
-            ${genreFilter}
+          ${source}
           GROUP BY h."trackId"
           ORDER BY plays DESC, MAX(h."listenedAt") DESC, h."trackId" ASC
           LIMIT ${pagination.limit} OFFSET ${pagination.skip}
         `),
         this.prisma.queryRaw<Array<{ total: bigint }>>(Prisma.sql`
-          SELECT COUNT(*)::bigint AS total
-          FROM (
-            SELECT h."trackId"
-            FROM "ListeningHistory" h
-            JOIN "Track" t ON t.id = h."trackId"
-            JOIN "Artist" a ON a.id = t."artistId"
-            WHERE h."listenedAt" >= ${since}
-              AND t."deletedAt" IS NULL
-              AND t."processingStatus" = 'READY'
-              AND a."deletedAt" IS NULL
-              ${countryFilter}
-            ${genreFilter}
-            GROUP BY h."trackId"
-          ) ranked_tracks
+          SELECT COUNT(DISTINCT h."trackId")::bigint AS total
+          ${source}
         `),
       ])
-      const ids = rows.map(({ trackId }) => trackId)
       const tracks = await this.prisma.track.findMany({
         where: {
-          id: { in: ids },
+          id: { in: rows.map(({ id }) => id) },
           deletedAt: null,
           processingStatus: 'READY',
           artist: { deletedAt: null },
         },
         include: { artist: { select: { id: true, username: true, avatar: true } } },
       })
-      const byId = new Map(tracks.map((track) => [track.id, track]))
-      return {
-        data: rows.flatMap(({ trackId, plays }) => {
-          const track = byId.get(trackId)
-          return track ? [{ ...track, plays: Number(plays) }] : []
-        }),
-        total: Number(countRows[0]?.total ?? 0n),
-        page: pagination.page,
-        limit: pagination.limit,
-      }
+      return toRankedPage({
+        rows,
+        total: countRows[0]?.total,
+        entities: tracks,
+        pagination,
+        rank: (track, { plays }) => ({ ...track, plays: Number(plays) }),
+      })
     })
   }
 
@@ -225,51 +205,47 @@ export class DiscoveryService {
     const pagination = normalizePagination(page, limit)
     const key = `artists-v1:${scope}:${country ?? 'global'}:${page}:${limit}`
     return this.cache.wrap(NS.CHARTS, key, TTL.MEDIUM, async () => {
-      const since = this.chartRangeStart(scope)
-      const countryFilter = this.countryFilter(scope, country)
+      const source = this.chartSource(scope, country, Prisma.empty)
       const [rows, countRows] = await Promise.all([
-        this.prisma.queryRaw<Array<{ artistId: string; listeners: bigint }>>(Prisma.sql`
-          SELECT t."artistId", COUNT(DISTINCT h."userId")::bigint AS listeners
-          FROM "ListeningHistory" h
-          JOIN "Track" t ON t.id = h."trackId"
-          JOIN "Artist" a ON a.id = t."artistId"
-          WHERE h."listenedAt" >= ${since}
-            AND t."deletedAt" IS NULL
-            AND t."processingStatus" = 'READY'
-            AND a."deletedAt" IS NULL
-            ${countryFilter}
+        this.prisma.queryRaw<Array<{ id: string; listeners: bigint }>>(Prisma.sql`
+          SELECT t."artistId" AS id, COUNT(DISTINCT h."userId")::bigint AS listeners
+          ${source}
           GROUP BY t."artistId"
           ORDER BY listeners DESC, MAX(h."listenedAt") DESC, t."artistId" ASC
           LIMIT ${pagination.limit} OFFSET ${pagination.skip}
         `),
         this.prisma.queryRaw<Array<{ total: bigint }>>(Prisma.sql`
           SELECT COUNT(DISTINCT t."artistId")::bigint AS total
-          FROM "ListeningHistory" h
-          JOIN "Track" t ON t.id = h."trackId"
-          JOIN "Artist" a ON a.id = t."artistId"
-          WHERE h."listenedAt" >= ${since}
-            AND t."deletedAt" IS NULL
-            AND t."processingStatus" = 'READY'
-            AND a."deletedAt" IS NULL
-            ${countryFilter}
+          ${source}
         `),
       ])
-      const ids = rows.map(({ artistId }) => artistId)
       const artists = await this.prisma.artist.findMany({
-        where: { id: { in: ids }, deletedAt: null },
+        where: { id: { in: rows.map(({ id }) => id) }, deletedAt: null },
         select: PUBLIC_ARTIST_SELECT,
       })
-      const byId = new Map(artists.map((artist) => [artist.id, artist]))
-      return {
-        data: rows.flatMap(({ artistId, listeners }) => {
-          const artist = byId.get(artistId)
-          return artist ? [{ ...artist, listeners: Number(listeners) }] : []
-        }),
-        total: Number(countRows[0]?.total ?? 0n),
-        page: pagination.page,
-        limit: pagination.limit,
-      }
+      return toRankedPage({
+        rows,
+        total: countRows[0]?.total,
+        entities: artists,
+        pagination,
+        rank: (artist, { listeners }) => ({ ...artist, listeners: Number(listeners) }),
+      })
     })
+  }
+
+  /** Playable listening history in the chart window, optionally narrowed to a country/genre. */
+  private chartSource(scope: ChartScope, country: string | undefined, genreFilter: Prisma.Sql) {
+    return Prisma.sql`
+      FROM "ListeningHistory" h
+      JOIN "Track" t ON t.id = h."trackId"
+      JOIN "Artist" a ON a.id = t."artistId"
+      WHERE h."listenedAt" >= ${this.chartRangeStart(scope)}
+        AND t."deletedAt" IS NULL
+        AND t."processingStatus" = 'READY'
+        AND a."deletedAt" IS NULL
+        ${this.countryFilter(scope, country)}
+        ${genreFilter}
+    `
   }
 
   private countryFilter(scope: ChartScope, country: string | undefined) {
@@ -284,12 +260,15 @@ export class DiscoveryService {
     return genre.id
   }
 
+  /** The user's most-played genres over the recent listening window. */
   private async getPreferredGenreIds(userId: string) {
+    const since = new Date(Date.now() - PREFERRED_GENRE_WINDOW_DAYS * MS_PER_DAY)
     const rows = await this.prisma.queryRaw<Array<{ genreId: string }>>(Prisma.sql`
       SELECT tg."genreId"
       FROM "ListeningHistory" h
       JOIN "TrackGenre" tg ON tg."trackId" = h."trackId"
       WHERE h."userId" = ${userId}::uuid
+        AND h."listenedAt" >= ${since}
       GROUP BY tg."genreId" ORDER BY COUNT(*) DESC LIMIT 5
     `)
     return rows.map(({ genreId }) => genreId)
@@ -297,6 +276,6 @@ export class DiscoveryService {
 
   private chartRangeStart(scope: ChartScope) {
     const days = scope === 'viral' ? 7 : 28
-    return new Date(Date.now() - days * 24 * 60 * 60 * 1000)
+    return new Date(Date.now() - days * MS_PER_DAY)
   }
 }

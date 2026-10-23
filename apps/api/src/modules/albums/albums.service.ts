@@ -42,16 +42,13 @@ const flattenAlbumTrack = ({ track, id: _membershipId, ...membership }: AlbumTra
   ...membership,
 })
 
-/** Represents the albums service. */
 @Injectable()
 export class AlbumsService {
-  /** Creates a new instance. */
   constructor(
     private readonly prisma: PrismaService,
     private readonly cache: CacheService,
   ) {}
 
-  /** Runs the find all operation. */
   async findAll({
     page = 1,
     limit = 10,
@@ -145,7 +142,6 @@ export class AlbumsService {
     }
   }
 
-  /** Runs the get by id operation. */
   async getById(id: AlbumEntity['id']) {
     return await this.cache.wrap(NS.ALBUMS, `id:${id}`, TTL.LONG, () =>
       this.prisma.album
@@ -164,10 +160,12 @@ export class AlbumsService {
     )
   }
 
-  /** Runs the create operation. */
   async create(artistId: ArtistEntity['id'], createDto: CreateAlbumDto) {
-    const artist = await this.prisma.artist.findUnique({ where: { id: artistId } })
-    if (!artist) throw new NotFoundException('Artist not found')
+    const artist = await this.prisma.artist.findUnique({
+      where: { id: artistId },
+      select: { id: true, deletedAt: true },
+    })
+    if (!artist || artist.deletedAt) throw new NotFoundException('Artist not found')
 
     const { rightsConfirmed: _rightsConfirmed, ...albumData } = createDto
     const album = await this.prisma.album.create({
@@ -177,60 +175,61 @@ export class AlbumsService {
     return album
   }
 
-  /** Runs the update operation. */
+  /** Updates an album the artist owns; a missing, deleted or foreign album is a 404. */
   async update(artistId: ArtistEntity['id'], id: AlbumEntity['id'], updateDto: UpdateAlbumDto) {
-    const album = await this.prisma.album.findFirst({ where: { id, artistId, deletedAt: null } })
-    if (!album) throw new NotFoundException('Album not found or does not belong to the artist')
-
-    const updated = await this.prisma.album.update({ where: { id }, data: updateDto })
+    const updated = await this.ownedAlbumWrite(() =>
+      this.prisma.album.update({ where: { id, artistId, deletedAt: null }, data: updateDto }),
+    )
     await Promise.all([this.cache.invalidate(NS.ALBUMS), this.cache.invalidate(NS.SEARCH)])
     return updated
   }
 
-  /** Runs the delete operation. */
+  /** Soft-deletes an album the artist owns; a missing, deleted or foreign album is a 404. */
   async delete(artistId: ArtistEntity['id'], id: AlbumEntity['id']) {
-    const album = await this.prisma.album.findFirst({ where: { id, artistId, deletedAt: null } })
-    if (!album) throw new NotFoundException('Album not found or does not belong to the artist')
-
-    const deleted = await this.prisma.album.update({
-      where: { id },
-      data: { deletedAt: new Date() },
-      omit: { artistId: true },
-    })
+    const deleted = await this.ownedAlbumWrite(() =>
+      this.prisma.album.update({
+        where: { id, artistId, deletedAt: null },
+        data: { deletedAt: new Date() },
+        omit: { artistId: true },
+      }),
+    )
     await Promise.all([this.cache.invalidate(NS.ALBUMS), this.cache.invalidate(NS.SEARCH)])
     return deleted
   }
 
-  /** Runs the like operation. */
   async like(userId: UserEntity['id'], albumId: AlbumEntity['id']) {
-    try {
-      const album = await this.prisma.album.findFirst({
-        where: { id: albumId, deletedAt: null },
-      })
-      if (!album) throw new NotFoundException('Album not found')
-      await this.prisma.userLikedAlbum.upsert({
-        where: { userId_albumId: { userId, albumId } },
-        update: {},
-        create: { userId, albumId },
-      })
-      return album
-    } catch (error: unknown) {
-      if (isPrismaP2025(error)) throw new NotFoundException('Album not found')
-      throw error
-    }
+    const album = await this.prisma.album.findFirst({
+      where: { id: albumId, deletedAt: null },
+    })
+    if (!album) throw new NotFoundException('Album not found')
+    await this.prisma.userLikedAlbum.upsert({
+      where: { userId_albumId: { userId, albumId } },
+      update: {},
+      create: { userId, albumId },
+    })
+    return album
   }
 
-  /** Runs the unlike operation. */
   async unlike(userId: UserEntity['id'], albumId: AlbumEntity['id']) {
+    const album = await this.prisma.album.findFirst({
+      where: { id: albumId, deletedAt: null },
+    })
+    if (!album) throw new NotFoundException('Album not found')
+    await this.prisma.userLikedAlbum.deleteMany({ where: { userId, albumId } })
+    return album
+  }
+
+  /**
+   * Runs a write filtered on the album's owner and deletion state, so the check and the write are
+   * one query; Prisma's "record not found" becomes the module's 404.
+   */
+  private async ownedAlbumWrite<T>(write: () => Promise<T>): Promise<T> {
     try {
-      const album = await this.prisma.album.findFirst({
-        where: { id: albumId, deletedAt: null },
-      })
-      if (!album) throw new NotFoundException('Album not found')
-      await this.prisma.userLikedAlbum.deleteMany({ where: { userId, albumId } })
-      return album
+      return await write()
     } catch (error: unknown) {
-      if (isPrismaP2025(error)) throw new NotFoundException('Album not found')
+      if (isPrismaP2025(error)) {
+        throw new NotFoundException('Album not found or does not belong to the artist')
+      }
       throw error
     }
   }

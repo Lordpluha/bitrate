@@ -1,4 +1,3 @@
-import type { ApiSchemas } from '@bitrate/contracts'
 import { Button } from '@bitrate/ui-react'
 import {
   basisPointsToPercent,
@@ -7,15 +6,11 @@ import {
   rightTypes,
 } from '@entities/release'
 import { Check, Circle } from 'lucide-react'
-
-export type RightsAction =
-  | { kind: 'rights' }
-  | { kind: 'upc' }
-  | { kind: 'splits'; rightType: ApiSchemas['ReleaseRightType'] }
+import type { WorkspaceActionHandler } from '../model/workspaceAction'
 
 interface WorkspaceRightsProps {
   release: ReleaseWorkspace
-  onAction: (action: RightsAction) => void
+  onAction: WorkspaceActionHandler
 }
 
 function Confirmation({ done, label }: { done: boolean; label: string }) {

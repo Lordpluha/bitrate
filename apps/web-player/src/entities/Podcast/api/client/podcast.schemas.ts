@@ -41,14 +41,31 @@ export const podcastDetailSchema = podcastSchema.extend({
   episodes: paginatedSchema.extend({ data: z.array(episodeSchema) }),
 })
 
+const savedEpisodeSchema = episodeSchema.extend({
+  podcast: podcastSchema.omit({ _count: true }),
+  savedAt: z.string(),
+})
+
 export const savedEpisodesSchema = paginatedSchema.extend({
-  data: z.array(
-    episodeSchema.extend({
-      podcast: podcastSchema.omit({ _count: true }),
-      savedAt: z.string(),
-    }),
-  ),
+  data: z.array(savedEpisodeSchema),
 })
 
 export type Episode = z.infer<typeof episodeSchema>
-export type SavedEpisode = z.infer<typeof savedEpisodesSchema>['data'][number]
+export type SavedEpisode = z.infer<typeof savedEpisodeSchema>
+export type PodcastDetail = z.infer<typeof podcastDetailSchema>
+
+type ToSavedEpisodeInput = {
+  episode: Episode
+  podcast: PodcastDetail
+}
+
+/** The saved-library entry for an episode saved just now, without the detail-only fields. */
+export const toSavedEpisode = ({
+  episode,
+  podcast,
+}: ToSavedEpisodeInput): SavedEpisode =>
+  savedEpisodeSchema.parse({
+    ...episode,
+    podcast,
+    savedAt: new Date().toISOString(),
+  })

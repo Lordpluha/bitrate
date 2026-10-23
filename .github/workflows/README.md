@@ -100,7 +100,7 @@ by the Expo workflow action.
   There is no desktop Docker image: it never built and nothing deployed it.
 
 ### UI React / Visual Tests
-- ui_react.yml — UI React entry workflow: checks plus the Storybook image.
+- ui_react.yml — UI React entry workflow: checks only; the Storybook image is storybook.yml.
 - ui_react_reusable.yml — Biome plus unit, integration, snapshot, and Chromium screenshot
   projects.
 
@@ -112,18 +112,24 @@ by the Expo workflow action.
 - player_reusable.yml — six independent jobs, none gated on another: ESLint (this package is on
   ESLint, **not** Biome), `svelte-check` + `tsc`, `check:tokens`, Vitest `unit` (jsdom) and `node`
   (SSR import), Vitest `browser` in Chromium, and the Vite build followed by a static Storybook
-  build (`storybook:build`; build only, no image). Chromium is installed through
-  the package's own `playwright` (`pnpm --filter @bitrate/player exec playwright install`) so its
+  build (`storybook:build`; a compile gate — the image is storybook.yml). Chromium is installed
+  through the package's own `playwright` (`pnpm --filter @bitrate/player exec playwright install`) so its
   revision matches the provider that drives it. No release gate runs Vitest, so nothing else
   needs a browser.
 
 ### Storybook (ui.bitrate.me)
-- The Storybook image is part of ui_react.yml (`storybook-pr` / `storybook-develop` /
-  `storybook-master` jobs): Storybook lives in packages/ui-react, so its checks and image sit
-  with the package's other checks. Only those jobs get packages: write.
-- ui_react_storybook_reusable.yml — builds packages/ui-react/Dockerfile (target: production)
-  and publishes it. It does not repeat the ui-react checks. Only develop/master export the
-  registry build cache; a PR reads it and leaves nothing behind in GHCR.
+- One composed catalogue: the ui-react Storybook is the host at `/` and composes the player
+  (`/player/`) and admin UI kit (`/admin/`) Storybooks as root-relative refs
+  (packages/ui-react/.storybook/main.ts). The frameworks differ (React, Svelte, Angular), so each
+  is built separately; all three land in one image on one origin, so no CORS is involved.
+- storybook.yml — image-only entry workflow (`storybook-pr` / `storybook-develop` /
+  `storybook-master`), filtered on packages/ui-react, packages/tailwind, packages/player and
+  apps/admin. Each package's own workflow still runs its checks and builds its Storybook as a
+  compile gate. Only the image jobs get packages: write.
+- storybook_reusable.yml — builds packages/ui-react/Dockerfile (target: production), which runs
+  the three `storybook:build`s through turbo one at a time, and publishes it. Only
+  develop/master export the registry build cache; a PR reads it and leaves nothing behind in
+  GHCR.
 
 ### Docs (docs.bitrate.me)
 - docs.yml — Docs pipeline entry workflow.
@@ -370,7 +376,7 @@ on the VPS. The develop-branch reference for each:
 | web-artists | `ghcr.io/lordpluha/bitrate/web-artists:develop` | web_artists.yml |
 | admin | `ghcr.io/lordpluha/bitrate/admin:develop` | admin.yml |
 | docs | `ghcr.io/lordpluha/bitrate/docs:develop` | docs.yml |
-| storybook | `ghcr.io/lordpluha/bitrate/storybook:develop` | ui_react.yml |
+| storybook | `ghcr.io/lordpluha/bitrate/storybook:develop` | storybook.yml |
 
 Nothing else is published as an image. mobile-web is built and smoke-tested locally in
 mobile.yml but not pushed; build caches live under `cache/<app>:buildcache` and only develop

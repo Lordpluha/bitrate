@@ -1,14 +1,20 @@
+import { PassThrough, Readable } from 'node:stream'
 import { describe, expect, it, jest } from '@jest/globals'
 import { NotFoundException } from '@nestjs/common'
 import type { Request, Response } from 'express'
 import { StaticAssetsController } from './static-assets.controller'
 import type { StorageService } from './storage.types'
 
+/** A writable response double that records status/headers and collects the streamed bytes. */
 function buildResponse() {
-  const res = { status: jest.fn(), set: jest.fn(), on: jest.fn() }
+  const res = Object.assign(new PassThrough(), { status: jest.fn(), set: jest.fn() })
   res.status.mockReturnValue(res)
-  return res
+  const chunks: Buffer[] = []
+  res.on('data', (chunk: Buffer) => chunks.push(chunk))
+  return Object.assign(res, { body: () => Buffer.concat(chunks).toString() })
 }
+
+const settle = () => new Promise((resolve) => setImmediate(resolve))
 
 function buildController(storage: Partial<StorageService>) {
   return new StaticAssetsController(storage as StorageService)
@@ -19,9 +25,8 @@ const request = (path: string[] | string, range?: string) =>
 
 describe('StaticAssetsController.serve', () => {
   it('streams a public image through STORAGE_SERVICE with long-lived caching', async () => {
-    const pipe = jest.fn()
     const getObjectStream = jest.fn().mockResolvedValue({
-      stream: { pipe, on: jest.fn() },
+      stream: Readable.from([Buffer.from('png')]),
       contentLength: 3,
       contentType: 'image/png',
     } as never)
@@ -33,7 +38,8 @@ describe('StaticAssetsController.serve', () => {
     await controller.serve(request(['tracks', 'covers', 'a.png']), res as unknown as Response)
 
     expect(getObjectStream).toHaveBeenCalledWith('tracks/covers/a.png', undefined)
-    expect(pipe).toHaveBeenCalledWith(res)
+    await settle()
+    expect(res.body()).toBe('png')
     expect(res.status).toHaveBeenCalledWith(200)
     expect(res.set).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -47,7 +53,7 @@ describe('StaticAssetsController.serve', () => {
 
   it('honors a Range request', async () => {
     const getObjectStream = jest.fn().mockResolvedValue({
-      stream: { pipe: jest.fn(), on: jest.fn() },
+      stream: Readable.from([Buffer.from('we')]),
       contentRange: 'bytes 0-1/3',
       contentType: 'image/webp',
     } as never)

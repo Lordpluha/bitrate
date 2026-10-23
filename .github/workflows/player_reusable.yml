@@ -117,7 +117,7 @@ jobs:
         run: pnpm --filter @bitrate/player build
 
       # Proves the stories still compile against the element. Build only: the player's
-      # Storybook is not published as an image (that is ui-react's storybook.yml).
+      # Storybook is published as part of the composed image built by storybook.yml.
       - name: Build Storybook
         run: pnpm --filter @bitrate/player storybook:build
         env:

@@ -1185,8 +1185,6 @@ window.__bitrateIntro = new Promise((done) => {
       make((i, f) => (f < .62 ? fib(i, Math.floor(COUNT * .62), 430, 1000, 455) : ellipse(i * .37, 1000, 455, 560, 150, f < .81 ? .9 : -.6))),
       /* 02 a 72-band spectrum along the floor + a signal line over the cards */
       make((i, f) => { if (f < .7) { const bar = i % 72; const h = (Math.sin(bar * .45) * .5 + .5) * (Math.sin(bar * .13 + 1) * .4 + .6) * 160; return [40 + bar * 19.5, 884 - rnd(i, 1) * h, (rnd(i, 2) - .5) * 40] } const x = rnd(i, 3) * BW; return [x, 230 + Math.sin(x * .02) * 12, (rnd(i, 4) - .5) * 60] }),
-      /* 03 release timeline: one line, five milestone clusters */
-      make((i, f) => { if (f < .5) return [100 + rnd(i, 5) * 1240, 322 + (rnd(i, 6) - .5) * 5, 0]; const k = i % 5; const r = 8 + rnd(i, 7) * 34; const t = rnd(i, 8) * 6.283; return [200 + k * 260 + Math.cos(t) * r, 322 + Math.sin(t) * r, (rnd(i, 9) - .5) * 30] }),
       /* 04 four concentric orbits — one per workshop step */
       make((i) => { const ring = i % 4; return ellipse(rnd(i, 10) * 6.283, 930, 520, 170 + ring * 110, 60 + ring * 40, .7 + ring * .12) }),
       /* 05 a perspective floor grid running to the horizon */

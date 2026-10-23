@@ -1,93 +1,126 @@
-<section class="space-y-6 p-8">
-  <header class="flex items-center justify-between gap-4">
-    <div class="space-y-1">
-      <h1 class="text-xl font-semibold text-foreground">Staff</h1>
-      <p class="text-sm text-muted-foreground">
-        Operators and what they can do. Permissions live on the operator — assigning a role copies
-        its template, then the two can drift.
-      </p>
-    </div>
-    @if (canWrite()) {
-      <a hlmBtn size="sm" routerLink="/staff/new">New operator</a>
-    }
-  </header>
+<app-page-header
+  [eyebrow]="'staff.eyebrow' | transloco"
+  [title]="'staff.title' | transloco"
+  [subtitle]="'staff.subtitle' | transloco"
+>
+  @if (canWrite()) {
+    <a headerActions hlmBtn routerLink="/staff/new">
+      <ng-icon name="lucidePlus" aria-hidden="true" />
+      {{ 'staff.new' | transloco }}
+    </a>
+  }
+</app-page-header>
+
+@if (actionErrorText(); as message) {
+  <app-state-message
+    class="rounded-tile border border-error/40 bg-glass p-4 shadow-glass backdrop-blur-[22px]"
+    kind="error"
+    [title]="message"
+    [compact]="true"
+  />
+}
+
+<app-table-panel>
+  @if (range(); as r) {
+    <app-panel-bar panelBar>
+      <span class="ms-auto text-[0.8125rem] tabular-nums text-muted-foreground">
+        {{ 'ui.pagination.range' | transloco: r }}
+      </span>
+    </app-panel-bar>
+  }
 
   <app-collection-status
-    [loading]="collection.loading()"
-    [failure]="collection.failure()"
+    [loading]="collection.loading() && collection.items().length === 0"
+    [failure]="failureText()"
     [isEmpty]="collection.items().length === 0"
-    emptyMessage="No operators yet."
+    [emptyMessage]="'staff.empty.title' | transloco"
+    [retryLabel]="'ui.tryAgain' | transloco"
+    (retry)="collection.reload()"
   />
 
-  @if (collection.items().length > 0) {
-    <div hlmTableContainer>
+  @if (collection.items().length > 0 && !collection.failure()) {
+    <div hlmTableContainer class="hidden md:block">
       <table hlmTable>
         <caption hlmCaption class="sr-only">
-          Operators
+          {{
+            'staff.table.caption' | transloco
+          }}
         </caption>
         <thead hlmTHead>
           <tr hlmTr>
             <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'username')">
               <app-sort-header
-                [field]="'username'"
-                label="Operator"
+                field="username"
+                [label]="'staff.table.operator' | transloco"
                 [sort]="query.state().sort"
                 (sortChange)="setSort($event)"
               >
-                Operator
+                {{ 'staff.table.operator' | transloco }}
               </app-sort-header>
             </th>
             <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'email')">
               <app-sort-header
-                [field]="'email'"
-                label="Email"
+                field="email"
+                [label]="'staff.table.email' | transloco"
                 [sort]="query.state().sort"
                 (sortChange)="setSort($event)"
               >
-                Email
+                {{ 'staff.table.email' | transloco }}
               </app-sort-header>
             </th>
-            <th hlmTh scope="col">Role</th>
-            <th hlmTh scope="col">Actions</th>
+            <th hlmTh scope="col">{{ 'staff.table.role' | transloco }}</th>
+            @if (canWrite()) {
+              <th hlmTh scope="col"></th>
+            }
+            <th hlmTh scope="col" class="w-11"></th>
           </tr>
         </thead>
         <tbody hlmTBody>
           @for (member of collection.items(); track member.id) {
             <tr hlmTr>
               <td hlmTd>
-                <a [routerLink]="['/staff', member.id]" class="text-primary hover:underline">
-                  {{ member.username }}
-                </a>
-                @if (member.deactivatedAt) {
-                  <span hlmBadge variant="destructive" class="ml-2">deactivated</span>
-                }
+                <span class="flex items-center gap-2">
+                  <a
+                    class="font-semibold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                    [routerLink]="['/staff', member.id]"
+                    >{{ member.username }}</a
+                  >
+                  @if (member.deactivatedAt) {
+                    <span hlmBadge variant="destructive">{{
+                      'staff.deactivated' | transloco
+                    }}</span>
+                  }
+                </span>
               </td>
               <td hlmTd class="text-muted-foreground">{{ member.email }}</td>
               <td hlmTd>
-                {{ member.role.name }}
-                @if (divergenceLabel(member); as label) {
-                  <span hlmBadge variant="secondary" class="ml-2">{{ label }}</span>
-                }
-              </td>
-              <td hlmTd>
-                @if (!member.deactivatedAt && canWrite()) {
-                  @if (deactivation(member); as decision) {
-                    @if (decision.allowed) {
-                      <button
-                        hlmBtn
-                        size="sm"
-                        variant="ghost"
-                        type="button"
-                        [disabled]="busyId() === member.id"
-                        (click)="remove(member)"
-                      >
-                        Deactivate
-                      </button>
-                    } @else {
-                      <span class="text-xs text-muted-foreground">{{ decision.reason }}</span>
-                    }
+                <span class="flex flex-wrap items-center gap-2">
+                  {{ member.role.name }}
+                  @if (divergenceLabel(member); as diff) {
+                    <span hlmBadge variant="warning">{{
+                      'staff.divergence' | transloco: { diff, role: member.role.name }
+                    }}</span>
                   }
-                }
+                </span>
+              </td>
+              @if (canWrite()) {
+                <td hlmTd class="text-right">
+                  @if (canDeactivate(member)) {
+                    <button
+                      hlmBtn
+                      size="sm"
+                      variant="ghost"
+                      type="button"
+                      [disabled]="busyId() === member.id"
+                      (click)="remove(member)"
+                    >
+                      {{ 'staff.deactivate' | transloco }}
+                    </button>
+                  }
+                </td>
+              }
+              <td hlmTd class="text-muted-foreground">
+                <ng-icon class="text-base" name="lucideChevronRight" aria-hidden="true" />
               </td>
             </tr>
           }
@@ -95,12 +128,34 @@
       </table>
     </div>
 
-    <app-paginator
-      [page]="collection.page()"
-      [pageCount]="collection.pageCount()"
-      [total]="collection.total()"
-      [disabled]="collection.loading()"
-      (goTo)="goToPage($event)"
-    />
+    <ul class="flex flex-col gap-2.5 p-3 md:hidden">
+      @for (member of collection.items(); track member.id) {
+        <li>
+          <a
+            class="flex flex-col gap-2 rounded-[18px] border border-glass-line bg-card/50 p-3.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            [routerLink]="['/staff', member.id]"
+          >
+            <span class="flex items-center gap-2">
+              <span class="truncate font-semibold">{{ member.username }}</span>
+              @if (member.deactivatedAt) {
+                <span hlmBadge variant="destructive">{{ 'staff.deactivated' | transloco }}</span>
+              }
+            </span>
+            <span class="truncate text-xs text-muted-foreground">
+              {{ member.email }} · {{ member.role.name }}
+            </span>
+          </a>
+        </li>
+      }
+    </ul>
   }
-</section>
+
+  <app-paginator
+    panelFooter
+    [page]="collection.page()"
+    [pageCount]="collection.pageCount()"
+    [total]="collection.total()"
+    [disabled]="collection.loading()"
+    (goTo)="goToPage($event)"
+  />
+</app-table-panel>

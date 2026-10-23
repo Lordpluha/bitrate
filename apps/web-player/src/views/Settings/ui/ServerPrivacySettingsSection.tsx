@@ -5,7 +5,6 @@ import {
   useMeSettings,
   useUpdateMeSettings,
 } from '@/entities/Me'
-import { showApiErrorToast } from '@/shared/api/feedback'
 import { useAuth } from '@/shared/hooks'
 import { useI18n } from '@/shared/i18n'
 import {
@@ -33,13 +32,7 @@ export const ServerPrivacySettingsSection = () => {
   if (!settings) return null
 
   const toggle = (key: PrivacyKey) => {
-    updateSettings.mutate(
-      { [key]: !settings[key] },
-      {
-        onError: (error) =>
-          showApiErrorToast(error, 'Unable to save this preference.'),
-      },
-    )
+    updateSettings.mutate({ [key]: !settings[key] })
   }
 
   const row = (key: PrivacyKey, label: string, description?: string) => (

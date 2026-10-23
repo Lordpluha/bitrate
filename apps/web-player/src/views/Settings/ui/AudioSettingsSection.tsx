@@ -4,7 +4,6 @@ import type { InterfaceLanguage, StreamingQuality } from '@entities/Settings'
 import { toServerStreamingQuality, useSettingsStore } from '@entities/Settings'
 import { localeLabels, useI18n } from '@shared/i18n'
 import { type UpdateMeSettings, useUpdateMeSettings } from '@/entities/Me'
-import { showApiErrorToast } from '@/shared/api/feedback'
 import { useAuth } from '@/shared/hooks'
 import {
   SettingsRow,
@@ -32,10 +31,7 @@ export const AudioSettingsSection = () => {
 
   const saveToAccount = (settings: UpdateMeSettings) => {
     if (!isAuthenticated) return
-    updateSettings.mutate(settings, {
-      onError: (error) =>
-        showApiErrorToast(error, 'Unable to save this preference.'),
-    })
+    updateSettings.mutate(settings)
   }
 
   return (

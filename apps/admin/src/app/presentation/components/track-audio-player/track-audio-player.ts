@@ -1,3 +1,4 @@
+import { TranslocoService } from '@jsverse/transloco'
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -29,6 +30,7 @@ import { renditionLabel } from './track-audio.formatter'
 })
 export class TrackAudioPlayer {
   private readonly prepareAudio = inject(PrepareTrackAudioUseCase)
+  private readonly transloco = inject(TranslocoService)
 
   readonly track = input.required<TrackDetail>()
 
@@ -46,13 +48,15 @@ export class TrackAudioPlayer {
 
   protected readonly resolveSource: BitratePlayerSourceResolver = async ({ bitrate }) => {
     const target = bitrate ?? this.renditions()[0]?.bitrate ?? null
-    if (target === null) throw new Error('This rendition is no longer available.')
+    if (target === null) throw new Error(this.transloco.translate('ui.audio.gone'))
 
     try {
       const source = await this.prepareAudio.execute({ id: this.track().id, bitrate: target })
       return source.url
     } catch (probeError) {
-      throw new Error(probeAudioErrorMessage(probeError), { cause: probeError })
+      throw new Error(this.transloco.translate(probeAudioErrorMessage(probeError)), {
+        cause: probeError,
+      })
     }
   }
 }

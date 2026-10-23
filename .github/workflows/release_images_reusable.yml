@@ -155,7 +155,7 @@ jobs:
       contents: read
       packages: write
       security-events: write
-    uses: ./.github/workflows/ui_react_storybook_reusable.yml
+    uses: ./.github/workflows/storybook_reusable.yml
     with:
       push-image: ${{ inputs.push-image }}
       tags: |

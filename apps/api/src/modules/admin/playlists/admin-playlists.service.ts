@@ -2,9 +2,21 @@ import { DEFAULT_LIMIT, DEFAULT_PAGE } from '@common/pagination'
 import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { AdminResourceStatus, AuditContextValue } from '@modules/admin/shared'
-import { isoOrNull, writeTakeDownAudit } from '@modules/admin/shared'
+import {
+  runTakeDownTransition,
+  statusWhere,
+  type TakeDownActor,
+  type TakeDownDirection,
+  writeTakeDownAudit,
+} from '@modules/admin/shared'
 import { Injectable } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
+import {
+  PLAYLIST_DETAIL_SELECT,
+  PLAYLIST_ROW_SELECT,
+  type PlaylistDetailRecord,
+  type PlaylistRowRecord,
+} from './admin-playlists.select'
 import type { ADMIN_PLAYLISTS_SORT_FIELDS } from './dtos'
 import type { AdminPlaylistEntity, AdminPlaylistTrackEntity } from './entities'
 import {
@@ -33,50 +45,10 @@ const AUDIT_ENTITY_TYPE = 'admin-playlists'
 const HIDE_ACTION = 'admin-playlists.hide'
 const UNHIDE_ACTION = 'admin-playlists.unhide'
 
-/** How many tracks the detail page shows; `trackCount` carries the full total. */
-const DETAIL_TRACK_LIMIT = 50
-
-/** The columns the list, detail and mutation responses share, with owner and track count joined. */
-const PLAYLIST_ROW_SELECT = {
-  id: true,
-  title: true,
-  cover: true,
-  userId: true,
-  user: { select: { username: true } },
-  isPublic: true,
-  followersCount: true,
-  _count: { select: { tracks: true } },
-  deletedAt: true,
-  createdAt: true,
-  updatedAt: true,
-} as const satisfies Prisma.PlaylistSelect
-
-/** The row columns plus the metadata and first tracks only the detail page shows. */
-const PLAYLIST_DETAIL_SELECT = {
-  ...PLAYLIST_ROW_SELECT,
-  description: true,
-  collaborative: true,
-  tracks: {
-    orderBy: { position: 'asc' },
-    take: DETAIL_TRACK_LIMIT,
-    select: { position: true, track: { select: { id: true, title: true } } },
-  },
-} as const satisfies Prisma.PlaylistSelect
-
-type PlaylistRowRecord = Prisma.PlaylistGetPayload<{ select: typeof PLAYLIST_ROW_SELECT }>
-type PlaylistDetailRecord = Prisma.PlaylistGetPayload<{ select: typeof PLAYLIST_DETAIL_SELECT }>
-
 /** Handles the operator-facing public-playlist moderation: hide, take-down and restore. */
 @Injectable()
 export class AdminPlaylistsService {
   constructor(private readonly prisma: PrismaService) {}
-
-  /** Builds the `deletedAt` half of the `where` clause for the `status` take-down filter. */
-  private buildStatusWhere(status: AdminResourceStatus = 'active') {
-    if (status === 'all') return {}
-    if (status === 'deactivated') return { deletedAt: { not: null } }
-    return { deletedAt: null }
-  }
 
   /**
    * Builds the shared `where` clause for listing and counting. `isPublic: true` is not
@@ -85,7 +57,7 @@ export class AdminPlaylistsService {
   private buildWhere({ status, ownerId, q }: Omit<ListPlaylistsInput, 'page' | 'limit'>) {
     return {
       isPublic: true,
-      ...this.buildStatusWhere(status),
+      ...statusWhere(status),
       ...(ownerId && { userId: ownerId }),
       ...(q && { title: { contains: q, mode: 'insensitive' } }),
     } satisfies Prisma.PlaylistWhereInput
@@ -96,7 +68,7 @@ export class AdminPlaylistsService {
     return { ...playlist, ownerId: userId, ownerUsername: user.username, trackCount: _count.tracks }
   }
 
-  /** Runs the find all operation, paginated, newest first by default. */
+  /** Lists public playlists, paginated, newest first by default. */
   async findAll({
     page = DEFAULT_PAGE,
     limit = DEFAULT_LIMIT,
@@ -107,14 +79,17 @@ export class AdminPlaylistsService {
     order,
   }: ListPlaylistsInput) {
     const where = this.buildWhere({ status, ownerId, q })
-    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const orderBy = buildSortOrderBy<Prisma.PlaylistOrderByWithRelationInput>({ sort, order }, [
+      { createdAt: 'desc' },
+      { id: 'desc' },
+    ])
     const [rows, total] = await Promise.all([
       this.prisma.playlist.findMany({
         where,
         select: PLAYLIST_ROW_SELECT,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: orderBy as unknown as Prisma.PlaylistOrderByWithRelationInput[],
+        orderBy,
       }),
       this.prisma.playlist.count({ where }),
     ])
@@ -122,7 +97,7 @@ export class AdminPlaylistsService {
   }
 
   /**
-   * Runs the find by id operation. Deliberately filters neither `isPublic` nor `deletedAt` — a
+   * Finds one playlist by id. Deliberately filters neither `isPublic` nor `deletedAt` — a
    * hidden or taken-down playlist must stay reachable by id so the operator can review it and
    * reverse either action.
    */
@@ -168,7 +143,10 @@ export class AdminPlaylistsService {
     reason?: string,
     auditContext: AuditContextValue = {},
   ) {
-    const existing = await this.prisma.playlist.findFirst({ where: { id } })
+    const existing = await this.prisma.playlist.findFirst({
+      where: { id },
+      select: { isPublic: true },
+    })
     if (!existing) throw new PlaylistNotFoundException(id)
     if (existing.isPublic === isPublic) throw this.visibilityConflict(id, isPublic)
     if (isPublic && !(await this.wasHiddenByOperator(id))) {
@@ -227,79 +205,48 @@ export class AdminPlaylistsService {
    * `deletedAt` and nothing else, so visibility is untouched. The write is an `updateMany`
    * scoped to `deletedAt: null` so a concurrent take-down loses with a 409.
    */
-  async softDelete(
+  softDelete(
     id: string,
     staffId: string,
     reason?: string,
     auditContext: AuditContextValue = {},
-  ) {
-    const existing = await this.prisma.playlist.findFirst({ where: { id } })
-    if (!existing) throw new PlaylistNotFoundException(id)
-    if (existing.deletedAt) throw new PlaylistAlreadyDeletedException(id)
-
-    return await this.prisma.$transaction(async (tx) => {
-      const { count } = await tx.playlist.updateMany({
-        where: { id, deletedAt: null },
-        data: { deletedAt: new Date() },
-      })
-      if (count === 0) throw new PlaylistAlreadyDeletedException(id)
-
-      const updated = await tx.playlist.findFirstOrThrow({
-        where: { id },
-        select: PLAYLIST_ROW_SELECT,
-      })
-      await writeTakeDownAudit({
-        tx,
-        entityType: AUDIT_ENTITY_TYPE,
-        entityId: id,
-        action: 'admin-playlists.delete',
-        staffId,
-        reason,
-        before: { deletedAt: isoOrNull(existing.deletedAt) },
-        after: { deletedAt: isoOrNull(updated.deletedAt) },
-        ...auditContext,
-      })
-      return this.toRow(updated)
-    })
+  ): Promise<AdminPlaylistEntity> {
+    return this.transition('take-down', id, { staffId, reason, ...auditContext })
   }
 
   /**
    * Restores a soft-deleted playlist, recording the operator's stated reason in an audit row.
    * Clears `deletedAt` only — a hidden playlist stays hidden. Same guard as {@link softDelete}.
    */
-  async restore(
+  restore(
     id: string,
     staffId: string,
     reason?: string,
     auditContext: AuditContextValue = {},
-  ) {
-    const existing = await this.prisma.playlist.findFirst({ where: { id } })
-    if (!existing) throw new PlaylistNotFoundException(id)
-    if (!existing.deletedAt) throw new PlaylistNotDeletedException(id)
+  ): Promise<AdminPlaylistEntity> {
+    return this.transition('restore', id, { staffId, reason, ...auditContext })
+  }
 
-    return await this.prisma.$transaction(async (tx) => {
-      const { count } = await tx.playlist.updateMany({
-        where: { id, deletedAt: { not: null } },
-        data: { deletedAt: null },
-      })
-      if (count === 0) throw new PlaylistNotDeletedException(id)
-
-      const updated = await tx.playlist.findFirstOrThrow({
-        where: { id },
-        select: PLAYLIST_ROW_SELECT,
-      })
-      await writeTakeDownAudit({
-        tx,
-        entityType: AUDIT_ENTITY_TYPE,
-        entityId: id,
-        action: 'admin-playlists.restore',
-        staffId,
-        reason,
-        before: { deletedAt: isoOrNull(existing.deletedAt) },
-        after: { deletedAt: isoOrNull(updated.deletedAt) },
-        ...auditContext,
-      })
-      return this.toRow(updated)
+  /** Takes a playlist down or restores it, with its audit row — see {@link runTakeDownTransition}. */
+  private transition(
+    direction: TakeDownDirection,
+    id: string,
+    actor: TakeDownActor,
+  ): Promise<AdminPlaylistEntity> {
+    const takeDown = direction === 'take-down'
+    return runTakeDownTransition({
+      prisma: this.prisma,
+      direction,
+      current: () => this.prisma.playlist.findFirst({ where: { id }, select: { deletedAt: true } }),
+      mark: (tx, guard, data) => tx.playlist.updateMany({ where: { id, ...guard }, data }),
+      load: async (tx) =>
+        this.toRow(
+          await tx.playlist.findFirstOrThrow({ where: { id }, select: PLAYLIST_ROW_SELECT }),
+        ),
+      notFound: () => new PlaylistNotFoundException(id),
+      conflict: () =>
+        takeDown ? new PlaylistAlreadyDeletedException(id) : new PlaylistNotDeletedException(id),
+      audit: { entityType: AUDIT_ENTITY_TYPE, entityId: id, ...actor },
     })
   }
 }
