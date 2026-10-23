@@ -6,7 +6,10 @@ export type AuditEntry = {
   action: string
   entityType: string
   entityId: string | null
-  /** Resolved server-side, so the list does not have to issue a request per row. */
+  /**
+   * Resolved server-side, so the list does not have to issue a request per row. `null` for an
+   * entry the platform wrote itself — the page shows it as "System" in the operator's language.
+   */
   actorUsername: string | null
   ipAddress: string | null
   createdAt: Date
@@ -19,11 +22,4 @@ export type AuditFilter = {
   entityType?: string
   entityId?: string
   sort?: Sort<AuditSortField>
-}
-
-/** Shown for entries the platform wrote itself, which carry no operator. */
-const SYSTEM_ACTOR = 'system'
-
-export function auditActorLabel(entry: AuditEntry): string {
-  return entry.actorUsername ?? SYSTEM_ACTOR
 }

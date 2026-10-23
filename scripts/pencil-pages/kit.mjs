@@ -21,7 +21,14 @@ export const id = () => {
 
 /* ---------- mode: building library components ('lib') or screens that import it ('page') ---------- */
 let MODE = 'page'
-const pre = () => (MODE === 'lib' ? '' : 'ds:')
+/* the imported library: the Bitrate library as `ds` by default; the admin console has its own (`admin`) */
+let ALIAS = 'ds'
+let LIB_FILE = 'bitrate.lib.pen'
+export const setLibrary = (alias, file) => {
+  ALIAS = alias
+  LIB_FILE = file
+}
+const pre = () => (MODE === 'lib' ? '' : `${ALIAS}:`)
 export const setMode = (m) => {
   MODE = m
 }
@@ -37,7 +44,7 @@ export const C = new Proxy(
 )
 const font = (f) => `$${pre()}--${f}`
 const fontOf = (f = 'font-sans') => {
-  const k = String(f).replace(/^\$(ds:)?--/, '')
+  const k = String(f).replace(/^\$([a-z]+:)?--/, '')
   return /^font-(sans|heading)$/.test(k) ? font(k) : String(f)
 }
 /** Where page files live relative to the library: web-player pages sit next to it, web-artist pages one level deeper. */
@@ -129,7 +136,7 @@ const aliasPath = (key) =>
     ? key
     : key
         .split('/')
-        .map((seg) => (seg.startsWith('ds:') ? seg : `ds:${seg}`))
+        .map((seg) => (seg.startsWith(`${ALIAS}:`) ? seg : `${ALIAS}:${seg}`))
         .join('/')
 export const Ref = (ref, o = {}, descendants) => ({
   type: 'ref',
@@ -265,16 +272,17 @@ export function writePage(root, dir, spec) {
       x,
       y: 0,
       name: `${title} / ${label}`,
-      theme: { 'ds:Mode': theme },
+      theme: { [`${ALIAS}:Mode`]: theme },
       context: `${route} — ${context}${note ? ` · ${note}` : ''}`,
     })
     frames.push(n)
     x += n.width + 100
   }
-  const d = desktop()
+  /* a desktop that takes the theme draws each edition itself (e.g. a theme switch showing its value) */
+  const d = desktop('Dark')
   place(d, 'Dark', 'Desktop / Dark')
-  place(d, 'Light', 'Desktop / Light')
-  place(d, 'Dim', 'Desktop / Dim')
+  place(desktop.length ? desktop('Light') : d, 'Light', 'Desktop / Light')
+  place(desktop.length ? desktop('Dim') : d, 'Dim', 'Desktop / Dim')
   if (mobile) place(mobile(), 'Dark', 'Mobile / Dark')
   for (const [label, fn, theme = 'Dark'] of extra) place(fn(), theme, label)
   for (const st of states) {
@@ -299,7 +307,7 @@ export function writePage(root, dir, spec) {
   writeFileSync(
     file,
     JSON.stringify(
-      { version: '2.20', imports: { ds: `${LIB_DIR}bitrate.lib.pen` }, children: frames },
+      { version: '2.20', imports: { [ALIAS]: `${LIB_DIR}${LIB_FILE}` }, children: frames },
       null,
       2,
     ),

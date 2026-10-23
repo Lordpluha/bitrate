@@ -13,9 +13,9 @@
       "accounts": "Accounts",
       "system": "System"
     },
-    "moderation": "Moderation queue",
-    "releases": "Release review",
-    "catalog": "Catalog pipeline",
+    "moderation": "Moderation",
+    "releases": "Releases",
+    "catalog": "Catalog",
     "albums": "Albums",
     "playlists": "Playlists",
     "podcasts": "Podcasts",
@@ -27,8 +27,7 @@
     "staff": "Staff",
     "expandSidebar": "Expand sidebar",
     "collapseSidebar": "Collapse sidebar",
-    "collapse": "Collapse",
-    "resizeSidebar": "Resize sidebar"
+    "collapse": "Collapse"
   },
   "locale": {
     "ariaLabel": "{{label}}. Activate to switch language."
@@ -40,12 +39,1519 @@
     "ariaLabel": "{{label}}. Activate to switch theme."
   },
   "login": {
-    "title": "Operator sign-in",
-    "subtitle": "Bitrate staff accounts only.",
-    "email": "Email",
+    "title": "Sign in to Bitrate Admin",
+    "subtitle": "For Bitrate staff. Use your work account.",
+    "email": "Work email",
+    "emailPlaceholder": "name@bitrate.fm",
     "password": "Password",
+    "passwordPlaceholder": "Your password",
     "submit": "Sign in",
     "submitting": "Signing in…",
-    "failure": "Sign-in failed. Check the address and password, then try again."
+    "failure": "Email or password is wrong, or this account can’t sign in. Check them and try again.",
+    "footer": "Trouble signing in? Ask a super admin to reset your password.",
+    "invalid": {
+      "emailRequired": "Enter your work email",
+      "emailFormat": "Enter a valid email address",
+      "passwordRequired": "Enter your password"
+    }
+  },
+  "shell": {
+    "search": "Search or jump to…",
+    "palette": {
+      "label": "Command palette",
+      "placeholder": "Type a section or an action",
+      "results": "Matching commands",
+      "empty": "Nothing matches. Try another word.",
+      "group": {
+        "navigation": "Navigation",
+        "actions": "Actions"
+      },
+      "switchTheme": "Switch theme",
+      "switchLanguage": "Switch language",
+      "toggleSidebar": "Fold or unfold the sidebar"
+    },
+    "profile": {
+      "open": "Open profile menu",
+      "language": "Language",
+      "theme": "Theme",
+      "signOut": "Sign out",
+      "themeName": {
+        "dark": "Dark",
+        "light": "Light",
+        "dim": "Dim"
+      }
+    },
+    "tabs": {
+      "label": "Sections",
+      "search": "Search",
+      "menu": "Menu"
+    }
+  },
+  "notFound": {
+    "crumb": "Not found",
+    "title": "This page doesn’t exist",
+    "subtitle": "The link may be old, or the record was removed. Nothing is wrong with your account.",
+    "opened": "You opened",
+    "toOverview": "Go to Overview",
+    "search": "Search the console",
+    "shortcutsTitle": "Where people usually go",
+    "shortcutsMeta": "Sections in your role",
+    "shortcut": {
+      "moderation": "Reports waiting for a decision",
+      "releases": "Releases waiting for review",
+      "catalog": "Tracks and their processing",
+      "users": "Listener accounts",
+      "audit": "Latest staff actions"
+    }
+  },
+  "ui": {
+    "loading": "Loading…",
+    "working": "Working…",
+    "cancel": "Cancel",
+    "close": "Close",
+    "tryAgain": "Try again",
+    "clearFilters": "Clear filters",
+    "pagination": {
+      "label": "Pagination",
+      "summary": "Page {page} of {pages} · {total} total",
+      "range": "{from}–{to} of {total}",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "sort": {
+      "label": "Sort by {column}, {state}",
+      "ascending": "ascending",
+      "descending": "descending",
+      "none": "not sorted"
+    },
+    "batch": {
+      "region": "Batch actions",
+      "selected": "{items} selected",
+      "clear": "Clear",
+      "confirmTitle": "{action} {items}",
+      "affected": "Affected rows",
+      "finished": "{action} finished",
+      "summary": "{succeeded} succeeded, {failed} failed.",
+      "perRow": "Result per row",
+      "outcome": {
+        "succeeded": "succeeded",
+        "failed": "failed"
+      }
+    },
+    "export": {
+      "action": "Export CSV",
+      "busy": "Exporting…",
+      "failed": "Could not export the CSV. Try again.",
+      "truncated": "The file holds the first {max} rows only. Narrow the filters to export the rest."
+    },
+    "confirm": {
+      "reason": "Reason (optional)"
+    },
+    "write": {
+      "already": {
+        "account": "{label} is already deactivated — reloaded.",
+        "item": "{label} is already taken down — reloaded."
+      },
+      "not": {
+        "account": "{label} is not deactivated — reloaded.",
+        "item": "{label} is not taken down — reloaded."
+      },
+      "visibility": "{label} changed visibility elsewhere or cannot be un-hidden by an operator — reloaded.",
+      "notFound": "{label} could not be found — it may have been removed.",
+      "notAllowed": "{label} can’t be changed in its current state.",
+      "failed": {
+        "deactivate": "Couldn’t deactivate {label}.",
+        "hide": "Couldn’t hide {label}.",
+        "reprocess": "Couldn’t reprocess {label}.",
+        "restore": "Couldn’t restore {label}.",
+        "revokeSessions": "Couldn’t revoke sessions for {label}.",
+        "takeDown": "Couldn’t take down {label}.",
+        "unhide": "Couldn’t unhide {label}."
+      }
+    },
+    "audio": {
+      "sessionExpired": "Your session has expired — press Play to continue.",
+      "gone": "This rendition is no longer available.",
+      "failed": "Couldn’t start playback — press Play to continue."
+    },
+    "yes": "Yes",
+    "no": "No"
+  },
+  "moderation": {
+    "batch": {
+      "items": "{count, plural, one {# report} other {# reports}}",
+      "resolve": "Resolve",
+      "resolveConfirm": "Resolve reports",
+      "resolveConsequence": "Marks each report resolved and stamps its resolution time.",
+      "dismiss": "Dismiss",
+      "dismissConfirm": "Dismiss reports",
+      "dismissConsequence": "Marks each report rejected and stamps its resolution time."
+    },
+    "eyebrow": "Operations · Moderation",
+    "title": "Moderation",
+    "subtitle": "Reports from listeners and artists. Taking one marks it in review, so two operators never work the same report.",
+    "kpi": {
+      "open": "Open",
+      "openOldest": "Oldest {age}",
+      "openNone": "Nothing waiting",
+      "reviewing": "Reviewing",
+      "reviewingSub": "Taken by an operator"
+    },
+    "filter": {
+      "status": "Status",
+      "type": "Type"
+    },
+    "status": {
+      "all": "All statuses",
+      "OPEN": "Open",
+      "REVIEWING": "Reviewing",
+      "RESOLVED": "Resolved",
+      "REJECTED": "Rejected"
+    },
+    "type": {
+      "all": "All types",
+      "track": "Track",
+      "album": "Album",
+      "playlist": "Playlist",
+      "artist": "Artist",
+      "podcast": "Podcast",
+      "episode": "Episode",
+      "user": "Listener"
+    },
+    "table": {
+      "caption": "Reported content awaiting operator review",
+      "reported": "Reported",
+      "reason": "Reason",
+      "status": "Status",
+      "opened": "Opened",
+      "actions": "Actions",
+      "selectAll": "Select all reports on this page",
+      "select": "Select {type} report {id}"
+    },
+    "action": {
+      "take": "Take",
+      "resolve": "Resolve",
+      "reject": "Reject"
+    },
+    "empty": {
+      "title": "The queue is clear",
+      "desc": "No open reports. New ones appear here as they arrive."
+    },
+    "noResults": {
+      "title": "No reports match these filters",
+      "desc": "Clear the filters to see the whole queue."
+    },
+    "error": {
+      "load": "Couldn’t load the queue",
+      "advance": "Couldn’t move that report. Nothing was changed.",
+      "batch": "Couldn’t update the selected reports."
+    }
+  },
+  "users": {
+    "batch": {
+      "items": "{count, plural, one {# listener} other {# listeners}}",
+      "deactivate": "Deactivate",
+      "deactivateConfirm": "Deactivate listeners",
+      "deactivateConsequence": "Sets a deletion date and signs each listener out. Playlists and history are kept."
+    },
+    "eyebrow": "Accounts · Listeners",
+    "title": "Listeners",
+    "subtitle": "Listener accounts: who they are, whether they confirmed their email, how they use Bitrate.",
+    "kpi": {
+      "listeners": "Listeners",
+      "listenersSub": "Active accounts"
+    },
+    "search": "Search username or email",
+    "filter": {
+      "status": "Status"
+    },
+    "email": {
+      "confirmed": "Confirmed",
+      "pending": "Not confirmed"
+    },
+    "table": {
+      "caption": "Listener accounts",
+      "listener": "Listener",
+      "email": "Email",
+      "emailState": "Email",
+      "joined": "Joined",
+      "selectAll": "Select all listeners on this page",
+      "select": "Select {name}"
+    },
+    "action": {
+      "deactivate": "Deactivate"
+    },
+    "empty": {
+      "title": "No listeners yet",
+      "desc": "Listener accounts appear here as people sign up."
+    },
+    "noResults": {
+      "title": "No listeners match these filters",
+      "titleQuery": "No listeners match “{query}”",
+      "desc": "Try another username or email, or clear the filter."
+    },
+    "error": {
+      "load": "Couldn’t load listeners",
+      "deactivate": "Couldn’t deactivate {name}.",
+      "batch": "Couldn’t deactivate the selected listeners."
+    }
+  },
+  "catalog": {
+    "batch": {
+      "takeDown": "Take down",
+      "takeDownConfirm": "Take down tracks",
+      "takeDownConsequence": "Stamps a deletion date on each track and blocks reprocessing. Albums and artists are untouched.",
+      "items": "{count, plural, one {# track} other {# tracks}}"
+    },
+    "eyebrow": "Operations · Catalog",
+    "title": "Catalog",
+    "subtitle": "Every uploaded track and where it is in the processing pipeline.",
+    "kpi": {
+      "ready": "Ready",
+      "readySub": "Live and playable",
+      "processing": "Processing",
+      "processingOldest": "Oldest {age}",
+      "processingNone": "Pipeline is idle",
+      "failed": "Failed",
+      "failedSub": "Needs a reprocess"
+    },
+    "attention": "{count, plural, one {# track on this page failed or has been processing for over half an hour.} other {# tracks on this page failed or have been processing for over half an hour.}}",
+    "order": "Ordered by what needs attention: failed tracks first, then the longest-stuck uploads. Choosing a column replaces this order; clearing it brings this order back.",
+    "search": "Search track title",
+    "filter": {
+      "pipeline": "Pipeline",
+      "resource": "Resource"
+    },
+    "pipeline": {
+      "all": "All",
+      "FAILED": "Failed",
+      "PROCESSING": "Processing",
+      "READY": "Ready",
+      "stuck": "Stuck"
+    },
+    "resource": {
+      "active": "Live",
+      "deactivated": "Taken down",
+      "all": "Any"
+    },
+    "table": {
+      "caption": "Tracks and their processing state",
+      "track": "Track",
+      "artist": "Artist",
+      "pipeline": "Pipeline",
+      "attempts": "Attempts",
+      "started": "Started",
+      "selectAll": "Select all tracks on this page",
+      "select": "Select {title}"
+    },
+    "action": {
+      "reprocess": "Reprocess"
+    },
+    "empty": {
+      "title": "No tracks yet",
+      "desc": "Uploads appear here as artists send them."
+    },
+    "noResults": {
+      "title": "No tracks match these filters",
+      "titleQuery": "No tracks match “{query}”",
+      "desc": "Try another title, or clear the filters."
+    },
+    "error": {
+      "load": "Couldn’t load the catalog",
+      "reprocess": "Couldn’t queue “{title}” for reprocessing.",
+      "batch": "Couldn’t take down the selected tracks."
+    }
+  },
+  "report": {
+    "eyebrow": "Moderation · Report {id}",
+    "loadingTitle": "Report",
+    "subtitle": "{reason} · filed {age} ago",
+    "action": {
+      "start": "Start review",
+      "resolve": "Resolve",
+      "reject": "Reject"
+    },
+    "dialog": {
+      "resolveTitle": "Resolve this report?",
+      "resolveDesc": "The reported content stays as it is unless you take it down from its own page. The report closes as resolved.",
+      "resolveAction": "Resolve report",
+      "rejectTitle": "Reject this report?",
+      "rejectDesc": "Nothing changes on the reported content. The report closes as rejected.",
+      "rejectAction": "Reject report"
+    },
+    "tile": {
+      "report": "Report",
+      "reportMeta": "What the reporter said",
+      "reason": "Reason",
+      "reporter": "Reporter",
+      "filed": "Filed",
+      "status": "Status",
+      "resolvedAt": "Closed",
+      "content": "Reported content",
+      "deleted": "Deleted",
+      "gone": "Subject no longer exists",
+      "goneDesc": "It was removed after the report was filed.",
+      "open": "Open its page",
+      "podcast": "Podcast {id}",
+      "siblings": "Other reports on this subject",
+      "siblingsMeta": "{count, plural, one {# more} other {# more}}",
+      "siblingReport": "Report"
+    },
+    "notFound": {
+      "title": "Report not found",
+      "desc": "This report doesn’t exist or was removed. Check the link, or go back to the queue."
+    },
+    "error": {
+      "load": "Couldn’t load this report",
+      "advance": "Couldn’t change this report’s status. Nothing was changed."
+    }
+  },
+  "releases": {
+    "eyebrow": "Operations · Releases",
+    "title": "Releases",
+    "subtitle": "Releases artists sent for review before they go live. Approving lets the artist’s delivery plan go ahead; it does not deliver the release.",
+    "kpi": {
+      "awaiting": "Awaiting review",
+      "awaitingOldest": "Oldest {age}",
+      "awaitingNone": "Nothing waiting",
+      "changes": "Changes requested",
+      "changesSub": "Waiting on artists"
+    },
+    "search": "Search title or artist",
+    "filter": {
+      "status": "Status"
+    },
+    "queueStatus": {
+      "SUBMITTED": "Awaiting review",
+      "REJECTED": "Changes requested",
+      "READY": "Approved",
+      "ALL": "All statuses"
+    },
+    "table": {
+      "caption": "Release submissions",
+      "release": "Release",
+      "type": "Type",
+      "tracks": "Tracks",
+      "status": "Status",
+      "submitted": "Submitted",
+      "artwork": "No artwork"
+    },
+    "empty": {
+      "title": "Nothing to review",
+      "desc": "No releases are waiting. New submissions appear here."
+    },
+    "noResults": {
+      "title": "No releases match these filters",
+      "titleQuery": "No releases match “{query}”",
+      "desc": "Try another title or artist, or clear the status filter."
+    },
+    "error": {
+      "load": "Couldn’t load releases"
+    }
+  },
+  "release": {
+    "kind": {
+      "ALBUM": "Album",
+      "SINGLE": "Single",
+      "EP": "EP",
+      "COMPILATION": "Compilation"
+    },
+    "status": {
+      "DRAFT": "Draft",
+      "SUBMITTED": "Awaiting review",
+      "READY": "Approved",
+      "REJECTED": "Changes requested",
+      "RELEASED": "Released"
+    },
+    "eyebrow": "Releases · Review",
+    "loadingTitle": "Release",
+    "subtitle": "{kind} by {artist} · {count, plural, one {# recording} other {# recordings}}",
+    "submitted": "submitted {age} ago",
+    "action": {
+      "approve": "Approve",
+      "changes": "Request changes"
+    },
+    "plan": {
+      "title": "Release plan",
+      "meta": "Set by the artist",
+      "date": "Planned date",
+      "notSet": "Not set",
+      "upc": "UPC",
+      "kind": "Type",
+      "stores": "Stores",
+      "noStores": "None chosen yet",
+      "territories": "Territories",
+      "worldwide": "Worldwide",
+      "audit": "View audit history"
+    },
+    "rights": {
+      "title": "Rights confirmations",
+      "meta": "{done} of {all} confirmed",
+      "master": "Master owner set",
+      "masterArtist": "The artist owns the master",
+      "masterOther": "Owned by {name}",
+      "masterOtherUnnamed": "Owned by someone else",
+      "writers": "Writers confirmed",
+      "accuracy": "Accuracy confirmed",
+      "confirmedOn": "Confirmed {date}",
+      "notYet": "Not confirmed yet",
+      "blockers": "Still blocking",
+      "notices": "Worth knowing"
+    },
+    "blocker": {
+      "NO_TRACKS": "No recordings",
+      "COVER_MISSING": "No artwork",
+      "TRACK_AUDIO_MISSING": "A recording has no audio",
+      "MASTER_OWNER_MISSING": "Master owner not set",
+      "WRITERS_NOT_CONFIRMED": "Writers not confirmed",
+      "ACCURACY_NOT_CONFIRMED": "Accuracy not confirmed",
+      "CONTRIBUTOR_ROLES_MISSING": "A contributor has no role",
+      "SPLITS_INCOMPLETE": "Splits do not add up to 100%"
+    },
+    "notice": {
+      "UPC_MISSING": "No UPC yet",
+      "ISRC_MISSING": "A recording has no ISRC yet"
+    },
+    "right": {
+      "RECORDING": "Recording (master)",
+      "COMPOSITION": "Composition (publishing)"
+    },
+    "tracks": {
+      "title": "Recordings",
+      "meta": "{count, plural, one {# recording} other {# recordings}}",
+      "caption": "Recordings in release order",
+      "number": "#",
+      "recording": "Recording",
+      "isrc": "ISRC",
+      "length": "Length",
+      "master": "Master",
+      "noAudio": "No audio",
+      "play": "Play {title}",
+      "none": "This release lists no recordings."
+    },
+    "contributors": {
+      "title": "Contributors",
+      "meta": "{count, plural, one {# person} other {# people}}",
+      "caption": "Contributors and their shares",
+      "name": "Contributor",
+      "roles": "Roles",
+      "shares": "Shares",
+      "none": "No contributors listed."
+    },
+    "history": {
+      "title": "Review history",
+      "meta": "{count, plural, =0 {First submission} one {# decision} other {# decisions}}",
+      "none": "First submission — no earlier decisions.",
+      "approved": "Approved",
+      "changes": "Changes requested",
+      "formerOperator": "former operator"
+    },
+    "decision": {
+      "needsPermission": "Deciding on releases needs the releases:review permission.",
+      "notAwaiting": "This release isn’t awaiting review. A decision is possible once the artist submits it.",
+      "approveTitle": "Approve “{title}”?",
+      "approveDesc": "The artist sees the decision in their workspace, and their delivery plan can go ahead. Approval does not deliver the release.",
+      "approveAction": "Approve release",
+      "changesTitle": "Request changes",
+      "changesDesc": "The artist sees each line as a task and resubmits when every one is done.",
+      "changesAction": "Send to artist",
+      "required": "Required changes",
+      "requiredHint": "{count} of up to {max} · one change per line, up to {length} characters each.",
+      "requiredPlaceholder": "Replace the artwork: it contains a third-party logo",
+      "requiredMissing": "Add at least one change",
+      "recommendations": "Recommendations (optional), one per line",
+      "message": "Note to the artist (optional)",
+      "saving": "Saving…",
+      "approved": "“{title}” was approved. The artist sees the decision now.",
+      "changesSent": "Changes were requested on “{title}”."
+    },
+    "notFound": {
+      "title": "Release not found",
+      "desc": "This release doesn’t exist, is still a draft, or the artist withdrew it. Go back to the queue."
+    },
+    "error": {
+      "load": "Couldn’t load this release",
+      "stale": "The release changed or was already decided. It was reloaded; check it again.",
+      "gone": "This release no longer exists.",
+      "invalid": "The API refused the review. Check the lengths and that no item repeats.",
+      "save": "Couldn’t save the decision. Nothing was changed."
+    },
+    "role": {
+      "PERFORMER": "Performer",
+      "PRODUCER": "Producer",
+      "COMPOSER": "Composer",
+      "LYRICIST": "Lyricist",
+      "OTHER": "Other"
+    }
+  },
+  "track": {
+    "eyebrow": "Catalog · Track",
+    "loadingTitle": "Track",
+    "by": "by {artist}",
+    "stuck": "Stuck",
+    "takenDown": "Taken down",
+    "action": {
+      "reprocess": "Reprocess",
+      "queuing": "Queuing…",
+      "takeDown": "Take down",
+      "restore": "Restore"
+    },
+    "confirm": {
+      "takeDown": "Take down “{title}”? It stops appearing in listener apps until restored.",
+      "takeDownAction": "Yes, take down",
+      "restore": "Restore “{title}”? It becomes visible again immediately.",
+      "restoreAction": "Yes, restore"
+    },
+    "done": {
+      "reprocess": "“{title}” was queued for reprocessing.",
+      "takeDown": "“{title}” was taken down.",
+      "restore": "“{title}” was restored."
+    },
+    "tile": {
+      "processing": "Processing",
+      "processingMeta": "Where the upload is in the pipeline",
+      "attempts": "Attempts",
+      "started": "Started",
+      "finished": "Finished",
+      "openReports": "Open reports",
+      "reports": "View reports naming this track",
+      "audit": "View audit history",
+      "lastError": "Last error",
+      "listen": "Listen",
+      "listenMeta": "A stored rendition, played here",
+      "history": "Processing history",
+      "historyMeta": "Every attempt, newest first",
+      "renditions": "Renditions",
+      "renditionsMeta": "{count, plural, =0 {None stored} one {# stored} other {# stored}}",
+      "renditionsNone": "No stored renditions.",
+      "credits": "Credits",
+      "creditsMeta": "{count, plural, one {# artist} other {# artists}}",
+      "primary": "Primary",
+      "genres": "Genres",
+      "genresNone": "No genres attached.",
+      "albums": "Albums",
+      "albumsNone": "Not on any album.",
+      "albumPlace": "Disc {disc}, track {track}",
+      "notListenable": "It plays here once processing finishes and a streamable rendition is stored."
+    },
+    "notFound": {
+      "title": "Track not found",
+      "desc": "This track doesn’t exist or was removed. Check the link, or go back to the catalog."
+    },
+    "error": {
+      "load": "Couldn’t load this track"
+    }
+  },
+  "attempt": {
+    "caption": "Processing attempts for this track, newest first",
+    "col": {
+      "attempt": "Attempt",
+      "trigger": "Trigger",
+      "status": "Status",
+      "step": "Step",
+      "duration": "Duration",
+      "error": "Error",
+      "worker": "Worker",
+      "started": "Started"
+    },
+    "trigger": {
+      "UPLOAD": "Upload",
+      "REPLACE": "Replace",
+      "REPROCESS": "Reprocess"
+    },
+    "status": {
+      "RUNNING": "Running",
+      "SUCCEEDED": "Succeeded",
+      "FAILED": "Failed",
+      "SUPERSEDED": "Superseded",
+      "STALLED": "Stalled"
+    },
+    "takingWhile": "Taking a while",
+    "willRetry": "Will retry",
+    "transient": "Likely transient",
+    "legacy": "Last recorded error (before history was kept)",
+    "empty": "No processing attempts recorded yet.",
+    "error": "Couldn’t load processing history",
+    "diagnostics": {
+      "show": "Show diagnostics",
+      "hide": "Hide diagnostics",
+      "copy": "Copy diagnostics",
+      "copyLabel": "Copy diagnostics for attempt {attempt}",
+      "copied": "Copied diagnostics to the clipboard.",
+      "copyFailed": "Couldn’t copy — clipboard access is unavailable."
+    }
+  },
+  "content": {
+    "resource": {
+      "active": "Live",
+      "deactivated": "Taken down",
+      "all": "Any"
+    },
+    "filter": {
+      "status": "Status"
+    },
+    "kpi": {
+      "live": "Live",
+      "takenDown": "Taken down",
+      "takenDownSub": "Restorable at any time",
+      "reported": "Reported",
+      "reportedSub": "Open reports"
+    },
+    "takenDown": "Taken down",
+    "explicit": "Explicit",
+    "audit": "View audit history",
+    "yesTakeDown": "Yes, take down",
+    "yesRestore": "Yes, restore",
+    "takeDown": "Take down",
+    "restore": "Restore",
+    "released": "released {date}"
+  },
+  "albums": {
+    "eyebrow": "Operations · Albums",
+    "title": "Albums",
+    "subtitle": "Albums, EPs and singles as listeners see them. Taking one down hides the release only; its tracks stay as they are and are managed one by one in the catalog.",
+    "kpiLiveSub": "Albums, EPs and singles",
+    "search": "Search album title",
+    "artistFilter": "One artist only",
+    "clearArtist": "Clear artist filter",
+    "table": {
+      "caption": "Albums",
+      "album": "Album",
+      "type": "Type",
+      "tracks": "Tracks",
+      "released": "Released"
+    },
+    "empty": {
+      "title": "No albums yet",
+      "desc": "Albums appear here once their releases are approved."
+    },
+    "noResults": {
+      "title": "No albums match these filters",
+      "titleQuery": "No albums match “{query}”",
+      "desc": "Try another title, or clear the filters."
+    },
+    "error": {
+      "load": "Couldn’t load albums"
+    }
+  },
+  "album": {
+    "eyebrow": "Albums · {type}",
+    "loadingTitle": "Album",
+    "subtitle": "{type} by {artist} · {count, plural, one {# track} other {# tracks}}",
+    "dialog": {
+      "takeDownTitle": "Take down album",
+      "takeDownDesc": "Take down “{title}”? The release is hidden until restored. Its tracks are not changed and stay manageable one by one.",
+      "restoreTitle": "Restore album",
+      "restoreDesc": "Restore “{title}”? It reappears in the active list immediately."
+    },
+    "done": {
+      "takeDown": "“{title}” was taken down. Its tracks were not changed.",
+      "restore": "“{title}” was restored."
+    },
+    "tile": {
+      "details": "Details",
+      "detailsMeta": "From the release",
+      "released": "Released",
+      "label": "Label",
+      "copyright": "Copyright",
+      "tracks": "Tracks",
+      "tracksMeta": "{count, plural, one {# track} other {# tracks}}",
+      "tracksNone": "This album lists no tracks.",
+      "caption": "Tracks in disc and track order",
+      "disc": "Disc",
+      "number": "#",
+      "track": "Track",
+      "pipeline": "Pipeline"
+    },
+    "notFound": {
+      "title": "Album not found",
+      "desc": "This album doesn’t exist or was removed. Check the link, or go back to the albums."
+    },
+    "error": {
+      "load": "Couldn’t load this album"
+    }
+  },
+  "playlists": {
+    "eyebrow": "Operations · Playlists",
+    "title": "Playlists",
+    "subtitle": "Playlists listeners made. Hiding one makes it private; taking it down removes it until restored. The two are separate.",
+    "kpiLiveSub": "Made by listeners",
+    "search": "Search playlist title",
+    "ownerFilter": "One owner only",
+    "clearOwner": "Clear owner filter",
+    "table": {
+      "caption": "Playlists",
+      "playlist": "Playlist",
+      "owner": "Owner",
+      "tracks": "Tracks",
+      "followers": "Followers",
+      "visibility": "Visibility",
+      "created": "Created"
+    },
+    "visibility": {
+      "public": "Public",
+      "private": "Private"
+    },
+    "empty": {
+      "title": "No playlists yet",
+      "desc": "Listener playlists appear here as they are made."
+    },
+    "noResults": {
+      "title": "No playlists match these filters",
+      "titleQuery": "No playlists match “{query}”",
+      "desc": "Try another title, or clear the filters."
+    },
+    "error": {
+      "load": "Couldn’t load playlists"
+    }
+  },
+  "playlist": {
+    "eyebrow": "Playlists · Playlist",
+    "loadingTitle": "Playlist",
+    "subtitle": "by {owner} · {count, plural, one {# track} other {# tracks}} · {followers, plural, one {# follower} other {# followers}}",
+    "action": {
+      "hide": "Hide",
+      "unhide": "Make public"
+    },
+    "dialog": {
+      "hideTitle": "Hide playlist",
+      "hideDesc": "Hide “{title}”? It becomes private and leaves the public list. It is not deleted, and can be made public again.",
+      "hideAction": "Yes, hide",
+      "unhideTitle": "Make playlist public",
+      "unhideDesc": "Make “{title}” public again? Its take-down state is not changed.",
+      "unhideAction": "Yes, make public",
+      "takeDownTitle": "Take down playlist",
+      "takeDownDesc": "Take down “{title}”? It is removed until restored. Its visibility is not changed.",
+      "restoreTitle": "Restore playlist",
+      "restoreDesc": "Restore “{title}”? Its visibility is not changed, so a hidden playlist stays hidden."
+    },
+    "done": {
+      "hide": "“{title}” was hidden. It is private now, not deleted.",
+      "unhide": "“{title}” is public again.",
+      "takeDown": "“{title}” was taken down. Its visibility was not changed.",
+      "restore": "“{title}” was restored. Its visibility was not changed."
+    },
+    "tile": {
+      "details": "Details",
+      "detailsMeta": "Who made it and who follows it",
+      "owner": "Owner",
+      "followers": "Followers",
+      "visibility": "Visibility",
+      "created": "Created",
+      "tracks": "Tracks",
+      "tracksMeta": "{count, plural, one {# track} other {# tracks}}",
+      "tracksNone": "This playlist has no tracks.",
+      "caption": "Tracks in playlist order",
+      "number": "#",
+      "track": "Track",
+      "collaborative": "Collaborative",
+      "firstOf": "Showing the first {shown} of {count} tracks."
+    },
+    "notFound": {
+      "title": "Playlist not found",
+      "desc": "This playlist doesn’t exist or was removed. Check the link, or go back to the playlists."
+    },
+    "error": {
+      "load": "Couldn’t load this playlist"
+    }
+  },
+  "podcasts": {
+    "eyebrow": "Operations · Podcasts",
+    "title": "Podcasts",
+    "subtitle": "Shows and their episodes. A show and each of its episodes are taken down separately.",
+    "kpiLiveSub": "Shows listeners can find",
+    "kpiReported": "Reported episodes",
+    "search": "Search podcast title",
+    "table": {
+      "caption": "Podcasts",
+      "podcast": "Podcast",
+      "publisher": "Publisher",
+      "language": "Language",
+      "episodes": "Episodes",
+      "created": "Created"
+    },
+    "empty": {
+      "title": "No podcasts yet",
+      "desc": "Shows appear here once publishers add them."
+    },
+    "noResults": {
+      "title": "No podcasts match these filters",
+      "titleQuery": "No podcasts match “{query}”",
+      "desc": "Try another title, or clear the filters."
+    },
+    "error": {
+      "load": "Couldn’t load podcasts"
+    }
+  },
+  "podcast": {
+    "eyebrow": "Podcasts · Show",
+    "loadingTitle": "Podcast",
+    "subtitle": "{publisher} · {count, plural, one {# episode} other {# episodes}}",
+    "dialog": {
+      "takeDownTitle": "Take down podcast",
+      "takeDownDesc": "Take down “{title}”? The podcast is hidden until restored. Its episodes are not changed and keep their own state.",
+      "restoreTitle": "Restore podcast",
+      "restoreDesc": "Restore “{title}”? It reappears in the active catalog immediately.",
+      "episodeTakeDownTitle": "Take down episode",
+      "episodeTakeDownDesc": "Take down the episode “{title}”? Only this episode is hidden. The podcast and its other episodes are not changed.",
+      "episodeRestoreTitle": "Restore episode",
+      "episodeRestoreDesc": "Restore the episode “{title}”? It reappears in the podcast immediately."
+    },
+    "done": {
+      "takeDown": "“{title}” was taken down. Its episodes were not changed.",
+      "episodeTakeDown": "“{title}” was taken down. The podcast and its other episodes were not changed.",
+      "restore": "“{title}” was restored."
+    },
+    "episode": {
+      "takeDown": "Take down episode {title}",
+      "restore": "Restore episode {title}"
+    },
+    "tile": {
+      "about": "About",
+      "aboutMeta": "From the publisher",
+      "publisher": "Publisher",
+      "language": "Language",
+      "created": "Created",
+      "noDescription": "No description.",
+      "episodes": "Episodes",
+      "episodesMeta": "{count, plural, one {# episode} other {# episodes}}",
+      "episodesNone": "This podcast has no episodes.",
+      "caption": "Episodes, newest first",
+      "episode": "Episode",
+      "length": "Length",
+      "released": "Released",
+      "minutes": "{count} min",
+      "episodeAudit": "View episode audit history"
+    },
+    "notFound": {
+      "title": "Podcast not found",
+      "desc": "This podcast doesn’t exist or was removed. Check the link, or go back to the podcasts."
+    },
+    "error": {
+      "load": "Couldn’t load this podcast"
+    }
+  },
+  "genres": {
+    "eyebrow": "Operations · Genres",
+    "title": "Genres",
+    "subtitle": "The genres artists tag their music with, and how much is in each. A genre still in use can’t be deleted.",
+    "new": "New genre",
+    "search": "Search genres",
+    "table": {
+      "caption": "Genres",
+      "name": "Name",
+      "slug": "Address",
+      "tracks": "Tracks",
+      "albums": "Albums",
+      "artists": "Artists"
+    },
+    "delete": "Delete",
+    "deleteLabel": "Delete {name}",
+    "inUse": "In use",
+    "usedBy": "Still used by {tracks, plural, one {# track} other {# tracks}}, {albums, plural, one {# album} other {# albums}} and {artists, plural, one {# artist} other {# artists}}.",
+    "dialog": {
+      "title": "Delete genre",
+      "desc": "Permanently delete “{name}”? Nothing uses it, but this can’t be undone.",
+      "action": "Delete genre",
+      "busy": "Deleting…"
+    },
+    "empty": {
+      "title": "No genres yet",
+      "desc": "Add the first genre so artists can tag their releases."
+    },
+    "noResults": {
+      "title": "No genres match “{query}”",
+      "desc": "Check the spelling, or add it as a new genre."
+    },
+    "error": {
+      "load": "Couldn’t load genres"
+    }
+  },
+  "genre": {
+    "eyebrowEdit": "Genres · Edit",
+    "eyebrowNew": "Genres · New",
+    "subtitle": "Shown to listeners on genre pages and to artists when they tag a release.",
+    "loadingTitle": "Genre",
+    "save": "Save changes",
+    "create": "Create genre",
+    "saving": "Saving…",
+    "readOnly": "Your role can view genres but not change them.",
+    "tile": {
+      "form": "Genre",
+      "formMeta": "Name, address and colour",
+      "preview": "Preview",
+      "previewMeta": "On the genre page",
+      "usage": "Usage",
+      "usageMeta": "Where it is tagged",
+      "previewEmpty": "A description appears here once you write one."
+    },
+    "field": {
+      "name": "Name",
+      "namePlaceholder": "e.g. Shoegaze",
+      "slug": "Address",
+      "slugPlaceholder": "Made from the name when left blank",
+      "slugHint": "Made from the name; change it only to fix a typo.",
+      "description": "Description",
+      "descriptionPlaceholder": "One or two sentences for the genre page",
+      "descriptionHint": "{count} of {max} characters",
+      "color": "Colour",
+      "colorHint": "A #rrggbb colour, e.g. #148a78. Leave blank for none."
+    },
+    "invalid": {
+      "nameRequired": "Name is required",
+      "nameTooLong": "Name must be 100 characters or fewer",
+      "slugTooLong": "Address must be 100 characters or fewer",
+      "slugFormat": "Use lowercase letters, digits and single hyphens",
+      "descriptionTooLong": "Description must be 1000 characters or fewer",
+      "colorFormat": "Use a #rrggbb colour, e.g. #148a78"
+    },
+    "error": {
+      "load": "Couldn’t load this genre",
+      "save": "Couldn’t save this genre.",
+      "slugTaken": "The address “{slug}” is already used by another genre.",
+      "slugTakenUnnamed": "A genre with this address already exists.",
+      "invalid": "The API rejected the name, address or colour.",
+      "gone": "This genre no longer exists.",
+      "delete": "Couldn’t delete this genre.",
+      "inUseUnknown": "This genre is still used by tracks, albums or artists."
+    },
+    "notFound": {
+      "title": "Genre not found",
+      "desc": "This genre doesn’t exist or was deleted. Go back to genres."
+    }
+  },
+  "account": {
+    "status": {
+      "active": "Active",
+      "deactivated": "Deactivated",
+      "all": "Any"
+    },
+    "kpi": {
+      "deactivated": "Deactivated",
+      "deactivatedSub": "Restorable at any time"
+    },
+    "action": {
+      "revokeSessions": "Revoke sessions",
+      "deactivate": "Deactivate",
+      "restore": "Restore"
+    },
+    "confirm": {
+      "revokeSessions": "Revoke every active session for {name}? They will be signed out on their next request.",
+      "revokeSessionsAction": "Yes, revoke sessions",
+      "deactivate": "Deactivate {name}? This signs them out and blocks sign-in until restored.",
+      "deactivateAction": "Yes, deactivate",
+      "restore": "Restore {name}? This reinstates sign-in immediately.",
+      "restoreAction": "Yes, restore"
+    },
+    "done": {
+      "revokedSessions": "{count, plural, one {Revoked # session} other {Revoked # sessions}} for {name}.",
+      "deactivated": "{name} was deactivated.",
+      "restored": "{name} was restored."
+    },
+    "joined": "joined {date}",
+    "tile": {
+      "activity": "Activity",
+      "activityMeta": "Since joining",
+      "sessions": "Active sessions",
+      "openReports": "Open reports",
+      "audit": "View audit history"
+    }
+  },
+  "artists": {
+    "eyebrow": "Accounts · Artists",
+    "title": "Artists",
+    "subtitle": "Artist accounts, their verification and what they have released.",
+    "kpi": {
+      "artists": "Artists",
+      "artistsSub": "Active accounts",
+      "verified": "Verified",
+      "verifiedSub": "{share}% of artists",
+      "waiting": "Waiting for verification",
+      "waitingSub": "Active, not verified yet"
+    },
+    "search": "Search name or email",
+    "filter": {
+      "status": "Status",
+      "verified": "Verified"
+    },
+    "verifiedFilter": {
+      "all": "Any",
+      "verified": "Verified",
+      "unverified": "Not verified"
+    },
+    "badge": {
+      "verified": "Verified",
+      "unverified": "Not verified"
+    },
+    "table": {
+      "caption": "Artist accounts",
+      "artist": "Artist",
+      "email": "Email",
+      "verified": "Verification",
+      "listeners": "Monthly listeners",
+      "joined": "Joined"
+    },
+    "action": {
+      "verify": "Verify",
+      "unverify": "Unverify",
+      "deactivate": "Deactivate"
+    },
+    "empty": {
+      "title": "No artists yet",
+      "desc": "Artist accounts appear here as people sign up."
+    },
+    "noResults": {
+      "title": "No artists match these filters",
+      "titleQuery": "No artists match “{query}”",
+      "desc": "Try another name or email, or clear the filters."
+    },
+    "error": {
+      "load": "Couldn’t load artists",
+      "verify": "Couldn’t change verification for {name}.",
+      "deactivate": "Couldn’t deactivate {name}."
+    }
+  },
+  "artist": {
+    "eyebrow": "Artists · Account",
+    "loadingTitle": "Artist",
+    "tile": {
+      "profile": "Profile",
+      "profileMeta": "Account and verification",
+      "email": "Email",
+      "country": "Country",
+      "listeners": "Monthly listeners",
+      "verification": "Verification",
+      "tracks": "Tracks",
+      "albums": "Albums",
+      "albumsMeta": "{count, plural, one {# album} other {# albums}}"
+    },
+    "tracks": {
+      "caption": "Tracks",
+      "track": "Track",
+      "state": "Pipeline",
+      "plays": "Plays",
+      "uploaded": "Uploaded",
+      "empty": "No tracks published yet.",
+      "error": "Couldn’t load tracks"
+    },
+    "albums": {
+      "caption": "Albums",
+      "album": "Album",
+      "type": "Type",
+      "tracks": "Tracks",
+      "released": "Released",
+      "empty": "No albums published yet.",
+      "error": "Couldn’t load albums"
+    },
+    "notFound": {
+      "title": "Artist not found",
+      "desc": "This account doesn’t exist or was deleted. Go back to artists."
+    },
+    "error": {
+      "load": "Couldn’t load this artist",
+      "verify": "Couldn’t change verification for {name}."
+    }
+  },
+  "user": {
+    "eyebrow": "Listeners · Account",
+    "loadingTitle": "Listener",
+    "tile": {
+      "playlists": "Playlists",
+      "liked": "Liked tracks",
+      "history": "Listening history",
+      "historyMeta": "Latest first",
+      "reportsFiled": "Reports filed",
+      "emailState": "Email"
+    },
+    "history": {
+      "caption": "Listening history",
+      "track": "Track",
+      "artist": "Artist",
+      "listened": "Listened",
+      "empty": "No listening history recorded yet.",
+      "error": "Couldn’t load listening history"
+    },
+    "notFound": {
+      "title": "Listener not found",
+      "desc": "This account doesn’t exist or was deleted. Go back to listeners."
+    },
+    "error": {
+      "load": "Couldn’t load this listener"
+    }
+  },
+  "audit": {
+    "eyebrow": "System · Audit log",
+    "title": "Audit log",
+    "subtitle": "Every change staff make, who made it and from where, newest first. Entries can’t be edited or removed.",
+    "search": "Filter by entity type, e.g. Track",
+    "entityFilter": "One record only",
+    "clearEntity": "Show every record",
+    "system": "System",
+    "table": {
+      "caption": "Recorded operator actions",
+      "when": "When",
+      "who": "Who",
+      "action": "Action",
+      "entity": "Entity",
+      "from": "From"
+    },
+    "empty": {
+      "title": "No actions recorded yet",
+      "desc": "Operator changes appear here as they happen."
+    },
+    "noResults": {
+      "title": "No entries match these filters",
+      "desc": "Try another entity type, or clear the filter."
+    },
+    "error": {
+      "load": "Couldn’t load the audit log"
+    }
+  },
+  "permissions": {
+    "group": {
+      "albums": "Albums",
+      "artists": "Artists",
+      "audit": "Audit log",
+      "genres": "Genres",
+      "overview": "Overview",
+      "playlists": "Playlists",
+      "podcasts": "Podcasts",
+      "releases": "Releases",
+      "reports": "Moderation",
+      "roles": "Roles",
+      "staff": "Staff",
+      "tracks": "Catalog",
+      "users": "Listeners"
+    },
+    "holders": "{count, plural, one {# holder} other {# holders}}",
+    "unheld": "Unheld",
+    "protected": "Protected"
+  },
+  "roles": {
+    "eyebrow": "System · Roles",
+    "title": "Roles",
+    "subtitle": "Roles are templates: an operator holds permissions, a role is a starting set. Editing a template later doesn’t reach anyone already assigned it.",
+    "new": "New role",
+    "kpi": {
+      "roles": "Roles",
+      "rolesSub": "{count, plural, =0 {None built in} one {# built in} other {# built in}}",
+      "operators": "Operators",
+      "operatorsSub": "Holding a role",
+      "divergent": "Divergent",
+      "divergentSub": "Differ from their role",
+      "permissions": "Permissions",
+      "permissionsSub": "{count, plural, one {In # area} other {In # areas}}"
+    },
+    "table": {
+      "caption": "Role templates",
+      "role": "Role",
+      "holders": "Holders",
+      "divergent": "Divergent"
+    },
+    "builtIn": "Built-in",
+    "delete": "Delete",
+    "deleteLabel": "Delete {name}",
+    "cannotDelete": {
+      "builtIn": "Built-in roles can’t be deleted.",
+      "inUse": "{count, plural, one {# active operator still holds this role.} other {# active operators still hold this role.}}"
+    },
+    "catalogue": {
+      "title": "Permission catalogue",
+      "meta": "Every permission a template can grant, and how many active operators hold it",
+      "caption": "Every permission, with how many operators hold it",
+      "permission": "Permission",
+      "heldBy": "Held by"
+    },
+    "empty": {
+      "title": "No roles yet",
+      "desc": "Create the first template to give operators a starting set."
+    },
+    "error": {
+      "load": "Couldn’t load roles",
+      "delete": "Couldn’t delete this role.",
+      "inUse": "This role is still assigned to active operators.",
+      "builtIn": "Built-in roles can’t be deleted.",
+      "gone": "This role no longer exists."
+    }
+  },
+  "role": {
+    "eyebrowEdit": "Roles · Edit",
+    "eyebrowNew": "Roles · New",
+    "loadingTitle": "Role",
+    "subtitle": "Assigning this template copies its permissions onto an operator. Editing it later doesn’t change anyone already assigned it.",
+    "save": "Save role",
+    "create": "Create role",
+    "saving": "Saving…",
+    "renameLocked": "A built-in role’s name can’t be changed.",
+    "readOnly": "Your role can view roles but not change them.",
+    "adminLocked": "The built-in ADMIN role always holds every permission and can’t be edited.",
+    "tile": {
+      "details": "Role",
+      "detailsMeta": "Name and what it is for",
+      "permissions": "Permissions",
+      "permissionsMeta": "{count, plural, =0 {None selected} one {# selected} other {# selected}}",
+      "holders": "Holders",
+      "holdersMeta": "Operators with this role",
+      "divergent": "Divergent"
+    },
+    "field": {
+      "name": "Name",
+      "namePlaceholder": "e.g. Curator",
+      "description": "Description",
+      "descriptionPlaceholder": "What operators with this role do"
+    },
+    "invalid": {
+      "nameRequired": "Name is required",
+      "nameTooLong": "Name must be 100 characters or fewer",
+      "descriptionTooLong": "Description must be 500 characters or fewer",
+      "protected": "A protected permission can’t be granted through a role template"
+    },
+    "error": {
+      "load": "Couldn’t load this role",
+      "save": "Couldn’t save this role.",
+      "duplicate": "A role named “{name}” already exists.",
+      "builtIn": "Built-in roles can’t be edited this way.",
+      "ungrantable": "This template includes a permission that can’t be granted.",
+      "gone": "This role no longer exists."
+    }
+  },
+  "staff": {
+    "eyebrow": "System · Staff",
+    "title": "Staff",
+    "subtitle": "Operators who can sign in to the admin console. Permissions live on the operator — assigning a role copies its template, then the two can drift.",
+    "new": "New operator",
+    "table": {
+      "caption": "Operators",
+      "operator": "Operator",
+      "email": "Email",
+      "role": "Role"
+    },
+    "divergence": "{diff} vs {role}",
+    "deactivate": "Deactivate",
+    "alreadyDeactivated": "{name} is already deactivated.",
+    "empty": {
+      "title": "No operators yet",
+      "desc": "Invite the first operator to share the work."
+    },
+    "error": {
+      "load": "Couldn’t load staff"
+    },
+    "deactivated": "Deactivated"
+  },
+  "operator": {
+    "eyebrow": "Staff · Operator",
+    "eyebrowNew": "Staff · New",
+    "loadingTitle": "Operator",
+    "builtInAdmin": "Built-in administrator",
+    "createSubtitle": "Choosing a role copies its permissions as a starting point — adjust them before saving and that adjusted set is what this operator gets, not the template.",
+    "create": "Create operator",
+    "creating": "Creating…",
+    "tile": {
+      "account": "Account",
+      "accountMeta": "How they sign in",
+      "role": "Role",
+      "roleMeta": "The template their access started from",
+      "permissions": "Permissions",
+      "permissionsMeta": "What this operator can do"
+    },
+    "field": {
+      "email": "Email",
+      "username": "Username",
+      "password": "Password",
+      "passwordHint": "At least {min} characters.",
+      "role": "Role",
+      "chooseRole": "Choose a role",
+      "loadingRoles": "Loading roles…",
+      "status": "Status",
+      "added": "Added",
+      "adminRole": "{name} — grants every permission"
+    },
+    "permissionsHint": "Starts as the chosen role’s template. Change anything here and that becomes an override sent instead of the template.",
+    "adminAll": "All permissions — built-in administrator. They can’t be edited one by one.",
+    "savePermissions": "Save permissions",
+    "reassignHint": "Reassigning replaces this operator’s permissions with the new role’s template — any override is discarded.",
+    "reassign": "Reassign role",
+    "reassigning": "Reassigning…",
+    "deactivateConfirm": "Deactivate {name}? This revokes their sessions immediately.",
+    "deactivating": "Deactivating…",
+    "invalid": {
+      "email": "Enter a valid email address",
+      "usernameRequired": "Username is required",
+      "passwordShort": "Password must be at least {min} characters",
+      "roleRequired": "Choose a role",
+      "protected": "A protected permission can’t be granted"
+    },
+    "error": {
+      "load": "Couldn’t load this operator",
+      "loadRoles": "Couldn’t load roles",
+      "create": "Couldn’t create this operator.",
+      "assignRole": "Couldn’t reassign this role.",
+      "updatePermissions": "Couldn’t update permissions.",
+      "deactivate": "Couldn’t deactivate this operator.",
+      "ungrantable": "This permission set includes one that can’t be granted.",
+      "adminLocked": "The built-in ADMIN role always holds every permission and can’t have its permissions edited one by one.",
+      "conflict": "That email or username is already in use.",
+      "lastAdmin": "This would leave no active operator holding the ADMIN role.",
+      "roleGone": "That role no longer exists.",
+      "gone": "This operator no longer exists."
+    },
+    "notFound": {
+      "title": "Operator not found",
+      "desc": "This operator doesn’t exist or was removed. Go back to staff."
+    },
+    "active": "Active",
+    "deactivateTitle": "Deactivate operator?",
+    "deactivateAction": "Deactivate"
+  },
+  "noAccess": {
+    "title": "No sections yet",
+    "subtitle": "You’re signed in, but your account doesn’t include any section of the console yet. A super admin can give you a role.",
+    "signedInAs": "Signed in as",
+    "role": "Role",
+    "noRole": "None",
+    "checkAgain": "Check again",
+    "checking": "Checking…",
+    "signOut": "Sign out"
+  },
+  "overview": {
+    "eyebrow": "Overview · {date}",
+    "title": "Overview",
+    "subtitle": "What needs attention across Bitrate today.",
+    "range": "Chart range",
+    "days": "{days, plural, other {#d}}",
+    "noData": "No data yet for this range.",
+    "openPanel": "Open analysis: {tile}",
+    "tile": {
+      "action": "Needs action",
+      "listeners": "Listeners",
+      "artists": "Artists",
+      "listens": "Listens per day",
+      "pipeline": "Track pipeline",
+      "reports": "Reports by type",
+      "accounts": "Accounts",
+      "audit": "Audit log"
+    },
+    "action": {
+      "meta": "{count, plural, one {# item} other {# items}} waiting on staff",
+      "clear": "All clear",
+      "clearDesc": "No reports, releases or failed tracks are waiting.",
+      "reports": "Reports to review",
+      "reportsSub": "{open} open · {reviewing} in review",
+      "releases": "Releases awaiting review",
+      "releasesSub": "Submitted by artists, oldest first",
+      "tracks": "Tracks failed processing",
+      "tracksSub": "{failed} failed · {stuck} stuck",
+      "latest": "Latest reports"
+    },
+    "kpi": {
+      "newInRange": "{count} new in {days} days",
+      "waiting": "{count} waiting for verification"
+    },
+    "listens": {
+      "meta": "{count} listens"
+    },
+    "pipeline": {
+      "meta": "{count} tracks right now",
+      "ready": "Ready",
+      "processing": "Processing",
+      "failed": "Failed",
+      "stuck": "Stuck > {minutes} min"
+    },
+    "reports": {
+      "meta": "Filed in {days} days · {count}"
+    },
+    "accounts": {
+      "meta": "New accounts and uploads",
+      "new": "New accounts, {days} days",
+      "uploads": "Uploads, {days} days",
+      "deactivated": "Deactivated accounts"
+    },
+    "audit": {
+      "meta": "Latest staff actions"
+    },
+    "locked": {
+      "title": "Not in your role",
+      "desc": "Needs {permission}. Ask a super admin for access."
+    },
+    "error": {
+      "title": "We couldn’t load the overview",
+      "desc": "The admin API didn’t respond. Queues and actions are unchanged.",
+      "tile": "Couldn’t load this tile",
+      "range": "Couldn’t load the charts for this range."
+    },
+    "panel": {
+      "range": "Last {days} days"
+    },
+    "series": {
+      "listens": "Listens",
+      "listeners": "Listeners",
+      "artists": "Artists",
+      "ready": "Ready",
+      "failed": "Failed",
+      "stuck": "Stuck",
+      "filed": "Reports filed"
+    },
+    "chart": {
+      "listensDesc": "Listens recorded each UTC day over the last {days} days.",
+      "reportsFiled": "Reports filed per day",
+      "reportsFiledDesc": "Moderation reports filed each UTC day over the last {days} days.",
+      "reportsByStatus": "Reports by current status",
+      "newListeners": "New listeners per day",
+      "newArtists": "New artists per day",
+      "newAccounts": "New accounts per day",
+      "newAccountsDesc": "Accounts created each UTC day over the last {days} days.",
+      "verification": "Verification",
+      "outcomes": "Uploads by outcome",
+      "outcomesDesc": "Tracks uploaded each UTC day over the last {days} days, by processing outcome.",
+      "reportsByTypeDesc": "Reports filed each UTC day over the last {days} days, by what was reported.",
+      "share": "Share by type"
+    },
+    "stat": {
+      "openReports": "Open reports",
+      "inReview": "In review",
+      "releasesAwaiting": "Releases awaiting",
+      "failedTracks": "Failed tracks",
+      "stuckTracks": "Stuck tracks",
+      "listeners": "Listeners",
+      "artists": "Artists",
+      "newInRange": "New in range",
+      "deactivated": "Deactivated",
+      "verified": "Verified",
+      "waiting": "Waiting for verification",
+      "totalListens": "Total listens",
+      "dailyAverage": "Daily average",
+      "peakDay": "Peak day",
+      "uploaded": "Uploads",
+      "ready": "Ready",
+      "failed": "Failed",
+      "processingNow": "Processing now",
+      "filed": "Filed",
+      "topType": "Most reported",
+      "newListeners": "New listeners",
+      "newArtists": "New artists",
+      "deactivatedAccounts": "Deactivated accounts"
+    },
+    "status": {
+      "open": "Open",
+      "reviewing": "In review",
+      "resolved": "Resolved",
+      "rejected": "Rejected"
+    },
+    "entity": {
+      "track": "Tracks",
+      "album": "Albums",
+      "playlist": "Playlists",
+      "artist": "Artists",
+      "podcast": "Podcasts",
+      "episode": "Episodes",
+      "user": "Listeners"
+    },
+    "link": {
+      "moderation": "Open moderation",
+      "listeners": "Open listeners",
+      "artists": "Open artists",
+      "catalog": "Open catalog",
+      "audit": "Open audit log"
+    }
   }
 }

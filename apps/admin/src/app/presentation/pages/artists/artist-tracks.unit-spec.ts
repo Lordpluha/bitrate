@@ -6,8 +6,7 @@ import type { ArtistTrack } from '@domain/artist'
 import type { Page } from '@domain/shared'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ArtistTracks } from './artist-tracks'
-import { TranslocoTestingModule } from '@jsverse/transloco'
-import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
+import { provideTestTransloco } from '@testing/transloco'
 
 function track(overrides: Partial<ArtistTrack> = {}): ArtistTrack {
   return {
@@ -27,13 +26,8 @@ const execute = vi.fn<() => Promise<Page<ArtistTrack>>>()
 function create() {
   TestBed.resetTestingModule()
   TestBed.configureTestingModule({
-    imports: [
-      TranslocoTestingModule.forRoot({
-        langs: { en: {}, uk: {} },
-        translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-      }),
-    ],
     providers: [
+      ...provideTestTransloco(),
       provideZonelessChangeDetection(),
       provideRouter([]),
       { provide: ListArtistTracksUseCase, useValue: { execute } },
@@ -63,8 +57,8 @@ describe('ArtistTracks', () => {
 
     const host = fixture.nativeElement as HTMLElement
     expect(host.querySelectorAll('tbody tr')).toHaveLength(2)
-    expect(host.textContent).toContain('READY')
-    expect(host.textContent).toContain('FAILED')
+    expect(host.textContent).toContain('Ready')
+    expect(host.textContent).toContain('Failed')
   })
 
   it('flags a taken-down track', async () => {
@@ -78,7 +72,7 @@ describe('ArtistTracks', () => {
     const fixture = create()
     await fixture.whenStable()
 
-    expect((fixture.nativeElement as HTMLElement).textContent).toContain('taken down')
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain('Taken down')
   })
 
   it('shows the collection error state when the request rejects', async () => {
@@ -89,7 +83,7 @@ describe('ArtistTracks', () => {
 
     expect(
       (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent,
-    ).toContain('Could not load tracks.')
+    ).toContain('Couldn’t load tracks')
   })
 
   it('shows the empty message when the artist has no tracks', async () => {

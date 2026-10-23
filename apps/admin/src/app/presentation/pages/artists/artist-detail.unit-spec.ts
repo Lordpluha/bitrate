@@ -15,6 +15,7 @@ import type { ArtistDetail } from '@domain/artist'
 import { ResourceNotFoundError } from '@domain/shared'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ArtistDetailPage } from './artist-detail'
+import { provideTestTransloco } from '@testing/transloco'
 
 const ADMIN_STAFF = {
   id: '3f2504e0-4f89-41d3-9a0c-0305e82c3301',
@@ -46,6 +47,7 @@ function create(): void {
   TestBed.resetTestingModule()
   TestBed.configureTestingModule({
     providers: [
+      ...provideTestTransloco(),
       provideZonelessChangeDetection(),
       provideRouter([]),
       { provide: GetArtistUseCase, useValue: { execute: getArtist } },
@@ -125,7 +127,7 @@ describe('ArtistDetailPage', () => {
 
     expect(
       (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent,
-    ).toContain('could not be found')
+    ).toContain('Artist not found')
   })
 
   it('shows a load failure, not not-found, when the load fails for another reason', async () => {
@@ -136,7 +138,7 @@ describe('ArtistDetailPage', () => {
     await fixture.whenStable()
 
     const alert = (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')
-    expect(alert?.textContent).toContain('Could not load this artist.')
-    expect(alert?.textContent).not.toContain('could not be found')
+    expect(alert?.textContent).toContain('Couldn’t load this artist')
+    expect(alert?.textContent).not.toContain('Artist not found')
   })
 })

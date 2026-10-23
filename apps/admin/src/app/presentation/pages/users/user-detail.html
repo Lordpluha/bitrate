@@ -1,153 +1,148 @@
-<section class="w-full space-y-8 p-8">
-  <header class="space-y-1">
-    <a routerLink="/users" class="text-sm text-muted-foreground hover:underline"
-      >&larr; Listeners</a
+@if (user(); as u) {
+  <app-page-header
+    [back]="back()"
+    [eyebrow]="'user.eyebrow' | transloco"
+    [title]="u.username"
+    [subtitle]="
+      u.email +
+      ' · ' +
+      ('account.joined' | transloco: { date: (u.createdAt | localizedDate: 'mediumDate') })
+    "
+  >
+    <span headerStatus hlmBadge [variant]="u.deactivatedAt ? 'secondary' : 'success'">{{
+      (u.deactivatedAt ? 'account.status.deactivated' : 'account.status.active') | transloco
+    }}</span>
+    <ng-container ngProjectAs="[headerActions]">
+      @if (canRevokeSessions() && revocation(u).allowed && armed() !== 'revoke-sessions') {
+        <button hlmBtn variant="secondary" type="button" (click)="arm('revoke-sessions')">
+          <ng-icon name="lucideLogOut" aria-hidden="true" />
+          {{ 'account.action.revokeSessions' | transloco }}
+        </button>
+      }
+      @if (canDeactivate() && deactivation(u).allowed && armed() !== 'deactivate') {
+        <button hlmBtn variant="destructive" type="button" (click)="arm('deactivate')">
+          <ng-icon name="lucideX" aria-hidden="true" />
+          {{ 'account.action.deactivate' | transloco }}
+        </button>
+      }
+      @if (canRestore() && restoration(u).allowed && armed() !== 'restore') {
+        <button hlmBtn type="button" (click)="arm('restore')">
+          <ng-icon name="lucideRotateCcw" aria-hidden="true" />
+          {{ 'account.action.restore' | transloco }}
+        </button>
+      }
+    </ng-container>
+  </app-page-header>
+
+  @if (armed(); as action) {
+    <app-confirm-action
+      [consequence]="confirmCopy[action].body | transloco: { name: u.username }"
+      [confirmLabel]="confirmCopy[action].action | transloco"
+      [pending]="pending()"
+      (confirmed)="confirm($event)"
+      (cancelled)="arm(null)"
+    />
+  }
+
+  @if (statusText(); as text) {
+    <p
+      class="flex items-center gap-3 rounded-tile border border-success/40 bg-glass p-4 text-sm shadow-glass backdrop-blur-[22px]"
+      role="status"
     >
-    @if (loading()) {
-      <h1 class="text-xl font-semibold text-foreground">Listener</h1>
-    } @else if (user(); as u) {
-      <h1 class="text-xl font-semibold text-foreground">
-        {{ u.username }}
-        @if (u.deactivatedAt) {
-          <span hlmBadge variant="destructive" class="ml-2 align-middle">deactivated</span>
-        } @else {
-          <span hlmBadge variant="outline" class="ml-2 align-middle">active</span>
-        }
-      </h1>
-      <p class="text-sm text-muted-foreground">{{ u.email }}</p>
-    }
-  </header>
-
-  @if (loading()) {
-    <p class="text-sm text-muted-foreground" role="status">Loading…</p>
-  } @else if (notFound()) {
-    <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
-      This listener could not be found.
-    </p>
-  } @else if (user(); as u) {
-    @if (status(); as message) {
-      <p class="rounded-md bg-muted px-3 py-2 text-sm text-foreground" role="status">
-        {{ message }}
-      </p>
-    }
-    @if (failure(); as message) {
-      <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
-        {{ message }}
-      </p>
-    }
-
-    <section class="space-y-3">
-      <h2 class="text-lg font-semibold text-foreground">Activity</h2>
-      <dl class="grid grid-cols-2 gap-4 sm:grid-cols-3">
-        <div class="rounded-md border border-border p-3">
-          <dt class="text-xs text-muted-foreground">Playlists</dt>
-          <dd class="text-lg font-semibold tabular-nums text-foreground">
-            {{ u.counts.playlists }}
-          </dd>
-        </div>
-        <div class="rounded-md border border-border p-3">
-          <dt class="text-xs text-muted-foreground">Liked tracks</dt>
-          <dd class="text-lg font-semibold tabular-nums text-foreground">
-            {{ u.counts.likedTracks }}
-          </dd>
-        </div>
-        <div class="rounded-md border border-border p-3">
-          <dt class="text-xs text-muted-foreground">Listening history</dt>
-          <dd class="text-lg font-semibold tabular-nums text-foreground">
-            {{ u.counts.listeningHistory }}
-          </dd>
-        </div>
-        <div class="rounded-md border border-border p-3">
-          <dt class="text-xs text-muted-foreground">Reports filed</dt>
-          <dd class="text-lg font-semibold tabular-nums text-foreground">
-            {{ u.counts.reportsFiled }}
-          </dd>
-        </div>
-        <div class="rounded-md border border-border p-3">
-          <dt class="text-xs text-muted-foreground">Active sessions</dt>
-          <dd class="text-lg font-semibold tabular-nums text-foreground">
-            {{ u.counts.activeSessions }}
-          </dd>
-        </div>
-      </dl>
-      <a
-        [routerLink]="['/audit']"
-        [queryParams]="{ entityType: 'admin-users', entityId: u.id }"
-        class="text-sm text-muted-foreground hover:underline"
+      <span
+        class="grid size-9 shrink-0 place-items-center rounded-xl bg-success-surface text-success-text"
+        aria-hidden="true"
       >
-        View audit history &rarr;
-      </a>
-    </section>
-
-    <section aria-labelledby="listening-history-heading" class="space-y-3">
-      <h2 id="listening-history-heading" class="text-lg font-semibold text-foreground">
-        Listening history
-      </h2>
-      <app-listening-history [userId]="userId" />
-    </section>
-
-    <section class="space-y-3">
-      <h2 class="text-lg font-semibold text-foreground">Actions</h2>
-
-      @if (canRevokeSessions() && revocation(u).allowed) {
-        @if (armed() === 'revoke-sessions') {
-          <app-confirm-action
-            consequence="Revoke every active session for {{
-              u.username
-            }}? They will be signed out on their next request."
-            confirmLabel="Yes, revoke sessions"
-            [pending]="pending()"
-            (confirmed)="confirm($event)"
-            (cancelled)="arm(null)"
-          />
-        } @else {
-          <button hlmBtn size="sm" variant="outline" type="button" (click)="arm('revoke-sessions')">
-            Revoke sessions
-          </button>
-        }
-      }
-
-      @if (canDeactivate() && deactivation(u).allowed) {
-        @if (armed() === 'deactivate') {
-          <app-confirm-action
-            consequence="Deactivate {{
-              u.username
-            }}? This signs them out and blocks sign-in until restored."
-            confirmLabel="Yes, deactivate"
-            [pending]="pending()"
-            (confirmed)="confirm($event)"
-            (cancelled)="arm(null)"
-          />
-        } @else {
-          <button hlmBtn size="sm" variant="ghost" type="button" (click)="arm('deactivate')">
-            Deactivate
-          </button>
-        }
-      }
-
-      @if (canRestore() && restoration(u).allowed) {
-        @if (armed() === 'restore') {
-          <app-confirm-action
-            consequence="Restore {{ u.username }}? This reinstates sign-in immediately."
-            confirmLabel="Yes, restore"
-            [pending]="pending()"
-            (confirmed)="confirm($event)"
-            (cancelled)="arm(null)"
-          />
-        } @else {
-          <button hlmBtn size="sm" variant="outline" type="button" (click)="arm('restore')">
-            Restore
-          </button>
-        }
-      }
-
-      @if (!deactivation(u).allowed && !restoration(u).allowed) {
-        <p class="text-sm text-muted-foreground">No actions available.</p>
-      }
-    </section>
-  } @else if (failure(); as message) {
-    <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
-      {{ message }}
+        <ng-icon name="lucideCheck" />
+      </span>
+      {{ text }}
     </p>
   }
-</section>
+  @if (actionErrorText(); as message) {
+    <app-state-message
+      class="rounded-tile border border-error/40 bg-glass p-4 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="message"
+      [compact]="true"
+    />
+  }
+
+  <app-tile-grid>
+    <app-tile
+      icon="lucideActivity"
+      [title]="'account.tile.activity' | transloco"
+      [meta]="'account.tile.activityMeta' | transloco"
+      [span]="2"
+    >
+      <div>
+        <app-kv-row [label]="'user.tile.emailState' | transloco">
+          <span hlmBadge [variant]="u.emailVerifiedAt ? 'success' : 'warning'">{{
+            (u.emailVerifiedAt ? 'users.email.confirmed' : 'users.email.pending') | transloco
+          }}</span>
+        </app-kv-row>
+        <app-kv-row [label]="'user.tile.playlists' | transloco">{{
+          u.counts.playlists
+        }}</app-kv-row>
+        <app-kv-row [label]="'user.tile.liked' | transloco">{{ u.counts.likedTracks }}</app-kv-row>
+        <app-kv-row [label]="'user.tile.history' | transloco">{{
+          u.counts.listeningHistory
+        }}</app-kv-row>
+        <app-kv-row [label]="'user.tile.reportsFiled' | transloco">{{
+          u.counts.reportsFiled
+        }}</app-kv-row>
+        <app-kv-row [label]="'account.tile.sessions' | transloco">{{
+          u.counts.activeSessions
+        }}</app-kv-row>
+      </div>
+      <a
+        class="mt-auto inline-flex items-center gap-1.5 text-[0.8125rem] font-semibold text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+        [routerLink]="['/audit']"
+        [queryParams]="{ entityType: 'admin-users', entityId: u.id }"
+      >
+        {{ 'account.tile.audit' | transloco }}
+        <ng-icon name="lucideArrowRight" aria-hidden="true" />
+      </a>
+    </app-tile>
+
+    <app-tile
+      icon="lucideHistory"
+      [title]="'user.tile.history' | transloco"
+      [meta]="'user.tile.historyMeta' | transloco"
+      [span]="2"
+    >
+      <app-listening-history [userId]="userId" />
+    </app-tile>
+  </app-tile-grid>
+} @else {
+  <app-page-header
+    [back]="back()"
+    [eyebrow]="'user.eyebrow' | transloco"
+    [title]="'user.loadingTitle' | transloco"
+  />
+  @if (loading()) {
+    <app-tile-grid role="status" [attr.aria-label]="'ui.loading' | transloco">
+      @for (tile of [1, 2]; track tile) {
+        <app-tile [title]="'ui.loading' | transloco" [span]="2">
+          <app-skeleton class="h-3.5 w-full" />
+          <app-skeleton class="h-3.5 w-4/5" />
+          <app-skeleton class="h-3.5 w-3/5" />
+        </app-tile>
+      }
+    </app-tile-grid>
+  } @else if (notFound()) {
+    <app-state-message
+      class="min-h-[340px] rounded-tile border border-glass-line bg-glass p-5 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="'user.notFound.title' | transloco"
+      [description]="'user.notFound.desc' | transloco"
+    />
+  } @else if (failureText(); as message) {
+    <app-state-message
+      class="min-h-[340px] rounded-tile border border-glass-line bg-glass p-5 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="message"
+      [actionLabel]="'ui.tryAgain' | transloco"
+      (action)="reload()"
+    />
+  }
+}

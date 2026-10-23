@@ -9,7 +9,7 @@ import { type AppLocale, LocaleStore } from './locale-store'
  * language picker conventionally shows "English"/"Українська" regardless of which language is
  * currently active, the same way a phone's language settings do.
  */
-const LOCALE_LABEL: Record<AppLocale, string> = {
+export const LOCALE_LABEL: Record<AppLocale, string> = {
   en: 'English',
   uk: 'Українська',
 }

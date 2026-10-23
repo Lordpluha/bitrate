@@ -1,133 +1,572 @@
-<section class="space-y-6 p-8">
-  <header class="flex flex-wrap items-start justify-between gap-4">
-    <div class="space-y-1">
-      <h1 class="text-xl font-semibold text-foreground">Overview</h1>
-      <p class="text-sm text-muted-foreground">
-        What needs a decision right now, and what's been happening across the platform.
-      </p>
-    </div>
-    <button
-      hlmBtn
-      size="sm"
-      variant="outline"
-      type="button"
-      [disabled]="loading()"
-      (click)="reload()"
-    >
-      Reload
-    </button>
-  </header>
+@let o = overview();
+@let s = totals();
 
-  <!-- `isEmpty` is always `false` here: the status counts folded into the charts below render as
-       soon as `overview` is set, and while it is still `null` `loading` is `true` — so this
-       screen never reaches CollectionStatus's empty state. Passed explicitly to satisfy its
-       required input. A failed reload keeps the charts' status counts already on screen and adds
-       this alert above them, rather than clearing them. -->
-  <app-collection-status
-    [loading]="loading()"
-    [failure]="failure()"
-    [isEmpty]="false"
-    emptyMessage="Nothing to show yet."
-  />
-
-  <section aria-labelledby="activity-charts-heading" class="space-y-3">
-    <div class="flex flex-wrap items-center justify-between gap-3">
-      <h2 id="activity-charts-heading" class="text-sm font-semibold text-foreground">Activity</h2>
-      <div class="flex gap-2" role="group" aria-label="Chart range">
-        @for (option of rangeOptions; track option) {
-          <button
-            hlmBtn
-            size="sm"
-            [variant]="range.state().days === option ? 'default' : 'outline'"
-            type="button"
-            [attr.aria-pressed]="range.state().days === option"
-            (click)="setRange(option)"
-          >
-            {{ option }}d
-          </button>
-        }
-      </div>
-    </div>
-
-    <app-collection-status
-      [loading]="seriesLoading()"
-      [failure]="seriesFailure()"
-      [isEmpty]="false"
-      emptyMessage="Nothing to show yet."
-    />
-
-    @if (summary()) {
-      <p class="text-sm text-muted-foreground">{{ summary() }}</p>
-    }
-
-    <!-- Rendered as soon as `overview()` has loaded, independent of the series request below: a
-         chart's own `[loading]`/`[failure]` input governs only its plot area, so a failed or
-         slow `getSeries` call never hides a status strip's counts — they come from `overview()`,
-         a different request. -->
-    <div class="space-y-4">
-      <div class="grid grid-cols-1 items-start gap-4 sm:grid-cols-2">
-        <app-line-chart
-          title="New accounts per day"
-          [description]="signupsDescription()"
-          [categories]="categories()"
-          [series]="signupsSeries()"
-          [headline]="signupsHeadline()"
-          [loading]="seriesLoading()"
-          [failure]="chartFailure()"
-        >
-          <app-overview-status-strip [items]="accountDeactivationStatus()" />
-        </app-line-chart>
-        <app-line-chart
-          title="Listens per day"
-          [description]="listensDescription()"
-          [categories]="categories()"
-          [series]="listensSeries()"
-          [loading]="seriesLoading()"
-          [failure]="chartFailure()"
-        />
-      </div>
-
-      <app-bar-chart
-        title="Uploads by outcome"
-        [description]="uploadsDescription()"
-        [categories]="categories()"
-        [series]="uploadsSeries()"
-        [stacked]="true"
-        [headline]="uploadsHeadline()"
-        [loading]="seriesLoading()"
-        [failure]="chartFailure()"
+<app-page-header
+  [eyebrow]="'overview.eyebrow' | transloco: { date: today() }"
+  [title]="'overview.title' | transloco"
+  [subtitle]="'overview.subtitle' | transloco"
+>
+  <div
+    headerActions
+    class="flex rounded-full border border-glass-line bg-glass p-1"
+    role="group"
+    [attr.aria-label]="'overview.range' | transloco"
+  >
+    @for (option of rangeOptions; track option) {
+      <button
+        class="h-8 rounded-full px-3.5 text-[0.8125rem] font-semibold tabular-nums transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+        type="button"
+        [class.bg-glass-hover]="days() === option"
+        [class.text-foreground]="days() === option"
+        [class.text-muted-foreground]="days() !== option"
+        [attr.aria-pressed]="days() === option"
+        (click)="setRange(option)"
       >
-        <app-overview-status-strip [items]="trackPipelineStatus()" urgentId="tracks-stuck" />
-      </app-bar-chart>
+        {{ 'overview.days' | transloco: { days: option } }}
+      </button>
+    }
+  </div>
+</app-page-header>
 
-      <div class="grid grid-cols-1 items-start gap-4 sm:grid-cols-3">
-        <div class="sm:col-span-2">
-          <app-bar-chart
-            title="Reports filed per day"
-            [description]="reportsDescription()"
-            [categories]="categories()"
-            [series]="reportsSeries()"
-            [loading]="seriesLoading()"
-            [failure]="chartFailure()"
+@if (failed() && !o) {
+  <app-state-message
+    class="min-h-[380px] rounded-tile border border-glass-line bg-glass p-5 shadow-glass backdrop-blur-[22px]"
+    kind="error"
+    [title]="'overview.error.title' | transloco"
+    [description]="'overview.error.desc' | transloco"
+    [actionLabel]="'ui.tryAgain' | transloco"
+    (action)="reload()"
+  />
+} @else if (loading() && !o) {
+  <app-tile-grid role="status" [attr.aria-label]="'ui.loading' | transloco">
+    @for (span of [2, 1, 1, 2, 1, 1, 2, 2]; track $index) {
+      <app-tile [title]="'ui.loading' | transloco" [span]="span === 2 ? 2 : 1">
+        <app-skeleton class="h-9 w-2/3 rounded-lg" />
+        <app-skeleton class="h-4 w-full rounded-lg" />
+        <app-skeleton class="h-4 w-3/4 rounded-lg" />
+      </app-tile>
+    }
+  </app-tile-grid>
+} @else if (o) {
+  @if (failed()) {
+    <app-state-message
+      class="rounded-tile border border-error/40 bg-glass p-4 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="'overview.error.title' | transloco"
+      [actionLabel]="'ui.tryAgain' | transloco"
+      [compact]="true"
+      (action)="reload()"
+    />
+  }
+  <app-tile-grid>
+    <!-- Needs action -->
+    <app-tile
+      icon="lucideInbox"
+      [title]="'overview.tile.action' | transloco"
+      [meta]="
+        needsAction()?.total
+          ? ('overview.action.meta' | transloco: { count: needsAction()?.total ?? 0 })
+          : ('overview.action.clear' | transloco)
+      "
+      [span]="2"
+    >
+      <ng-container ngProjectAs="[tileAction]">
+        <ng-container
+          *ngTemplateOutlet="
+            openPanelButton;
+            context: { $implicit: 'action', key: 'overview.tile.action' }
+          "
+        />
+      </ng-container>
+      @if (needsAction(); as action) {
+        @if (action.total === 0) {
+          <app-state-message
+            kind="empty"
+            [title]="'overview.action.clear' | transloco"
+            [description]="'overview.action.clearDesc' | transloco"
+            [compact]="true"
           />
-        </div>
-        <app-bar-chart
-          title="Reports by current status"
-          [description]="reportsByStatusDescription"
-          [categories]="reportStatusCategories"
-          [series]="reportsByStatusSeries()"
+        } @else {
+          <div class="flex flex-col gap-2">
+            @if (canReports()) {
+              <a
+                class="flex items-center gap-3 rounded-2xl border border-glass-line bg-card/50 px-3.5 py-2.5 transition-transform hover:translate-x-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
+                routerLink="/moderation"
+              >
+                <span
+                  class="grid size-[34px] shrink-0 place-items-center rounded-xl bg-warning-surface text-warning-text"
+                  aria-hidden="true"
+                  ><ng-icon class="text-lg" name="lucideFlag"
+                /></span>
+                <span class="min-w-0 flex-1">
+                  <span class="block font-semibold">{{
+                    'overview.action.reports' | transloco
+                  }}</span>
+                  <span class="block truncate text-xs text-muted-foreground">{{
+                    'overview.action.reportsSub'
+                      | transloco: { open: o.reports.open, reviewing: o.reports.reviewing }
+                  }}</span>
+                </span>
+                <span class="font-display text-xl font-semibold tabular-nums">{{
+                  action.reports
+                }}</span>
+                <ng-icon
+                  class="text-muted-foreground"
+                  name="lucideChevronRight"
+                  aria-hidden="true"
+                />
+              </a>
+            }
+            @if (releases().state === 'ok') {
+              <a
+                class="flex items-center gap-3 rounded-2xl border border-glass-line bg-card/50 px-3.5 py-2.5 transition-transform hover:translate-x-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
+                routerLink="/releases"
+              >
+                <span
+                  class="grid size-[34px] shrink-0 place-items-center rounded-xl bg-info-surface text-info-text"
+                  aria-hidden="true"
+                  ><ng-icon class="text-lg" name="lucideDisc3"
+                /></span>
+                <span class="min-w-0 flex-1">
+                  <span class="block font-semibold">{{
+                    'overview.action.releases' | transloco
+                  }}</span>
+                  <span class="block truncate text-xs text-muted-foreground">{{
+                    'overview.action.releasesSub' | transloco
+                  }}</span>
+                </span>
+                <span class="font-display text-xl font-semibold tabular-nums">{{
+                  action.awaiting
+                }}</span>
+                <ng-icon
+                  class="text-muted-foreground"
+                  name="lucideChevronRight"
+                  aria-hidden="true"
+                />
+              </a>
+            }
+            @if (canTracks()) {
+              <a
+                class="flex items-center gap-3 rounded-2xl border border-glass-line bg-card/50 px-3.5 py-2.5 transition-transform hover:translate-x-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
+                routerLink="/catalog"
+                [queryParams]="{ status: 'FAILED' }"
+              >
+                <span
+                  class="grid size-[34px] shrink-0 place-items-center rounded-xl bg-error-surface text-error-text"
+                  aria-hidden="true"
+                  ><ng-icon class="text-lg" name="lucideCircleAlert"
+                /></span>
+                <span class="min-w-0 flex-1">
+                  <span class="block font-semibold">{{
+                    'overview.action.tracks' | transloco
+                  }}</span>
+                  <span class="block truncate text-xs text-muted-foreground">{{
+                    'overview.action.tracksSub'
+                      | transloco: { failed: o.tracks.failed, stuck: o.tracks.stuck }
+                  }}</span>
+                </span>
+                <span class="font-display text-xl font-semibold tabular-nums">{{
+                  action.tracks
+                }}</span>
+                <ng-icon
+                  class="text-muted-foreground"
+                  name="lucideChevronRight"
+                  aria-hidden="true"
+                />
+              </a>
+            }
+          </div>
+          @if (latestReports().length > 0) {
+            <p
+              class="text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-muted-foreground"
+            >
+              {{ 'overview.action.latest' | transloco }}
+            </p>
+            <ul class="flex flex-col gap-2">
+              @for (report of latestReports(); track report.id) {
+                <li class="flex gap-2.5 text-[0.8125rem]">
+                  <i
+                    class="mt-1.5 size-2 shrink-0 rounded-full bg-accent shadow-[0_0_10px_var(--color-accent)]"
+                    aria-hidden="true"
+                  ></i>
+                  <a class="min-w-0 hover:underline" [routerLink]="['/moderation', report.id]">
+                    <span class="block truncate"
+                      >{{ 'overview.entity.' + report.entityType | transloco }} ·
+                      {{ report.reason }}</span
+                    >
+                    <small class="block text-xs text-muted-foreground">{{
+                      report.createdAt | elapsed
+                    }}</small>
+                  </a>
+                </li>
+              }
+            </ul>
+          }
+        }
+      }
+    </app-tile>
+
+    <!-- Listeners -->
+    <app-tile
+      icon="lucideUsers"
+      [title]="'overview.tile.listeners' | transloco"
+      [meta]="'overview.panel.range' | transloco: { days: days() }"
+    >
+      <ng-container ngProjectAs="[tileAction]">
+        <ng-container
+          *ngTemplateOutlet="
+            openPanelButton;
+            context: { $implicit: 'listeners', key: 'overview.tile.listeners' }
+          "
+        />
+      </ng-container>
+      @switch (users().state) {
+        @case ('locked') {
+          <ng-container *ngTemplateOutlet="locked; context: { $implicit: 'users:read' }" />
+        }
+        @case ('loading') {
+          <app-skeleton class="h-9 w-2/3 rounded-lg" />
+        }
+        @case ('failed') {
+          <ng-container *ngTemplateOutlet="tileFailed" />
+        }
+        @default {
+          @if (users(); as u) {
+            @if (u.state === 'ok') {
+              <p class="font-display text-[2rem] font-semibold leading-none tabular-nums">
+                {{ u.value.live.toLocaleString(locale()) }}
+              </p>
+            }
+          }
+          @if (s) {
+            <p class="text-xs text-muted-foreground">
+              {{ 'overview.kpi.newInRange' | transloco: { count: s.newListeners, days: days() } }}
+            </p>
+          }
+          @if (listenersSpark(); as path) {
+            <ng-container *ngTemplateOutlet="spark; context: { $implicit: path }" />
+          }
+        }
+      }
+    </app-tile>
+
+    <!-- Artists -->
+    <app-tile
+      icon="lucideMic"
+      [title]="'overview.tile.artists' | transloco"
+      [meta]="'overview.panel.range' | transloco: { days: days() }"
+    >
+      <ng-container ngProjectAs="[tileAction]">
+        <ng-container
+          *ngTemplateOutlet="
+            openPanelButton;
+            context: { $implicit: 'artists', key: 'overview.tile.artists' }
+          "
+        />
+      </ng-container>
+      @switch (artists().state) {
+        @case ('locked') {
+          <ng-container *ngTemplateOutlet="locked; context: { $implicit: 'artists:read' }" />
+        }
+        @case ('loading') {
+          <app-skeleton class="h-9 w-2/3 rounded-lg" />
+        }
+        @case ('failed') {
+          <ng-container *ngTemplateOutlet="tileFailed" />
+        }
+        @default {
+          @if (artists(); as a) {
+            @if (a.state === 'ok') {
+              <p class="font-display text-[2rem] font-semibold leading-none tabular-nums">
+                {{ a.value.live.toLocaleString(locale()) }}
+              </p>
+              <p class="text-xs text-muted-foreground">
+                {{ 'overview.kpi.waiting' | transloco: { count: a.value.unverified } }}
+              </p>
+            }
+          }
+          @if (artistsSpark(); as path) {
+            <ng-container *ngTemplateOutlet="spark; context: { $implicit: path }" />
+          }
+        }
+      }
+    </app-tile>
+
+    <!-- Listens per day -->
+    <app-tile
+      icon="lucideAudioLines"
+      [title]="'overview.tile.listens' | transloco"
+      [meta]="
+        s
+          ? ('overview.listens.meta' | transloco: { count: s.listens.toLocaleString(locale()) })
+          : null
+      "
+      [span]="2"
+    >
+      <ng-container ngProjectAs="[tileAction]">
+        <ng-container
+          *ngTemplateOutlet="
+            openPanelButton;
+            context: { $implicit: 'listens', key: 'overview.tile.listens' }
+          "
+        />
+      </ng-container>
+      @if (seriesFailed()) {
+        <ng-container *ngTemplateOutlet="tileFailed" />
+      } @else {
+        <app-line-chart
+          [title]="'overview.tile.listens' | transloco"
+          [description]="'overview.chart.listensDesc' | transloco: { days: days() }"
+          [categories]="categories()"
+          [series]="listens()"
+          [emptyMessage]="'overview.noData' | transloco"
+          [loadingLabel]="'ui.loading' | transloco"
           [loading]="seriesLoading()"
-          [failure]="chartFailure()"
-        >
-          <app-overview-status-strip [items]="reportsStatus()" />
-          <a
-            routerLink="/overview/reports"
-            queryParamsHandling="preserve"
-            class="mt-2 inline-block text-xs text-muted-foreground underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-ring"
-            >Reports by entity type over time</a
-          >
-        </app-bar-chart>
+          [captionHidden]="true"
+        />
+      }
+    </app-tile>
+
+    <!-- Track pipeline -->
+    <app-tile
+      icon="lucideDisc3"
+      [title]="'overview.tile.pipeline' | transloco"
+      [meta]="'overview.pipeline.meta' | transloco: { count: pipeline()?.total ?? 0 }"
+    >
+      <ng-container ngProjectAs="[tileAction]">
+        <ng-container
+          *ngTemplateOutlet="
+            openPanelButton;
+            context: { $implicit: 'pipeline', key: 'overview.tile.pipeline' }
+          "
+        />
+      </ng-container>
+      @if (!canTracks()) {
+        <ng-container *ngTemplateOutlet="locked; context: { $implicit: 'tracks:read' }" />
+      } @else if (pipeline(); as p) {
+        <div class="flex h-2.5 overflow-hidden rounded-full bg-foreground/8" aria-hidden="true">
+          @for (part of p.parts; track part.key) {
+            <span
+              class="h-full"
+              [style.width.%]="part.share"
+              [style.background]="part.color"
+            ></span>
+          }
+        </div>
+        <dl class="flex flex-col gap-2">
+          @for (part of p.parts; track part.key) {
+            <div class="flex items-center gap-2.5 text-[0.8125rem] text-muted-foreground">
+              <i class="size-2 rounded-full" [style.background]="part.color" aria-hidden="true"></i>
+              <dt>
+                {{
+                  part.key === 'stuck'
+                    ? ('overview.pipeline.stuck'
+                      | transloco: { minutes: o.tracks.stuckAfterMs / 60000 })
+                    : ('overview.pipeline.' + part.key | transloco)
+                }}
+              </dt>
+              <dd class="ms-auto font-semibold tabular-nums text-foreground">
+                {{ part.value.toLocaleString(locale()) }}
+              </dd>
+            </div>
+          }
+        </dl>
+        <a
+          class="mt-auto inline-flex items-center gap-1.5 text-[0.8125rem] font-semibold text-accent hover:underline"
+          routerLink="/catalog"
+          >{{ 'overview.link.catalog' | transloco }}
+          <ng-icon name="lucideArrowUpRight" aria-hidden="true"
+        /></a>
+      }
+    </app-tile>
+
+    <!-- Reports by type -->
+    <app-tile
+      icon="lucideFlag"
+      [title]="'overview.tile.reports' | transloco"
+      [meta]="
+        reportTypes()
+          ? ('overview.reports.meta'
+            | transloco: { days: days(), count: reportTypes()?.total ?? 0 })
+          : null
+      "
+    >
+      <ng-container ngProjectAs="[tileAction]">
+        <ng-container
+          *ngTemplateOutlet="
+            openPanelButton;
+            context: { $implicit: 'reports', key: 'overview.tile.reports' }
+          "
+        />
+      </ng-container>
+      @if (seriesFailed()) {
+        <ng-container *ngTemplateOutlet="tileFailed" />
+      } @else if (seriesLoading() && !reportTypes()) {
+        <app-skeleton class="h-4 w-full rounded-lg" />
+        <app-skeleton class="h-4 w-3/4 rounded-lg" />
+      } @else if (reportTypes(); as r) {
+        @if (r.rows.length === 0) {
+          <p class="text-sm text-muted-foreground">{{ 'overview.noData' | transloco }}</p>
+        }
+        @for (row of r.rows; track row.type) {
+          <div class="flex flex-col gap-1.5">
+            <div class="flex justify-between text-[0.8125rem]">
+              <span>{{ 'overview.entity.' + row.type | transloco }}</span>
+              <b class="tabular-nums">{{ row.total }}</b>
+            </div>
+            <div class="h-1.5 overflow-hidden rounded-full bg-foreground/8" aria-hidden="true">
+              <i
+                class="block h-full rounded-full"
+                [style.width.%]="row.width"
+                [style.background]="row.color"
+              ></i>
+            </div>
+          </div>
+        }
+      }
+    </app-tile>
+
+    <!-- Accounts -->
+    <app-tile
+      icon="lucideUserPlus"
+      [title]="'overview.tile.accounts' | transloco"
+      [meta]="'overview.accounts.meta' | transloco"
+      [span]="2"
+    >
+      <ng-container ngProjectAs="[tileAction]">
+        <ng-container
+          *ngTemplateOutlet="
+            openPanelButton;
+            context: { $implicit: 'accounts', key: 'overview.tile.accounts' }
+          "
+        />
+      </ng-container>
+      <div>
+        <div class="flex justify-between border-b border-glass-line py-[7px] text-[0.8125rem]">
+          <span class="text-muted-foreground">{{
+            'overview.accounts.new' | transloco: { days: days() }
+          }}</span>
+          <b class="tabular-nums">{{
+            s ? (s.newListeners + s.newArtists).toLocaleString(locale()) : '—'
+          }}</b>
+        </div>
+        <div class="flex justify-between border-b border-glass-line py-[7px] text-[0.8125rem]">
+          <span class="text-muted-foreground">{{
+            'overview.accounts.uploads' | transloco: { days: days() }
+          }}</span>
+          <b class="tabular-nums">{{ s ? s.uploads.toLocaleString(locale()) : '—' }}</b>
+        </div>
+        <div class="flex justify-between py-[7px] text-[0.8125rem]">
+          <span class="text-muted-foreground">{{
+            'overview.accounts.deactivated' | transloco
+          }}</span>
+          <b class="tabular-nums">{{
+            (o.deactivated.users + o.deactivated.artists).toLocaleString(locale())
+          }}</b>
+        </div>
       </div>
-    </div>
-  </section>
-</section>
+    </app-tile>
+
+    <!-- Audit log -->
+    <app-tile
+      icon="lucideScrollText"
+      [title]="'overview.tile.audit' | transloco"
+      [meta]="'overview.audit.meta' | transloco"
+      [span]="2"
+    >
+      <ng-container ngProjectAs="[tileAction]">
+        <ng-container
+          *ngTemplateOutlet="
+            openPanelButton;
+            context: { $implicit: 'audit', key: 'overview.tile.audit' }
+          "
+        />
+      </ng-container>
+      @if (o.recentActivity.length === 0) {
+        <p class="text-sm text-muted-foreground">{{ 'overview.noData' | transloco }}</p>
+      }
+      <ul class="flex flex-col gap-2.5">
+        @for (entry of o.recentActivity.slice(0, 4); track entry.id) {
+          <li class="flex gap-2.5 text-[0.8125rem]">
+            <i
+              class="mt-1.5 size-2 shrink-0 rounded-full bg-accent shadow-[0_0_10px_var(--color-accent)]"
+              aria-hidden="true"
+            ></i>
+            <span class="min-w-0">
+              <span class="block truncate"
+                ><b class="font-semibold">{{
+                  entry.actorUsername ?? ('audit.system' | transloco)
+                }}</b>
+                <span class="ms-1.5 font-mono text-xs text-muted-foreground">{{
+                  entry.action
+                }}</span></span
+              >
+              <small class="block text-xs text-muted-foreground">{{
+                entry.createdAt | elapsed
+              }}</small>
+            </span>
+          </li>
+        }
+      </ul>
+      @if (canAudit()) {
+        <a
+          class="mt-auto inline-flex items-center gap-1.5 text-[0.8125rem] font-semibold text-accent hover:underline"
+          routerLink="/audit"
+          >{{ 'overview.link.audit' | transloco }}
+          <ng-icon name="lucideArrowUpRight" aria-hidden="true"
+        /></a>
+      }
+    </app-tile>
+  </app-tile-grid>
+}
+
+<app-overview-panel
+  [model]="panel()"
+  [loading]="seriesLoading()"
+  [failure]="seriesFailed() ? ('overview.error.range' | transloco) : null"
+  [emptyMessage]="'overview.noData' | transloco"
+  (closed)="closePanel()"
+/>
+
+<ng-template #openPanelButton let-panel let-key="key">
+  <button
+    class="grid size-[34px] shrink-0 place-items-center rounded-full bg-foreground/6 text-muted-foreground transition-[transform,color] hover:-rotate-45 hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
+    type="button"
+    aria-haspopup="dialog"
+    [attr.aria-label]="'overview.openPanel' | transloco: { tile: (key | transloco) }"
+    (click)="openPanel(panel)"
+  >
+    <ng-icon name="lucideArrowUpRight" aria-hidden="true" />
+  </button>
+</ng-template>
+
+<ng-template #locked let-permission>
+  <app-state-message
+    kind="locked"
+    [title]="'overview.locked.title' | transloco"
+    [description]="'overview.locked.desc' | transloco: { permission }"
+    [compact]="true"
+  />
+</ng-template>
+
+<ng-template #tileFailed>
+  <app-state-message
+    kind="error"
+    [title]="'overview.error.tile' | transloco"
+    [actionLabel]="'ui.tryAgain' | transloco"
+    [compact]="true"
+    (action)="reloadRange()"
+  />
+</ng-template>
+
+<ng-template #spark let-path>
+  <svg
+    class="mt-auto h-11 w-full"
+    viewBox="0 0 240 44"
+    preserveAspectRatio="none"
+    aria-hidden="true"
+  >
+    <path [attr.d]="path + ' L240 44 L0 44 Z'" class="fill-primary/15" />
+    <path [attr.d]="path" class="fill-none stroke-primary" stroke-width="2" />
+  </svg>
+</ng-template>

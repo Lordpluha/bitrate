@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing'
 import type { Sort } from '@domain/shared'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { SortHeader, sortHeaderAriaSort } from './sort-header'
+import { provideTestTransloco } from '@testing/transloco'
 
 type Field = 'username' | 'email'
 
@@ -42,7 +43,9 @@ describe('sortHeaderAriaSort', () => {
 describe('SortHeader', () => {
   beforeEach(() => {
     TestBed.resetTestingModule()
-    TestBed.configureTestingModule({ providers: [provideZonelessChangeDetection()] })
+    TestBed.configureTestingModule({
+      providers: [...provideTestTransloco(), provideZonelessChangeDetection()],
+    })
   })
 
   it('names the column as not sorted while unsorted', async () => {

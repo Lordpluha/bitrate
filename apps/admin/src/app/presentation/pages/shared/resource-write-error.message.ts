@@ -11,66 +11,82 @@ type ResourceWriteAction =
  */
 type ResourceKind = 'account' | 'album' | 'episode' | 'playlist' | 'podcast' | 'track'
 
+/** Operator-facing copy as a transloco key and its parameters; the page translates it on show. */
+export type Notice = {
+  key: string
+  params?: Record<string, string | number>
+}
+
 type ResourceWriteMessageInput = {
   error: unknown
   action: ResourceWriteAction
+  /** How the page names the record, quotes included — `"Night Drive"`. */
   label: string
   /** Defaults to `'account'` — the wording `user-detail.ts`/`artist-detail.ts` already relied on. */
   resource?: ResourceKind
 }
 
-const ALREADY_REFUSED_WORDING: Record<ResourceKind, string> = {
-  account: 'already deactivated',
-  album: 'already taken down',
-  episode: 'already taken down',
-  playlist: 'already taken down',
-  podcast: 'already taken down',
-  track: 'already taken down',
+const ALREADY_REFUSED_KEY: Record<ResourceKind, string> = {
+  account: 'ui.write.already.account',
+  album: 'ui.write.already.item',
+  episode: 'ui.write.already.item',
+  playlist: 'ui.write.already.item',
+  podcast: 'ui.write.already.item',
+  track: 'ui.write.already.item',
 }
 
-const NOT_REFUSED_WORDING: Record<ResourceKind, string> = {
-  account: 'not deactivated',
-  album: 'not taken down',
-  episode: 'not taken down',
-  playlist: 'not taken down',
-  podcast: 'not taken down',
-  track: 'not taken down',
+const NOT_REFUSED_KEY: Record<ResourceKind, string> = {
+  account: 'ui.write.not.account',
+  album: 'ui.write.not.item',
+  episode: 'ui.write.not.item',
+  playlist: 'ui.write.not.item',
+  podcast: 'ui.write.not.item',
+  track: 'ui.write.not.item',
+}
+
+const FAILED_KEY: Record<ResourceWriteAction, string> = {
+  deactivate: 'ui.write.failed.deactivate',
+  hide: 'ui.write.failed.hide',
+  reprocess: 'ui.write.failed.reprocess',
+  restore: 'ui.write.failed.restore',
+  'revoke sessions for': 'ui.write.failed.revokeSessions',
+  'take down': 'ui.write.failed.takeDown',
+  unhide: 'ui.write.failed.unhide',
 }
 
 /**
- * Maps a failed take-down/restore/revoke-sessions write to operator-facing text. A 409 means the
+ * Maps a failed take-down/restore/revoke-sessions write to operator-facing copy. A 409 means the
  * resource's state already changed elsewhere — the caller reloads the detail view so the screen
  * catches up instead of leaving a stale confirm button on screen.
  */
-export function resourceWriteErrorMessage({
+export function resourceWriteError({
   error,
   action,
   label,
   resource = 'account',
-}: ResourceWriteMessageInput): string {
-  if (error instanceof ActionNotAllowedError) {
-    return error.message
-  }
+}: ResourceWriteMessageInput): Notice {
+  const params = { label }
+  if (error instanceof ActionNotAllowedError) return { key: 'ui.write.notAllowed', params }
 
   if (error instanceof ResourceWriteError) {
     switch (error.reason) {
       case 'already-deactivated':
-        return `${label} is ${ALREADY_REFUSED_WORDING[resource]} — reloaded.`
+        return { key: ALREADY_REFUSED_KEY[resource], params }
       case 'not-deactivated':
-        return `${label} is ${NOT_REFUSED_WORDING[resource]} — reloaded.`
+        return { key: NOT_REFUSED_KEY[resource], params }
       case 'visibility-conflict':
-        return `${label} changed visibility elsewhere or cannot be un-hidden by an operator — reloaded.`
+        return { key: 'ui.write.visibility', params }
       case 'not-found':
-        return `${label} could not be found — it may have been removed.`
+        return { key: 'ui.write.notFound', params }
       default:
-        return `Could not ${action} ${label}.`
+        return { key: FAILED_KEY[action], params }
     }
   }
 
-  return `Could not ${action} ${label}.`
+  return { key: FAILED_KEY[action], params }
 }
 
-/** Whether the message above means the detail view should reload rather than merely display the error. */
+/** Whether the error means the detail view should reload rather than merely display it. */
 export function isStaleStateError(error: unknown): boolean {
   return (
     error instanceof ResourceWriteError &&

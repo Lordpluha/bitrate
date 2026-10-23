@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatClockDuration, formatMinutes, humaniseDurationMs } from './duration.formatter'
+import { formatClockDuration, humaniseDurationMs, wholeMinutes } from './duration.formatter'
 
 describe('duration formatters', () => {
   it('humanises a processing duration in ms, seconds or minutes', () => {
@@ -14,9 +14,10 @@ describe('duration formatters', () => {
     expect(formatClockDuration(null)).toBe('—')
   })
 
-  it('shows an episode length in whole minutes', () => {
-    expect(formatMinutes(1800)).toBe('30 min')
-    expect(formatMinutes(89)).toBe('1 min')
-    expect(formatMinutes(null)).toBe('—')
+  it('counts an episode length in whole minutes, never zero', () => {
+    expect(wholeMinutes(1800)).toBe(30)
+    expect(wholeMinutes(89)).toBe(1)
+    expect(wholeMinutes(20)).toBe(1)
+    expect(wholeMinutes(null)).toBeNull()
   })
 })

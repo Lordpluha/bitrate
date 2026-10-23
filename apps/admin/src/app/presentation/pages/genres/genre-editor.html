@@ -1,116 +1,254 @@
-<section class="w-full space-y-6 p-8">
-  <header class="space-y-1">
-    <a routerLink="/genres" class="text-sm text-muted-foreground hover:underline">&larr; Genres</a>
-    <h1 class="text-xl font-semibold text-foreground">
-      {{ genreId === null ? 'New genre' : (genre()?.name ?? 'Genre') }}
-    </h1>
-    <p class="text-sm text-muted-foreground">
-      Genres drive browse categories and recommendations. A genre that tracks, albums or artists
-      still reference cannot be deleted.
-    </p>
-  </header>
-
-  @if (loading()) {
-    <p class="text-sm text-muted-foreground" role="status">Loading…</p>
-  } @else {
-    @if (failure(); as message) {
-      <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
-        {{ message }}
-      </p>
+<app-page-header
+  [back]="back()"
+  [eyebrow]="(genreId === null ? 'genre.eyebrowNew' : 'genre.eyebrowEdit') | transloco"
+  [title]="
+    genreId === null
+      ? ('genres.new' | transloco)
+      : (genre()?.name ?? ('genre.loadingTitle' | transloco))
+  "
+  [subtitle]="'genre.subtitle' | transloco"
+>
+  <ng-container ngProjectAs="[headerActions]">
+    @if (deletable()) {
+      <button hlmBtn variant="secondary" type="button" (click)="confirmingDelete.set(true)">
+        <ng-icon name="lucideTrash2" aria-hidden="true" />
+        {{ 'genres.delete' | transloco }}
+      </button>
     }
-
-    @if (genre(); as current) {
-      <p class="text-sm text-muted-foreground">
-        Referenced by {{ current.counts.tracks }} tracks, {{ current.counts.albums }} albums and
-        {{ current.counts.artists }} artists.
-      </p>
+    @if (canWrite() && !loading() && !notFound() && !loadFailed()) {
+      <button hlmBtn type="submit" form="genre-form" [disabled]="submitting()">
+        <ng-icon name="lucideCheck" aria-hidden="true" />
+        {{
+          (submitting() ? 'genre.saving' : genreId === null ? 'genre.create' : 'genre.save')
+            | transloco
+        }}
+      </button>
     }
+  </ng-container>
+</app-page-header>
 
-    <form class="space-y-6" [formGroup]="form" (ngSubmit)="submit()">
-      <div class="space-y-2">
-        <label hlmLabel for="genre-name">Name</label>
-        <input
-          hlmInput
-          class="w-full"
-          id="genre-name"
-          type="text"
-          formControlName="name"
-          [attr.aria-invalid]="errorFor('name') !== null"
-          [attr.aria-describedby]="errorFor('name') ? 'genre-name-error' : null"
-        />
-        @if (errorFor('name'); as message) {
-          <p class="text-sm text-destructive" id="genre-name-error" role="alert">{{ message }}</p>
-        }
-      </div>
+@if (loading()) {
+  <app-tile-grid role="status" [attr.aria-label]="'ui.loading' | transloco">
+    @for (tile of [1, 2]; track tile) {
+      <app-tile [title]="'ui.loading' | transloco" [span]="2">
+        <app-skeleton class="h-[38px] w-full rounded-xl" />
+        <app-skeleton class="h-[38px] w-full rounded-xl" />
+        <app-skeleton class="h-20 w-full rounded-xl" />
+      </app-tile>
+    }
+  </app-tile-grid>
+} @else if (notFound()) {
+  <app-state-message
+    class="min-h-[340px] rounded-tile border border-glass-line bg-glass p-5 shadow-glass backdrop-blur-[22px]"
+    kind="error"
+    [title]="'genre.notFound.title' | transloco"
+    [description]="'genre.notFound.desc' | transloco"
+  />
+} @else if (loadFailed()) {
+  <app-state-message
+    class="min-h-[340px] rounded-tile border border-glass-line bg-glass p-5 shadow-glass backdrop-blur-[22px]"
+    kind="error"
+    [title]="'genre.error.load' | transloco"
+    [actionLabel]="'ui.tryAgain' | transloco"
+    (action)="reload()"
+  />
+} @else {
+  @if (failureText(); as message) {
+    <app-state-message
+      class="rounded-tile border border-error/40 bg-glass p-4 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="message"
+      [compact]="true"
+    />
+  }
+  @if (!canWrite()) {
+    <app-state-message
+      class="rounded-tile border border-glass-line bg-glass p-4 shadow-glass backdrop-blur-[22px]"
+      kind="locked"
+      [title]="'genre.readOnly' | transloco"
+      [compact]="true"
+    />
+  }
 
-      <div class="space-y-2">
-        <label hlmLabel for="genre-slug">Slug</label>
-        <input
-          hlmInput
-          class="w-full"
-          id="genre-slug"
-          type="text"
-          placeholder="Derived from the name when left blank"
-          formControlName="slug"
-          [attr.aria-invalid]="errorFor('slug') !== null"
-          [attr.aria-describedby]="errorFor('slug') ? 'genre-slug-error' : null"
-        />
-        @if (errorFor('slug'); as message) {
-          <p class="text-sm text-destructive" id="genre-slug-error" role="alert">{{ message }}</p>
-        }
-      </div>
-
-      <div class="space-y-2">
-        <label hlmLabel for="genre-description">Description</label>
-        <input
-          hlmInput
-          class="w-full"
-          id="genre-description"
-          type="text"
-          formControlName="description"
-          [attr.aria-invalid]="errorFor('description') !== null"
-          [attr.aria-describedby]="errorFor('description') ? 'genre-description-error' : null"
-        />
-        @if (errorFor('description'); as message) {
-          <p class="text-sm text-destructive" id="genre-description-error" role="alert">
-            {{ message }}
-          </p>
-        }
-      </div>
-
-      <div class="space-y-2">
-        <label hlmLabel for="genre-color">Colour</label>
-        <div class="flex items-center gap-3">
+  <app-tile-grid>
+    <app-tile
+      icon="lucideTags"
+      [title]="'genre.tile.form' | transloco"
+      [meta]="'genre.tile.formMeta' | transloco"
+      [span]="2"
+    >
+      <form id="genre-form" class="flex flex-col gap-4" [formGroup]="form" (ngSubmit)="submit()">
+        <div class="flex flex-col gap-1.5">
+          <label hlmLabel for="genre-name">{{ 'genre.field.name' | transloco }}</label>
           <input
             hlmInput
-            class="w-40"
-            id="genre-color"
+            id="genre-name"
             type="text"
-            placeholder="#148a78"
-            formControlName="color"
-            [attr.aria-invalid]="errorFor('color') !== null"
-            [attr.aria-describedby]="errorFor('color') ? 'genre-color-error' : null"
+            formControlName="name"
+            [placeholder]="'genre.field.namePlaceholder' | transloco"
+            [attr.aria-invalid]="errorFor('name') !== null"
+            [attr.aria-describedby]="errorFor('name') ? 'genre-name-error' : null"
           />
-          @if (swatch(); as value) {
-            <span
-              class="inline-block size-6 rounded-full border border-border"
-              [style.background-color]="value"
-              aria-hidden="true"
-            ></span>
+          @if (errorFor('name'); as key) {
+            <p class="text-xs text-error-text" id="genre-name-error" role="alert">
+              {{ key | transloco }}
+            </p>
           }
         </div>
-        @if (errorFor('color'); as message) {
-          <p class="text-sm text-destructive" id="genre-color-error" role="alert">{{ message }}</p>
-        }
-      </div>
+        <div class="flex flex-col gap-1.5">
+          <label hlmLabel for="genre-slug">{{ 'genre.field.slug' | transloco }}</label>
+          <input
+            hlmInput
+            class="font-mono"
+            id="genre-slug"
+            type="text"
+            formControlName="slug"
+            [placeholder]="'genre.field.slugPlaceholder' | transloco"
+            [attr.aria-invalid]="errorFor('slug') !== null"
+            [attr.aria-describedby]="errorFor('slug') ? 'genre-slug-error' : 'genre-slug-hint'"
+          />
+          @if (errorFor('slug'); as key) {
+            <p class="text-xs text-error-text" id="genre-slug-error" role="alert">
+              {{ key | transloco }}
+            </p>
+          } @else {
+            <p class="text-xs text-muted-foreground" id="genre-slug-hint">
+              {{ 'genre.field.slugHint' | transloco }}
+            </p>
+          }
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label hlmLabel for="genre-description">{{
+            'genre.field.description' | transloco
+          }}</label>
+          <textarea
+            id="genre-description"
+            class="w-full min-w-0 rounded-xl border border-glass-line bg-foreground/5 px-3 py-2 text-sm outline-none transition-[border-color,box-shadow] placeholder:text-muted-foreground focus-visible:border-primary/60 focus-visible:ring-3 focus-visible:ring-primary/20 disabled:opacity-50"
+            rows="3"
+            formControlName="description"
+            [placeholder]="'genre.field.descriptionPlaceholder' | transloco"
+            [attr.aria-invalid]="errorFor('description') !== null"
+            [attr.aria-describedby]="
+              errorFor('description') ? 'genre-description-error' : 'genre-description-hint'
+            "
+          ></textarea>
+          @if (errorFor('description'); as key) {
+            <p class="text-xs text-error-text" id="genre-description-error" role="alert">
+              {{ key | transloco }}
+            </p>
+          } @else {
+            <p class="text-xs tabular-nums text-muted-foreground" id="genre-description-hint">
+              {{
+                'genre.field.descriptionHint'
+                  | transloco: { count: (draft().description ?? '').length, max: descriptionMax }
+              }}
+            </p>
+          }
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label hlmLabel for="genre-color">{{ 'genre.field.color' | transloco }}</label>
+          <span class="flex items-center gap-3">
+            <input
+              hlmInput
+              class="w-40 font-mono"
+              id="genre-color"
+              type="text"
+              placeholder="#148a78"
+              formControlName="color"
+              [attr.aria-invalid]="errorFor('color') !== null"
+              [attr.aria-describedby]="errorFor('color') ? 'genre-color-error' : 'genre-color-hint'"
+            />
+            <span
+              class="size-7 shrink-0 rounded-full border border-glass-line"
+              [style.background-color]="swatch()"
+              aria-hidden="true"
+            ></span>
+          </span>
+          @if (errorFor('color'); as key) {
+            <p class="text-xs text-error-text" id="genre-color-error" role="alert">
+              {{ key | transloco }}
+            </p>
+          } @else {
+            <p class="text-xs text-muted-foreground" id="genre-color-hint">
+              {{ 'genre.field.colorHint' | transloco }}
+            </p>
+          }
+        </div>
+      </form>
+    </app-tile>
 
-      @if (canWrite()) {
-        <button hlmBtn type="submit" [disabled]="submitting()">
-          {{ submitting() ? 'Saving…' : 'Save genre' }}
-        </button>
-      } @else {
-        <p class="text-sm text-muted-foreground">You do not have permission to change genres.</p>
-      }
-    </form>
-  }
-</section>
+    <app-tile
+      icon="lucideEye"
+      [title]="'genre.tile.preview' | transloco"
+      [meta]="'genre.tile.previewMeta' | transloco"
+      [span]="2"
+    >
+      <div
+        class="flex flex-col gap-2 rounded-2xl border border-glass-line p-4"
+        [style.background]="
+          swatch() ? 'color-mix(in oklab, ' + swatch() + ' 18%, transparent)' : null
+        "
+      >
+        <span class="flex items-center gap-2.5">
+          <span
+            class="size-3 shrink-0 rounded-full border border-glass-line"
+            [style.background-color]="swatch()"
+            aria-hidden="true"
+          ></span>
+          <b class="font-display text-lg font-semibold">{{
+            draft().name || ('genre.field.namePlaceholder' | transloco)
+          }}</b>
+        </span>
+        <p class="text-[0.8125rem] text-muted-foreground">
+          {{ draft().description || ('genre.tile.previewEmpty' | transloco) }}
+        </p>
+      </div>
+    </app-tile>
+
+    @if (genre(); as current) {
+      <app-tile
+        icon="lucideActivity"
+        [title]="'genre.tile.usage' | transloco"
+        [meta]="'genre.tile.usageMeta' | transloco"
+        [span]="2"
+      >
+        <div>
+          <app-kv-row [label]="'genres.table.tracks' | transloco">{{
+            current.counts.tracks
+          }}</app-kv-row>
+          <app-kv-row [label]="'genres.table.albums' | transloco">{{
+            current.counts.albums
+          }}</app-kv-row>
+          <app-kv-row [label]="'genres.table.artists' | transloco">{{
+            current.counts.artists
+          }}</app-kv-row>
+        </div>
+      </app-tile>
+    }
+  </app-tile-grid>
+}
+
+<hlm-dialog [state]="confirmingDelete() ? 'open' : 'closed'" (closed)="cancelDelete()">
+  <hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-md">
+    <hlm-dialog-header>
+      <h2 hlmDialogTitle>{{ 'genres.dialog.title' | transloco }}</h2>
+      <p hlmDialogDescription>
+        {{ 'genres.dialog.desc' | transloco: { name: genre()?.name ?? '' } }}
+      </p>
+    </hlm-dialog-header>
+    <hlm-dialog-footer>
+      <button hlmBtn variant="ghost" type="button" (click)="cancelDelete()">
+        {{ 'ui.cancel' | transloco }}
+      </button>
+      <button
+        hlmBtn
+        variant="destructive"
+        type="button"
+        [disabled]="deleting()"
+        (click)="confirmDelete()"
+      >
+        {{ (deleting() ? 'genres.dialog.busy' : 'genres.dialog.action') | transloco }}
+      </button>
+    </hlm-dialog-footer>
+  </hlm-dialog-content>
+</hlm-dialog>

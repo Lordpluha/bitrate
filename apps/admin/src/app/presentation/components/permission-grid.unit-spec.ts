@@ -2,11 +2,14 @@ import { provideZonelessChangeDetection } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { PermissionGrid } from './permission-grid'
+import { provideTestTransloco } from '@testing/transloco'
 
 describe('PermissionGrid', () => {
   beforeEach(() => {
     TestBed.resetTestingModule()
-    TestBed.configureTestingModule({ providers: [provideZonelessChangeDetection()] })
+    TestBed.configureTestingModule({
+      providers: [...provideTestTransloco(), provideZonelessChangeDetection()],
+    })
   })
 
   it('hides protected permissions when hideProtected is set', async () => {
@@ -76,7 +79,7 @@ describe('PermissionGrid', () => {
     const host = fixture.nativeElement as HTMLElement
     const label = host.querySelector('#tracks\\:read')?.closest('label')
 
-    expect(label?.textContent).toContain('unheld')
+    expect(label?.textContent).toContain('Unheld')
   })
 
   it('shows a holder count instead of the marker when a permission is held', async () => {
@@ -89,6 +92,6 @@ describe('PermissionGrid', () => {
     const label = host.querySelector('#tracks\\:read')?.closest('label')
 
     expect(label?.textContent).toContain('3 holders')
-    expect(label?.textContent).not.toContain('unheld')
+    expect(label?.textContent).not.toContain('Unheld')
   })
 })

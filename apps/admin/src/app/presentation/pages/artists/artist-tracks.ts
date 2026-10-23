@@ -1,3 +1,5 @@
+import { TranslocoPipe } from '@jsverse/transloco'
+import { PIPELINE_BADGE, PIPELINE_KEY } from '@presentation/pages/catalog/catalog-labels'
 import { ChangeDetectionStrategy, Component, effect, inject, input, untracked } from '@angular/core'
 import { RouterLink } from '@angular/router'
 import { ListArtistTracksUseCase } from '@application/artists'
@@ -21,6 +23,7 @@ import { HlmTableImports } from '@spartan-ng/helm/table'
     Paginator,
     HlmBadgeImports,
     HlmTableImports,
+    TranslocoPipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './artist-tracks.html',
@@ -29,9 +32,11 @@ export class ArtistTracks {
   private readonly listTracks = inject(ListArtistTracksUseCase)
 
   readonly artistId = input.required<string>()
+  protected readonly pipelineBadge = PIPELINE_BADGE
+  protected readonly pipelineKey = PIPELINE_KEY
 
   protected readonly collection = createCollection<ArtistTrack>({
-    errorMessage: 'Could not load tracks.',
+    errorMessage: 'artist.tracks.error',
     load: (page) => this.listTracks.execute({ artistId: this.artistId(), page }),
   })
 

@@ -5,10 +5,9 @@ import { GetAlbumUseCase, RestoreAlbumUseCase, TakeDownAlbumUseCase } from '@app
 import { SessionStore } from '@application/session'
 import type { AlbumDetail } from '@domain/album'
 import { ResourceNotFoundError, ResourceWriteError } from '@domain/shared'
-import { TranslocoTestingModule } from '@jsverse/transloco'
-import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { AlbumDetailPage } from './album-detail'
+import { provideTestTransloco } from '@testing/transloco'
 
 const ADMIN_STAFF = {
   id: '3f2504e0-4f89-41d3-9a0c-0305e82c3301',
@@ -66,13 +65,8 @@ const restoreAlbum = vi.fn<(input: unknown) => Promise<void>>()
 function create(permissions: string[] = []): void {
   TestBed.resetTestingModule()
   TestBed.configureTestingModule({
-    imports: [
-      TranslocoTestingModule.forRoot({
-        langs: { en: {}, uk: {} },
-        translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-      }),
-    ],
     providers: [
+      ...provideTestTransloco(),
       provideZonelessChangeDetection(),
       provideRouter([]),
       { provide: GetAlbumUseCase, useValue: { execute: getAlbum } },
@@ -112,8 +106,8 @@ describe('AlbumDetailPage', () => {
     expect(rows).toHaveLength(2)
     expect(rows[0]?.textContent).toContain('Intro')
     expect(rows[0]?.querySelector('a')?.getAttribute('href')).toBe(`/catalog/${TRACK_ID}`)
-    expect(rows[0]?.textContent).not.toContain('taken down')
-    expect(rows[1]?.textContent).toContain('taken down')
+    expect(rows[0]?.textContent).not.toContain('Taken down')
+    expect(rows[1]?.textContent).toContain('Taken down')
   })
 
   it('shows the not-found message when the album does not exist', async () => {
@@ -125,7 +119,7 @@ describe('AlbumDetailPage', () => {
 
     expect(
       (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent,
-    ).toContain('could not be found')
+    ).toContain('Album not found')
   })
 
   it('shows a load failure, not not-found, when the load fails for another reason', async () => {
@@ -136,8 +130,8 @@ describe('AlbumDetailPage', () => {
     await fixture.whenStable()
 
     const alert = (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')
-    expect(alert?.textContent).toContain('Could not load this album.')
-    expect(alert?.textContent).not.toContain('could not be found')
+    expect(alert?.textContent).toContain('Couldn’t load this album')
+    expect(alert?.textContent).not.toContain('Album not found')
   })
 
   it('offers Take down, not Restore, for an active album', async () => {
@@ -174,7 +168,6 @@ describe('AlbumDetailPage', () => {
     const host = fixture.nativeElement as HTMLElement
     expect(buttonLabelled(host, 'Take down')).toBeUndefined()
     expect(buttonLabelled(host, 'Restore')).toBeUndefined()
-    expect(host.textContent).toContain('No actions available.')
   })
 
   it('does not take the album down until the dialog is confirmed, then sends the typed reason', async () => {

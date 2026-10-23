@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core'
-import { ActivatedRoute, RouterLink } from '@angular/router'
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core'
+import { ActivatedRoute } from '@angular/router'
 import { ListRolesUseCase } from '@application/roles'
 import { SessionStore } from '@application/session'
 import {
@@ -9,15 +9,37 @@ import {
   UpdateStaffPermissionsUseCase,
 } from '@application/staff'
 import type { Permission } from '@domain/access'
-import { BUILT_IN_ADMIN_ROLE_NAME, type Role, type RolePolicyDecision } from '@domain/role'
+import { BUILT_IN_ADMIN_ROLE_NAME, type Role } from '@domain/role'
 import { ActionNotAllowedError } from '@domain/shared'
 import { canDeactivate, canEditPermissions, type StaffMember } from '@domain/staff'
-import { PermissionGrid } from '@presentation/components'
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco'
+import { NgIcon, provideIcons } from '@ng-icons/core'
+import {
+  lucideCheck,
+  lucideKeyRound,
+  lucideShieldCheck,
+  lucideUser,
+  lucideUserX,
+} from '@ng-icons/lucide'
+import {
+  KvRow,
+  PageHeader,
+  PermissionGrid,
+  Skeleton,
+  StateMessage,
+  Tile,
+  TileGrid,
+} from '@presentation/components'
+import { LocaleStore } from '@presentation/navigation'
+import type { Notice } from '@presentation/pages/shared/resource-write-error.message'
+import { LocalizedDatePipe } from '@presentation/pipes'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
+import { HlmDialogImports } from '@spartan-ng/helm/dialog'
 import { HlmInputImports } from '@spartan-ng/helm/input'
+import { HlmLabelImports } from '@spartan-ng/helm/label'
 import { staffDivergenceLabel } from './staff-divergence-label'
-import { staffWriteErrorMessage } from './staff-write-error.message'
+import { staffWriteError } from './staff-write-error.message'
 
 /**
  * Over 100 lines: the permission editor, role reassignment and deactivation are three actions
@@ -26,8 +48,28 @@ import { staffWriteErrorMessage } from './staff-write-error.message'
  */
 @Component({
   selector: 'app-staff-detail',
-  imports: [RouterLink, PermissionGrid, HlmBadgeImports, HlmButtonImports, HlmInputImports],
+  imports: [
+    HlmBadgeImports,
+    HlmButtonImports,
+    HlmDialogImports,
+    HlmInputImports,
+    HlmLabelImports,
+    KvRow,
+    LocalizedDatePipe,
+    NgIcon,
+    PageHeader,
+    PermissionGrid,
+    Skeleton,
+    StateMessage,
+    Tile,
+    TileGrid,
+    TranslocoPipe,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    provideIcons({ lucideCheck, lucideKeyRound, lucideShieldCheck, lucideUser, lucideUserX }),
+  ],
+  host: { class: 'flex flex-col gap-5 lg:gap-[22px]' },
   templateUrl: './staff-detail.html',
 })
 export class StaffDetailPage {
@@ -37,6 +79,8 @@ export class StaffDetailPage {
   private readonly updatePermissionsUseCase = inject(UpdateStaffPermissionsUseCase)
   private readonly assignRoleUseCase = inject(AssignStaffRoleUseCase)
   private readonly deactivateStaff = inject(DeactivateStaffUseCase)
+  private readonly transloco = inject(TranslocoService)
+  private readonly locale = inject(LocaleStore).locale
 
   protected readonly canWrite = inject(SessionStore).can('staff:write')
   protected readonly staffId = this.route.snapshot.paramMap.get('id') ?? ''
@@ -45,13 +89,25 @@ export class StaffDetailPage {
   protected readonly member = signal<StaffMember | null>(null)
   protected readonly roles = signal<Role[]>([])
   protected readonly loading = signal(true)
-  protected readonly failure = signal<string | null>(null)
+  protected readonly loadFailed = signal(false)
+  protected readonly failure = signal<Notice | null>(null)
   protected readonly permissions = signal<Permission[]>([])
   protected readonly selectedRoleId = signal('')
   protected readonly savingPermissions = signal(false)
   protected readonly reassigning = signal(false)
   protected readonly deactivating = signal(false)
   protected readonly confirmingDeactivate = signal(false)
+
+  protected readonly back = computed(() => ({ link: '/staff', label: this.t('staff.title') }))
+  protected readonly failureText = computed(() => {
+    const notice = this.failure()
+    return notice === null ? null : this.t(notice.key, notice.params)
+  })
+  /** Whether the header offers Deactivate — an active operator, and the right to change staff. */
+  protected readonly deactivatable = computed(() => {
+    const current = this.member()
+    return current !== null && this.canWrite() && canDeactivate(current).allowed
+  })
 
   constructor() {
     void this.load()
@@ -63,10 +119,6 @@ export class StaffDetailPage {
 
   protected divergenceLabel(member: StaffMember): string | null {
     return staffDivergenceLabel(member)
-  }
-
-  protected deactivation(member: StaffMember): RolePolicyDecision {
-    return canDeactivate(member)
   }
 
   protected setPermissions(permissions: Permission[]): void {
@@ -91,7 +143,7 @@ export class StaffDetailPage {
       this.member.set(updated)
     } catch (error) {
       this.failure.set(
-        staffWriteErrorMessage({
+        staffWriteError({
           error,
           operation: 'update-permissions',
           targetIsBuiltInAdmin: current.role.name === this.builtInAdminRoleName,
@@ -115,7 +167,7 @@ export class StaffDetailPage {
       this.permissions.set(updated.permissions)
       this.selectedRoleId.set(updated.role.id)
     } catch (error) {
-      this.failure.set(staffWriteErrorMessage({ error, operation: 'assign-role' }))
+      this.failure.set(staffWriteError({ error, operation: 'assign-role' }))
     } finally {
       this.reassigning.set(false)
     }
@@ -126,7 +178,7 @@ export class StaffDetailPage {
   }
 
   protected cancelDeactivate(): void {
-    this.confirmingDeactivate.set(false)
+    if (!this.deactivating()) this.confirmingDeactivate.set(false)
   }
 
   protected async deactivate(): Promise<void> {
@@ -141,8 +193,8 @@ export class StaffDetailPage {
     } catch (error) {
       this.failure.set(
         error instanceof ActionNotAllowedError
-          ? error.message
-          : staffWriteErrorMessage({ error, operation: 'deactivate' }),
+          ? { key: 'staff.alreadyDeactivated', params: { name: current.username } }
+          : staffWriteError({ error, operation: 'deactivate' }),
       )
     } finally {
       this.deactivating.set(false)
@@ -150,7 +202,13 @@ export class StaffDetailPage {
     }
   }
 
+  protected async reload(): Promise<void> {
+    await this.load()
+  }
+
   private async load(): Promise<void> {
+    this.loading.set(true)
+    this.loadFailed.set(false)
     try {
       const [member, roles] = await Promise.all([
         this.getStaff.execute(this.staffId),
@@ -161,9 +219,13 @@ export class StaffDetailPage {
       this.permissions.set(member.permissions)
       this.selectedRoleId.set(member.role.id)
     } catch {
-      this.failure.set('Could not load this operator.')
+      this.loadFailed.set(true)
     } finally {
       this.loading.set(false)
     }
+  }
+
+  private t(key: string, params: Record<string, string | number> = {}): string {
+    return this.transloco.translate(key, params, this.locale())
   }
 }

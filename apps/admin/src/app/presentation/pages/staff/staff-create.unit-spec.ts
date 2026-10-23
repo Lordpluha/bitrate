@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing'
 import { provideRouter } from '@angular/router'
 import { RoleRepository, type Role } from '@domain/role'
 import { type CreateStaffInput, StaffRepository, type StaffMember } from '@domain/staff'
+import { provideTestTransloco } from '@testing/transloco'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { StaffCreatePage } from './staff-create'
 
@@ -61,6 +62,7 @@ describe('StaffCreatePage', () => {
       providers: [
         provideZonelessChangeDetection(),
         provideRouter([]),
+        ...provideTestTransloco(),
         {
           provide: RoleRepository,
           useValue: { list: () => Promise.resolve([MODERATOR_ROLE, CUSTOM_ROLE]) },

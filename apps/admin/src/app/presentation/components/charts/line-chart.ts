@@ -15,7 +15,7 @@ import {
   CHART_PLOT_HEIGHT,
   chartPlotWidth,
 } from './chart-layout'
-import { formatChartValue } from './chart-format'
+import { formatChartTick, formatChartValue } from './chart-format'
 import { ChartHoverState } from './chart-hover-state'
 import {
   axisTicks,
@@ -57,6 +57,10 @@ export class LineChart {
   readonly categories = input.required<string[]>()
   readonly series = input.required<ChartSeriesValues[]>()
   readonly emptyMessage = input('No data for this range.')
+  /** Announced while the plot loads; the page passes it in the operator's language. */
+  readonly loadingLabel = input('Loading…')
+  /** Hides the caption visually when the surrounding tile already titles the chart. */
+  readonly captionHidden = input(false)
   readonly headline = input<ChartHeadline | null>(null)
   /** When set, the plot area shows this state instead of the data — the header, description and
    *  any projected content (a status strip) stay visible regardless, so a chart that carries a
@@ -105,7 +109,7 @@ export class LineChart {
   }
 
   protected tickLabel(tick: number): string {
-    return formatChartValue(tick)
+    return formatChartTick(tick)
   }
 
   protected xLabel(index: number): string {
@@ -133,9 +137,7 @@ export class LineChart {
   }
 
   protected tooltipLabel(index: number): string {
-    const parts = this.series().map(
-      (item) => `${item.label} ${this.cellValue(item, index)}`,
-    )
+    const parts = this.series().map((item) => `${item.label} ${this.cellValue(item, index)}`)
     return `${this.xLabel(index)}: ${parts.join(', ')}`
   }
 }

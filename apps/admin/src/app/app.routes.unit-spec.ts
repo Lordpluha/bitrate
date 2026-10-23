@@ -62,12 +62,18 @@ describe('routes', () => {
     expect(TestBed.inject(Title).getTitle()).toBe('New genre · Bitrate operators')
   })
 
-  it('sends an unknown path to the overview', async () => {
+  it('keeps an unknown path and titles it as not found, instead of hiding it behind /', async () => {
     TestBed.inject(SessionStore).set(ADMIN)
 
     await router.navigateByUrl('/nowhere')
 
-    expect(router.url).toBe('/')
-    expect(TestBed.inject(Title).getTitle()).toBe('Overview · Bitrate operators')
+    expect(router.url).toBe('/nowhere')
+    expect(TestBed.inject(Title).getTitle()).toBe('Not found · Bitrate operators')
+  })
+
+  it('sends a visitor without a staff session from an unknown path to sign in', async () => {
+    await router.navigateByUrl('/nowhere')
+
+    expect(router.url).toBe('/login?next=%2Fnowhere')
   })
 })

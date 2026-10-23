@@ -7,8 +7,7 @@ import type { ReportDetail } from '@domain/moderation'
 import { ResourceNotFoundError } from '@domain/shared'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ReportDetailPage } from './report-detail'
-import { TranslocoTestingModule } from '@jsverse/transloco'
-import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
+import { provideTestTransloco } from '@testing/transloco'
 
 const ADMIN_STAFF = {
   id: '3f2504e0-4f89-41d3-9a0c-0305e82c3301',
@@ -48,13 +47,8 @@ const advanceReport = vi.fn<() => Promise<ReportDetail>>()
 function create(): void {
   TestBed.resetTestingModule()
   TestBed.configureTestingModule({
-    imports: [
-      TranslocoTestingModule.forRoot({
-        langs: { en: {}, uk: {} },
-        translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-      }),
-    ],
     providers: [
+      ...provideTestTransloco(),
       provideZonelessChangeDetection(),
       provideRouter([]),
       { provide: GetReportUseCase, useValue: { execute: getReport } },
@@ -193,7 +187,7 @@ describe('ReportDetailPage', () => {
 
     expect(
       (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent,
-    ).toContain('could not be found')
+    ).toContain('Report not found')
   })
 
   it('shows a load failure, not not-found, when the load fails for another reason', async () => {
@@ -204,8 +198,8 @@ describe('ReportDetailPage', () => {
     await fixture.whenStable()
 
     const alert = (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')
-    expect(alert?.textContent).toContain('Could not load this report.')
-    expect(alert?.textContent).not.toContain('could not be found')
+    expect(alert?.textContent).toContain('Couldn’t load this report')
+    expect(alert?.textContent).not.toContain('Report not found')
   })
 
   it('advances the report and updates the displayed status', async () => {
@@ -218,11 +212,76 @@ describe('ReportDetailPage', () => {
 
     const host = fixture.nativeElement as HTMLElement
     Array.from(host.querySelectorAll('button'))
-      .find((b) => b.textContent?.trim() === 'Take')
+      .find((b) => b.textContent?.trim() === 'Start review')
       ?.click()
     await fixture.whenStable()
 
     expect(advanceReport).toHaveBeenCalledWith(expect.objectContaining({ status: 'REVIEWING' }))
-    expect(host.textContent).toContain('REVIEWING')
+    expect(host.querySelector('h1')?.textContent).toContain('Reviewing')
+  })
+
+  describe('closing decisions', () => {
+    const dialog = () => document.body.querySelector('[data-slot="dialog-content"]')
+    const button = (root: ParentNode | null, text: string) =>
+      Array.from(root?.querySelectorAll<HTMLButtonElement>('button') ?? []).find(
+        (candidate) => candidate.textContent?.trim() === text,
+      )
+
+    async function render() {
+      getReport.mockResolvedValue(detail())
+      advanceReport.mockResolvedValue(detail({ status: 'RESOLVED' }))
+      create()
+      const fixture = TestBed.createComponent(ReportDetailPage)
+      await fixture.whenStable()
+      return { fixture, host: fixture.nativeElement as HTMLElement }
+    }
+
+    it('asks before resolving, and resolves on confirm', async () => {
+      const { fixture, host } = await render()
+      button(host, 'Resolve')?.click()
+      await fixture.whenStable()
+
+      expect(dialog()?.textContent).toContain('Resolve this report?')
+      expect(advanceReport).not.toHaveBeenCalled()
+
+      button(dialog(), 'Resolve report')?.click()
+      await fixture.whenStable()
+
+      expect(advanceReport).toHaveBeenCalledWith(expect.objectContaining({ status: 'RESOLVED' }))
+    })
+
+    it('changes nothing when the confirmation is cancelled', async () => {
+      const { fixture, host } = await render()
+      button(host, 'Reject')?.click()
+      await fixture.whenStable()
+
+      button(dialog(), 'Cancel')?.click()
+      await fixture.whenStable()
+
+      expect(advanceReport).not.toHaveBeenCalled()
+    })
+
+    it('offers no review to start on a closed report', async () => {
+      getReport.mockResolvedValue(detail({ status: 'RESOLVED' }))
+      create()
+      const fixture = TestBed.createComponent(ReportDetailPage)
+      await fixture.whenStable()
+      const host = fixture.nativeElement as HTMLElement
+
+      expect(button(host, 'Start review')).toBeUndefined()
+      expect(button(host, 'Reject')).toBeDefined()
+    })
+
+    it('says so when the status change fails, keeping the report on screen', async () => {
+      const { fixture, host } = await render()
+      advanceReport.mockRejectedValue(new Error('500'))
+      button(host, 'Start review')?.click()
+      await fixture.whenStable()
+
+      expect(host.querySelector('[role="alert"]')?.textContent).toContain(
+        'Couldn’t change this report’s status',
+      )
+      expect(host.querySelector('h1')?.textContent).toContain('Night Drive')
+    })
   })
 })

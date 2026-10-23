@@ -20,7 +20,7 @@ export const DEFAULT_THEME: Theme = 'dark'
  * owns every change after that. If the two ever drift, `theme-store.unit-spec.ts` and a manual
  * check of `index.html` are what would catch it; nothing wires them together mechanically.
  *
- * `localStorage` is wrapped in try/catch on both sides — see `SidebarWidth` for why: a private
+ * `localStorage` is wrapped in try/catch on both sides — see `SidebarState` for why: a private
  * window, cleared site data or storage blocked by the browser all throw on access rather than
  * returning `null`, and a colour preference is never worth failing a page load over.
  */

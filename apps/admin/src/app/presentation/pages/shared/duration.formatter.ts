@@ -21,8 +21,11 @@ export function formatClockDuration(seconds: number | null): string {
   return `${minutes}:${String(seconds % SECONDS_PER_MINUTE).padStart(2, '0')}`
 }
 
-/** An episode's length rounded to whole minutes, e.g. "30 min"; "—" when unknown. */
-export function formatMinutes(seconds: number | null): string {
-  if (seconds === null) return NO_DURATION
-  return `${Math.round(seconds / SECONDS_PER_MINUTE)} min`
+/**
+ * An episode's length in whole minutes (at least one), for a translated "{count} min"; `null`
+ * when unknown.
+ */
+export function wholeMinutes(seconds: number | null): number | null {
+  if (seconds === null) return null
+  return Math.max(Math.round(seconds / SECONDS_PER_MINUTE), 1)
 }

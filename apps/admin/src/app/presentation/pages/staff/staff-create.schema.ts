@@ -5,7 +5,7 @@ import type { Permission } from '@domain/access'
 const PROTECTED_SET = new Set<Permission>(PROTECTED_PERMISSIONS)
 
 /** The API's own floor, surfaced here as a validation message rather than only a server 400. */
-const MIN_PASSWORD_LENGTH = 12
+export const MIN_PASSWORD_LENGTH = 12
 
 /**
  * What the create form accepts. The permission grid already hides protected permissions, so
@@ -13,15 +13,13 @@ const MIN_PASSWORD_LENGTH = 12
  * worth stating, since a schema is the contract even when the widget in front of it behaves.
  */
 export const staffCreateSchema = z.object({
-  email: z.email('Enter a valid email address'),
-  username: z.string().min(1, 'Username is required'),
-  password: z
-    .string()
-    .min(MIN_PASSWORD_LENGTH, `Password must be at least ${MIN_PASSWORD_LENGTH} characters`),
-  roleId: z.string().min(1, 'Choose a role'),
+  email: z.email('operator.invalid.email'),
+  username: z.string().min(1, 'operator.invalid.usernameRequired'),
+  password: z.string().min(MIN_PASSWORD_LENGTH, 'operator.invalid.passwordShort'),
+  roleId: z.string().min(1, 'operator.invalid.roleRequired'),
   permissions: z
     .array(z.custom<Permission>())
     .refine((permissions) => permissions.every((permission) => !PROTECTED_SET.has(permission)), {
-      message: 'A protected permission cannot be granted',
+      message: 'operator.invalid.protected',
     }),
 })
