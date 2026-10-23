@@ -1,5 +1,12 @@
 # @bitrate/vite-svgr
 
+## 2.0.1
+
+### Patch Changes
+
+- Updated dependencies [e97e6c7]
+  - @bitrate/svgr@2.0.1
+
 ## 2.0.0
 
 ### Major Changes

@@ -1,5 +1,32 @@
 # @bitrate/api
 
+## 1.4.0
+
+### Minor Changes
+
+- f9bff71: Podcast episodes became searchable on the server: `GET /v1/podcasts/{id}` accepted an optional
+  `q` that narrowed the episode page and its total to a case-insensitive title or description
+  match, and the podcast page searched and paged through every episode with it instead of
+  filtering only the first 50 in the browser, while saving an episode updated the library
+  optimistically and reported failures.
+
+### Patch Changes
+
+- e97e6c7: A code-health pass fixed bugs found in review and removed duplicated and wasteful work across
+  the stack. The API created OAuth accounts atomically, deleted replaced avatars, closed storage
+  streams on failure, kept muted notification categories from crowding out releases, reported
+  playlist position races as conflicts and re-checked websocket sessions on a timer instead of on
+  every message, with narrower reads and shared admin take-down, OAuth and ranking helpers. The
+  landing page gave every scene its own particle layout again and stopped per-frame style reads;
+  the player stopped rewriting the store on every progress tick and mutation errors were toasted
+  once. The admin panel told load failures apart from missing records and kept the page when
+  navigating search history; the artist dashboard themed its verify-email page and refreshed only
+  the caches a release write changed. The carousel released its re-init listener and honoured
+  consumer gaps, the player engine ignored superseded play requests, and the MP4 indexer and SVG
+  colour detection did less work per file.
+- Updated dependencies [e97e6c7]
+  - @bitrate/converter@2.1.1
+
 ## 1.3.0
 
 ### Minor Changes

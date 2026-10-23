@@ -1,5 +1,18 @@
 # @bitrate/docs
 
+## 1.2.0
+
+### Minor Changes
+
+- d5b8afd: The documentation site took on the Bitrate brand: the shared palette in light, dark and dim
+  themes behind a three-way theme switch, Unbounded, Inter and JetBrains Mono served from the site
+  itself, a bento home page whose counts and latest ADRs came from the build, a token-driven code
+  theme, status-coloured admonitions and a new 404 page.
+
+### Patch Changes
+
+- ff953f1: Raised the workspace's DOMPurify override to 3.4.17, which the docs site's Mermaid diagrams use, to patch GHSA-cg2g-xh64-v4q7 (critical) and GHSA-mrv2-3pqr-j5jr (high).
+
 ## 1.1.2
 
 ### Patch Changes
