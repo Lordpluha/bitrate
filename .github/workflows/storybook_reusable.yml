@@ -1,4 +1,4 @@
-name: "[ui-react] Storybook Reusable"
+name: "[storybook] Image Reusable"
 
 on:
   workflow_call:
@@ -42,13 +42,13 @@ jobs:
   storybook-build:
     name: Storybook Build and Docker
     runs-on: ubuntu-latest
-    # Two builds run inside this image: the ui-react library build (which generates
-    # src/icons/svgr/ that the stories import) and then the Storybook build itself. Neither
-    # is fast, so the default timeout is deliberately generous.
+    # Several builds run inside this image, one after another: the libraries the stories import
+    # (ui-react, the player element) and then three Storybooks — ui-react, player and the admin
+    # UI kit. None is fast, so the default timeout is deliberately generous.
     timeout-minutes: ${{ inputs.timeout-minutes }}
 
-    # Biome, tokens and the Vitest projects for packages/ui-react run as sibling jobs in
-    # ui_react.yml. This workflow only produces the image, so it does not repeat them.
+    # Each package's checks run in its own workflow (ui_react.yml, player.yml, admin.yml).
+    # This workflow only produces the image, so it does not repeat them.
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -61,9 +61,9 @@ jobs:
           ghcr-username: ${{ github.actor }}
           ghcr-password: ${{ secrets.GITHUB_TOKEN }}
 
-      # The production target serves the prebuilt storybook-static bundle from nginx on 8080
-      # and reads no configuration, so this image carries no build args and is
-      # environment-agnostic.
+      # The production target serves the three prebuilt storybook-static bundles from nginx on
+      # 8080 and reads no configuration — the host's refs are root-relative — so this image
+      # carries no build args and is environment-agnostic.
       - name: Build Storybook Docker image
         uses: docker/build-push-action@v7
         with:

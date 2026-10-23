@@ -176,7 +176,17 @@ pnpm storybook
 
 # Build static
 pnpm storybook:build
+
+# Also compose the player and admin UI kit Storybooks (run their dev servers first:
+# `pnpm --filter @bitrate/player storybook` on 6007, `pnpm --filter @bitrate/admin storybook` on 6008)
+STORYBOOK_COMPOSE=1 pnpm storybook
 ```
+
+This Storybook is the host of the published catalogue at `ui.bitrate.me`. The player (Svelte) and
+the admin UI kit (Angular) are built separately and composed in as
+[refs](https://storybook.js.org/docs/sharing/storybook-composition): one image serves the host at
+`/`, the player at `/player/` and the admin kit at `/admin/`. A plain `pnpm storybook` shows only
+the ui-react stories.
 
 ---
 
