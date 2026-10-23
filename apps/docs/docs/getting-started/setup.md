@@ -105,7 +105,9 @@ only appear once you start that app on its own:
 | Web Player | `http://localhost:3001` |
 | Web Artists | `http://localhost:3002` |
 | Docs (Docusaurus) | `http://localhost:3003` |
-| Storybook | `http://localhost:6006` |
+| Storybook (ui-react) | `http://localhost:6006` |
+| Storybook (player) | `http://localhost:6007` |
+| Storybook (admin UI kit) | `http://localhost:6008` |
 | Mobile (Metro) | `http://localhost:8081` |
 | Desktop (Vite) | `http://localhost:1420` |
 
