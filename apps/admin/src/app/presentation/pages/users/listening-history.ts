@@ -1,3 +1,4 @@
+import { TranslocoPipe } from '@jsverse/transloco'
 import { ChangeDetectionStrategy, Component, effect, inject, input, untracked } from '@angular/core'
 import { RouterLink } from '@angular/router'
 import { ListListeningHistoryUseCase } from '@application/users'
@@ -13,7 +14,14 @@ import { HlmTableImports } from '@spartan-ng/helm/table'
  */
 @Component({
   selector: 'app-listening-history',
-  imports: [LocalizedDatePipe, RouterLink, CollectionStatus, Paginator, HlmTableImports],
+  imports: [
+    CollectionStatus,
+    HlmTableImports,
+    LocalizedDatePipe,
+    Paginator,
+    RouterLink,
+    TranslocoPipe,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './listening-history.html',
 })
@@ -23,7 +31,7 @@ export class ListeningHistory {
   readonly userId = input.required<string>()
 
   protected readonly collection = createCollection<ListeningHistoryEntry>({
-    errorMessage: 'Could not load listening history.',
+    errorMessage: 'user.history.error',
     load: (page) => this.listHistory.execute({ userId: this.userId(), page }),
   })
 

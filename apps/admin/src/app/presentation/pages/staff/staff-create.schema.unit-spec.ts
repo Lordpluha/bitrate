@@ -19,7 +19,7 @@ describe('staffCreateSchema', () => {
 
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error.issues[0]?.message).toContain('at least 12 characters')
+      expect(result.error.issues[0]?.message).toBe('operator.invalid.passwordShort')
     }
   })
 

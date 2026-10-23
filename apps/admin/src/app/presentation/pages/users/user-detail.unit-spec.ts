@@ -13,6 +13,7 @@ import { ResourceNotFoundError, ResourceWriteError } from '@domain/shared'
 import type { UserDetail } from '@domain/user'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { UserDetailPage } from './user-detail'
+import { provideTestTransloco } from '@testing/transloco'
 
 const ADMIN_STAFF = {
   id: '3f2504e0-4f89-41d3-9a0c-0305e82c3301',
@@ -51,6 +52,7 @@ function create(): void {
   TestBed.resetTestingModule()
   TestBed.configureTestingModule({
     providers: [
+      ...provideTestTransloco(),
       provideZonelessChangeDetection(),
       provideRouter([]),
       { provide: GetUserUseCase, useValue: { execute: getUser } },
@@ -87,7 +89,7 @@ describe('UserDetailPage', () => {
     const host = fixture.nativeElement as HTMLElement
     expect(host.textContent).toContain('listener-1')
     expect(host.textContent).toContain('Playlists')
-    expect(host.querySelector('dd')?.textContent?.trim()).toBe('2')
+    expect(host.querySelectorAll('app-kv-row')[1]?.textContent).toContain('2')
   })
 
   it('shows the not-found message when the listener does not exist', async () => {
@@ -99,7 +101,7 @@ describe('UserDetailPage', () => {
 
     expect(
       (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent,
-    ).toContain('could not be found')
+    ).toContain('Listener not found')
   })
 
   it('shows a load failure, not not-found, when the load fails for another reason', async () => {
@@ -110,8 +112,8 @@ describe('UserDetailPage', () => {
     await fixture.whenStable()
 
     const alert = (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')
-    expect(alert?.textContent).toContain('Could not load this listener.')
-    expect(alert?.textContent).not.toContain('could not be found')
+    expect(alert?.textContent).toContain('Couldn’t load this listener')
+    expect(alert?.textContent).not.toContain('Listener not found')
   })
 
   it('hides the restore button for an active account', async () => {

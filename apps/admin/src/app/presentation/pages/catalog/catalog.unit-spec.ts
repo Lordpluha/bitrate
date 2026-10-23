@@ -19,8 +19,7 @@ import { ExportRepository } from '@domain/export'
 import { FileSaver } from '@presentation/components'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { CatalogPage } from './catalog'
-import { TranslocoTestingModule } from '@jsverse/transloco'
-import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
+import { provideTestTransloco } from '@testing/transloco'
 
 function track(overrides: Partial<Track> = {}): Track {
   return {
@@ -113,13 +112,8 @@ describe('CatalogPage — attention-first default', () => {
 
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
-      imports: [
-        TranslocoTestingModule.forRoot({
-          langs: { en: {}, uk: {} },
-          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-        }),
-      ],
       providers: [
+        ...provideTestTransloco(),
         provideZonelessChangeDetection(),
         provideRouter(routes),
         provideLocationMocks(),
@@ -174,13 +168,8 @@ describe('CatalogPage — search box', () => {
 
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
-      imports: [
-        TranslocoTestingModule.forRoot({
-          langs: { en: {}, uk: {} },
-          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-        }),
-      ],
       providers: [
+        ...provideTestTransloco(),
         provideZonelessChangeDetection(),
         provideRouter(routes),
         provideLocationMocks(),
@@ -206,7 +195,8 @@ describe('CatalogPage — search box', () => {
     await harness.navigateByUrl('/catalog?page=3', CatalogPage)
     await afterDebounce()
 
-    const box = harness.routeNativeElement?.querySelector<HTMLInputElement>('#track-search')
+    const box =
+      harness.routeNativeElement?.querySelector<HTMLInputElement>('app-search-field input')
     if (!box) throw new Error('search box not rendered')
     box.value = 'drive'
     box.dispatchEvent(new Event('input'))
@@ -254,13 +244,8 @@ describe('CatalogPage — batch take-down', () => {
 
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
-      imports: [
-        TranslocoTestingModule.forRoot({
-          langs: { en: {}, uk: {} },
-          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-        }),
-      ],
       providers: [
+        ...provideTestTransloco(),
         provideZonelessChangeDetection(),
         provideRouter(routes),
         provideLocationMocks(),
@@ -343,13 +328,8 @@ describe('CatalogPage — CSV export', () => {
 
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
-      imports: [
-        TranslocoTestingModule.forRoot({
-          langs: { en: {}, uk: {} },
-          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-        }),
-      ],
       providers: [
+        ...provideTestTransloco(),
         provideZonelessChangeDetection(),
         provideRouter(routes),
         provideLocationMocks(),
@@ -389,5 +369,94 @@ describe('CatalogPage — CSV export', () => {
     expect(exportTracks).toHaveBeenCalledWith(
       expect.objectContaining({ query: 'x', sort: { field: 'title', direction: 'asc' } }),
     )
+  })
+})
+
+describe('CatalogPage — figures and states', () => {
+  let harness: RouterTestingHarness
+
+  const host = () => harness.routeNativeElement as HTMLElement
+  const tile = (label: string) =>
+    Array.from(host().querySelectorAll('app-metric-tile')).find((candidate) =>
+      candidate.textContent?.includes(label),
+    )
+  const buttonWith = (text: string) =>
+    Array.from(host().querySelectorAll('button')).find((button) =>
+      button.textContent?.includes(text),
+    )
+  const open = async (url = '/catalog') => {
+    await harness.navigateByUrl(url, CatalogPage)
+    await harness.fixture.whenStable()
+  }
+  /** The list's own page, and one-row answers for the KPI counts. */
+  const serve = (rows: Track[]) =>
+    list.mockImplementation(({ limit, filter }) =>
+      Promise.resolve(
+        limit === 1
+          ? {
+              items: [track({ processingStatus: 'PROCESSING' })],
+              total: { READY: 1284, PROCESSING: 47, FAILED: 3 }[filter.processingStatus ?? 'READY'],
+              page: 1,
+              limit: 1,
+            }
+          : { items: rows, total: rows.length, page: 1, limit: limit ?? 20 },
+      ),
+    )
+
+  beforeEach(async () => {
+    list.mockReset()
+    TestBed.resetTestingModule()
+    TestBed.configureTestingModule({
+      providers: [
+        ...provideTestTransloco(),
+        provideZonelessChangeDetection(),
+        provideRouter(routes),
+        provideLocationMocks(),
+        { provide: TrackRepository, useClass: StubTrackRepository },
+        { provide: ExportRepository, useClass: StubExportRepository },
+      ],
+    })
+    harness = await RouterTestingHarness.create()
+  })
+
+  it('counts live tracks by pipeline state above the list', async () => {
+    serve([track()])
+    await open()
+
+    expect(tile('Ready')?.textContent).toContain((1284).toLocaleString())
+    expect(tile('Processing')?.textContent).toContain('47')
+    expect(tile('Failed')?.textContent).toContain('3')
+  })
+
+  it('reads the pipeline state in plain words and flags the failures on the page', async () => {
+    serve([track(), track({ id: 'ok', title: 'Day Drive', processingStatus: 'READY' })])
+    await open()
+
+    const table = host().querySelector('table')
+    expect(table?.textContent).toContain('Failed')
+    expect(table?.textContent).toContain('Ready')
+    expect(host().textContent).toContain('1 track on this page failed')
+  })
+
+  it('offers Clear filters when a narrowed list is empty, back to the live catalog', async () => {
+    serve([])
+    await open('/catalog?status=FAILED')
+
+    expect(host().textContent).toContain('No tracks match these filters')
+    buttonWith('Clear filters')?.click()
+    await harness.fixture.whenStable()
+
+    expect(TestBed.inject(Router).url).toBe('/catalog')
+  })
+
+  it('reports a failed load as an alert with Try again, and a dash in every figure', async () => {
+    list.mockRejectedValue(new Error('down'))
+    await open()
+
+    expect(host().querySelector('[role="alert"]')?.textContent).toContain(
+      'Couldn’t load the catalog',
+    )
+    expect(tile('Ready')?.textContent).toContain('—')
+    expect(buttonWith('Try again')).toBeDefined()
   })
 })

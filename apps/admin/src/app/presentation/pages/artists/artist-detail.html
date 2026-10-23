@@ -1,160 +1,184 @@
-<section class="w-full space-y-8 p-8">
-  <header class="space-y-1">
-    <a routerLink="/artists" class="text-sm text-muted-foreground hover:underline"
-      >&larr; Artists</a
-    >
-    @if (loading()) {
-      <h1 class="text-xl font-semibold text-foreground">Artist</h1>
-    } @else if (artist(); as a) {
-      <h1 class="text-xl font-semibold text-foreground">
-        {{ a.username }}
-        <span hlmBadge [variant]="a.verified ? 'default' : 'outline'" class="ml-2 align-middle">
-          {{ a.verified ? 'verified' : 'unverified' }}
-        </span>
-        @if (a.deactivatedAt) {
-          <span hlmBadge variant="destructive" class="ml-2 align-middle">deactivated</span>
-        }
-      </h1>
-      <p class="text-sm text-muted-foreground">{{ a.email }}</p>
+@if (artist(); as a) {
+  <app-page-header
+    [back]="back()"
+    [eyebrow]="'artist.eyebrow' | transloco"
+    [title]="a.username"
+    [subtitle]="
+      a.email +
+      ' · ' +
+      ('account.joined' | transloco: { date: (a.createdAt | localizedDate: 'mediumDate') })
+    "
+  >
+    <span headerStatus hlmBadge [variant]="a.verified ? 'info' : 'secondary'">{{
+      (a.verified ? 'artists.badge.verified' : 'artists.badge.unverified') | transloco
+    }}</span>
+    @if (a.deactivatedAt) {
+      <span headerStatus hlmBadge variant="secondary">{{
+        'account.status.deactivated' | transloco
+      }}</span>
     }
-  </header>
-
-  @if (loading()) {
-    <p class="text-sm text-muted-foreground" role="status">Loading…</p>
-  } @else if (notFound()) {
-    <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
-      This artist could not be found.
-    </p>
-  } @else if (artist(); as a) {
-    @if (status(); as message) {
-      <p class="rounded-md bg-muted px-3 py-2 text-sm text-foreground" role="status">
-        {{ message }}
-      </p>
-    }
-    @if (failure(); as message) {
-      <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
-        {{ message }}
-      </p>
-    }
-
-    <section class="space-y-3">
-      <h2 class="text-lg font-semibold text-foreground">Activity</h2>
-      <dl class="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <div class="rounded-md border border-border p-3">
-          <dt class="text-xs text-muted-foreground">Tracks</dt>
-          <dd class="text-lg font-semibold tabular-nums text-foreground">{{ a.counts.tracks }}</dd>
-        </div>
-        <div class="rounded-md border border-border p-3">
-          <dt class="text-xs text-muted-foreground">Albums</dt>
-          <dd class="text-lg font-semibold tabular-nums text-foreground">{{ a.counts.albums }}</dd>
-        </div>
-        <div class="rounded-md border border-border p-3">
-          <dt class="text-xs text-muted-foreground">Open reports</dt>
-          <dd class="text-lg font-semibold tabular-nums text-foreground">
-            {{ a.counts.openReports }}
-          </dd>
-        </div>
-        <div class="rounded-md border border-border p-3">
-          <dt class="text-xs text-muted-foreground">Active sessions</dt>
-          <dd class="text-lg font-semibold tabular-nums text-foreground">
-            {{ a.counts.activeSessions }}
-          </dd>
-        </div>
-      </dl>
-      <a
-        [routerLink]="['/audit']"
-        [queryParams]="{ entityType: 'admin-artists', entityId: a.id }"
-        class="text-sm text-muted-foreground hover:underline"
-      >
-        View audit history &rarr;
-      </a>
-    </section>
-
-    <section aria-labelledby="artist-tracks-heading" class="space-y-3">
-      <h2 id="artist-tracks-heading" class="text-lg font-semibold text-foreground">Tracks</h2>
-      <app-artist-tracks [artistId]="artistId" />
-    </section>
-
-    <section aria-labelledby="artist-albums-heading" class="space-y-3">
-      <h2 id="artist-albums-heading" class="text-lg font-semibold text-foreground">Albums</h2>
-      <app-artist-albums [artistId]="artistId" />
-    </section>
-
-    <section class="space-y-3">
-      <h2 class="text-lg font-semibold text-foreground">Actions</h2>
-
+    <ng-container ngProjectAs="[headerActions]">
       @if (canVerify() && verifiable(a)) {
         <button
           hlmBtn
-          size="sm"
-          variant="outline"
+          variant="secondary"
           type="button"
           [disabled]="verifying()"
           (click)="toggleVerification()"
         >
-          {{ a.verified ? 'Unverify' : 'Verify' }}
+          <ng-icon name="lucideBadgeCheck" aria-hidden="true" />
+          {{ (a.verified ? 'artists.action.unverify' : 'artists.action.verify') | transloco }}
         </button>
       }
-
-      @if (canRevokeSessions() && revocation(a).allowed) {
-        @if (armed() === 'revoke-sessions') {
-          <app-confirm-action
-            consequence="Revoke every active session for {{
-              a.username
-            }}? They will be signed out on their next request."
-            confirmLabel="Yes, revoke sessions"
-            [pending]="pending()"
-            (confirmed)="confirm($event)"
-            (cancelled)="arm(null)"
-          />
-        } @else {
-          <button hlmBtn size="sm" variant="outline" type="button" (click)="arm('revoke-sessions')">
-            Revoke sessions
-          </button>
-        }
+      @if (canRevokeSessions() && revocation(a).allowed && armed() !== 'revoke-sessions') {
+        <button hlmBtn variant="secondary" type="button" (click)="arm('revoke-sessions')">
+          <ng-icon name="lucideLogOut" aria-hidden="true" />
+          {{ 'account.action.revokeSessions' | transloco }}
+        </button>
       }
-
-      @if (canDeactivate() && deactivation(a).allowed) {
-        @if (armed() === 'deactivate') {
-          <app-confirm-action
-            consequence="Deactivate {{
-              a.username
-            }}? This signs them out and blocks sign-in until restored."
-            confirmLabel="Yes, deactivate"
-            [pending]="pending()"
-            (confirmed)="confirm($event)"
-            (cancelled)="arm(null)"
-          />
-        } @else {
-          <button hlmBtn size="sm" variant="ghost" type="button" (click)="arm('deactivate')">
-            Deactivate
-          </button>
-        }
+      @if (canDeactivate() && deactivation(a).allowed && armed() !== 'deactivate') {
+        <button hlmBtn variant="destructive" type="button" (click)="arm('deactivate')">
+          <ng-icon name="lucideX" aria-hidden="true" />
+          {{ 'account.action.deactivate' | transloco }}
+        </button>
       }
-
-      @if (canRestore() && restoration(a).allowed) {
-        @if (armed() === 'restore') {
-          <app-confirm-action
-            consequence="Restore {{ a.username }}? This reinstates sign-in immediately."
-            confirmLabel="Yes, restore"
-            [pending]="pending()"
-            (confirmed)="confirm($event)"
-            (cancelled)="arm(null)"
-          />
-        } @else {
-          <button hlmBtn size="sm" variant="outline" type="button" (click)="arm('restore')">
-            Restore
-          </button>
-        }
+      @if (canRestore() && restoration(a).allowed && armed() !== 'restore') {
+        <button hlmBtn type="button" (click)="arm('restore')">
+          <ng-icon name="lucideRotateCcw" aria-hidden="true" />
+          {{ 'account.action.restore' | transloco }}
+        </button>
       }
+    </ng-container>
+  </app-page-header>
 
-      @if (!deactivation(a).allowed && !restoration(a).allowed && !verifiable(a)) {
-        <p class="text-sm text-muted-foreground">No actions available.</p>
-      }
-    </section>
-  } @else if (failure(); as message) {
-    <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
-      {{ message }}
+  @if (armed(); as action) {
+    <app-confirm-action
+      [consequence]="confirmCopy[action].body | transloco: { name: a.username }"
+      [confirmLabel]="confirmCopy[action].action | transloco"
+      [pending]="pending()"
+      (confirmed)="confirm($event)"
+      (cancelled)="arm(null)"
+    />
+  }
+
+  @if (statusText(); as text) {
+    <p
+      class="flex items-center gap-3 rounded-tile border border-success/40 bg-glass p-4 text-sm shadow-glass backdrop-blur-[22px]"
+      role="status"
+    >
+      <span
+        class="grid size-9 shrink-0 place-items-center rounded-xl bg-success-surface text-success-text"
+        aria-hidden="true"
+      >
+        <ng-icon name="lucideCheck" />
+      </span>
+      {{ text }}
     </p>
   }
-</section>
+  @if (actionErrorText(); as message) {
+    <app-state-message
+      class="rounded-tile border border-error/40 bg-glass p-4 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="message"
+      [compact]="true"
+    />
+  }
+
+  <app-tile-grid>
+    <app-tile
+      icon="lucideUser"
+      [title]="'artist.tile.profile' | transloco"
+      [meta]="'artist.tile.profileMeta' | transloco"
+      [span]="2"
+    >
+      <div>
+        <app-kv-row [label]="'artist.tile.email' | transloco">{{ a.email }}</app-kv-row>
+        <app-kv-row [label]="'artist.tile.country' | transloco">{{ a.country ?? '—' }}</app-kv-row>
+        <app-kv-row [label]="'artist.tile.listeners' | transloco">{{
+          a.monthlyListeners.toLocaleString()
+        }}</app-kv-row>
+        <app-kv-row [label]="'artist.tile.verification' | transloco">
+          <span hlmBadge [variant]="a.verified ? 'info' : 'secondary'">{{
+            (a.verified ? 'artists.badge.verified' : 'artists.badge.unverified') | transloco
+          }}</span>
+        </app-kv-row>
+      </div>
+    </app-tile>
+
+    <app-tile
+      icon="lucideActivity"
+      [title]="'account.tile.activity' | transloco"
+      [meta]="'account.tile.activityMeta' | transloco"
+      [span]="2"
+    >
+      <div>
+        <app-kv-row [label]="'artist.tile.tracks' | transloco">{{ a.counts.tracks }}</app-kv-row>
+        <app-kv-row [label]="'artist.tile.albums' | transloco">{{ a.counts.albums }}</app-kv-row>
+        <app-kv-row [label]="'account.tile.openReports' | transloco">{{
+          a.counts.openReports
+        }}</app-kv-row>
+        <app-kv-row [label]="'account.tile.sessions' | transloco">{{
+          a.counts.activeSessions
+        }}</app-kv-row>
+      </div>
+      <a
+        class="mt-auto inline-flex items-center gap-1.5 text-[0.8125rem] font-semibold text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+        [routerLink]="['/audit']"
+        [queryParams]="{ entityType: 'admin-artists', entityId: a.id }"
+      >
+        {{ 'account.tile.audit' | transloco }}
+        <ng-icon name="lucideArrowRight" aria-hidden="true" />
+      </a>
+    </app-tile>
+
+    <app-tile
+      icon="lucideAudioLines"
+      [title]="'artist.tile.tracks' | transloco"
+      [meta]="'release.tracks.meta' | transloco: { count: a.counts.tracks }"
+      [span]="4"
+    >
+      <app-artist-tracks [artistId]="artistId" />
+    </app-tile>
+
+    <app-tile
+      icon="lucideDisc3"
+      [title]="'artist.tile.albums' | transloco"
+      [meta]="'artist.tile.albumsMeta' | transloco: { count: a.counts.albums }"
+      [span]="4"
+    >
+      <app-artist-albums [artistId]="artistId" />
+    </app-tile>
+  </app-tile-grid>
+} @else {
+  <app-page-header
+    [back]="back()"
+    [eyebrow]="'artist.eyebrow' | transloco"
+    [title]="'artist.loadingTitle' | transloco"
+  />
+  @if (loading()) {
+    <app-tile-grid role="status" [attr.aria-label]="'ui.loading' | transloco">
+      @for (tile of [2, 2, 4]; track $index) {
+        <app-tile [title]="'ui.loading' | transloco" [span]="tile === 4 ? 4 : 2">
+          <app-skeleton class="h-3.5 w-full" />
+          <app-skeleton class="h-3.5 w-4/5" />
+          <app-skeleton class="h-3.5 w-3/5" />
+        </app-tile>
+      }
+    </app-tile-grid>
+  } @else if (notFound()) {
+    <app-state-message
+      class="min-h-[340px] rounded-tile border border-glass-line bg-glass p-5 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="'artist.notFound.title' | transloco"
+      [description]="'artist.notFound.desc' | transloco"
+    />
+  } @else if (failureText(); as message) {
+    <app-state-message
+      class="min-h-[340px] rounded-tile border border-glass-line bg-glass p-5 shadow-glass backdrop-blur-[22px]"
+      kind="error"
+      [title]="message"
+      [actionLabel]="'ui.tryAgain' | transloco"
+      (action)="reload()"
+    />
+  }
+}

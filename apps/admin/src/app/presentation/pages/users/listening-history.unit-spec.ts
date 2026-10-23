@@ -6,8 +6,7 @@ import type { Page } from '@domain/shared'
 import type { ListeningHistoryEntry } from '@domain/user'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ListeningHistory } from './listening-history'
-import { TranslocoTestingModule } from '@jsverse/transloco'
-import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
+import { provideTestTransloco } from '@testing/transloco'
 
 function entry(overrides: Partial<ListeningHistoryEntry> = {}): ListeningHistoryEntry {
   return {
@@ -25,13 +24,8 @@ const execute = vi.fn<() => Promise<Page<ListeningHistoryEntry>>>()
 function create() {
   TestBed.resetTestingModule()
   TestBed.configureTestingModule({
-    imports: [
-      TranslocoTestingModule.forRoot({
-        langs: { en: {}, uk: {} },
-        translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
-      }),
-    ],
     providers: [
+      ...provideTestTransloco(),
       provideZonelessChangeDetection(),
       provideRouter([]),
       { provide: ListListeningHistoryUseCase, useValue: { execute } },
@@ -70,7 +64,7 @@ describe('ListeningHistory', () => {
 
     const host = fixture.nativeElement as HTMLElement
     expect(host.querySelector('[role="alert"]')?.textContent).toContain(
-      'Could not load listening history.',
+      'Couldn’t load listening history',
     )
   })
 

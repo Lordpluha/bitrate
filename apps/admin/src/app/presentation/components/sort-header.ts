@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core'
 import type { Sort, SortDirection } from '@domain/shared'
+import { TranslocoPipe } from '@jsverse/transloco'
 import { NgIcon, provideIcons } from '@ng-icons/core'
 import { lucideArrowDown, lucideArrowUp, lucideChevronsUpDown } from '@ng-icons/lucide'
 
@@ -19,6 +20,12 @@ export function sortHeaderAriaSort<TField extends string>(
   return sort.direction === 'asc' ? 'ascending' : 'descending'
 }
 
+const SORT_STATE_KEY: Record<SortDirection | 'none', string> = {
+  asc: 'ui.sort.ascending',
+  desc: 'ui.sort.descending',
+  none: 'ui.sort.none',
+}
+
 /**
  * The interactive part of a sortable column header, shared by every paginated operator list. The
  * whole visible label sits inside a real `<button>` so the control is reachable and operable by
@@ -30,14 +37,16 @@ export function sortHeaderAriaSort<TField extends string>(
  */
 @Component({
   selector: 'app-sort-header',
-  imports: [NgIcon],
+  imports: [NgIcon, TranslocoPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideIcons({ lucideArrowDown, lucideArrowUp, lucideChevronsUpDown })],
   template: `
     <button
       type="button"
       class="inline-flex items-center gap-1 text-inherit hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-      [attr.aria-label]="accessibleLabel()"
+      [attr.aria-label]="
+        'ui.sort.label' | transloco: { column: label(), state: (stateKey() | transloco) }
+      "
       (click)="cycle()"
     >
       <ng-content />
@@ -67,12 +76,8 @@ export class SortHeader<TField extends string> {
     return 'lucideChevronsUpDown'
   })
 
-  protected readonly accessibleLabel = computed(() => {
-    const direction = this.direction()
-    const state =
-      direction === 'asc' ? 'ascending' : direction === 'desc' ? 'descending' : 'not sorted'
-    return `Sort by ${this.label()}, ${state}`
-  })
+  /** The direction as read out, one of the `ui.sort.*` keys. */
+  protected readonly stateKey = computed(() => SORT_STATE_KEY[this.direction() ?? 'none'])
 
   protected cycle(): void {
     const direction = this.direction()

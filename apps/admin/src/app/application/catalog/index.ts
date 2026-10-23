@@ -1,3 +1,4 @@
+export * from './get-catalog-stats.use-case'
 export * from './get-track.use-case'
 export * from './list-processing-attempts.use-case'
 export * from './list-tracks.use-case'

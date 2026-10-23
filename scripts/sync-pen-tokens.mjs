@@ -5,8 +5,11 @@
  * packages/tailwind/src is the token source (see .claude/rules/design-tokens.md). This script
  * walks themes.css's @import chain, resolves every `--color-*` role for the Dark (@theme), Light
  * (:root.light) and Dim (:root.dim, inheriting Dark) themes, and writes them into
- * bitrate.lib.pen as `--<role>` variables on its `Mode` theme axis — so `bg-card` in code and
- * `$ds:--card` in a design are the same value by construction. A role whose CSS value is a bare
+ * every design library as `--<role>` variables on its `Mode` theme axis — so `bg-card` in code and
+ * `$ds:--card` in a design are the same value by construction. There are two libraries, each with
+ * its own components: bitrate.lib.pen (`ds`) for the player, landing and artist designs, and
+ * admin.lib.pen (`admin`) for the admin console — the admin design system is separate. A role
+ * whose CSS value is a bare
  * `var(--color-x)` stays a `$--x` alias, so the design keeps the code's alias chain.
  *
  *   node scripts/sync-pen-tokens.mjs           write the library
@@ -25,16 +28,28 @@
  */
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, relative } from 'node:path'
-import { HEX, isTransparent, LIBRARY, parseHex, ROOT, rgbToOklab } from './lib/pen-colour.mjs'
+import { HEX, isTransparent, parseHex, ROOT, rgbToOklab } from './lib/pen-colour.mjs'
 
 const THEMES_ENTRY = join(ROOT, 'packages/tailwind/src/themes.css')
+/** Design libraries, each with the designs it serves (first match wins). Colours come from code for both. */
+const LIBRARIES = [
+  {
+    file: 'pencil/web-admin-design/design-system/admin.lib.pen',
+    alias: 'admin',
+    scope: /^pencil\/web-admin-design\//,
+  },
+  {
+    file: 'pencil/web-player-design/design-system/bitrate.lib.pen',
+    alias: 'ds',
+    scope: /^pencil\//,
+  },
+]
 const DESIGNS = join(ROOT, 'pencil')
 /** Archived designs are historical references, not live designs: the checks skip them. */
 const ARCHIVED = /\/archive\//
 const SHAPES = new Set(['text', 'icon', 'rectangle', 'ellipse', 'path', 'polygon', 'line'])
 const VISUAL = ['fill', 'stroke', 'effect', 'cornerRadius']
 
-const LIBRARY_ALIAS = 'ds'
 const THEMES = ['Dark', 'Light', 'Dim']
 const SELECTORS = { '@theme': 'Dark', ':root.light': 'Light', ':root.dim': 'Dim' }
 
@@ -263,6 +278,11 @@ function scanDesign(file, libraryNames, refPattern) {
         }
         const ref = child.match(refPattern)
         if (ref && !libraryNames.has(ref[1])) unknown.set(ref[1], (unknown.get(ref[1]) ?? 0) + 1)
+        /* a variable of another library (wrong alias) resolves to nothing in this file */ else if (
+          !ref &&
+          /^\$([a-z]+:)?--[a-z0-9-]+$/.test(child)
+        )
+          unknown.set(child, (unknown.get(child) ?? 0) + 1)
       } else if (descendants) {
         visit(child, frame, child?.type ? descendants : null)
       } else if (tree && key === 'children') {
@@ -293,45 +313,55 @@ function scanDesign(file, libraryNames, refPattern) {
 /* ---------- main ---------- */
 
 const check = process.argv.includes('--check')
-const library = JSON.parse(readFileSync(LIBRARY, 'utf8'))
 const generated = buildVariables()
-const current = library.variables ?? {}
-const designOnly = Object.keys(current).filter((k) => current[k].type === 'color' && !generated[k])
+const libs = LIBRARIES.map((l) => {
+  const path = join(ROOT, l.file)
+  const doc = JSON.parse(readFileSync(path, 'utf8'))
+  const current = doc.variables ?? {}
+  const designOnly = Object.keys(current).filter(
+    (k) => current[k].type === 'color' && !generated[k],
+  )
+  const names = new Set(Object.keys(generated).concat(Object.keys(current)))
+  for (const name of designOnly) names.delete(name)
+  return { ...l, path, doc, current, designOnly, names }
+})
 
 if (!check) {
-  const next = {}
-  for (const [name, v] of Object.entries(current)) if (v.type !== 'color') next[name] = v
-  Object.assign(next, generated)
-  library.themes = { ...library.themes, Mode: THEMES }
-  library.variables = next
-  writeFileSync(LIBRARY, JSON.stringify(library, null, 2))
-  console.log(
-    `✅ ${relative(ROOT, LIBRARY)}: ${Object.keys(generated).length} colour variables from code`,
-  )
-  if (designOnly.length) console.log(`   removed design-only colours: ${designOnly.join(', ')}`)
+  for (const lib of libs) {
+    const next = {}
+    for (const [name, v] of Object.entries(lib.current)) if (v.type !== 'color') next[name] = v
+    Object.assign(next, generated)
+    lib.doc.themes = { ...lib.doc.themes, Mode: THEMES }
+    lib.doc.variables = next
+    writeFileSync(lib.path, JSON.stringify(lib.doc, null, 2))
+    console.log(`✅ ${lib.file}: ${Object.keys(generated).length} colour variables from code`)
+    if (lib.designOnly.length)
+      console.log(`   removed design-only colours: ${lib.designOnly.join(', ')}`)
+  }
   process.exit(0)
 }
 
 const problems = []
-const drift = Object.keys(generated).filter(
-  (k) => JSON.stringify(current[k]?.value) !== JSON.stringify(generated[k].value),
-)
-if (drift.length)
-  problems.push(`library drifted from code for ${drift.length} role(s): ${drift.join(', ')}`)
-if (designOnly.length) problems.push(`library colours with no code token: ${designOnly.join(', ')}`)
+for (const lib of libs) {
+  const drift = Object.keys(generated).filter(
+    (k) => JSON.stringify(lib.current[k]?.value) !== JSON.stringify(generated[k].value),
+  )
+  if (drift.length)
+    problems.push(`${lib.file} drifted from code for ${drift.length} role(s): ${drift.join(', ')}`)
+  if (lib.designOnly.length)
+    problems.push(`${lib.file} has colours with no code token: ${lib.designOnly.join(', ')}`)
+}
 
-const libraryNames = new Set(Object.keys(generated).concat(Object.keys(current)))
-for (const name of designOnly) libraryNames.delete(name)
 const designs = [...penFiles(DESIGNS)].filter((path) => !ARCHIVED.test(relative(ROOT, path)))
 for (const path of designs) {
   const file = relative(ROOT, path)
-  const isLibrary = path === LIBRARY
-  const pattern = isLibrary
-    ? /^\$(--[a-z0-9-]+)$/
-    : new RegExp(`^\\$${LIBRARY_ALIAS}:(--[a-z0-9-]+)$`)
+  const lib = libs.find((l) => l.scope.test(file))
+  const isLibrary = path === lib.path
+  const alias = lib.alias
+  const pattern = isLibrary ? /^\$(--[a-z0-9-]+)$/ : new RegExp(`^\\$${alias}:(--[a-z0-9-]+)$`)
   const { hex, unknown, imports, ownColours, wrongAxis, local, absolute } = scanDesign(
     path,
-    libraryNames,
+    lib.names,
     pattern,
   )
   if (absolute)
@@ -344,26 +374,29 @@ for (const path of designs) {
     )
   if (!isLibrary && wrongAxis)
     problems.push(
-      `${file}: ${wrongAxis} theme(s) set on "Mode" — an importing file must use "ds:Mode"`,
+      `${file}: ${wrongAxis} theme(s) set on "Mode" — an importing file must use "${alias}:Mode"`,
     )
-  if (!isLibrary && !imports[LIBRARY_ALIAS])
-    problems.push(`${file}: does not import the library as "${LIBRARY_ALIAS}"`)
+  if (!isLibrary && !imports[alias])
+    problems.push(`${file}: does not import its library (${lib.file}) as "${alias}"`)
+  for (const other of libs)
+    if (!isLibrary && other !== lib && imports[other.alias])
+      problems.push(`${file}: imports ${other.file} — it belongs to ${lib.file} only`)
   if (!isLibrary && ownColours)
     problems.push(`${file}: defines ${ownColours} colour variable(s) of its own — a second palette`)
   for (const [name, count] of unknown)
-    problems.push(`${file}: ${count}× ${name} is not a library variable`)
+    problems.push(`${file}: ${count}× ${name} is not a variable of ${lib.file}`)
   for (const [frame, count] of hex)
     problems.push(`${file}: ${count} hardcoded hex colour(s) in "${frame}"`)
 }
 
 if (problems.length === 0) {
   console.log(
-    `✅ pen tokens: library matches code; ${designs.length} designs use one palette, three themes`,
+    `✅ pen tokens: ${libs.length} libraries match code; ${designs.length} designs use one palette, three themes`,
   )
   process.exit(0)
 }
 console.error(`✗ pen tokens:\n${problems.map((p) => `  ${p}`).join('\n')}`)
 console.error(
-  '\nRun `pnpm design:tokens` to regenerate the library and `node scripts/bind-pen-colors.mjs <file>`\nto bind a design to it.',
+  '\nRun `pnpm design:tokens` to regenerate the libraries and `node scripts/bind-pen-colors.mjs <file>`\nto bind a design to its library.',
 )
 process.exit(1)

@@ -8,7 +8,7 @@ export const listVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-muted',
+        default: 'border border-glass-line bg-glass-strong',
         line: 'gap-1 bg-transparent',
       },
     },

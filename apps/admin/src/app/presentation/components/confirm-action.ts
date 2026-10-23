@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core'
 import { TAKE_DOWN_REASON_MAX_LENGTH } from '@domain/shared'
+import { TranslocoPipe } from '@jsverse/transloco'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmLabelImports } from '@spartan-ng/helm/label'
 
@@ -16,7 +17,7 @@ import { HlmLabelImports } from '@spartan-ng/helm/label'
  */
 @Component({
   selector: 'app-confirm-action',
-  imports: [HlmButtonImports, HlmLabelImports],
+  imports: [HlmButtonImports, HlmLabelImports, TranslocoPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './confirm-action.html',
 })

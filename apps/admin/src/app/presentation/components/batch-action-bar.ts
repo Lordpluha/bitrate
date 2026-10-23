@@ -3,11 +3,13 @@ import {
   Component,
   computed,
   effect,
+  inject,
   input,
   output,
   signal,
 } from '@angular/core'
 import type { BatchResult } from '@domain/shared'
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmDialogImports } from '@spartan-ng/helm/dialog'
 
@@ -16,6 +18,12 @@ export type BatchRow = {
   id: string
   /** The row's title or username — what the operator recognises it by. */
   label: string
+}
+
+/** The per-row outcome as read out in the result summary. */
+const OUTCOME_KEY: Record<BatchResult['items'][number]['outcome'], string> = {
+  succeeded: 'ui.batch.outcome.succeeded',
+  failed: 'ui.batch.outcome.failed',
 }
 
 /** One action the operator may run on the selection. The page lists only the permitted ones. */
@@ -40,7 +48,7 @@ export type BatchActionOption = {
  */
 @Component({
   selector: 'app-batch-action-bar',
-  imports: [HlmButtonImports, HlmDialogImports],
+  imports: [HlmButtonImports, HlmDialogImports, TranslocoPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './batch-action-bar.html',
 })
@@ -48,8 +56,11 @@ export class BatchActionBar {
   /** The selected rows, in selection order. */
   readonly rows = input.required<readonly BatchRow[]>()
   readonly actions = input.required<readonly BatchActionOption[]>()
-  /** What a row is called in the counter and dialog, e.g. "report". */
-  readonly noun = input.required<string>()
+  /**
+   * A transloco key naming `count` rows with the plural built in, e.g.
+   * `{count, plural, one {# report} other {# reports}}` — used by the counter and the dialog.
+   */
+  readonly itemsKey = input.required<string>()
   /** True while the page is running the confirmed action. */
   readonly pending = input(false)
   /** Set by the page when the action finished; cleared by it on `closed`. */
@@ -62,6 +73,7 @@ export class BatchActionBar {
   /** The operator dismissed the result summary. */
   readonly closed = output<void>()
 
+  protected readonly OUTCOME_KEY = OUTCOME_KEY
   protected readonly armed = signal<BatchActionOption | null>(null)
   /** Rows frozen when the action was confirmed. */
   protected readonly frozen = signal<readonly BatchRow[]>([])
@@ -107,7 +119,10 @@ export class BatchActionBar {
     if (this.result()) this.closed.emit()
   }
 
-  protected pluralNoun(count: number): string {
-    return count === 1 ? this.noun() : `${this.noun()}s`
+  private readonly transloco = inject(TranslocoService)
+
+  /** "2 reports" in the active language; the pipe around it re-renders on a language switch. */
+  protected items(count: number): string {
+    return this.transloco.translate(this.itemsKey(), { count })
   }
 }

@@ -1,3 +1,4 @@
+export * from './get-playlist-stats.use-case'
 export * from './get-playlist.use-case'
 export * from './list-playlists.use-case'
 export * from './restore-playlist.use-case'

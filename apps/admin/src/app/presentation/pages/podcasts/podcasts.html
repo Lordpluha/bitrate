@@ -1,102 +1,208 @@
-<section class="space-y-6 p-8">
-  <header class="space-y-1">
-    <h1 class="text-xl font-semibold text-foreground">Podcasts</h1>
-    <p class="text-sm text-muted-foreground">
-      A podcast and each of its episodes are taken down separately. Taking a podcast down does not
-      change its episodes, and taking an episode down does not change its podcast.
-    </p>
-  </header>
+<app-page-header
+  [eyebrow]="'podcasts.eyebrow' | transloco"
+  [title]="'podcasts.title' | transloco"
+  [subtitle]="'podcasts.subtitle' | transloco"
+/>
 
-  <div class="flex flex-wrap items-center gap-3">
-    <form class="flex gap-2" (ngSubmit)="applyFilters()">
-      <label class="sr-only" for="podcast-search">Search podcasts</label>
-      <input
-        hlmInput
-        class="w-64"
-        id="podcast-search"
-        type="search"
-        placeholder="Podcast title"
-        [value]="draft()"
-        (input)="draft.set($any($event.target).value)"
-      />
-      <button hlmBtn size="sm" variant="outline" type="submit">Search</button>
-    </form>
-
-    <div class="flex gap-2" role="group" aria-label="Filter by take-down status">
-      @for (option of statusOptions; track option.value) {
-        <button
-          hlmBtn
-          size="sm"
-          type="button"
-          [variant]="query.state().resourceStatus === option.value ? 'default' : 'outline'"
-          [attr.aria-pressed]="query.state().resourceStatus === option.value"
-          (click)="setResourceStatus(option.value)"
-        >
-          {{ option.label }}
-        </button>
-      }
-    </div>
-  </div>
-
-  <app-collection-status
-    [loading]="collection.loading()"
-    [failure]="collection.failure()"
-    [isEmpty]="collection.items().length === 0"
-    emptyMessage="No podcasts match this filter."
+<app-metric-strip>
+  <app-metric-tile
+    icon="lucidePodcast"
+    tone="success"
+    [label]="'content.kpi.live' | transloco"
+    [value]="stats()?.live ?? null"
+    [sub]="stats() === null ? null : ('podcasts.kpiLiveSub' | transloco)"
+    [loading]="statsLoading()"
   />
+  @if (canSeeReports()) {
+    <app-metric-tile
+      icon="lucideFlag"
+      tone="warning"
+      [label]="'podcasts.kpiReported' | transloco"
+      [value]="reported()"
+      [sub]="reported() === null ? null : ('content.kpi.reportedSub' | transloco)"
+      [loading]="statsLoading()"
+    />
+  }
+  <app-metric-tile
+    icon="lucideX"
+    [label]="'content.kpi.takenDown' | transloco"
+    [value]="stats()?.takenDown ?? null"
+    [sub]="stats() === null ? null : ('content.kpi.takenDownSub' | transloco)"
+    [loading]="statsLoading()"
+  />
+</app-metric-strip>
 
-  @if (collection.items().length > 0) {
-    <div hlmTableContainer>
+<app-table-panel>
+  <app-panel-bar panelBar>
+    <app-search-field
+      [label]="'podcasts.search' | transloco"
+      [value]="draft()"
+      (valueChange)="draft.set($event)"
+    />
+    <app-filter-menu
+      [label]="'content.filter.status' | transloco"
+      [options]="resourceOptions()"
+      [value]="query.state().resourceStatus"
+      [defaultValue]="'active'"
+      (valueChange)="setResourceStatus($event)"
+    />
+    @if (range(); as r) {
+      <span class="ms-auto text-[0.8125rem] tabular-nums text-muted-foreground">
+        {{ 'ui.pagination.range' | transloco: r }}
+      </span>
+    }
+  </app-panel-bar>
+
+  @if (
+    collection.items().length === 0 && !collection.loading() && !collection.failure() && narrowed()
+  ) {
+    <app-state-message
+      class="min-h-[340px] p-5"
+      kind="noResults"
+      [title]="
+        query.state().query
+          ? ('podcasts.noResults.titleQuery' | transloco: { query: query.state().query })
+          : ('podcasts.noResults.title' | transloco)
+      "
+      [description]="'podcasts.noResults.desc' | transloco"
+      [actionLabel]="'ui.clearFilters' | transloco"
+      (action)="clearFilters()"
+    />
+  } @else {
+    <app-collection-status
+      [loading]="collection.loading() && collection.items().length === 0"
+      [failure]="failureText()"
+      [isEmpty]="collection.items().length === 0"
+      [emptyMessage]="'podcasts.empty.title' | transloco"
+      [retryLabel]="'ui.tryAgain' | transloco"
+      (retry)="retry()"
+    />
+  }
+
+  @if (collection.items().length > 0 && !collection.failure()) {
+    <div hlmTableContainer class="hidden md:block">
       <table hlmTable>
         <caption hlmCaption class="sr-only">
-          Podcasts
+          {{
+            'podcasts.table.caption' | transloco
+          }}
         </caption>
         <thead hlmTHead>
           <tr hlmTr>
             <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'title')">
               <app-sort-header
-                [field]="'title'"
-                label="Podcast"
+                field="title"
+                [label]="'podcasts.table.podcast' | transloco"
                 [sort]="query.state().sort"
                 (sortChange)="setSort($event)"
               >
-                Podcast
+                {{ 'podcasts.table.podcast' | transloco }}
               </app-sort-header>
             </th>
-            <th hlmTh scope="col">Publisher</th>
-            <th hlmTh scope="col">Language</th>
-            <th hlmTh scope="col">Episodes</th>
+            <th hlmTh scope="col">{{ 'podcasts.table.language' | transloco }}</th>
+            <th hlmTh scope="col">{{ 'podcasts.table.episodes' | transloco }}</th>
+            <th hlmTh scope="col">{{ 'content.filter.status' | transloco }}</th>
+            <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'createdAt')">
+              <app-sort-header
+                field="createdAt"
+                [label]="'podcasts.table.created' | transloco"
+                [sort]="query.state().sort"
+                (sortChange)="setSort($event)"
+              >
+                {{ 'podcasts.table.created' | transloco }}
+              </app-sort-header>
+            </th>
+            <th hlmTh scope="col" class="w-11"></th>
           </tr>
         </thead>
         <tbody hlmTBody>
           @for (podcast of collection.items(); track podcast.id) {
             <tr hlmTr>
               <td hlmTd>
-                <a [routerLink]="['/podcasts', podcast.id]" class="hover:underline">{{
-                  podcast.title
-                }}</a>
-                @if (podcast.explicit) {
-                  <span hlmBadge variant="outline" class="ml-2">explicit</span>
-                }
-                @if (podcast.takenDownAt) {
-                  <span hlmBadge variant="destructive" class="ml-2">taken down</span>
-                }
+                <span class="flex items-center gap-3">
+                  @if (podcast.coverUrl) {
+                    <img
+                      class="size-10 shrink-0 rounded-[10px] object-cover"
+                      [src]="podcast.coverUrl"
+                      alt=""
+                    />
+                  } @else {
+                    <span
+                      class="grid size-10 shrink-0 place-items-center rounded-[10px] bg-foreground/8 text-muted-foreground"
+                      aria-hidden="true"
+                    >
+                      <ng-icon name="lucidePodcast" />
+                    </span>
+                  }
+                  <span class="flex min-w-0 flex-col">
+                    <span class="flex items-center gap-2">
+                      <a
+                        class="truncate font-semibold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                        [routerLink]="['/podcasts', podcast.id]"
+                        >{{ podcast.title }}</a
+                      >
+                      @if (podcast.explicit) {
+                        <span hlmBadge variant="outline">{{ 'content.explicit' | transloco }}</span>
+                      }
+                    </span>
+                    <span class="truncate text-xs text-muted-foreground">{{
+                      podcast.publisher
+                    }}</span>
+                  </span>
+                </span>
               </td>
-              <td hlmTd class="text-muted-foreground">{{ podcast.publisher }}</td>
-              <td hlmTd class="text-muted-foreground">{{ podcast.language ?? '—' }}</td>
+              <td hlmTd class="uppercase text-muted-foreground">{{ podcast.language ?? '—' }}</td>
               <td hlmTd class="tabular-nums text-muted-foreground">{{ podcast.episodeCount }}</td>
+              <td hlmTd>
+                <span hlmBadge [variant]="podcast.takenDownAt ? 'secondary' : 'success'">{{
+                  (podcast.takenDownAt ? 'content.resource.deactivated' : 'content.resource.active')
+                    | transloco
+                }}</span>
+              </td>
+              <td hlmTd class="tabular-nums text-muted-foreground">
+                {{ podcast.createdAt | localizedDate: 'dd.MM.yyyy' }}
+              </td>
+              <td hlmTd class="text-muted-foreground">
+                <ng-icon class="text-base" name="lucideChevronRight" aria-hidden="true" />
+              </td>
             </tr>
           }
         </tbody>
       </table>
     </div>
 
-    <app-paginator
-      [page]="collection.page()"
-      [pageCount]="collection.pageCount()"
-      [total]="collection.total()"
-      [disabled]="collection.loading()"
-      (goTo)="goToPage($event)"
-    />
+    <ul class="flex flex-col gap-2.5 p-3 md:hidden">
+      @for (podcast of collection.items(); track podcast.id) {
+        <li>
+          <a
+            class="flex flex-col gap-2 rounded-[18px] border border-glass-line bg-card/50 p-3.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            [routerLink]="['/podcasts', podcast.id]"
+          >
+            <span class="flex items-start gap-2.5">
+              <span class="flex min-w-0 flex-1 flex-col">
+                <span class="truncate font-semibold">{{ podcast.title }}</span>
+                <span class="truncate text-xs text-muted-foreground">{{ podcast.publisher }}</span>
+              </span>
+              <span hlmBadge [variant]="podcast.takenDownAt ? 'secondary' : 'success'">{{
+                (podcast.takenDownAt ? 'content.resource.deactivated' : 'content.resource.active')
+                  | transloco
+              }}</span>
+            </span>
+            <span class="text-xs text-muted-foreground">{{
+              'podcast.tile.episodesMeta' | transloco: { count: podcast.episodeCount }
+            }}</span>
+          </a>
+        </li>
+      }
+    </ul>
   }
-</section>
+
+  <app-paginator
+    panelFooter
+    [page]="collection.page()"
+    [pageCount]="collection.pageCount()"
+    [total]="collection.total()"
+    [disabled]="collection.loading()"
+    (goTo)="goToPage($event)"
+  />
+</app-table-panel>

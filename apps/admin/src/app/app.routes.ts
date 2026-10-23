@@ -1,5 +1,7 @@
-import type { Routes } from '@angular/router'
+import { inject } from '@angular/core'
+import { Router, type Routes } from '@angular/router'
 import { requirePermission, requireStaffSession } from '@presentation/guards'
+import { CRUMB_DATA_KEY } from '@presentation/navigation'
 
 /** Titles are bare names; `OperatorTitleStrategy` appends the panel suffix. */
 export const routes: Routes = [
@@ -22,14 +24,12 @@ export const routes: Routes = [
           import('@presentation/pages/overview/overview').then((m) => m.OverviewPage),
       },
       {
-        // Literal path, declared ahead of any `:id` sibling — there is none under `overview`.
+        // The old drill-down is now Overview's "Reports by type" panel; old links open it there.
         path: 'overview/reports',
-        title: 'Reports by entity type',
-        canActivate: [requirePermission('overview:read')],
-        loadComponent: () =>
-          import('@presentation/pages/overview/overview-reports').then(
-            (m) => m.OverviewReportsPage,
-          ),
+        redirectTo: ({ queryParams }) =>
+          inject(Router).createUrlTree(['/'], {
+            queryParams: { ...queryParams, panel: 'reports' },
+          }),
       },
       {
         path: 'no-access',
@@ -217,7 +217,16 @@ export const routes: Routes = [
         loadComponent: () =>
           import('@presentation/pages/staff/staff-detail').then((m) => m.StaffDetailPage),
       },
+      {
+        // Any address the console does not know: its own page inside the shell, not a silent
+        // redirect to `/` that hid typos and stale links. Under the staff guard like every
+        // child — signed out, the operator is sent to sign in first.
+        path: '**',
+        title: 'Not found',
+        data: { [CRUMB_DATA_KEY]: 'notFound.crumb' },
+        loadComponent: () =>
+          import('@presentation/pages/not-found/not-found').then((m) => m.NotFoundPage),
+      },
     ],
   },
-  { path: '**', redirectTo: '' },
 ]
