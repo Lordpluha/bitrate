@@ -1,5 +1,15 @@
 # @bitrate/contracts
 
+## 1.4.0
+
+### Minor Changes
+
+- f9bff71: Podcast episodes became searchable on the server: `GET /v1/podcasts/{id}` accepted an optional
+  `q` that narrowed the episode page and its total to a case-insensitive title or description
+  match, and the podcast page searched and paged through every episode with it instead of
+  filtering only the first 50 in the browser, while saving an episode updated the library
+  optimistically and reported failures.
+
 ## 1.3.0
 
 ### Minor Changes
