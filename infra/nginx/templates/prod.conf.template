@@ -152,7 +152,9 @@ server {
     include /etc/nginx/snippets/static-site-routes.conf;
 }
 
-# Storybook — the @bitrate/ui-react component workshop.
+# Storybook — the composed component catalogue: @bitrate/ui-react at /, with the player at
+# /player/ and the admin UI kit at /admin/ served from the same container (one origin, so the
+# host Storybook reads the other two as refs without CORS).
 server {
     listen 443 ssl;
     http2 on;

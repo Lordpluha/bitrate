@@ -1,7 +1,14 @@
-# Multi-stage Dockerfile for the Storybook static site.
+# Multi-stage Dockerfile for the composed Storybook static site.
 #
-# Storybook is the component workshop for @bitrate/ui-react, published so designers and other
-# apps' developers can browse the library without running the monorepo.
+# One catalogue for every UI surface, published so designers and other apps' developers can
+# browse the components without running the monorepo. The frameworks differ, so each Storybook
+# is built on its own and composed through refs (see packages/ui-react/.storybook/main.ts):
+#
+#   /         @bitrate/ui-react — the host, React
+#   /player/  @bitrate/player   — the <bitrate-player> custom element, Svelte
+#   /admin/   @bitrate/admin    — the spartan-ng UI kit, Angular
+#
+# All three sit on one origin, so the host reads the others' index.json without CORS.
 #
 # The build installs in its own stage rather than copying node_modules across stages: pnpm's
 # isolated linker does not reliably produce a per-package directory for every importer, and a
@@ -21,21 +28,28 @@ WORKDIR /app
 # Stage 2: Build
 FROM base AS build
 COPY . .
-RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile --filter @bitrate/ui-react...
+RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile \
+    --filter @bitrate/ui-react... --filter @bitrate/player... --filter @bitrate/admin...
 
-# The library build first: the svgr plugin generates src/icons/svgr/ during it, and the stories
-# import those components. Routed through turbo, not a plain pnpm script, so an unchanged
-# source tree restores dist/ (and the ~9s SVGR regen) from the remote cache instead of
-# rerunning it; the secret mount is optional (required=false is the default), so a build
-# without TURBO_TOKEN — a fork PR, a local docker build — just runs uncached.
+# storybook:build depends on ^build, so turbo builds what the stories import first — the
+# ui-react library (its svgr plugin generates src/icons/svgr/) and the player element the admin
+# kit embeds. Routed through turbo, not plain pnpm scripts, so an unchanged source tree restores
+# dist/ and storybook-static/ from the remote cache instead of rerunning them; the secret mount
+# is optional (required=false is the default), so a build without TURBO_TOKEN — a fork PR, a
+# local docker build — just runs uncached. One package at a time: three Storybook builds at
+# once is several GiB of memory on a CI runner.
 RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
-    pnpm exec turbo run build --filter=@bitrate/ui-react
-RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
-    NODE_ENV=production pnpm exec turbo run storybook:build --filter=@bitrate/ui-react
+    NODE_ENV=production pnpm exec turbo run storybook:build --concurrency=1 \
+      --filter=@bitrate/ui-react --filter=@bitrate/player --filter=@bitrate/admin
 
 # Stage 3: Production
 FROM nginx:1.31-alpine AS production
 COPY --from=build /app/packages/ui-react/storybook-static /usr/share/nginx/html
+COPY --from=build /app/packages/player/storybook-static /usr/share/nginx/html/player
+COPY --from=build /app/apps/admin/storybook-static /usr/share/nginx/html/admin
+# The admin stylesheet loads its fonts from the root-absolute /fonts/ — right for the app, which
+# owns its origin, but under /admin/ it resolves against the host. Nothing else here uses /fonts/.
+COPY --from=build /app/apps/admin/public/fonts /usr/share/nginx/html/fonts
 COPY infra/nginx/static-site.conf /etc/nginx/nginx.conf
 RUN chown -R nginx:nginx /usr/share/nginx/html
 USER nginx
