@@ -410,6 +410,7 @@ services:
         reservations:
           memory: 32M
 
+  # Composed Storybook: ui-react at /, player at /player/, admin UI kit at /admin/.
   storybook:
     logging: *default-logging
     image: ghcr.io/lordpluha/bitrate/storybook:${IMAGE_TAG:-master}
