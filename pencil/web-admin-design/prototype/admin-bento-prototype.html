@@ -8509,6 +8509,8 @@ function device(mode) {
 }
 addEventListener('resize', fitPhone)
 addEventListener('message', (e) => {
+  /* only the phone frame and its host page — both this same file — may drive the demo */
+  if (e.origin !== location.origin) return
   const m = e.data || {}
   if (m.type === 'state' && !EMBED) { demo = { page: m.page, view: m.view }; $('#demo').innerHTML = demoHTML() }
   if (m.type !== 'demo' || !EMBED) return

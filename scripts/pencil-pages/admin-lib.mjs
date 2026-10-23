@@ -6,7 +6,7 @@
 // @bitrate/tailwind): this script keeps the file's colour variables and `pnpm design:tokens` writes them
 // from code; fonts are set here. Glass is a translucent token fill plus a background blur; chart series
 // share one plot by stacking flex children with a negative gap (no absolute positioning).
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { C, T, H, I, F, Row, Col, Ref, id, setMode } from './kit.mjs'
 
@@ -3877,7 +3877,16 @@ const root = F(
 const missing = blocks.filter((b) => !used.has(b.name)).map((b) => b.name)
 if (missing.length) throw new Error(`not on the library page: ${missing.join(', ')}`)
 /* colour variables are written from code by `pnpm design:tokens`; keep them, set the fonts */
-const previous = existsSync(libF) ? JSON.parse(readFileSync(libF, 'utf8')) : {}
+/* one read, no exists-then-read: a missing library is a first build, anything else is a real error */
+const readPrevious = () => {
+  try {
+    return JSON.parse(readFileSync(libF, 'utf8'))
+  } catch (error) {
+    if (error?.code === 'ENOENT') return {}
+    throw error
+  }
+}
+const previous = readPrevious()
 const variables = Object.fromEntries(
   Object.entries(previous.variables ?? {}).filter(([, v]) => v.type === 'color'),
 )
