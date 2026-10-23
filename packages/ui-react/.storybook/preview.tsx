@@ -3,11 +3,11 @@ import { useEffect } from 'react'
 import '../src/styles/index.css'
 
 /**
- * The token system puts the dark theme in `@theme` and every light override behind
- * `:root.light`, so switching themes means toggling one class on the document element —
+ * The token system puts the dark theme in `@theme` and every other theme's overrides behind
+ * `:root.<theme>`, so switching themes means swapping one class on the document element —
  * exactly what the apps do.
  */
-const THEME_CLASS = 'light'
+const THEMES = ['dark', 'light', 'dim'] as const
 
 const preview: Preview = {
   globalTypes: {
@@ -19,6 +19,7 @@ const preview: Preview = {
         items: [
           { value: 'dark', title: 'Dark', icon: 'moon' },
           { value: 'light', title: 'Light', icon: 'sun' },
+          { value: 'dim', title: 'Dim', icon: 'contrast' },
         ],
         dynamicTitle: true,
       },
@@ -30,7 +31,8 @@ const preview: Preview = {
       const theme = context.globals.theme ?? 'dark'
 
       useEffect(() => {
-        document.documentElement.classList.toggle(THEME_CLASS, theme === 'light')
+        document.documentElement.classList.remove(...THEMES)
+        document.documentElement.classList.add(theme)
         // Paint the canvas via <body>, so stories keep their natural height instead of 100dvh.
         document.body.classList.add('bg-background', 'text-foreground')
       }, [theme])
