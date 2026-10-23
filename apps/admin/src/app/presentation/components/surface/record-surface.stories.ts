@@ -1,4 +1,4 @@
-import { provideRouter } from '@angular/router'
+import { provideRouter, withDisabledInitialNavigation } from '@angular/router'
 import { provideIcons } from '@ng-icons/core'
 import { lucideFileText, lucideHistory, lucideMusic } from '@ng-icons/lucide'
 import { HlmBadge } from '@spartan-ng/helm/badge'
@@ -16,7 +16,9 @@ const meta = {
   component: Tile,
   tags: ['autodocs'],
   decorators: [
-    applicationConfig({ providers: [provideRouter([])] }),
+    // No initial navigation: no route matches the iframe's path, and a failed navigation resets
+    // the document URL — which, published under /admin/, sends every lazy story chunk to the root.
+    applicationConfig({ providers: [provideRouter([], withDisabledInitialNavigation())] }),
     moduleMetadata({
       imports: [
         HlmBadge,
