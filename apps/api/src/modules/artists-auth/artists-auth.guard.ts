@@ -19,7 +19,7 @@ export type { TokenRequirement } from '@modules/auth-core'
  * @returns Decorator function that sets the token requirement for the guard.
  */
 export function ArtistAuth(tokenRequirement: TokenRequirement = 'access') {
-  return sessionAuth(ArtistAuthGuard, tokenRequirement)
+  return sessionAuth(ArtistAuthGuard, tokenRequirement, 'artist')
 }
 
 /** Represents the artist auth guard. */

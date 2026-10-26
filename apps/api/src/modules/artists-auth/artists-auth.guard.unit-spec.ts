@@ -12,7 +12,6 @@ const makeTokenServiceMock = () =>
   ({
     verifyToken: jest.fn(),
     hashToken: jest.fn().mockReturnValue('hashed-token'),
-    getTokenName: jest.fn((type: string) => (type === 'access' ? 'access_token' : 'refresh_token')),
   }) as unknown as jest.Mocked<TokenService>
 
 const makeReflectorMock = (requirement: string) =>
@@ -59,19 +58,16 @@ describe('ArtistAuthGuard', () => {
   })
 
   it('should throw UnauthorizedException when token verification fails', async () => {
-    process.env.ACCESS_TOKEN_NAME = 'access_token'
     reflector = makeReflectorMock('access')
     guard = new ArtistAuthGuard(prisma, reflector, tokenService)
     tokenService.verifyToken.mockRejectedValue(new Error('invalid') as never)
 
     await expect(
-      guard.canActivate(makeContext({ access_token: 'bad-token' }) as never),
+      guard.canActivate(makeContext({ artist_access_token: 'bad-token' }) as never),
     ).rejects.toThrow(UnauthorizedException)
   })
 
   it('should throw INVALID_OR_EXPIRED_TOKEN when artist not found in DB', async () => {
-    process.env.ACCESS_TOKEN_NAME = 'access_token'
-    process.env.REFRESH_TOKEN_NAME = 'refresh_token'
     reflector = makeReflectorMock('access')
     guard = new ArtistAuthGuard(prisma, reflector, tokenService)
     tokenService.verifyToken.mockResolvedValue({
@@ -81,14 +77,12 @@ describe('ArtistAuthGuard', () => {
     } as never)
     prisma.artist.findFirst.mockResolvedValue(null)
 
-    await expect(guard.canActivate(makeContext({ access_token: 'at' }) as never)).rejects.toThrow(
-      UNAUTHORIZED_ERRORS.USER_NOT_FOUND,
-    )
+    await expect(
+      guard.canActivate(makeContext({ artist_access_token: 'at' }) as never),
+    ).rejects.toThrow(UNAUTHORIZED_ERRORS.USER_NOT_FOUND)
   })
 
   it('should throw SESSION_NOT_FOUND when session not found', async () => {
-    process.env.ACCESS_TOKEN_NAME = 'access_token'
-    process.env.REFRESH_TOKEN_NAME = 'refresh_token'
     reflector = makeReflectorMock('access')
     guard = new ArtistAuthGuard(prisma, reflector, tokenService)
     tokenService.verifyToken.mockResolvedValue({
@@ -99,14 +93,12 @@ describe('ArtistAuthGuard', () => {
     prisma.artist.findFirst.mockResolvedValue(buildArtist() as never)
     prisma.artistSession.findFirst.mockResolvedValue(null)
 
-    await expect(guard.canActivate(makeContext({ access_token: 'at' }) as never)).rejects.toThrow(
-      UNAUTHORIZED_ERRORS.SESSION_NOT_FOUND,
-    )
+    await expect(
+      guard.canActivate(makeContext({ artist_access_token: 'at' }) as never),
+    ).rejects.toThrow(UNAUTHORIZED_ERRORS.SESSION_NOT_FOUND)
   })
 
   it('should return true and attach artist to request when auth succeeds', async () => {
-    process.env.ACCESS_TOKEN_NAME = 'access_token'
-    process.env.REFRESH_TOKEN_NAME = 'refresh_token'
     reflector = makeReflectorMock('access')
     guard = new ArtistAuthGuard(prisma, reflector, tokenService)
 
@@ -120,7 +112,7 @@ describe('ArtistAuthGuard', () => {
     prisma.artist.findFirst.mockResolvedValue(artist as never)
     prisma.artistSession.findFirst.mockResolvedValue(session as never)
 
-    const req: Record<string, unknown> = { cookies: { access_token: 'at' } }
+    const req: Record<string, unknown> = { cookies: { artist_access_token: 'at' } }
     const ctx = {
       getHandler: () => ({}),
       getClass: () => ({}),

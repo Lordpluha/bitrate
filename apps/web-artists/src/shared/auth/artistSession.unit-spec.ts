@@ -8,8 +8,8 @@ const artist = {
 }
 const config = {
   apiUrl: 'http://localhost:3000',
-  accessCookieName: 'access_token',
-  refreshCookieName: 'refresh_token',
+  accessCookieName: 'artist_access_token',
+  refreshCookieName: 'artist_refresh_token',
 }
 const fetchMock = vi.fn<typeof fetch>()
 
@@ -39,7 +39,7 @@ describe('artist session', () => {
     })
     expect(session).toEqual({ status: 'authenticated', artist })
     expect(fetchMock.mock.calls[0]?.[1]).toMatchObject({
-      headers: { cookie: 'access_token=valid-access' },
+      headers: { cookie: 'artist_access_token=valid-access' },
       cache: 'no-store',
       redirect: 'error',
     })
@@ -52,8 +52,11 @@ describe('artist session', () => {
       .mockResolvedValueOnce(
         new Response(null, {
           headers: [
-            ['set-cookie', 'access_token=new-access; Path=/; HttpOnly'],
-            ['set-cookie', 'refresh_token=new-refresh; Path=/; HttpOnly'],
+            ['set-cookie', 'artist_access_token=new-access; Path=/; HttpOnly'],
+            [
+              'set-cookie',
+              'artist_refresh_token=new-refresh; Path=/; HttpOnly',
+            ],
           ],
         }),
       )
@@ -67,14 +70,14 @@ describe('artist session', () => {
     ).toEqual({ status: 'authenticated', artist })
     expect(fetchMock.mock.calls[1]?.[1]).toMatchObject({
       method: 'POST',
-      headers: { cookie: 'refresh_token=valid-refresh' },
+      headers: { cookie: 'artist_refresh_token=valid-refresh' },
     })
     expect(fetchMock.mock.calls[2]?.[1]).toMatchObject({
-      headers: { cookie: 'access_token=new-access' },
+      headers: { cookie: 'artist_access_token=new-access' },
     })
     expect(onCookies).toHaveBeenCalledWith([
-      'access_token=new-access; Path=/; HttpOnly',
-      'refresh_token=new-refresh; Path=/; HttpOnly',
+      'artist_access_token=new-access; Path=/; HttpOnly',
+      'artist_refresh_token=new-refresh; Path=/; HttpOnly',
     ])
   })
 

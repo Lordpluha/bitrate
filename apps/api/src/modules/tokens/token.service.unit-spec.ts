@@ -14,8 +14,6 @@ describe('TokenService', () => {
     ['JWT_ACCESS_EXPIRES_IN', '5m'],
     ['JWT_REFRESH_EXPIRES_IN', '30d'],
     ['JWT_SECRET', 'super-secret'],
-    ['ACCESS_TOKEN_NAME', 'access_token'],
-    ['REFRESH_TOKEN_NAME', 'refresh_token'],
     ['cookie', { httpOnly: true, sameSite: 'lax', secure: false, path: '/' }],
   ])
 
@@ -75,21 +73,25 @@ describe('TokenService', () => {
     expect(result).toEqual({ sub: 'user-1', username: 'alice' })
   })
 
-  it('setAuthCookies should set access and refresh cookies', () => {
-    const res = {
-      cookie: jest.fn(),
-    } as unknown as jest.Mocked<Response>
+  const createResponse = () =>
+    ({ cookie: jest.fn(), clearCookie: jest.fn() }) as unknown as jest.Mocked<Response>
 
-    service.setAuthCookies(res, 'access-token', 'refresh-token')
+  /** Names a response wrote (`cookie`) or dropped (`clearCookie`), in call order. */
+  const namesOf = (mock: jest.Mock) => mock.mock.calls.map(([name]) => name)
 
-    expect(res.cookie).toHaveBeenCalledWith('access_token', 'access-token', {
+  it('setAuthCookies should set the access and refresh cookies of the audience', () => {
+    const res = createResponse()
+
+    service.setAuthCookies(res, 'user', 'access-token', 'refresh-token')
+
+    expect(res.cookie).toHaveBeenCalledWith('user_access_token', 'access-token', {
       httpOnly: true,
       sameSite: 'lax',
       secure: false,
       path: '/',
       maxAge: 300_000,
     })
-    expect(res.cookie).toHaveBeenCalledWith('refresh_token', 'refresh-token', {
+    expect(res.cookie).toHaveBeenCalledWith('user_refresh_token', 'refresh-token', {
       httpOnly: true,
       sameSite: 'lax',
       secure: false,
@@ -98,22 +100,36 @@ describe('TokenService', () => {
     })
   })
 
-  it('clearAuthCookies should clear access and refresh cookies with the write-time attributes', () => {
-    const res = {
-      clearCookie: jest.fn(),
-    } as unknown as jest.Mocked<Response>
+  /** The bug this split fixes: one sign-in overwrote or dropped another audience's session. */
+  it.each([
+    ['user', ['user_access_token', 'user_refresh_token']],
+    ['artist', ['artist_access_token', 'artist_refresh_token']],
+    ['staff', ['staff_access_token', 'staff_refresh_token']],
+  ] as const)("should touch only the %s session's cookies", (audience, own) => {
+    const signIn = createResponse()
+    const signOut = createResponse()
 
-    service.clearAuthCookies(res)
+    service.setAuthCookies(signIn, audience, 'at', 'rt')
+    service.clearAuthCookies(signOut, audience)
+
+    const legacy = ['access_token', 'refresh_token']
+    expect(namesOf(signIn.cookie as jest.Mock)).toEqual(own)
+    expect(namesOf(signIn.clearCookie as jest.Mock)).toEqual(legacy)
+    expect(namesOf(signOut.clearCookie as jest.Mock)).toEqual([...own, ...legacy])
+  })
+
+  it('clearAuthCookies should clear access and refresh cookies with the write-time attributes', () => {
+    const res = createResponse()
+
+    service.clearAuthCookies(res, 'artist')
 
     const attributes = { httpOnly: true, sameSite: 'lax' as const, secure: false, path: '/' }
-    expect(res.clearCookie).toHaveBeenCalledWith('access_token', attributes)
-    expect(res.clearCookie).toHaveBeenCalledWith('refresh_token', attributes)
+    expect(res.clearCookie).toHaveBeenCalledWith('artist_access_token', attributes)
+    expect(res.clearCookie).toHaveBeenCalledWith('artist_refresh_token', attributes)
   })
 
   it('clearAuthCookies should repeat the cookie domain, or a scoped session survives logout', () => {
-    const res = {
-      clearCookie: jest.fn(),
-    } as unknown as jest.Mocked<Response>
+    const res = createResponse()
     configMap.set('cookie', {
       httpOnly: true,
       sameSite: 'lax',
@@ -123,7 +139,7 @@ describe('TokenService', () => {
     })
 
     try {
-      service.clearAuthCookies(res)
+      service.clearAuthCookies(res, 'staff')
     } finally {
       configMap.set('cookie', { httpOnly: true, sameSite: 'lax', secure: false, path: '/' })
     }
@@ -135,7 +151,9 @@ describe('TokenService', () => {
       path: '/',
       domain: '.bitrate.me',
     }
+    expect(res.clearCookie).toHaveBeenCalledWith('staff_access_token', attributes)
+    expect(res.clearCookie).toHaveBeenCalledWith('staff_refresh_token', attributes)
+    // A legacy cookie written on the shared domain is only dropped by a domain-scoped clear.
     expect(res.clearCookie).toHaveBeenCalledWith('access_token', attributes)
-    expect(res.clearCookie).toHaveBeenCalledWith('refresh_token', attributes)
   })
 })

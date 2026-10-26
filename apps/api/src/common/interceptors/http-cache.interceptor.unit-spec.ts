@@ -103,7 +103,7 @@ describe('HttpCacheInterceptor', () => {
 
   it('downgrades to private when the request carries cookies', async () => {
     const { context, setHeaders } = makeContext('/api/v1/artists', {
-      headers: { cookie: 'access_token=abc' },
+      headers: { cookie: 'user_access_token=abc' },
     })
 
     await run(interceptor, context)

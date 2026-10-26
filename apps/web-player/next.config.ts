@@ -50,7 +50,7 @@ const nextConfig = {
   },
   pageExtensions: ['ts', 'tsx', 'mdx'],
   poweredByHeader: false,
-  transpilePackages: ['@bitrate/ui-react'],
+  transpilePackages: ['@bitrate/ui-react', '@bitrate/contracts'],
   async rewrites() {
     return [
       {

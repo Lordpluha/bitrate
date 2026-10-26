@@ -1,3 +1,4 @@
+import { SESSION_COOKIE_NAMES } from '@bitrate/contracts'
 import { ROUTES } from '@shared/routes'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
@@ -34,8 +35,8 @@ export const isPublicRoute = (pathname: string) =>
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  const accessToken = request.cookies.get('access_token')
-  const refreshToken = request.cookies.get('refresh_token')
+  const accessToken = request.cookies.get(SESSION_COOKIE_NAMES.user.access)
+  const refreshToken = request.cookies.get(SESSION_COOKIE_NAMES.user.refresh)
   const hasRecoverableSession = Boolean(accessToken || refreshToken)
 
   if (!hasRecoverableSession && !isPublicRoute(pathname)) {
