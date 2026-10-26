@@ -307,6 +307,15 @@ describe('Release drafts (HTTP)', () => {
     })
   })
 
+  it('documents a nullable transformed field as a nullable string, not an array', () => {
+    const document = SwaggerModule.createDocument(app, new DocumentBuilder().build())
+    const schema = document.components?.schemas?.UpdateReleaseTrackDto
+    expect(schema).toMatchObject({
+      properties: { isrc: { anyOf: [{ type: 'string' }, { type: 'null' }] } },
+    })
+    expect(schema).not.toMatchObject({ properties: { isrc: { type: 'array' } } })
+  })
+
   it.each([
     { displayName: '   ' },
     { displayName: 'x'.repeat(256) },

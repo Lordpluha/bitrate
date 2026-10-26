@@ -20,6 +20,7 @@ WORKDIR /app
 # Stage 2: Dependencies
 FROM base AS dependencies
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY patches ./patches
 COPY scripts ./scripts
 COPY apps/api/package.json ./apps/api/
 # pnpm's frozen-lockfile check validates every workspace importer in pnpm-lock.yaml has a
@@ -82,6 +83,7 @@ RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
 FROM base AS prod-dependencies
 ARG PRISMA_GENERATE_ONLY_URL
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY patches ./patches
 COPY scripts ./scripts
 COPY apps/api/package.json ./apps/api/
 COPY apps/admin/package.json ./apps/admin/
