@@ -14,6 +14,7 @@ WORKDIR /app
 # Stage 2: Dependencies
 FROM base AS dependencies
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY patches ./patches
 COPY scripts ./scripts
 COPY apps/web-artists/package.json ./apps/web-artists/
 COPY packages/tailwind/package.json ./packages/tailwind/

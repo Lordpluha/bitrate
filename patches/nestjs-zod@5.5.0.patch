@@ -1,0 +1,34 @@
+diff --git a/dist/dto-CHeB-l1i.mjs b/dist/dto-CHeB-l1i.mjs
+index 71150dbea8fed02a5f524d4db5c0193bd77f0e65..549bf2c590efff317cbcd58eff69943f238445e6 100644
+--- a/dist/dto-CHeB-l1i.mjs
++++ b/dist/dto-CHeB-l1i.mjs
+@@ -393,6 +393,12 @@ function cleanupRefs(rootSchema, io) {
+ 			if (defKey && io === "output") schema.$ref = `#/$defs/${defKey}_Output`;
+ 		}
+ 		if ("id" in schema) delete schema["id"];
++		// zod >= 4.5 collapses anyOf [{ type: x }, { type: "null" }] into type: [x, "null"], which
++		// @nestjs/swagger reads as an array. Expand it back (BenLorantfy/nestjs-zod#473).
++		if (Array.isArray(schema.type)) {
++			schema.anyOf = schema.type.map((type) => ({ type }));
++			delete schema.type;
++		}
+ 		return schema;
+ 	}, { clone: true });
+ }
+diff --git a/dist/dto-sWxCeI9D.cjs b/dist/dto-sWxCeI9D.cjs
+index b01e7e7d7ca3fc93a9eb88857d715ba409edfe96..8f66de038cfe418824d96f9a8e1e61a3e7fffb62 100644
+--- a/dist/dto-sWxCeI9D.cjs
++++ b/dist/dto-sWxCeI9D.cjs
+@@ -416,6 +416,12 @@ function cleanupRefs(rootSchema, io) {
+ 			if (defKey && io === "output") schema.$ref = `#/$defs/${defKey}_Output`;
+ 		}
+ 		if ("id" in schema) delete schema["id"];
++		// zod >= 4.5 collapses anyOf [{ type: x }, { type: "null" }] into type: [x, "null"], which
++		// @nestjs/swagger reads as an array. Expand it back (BenLorantfy/nestjs-zod#473).
++		if (Array.isArray(schema.type)) {
++			schema.anyOf = schema.type.map((type) => ({ type }));
++			delete schema.type;
++		}
+ 		return schema;
+ 	}, { clone: true });
+ }

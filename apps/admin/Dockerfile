@@ -14,6 +14,7 @@ WORKDIR /app
 # Stage 2: Dependencies
 FROM base AS dependencies
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY patches ./patches
 COPY scripts ./scripts
 COPY apps/admin/package.json ./apps/admin/
 # pnpm's frozen-lockfile check validates every workspace importer in pnpm-lock.yaml has a
