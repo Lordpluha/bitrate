@@ -19,6 +19,7 @@
     "test:int": "vitest run --config=tests/configs/vitest.config.ts --project=integration --passWithNoTests",
     "test:select": "node scripts/select-playwright-tests.mjs",
     "test:e2e": "playwright test --config=tests/configs/playwright.e2e.config.ts",
+    "test:player": "playwright test --config=tests/configs/playwright.player.config.ts",
     "test:screenshot": "playwright test --config=tests/configs/playwright.screenshot.config.ts",
     "test:screenshot:update": "playwright test --config=tests/configs/playwright.screenshot.config.ts --update-snapshots"
   },

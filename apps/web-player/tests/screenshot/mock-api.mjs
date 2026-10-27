@@ -10,9 +10,30 @@
  *
  * Usage: `node tests/screenshot/mock-api.mjs` (port from MOCK_API_PORT, default 3999).
  */
+import { readFileSync } from 'node:fs'
 import { createServer } from 'node:http'
 
 const PORT = Number(process.env.MOCK_API_PORT ?? 3999)
+
+/**
+ * With `MOCK_CMAF=1` (the player regression suite) every track streams the two-rendition CMAF
+ * fixture `packages/player` plays in its own specs; screenshots keep the plain-file path.
+ */
+const CMAF_ENABLED = process.env.MOCK_CMAF === '1'
+const CMAF_DIR = new URL(
+  '../../../../packages/player/src/element/__fixtures__/cmaf/',
+  import.meta.url,
+)
+const cmafFile = (name) => readFileSync(new URL(name, CMAF_DIR))
+const CMAF = CMAF_ENABLED
+  ? {
+      manifest: JSON.parse(cmafFile('manifest.json').toString('utf8')),
+      renditions: new Map([
+        [64, cmafFile('64.m4a')],
+        [192, cmafFile('192.m4a')],
+      ]),
+    }
+  : null
 
 /** The moment the specs freeze the browser clock at; fixture dates sit just before it. */
 export const NOW = '2026-10-19T12:00:00.000Z'
@@ -620,6 +641,8 @@ const corsHeaders = (request) => ({
   'access-control-allow-methods': 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
   'access-control-allow-origin':
     request.headers.origin ?? 'http://localhost:3001',
+  /** The CMAF loader checks both on every fragment it fetches. */
+  'access-control-expose-headers': 'Content-Range, Content-Length',
 })
 
 const respond = (request, response, status, body) => {
@@ -667,6 +690,25 @@ const silentWavFor = (pathname) => {
 createServer((request, response) => {
   const url = new URL(request.url ?? '/', `http://localhost:${PORT}`)
   if (request.method === 'OPTIONS') return respond(request, response, 204, {})
+  if (CMAF && /^\/api\/v1\/tracks\/[^/]+\/manifest$/.test(url.pathname)) {
+    return respond(request, response, 200, CMAF.manifest)
+  }
+  const rendition = /^\/api\/v1\/tracks\/[^/]+\/cmaf\/(\d+)$/.exec(url.pathname)
+  if (CMAF && rendition) {
+    const bytes = CMAF.renditions.get(Number(rendition[1]))
+    const range = /^bytes=(\d+)-(\d+)$/.exec(request.headers.range ?? '')
+    if (!bytes || !range)
+      return respond(request, response, 416, { message: 'Bad range' })
+    const start = Number(range[1])
+    const end = Math.min(Number(range[2]), bytes.length - 1)
+    response.writeHead(206, {
+      ...corsHeaders(request),
+      'content-length': end - start + 1,
+      'content-range': `bytes ${start}-${end}/${bytes.length}`,
+      'content-type': 'video/mp4',
+    })
+    return response.end(bytes.subarray(start, end + 1))
+  }
   if (/^\/static\/.+\.wav$/.test(url.pathname)) {
     const wav = silentWavFor(url.pathname)
     /** Byte ranges, so the media is seekable and a restored position can resume. */

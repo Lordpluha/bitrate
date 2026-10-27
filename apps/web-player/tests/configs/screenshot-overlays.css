@@ -1,11 +1,12 @@
 /*
- * Applied only while Playwright takes a screenshot. CI runs the specs against `next dev`, which
- * draws two development overlays a production build never has: the Next.js dev indicator
- * (bottom left) and the TanStack Query devtools button (bottom right). Hiding them keeps one
- * baseline valid for `next dev` and `next start` alike.
+ * Applied while Playwright takes a screenshot, and by the player regression suite before it
+ * clicks. CI runs the specs against `next dev`, which draws two development overlays a
+ * production build never has: the Next.js dev indicator (bottom left) and the TanStack Query
+ * devtools button (bottom right). Hiding them keeps one baseline valid for `next dev` and
+ * `next start` alike, and keeps them off the mobile island's controls.
  *
- * Toasts are hidden too: they are transient, and the fixture API has no audio, so the resumed
- * player's "Unable to play" toast would land in shots at a random moment.
+ * Toasts are hidden too: they are transient, and the fixture API answers a few endpoints the
+ * pages call with 404, whose toasts would land in shots — or over a control — at random.
  */
 nextjs-portal,
 .tsqd-open-btn-container,
