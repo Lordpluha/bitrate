@@ -313,6 +313,11 @@ export interface BitratePlayerElement extends HTMLElement {
   muted: boolean
   /** Renders and controls another `<bitrate-player>` instead of playing anything itself. */
   mirror: BitratePlayerElement | null
+  /**
+   * Reflected as `media-session`: show this element's track on the lock screen and in the OS
+   * media controls, and answer the media keys. Set it on the one element that plays.
+   */
+  mediaSession: boolean
   /** Translations for the element's labels; a mirror uses the labels of the root it mirrors. */
   labels: BitratePlayerLabelOverrides | null
   /** The current playback state; `statechange` fires whenever it changes. */

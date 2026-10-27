@@ -26,6 +26,7 @@
       muted: { type: 'Boolean', attribute: 'muted', reflect: true },
       mirror: {},
       labels: {},
+      mediaSession: { type: 'Boolean', attribute: 'media-session', reflect: true },
     },
     extend: withPlayerProvider,
   }}
@@ -44,6 +45,7 @@
   import type { PlayerController } from './player-controller'
   import type { BitratePlayerProps } from './player-props'
   import { createPlayerEngineState } from './player-state.svelte'
+  import { createMediaSession } from './media-session.svelte'
   import { createStreamingState } from './streaming-state.svelte'
 
   let {
@@ -71,6 +73,7 @@
     muted = false,
     mirror = null,
     labels = null,
+    mediaSession = false,
   }: BitratePlayerProps = $props()
 
   let audioEl: HTMLAudioElement | undefined = $state(undefined)
@@ -199,6 +202,25 @@
   })
 
   const shared = $derived(mirrored ?? controller)
+
+  /** Only an element that plays owns the session; a mirror never does. */
+  createMediaSession({
+    getEnabled: () => mediaSession && !mirror,
+    getController: () => controller,
+    handlers: {
+      play: () => {
+        if (live.active) live.play()
+        else if (!controller.playing) void legacy.onPlayPause()
+      },
+      pause: () => {
+        if (live.active) live.pause()
+        else if (controller.playing) void legacy.onPlayPause()
+      },
+      seekTo: (seconds) => {
+        if (live.active) live.seek(seconds)
+      },
+    },
+  })
 
   $effect(() => {
     if (isPlayerProviderHost(rootElement)) rootElement.providePlayer(shared)

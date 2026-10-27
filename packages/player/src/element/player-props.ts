@@ -35,4 +35,5 @@ export type BitratePlayerProps = {
   muted?: boolean
   mirror?: BitratePlayerElement | null
   labels?: BitratePlayerLabelOverrides | null
+  mediaSession?: boolean
 }
