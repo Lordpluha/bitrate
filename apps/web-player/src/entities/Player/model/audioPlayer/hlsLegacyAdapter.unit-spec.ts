@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import type { PlayerSlot } from '@/entities/Player/model/audioPlayer/audioPlayer.types'
 
 /**
  * Characterises the legacy fallback chain for tracks without a CMAF manifest —
- * hls.js, then native HLS, then the progressive file — so replacing it with a
- * host-supplied adapter keeps the same order and recovery budget.
+ * hls.js, then native HLS, then the progressive file. Written against the old
+ * `attachHlsSource` before the move and kept unchanged for the adapter
+ * `<bitrate-player>` now calls, so the order and recovery budget held.
  */
 const hlsState = vi.hoisted(() => ({
   instances: [] as FakeHlsInstance[],
@@ -71,16 +71,7 @@ vi.mock('hls.js', () => {
   return { default: FakeHls }
 })
 
-const { attachHlsSource } = await import('./attachHlsSource')
-
-const newSlot = (): PlayerSlot => ({
-  currentBitrate: null,
-  element: null,
-  hls: null,
-  loader: null,
-  playbackKey: 'key-1',
-  trackId: 't1',
-})
+const { createHlsLegacyAdapter } = await import('./hlsLegacyAdapter')
 
 const attach = (
   overrides: { isPrefetch?: boolean; canPlayHls?: boolean } = {},
@@ -90,19 +81,16 @@ const attach = (
   vi.spyOn(element, 'canPlayType').mockReturnValue(
     overrides.canPlayHls ? 'maybe' : '',
   )
-  const slot = newSlot()
   const onFatalError = vi.fn()
-  attachHlsSource({
-    element,
+  const handle = createHlsLegacyAdapter()({
     isPrefetch: overrides.isPrefetch ?? false,
+    key: 'key-1',
+    media: element,
     onFatalError,
-    playbackKey: 'key-1',
     progressiveUrl: 'https://cdn.test/t1.mp3',
-    recoveryAttempts: {},
-    slot,
     trackId: 't1',
   })
-  return { element, onFatalError, slot }
+  return { element, handle, onFatalError }
 }
 
 const fatal = (type: string, details = 'other') => ({
@@ -111,30 +99,29 @@ const fatal = (type: string, details = 'other') => ({
   type,
 })
 
-describe('attachHlsSource', () => {
+describe('createHlsLegacyAdapter', () => {
   beforeEach(() => {
     hlsState.instances = []
     hlsState.supported = true
   })
 
   it('loads the track through hls.js once the media is attached', () => {
-    const { element, slot } = attach()
+    const { element } = attach()
     const hls = hlsState.instances[0]
 
-    expect(slot.hls).toBe(hls)
+    expect(hls).toBeDefined()
     expect(hls?.attachMedia).toHaveBeenCalledWith(element)
     hls?.emit('mediaAttached')
     expect(hls?.loadSource).toHaveBeenCalledWith(expect.stringContaining('t1'))
   })
 
   it('falls back to the progressive file on a fatal manifest or fragment load error', () => {
-    const { element, slot } = attach()
+    const { element } = attach()
     const hls = hlsState.instances[0]
 
     hls?.emit('error', fatal('networkError', 'manifestLoadError'))
 
     expect(hls?.destroy).toHaveBeenCalled()
-    expect(slot.hls).toBeNull()
     expect(element.src).toBe('https://cdn.test/t1.mp3')
   })
 
@@ -196,5 +183,16 @@ describe('attachHlsSource', () => {
     element.dispatchEvent(new Event('error'))
 
     expect(onFatalError).toHaveBeenCalledTimes(1)
+  })
+
+  it('ignores the chain once the element has destroyed it', () => {
+    const { element, handle } = attach()
+    const hls = hlsState.instances[0]
+
+    handle.destroy()
+    hls?.emit('error', fatal('networkError', 'manifestLoadError'))
+
+    expect(hls?.destroy).toHaveBeenCalledTimes(1)
+    expect(element.getAttribute('src')).toBeNull()
   })
 })

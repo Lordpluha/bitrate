@@ -5,8 +5,8 @@ import {
   selectCurrentPlaylistName,
   selectMusicPlayer,
   selectRepeatMode,
-  useAudioPlayer,
   usePlayerStore,
+  useStreamingPlayer,
 } from '@entities/Player'
 import { useTrackLike } from '@entities/Track'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
@@ -37,7 +37,7 @@ export const usePlayerController = ({
   useStreamQualityCap()
   const trackLike = useTrackLike(currentTrack?.id)
   const floatingPlayer = useFloatingPlayerWindow(currentTrack?.title)
-  const audio = useAudioPlayer()
+  const audio = useStreamingPlayer()
   const toggleShuffle = usePlaylistShuffle({
     currentQueueId: player.currentQueueId,
     currentTrack,
@@ -84,16 +84,8 @@ export const usePlayerController = ({
   }
 
   return {
-    audioProps: {
-      activeSlot: audio.activeSlot,
-      bindAudioElement: audio.bindAudioElement,
-      onCanPlay: audio.handleCanPlay,
-      onEnded: audio.handleEnded,
-      onLoadedMetadata: audio.handleLoadedMetadata,
-      onPlaybackStateChange: audio.handlePlaybackStateChange,
-      onProgress: audio.handleProgress,
-      onSeeked: audio.handleSeeked,
-      onTimeUpdate: audio.handleTimeUpdate,
+    elementProps: {
+      bindElement: audio.bindElement,
     },
     desktopProps: {
       ...common,

@@ -112,6 +112,14 @@ from web-player for #236. The host passes `fetchRange` to each `StreamLoader`, a
 `player-debug` switch; without it nothing persists and tracing stays off. The quality cap
 (`setMaxStreamBitrate`) is the one other module-level setting.
 
+`src/engine/slots/` is streaming mode (ADR-0063): `SlotPlayer` drives two media elements from
+the host's `source`/`next`, with the prefetch and constrained-start thresholds in `network.ts`.
+Everything host-specific arrives in `BitratePlayerStreaming`; the host keeps the queue and its
+legacy (HLS) adapter. `src/element/streaming-state.svelte.ts` binds it to the root, and
+`create-controller.ts` picks streaming or the `resolveSource` path for layouts and parts.
+CMAF browser specs play `src/element/__fixtures__/cmaf/`, regenerated with
+`node scripts/make-cmaf-fixture.mjs` (ffmpeg on PATH).
+
 ## SSR guard and `defineBitratePlayer()`
 
 `customElements` does not exist during server rendering — but that alone is not enough.
