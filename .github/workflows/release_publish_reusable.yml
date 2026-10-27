@@ -274,7 +274,9 @@ jobs:
       packages: write
       security-events: write
     uses: $/.github/workflows/release_images_reusable.yml
-    secrets: inherit
+    secrets:
+      turbo-token: ${{ secrets.TURBO_TOKEN }}
+      sentry-auth-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
     with:
       image-tag: ${{ needs.resolve.outputs.tag }}
       push-image: true
@@ -303,6 +305,8 @@ jobs:
       wait-for-images: false
       run-deploy: true
       image-tag: ${{ needs.resolve.outputs.tag }}
+    # zizmor: ignore[secrets-inherit] -- environment-scoped secrets reach the called
+    # workflow's `environment:` job only through inherit; see deploy.yml.
     secrets: inherit
 
   # ---------------------------------------------------------------------------

@@ -19,6 +19,10 @@ on:
         description: Artifact suffix for uploaded APK
         required: true
         type: string
+    secrets:
+      expo-token:
+        description: Expo access token for EAS builds
+        required: false
 
 permissions:
   contents: read
@@ -31,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      EXPO_TOKEN: ${{ secrets.expo-token }}
 
     steps:
       - name: Checkout repository
@@ -83,7 +87,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      EXPO_TOKEN: ${{ secrets.expo-token }}
 
     steps:
       - name: Checkout repository

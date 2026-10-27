@@ -61,4 +61,6 @@ jobs:
     # a reusable workflow may not declare `environment:`, so an explicit mapping
     # here would resolve against repository scope and pass empty strings. See
     # deploy.yml for the full reasoning.
+    # zizmor: ignore[secrets-inherit] -- environment-scoped secrets reach the called
+    # workflow's `environment:` job only through inherit; see deploy.yml.
     secrets: inherit

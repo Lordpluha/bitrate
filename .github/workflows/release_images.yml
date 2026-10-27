@@ -118,7 +118,9 @@ jobs:
       packages: write
       security-events: write
     uses: $/.github/workflows/release_images_reusable.yml
-    secrets: inherit
+    secrets:
+      turbo-token: ${{ secrets.TURBO_TOKEN }}
+      sentry-auth-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
     with:
       image-tag: ${{ needs.resolve.outputs.tag }}
       push-image: ${{ !inputs.dry_run }}

@@ -74,7 +74,8 @@ jobs:
     needs: changes
     if: ${{ !cancelled() && ((github.event_name == 'pull_request' && needs.changes.outputs.changed == 'true') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr')) }}
     uses: $/.github/workflows/mobile_reusable.yml
-    secrets: inherit
+    secrets:
+      expo-token: ${{ secrets.EXPO_TOKEN }}
     with:
       run-expo-check: true
       expo-image-tag: mobile-expo-pr:${{ github.sha }}
@@ -95,7 +96,8 @@ jobs:
   mobile-develop:
     if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
     uses: $/.github/workflows/mobile_reusable.yml
-    secrets: inherit
+    secrets:
+      expo-token: ${{ secrets.EXPO_TOKEN }}
     with:
       run-expo-check: true
       expo-image-tag: mobile-expo-develop:${{ github.sha }}
@@ -118,7 +120,8 @@ jobs:
   mobile-master:
     if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'master') }}
     uses: $/.github/workflows/mobile_reusable.yml
-    secrets: inherit
+    secrets:
+      expo-token: ${{ secrets.EXPO_TOKEN }}
     with:
       run-expo-check: false
       # Already built and tested on develop; nothing consumes a master mobile-web image.

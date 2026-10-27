@@ -41,6 +41,10 @@ on:
         required: false
         default: true
         type: boolean
+    secrets:
+      turbo-token:
+        description: Turbo remote cache token for the turbo build inside the Dockerfile
+        required: false
 
 permissions:
   contents: read
@@ -138,7 +142,7 @@ jobs:
           # develop's layers with its own, and a gzip mode=max export cost minutes per run.
           cache-to: ${{ inputs.cache-to-registry && format('type=registry,ref={0}/{1}/cache/web-artists:buildcache,mode=max,compression=zstd,ignore-error=true', env.REGISTRY, env.IMAGE_PREFIX) || '' }}
           secrets: |
-            turbo_token=${{ secrets.TURBO_TOKEN }}
+            turbo_token=${{ secrets.turbo-token }}
           build-args: |
             VITE_API_URL=${{ env.BUILD_NEXT_PUBLIC_API_URL }}
           target: production

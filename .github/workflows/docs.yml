@@ -63,7 +63,8 @@ jobs:
   docs-pr:
     if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr') }}
     uses: $/.github/workflows/docs_reusable.yml
-    secrets: inherit
+    secrets:
+      turbo-token: ${{ secrets.TURBO_TOKEN }}
     with:
       push-image: false
       tags: ghcr.io/lordpluha/${{ github.event.repository.name }}/docs:pr-${{ github.sha }}
@@ -74,7 +75,8 @@ jobs:
   docs-develop:
     if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
     uses: $/.github/workflows/docs_reusable.yml
-    secrets: inherit
+    secrets:
+      turbo-token: ${{ secrets.TURBO_TOKEN }}
     with:
       push-image: true
       tags: |
@@ -97,7 +99,8 @@ jobs:
     # push event for a GITHUB_TOKEN push. See ADR-0029.
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'master' }}
     uses: $/.github/workflows/docs_reusable.yml
-    secrets: inherit
+    secrets:
+      turbo-token: ${{ secrets.TURBO_TOKEN }}
     with:
       push-image: true
       # Three tags, and the third one is the rollback handle:

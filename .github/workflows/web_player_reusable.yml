@@ -41,6 +41,13 @@ on:
         required: false
         default: true
         type: boolean
+    secrets:
+      turbo-token:
+        description: Turbo remote cache token for the turbo build inside the Dockerfile
+        required: false
+      sentry-auth-token:
+        description: Sentry token the Dockerfile uses to upload source maps
+        required: false
 
 permissions:
   contents: read
@@ -172,8 +179,8 @@ jobs:
           # develop's layers with its own, and a gzip mode=max export cost minutes per run.
           cache-to: ${{ inputs.cache-to-registry && format('type=registry,ref={0}/{1}/cache/web-player:buildcache,mode=max,compression=zstd,ignore-error=true', env.REGISTRY, env.IMAGE_PREFIX) || '' }}
           secrets: |
-            turbo_token=${{ secrets.TURBO_TOKEN }}
-            sentry_auth_token=${{ secrets.SENTRY_AUTH_TOKEN }}
+            turbo_token=${{ secrets.turbo-token }}
+            sentry_auth_token=${{ secrets.sentry-auth-token }}
           build-args: |
             API_URL=${{ env.BUILD_API_URL }}
             NEXT_PUBLIC_API_URL=${{ env.BUILD_NEXT_PUBLIC_API_URL }}

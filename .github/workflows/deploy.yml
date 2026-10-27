@@ -105,4 +105,6 @@ jobs:
       wait-for-images: ${{ github.event_name == 'push' || inputs.mode == 'full' }}
       run-deploy: ${{ github.event_name == 'push' || inputs.mode != 'health-only' }}
       image-tag: ${{ inputs.image-tag }}
+    # zizmor: ignore[secrets-inherit] -- environment-scoped secrets reach the called
+    # workflow's `environment:` job only through inherit; see the note above.
     secrets: inherit
