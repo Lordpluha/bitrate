@@ -154,6 +154,20 @@ describe('useStreamingPlayer', () => {
     expect(usePlayerStore.getState().currentTime).toBe(12)
   })
 
+  it('keeps a restored position until the element has loaded the track', () => {
+    const { element } = renderPlayer()
+    startPlaylist()
+    act(() => usePlayerStore.getState().setCurrentTime(64))
+
+    emit(element, 'statechange', {
+      currentTime: 0,
+      duration: 0,
+      key: element.source?.key,
+    })
+
+    expect(usePlayerStore.getState().currentTime).toBe(64)
+  })
+
   it('moves the store on when the current play ends, so the element switches to next', () => {
     const { element } = renderPlayer()
     startPlaylist()

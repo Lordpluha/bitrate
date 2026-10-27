@@ -157,7 +157,12 @@ export const useStreamingPlayer = () => {
 
     const handleStateChange = (event: Event) => {
       const state = (event as CustomEvent<BitratePlayerStateDetail>).detail
-      if (state.key !== source.key) return
+      /**
+       * Until metadata loads the element knows no duration and reports 0:00 — mirroring that
+       * would wipe the position a restored session shows. The old audio slots only wrote time
+       * from `timeupdate`, which never fires before then either.
+       */
+      if (state.key !== source.key || state.duration <= 0) return
       setPlaybackTime({
         currentTime: state.currentTime,
         duration: state.duration,
