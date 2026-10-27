@@ -72,11 +72,11 @@
   }
 
   .icon-button--active {
-    color: var(--color-success, mediumseagreen);
+    color: var(--bitrate-player-accent, var(--color-success, mediumseagreen));
   }
 
   .icon-button--active:hover:not(:disabled) {
-    color: var(--color-success, mediumseagreen);
+    color: var(--bitrate-player-accent, var(--color-success, mediumseagreen));
   }
 
   .play-button {
@@ -86,8 +86,14 @@
     width: var(--bitrate-player-play-size, 2rem);
     height: var(--bitrate-player-play-size, 2rem);
     border-radius: 9999px;
-    background-color: var(--color-text, var(--color-primary, currentColor));
-    color: var(--color-background, var(--color-primary-foreground, inherit));
+    background-color: var(
+      --bitrate-player-play-background,
+      var(--color-text, var(--color-primary, currentColor))
+    );
+    color: var(
+      --bitrate-player-play-foreground,
+      var(--color-background, var(--color-primary-foreground, inherit))
+    );
     transition: transform 0.15s ease;
   }
 

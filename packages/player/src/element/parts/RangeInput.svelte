@@ -42,7 +42,8 @@
     border-radius: 9999px;
     background: linear-gradient(
       to right,
-      var(--color-text, var(--color-primary, currentColor)) var(--progress, 0%),
+      var(--bitrate-player-accent, var(--color-text, var(--color-primary, currentColor)))
+        var(--progress, 0%),
       var(--color-border, currentColor) var(--progress, 0%)
     );
     cursor: pointer;
