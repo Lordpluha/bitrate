@@ -94,6 +94,25 @@ describe('<bitrate-player> streaming mode', () => {
     await expect.poll(() => audios(element)[1]?.paused).toBe(false)
   })
 
+  it('has the next play already running when the current one ends (gapless)', async () => {
+    const element = await mountStreaming()
+    element.source = await source('k1')
+    element.next = await source('k2')
+    /** Paused, a one-second track is already near its end, so next prefetches before play. */
+    await expect.poll(() => audios(element)[1]?.getAttribute('src')).toBeTruthy()
+
+    let nextAtHandOver = -1
+    element.addEventListener('ended', async () => {
+      nextAtHandOver = audios(element)[1]?.currentTime ?? -1
+      element.source = await source('k2')
+    })
+    await element.play()
+
+    await expect.poll(() => nextAtHandOver, { timeout: 5_000 }).toBeGreaterThan(0)
+    await expect.poll(() => element.state.key).toBe('k2')
+    expect(audios(element)[1]?.paused).toBe(false)
+  })
+
   it('reports ended with the key of the play that finished', async () => {
     const element = await mountStreaming()
     const ended = vi.fn()

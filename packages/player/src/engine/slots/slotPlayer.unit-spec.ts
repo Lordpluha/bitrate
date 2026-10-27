@@ -215,6 +215,71 @@ describe('SlotPlayer', () => {
     expect(player.state.key).toBe('k2')
   })
 
+  describe('gapless hand-over', () => {
+    /** A playing track 30 s from its end with the next play already prefetched. */
+    const nearTheEnd = async () => {
+      const ctx = setup()
+      ctx.player.setSource(source('k1', 't1'))
+      ctx.player.setNext(source('k2', 't2'))
+      await settle()
+      ctx.player.play()
+      ctx.media[0].setTiming({ buffered: [[160, 200]], currentTime: 170, duration: 200 })
+      ctx.media[0].dispatchEvent(new Event('progress'))
+      await settle()
+      expect(ctx.media[1].getAttribute('src')).toBe('https://cdn.test/t2.mp3')
+      vi.useFakeTimers()
+      return ctx
+    }
+
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    it('starts the next play just before the current one ends and does not restart it', async () => {
+      const { handlers, media, player } = await nearTheEnd()
+
+      media[0].setTiming({ currentTime: 199.5 })
+      media[0].dispatchEvent(new Event('timeupdate'))
+      expect(media[1].play).not.toHaveBeenCalled()
+      await vi.advanceTimersByTimeAsync(500)
+      expect(media[1].play).toHaveBeenCalledTimes(1)
+      expect(media[0].paused).toBe(false)
+
+      media[1].setTiming({ currentTime: 0.2 })
+      media[0].dispatchEvent(new Event('ended'))
+      expect(handlers.onEnded).toHaveBeenCalledWith({ key: 'k1' })
+      player.setSource(source('k2', 't2'))
+
+      /** Still running from where it started: the switch did not seek it back to 0. */
+      expect(player.state.key).toBe('k2')
+      expect(media[1].currentTime).toBe(0.2)
+      expect(media[1].paused).toBe(false)
+      expect(media[0].paused).toBe(true)
+    })
+
+    it('drops the hand-over when the listener seeks away from the end', async () => {
+      const { media, player } = await nearTheEnd()
+      media[0].setTiming({ currentTime: 199.5 })
+      media[0].dispatchEvent(new Event('timeupdate'))
+
+      player.seek(30)
+      await vi.advanceTimersByTimeAsync(1_000)
+
+      expect(media[1].play).not.toHaveBeenCalled()
+    })
+
+    it('prepares nothing while paused', async () => {
+      const { media, player } = await nearTheEnd()
+      player.pause()
+
+      media[0].setTiming({ currentTime: 199.5 })
+      media[0].dispatchEvent(new Event('timeupdate'))
+      await vi.advanceTimersByTimeAsync(1_000)
+
+      expect(media[1].play).not.toHaveBeenCalled()
+    })
+  })
+
   it('reports the end of the play and forgets its position', async () => {
     const { handlers, media, player, positions } = setup()
     player.setSource(source('k1'))

@@ -29,6 +29,15 @@ const POSITION_SAVE_INTERVAL_MS = 1000
 /** Shown, and reported through `onFatalError`, when nothing can play the current track. */
 const UNPLAYABLE_MESSAGE = 'Unable to play this track. Please try again.'
 
+/** How close to the end the hand-over to a prefetched next track is scheduled. */
+const GAPLESS_ARM_SECONDS = 1
+
+/**
+ * The next track starts this long before the current one ends, covering the time media
+ * elements take to begin output; the tail keeps playing underneath for that moment.
+ */
+const GAPLESS_LEAD_SECONDS = 0.05
+
 /** `HTMLMediaElement.HAVE_FUTURE_DATA`, kept local so this module reads no DOM globals. */
 const HAVE_FUTURE_DATA = 3
 
@@ -73,6 +82,9 @@ export class SlotPlayer {
   private wantPlaying = false
   private pendingPlay = false
   private pendingPrefetch: PendingPrefetch | null = null
+  private gaplessTimer: ReturnType<typeof setTimeout> | null = null
+  /** The prefetched key already started ahead of the current track's end. */
+  private earlyStartedKey: string | null = null
   private seeking = false
   private lastPositionSave = 0
   private volume = 1
@@ -124,6 +136,8 @@ export class SlotPlayer {
       this.previousKey = source?.key ?? null
       this.error = null
     }
+    /** Moving on to the play started early keeps it; anything else drops the hand-over. */
+    if (source?.key !== this.earlyStartedKey) this.cancelGapless()
     this.current = source
     this.reconcile()
     this.applyPlayIntent()
@@ -144,12 +158,14 @@ export class SlotPlayer {
 
   pause(): void {
     this.wantPlaying = false
+    this.cancelGapless()
     this.applyPlayIntent()
   }
 
   seek(seconds: number): void {
     if (!Number.isFinite(seconds)) return
     const { media } = this.slots[this.active]
+    this.cancelGapless()
     this.seeking = true
     media.currentTime = seconds
     if (this.current) this.input.streaming.positions?.save(this.current.key, seconds)
@@ -178,6 +194,7 @@ export class SlotPlayer {
 
   destroy(): void {
     this.destroyed = true
+    this.cancelGapless()
     this.saveActivePosition()
     this.destroySlot(0)
     this.destroySlot(1)
@@ -260,8 +277,14 @@ export class SlotPlayer {
     next.loader?.promoteToActive(ACTIVE_BUFFER_SECONDS)
     next.media.volume = this.volume
     next.media.muted = this.muted
-    next.media.currentTime = 0
-    void next.media.play().catch(() => undefined)
+    /** Already started just before the previous track ended: keep it running, no restart. */
+    const startedEarly = this.earlyStartedKey === next.key && !next.media.paused
+    this.earlyStartedKey = null
+    this.cancelGapless()
+    if (!startedEarly) {
+      next.media.currentTime = 0
+      void next.media.play().catch(() => undefined)
+    }
     previous.media.pause()
   }
 
@@ -469,6 +492,55 @@ export class SlotPlayer {
     this.input.streaming.positions?.save(this.current.key, slot.media.currentTime)
   }
 
+  /**
+   * Schedules the hand-over once the current track is within a second of its end, playing and
+   * with the next play already prefetched — so the next one starts on time instead of after
+   * `ended` and the switch that follows it.
+   */
+  private armGapless(): void {
+    if (this.gaplessTimer || this.earlyStartedKey || !this.wantPlaying) return
+    const next = this.next
+    const { media } = this.slots[this.active]
+    const standby = this.slots[otherSlot(this.active)]
+    if (!next || standby.key !== next.key || media.paused) return
+    if (!Number.isFinite(media.duration)) return
+
+    const remaining = media.duration - media.currentTime
+    if (remaining > GAPLESS_ARM_SECONDS) return
+
+    const delayMs = Math.max(0, (remaining - GAPLESS_LEAD_SECONDS) * 1000)
+    this.gaplessTimer = setTimeout(() => {
+      this.gaplessTimer = null
+      this.startEarly(next.key)
+    }, delayMs)
+  }
+
+  private startEarly(key: string): void {
+    const standby = this.slots[otherSlot(this.active)]
+    if (standby.key !== key || !this.wantPlaying || this.seeking) return
+    this.earlyStartedKey = key
+    standby.media.volume = this.volume
+    standby.media.muted = this.muted
+    standby.media.currentTime = 0
+    void standby.media.play().catch(() => {
+      if (this.earlyStartedKey === key) this.earlyStartedKey = null
+    })
+  }
+
+  /** Called on a seek, a pause or a new source: the hand-over no longer applies. */
+  private cancelGapless(): void {
+    if (this.gaplessTimer) clearTimeout(this.gaplessTimer)
+    this.gaplessTimer = null
+    const key = this.earlyStartedKey
+    if (!key) return
+    this.earlyStartedKey = null
+    const standby = this.slots[otherSlot(this.active)]
+    if (standby.key === key) {
+      standby.media.pause()
+      standby.media.currentTime = 0
+    }
+  }
+
   private isHeard(index: SlotIndex): boolean {
     return (
       index === this.active && this.current !== null && this.slots[index].key === this.current.key
@@ -487,6 +559,7 @@ export class SlotPlayer {
     })
     on('timeupdate', () => {
       if (index !== this.active || this.seeking) return
+      this.armGapless()
       this.emit()
       if (this.current && Date.now() - this.lastPositionSave >= POSITION_SAVE_INTERVAL_MS) {
         this.saveActivePosition()
