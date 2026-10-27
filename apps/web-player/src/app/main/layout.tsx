@@ -5,7 +5,7 @@ import { selectCurrentTrack, usePlayerStore } from '@entities/Player'
 import { LegalReacceptanceDialog } from '@features/Auth/ui/LegalReacceptanceDialog'
 import { BitrateConnectSync } from '@features/BitrateConnect'
 import { AccountSettingsSync } from '@features/SyncSettings'
-import { LeftSidebar, MobileCreatePlaylistSheet } from '@widgets/LeftSidebar'
+import { LeftSidebar } from '@widgets/LeftSidebar'
 import { MainHeader } from '@widgets/MainHeader'
 import { MobileIsland } from '@widgets/MobileIsland'
 import { Player } from '@widgets/Player'
@@ -17,7 +17,6 @@ import { useMainShellResize } from './useMainShellResize'
 export default function MainLayout({ children }: PropsWithChildren) {
   const currentTrack = usePlayerStore(selectCurrentTrack)
   const hasPlayer = !!currentTrack
-  const [isMobileCreateOpen, setIsMobileCreateOpen] = useState(false)
   const [isPlayerExpanded, setIsPlayerExpanded] = useState(false)
   const {
     gridTemplateColumns,
@@ -39,7 +38,7 @@ export default function MainLayout({ children }: PropsWithChildren) {
 
   return (
     <div className="h-dvh overflow-hidden bg-background text-text xl:flex xl:h-screen xl:flex-col xl:gap-3 xl:p-4">
-      <MainHeader onCreate={() => setIsMobileCreateOpen(true)} />
+      <MainHeader />
       <LegalReacceptanceDialog />
       <BitrateConnectSync />
       <AccountSettingsSync />
@@ -120,10 +119,6 @@ export default function MainLayout({ children }: PropsWithChildren) {
         )}
       </div>
 
-      <MobileCreatePlaylistSheet
-        isOpen={isMobileCreateOpen}
-        onOpenChange={setIsMobileCreateOpen}
-      />
       {!isPlayerExpanded && (
         <MobileIsland
           className="xl:hidden"

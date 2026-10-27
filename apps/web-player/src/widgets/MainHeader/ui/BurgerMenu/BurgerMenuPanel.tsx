@@ -6,10 +6,9 @@ import Link from 'next/link'
 import { ThemeSwitcher } from '@/features/SwitchTheme'
 import { useOverlayFocus } from '@/shared/hooks/useOverlayFocus'
 import { useI18n } from '@/shared/i18n'
-import { ROUTES } from '@/shared/routes'
+import { MOBILE_MENU_NAV } from '@/shared/routes'
 import { AuthButtons } from '../AuthButtons'
 import { InstallBtn } from '../InstallBtn'
-import { NavLinks } from '../NavLinks'
 
 type BurgerMenuPanelProps = {
   id: string
@@ -73,15 +72,20 @@ export const BurgerMenuPanel = ({
           {isAuthenticated ? (
             <>
               <nav className="grid border-b border-border pb-6">
-                <MenuLink href={ROUTES.profile} onClick={onClose}>
-                  {t('common.profile')}
-                </MenuLink>
-                <MenuLink href={ROUTES.recents} onClick={onClose}>
-                  {t('recents.title')}
-                </MenuLink>
-                <MenuLink href={ROUTES.settings} onClick={onClose}>
-                  {t('settings.title')}
-                </MenuLink>
+                {MOBILE_MENU_NAV.map(({ href, icon: Icon, labelKey }) => (
+                  <Link
+                    className="flex items-center gap-3 rounded px-3 py-3 text-foreground transition-colors hover:bg-surface"
+                    href={href}
+                    key={href}
+                    onClick={onClose}
+                  >
+                    <Icon
+                      aria-hidden="true"
+                      className="size-4.5 shrink-0 text-muted-foreground"
+                    />
+                    {t(labelKey)}
+                  </Link>
+                ))}
               </nav>
               <div className="flex items-center justify-between border-b border-border pb-6">
                 <span className="text-sm text-text-subdued">
@@ -102,9 +106,6 @@ export const BurgerMenuPanel = ({
           ) : (
             <>
               <div className="border-b border-border pb-6">
-                <NavLinks />
-              </div>
-              <div className="border-b border-border pb-6">
                 <InstallBtn />
               </div>
               <AuthButtons />
@@ -115,21 +116,3 @@ export const BurgerMenuPanel = ({
     </div>
   )
 }
-
-const MenuLink = ({
-  children,
-  href,
-  onClick,
-}: {
-  children: string
-  href: string
-  onClick: () => void
-}) => (
-  <Link
-    className="rounded px-3 py-3 text-text transition-colors hover:bg-surface"
-    href={href}
-    onClick={onClick}
-  >
-    {children}
-  </Link>
-)

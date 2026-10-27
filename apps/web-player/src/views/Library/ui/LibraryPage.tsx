@@ -43,12 +43,12 @@ export const LibraryPage = () => {
   return (
     <div className="h-full overflow-y-auto px-4 pt-2 pb-3 custom-scrollbar md:px-8 md:py-6">
       <div className="flex flex-col gap-5 md:gap-7">
-        <div className="flex items-end justify-between gap-4 max-xl:hidden">
+        <div className="flex items-end justify-between gap-4">
           <div className="flex min-w-0 flex-col gap-1">
             <p className="text-xs font-semibold tracking-[1.2px] text-muted-foreground uppercase">
               {t('library.title')}
             </p>
-            <h1 className="text-[32px] leading-[1.1] font-bold text-foreground">
+            <h1 className="text-2xl leading-[1.1] font-bold text-foreground md:text-[32px]">
               {t('library.heading')}
             </h1>
           </div>

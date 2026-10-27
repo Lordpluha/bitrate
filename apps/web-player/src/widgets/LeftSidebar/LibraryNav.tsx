@@ -1,15 +1,7 @@
 'use client'
 
 import { cn } from '@bitrate/ui-react'
-import { ROUTES } from '@shared/routes'
-import {
-  Activity,
-  Clock3,
-  Heart,
-  House,
-  Search,
-  TrendingUp,
-} from 'lucide-react'
+import { MAIN_NAV } from '@shared/routes'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useI18n } from '@/shared/i18n'
@@ -25,18 +17,11 @@ type LibraryNavProps = {
 export const LibraryNav = ({ isCollapsed }: LibraryNavProps) => {
   const { t } = useI18n()
   const pathname = usePathname()
-  const items = [
-    { href: ROUTES.main, icon: House, label: t('nav.home') },
-    { href: ROUTES.search(), icon: Search, label: t('nav.search') },
-    { href: ROUTES.charts, icon: TrendingUp, label: t('nav.charts') },
-    { href: ROUTES.activity, icon: Activity, label: t('nav.activity') },
-    { href: ROUTES.likedSongs, icon: Heart, label: t('library.likedSongs') },
-    { href: ROUTES.recents, icon: Clock3, label: t('library.recents') },
-  ]
 
   return (
     <nav aria-label={t('nav.main')} className="flex w-full flex-col gap-1">
-      {items.map(({ href, icon: Icon, label }) => {
+      {MAIN_NAV.map(({ href, icon: Icon, labelKey }) => {
+        const label = t(labelKey)
         const isActive = pathname === href.split('?')[0]
 
         return (

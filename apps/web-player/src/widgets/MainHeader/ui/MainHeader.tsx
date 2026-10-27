@@ -7,15 +7,10 @@ import { AuthButtons } from './AuthButtons'
 import { FriendActivityPopover } from './FriendActivityPopover'
 import { HeaderSearch } from './HeaderSearch'
 import { MobileMainHeader } from './MobileMainHeader'
-import { NavLinks } from './NavLinks'
 import { NotificationsPopover } from './NotificationsPopover'
 import { ProfileButton } from './ProfileButton'
 
-type MainHeaderProps = {
-  onCreate?: () => void
-}
-
-export const MainHeader = ({ onCreate }: MainHeaderProps) => {
+export const MainHeader = () => {
   const { user, isAuthenticated, isLoading } = useAuth()
 
   return (
@@ -39,16 +34,13 @@ export const MainHeader = ({ onCreate }: MainHeaderProps) => {
                 />
               </>
             ) : (
-              <>
-                <NavLinks />
-                <AuthButtons />
-              </>
+              <AuthButtons />
             )}
           </div>
         </div>
 
         <div className="h-full w-full xl:hidden">
-          <MobileMainHeader onCreate={onCreate} />
+          <MobileMainHeader />
         </div>
       </div>
     </header>
