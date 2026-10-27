@@ -231,15 +231,24 @@
 <svelte:element this={"slot"} bind:this={slotEl} />
 
 {#if !composed}
-  <ChromeLayout chrome={resolveChrome(chrome)} player={shared} />
+  <div class="layout-container">
+    <ChromeLayout chrome={resolveChrome(chrome)} player={shared} />
+  </div>
 {/if}
 
 <style>
   :host {
-    container-name: bitrate-player;
-    container-type: inline-size;
     display: block;
     font-family: inherit;
+  }
+
+  /**
+   * The size container the built-in layouts query. Not on :host — inline-size containment
+   * would stop a host-composed element from taking its content's width in a flex row.
+   */
+  .layout-container {
+    container-name: bitrate-player;
+    container-type: inline-size;
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -148,6 +148,23 @@ describe('<bitrate-player> composed from parts', () => {
       .toEqual(['Відтворити «Night Drive»', 'Next track', 'Повторювати плейлист'])
   })
 
+  it('takes its content width in a flex row when composed', async () => {
+    const element = await mountComposed(
+      '<bitrate-player-transport controls="play"></bitrate-player-transport>',
+    )
+    const row = element.parentElement
+    if (!row) throw new Error('player has no wrapper')
+    row.style.display = 'flex'
+
+    await vi.waitFor(() => {
+      if (!partRoot(element, 'bitrate-player-transport').querySelector('.play-button')) {
+        throw new Error('play button not rendered')
+      }
+    })
+
+    expect(element.getBoundingClientRect().width).toBeGreaterThan(0)
+  })
+
   it('puts the time under the rail for a stacked seek', async () => {
     const element = await mountComposed(
       '<bitrate-player-seek variant="stacked"></bitrate-player-seek>',
