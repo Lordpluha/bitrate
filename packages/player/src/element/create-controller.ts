@@ -22,6 +22,7 @@ type PlayerView = Pick<
   | 'repeatMode'
   | 'renditions'
   | 'callbacks'
+  | 'labels'
 >
 
 export type CreatePlayerControllerInput = {
@@ -85,6 +86,9 @@ export function createPlayerController({
     },
     get callbacks() {
       return readView().callbacks
+    },
+    get labels() {
+      return readView().labels
     },
     get playing() {
       const state = live()

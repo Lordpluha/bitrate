@@ -6,8 +6,6 @@
   import ShuffleIcon from '../icons/ShuffleIcon.svelte'
   import SkipBackIcon from '../icons/SkipBackIcon.svelte'
   import SkipForwardIcon from '../icons/SkipForwardIcon.svelte'
-  import { playPauseLabel } from '../lib/play-pause-label'
-  import { REPEAT_LABELS } from '../lib/repeat-labels'
   import type { PlayerController } from '../player-controller'
   import IconButton from './IconButton.svelte'
 
@@ -30,7 +28,7 @@
   {#if shuffle}
     <IconButton
       active={player.isShuffled}
-      label={player.isShuffled ? 'Disable shuffle' : 'Enable shuffle'}
+      label={player.isShuffled ? player.labels.disableShuffle : player.labels.enableShuffle}
       onClick={shuffle}
       pressed={player.isShuffled}
     >
@@ -39,7 +37,7 @@
   {/if}
 
   {#if previous}
-    <IconButton label="Previous track" onClick={previous}>
+    <IconButton label={player.labels.previous} onClick={previous}>
       <SkipBackIcon />
     </IconButton>
   {/if}
@@ -47,7 +45,11 @@
   {#if controls.includes('play')}
     <IconButton
       disabled={!player.canPlay}
-      label={player.preparing ? 'Preparing…' : playPauseLabel(player.trackTitle, player.playing)}
+      label={player.preparing
+        ? player.labels.preparing
+        : player.playing
+          ? player.labels.pause(player.trackTitle)
+          : player.labels.play(player.trackTitle)}
       onClick={player.playPause}
       pressed={player.playing}
       variant="play"
@@ -61,7 +63,7 @@
   {/if}
 
   {#if next}
-    <IconButton label="Next track" onClick={next}>
+    <IconButton label={player.labels.next} onClick={next}>
       <SkipForwardIcon />
     </IconButton>
   {/if}
@@ -69,7 +71,7 @@
   {#if repeat}
     <IconButton
       active={player.repeatMode !== 'off'}
-      label={REPEAT_LABELS[player.repeatMode]}
+      label={player.labels.repeat[player.repeatMode]}
       onClick={repeat}
       pressed={player.repeatMode !== 'off'}
     >

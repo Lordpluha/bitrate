@@ -5,7 +5,7 @@
 </script>
 
 <label class="quality" part="quality">
-  Quality
+  {player.labels.quality}
   <select
     disabled={player.preparing}
     onchange={player.changeQuality}

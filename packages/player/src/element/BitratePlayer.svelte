@@ -25,6 +25,7 @@
       volume: { type: 'Number', attribute: 'volume' },
       muted: { type: 'Boolean', attribute: 'muted', reflect: true },
       mirror: {},
+      labels: {},
     },
     extend: withPlayerProvider,
   }}
@@ -38,6 +39,7 @@
   import ChromeLayout from './layouts/ChromeLayout.svelte'
   import { createPlayerController, legacyStateDetail } from './create-controller'
   import { resolveChrome } from './lib/controls'
+  import { resolveLabels } from './lib/labels'
   import { type HostTransport, isPlayerProviderHost } from './player-context'
   import type { PlayerController } from './player-controller'
   import type { BitratePlayerProps } from './player-props'
@@ -68,6 +70,7 @@
     volume = 1,
     muted = false,
     mirror = null,
+    labels = null,
   }: BitratePlayerProps = $props()
 
   let audioEl: HTMLAudioElement | undefined = $state(undefined)
@@ -143,6 +146,8 @@
     },
   }
 
+  const resolvedLabels = $derived(resolveLabels(labels))
+
   const controller = createPlayerController({
     readView: () => ({
       trackTitle,
@@ -153,6 +158,7 @@
       repeatMode,
       renditions,
       callbacks,
+      labels: resolvedLabels,
     }),
     hasSource: () => source !== null,
     legacy,

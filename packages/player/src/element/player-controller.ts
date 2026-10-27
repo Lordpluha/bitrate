@@ -1,5 +1,6 @@
 import type {
   BitratePlayerErrorDetail,
+  BitratePlayerLabels,
   BitratePlayerRendition,
   BitratePlayerRepeatMode,
 } from '../contract'
@@ -31,6 +32,8 @@ export type PlayerController = {
   readonly repeatMode: BitratePlayerRepeatMode
   readonly renditions: BitratePlayerRendition[]
   readonly callbacks: PlayerCallbacks
+  /** The host's translations over the English defaults. */
+  readonly labels: BitratePlayerLabels
   readonly playing: boolean
   readonly preparing: boolean
   /** False while preparing or with no rendition to resolve — the Play button is disabled. */

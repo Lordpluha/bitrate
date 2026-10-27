@@ -128,6 +128,26 @@ describe('<bitrate-player> composed from parts', () => {
       .not.toBeNull()
   })
 
+  it("renders the host's labels, keeping the English defaults for the rest", async () => {
+    const element = await mountComposed(
+      '<bitrate-player-transport controls="play next repeat"></bitrate-player-transport>',
+    )
+    element.onNext = vi.fn()
+    element.onRepeatToggle = vi.fn()
+    element.labels = {
+      play: (title) => `Відтворити «${title}»`,
+      repeat: { off: 'Повторювати плейлист' },
+    }
+
+    const names = () =>
+      [...partRoot(element, 'bitrate-player-transport').querySelectorAll('button')].map((button) =>
+        button.getAttribute('aria-label'),
+      )
+    await expect
+      .poll(names)
+      .toEqual(['Відтворити «Night Drive»', 'Next track', 'Повторювати плейлист'])
+  })
+
   it('renders nothing for a part outside any player', async () => {
     const { defineBitratePlayer } = await import('./index')
     await defineBitratePlayer()

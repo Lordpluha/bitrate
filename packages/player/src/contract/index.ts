@@ -213,6 +213,33 @@ export type BitratePlayerEndedDetail = {
   key: string
 }
 
+/**
+ * Every accessible name and visible label the element renders, so a host can supply its own
+ * translations. Set `labels` to any subset; the rest keep their English defaults.
+ */
+export type BitratePlayerLabels = {
+  /** The Play button's name for the current track ('' when no title is known). */
+  play: (trackTitle: string) => string
+  pause: (trackTitle: string) => string
+  preparing: string
+  previous: string
+  next: string
+  enableShuffle: string
+  disableShuffle: string
+  /** The repeat button's name for each mode — what pressing it does next. */
+  repeat: Record<BitratePlayerRepeatMode, string>
+  like: string
+  unlike: string
+  mute: string
+  unmute: string
+  volume: string
+  seek: string
+  openFloating: string
+  openQueue: string
+  openFull: string
+  quality: string
+}
+
 /** The custom element's dispatched event names — bubbling, composed, `detail` where noted. */
 export const BITRATE_PLAYER_EVENT = {
   PLAY: 'play',
@@ -271,6 +298,8 @@ export interface BitratePlayerElement extends HTMLElement {
   muted: boolean
   /** Renders and controls another `<bitrate-player>` instead of playing anything itself. */
   mirror: BitratePlayerElement | null
+  /** Translations for the element's labels; a mirror uses the labels of the root it mirrors. */
+  labels: Partial<BitratePlayerLabels> | null
   /** The current playback state; `statechange` fires whenever it changes. */
   readonly state: BitratePlayerStateDetail
   play(): Promise<void>

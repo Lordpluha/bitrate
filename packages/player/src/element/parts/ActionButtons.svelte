@@ -25,7 +25,7 @@
 {#if like}
   <IconButton
     active={player.isLiked}
-    label={player.isLiked ? 'Unlike' : 'Like'}
+    label={player.isLiked ? player.labels.unlike : player.labels.like}
     onClick={like}
     pressed={player.isLiked}
   >
@@ -34,19 +34,19 @@
 {/if}
 
 {#if pip}
-  <IconButton label="Open floating player" onClick={pip}>
+  <IconButton label={player.labels.openFloating} onClick={pip}>
     <PipIcon />
   </IconButton>
 {/if}
 
 {#if queue}
-  <IconButton label="Open queue" onClick={queue}>
+  <IconButton label={player.labels.openQueue} onClick={queue}>
     <QueueIcon />
   </IconButton>
 {/if}
 
 {#if expand}
-  <IconButton label="Open full player" onClick={expand}>
+  <IconButton label={player.labels.openFull} onClick={expand}>
     <ExpandIcon />
   </IconButton>
 {/if}

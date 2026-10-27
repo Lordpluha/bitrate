@@ -8,14 +8,14 @@
 </script>
 
 <IconButton
-  label={player.muted ? 'Unmute' : 'Mute'}
+  label={player.muted ? player.labels.unmute : player.labels.mute}
   onClick={player.toggleMute}
   pressed={player.muted}
 >
   <VolumeIcon muted={player.muted} />
 </IconButton>
 <RangeInput
-  label="Volume"
+  label={player.labels.volume}
   max="1"
   min="0"
   onInput={player.setVolume}

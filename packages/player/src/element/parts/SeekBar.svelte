@@ -21,7 +21,7 @@
     <span class="time time--elapsed">{formatTime(player.currentTime)}</span>
   {/if}
   <RangeInput
-    label="Seek playback"
+    label={player.labels.seek}
     max={player.duration}
     min="0"
     onInput={player.seek}

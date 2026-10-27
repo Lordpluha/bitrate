@@ -120,6 +120,7 @@ describe('<bitrate-player> streaming mode', () => {
     const primary = await mountStreaming()
     primary.source = await source('k1')
     primary.trackTitle = 'Night Drive'
+    primary.labels = { play: (title) => `Play "${title}"` }
 
     const mirror = document.createElement('bitrate-player')
     mirror.innerHTML = '<bitrate-player-transport controls="play"></bitrate-player-transport>'
