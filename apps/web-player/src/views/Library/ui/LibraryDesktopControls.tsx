@@ -40,8 +40,8 @@ export const LibraryDesktopControls = ({
           }
           value={controls.sortMode}
         >
-          <option value="recent">{t('library.recents')}</option>
-          <option value="title">{t('common.title')}</option>
+          <option value="recent">{t('library.sortRecentlyAdded')}</option>
+          <option value="title">{t('library.sortTitle')}</option>
         </select>
       </label>
     </div>

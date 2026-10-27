@@ -7,11 +7,10 @@ import {
   selectCurrentTrack,
   usePlayerStore,
 } from '@entities/Player'
-import { useTrackLike } from '@entities/Track'
+import { LikeTrackButton } from '@entities/Track'
 import { ROUTES } from '@shared/routes'
 import { MediaImage } from '@shared/ui/MediaImage'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import { Heart } from 'lucide-react'
 import Link from 'next/link'
 
 type CurrentPlaylistProps = {
@@ -23,7 +22,6 @@ export const CurrentPlaylist = ({ onCollapse }: CurrentPlaylistProps) => {
   const playlistName = usePlayerStore(selectCurrentPlaylistName)
   const { data: artist } = useArtist(currentTrack?.artistId)
   const artistName = artist?.username || 'Unknown Artist'
-  const { isLiked, isPending, toggleLike } = useTrackLike(currentTrack?.id)
 
   if (!currentTrack) {
     return null
@@ -78,24 +76,11 @@ export const CurrentPlaylist = ({ onCollapse }: CurrentPlaylistProps) => {
             {artistName}
           </Link>
         </div>
-        <button
-          aria-label={
-            isLiked
-              ? `Remove ${currentTrack.title} from Liked Songs`
-              : `Save ${currentTrack.title} to Liked Songs`
-          }
-          aria-pressed={isLiked}
-          className="shrink-0 rounded-full p-1 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
-          disabled={isPending}
-          onClick={toggleLike}
-          type="button"
-        >
-          <Heart
-            aria-hidden="true"
-            className={isLiked ? 'fill-accent text-accent' : undefined}
-            size={22}
-          />
-        </button>
+        <LikeTrackButton
+          size={22}
+          trackId={currentTrack.id}
+          trackTitle={currentTrack.title}
+        />
       </div>
     </div>
   )

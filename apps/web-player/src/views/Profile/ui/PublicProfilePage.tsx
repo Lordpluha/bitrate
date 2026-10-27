@@ -6,6 +6,7 @@ import { ROUTES } from '@shared/routes'
 import { MusicCardLg, SectionHeader, Skeleton, StateMessage } from '@shared/ui'
 import { getPlaylistCoverUrl, getUserAvatarUrl } from '@shared/utils/mediaUrl'
 import { ListMusic, UserRound } from 'lucide-react'
+import { usePlayCollection } from '@/features/PlayCollection'
 import { ProfileFollowsSection } from '@/views/Profile/ui/ProfileFollowsSection'
 import { ProfileHeader } from '@/views/Profile/ui/ProfileHeader'
 
@@ -16,6 +17,7 @@ type PublicProfilePageProps = {
 export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
   const userQuery = useUserById(userId)
   const playlistsQuery = useUserPlaylists(userId)
+  const playCollection = usePlayCollection()
   const playlists = playlistsQuery.data ?? []
 
   if (userQuery.isPending) {
@@ -90,6 +92,13 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
                     id={playlist.id}
                     imageUrl={getPlaylistCoverUrl(playlist.cover)}
                     name={playlist.title}
+                    onPlay={() =>
+                      void playCollection({
+                        id: playlist.id,
+                        kind: 'playlist',
+                        title: playlist.title,
+                      })
+                    }
                   />
                 </li>
               ))}

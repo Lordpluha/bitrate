@@ -31,8 +31,8 @@ export const LibraryMobileControls = ({
         >
           <ArrowDownUp aria-hidden="true" size={19} />
           {controls.sortMode === 'recent'
-            ? t('library.recents')
-            : t('common.title')}
+            ? t('library.sortRecentlyAdded')
+            : t('library.sortTitle')}
         </button>
         <button
           aria-label={

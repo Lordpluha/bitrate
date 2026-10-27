@@ -1,69 +1,78 @@
 'use client'
 
 import { cn } from '@bitrate/ui-react'
-import { useLikeTrack, useUnlikeTrack } from '@entities/Track/api/client'
-import { showApiSuccessToast } from '@shared/api/feedback'
+import { useTrackLike } from '@entities/Track/api/client'
 import { Heart } from 'lucide-react'
-import { useEffect, useState } from 'react'
 
-type LikeTrackButtonProps = {
-  initialLiked?: boolean
-  trackId: string
+type LikeButtonProps = {
+  className?: string
+  disabled?: boolean
+  isLiked: boolean
+  onToggle: () => void
+  /** Icon size: 16 in rows, 18 on the player bar, 22-24 on now-playing surfaces. */
+  size?: 16 | 18 | 22 | 24
   trackTitle?: string
 }
 
-export const LikeTrackButton = ({
-  initialLiked = false,
-  trackId,
+/** How every like button looks and is labelled; `LikeTrackButton` wires it to the server. */
+export const LikeButton = ({
+  className,
+  disabled = false,
+  isLiked,
+  onToggle,
+  size = 16,
   trackTitle = 'track',
-}: LikeTrackButtonProps) => {
-  const [isLiked, setIsLiked] = useState(initialLiked)
-  const likeTrack = useLikeTrack()
-  const unlikeTrack = useUnlikeTrack()
-  const isPending = likeTrack.isPending || unlikeTrack.isPending
-
-  useEffect(() => {
-    setIsLiked(initialLiked)
-  }, [initialLiked])
-
-  /** Failures are toasted by the query client's mutation cache. */
-  const handleToggle = () => {
-    if (isPending) return
-
-    const variables = { params: { path: { id: trackId } } }
-    if (isLiked) {
-      unlikeTrack.mutate(variables, {
-        onSuccess: () => {
-          setIsLiked(false)
-          showApiSuccessToast('Removed from Liked Songs')
-        },
-      })
-      return
+}: LikeButtonProps) => (
+  <button
+    aria-label={
+      isLiked
+        ? `Remove ${trackTitle} from Liked Songs`
+        : `Save ${trackTitle} to Liked Songs`
     }
+    aria-pressed={isLiked}
+    className={cn(
+      'shrink-0 rounded-full p-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60',
+      isLiked ? 'text-accent' : 'text-muted-foreground hover:text-foreground',
+      className,
+    )}
+    disabled={disabled}
+    onClick={(event) => {
+      event.stopPropagation()
+      onToggle()
+    }}
+    type="button"
+  >
+    <Heart
+      aria-hidden="true"
+      fill={isLiked ? 'currentColor' : 'none'}
+      size={size}
+    />
+  </button>
+)
 
-    likeTrack.mutate(variables, {
-      onSuccess: () => {
-        setIsLiked(true)
-        showApiSuccessToast('Added to Liked Songs')
-      },
-    })
-  }
+type LikeTrackButtonProps = Pick<
+  LikeButtonProps,
+  'className' | 'size' | 'trackTitle'
+> & {
+  trackId: string
+}
+
+/**
+ * The like button for a track. Its state comes from the server's liked list, so every
+ * surface showing the same track agrees; a click never reaches the row around it.
+ */
+export const LikeTrackButton = ({
+  trackId,
+  ...props
+}: LikeTrackButtonProps) => {
+  const { isLiked, isPending, toggleLike } = useTrackLike(trackId)
 
   return (
-    <button
-      aria-label={`${isLiked ? 'Unlike' : 'Like'} ${trackTitle}`}
-      className={cn(
-        'rounded-full p-1 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-60',
-        isLiked ? 'text-primary' : 'text-text-subdued hover:text-text',
-      )}
+    <LikeButton
+      {...props}
       disabled={isPending}
-      onClick={(event) => {
-        event.stopPropagation()
-        handleToggle()
-      }}
-      type="button"
-    >
-      <Heart fill={isLiked ? 'currentColor' : 'none'} size={16} />
-    </button>
+      isLiked={isLiked}
+      onToggle={toggleLike}
+    />
   )
 }

@@ -3,8 +3,8 @@
 import { useAuth } from '@shared/hooks'
 import { ROUTES } from '@shared/routes'
 import { Logo } from '@shared/ui'
+import { ActivityPopover } from './ActivityPopover'
 import { AuthButtons } from './AuthButtons'
-import { FriendActivityPopover } from './FriendActivityPopover'
 import { HeaderSearch } from './HeaderSearch'
 import { MobileMainHeader } from './MobileMainHeader'
 import { NotificationsPopover } from './NotificationsPopover'
@@ -27,7 +27,7 @@ export const MainHeader = () => {
             ) : isAuthenticated && user ? (
               <>
                 <NotificationsPopover />
-                <FriendActivityPopover />
+                <ActivityPopover />
                 <ProfileButton
                   avatar={user.avatar}
                   username={user.username || 'User'}

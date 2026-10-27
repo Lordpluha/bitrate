@@ -4,8 +4,9 @@ import { cn } from '@bitrate/ui-react'
 import { useOverlayFocus } from '@shared/hooks'
 import { ROUTES } from '@shared/routes'
 import { MediaImage } from '@shared/ui/MediaImage'
-import { ChevronDown, Heart, ListMusic, Mic2 } from 'lucide-react'
+import { ChevronDown, ListMusic, Mic2 } from 'lucide-react'
 import Link from 'next/link'
+import { LikeButton } from '@/entities/Track'
 import { ConnectDevicesPopover } from '@/features/BitrateConnect'
 import { NowPlayingDetails } from './NowPlayingDetails'
 import type { NowPlayingViewProps } from './nowPlaying.types'
@@ -89,19 +90,14 @@ export const NowPlayingView = ({
               </h2>
               <p className="truncate text-sm text-muted-foreground">{artist}</p>
             </div>
-            <button
-              aria-label={isLiked ? `Unlike ${title}` : `Like ${title}`}
-              aria-pressed={isLiked}
-              className="shrink-0 rounded-full p-1 text-primary transition-transform hover:scale-110"
-              onClick={onLikeToggle}
-              type="button"
-            >
-              <Heart
-                aria-hidden="true"
-                fill={isLiked ? 'currentColor' : 'none'}
+            {onLikeToggle ? (
+              <LikeButton
+                isLiked={isLiked}
+                onToggle={onLikeToggle}
                 size={24}
+                trackTitle={title}
               />
-            </button>
+            ) : null}
           </div>
 
           <PlayerControls

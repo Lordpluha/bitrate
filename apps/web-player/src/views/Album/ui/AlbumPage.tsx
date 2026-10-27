@@ -1,7 +1,7 @@
 'use client'
 
 import { useAlbum } from '@entities/Album'
-import { type TrackEntity, useLikedTracks } from '@entities/Track'
+import type { TrackEntity } from '@entities/Track'
 import { ROUTES } from '@shared/routes'
 import { StateMessage } from '@shared/ui'
 import {
@@ -10,7 +10,6 @@ import {
 } from '@shared/ui/CollectionHeader'
 import { getAlbumCoverUrl } from '@shared/utils/mediaUrl'
 import { Disc3 } from 'lucide-react'
-import { useMemo } from 'react'
 import { AlbumHero } from './AlbumHero'
 import { AlbumTrackSection } from './AlbumTrackSection'
 
@@ -19,15 +18,8 @@ const getAlbumDuration = (tracks: TrackEntity[]) =>
 
 export const AlbumPage = ({ albumId }: { albumId: string }) => {
   const { data, isError, isPending } = useAlbum(albumId)
-  const { data: likedTracks } = useLikedTracks(1, 1000, undefined, {
-    staleTime: 5 * 60_000,
-  })
   const album = data
   const tracks = album?.tracks ?? []
-  const likedTrackIds = useMemo(
-    () => new Set((likedTracks ?? []).map((track) => track.id)),
-    [likedTracks],
-  )
   const coverUrl = getAlbumCoverUrl(album?.cover)
 
   if (isPending) {
@@ -62,7 +54,6 @@ export const AlbumPage = ({ albumId }: { albumId: string }) => {
       <AlbumTrackSection
         albumId={album.id}
         albumTitle={album.title}
-        likedTrackIds={likedTrackIds}
         tracks={tracks}
       />
     </CollectionPanel>

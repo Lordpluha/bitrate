@@ -1,19 +1,23 @@
+import { Button } from '@bitrate/ui-react'
 import { ROUTES } from '@shared/routes'
 import Link from 'next/link'
 
+/** The same Sign up / Log in pair as the player header, as links to the auth pages. */
 export const AuthButtons = () => (
-  <div className="flex items-center gap-4">
-    <Link
-      className="login text-xl py-2 px-6 rounded-3xl bg-primary hover:opacity-70 transition-[1s] text-text font-medium"
-      href={ROUTES.auth.login}
+  <div className="flex items-center gap-2 xl:gap-4">
+    <Button
+      asChild
+      className="h-12 min-w-25 rounded-full text-base font-semibold"
+      variant="ghost"
     >
-      Login
-    </Link>
-    <Link
-      className="text-xl py-2 px-6 rounded-3xl hover:opacity-70 transition-[1s] text-text font-medium border-solid border-2"
-      href={ROUTES.auth.registration}
+      <Link href={ROUTES.auth.registration}>Sign up</Link>
+    </Button>
+    <Button
+      asChild
+      className="h-12 min-w-25 rounded-full px-8 text-base font-bold"
+      variant="default"
     >
-      Register
-    </Link>
+      <Link href={ROUTES.auth.login}>Log in</Link>
+    </Button>
   </div>
 )

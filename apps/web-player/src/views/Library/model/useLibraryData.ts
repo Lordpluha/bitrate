@@ -2,7 +2,6 @@
 
 import { useMemo } from 'react'
 import { useLikedAlbums } from '@/entities/Album'
-import { useListeningHistory } from '@/entities/History'
 import { LIKED_SONGS_ID, usePlaylistLibraryItems } from '@/entities/Playlist'
 import { useLikedTracks } from '@/entities/Track'
 import type {
@@ -30,10 +29,6 @@ export const useLibraryData = ({
     usePlaylistLibraryItems()
   const { data: likedTracks, isPending: isLikedPending } = useLikedTracks()
   const { data: albums, isPending: isAlbumsPending } = useLikedAlbums()
-  const { data: history, isPending: isHistoryPending } = useListeningHistory({
-    page: 1,
-    limit: 50,
-  })
 
   const playlists = useMemo(() => {
     return libraryPlaylists
@@ -89,31 +84,13 @@ export const useLibraryData = ({
       )
   }, [albums, query, sortMode])
 
-  const historyItems = useMemo(
-    () =>
-      (history ?? [])
-        .filter((entry) => includesQuery(entry.track.title, query))
-        .sort((first, second) =>
-          compareByTitleOrDate(
-            first.track.title,
-            second.track.title,
-            first.listenedAt,
-            second.listenedAt,
-            sortMode,
-          ),
-        ),
-    [history, query, sortMode],
-  )
-
   const isPending =
     (activeSection === 'playlists' && isPlaylistsPending) ||
     (activeSection === 'liked' && isLikedPending) ||
-    (activeSection === 'albums' && isAlbumsPending) ||
-    (activeSection === 'history' && isHistoryPending)
+    (activeSection === 'albums' && isAlbumsPending)
 
   return {
     albums: albumItems,
-    history: historyItems,
     isPending,
     playlists,
     tracks,

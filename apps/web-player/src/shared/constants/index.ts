@@ -1,4 +1,5 @@
 export * from './fallbacks'
 export * from './site'
+export * from './storage'
 export * from './themes'
 export * from './zIndex'

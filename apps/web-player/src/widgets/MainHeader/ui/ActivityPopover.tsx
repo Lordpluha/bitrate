@@ -11,20 +11,25 @@ import { MediaImage } from '@shared/ui/MediaImage'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useFollowingActivity } from '@/entities/User'
+import { usePlayCollection } from '@/features/PlayCollection'
 import { Z_INDEX_CLASS } from '@/shared/constants'
 import { ROUTES } from '@/shared/routes'
 import { formatRelativeTime } from '@/shared/utils/formatRelativeTime'
 import { getTrackCoverUrl, getUserAvatarUrl } from '@/shared/utils/mediaUrl'
 
-/** What the people you follow last played; fetched only while the panel is open. */
-export const FriendActivityPopover = () => {
+/**
+ * What the people you follow last played, the Activity page's preview; fetched only while the
+ * panel is open. A track plays from here as it does on the page.
+ */
+export const ActivityPopover = () => {
   const [isOpen, setIsOpen] = useState(false)
   const { data, isError, isPending } = useFollowingActivity(isOpen)
+  const playCollection = usePlayCollection()
 
   return (
     <Popover onOpenChange={setIsOpen} open={isOpen}>
       <PopoverTrigger
-        aria-label="Friend activity"
+        aria-label="Activity"
         className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-surface hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <MembersIcon className="size-5 xl:size-4.5" />
@@ -39,7 +44,7 @@ export const FriendActivityPopover = () => {
         sideOffset={8}
       >
         <div className="border-b border-border px-4 py-3">
-          <h2 className="font-bold">Friend activity</h2>
+          <h2 className="font-bold">Activity</h2>
           <p className="text-xs text-text-subdued">
             What people you follow played this week
           </p>
@@ -58,7 +63,7 @@ export const FriendActivityPopover = () => {
               className="px-3 py-8 text-center text-sm text-text-subdued"
               role="status"
             >
-              Friend activity is unavailable right now.
+              Activity is unavailable right now.
             </p>
           ) : data.length === 0 ? (
             <p className="px-3 py-8 text-center text-sm text-text-subdued">
@@ -101,9 +106,17 @@ export const FriendActivityPopover = () => {
                         {formatRelativeTime({ date: listenedAt })}
                       </time>
                     </div>
-                    <Link
-                      className="flex min-w-0 items-center gap-2 text-xs text-text-subdued hover:text-text"
-                      href={ROUTES.artist(track.artistId)}
+                    <button
+                      aria-label={`Play ${track.title}`}
+                      className="flex min-w-0 items-center gap-2 text-left text-xs text-text-subdued hover:text-text"
+                      onClick={() =>
+                        void playCollection({
+                          id: track.id,
+                          kind: 'track',
+                          title: track.title,
+                        })
+                      }
+                      type="button"
                     >
                       <span className="relative size-4 shrink-0 overflow-hidden rounded-sm bg-surface">
                         <MediaImage
@@ -117,7 +130,7 @@ export const FriendActivityPopover = () => {
                         />
                       </span>
                       <span className="truncate">{track.title}</span>
-                    </Link>
+                    </button>
                   </div>
                 </li>
               ))}

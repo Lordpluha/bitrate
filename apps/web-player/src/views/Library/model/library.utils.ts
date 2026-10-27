@@ -10,7 +10,6 @@ export const libraryTabs: Array<{
   { id: 'playlists', label: 'Playlists' },
   { id: 'liked', label: 'Liked Songs' },
   { id: 'albums', label: 'Albums' },
-  { id: 'history', label: 'Recently Played' },
 ]
 
 const getTimestamp = (value?: string | null) =>

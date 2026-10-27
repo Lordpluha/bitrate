@@ -4,6 +4,7 @@ import { useArtistPlaylists } from '@entities/Discovery'
 import { ROUTES } from '@shared/routes'
 import { MusicCardLg } from '@shared/ui'
 import { getPlaylistCoverUrl } from '@shared/utils/mediaUrl'
+import { usePlayCollection } from '@/features/PlayCollection'
 
 type ArtistFeaturingProps = {
   artistId: string
@@ -17,6 +18,7 @@ export const ArtistFeaturing = ({
 }: ArtistFeaturingProps) => {
   const { data } = useArtistPlaylists(artistId)
   const playlists = data?.data ?? []
+  const playCollection = usePlayCollection()
   if (playlists.length === 0) return null
 
   return (
@@ -36,6 +38,13 @@ export const ArtistFeaturing = ({
               id={playlist.id}
               imageUrl={getPlaylistCoverUrl(playlist.cover)}
               name={playlist.title}
+              onPlay={() =>
+                void playCollection({
+                  id: playlist.id,
+                  kind: 'playlist',
+                  title: playlist.title,
+                })
+              }
             />
           </li>
         ))}

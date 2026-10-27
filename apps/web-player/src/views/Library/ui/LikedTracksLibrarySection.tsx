@@ -28,7 +28,6 @@ export const LikedTracksLibrarySection = ({
       isPlaybackContextActive={
         musicPlayer.currentPlaylistId === LIKED_SONGS_PLAYBACK_ID
       }
-      likedTrackIds={tracks.map((track) => track.id)}
       onPlayTrack={(track, index) =>
         playPlaylist({
           currentPlaylistId: LIKED_SONGS_PLAYBACK_ID,

@@ -9,14 +9,12 @@ import { Disc3, Pause, Play } from 'lucide-react'
 type AlbumTrackSectionProps = {
   albumId: string
   albumTitle: string
-  likedTrackIds: Set<string>
   tracks: TrackEntity[]
 }
 
 export const AlbumTrackSection = ({
   albumId,
   albumTitle,
-  likedTrackIds,
   tracks,
 }: AlbumTrackSectionProps) => {
   const musicPlayer = usePlayerStore(selectMusicPlayer)
@@ -83,7 +81,6 @@ export const AlbumTrackSection = ({
         <TracksList
           activeTrackId={musicPlayer.currentTrack?.id}
           isPlaybackContextActive={isAlbumContext}
-          likedTrackIds={likedTrackIds}
           onPlayTrack={playFrom}
           showDateAdded={false}
           tracks={tracks}

@@ -2,10 +2,10 @@
 
 import { StateMessage } from '@shared/ui'
 import { Music } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import type { PlaylistWithTracks } from '@/entities/Playlist'
 import { selectCompactLibrary, useSettingsStore } from '@/entities/Settings'
-import { TracksList, useLikedTracks } from '@/entities/Track'
+import { TracksList } from '@/entities/Track'
 import { useAuth } from '@/shared/hooks'
 import { useI18n } from '@/shared/i18n'
 import type { TrackViewMode } from '@/views/Playlist/model/playlist.types'
@@ -25,19 +25,12 @@ type PlaylistContentProps = {
 export const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
   const { t } = useI18n()
   const { user } = useAuth()
-  const { data: likedTracks } = useLikedTracks(1, 1000, undefined, {
-    staleTime: 5 * 60_000,
-  })
   const [isEditing, setIsEditing] = useState(false)
   const compactLibrary = useSettingsStore(selectCompactLibrary)
   const [trackViewMode, setTrackViewMode] = useState<TrackViewMode>(
     compactLibrary ? 'compact' : 'list',
   )
   const tracks = playlist.tracks ?? []
-  const likedTrackIds = useMemo(
-    () => new Set((likedTracks ?? []).map((track) => track.id)),
-    [likedTracks],
-  )
   const isOwner = Boolean(
     playlist.user?.id && user?.id && playlist.user.id === user.id,
   )
@@ -85,7 +78,6 @@ export const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
         <TracksList
           activeTrackId={playback.currentTrackId}
           isPlaybackContextActive={playback.isActive}
-          likedTrackIds={likedTrackIds}
           onPlayTrack={playback.playTrack}
           onRemoveTrack={isOwner ? actions.removeTrack : undefined}
           removable={isOwner}

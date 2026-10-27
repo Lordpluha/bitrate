@@ -35,9 +35,7 @@ export const LibraryTabs = ({ controls, onChange }: LibraryTabsProps) => {
             ? t('library.playlists')
             : tab.id === 'liked'
               ? t('library.liked')
-              : tab.id === 'albums'
-                ? t('library.albums')
-                : t('library.history')}
+              : t('library.albums')}
         </button>
       ))}
     </div>

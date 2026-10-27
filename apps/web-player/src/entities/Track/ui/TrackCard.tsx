@@ -29,7 +29,6 @@ interface TrackCardProps {
   index: number
   onPlayTrack?: (track: TrackEntity, index: number) => void
   onRemoveTrack?: (trackId: string) => void
-  isLiked?: boolean
   isPlaybackContextActive?: boolean
   isPlaybackTrackActive?: boolean
   removable?: boolean
@@ -40,7 +39,6 @@ interface TrackCardProps {
 export const TrackCard = ({
   album = null,
   index,
-  isLiked = false,
   isPlaybackContextActive = true,
   isPlaybackTrackActive = true,
   onPlayTrack,
@@ -130,7 +128,6 @@ export const TrackCard = ({
           </div>
         ) : null}
         <TrackRowActions
-          isLiked={isLiked}
           onRemove={() => onRemoveTrack?.(track.id)}
           removable={removable}
           track={track}

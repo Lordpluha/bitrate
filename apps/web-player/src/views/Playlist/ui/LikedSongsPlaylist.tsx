@@ -5,7 +5,6 @@ import { type TrackEntity, TracksList, useLikedTracks } from '@entities/Track'
 import { ROUTES } from '@shared/routes'
 import { StateMessage } from '@shared/ui'
 import { Heart, Pause, Play } from 'lucide-react'
-import { useMemo } from 'react'
 import { useI18n } from '@/shared/i18n'
 import { getPlaylistDuration } from '../utils/getPlaylistDuration'
 import { PlaylistHeader } from './PlaylistHeader'
@@ -23,10 +22,6 @@ export const LikedSongsPlaylist = ({ tracks }: LikedSongsPlaylistProps) => {
   })
   const currentTracks = likedTracks ?? tracks
   const likedSongsPlaybackId = 'liked-songs'
-  const likedTrackIds = useMemo(
-    () => currentTracks.map((track) => track.id),
-    [currentTracks],
-  )
   const togglePlay = usePlayerStore((state) => state.togglePlay)
   const isLikedContext = musicPlayer.currentPlaylistId === likedSongsPlaybackId
   const isLikedPlaying = isLikedContext && musicPlayer.isPlaying
@@ -83,7 +78,6 @@ export const LikedSongsPlaylist = ({ tracks }: LikedSongsPlaylistProps) => {
         <TracksList
           activeTrackId={musicPlayer.currentTrack?.id}
           isPlaybackContextActive={isLikedContext}
-          likedTrackIds={likedTrackIds}
           onPlayTrack={playFrom}
           tracks={currentTracks}
         />

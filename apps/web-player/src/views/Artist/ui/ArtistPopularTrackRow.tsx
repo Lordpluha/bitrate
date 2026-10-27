@@ -90,11 +90,7 @@ export const ArtistPopularTrackRow = ({
           'opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-within:opacity-100',
       )}
     >
-      <LikeTrackButton
-        initialLiked={isLiked}
-        trackId={track.id}
-        trackTitle={track.title}
-      />
+      <LikeTrackButton trackId={track.id} trackTitle={track.title} />
     </span>
     <span className="pointer-events-none relative z-10 text-right text-[13px] tabular-nums text-muted-foreground">
       {formatDuration(track.duration ?? 0)}

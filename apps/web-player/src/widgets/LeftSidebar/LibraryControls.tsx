@@ -21,7 +21,7 @@ import {
 
 const SORT_LABELS = {
   creator: 'library.sortCreator',
-  recent: 'library.recents',
+  recent: 'library.sortRecentlyAdded',
   title: 'library.sortTitle',
 } as const satisfies Record<LibrarySort, TranslationKey>
 
