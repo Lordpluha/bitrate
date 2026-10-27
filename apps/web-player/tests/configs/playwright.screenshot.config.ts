@@ -1,8 +1,12 @@
+import { resolve } from 'node:path'
 import { defineConfig, devices } from '@playwright/test'
 
 /** Where `tests/screenshot/mock-api.mjs` answers; the specs' fixture data lives there. */
 const MOCK_API_PORT = 3999
 const MOCK_API_URL = `http://localhost:${MOCK_API_PORT}`
+
+/** Playwright runs `webServer` commands from this config's directory unless told otherwise. */
+const APP_ROOT = resolve(__dirname, '../..')
 
 export default defineConfig({
   testDir: '../../src',
@@ -50,6 +54,7 @@ export default defineConfig({
     : [
         {
           command: `node tests/screenshot/mock-api.mjs`,
+          cwd: APP_ROOT,
           env: { MOCK_API_PORT: String(MOCK_API_PORT) },
           url: `${MOCK_API_URL}/api/v1/auth/me`,
           reuseExistingServer: false,
@@ -57,6 +62,7 @@ export default defineConfig({
         },
         {
           command: 'pnpm dev',
+          cwd: APP_ROOT,
           env: { API_URL: MOCK_API_URL, NEXT_PUBLIC_API_URL: MOCK_API_URL },
           url: 'http://localhost:3001',
           reuseExistingServer: false,
