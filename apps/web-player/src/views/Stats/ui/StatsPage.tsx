@@ -67,7 +67,7 @@ const StatsLoading = () => {
       className="flex flex-col gap-4"
       role="status"
     >
-      <div className="grid grid-cols-2 gap-3 md:gap-4 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 md:gap-4 2xl:grid-cols-4">
         {TILE_KEYS.map((key) => (
           <Skeleton className="h-28 rounded-[14px]" key={key} />
         ))}
@@ -127,7 +127,7 @@ const StatsContent = ({ range }: { range: DiscoveryRange }) => {
         isSwitchingRange && 'opacity-60',
       )}
     >
-      <div className="grid grid-cols-2 gap-3 md:gap-4 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 md:gap-4 2xl:grid-cols-4">
         {stats.map((stat) => (
           <StatTile key={stat.label} {...stat} />
         ))}

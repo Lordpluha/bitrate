@@ -13,22 +13,28 @@ export const ArtistHero = ({ artist, statsLabel }: ArtistHeroProps) => {
     artist.backgroundImage,
     artist.avatar,
   )
+  /** Without a picture the hero is a tinted wash; the placeholder glyph would fill it. */
+  const hasPicture = Boolean(artist.backgroundImage || artist.avatar)
 
   return (
     <section
       aria-labelledby="artist-page-title"
       className="relative isolate flex h-65 flex-col justify-end gap-1 overflow-hidden rounded-[14px] p-4 md:h-80 md:gap-2 md:rounded-2xl md:p-8"
     >
-      <MediaImage
-        alt=""
-        className="-z-20 object-cover object-center"
-        fallback="artist"
-        fill
-        priority
-        sizes="100vw"
-        src={backgroundUrl}
-        unoptimized
-      />
+      {hasPicture ? (
+        <MediaImage
+          alt=""
+          className="-z-20 object-cover object-center"
+          fallback="artist"
+          fill
+          priority
+          sizes="100vw"
+          src={backgroundUrl}
+          unoptimized
+        />
+      ) : (
+        <div className="absolute inset-0 -z-20 bg-linear-to-br from-primary/55 via-secondary to-background" />
+      )}
       <div className="absolute inset-0 -z-10 bg-linear-to-b from-black/0 via-black/15 to-black/75" />
 
       {artist.verified ? (

@@ -50,7 +50,7 @@ export const PopularArtists = () => {
             ) : (
               artists.map((artist) => (
                 <CarouselItem
-                  className="mr-4 max-w-50 basis-auto"
+                  className="mr-4 max-w-50 basis-45 shrink-0"
                   key={artist.id}
                 >
                   <MusicCardLg

@@ -30,6 +30,8 @@ export const AboutArtist = () => {
     artist.backgroundImage,
     artist.avatar,
   )
+  /** Without a picture the card is a tinted wash; the placeholder glyph would fill it. */
+  const hasPicture = Boolean(artist.backgroundImage || artist.avatar)
   const ncsBioLink = artist.bio ? parseNcsArtistBioLink(artist.bio) : null
   const ncsBioPrefix = getNcsArtistBioPrefix()
 
@@ -41,16 +43,20 @@ export const AboutArtist = () => {
         href={ROUTES.artist(artist.id)}
       >
         <div className="relative aspect-[3/2] w-full overflow-hidden">
-          <MediaImage
-            alt=""
-            className="object-cover transition duration-300 group-hover:scale-[1.02] group-hover:brightness-90"
-            fallback="artist"
-            fill
-            priority
-            sizes="(max-width: 1279px) 100vw, 320px"
-            src={backgroundUrl}
-            unoptimized
-          />
+          {hasPicture ? (
+            <MediaImage
+              alt=""
+              className="object-cover transition duration-300 group-hover:scale-[1.02] group-hover:brightness-90"
+              fallback="artist"
+              fill
+              priority
+              sizes="(max-width: 1279px) 100vw, 320px"
+              src={backgroundUrl}
+              unoptimized
+            />
+          ) : (
+            <div className="absolute inset-0 bg-linear-to-br from-primary/55 via-secondary to-background" />
+          )}
           <div className="absolute inset-0 bg-black/15 transition-colors group-hover:bg-black/25" />
           <h2 className="absolute left-4 top-4 z-10 text-sm font-bold text-white drop-shadow-md">
             {t('sidebar.aboutArtist')}
