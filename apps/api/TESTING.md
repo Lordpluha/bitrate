@@ -48,8 +48,6 @@ Only E2E tests require real infrastructure:
   - `JWT_SECRET`
   - `JWT_ACCESS_EXPIRES_IN`
   - `JWT_REFRESH_EXPIRES_IN`
-  - `ACCESS_TOKEN_NAME`
-  - `REFRESH_TOKEN_NAME`
 - **Other required envs:** `WEB_HOST`, `NODE_ENV`
 
 All required variables are validated in [apps/api/env.schema.ts](env.schema.ts).

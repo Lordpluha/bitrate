@@ -12,7 +12,6 @@ const makeTokenServiceMock = () =>
   ({
     verifyToken: jest.fn(),
     hashToken: jest.fn().mockReturnValue('hashed-token'),
-    getTokenName: jest.fn((type: string) => (type === 'access' ? 'access_token' : 'refresh_token')),
   }) as unknown as jest.Mocked<TokenService>
 
 const makeReflectorMock = (requirement: string, permission?: Permission) =>
@@ -37,8 +36,6 @@ describe('AdminAuthGuard', () => {
     resetPrismaMock()
     prisma = prismaMock
     tokenService = makeTokenServiceMock()
-    process.env.ACCESS_TOKEN_NAME = 'access_token'
-    process.env.REFRESH_TOKEN_NAME = 'refresh_token'
   })
 
   it('should throw ACCESS_TOKEN_REQUIRED when access token is missing', async () => {
@@ -49,6 +46,17 @@ describe('AdminAuthGuard', () => {
     )
   })
 
+  /** A player or legacy session riding along on the shared cookie domain is not a staff one. */
+  it("should ignore another audience's session cookies", async () => {
+    guard = new AdminAuthGuard(prisma, makeReflectorMock('access'), tokenService)
+    const cookies = { user_access_token: 'user-at', access_token: 'legacy-at' }
+
+    await expect(guard.canActivate(makeContext(cookies) as never)).rejects.toThrow(
+      UNAUTHORIZED_ERRORS.ACCESS_TOKEN_REQUIRED,
+    )
+    expect(tokenService.verifyToken).not.toHaveBeenCalled()
+  })
+
   it('should reject a user-type token (STAFF_NOT_FOUND)', async () => {
     guard = new AdminAuthGuard(prisma, makeReflectorMock('access'), tokenService)
     tokenService.verifyToken.mockResolvedValue({
@@ -57,9 +65,9 @@ describe('AdminAuthGuard', () => {
       type: 'user',
     } as never)
 
-    await expect(guard.canActivate(makeContext({ access_token: 'at' }) as never)).rejects.toThrow(
-      UNAUTHORIZED_ERRORS.STAFF_NOT_FOUND,
-    )
+    await expect(
+      guard.canActivate(makeContext({ staff_access_token: 'at' }) as never),
+    ).rejects.toThrow(UNAUTHORIZED_ERRORS.STAFF_NOT_FOUND)
   })
 
   it('should throw STAFF_NOT_FOUND when the staff record cannot be found', async () => {
@@ -71,9 +79,9 @@ describe('AdminAuthGuard', () => {
     } as never)
     prisma.staff.findFirst.mockResolvedValue(null)
 
-    await expect(guard.canActivate(makeContext({ access_token: 'at' }) as never)).rejects.toThrow(
-      UNAUTHORIZED_ERRORS.STAFF_NOT_FOUND,
-    )
+    await expect(
+      guard.canActivate(makeContext({ staff_access_token: 'at' }) as never),
+    ).rejects.toThrow(UNAUTHORIZED_ERRORS.STAFF_NOT_FOUND)
   })
 
   it('should throw SESSION_NOT_FOUND when no matching session exists', async () => {
@@ -86,9 +94,9 @@ describe('AdminAuthGuard', () => {
     prisma.staff.findFirst.mockResolvedValue(buildStaff() as never)
     prisma.staffSession.findFirst.mockResolvedValue(null)
 
-    await expect(guard.canActivate(makeContext({ access_token: 'at' }) as never)).rejects.toThrow(
-      UNAUTHORIZED_ERRORS.SESSION_NOT_FOUND,
-    )
+    await expect(
+      guard.canActivate(makeContext({ staff_access_token: 'at' }) as never),
+    ).rejects.toThrow(UNAUTHORIZED_ERRORS.SESSION_NOT_FOUND)
   })
 
   it('should throw ForbiddenException when the permission is missing', async () => {
@@ -106,9 +114,9 @@ describe('AdminAuthGuard', () => {
     )
     prisma.staffSession.findFirst.mockResolvedValue(buildStaffSession() as never)
 
-    await expect(guard.canActivate(makeContext({ access_token: 'at' }) as never)).rejects.toThrow(
-      ForbiddenException,
-    )
+    await expect(
+      guard.canActivate(makeContext({ staff_access_token: 'at' }) as never),
+    ).rejects.toThrow(ForbiddenException)
   })
 
   it('should return true and attach staff to request when the permission is held', async () => {
@@ -126,7 +134,7 @@ describe('AdminAuthGuard', () => {
     prisma.staff.findFirst.mockResolvedValue(staff as never)
     prisma.staffSession.findFirst.mockResolvedValue(session as never)
 
-    const req: Record<string, unknown> = { cookies: { access_token: 'at' } }
+    const req: Record<string, unknown> = { cookies: { staff_access_token: 'at' } }
     const ctx = {
       getHandler: () => ({}),
       getClass: () => ({}),
@@ -150,7 +158,7 @@ describe('AdminAuthGuard', () => {
     prisma.staff.findFirst.mockResolvedValue(staff as never)
     prisma.staffSession.findFirst.mockResolvedValue(buildStaffSession() as never)
 
-    const result = await guard.canActivate(makeContext({ access_token: 'at' }) as never)
+    const result = await guard.canActivate(makeContext({ staff_access_token: 'at' }) as never)
 
     expect(result).toBe(true)
   })
@@ -165,7 +173,7 @@ describe('AdminAuthGuard', () => {
     prisma.staff.findFirst.mockResolvedValue(buildStaff({ permissions: [] }) as never)
     prisma.staffSession.findFirst.mockResolvedValue(buildStaffSession() as never)
 
-    const result = await guard.canActivate(makeContext({ access_token: 'at' }) as never)
+    const result = await guard.canActivate(makeContext({ staff_access_token: 'at' }) as never)
 
     expect(result).toBe(true)
   })
@@ -174,8 +182,8 @@ describe('AdminAuthGuard', () => {
     guard = new AdminAuthGuard(prisma, makeReflectorMock('access'), tokenService)
     tokenService.verifyToken.mockRejectedValue(new Error('invalid') as never)
 
-    await expect(guard.canActivate(makeContext({ access_token: 'bad' }) as never)).rejects.toThrow(
-      UnauthorizedException,
-    )
+    await expect(
+      guard.canActivate(makeContext({ staff_access_token: 'bad' }) as never),
+    ).rejects.toThrow(UnauthorizedException)
   })
 })

@@ -1,4 +1,5 @@
 import { AUTH_ROUTE_THROTTLE } from '@common/config'
+import { sessionCookieName } from '@modules/tokens'
 import { TokenService } from '@modules/tokens/token.service'
 import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
@@ -36,7 +37,7 @@ export class AdminAuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const tokens = await this.adminAuthService.loginStaff(loginDto.email, loginDto.password)
-    this.tokenService.setAuthCookies(res, tokens.access_token, tokens.refresh_token)
+    this.tokenService.setAuthCookies(res, 'staff', tokens.access_token, tokens.refresh_token)
   }
 
   /** Runs the logout operation. */
@@ -44,9 +45,9 @@ export class AdminAuthController {
   @AdminAuth()
   @Post('logout')
   async logout(@Req() req: AdminAuthRequest & Request, @Res({ passthrough: true }) res: Response) {
-    const access_token = req[process.env.ACCESS_TOKEN_NAME!] as string
+    const access_token = req[sessionCookieName('staff', 'access')] as string
     await this.adminAuthService.logout(req.staff.id, access_token)
-    this.tokenService.clearAuthCookies(res)
+    this.tokenService.clearAuthCookies(res, 'staff')
   }
 
   /** Runs the refresh operation. */
@@ -54,9 +55,9 @@ export class AdminAuthController {
   @AdminRefreshAuth()
   @Post('refresh')
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const refresh_token = req[process.env.REFRESH_TOKEN_NAME!] as string
+    const refresh_token = req[sessionCookieName('staff', 'refresh')] as string
     const tokens = await this.adminAuthService.refresh(refresh_token)
-    this.tokenService.setAuthCookies(res, tokens.access_token, tokens.refresh_token)
+    this.tokenService.setAuthCookies(res, 'staff', tokens.access_token, tokens.refresh_token)
   }
 
   /** Runs the get me operation. */

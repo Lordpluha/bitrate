@@ -6,7 +6,12 @@ import { JwtService } from '@nestjs/jwt'
 import * as argon2 from 'argon2'
 import type { Response } from 'express'
 import ms, { type StringValue } from 'ms'
-import { JWTPayload } from '../tokens'
+import {
+  JWTPayload,
+  LEGACY_SESSION_COOKIE_NAMES,
+  type SessionAudience,
+  sessionCookieName,
+} from '../tokens'
 
 /** Represents the token service. */
 @Injectable()
@@ -73,40 +78,50 @@ export class TokenService {
     )
   }
 
-  /** Runs the set auth cookies operation. */
-  setAuthCookies(res: Response, accessToken: string, refreshToken: string) {
+  /** Writes an audience's session cookie pair, dropping the pre-split shared names. */
+  setAuthCookies(
+    res: Response,
+    audience: SessionAudience,
+    accessToken: string,
+    refreshToken: string,
+  ) {
     const base = this.configService.getOrThrow('cookie')
 
-    res.cookie(this.configService.getOrThrow('ACCESS_TOKEN_NAME'), accessToken, {
+    res.cookie(sessionCookieName(audience, 'access'), accessToken, {
       ...base,
       maxAge: ms(this.accessTokenExpiry),
     })
-    res.cookie(this.configService.getOrThrow('REFRESH_TOKEN_NAME'), refreshToken, {
+    res.cookie(sessionCookieName(audience, 'refresh'), refreshToken, {
       ...base,
       maxAge: ms(this.refreshTokenExpiry),
     })
+    this.clearLegacyCookies(res)
   }
 
   /**
-   * Runs the clear auth cookies operation.
+   * Drops an audience's session cookie pair; other audiences' sessions are left alone.
    *
    * The clearing cookie has to carry the same `domain` and `path` the session was
    * written with — a bare `clearCookie` writes a host-only cookie that leaves a
    * domain-scoped session in place, so logout silently does nothing.
    */
-  clearAuthCookies(res: Response) {
-    const { httpOnly, sameSite, secure, path, domain } = this.configService.getOrThrow('cookie')
-    const options = { httpOnly, sameSite, secure, path, ...(domain ? { domain } : {}) }
+  clearAuthCookies(res: Response, audience: SessionAudience) {
+    const options = this.clearCookieOptions()
 
-    res.clearCookie(this.configService.getOrThrow('ACCESS_TOKEN_NAME'), options)
-    res.clearCookie(this.configService.getOrThrow('REFRESH_TOKEN_NAME'), options)
+    res.clearCookie(sessionCookieName(audience, 'access'), options)
+    res.clearCookie(sessionCookieName(audience, 'refresh'), options)
+    this.clearLegacyCookies(res, options)
   }
 
-  /** Returns the cookie name for access or refresh token. */
-  getTokenName(type: 'access' | 'refresh'): string {
-    return type === 'access'
-      ? this.configService.getOrThrow('ACCESS_TOKEN_NAME')
-      : this.configService.getOrThrow('REFRESH_TOKEN_NAME')
+  /** Drops the session cookies every audience shared before the names were split. */
+  private clearLegacyCookies(res: Response, options = this.clearCookieOptions()) {
+    for (const name of LEGACY_SESSION_COOKIE_NAMES) res.clearCookie(name, options)
+  }
+
+  /** The scope a session cookie was written with, which clearing it has to repeat. */
+  private clearCookieOptions() {
+    const { httpOnly, sameSite, secure, path, domain } = this.configService.getOrThrow('cookie')
+    return { httpOnly, sameSite, secure, path, ...(domain ? { domain } : {}) }
   }
 
   /** Runs the hash token operation. */

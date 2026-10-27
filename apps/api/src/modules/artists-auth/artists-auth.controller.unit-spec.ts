@@ -56,8 +56,6 @@ describe('AuthController (artists)', () => {
   let tokenService: jest.Mocked<TokenService>
 
   beforeEach(() => {
-    process.env.ACCESS_TOKEN_NAME = 'access_token'
-    process.env.REFRESH_TOKEN_NAME = 'refresh_token'
     authService = makeAuthServiceMock()
     artistsService = makeArtistsServiceMock()
     tokenService = makeTokenServiceMock()
@@ -83,7 +81,7 @@ describe('AuthController (artists)', () => {
     expect(authService.loginArtist).toHaveBeenCalledWith('a@example.com', 'pass', {
       userAgent: 'Firefox',
     })
-    expect(tokenService.setAuthCookies).toHaveBeenCalledWith(res, 'at', 'rt')
+    expect(tokenService.setAuthCookies).toHaveBeenCalledWith(res, 'artist', 'at', 'rt')
   })
 
   it('registration should call registerArtist', async () => {
@@ -111,13 +109,13 @@ describe('AuthController (artists)', () => {
     const res = makeResponse()
     const req = {
       artist: { id: 'artist-1' },
-      access_token: 'at',
+      artist_access_token: 'at',
     } as never
 
     await controller.logout(req, res)
 
     expect(authService.logout).toHaveBeenCalledWith('artist-1', 'at')
-    expect(tokenService.clearAuthCookies).toHaveBeenCalledWith(res)
+    expect(tokenService.clearAuthCookies).toHaveBeenCalledWith(res, 'artist')
   })
 
   it('refresh should call service.refresh and setAuthCookies', async () => {
@@ -127,13 +125,13 @@ describe('AuthController (artists)', () => {
     } as never)
     const res = makeResponse()
     const req = {
-      refresh_token: 'rt',
+      artist_refresh_token: 'rt',
     } as never
 
     await controller.refresh(req, res)
 
     expect(authService.refresh).toHaveBeenCalledWith('rt', {})
-    expect(tokenService.setAuthCookies).toHaveBeenCalledWith(res, 'new-at', 'new-rt')
+    expect(tokenService.setAuthCookies).toHaveBeenCalledWith(res, 'artist', 'new-at', 'new-rt')
   })
 
   it('getMe should return artist by id from request user', async () => {
