@@ -1,4 +1,4 @@
-import type { TrackManifest } from '@/entities/Player/model/manifest.types'
+import type { TrackManifest } from './manifest'
 
 /** The MSE MIME string for one rendition codec. */
 const mimeFor = (codec: string) => `audio/mp4; codecs="${codec}"`
@@ -77,9 +77,7 @@ export type OpenSourceBufferInput = {
 }
 
 /** Creates a MediaSource and points the audio element at it. */
-export const attachMediaSource = (
-  audio: HTMLAudioElement,
-): AttachedMediaSource => {
+export const attachMediaSource = (audio: HTMLAudioElement): AttachedMediaSource => {
   const mediaSource = new MediaSource()
   const objectUrl = URL.createObjectURL(mediaSource)
   audio.src = objectUrl

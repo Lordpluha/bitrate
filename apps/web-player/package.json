@@ -23,6 +23,7 @@
     "test:screenshot:update": "playwright test --config=tests/configs/playwright.screenshot.config.ts --update-snapshots"
   },
   "dependencies": {
+    "@bitrate/player": "workspace:*",
     "@bitrate/ui-react": "workspace:*",
     "@hookform/resolvers": "^5.9.1",
     "@sentry/nextjs": "^11.5.0",

@@ -1,8 +1,6 @@
 import { vi } from 'vitest'
-import type {
-  ManifestRendition,
-  TrackManifest,
-} from '@/entities/Player/model/manifest.types'
+import { configureCmafEngine } from '../environment'
+import type { ManifestRendition, TrackManifest } from '../manifest'
 
 export class FakeSourceBuffer extends EventTarget {
   static holdFirstAppend = false
@@ -126,6 +124,7 @@ export const installMediaSourceFakes = () => {
   FakeMediaSource.throwOnAddSourceBuffer = false
   FakeSourceBuffer.holdFirstAppend = false
   localStorage.clear()
+  configureCmafEngine({ storage: localStorage })
   vi.stubGlobal('MediaSource', FakeMediaSource)
   Object.defineProperty(URL, 'createObjectURL', {
     configurable: true,

@@ -8,12 +8,9 @@ import { type RequestFragmentInput, requestFragment } from './fragmentRequest'
  */
 const RETRY = { baseDelayMs: 0, maxAttempts: 3, timeoutMs: 1_000 }
 
-const statusError = (status: number) =>
-  Object.assign(new Error(`HTTP ${status}`), { status })
+const statusError = (status: number) => Object.assign(new Error(`HTTP ${status}`), { status })
 
-const input = (
-  overrides: Partial<RequestFragmentInput>,
-): RequestFragmentInput => ({
+const input = (overrides: Partial<RequestFragmentInput>): RequestFragmentInput => ({
   bitrate: 128,
   fetchRange: vi.fn(async () => new ArrayBuffer(4)),
   isCurrent: () => true,
@@ -55,9 +52,7 @@ describe('requestFragment', () => {
       .fn<RequestFragmentInput['fetchRange']>()
       .mockRejectedValue(statusError(404))
 
-    await expect(requestFragment(input({ fetchRange }))).rejects.toThrow(
-      'HTTP 404',
-    )
+    await expect(requestFragment(input({ fetchRange }))).rejects.toThrow('HTTP 404')
     expect(fetchRange).toHaveBeenCalledTimes(1)
   })
 
@@ -66,18 +61,14 @@ describe('requestFragment', () => {
       .fn<RequestFragmentInput['fetchRange']>()
       .mockRejectedValue(new Error('offline'))
 
-    await expect(requestFragment(input({ fetchRange }))).rejects.toThrow(
-      'offline',
-    )
+    await expect(requestFragment(input({ fetchRange }))).rejects.toThrow('offline')
     expect(fetchRange).toHaveBeenCalledTimes(3)
   })
 
   it('returns null without fetching once a seek has superseded it', async () => {
     const fetchRange = vi.fn<RequestFragmentInput['fetchRange']>()
 
-    const bytes = await requestFragment(
-      input({ fetchRange, isCurrent: () => false }),
-    )
+    const bytes = await requestFragment(input({ fetchRange, isCurrent: () => false }))
 
     expect(bytes).toBeNull()
     expect(fetchRange).not.toHaveBeenCalled()
@@ -106,9 +97,7 @@ describe('requestFragment', () => {
       () => new Promise<ArrayBuffer>(() => undefined),
     )
 
-    const pending = requestFragment(
-      input({ fetchRange, retry: { ...RETRY, maxAttempts: 2 } }),
-    )
+    const pending = requestFragment(input({ fetchRange, retry: { ...RETRY, maxAttempts: 2 } }))
     const settled = expect(pending).rejects.toThrow('timed out')
     await vi.advanceTimersByTimeAsync(RETRY.timeoutMs * 3)
 

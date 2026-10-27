@@ -1,5 +1,5 @@
+import type { StreamLoader } from '@bitrate/player/engine'
 import type Hls from 'hls.js'
-import type { StreamLoader } from '@/entities/Player/lib'
 import type { PlayableTrack } from '@/entities/Player/model/playableTrack.types'
 
 export type SlotIndex = 0 | 1

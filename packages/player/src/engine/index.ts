@@ -7,6 +7,9 @@
  */
 import type { BitratePlayerErrorCode, BitratePlayerSourceResolver } from '../contract'
 
+/** The CMAF/MSE path with adaptive bitrate (ADR-0020); its storage and debug switch are injected too. */
+export * from './cmaf'
+
 /** `MediaError.code` values the DOM spec defines — kept local so the engine needs no DOM lib types at module scope. */
 const MEDIA_ERR_NETWORK = 2
 const MEDIA_ERR_SRC_NOT_SUPPORTED = 4

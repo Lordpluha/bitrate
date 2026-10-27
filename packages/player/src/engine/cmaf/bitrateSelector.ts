@@ -1,18 +1,8 @@
-import {
-  AdaptiveBitrateController,
-  type ThroughputSample,
-} from '@/entities/Player/lib/adaptiveBitrate'
-import { mbps, playerLog } from '@/entities/Player/lib/playerLog'
-import {
-  capBitrate,
-  getMaxStreamBitrate,
-} from '@/entities/Player/lib/streamQuality'
-import {
-  pickStartBitrate,
-  readRememberedThroughput,
-  rememberThroughput,
-} from '@/entities/Player/lib/throughputMemory'
-import type { TrackManifest } from '@/entities/Player/model/manifest.types'
+import { AdaptiveBitrateController, type ThroughputSample } from './adaptiveBitrate'
+import { mbps, playerLog } from './playerLog'
+import { capBitrate, getMaxStreamBitrate } from './streamQuality'
+import { pickStartBitrate, readRememberedThroughput, rememberThroughput } from './throughputMemory'
+import type { TrackManifest } from './manifest'
 
 /** What a selector needs to pick a starting rendition and report changes. */
 export type BitrateSelectorInput = {
@@ -57,10 +47,7 @@ export class BitrateSelector {
     if (remembered !== null) this.abr.seed(remembered)
 
     this.current = capBitrate({
-      bitrate:
-        initialBitrate ??
-        pickStartBitrate({ manifest, throughputBps: remembered }) ??
-        0,
+      bitrate: initialBitrate ?? pickStartBitrate({ manifest, throughputBps: remembered }) ?? 0,
       manifest,
       maxBitrate,
     })
@@ -89,10 +76,7 @@ export class BitrateSelector {
   /** Records that the buffer ran dry, so the next choice drops to the floor. */
   noteStall(): void {
     this.hadStall = true
-    playerLog(
-      'error',
-      `${this.label}: буфер опустел — следующий фрагмент возьмём с минимума`,
-    )
+    playerLog('error', `${this.label}: буфер опустел — следующий фрагмент возьмём с минимума`)
   }
 
   /** Feeds one completed download into the throughput estimate. */
@@ -110,9 +94,7 @@ export class BitrateSelector {
    * @throws RangeError when the manifest has no such rendition.
    */
   pin(bitrate: number): boolean {
-    const known = this.manifest.renditions.some(
-      (rendition) => rendition.bitrate === bitrate,
-    )
+    const known = this.manifest.renditions.some((rendition) => rendition.bitrate === bitrate)
     if (!known) throw new RangeError(`Unknown rendition bitrate: ${bitrate}`)
 
     this.automatic = false
@@ -158,9 +140,7 @@ export class BitrateSelector {
       'abr',
       `${this.label}: ${chosen > this.current ? '↑' : '↓'} ${this.current}k → ${chosen}k`,
       {
-        'оценка полосы': this.abr.estimatedBps
-          ? mbps(this.abr.estimatedBps)
-          : 'ещё нет',
+        'оценка полосы': this.abr.estimatedBps ? mbps(this.abr.estimatedBps) : 'ещё нет',
         'буфер впереди': `${bufferedAhead.toFixed(1)} с`,
       },
     )

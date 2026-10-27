@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import type { TrackManifest } from '@/entities/Player/model/manifest.types'
+import { configureCmafEngine } from './environment'
+import type { TrackManifest } from './manifest'
 import { BitrateSelector } from './bitrateSelector'
 import { capBitrate, setMaxStreamBitrate } from './streamQuality'
 
@@ -19,36 +20,27 @@ const ladder: TrackManifest = {
 
 describe('capBitrate', () => {
   it('keeps a rendition within the cap', () => {
-    expect(
-      capBitrate({ bitrate: 192, manifest: ladder, maxBitrate: 192 }),
-    ).toBe(192)
+    expect(capBitrate({ bitrate: 192, manifest: ladder, maxBitrate: 192 })).toBe(192)
   })
 
   it('drops to the best rendition under the cap', () => {
-    expect(
-      capBitrate({ bitrate: 320, manifest: ladder, maxBitrate: 192 }),
-    ).toBe(192)
-    expect(
-      capBitrate({ bitrate: 320, manifest: ladder, maxBitrate: 150 }),
-    ).toBe(128)
+    expect(capBitrate({ bitrate: 320, manifest: ladder, maxBitrate: 192 })).toBe(192)
+    expect(capBitrate({ bitrate: 320, manifest: ladder, maxBitrate: 150 })).toBe(128)
   })
 
   it('uses the lowest rendition when every one is above the cap', () => {
-    expect(capBitrate({ bitrate: 320, manifest: ladder, maxBitrate: 64 })).toBe(
-      128,
-    )
+    expect(capBitrate({ bitrate: 320, manifest: ladder, maxBitrate: 64 })).toBe(128)
   })
 
   it('leaves the bitrate alone without a cap', () => {
-    expect(
-      capBitrate({ bitrate: 320, manifest: ladder, maxBitrate: null }),
-    ).toBe(320)
+    expect(capBitrate({ bitrate: 320, manifest: ladder, maxBitrate: null })).toBe(320)
   })
 })
 
 describe('BitrateSelector with a quality cap', () => {
   beforeEach(() => {
     localStorage.clear()
+    configureCmafEngine({ storage: localStorage })
   })
   afterEach(() => {
     setMaxStreamBitrate(null)

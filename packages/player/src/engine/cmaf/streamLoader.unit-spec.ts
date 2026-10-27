@@ -22,14 +22,12 @@ describe('StreamLoader', () => {
 
   it('retries transient fragment failures within a finite budget', async () => {
     let fragmentAttempts = 0
-    const fetchRange = vi.fn(
-      async ({ range }: { range: readonly number[] }) => {
-        if (range[0] === 2 && fragmentAttempts++ < 2) {
-          throw new Error('temporary network failure')
-        }
-        return new ArrayBuffer(2)
-      },
-    )
+    const fetchRange = vi.fn(async ({ range }: { range: readonly number[] }) => {
+      if (range[0] === 2 && fragmentAttempts++ < 2) {
+        throw new Error('temporary network failure')
+      }
+      return new ArrayBuffer(2)
+    })
     const onError = vi.fn()
     const loader = new StreamLoader({
       audio: document.createElement('audio'),
@@ -64,9 +62,7 @@ describe('StreamLoader', () => {
     await loader.start()
 
     expect(loader.isAutoBitrate).toBe(false)
-    expect(
-      fetchRange.mock.calls.every(([input]) => input.bitrate === 320),
-    ).toBe(true)
+    expect(fetchRange.mock.calls.every(([input]) => input.bitrate === 320)).toBe(true)
     loader.destroy()
   })
 
@@ -88,9 +84,7 @@ describe('StreamLoader', () => {
     await loader.start()
 
     expect(loader.isAutoBitrate).toBe(true)
-    expect(
-      fetchRange.mock.calls.every(([input]) => input.bitrate === 128),
-    ).toBe(true)
+    expect(fetchRange.mock.calls.every(([input]) => input.bitrate === 128)).toBe(true)
     loader.destroy()
   })
 
@@ -119,9 +113,7 @@ describe('StreamLoader', () => {
     await loader.start()
 
     expect(onError).toHaveBeenCalledOnce()
-    expect(onError).toHaveBeenCalledWith(
-      expect.objectContaining({ message: 'offline' }),
-    )
+    expect(onError).toHaveBeenCalledWith(expect.objectContaining({ message: 'offline' }))
     loader.destroy()
   })
 
@@ -179,13 +171,9 @@ describe('StreamLoader', () => {
       if (fragmentAttempt > 1) return Promise.resolve(new ArrayBuffer(2))
 
       return new Promise<ArrayBuffer>((_resolve, reject) => {
-        signal.addEventListener(
-          'abort',
-          () => reject(new DOMException('aborted', 'AbortError')),
-          {
-            once: true,
-          },
-        )
+        signal.addEventListener('abort', () => reject(new DOMException('aborted', 'AbortError')), {
+          once: true,
+        })
       })
     })
     const loader = new StreamLoader({ audio, fetchRange, manifest, onError })

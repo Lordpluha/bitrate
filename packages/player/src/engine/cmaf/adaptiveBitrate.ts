@@ -1,4 +1,4 @@
-import type { TrackManifest } from '@/entities/Player/model/manifest.types'
+import type { TrackManifest } from './manifest'
 
 export type ThroughputSample = {
   bytes: number
@@ -100,9 +100,7 @@ export class AdaptiveBitrateController {
     if (this.throughputBps === null) return currentBitrate
 
     const affordableBps = this.throughputBps * SAFETY_FACTOR
-    const affordable = [...ladder]
-      .reverse()
-      .find((bitrate) => bitrate * 1000 <= affordableBps)
+    const affordable = [...ladder].reverse().find((bitrate) => bitrate * 1000 <= affordableBps)
 
     /** Even the lowest rendition is unaffordable — it is still the best option. */
     if (affordable === undefined) {

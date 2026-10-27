@@ -61,8 +61,7 @@ class FakeSourceBuffer extends EventTarget {
   }
 }
 
-const asSourceBuffer = (fake: FakeSourceBuffer) =>
-  fake as unknown as SourceBuffer
+const asSourceBuffer = (fake: FakeSourceBuffer) => fake as unknown as SourceBuffer
 
 describe('SourceBufferQueue', () => {
   let fake: FakeSourceBuffer
@@ -88,9 +87,7 @@ describe('SourceBufferQueue', () => {
       queue.append(new ArrayBuffer(3), 0),
     ])
 
-    expect(fake.operations.map((operation) => operation.args[0])).toEqual([
-      1, 2, 3,
-    ])
+    expect(fake.operations.map((operation) => operation.args[0])).toEqual([1, 2, 3])
   })
 
   it('trims the back buffer and retries when the browser reports a full buffer', async () => {
@@ -164,9 +161,7 @@ describe('SourceBufferQueue', () => {
 
     await queue.append(new ArrayBuffer(64), 5)
 
-    expect(
-      fake.operations.some((operation) => operation.type === 'remove'),
-    ).toBe(false)
+    expect(fake.operations.some((operation) => operation.type === 'remove')).toBe(false)
     expect(fake.operations).toContainEqual({ type: 'append', args: [64] })
   })
 
@@ -200,8 +195,6 @@ describe('SourceBufferQueue', () => {
       sourceBuffer: asSourceBuffer(errorFake),
     })
 
-    await expect(queue.append(new ArrayBuffer(1), 0)).rejects.toThrow(
-      /signalled an error/,
-    )
+    await expect(queue.append(new ArrayBuffer(1), 0)).rejects.toThrow(/signalled an error/)
   })
 })

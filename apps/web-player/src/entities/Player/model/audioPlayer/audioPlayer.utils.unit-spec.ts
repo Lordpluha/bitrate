@@ -1,5 +1,4 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { bufferedRanges } from '@/entities/Player/lib/__tests__/mediaSourceFakes'
 import {
   shouldDelayInitialPlayback,
   shouldPrefetchNextTrack,
@@ -10,6 +9,13 @@ import {
  * slow connection holds the first play — the thresholds the shared engine's
  * prefetch must keep after the migration.
  */
+const bufferedRanges = (windows: [number, number][]): TimeRanges =>
+  ({
+    end: (index: number) => windows[index]?.[1] ?? 0,
+    length: windows.length,
+    start: (index: number) => windows[index]?.[0] ?? 0,
+  }) as TimeRanges
+
 type MediaShape = {
   currentTime: number
   duration: number

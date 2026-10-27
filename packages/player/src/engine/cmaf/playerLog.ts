@@ -1,10 +1,13 @@
 /**
  * Console tracing for the CMAF playback path.
  *
- * On by default in development; in any environment it can be toggled at runtime
- * with `localStorage.setItem('player-debug', '1')` (and `'0'` to silence it),
- * so the same build can be traced on a phone or in preview.
+ * Off unless the host turns it on by default (web-player does in development); in
+ * any environment it can be toggled at runtime with the host storage's
+ * `player-debug` key — `'1'` on, `'0'` off — so the same build can be traced on
+ * a phone or in preview.
  */
+
+import { getCmafEngineEnvironment } from './environment'
 
 const STORAGE_KEY = 'player-debug'
 
@@ -20,9 +23,10 @@ const STYLES = {
 export type PlayerLogChannel = keyof typeof STYLES
 
 const readOverride = (): boolean | null => {
-  if (typeof localStorage === 'undefined') return null
+  const { storage } = getCmafEngineEnvironment()
+  if (!storage) return null
 
-  const value = localStorage.getItem(STORAGE_KEY)
+  const value = storage.getItem(STORAGE_KEY)
   if (value === '1') return true
   if (value === '0') return false
   return null
@@ -30,14 +34,13 @@ const readOverride = (): boolean | null => {
 
 /** True when playback tracing should be printed. */
 const isPlayerLogEnabled = (): boolean =>
-  readOverride() ?? process.env.NODE_ENV === 'development'
+  readOverride() ?? getCmafEngineEnvironment().debugByDefault
 
 /** Formats bytes as KB with one decimal, the scale fragments actually land in. */
 const kb = (bytes: number) => `${(bytes / 1024).toFixed(1)} KB`
 
 /** Formats bits per second as Mbps. */
-export const mbps = (bitsPerSecond: number) =>
-  `${(bitsPerSecond / 1_000_000).toFixed(2)} Mbps`
+export const mbps = (bitsPerSecond: number) => `${(bitsPerSecond / 1_000_000).toFixed(2)} Mbps`
 
 export const playerLog = (
   channel: PlayerLogChannel,

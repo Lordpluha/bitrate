@@ -4,6 +4,7 @@ import type { PlayerSlot } from './audioPlayer.types'
 
 const mocks = vi.hoisted(() => ({
   canPlayThroughMse: vi.fn(() => true),
+  configureCmafEngine: vi.fn(),
   playerLog: vi.fn(),
   start: vi.fn<() => Promise<void>>(),
 }))
@@ -12,8 +13,9 @@ vi.mock('@/entities/Player/api/client', () => ({
   fetchRenditionRange: vi.fn(),
 }))
 
-vi.mock('@/entities/Player/lib', () => ({
+vi.mock('@bitrate/player/engine', () => ({
   canPlayThroughMse: mocks.canPlayThroughMse,
+  configureCmafEngine: mocks.configureCmafEngine,
   playerLog: mocks.playerLog,
   StreamLoader: class {
     start = mocks.start

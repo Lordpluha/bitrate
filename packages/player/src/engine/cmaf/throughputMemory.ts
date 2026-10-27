@@ -1,4 +1,5 @@
-import type { TrackManifest } from '@/entities/Player/model/manifest.types'
+import { getCmafEngineEnvironment } from './environment'
+import type { TrackManifest } from './manifest'
 
 const STORAGE_KEY = 'player-throughput'
 
@@ -23,15 +24,15 @@ type StoredEstimate = {
 
 /** Last measured bandwidth in bits per second, or null when unknown or stale. */
 export const readRememberedThroughput = (): number | null => {
-  if (typeof localStorage === 'undefined') return null
+  const { storage } = getCmafEngineEnvironment()
+  if (!storage) return null
 
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
+    const raw = storage.getItem(STORAGE_KEY)
     if (!raw) return null
 
     const parsed: StoredEstimate = JSON.parse(raw)
-    if (typeof parsed.bps !== 'number' || typeof parsed.savedAtMs !== 'number')
-      return null
+    if (typeof parsed.bps !== 'number' || typeof parsed.savedAtMs !== 'number') return null
     if (Date.now() - parsed.savedAtMs > MAX_AGE_MS) return null
 
     return parsed.bps > 0 ? parsed.bps : null
@@ -46,11 +47,12 @@ type RememberThroughputInput = {
 
 /** Persists the current estimate so the next track can start at the right rung. */
 export const rememberThroughput = ({ bps }: RememberThroughputInput): void => {
-  if (typeof localStorage === 'undefined' || bps <= 0) return
+  const { storage } = getCmafEngineEnvironment()
+  if (!storage || bps <= 0) return
 
   try {
     const payload: StoredEstimate = { bps, savedAtMs: Date.now() }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload))
+    storage.setItem(STORAGE_KEY, JSON.stringify(payload))
   } catch {
     return
   }
@@ -80,8 +82,5 @@ export const pickStartBitrate = ({
 
   const affordableBps = throughputBps * START_SAFETY_FACTOR
 
-  return (
-    [...ladder].reverse().find((bitrate) => bitrate * 1000 <= affordableBps) ??
-    lowest
-  )
+  return [...ladder].reverse().find((bitrate) => bitrate * 1000 <= affordableBps) ?? lowest
 }

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 
-import type { TrackManifest } from '@/entities/Player/model/manifest.types'
+import type { TrackManifest } from './manifest'
 import { AdaptiveBitrateController } from './adaptiveBitrate'
 
 const manifest = {

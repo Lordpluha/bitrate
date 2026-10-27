@@ -1,8 +1,4 @@
-import type {
-  ManifestRendition,
-  ResolvedFragment,
-  TrackManifest,
-} from '@/entities/Player/model/manifest.types'
+import type { ManifestRendition, ResolvedFragment, TrackManifest } from './manifest'
 
 export type FragmentAtInput = {
   manifest: TrackManifest
@@ -11,8 +7,7 @@ export type FragmentAtInput = {
 }
 
 /** Converts a byte range from the manifest into an inclusive HTTP `Range` value. */
-export const toRangeHeader = (range: readonly [number, number]) =>
-  `bytes=${range[0]}-${range[1]}`
+export const toRangeHeader = (range: readonly [number, number]) => `bytes=${range[0]}-${range[1]}`
 
 /**
  * Resolves one fragment of a rendition into seconds and an inclusive byte range.
@@ -92,10 +87,7 @@ export const findFragmentIndexAt = ({
 
 const getBufferedRangeEndAt = (buffered: TimeRanges, timeSeconds: number) => {
   for (let index = 0; index < buffered.length; index += 1) {
-    if (
-      timeSeconds >= buffered.start(index) &&
-      timeSeconds <= buffered.end(index)
-    ) {
+    if (timeSeconds >= buffered.start(index) && timeSeconds <= buffered.end(index)) {
       return buffered.end(index)
     }
   }
@@ -137,23 +129,13 @@ export const findFragmentIndexForSeek = ({
     rendition,
     timeSeconds,
   })
-  if (
-    targetIndex < 0 ||
-    getBufferedRangeEndAt(buffered, timeSeconds) === null
-  ) {
+  if (targetIndex < 0 || getBufferedRangeEndAt(buffered, timeSeconds) === null) {
     return targetIndex
   }
 
-  for (
-    let index = targetIndex;
-    index < rendition.fragments.length;
-    index += 1
-  ) {
+  for (let index = targetIndex; index < rendition.fragments.length; index += 1) {
     const fragment = resolveFragment({ index, manifest, rendition })
-    if (
-      !fragment ||
-      !isTimeRangeBuffered(buffered, fragment.startSeconds, fragment.endSeconds)
-    ) {
+    if (!fragment || !isTimeRangeBuffered(buffered, fragment.startSeconds, fragment.endSeconds)) {
       return index
     }
   }
@@ -171,15 +153,9 @@ export const selectRendition = (
   null
 
 /** Seconds of media already buffered ahead of `currentTime`. */
-export const getBufferedAhead = (
-  buffered: TimeRanges,
-  currentTime: number,
-): number => {
+export const getBufferedAhead = (buffered: TimeRanges, currentTime: number): number => {
   for (let index = 0; index < buffered.length; index += 1) {
-    if (
-      currentTime >= buffered.start(index) &&
-      currentTime <= buffered.end(index)
-    ) {
+    if (currentTime >= buffered.start(index) && currentTime <= buffered.end(index)) {
       return buffered.end(index) - currentTime
     }
   }

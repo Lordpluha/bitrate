@@ -1,20 +1,16 @@
-import type { BitrateSelector } from '@/entities/Player/lib/bitrateSelector'
+import type { BitrateSelector } from './bitrateSelector'
 import {
   findFragmentIndexForSeek,
   getBufferedAhead,
   isTimeRangeBuffered,
   resolveFragment,
   selectRendition,
-} from '@/entities/Player/lib/fragmentIndex'
-import {
-  type FetchRangeInput,
-  requestFragment,
-  toError,
-} from '@/entities/Player/lib/fragmentRequest'
-import { logFragment, playerLog } from '@/entities/Player/lib/playerLog'
-import type { SourceBufferQueue } from '@/entities/Player/lib/sourceBufferQueue'
-import type { RequestRetryPolicy } from '@/entities/Player/lib/streamLoaderOptions'
-import type { TrackManifest } from '@/entities/Player/model/manifest.types'
+} from './fragmentIndex'
+import { type FetchRangeInput, requestFragment, toError } from './fragmentRequest'
+import { logFragment, playerLog } from './playerLog'
+import type { SourceBufferQueue } from './sourceBufferQueue'
+import type { RequestRetryPolicy } from './streamLoaderOptions'
+import type { TrackManifest } from './manifest'
 
 /** Everything the fill loop needs to keep one track's buffer topped up. */
 export type BufferFillerInput = {
@@ -150,9 +146,7 @@ export class BufferFiller {
       onRequestEnd: (controller) => {
         if (this.controller === controller) this.controller = null
       },
-      onSample: measure
-        ? (sample) => this.input.selector.addSample(sample)
-        : undefined,
+      onSample: measure ? (sample) => this.input.selector.addSample(sample) : undefined,
     })
   }
 
@@ -223,16 +217,10 @@ export class BufferFiller {
 
     try {
       while (this.isCurrent(epoch)) {
-        const bufferedAhead = getBufferedAhead(
-          audio.buffered,
-          audio.currentTime,
-        )
+        const bufferedAhead = getBufferedAhead(audio.buffered, audio.currentTime)
         if (bufferedAhead >= this.targetBufferSeconds) break
 
-        const rendition = selectRendition(
-          manifest,
-          selector.next(bufferedAhead),
-        )
+        const rendition = selectRendition(manifest, selector.next(bufferedAhead))
         if (!rendition) break
 
         const fragment = resolveFragment({
@@ -246,38 +234,19 @@ export class BufferFiller {
         }
 
         /** A retained seek range may already contain this exact fragment. */
-        if (
-          isTimeRangeBuffered(
-            audio.buffered,
-            fragment.startSeconds,
-            fragment.endSeconds,
-          )
-        ) {
+        if (isTimeRangeBuffered(audio.buffered, fragment.startSeconds, fragment.endSeconds)) {
           this.nextFragmentIndex += 1
           continue
         }
 
+        if (!(await this.ensureInitSegment(rendition.bitrate, rendition.initRange, epoch))) break
         if (
-          !(await this.ensureInitSegment(
-            rendition.bitrate,
-            rendition.initRange,
-            epoch,
-          ))
-        )
-          break
-        if (
-          !(await this.appendFragment(
-            rendition.bitrate,
-            fragment.byteRange,
-            bufferedAhead,
-            epoch,
-          ))
+          !(await this.appendFragment(rendition.bitrate, fragment.byteRange, bufferedAhead, epoch))
         )
           break
       }
     } catch (error) {
-      if (!this.stopped && this.epoch === epoch)
-        this.input.onError?.(toError(error))
+      if (!this.stopped && this.epoch === epoch) this.input.onError?.(toError(error))
     } finally {
       this.filling = false
     }

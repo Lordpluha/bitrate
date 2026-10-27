@@ -1,21 +1,21 @@
-import { BitrateSelector } from '@/entities/Player/lib/bitrateSelector'
-import { BufferFiller } from '@/entities/Player/lib/bufferFiller'
-import { selectRendition } from '@/entities/Player/lib/fragmentIndex'
-import type { FetchRangeInput } from '@/entities/Player/lib/fragmentRequest'
+import { BitrateSelector } from './bitrateSelector'
+import { BufferFiller } from './bufferFiller'
+import { selectRendition } from './fragmentIndex'
+import type { FetchRangeInput } from './fragmentRequest'
 import {
   attachMediaSource,
   canPlayThroughMse,
   openAudioSourceBuffer,
   waitForMediaSourceOpen,
-} from '@/entities/Player/lib/mediaSourceSupport'
-import { playerLog } from '@/entities/Player/lib/playerLog'
-import { SourceBufferQueue } from '@/entities/Player/lib/sourceBufferQueue'
+} from './mediaSourceSupport'
+import { playerLog } from './playerLog'
+import { SourceBufferQueue } from './sourceBufferQueue'
 import {
   FILL_TICK_MS,
   resolveStreamLoaderOptions,
   type StreamLoaderTunables,
-} from '@/entities/Player/lib/streamLoaderOptions'
-import type { TrackManifest } from '@/entities/Player/model/manifest.types'
+} from './streamLoaderOptions'
+import type { TrackManifest } from './manifest'
 
 /** Everything a stream loader needs in order to drive one track. */
 export type StreamLoaderInput = StreamLoaderTunables & {

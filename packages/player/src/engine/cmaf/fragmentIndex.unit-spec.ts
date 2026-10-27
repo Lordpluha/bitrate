@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import type { TrackManifest } from '@/entities/Player/model/manifest.types'
+import type { TrackManifest } from './manifest'
 import {
   findFragmentIndexAt,
   findFragmentIndexForSeek,
@@ -13,11 +13,7 @@ import {
 
 /** Mirrors real output: first fragment 191 AAC frames, the rest 192. */
 const buildManifest = (): TrackManifest => {
-  const durations = [
-    195_584,
-    ...Array.from({ length: 13 }, () => 196_608),
-    128_512,
-  ]
+  const durations = [195_584, ...Array.from({ length: 13 }, () => 196_608), 128_512]
   let startTicks = 0
   let offset = 929
 
@@ -117,9 +113,7 @@ describe('findFragmentIndexAt', () => {
 
   it('finds the fragment containing an arbitrary seek target', () => {
     /** 42 s lands inside fragment 10: 4.0747 + 9 x 4.096 = 40.94 s. */
-    expect(findFragmentIndexAt({ manifest, rendition, timeSeconds: 42 })).toBe(
-      10,
-    )
+    expect(findFragmentIndexAt({ manifest, rendition, timeSeconds: 42 })).toBe(10)
   })
 
   it('lands on the fragment that starts exactly at the boundary', () => {
@@ -135,33 +129,25 @@ describe('findFragmentIndexAt', () => {
   })
 
   it('clamps a negative time to the first fragment', () => {
-    expect(findFragmentIndexAt({ manifest, rendition, timeSeconds: -10 })).toBe(
-      0,
-    )
+    expect(findFragmentIndexAt({ manifest, rendition, timeSeconds: -10 })).toBe(0)
   })
 
   it('clamps a time past the end to the last fragment', () => {
-    expect(
-      findFragmentIndexAt({ manifest, rendition, timeSeconds: 9_999 }),
-    ).toBe(14)
+    expect(findFragmentIndexAt({ manifest, rendition, timeSeconds: 9_999 })).toBe(14)
   })
 
   it('resolves every fragment to itself at its own start time', () => {
     for (const [index, fragment] of rendition.fragments.entries()) {
       const startSeconds = fragment[0] / manifest.timescale
 
-      expect(
-        findFragmentIndexAt({ manifest, rendition, timeSeconds: startSeconds }),
-      ).toBe(index)
+      expect(findFragmentIndexAt({ manifest, rendition, timeSeconds: startSeconds })).toBe(index)
     }
   })
 
   it('returns -1 for an empty rendition', () => {
     const empty = { ...rendition, fragments: [] }
 
-    expect(
-      findFragmentIndexAt({ manifest, rendition: empty, timeSeconds: 5 }),
-    ).toBe(-1)
+    expect(findFragmentIndexAt({ manifest, rendition: empty, timeSeconds: 5 })).toBe(-1)
   })
 })
 

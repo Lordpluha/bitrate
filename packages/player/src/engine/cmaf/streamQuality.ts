@@ -1,4 +1,4 @@
-import type { TrackManifest } from '@/entities/Player/model/manifest.types'
+import type { TrackManifest } from './manifest'
 
 /**
  * The highest rendition (kbps) the listener's audio-quality setting allows; null means no cap.
@@ -20,11 +20,7 @@ type CapBitrateInput = {
 }
 
 /** The best rendition at or under the cap; the lowest one when all are above it. */
-export const capBitrate = ({
-  bitrate,
-  manifest,
-  maxBitrate,
-}: CapBitrateInput) => {
+export const capBitrate = ({ bitrate, manifest, maxBitrate }: CapBitrateInput) => {
   if (maxBitrate === null || bitrate <= maxBitrate) return bitrate
   const bitrates = manifest.renditions.map((rendition) => rendition.bitrate)
   const allowed = bitrates.filter((candidate) => candidate <= maxBitrate)

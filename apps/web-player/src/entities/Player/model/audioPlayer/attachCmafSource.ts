@@ -1,11 +1,27 @@
-import { fetchRenditionRange } from '@/entities/Player/api/client'
 import {
   canPlayThroughMse,
+  configureCmafEngine,
   playerLog,
   StreamLoader,
-} from '@/entities/Player/lib'
+} from '@bitrate/player/engine'
+import { fetchRenditionRange } from '@/entities/Player/api/client'
 import type { PlayerSlot } from '@/entities/Player/model/audioPlayer/audioPlayer.types'
 import type { TrackManifest } from '@/entities/Player/model/manifest.types'
+
+let engineConfigured = false
+
+/**
+ * Hands the engine this app's storage and debug default once, before the first loader:
+ * remembered bandwidth survives reloads, and tracing is on in development.
+ */
+const ensureEngineConfigured = () => {
+  if (engineConfigured) return
+  engineConfigured = true
+  configureCmafEngine({
+    debugByDefault: process.env.NODE_ENV === 'development',
+    storage: typeof localStorage === 'undefined' ? null : localStorage,
+  })
+}
 
 export type AttachCmafSourceInput = {
   element: HTMLAudioElement
@@ -41,6 +57,7 @@ export const attachCmafSource = ({
   trackId,
   onFatalError,
 }: AttachCmafSourceInput): boolean => {
+  ensureEngineConfigured()
   if (!canPlayThroughMse(manifest)) {
     playerLog('path', 'MSE недоступен → откат на HLS', { trackId })
     return false

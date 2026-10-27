@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import type { TrackManifest } from '@/entities/Player/model/manifest.types'
+import type { TrackManifest } from './manifest'
 import { BitrateSelector } from './bitrateSelector'
+import { configureCmafEngine } from './environment'
 import { setMaxStreamBitrate } from './streamQuality'
 import { rememberThroughput } from './throughputMemory'
 
@@ -25,6 +26,7 @@ const ladder: TrackManifest = {
 describe('BitrateSelector', () => {
   beforeEach(() => {
     localStorage.clear()
+    configureCmafEngine({ storage: localStorage })
     setMaxStreamBitrate(null)
   })
 
@@ -46,9 +48,7 @@ describe('BitrateSelector', () => {
   it('never opens above the quality cap, falling back to the best allowed rung', () => {
     rememberThroughput({ bps: 10_000_000 })
 
-    expect(
-      new BitrateSelector({ manifest: ladder, maxBitrate: 128 }).bitrate,
-    ).toBe(128)
+    expect(new BitrateSelector({ manifest: ladder, maxBitrate: 128 }).bitrate).toBe(128)
   })
 
   it('reads the listener cap from the module setting by default', () => {
@@ -72,9 +72,7 @@ describe('BitrateSelector', () => {
   })
 
   it('rejects pinning a rendition the manifest does not have', () => {
-    expect(() => new BitrateSelector({ manifest: ladder }).pin(256)).toThrow(
-      RangeError,
-    )
+    expect(() => new BitrateSelector({ manifest: ladder }).pin(256)).toThrow(RangeError)
   })
 
   it('drops to the floor on the fragment after a stall', () => {

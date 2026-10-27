@@ -41,43 +41,24 @@ export type StreamLoaderTunables = {
 
 /** Falls back when a value is missing, non-finite, or not strictly positive. */
 const positiveFiniteOr = (value: number | undefined, fallback: number) =>
-  typeof value === 'number' && Number.isFinite(value) && value > 0
-    ? value
-    : fallback
+  typeof value === 'number' && Number.isFinite(value) && value > 0 ? value : fallback
 
 /** Falls back when a value is missing, non-finite, or negative. Zero is allowed. */
 const nonNegativeFiniteOr = (value: number | undefined, fallback: number) =>
-  typeof value === 'number' && Number.isFinite(value) && value >= 0
-    ? value
-    : fallback
+  typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : fallback
 
 /** Applies defaults to whatever tunables the caller supplied. */
 export const resolveStreamLoaderOptions = (
   input: StreamLoaderTunables,
 ): ResolvedStreamLoaderOptions => ({
-  targetBufferSeconds:
-    input.targetBufferSeconds ?? DEFAULT_TARGET_BUFFER_SECONDS,
-  sourceOpenTimeoutMs: positiveFiniteOr(
-    input.sourceOpenTimeoutMs,
-    DEFAULT_SOURCE_OPEN_TIMEOUT_MS,
-  ),
+  targetBufferSeconds: input.targetBufferSeconds ?? DEFAULT_TARGET_BUFFER_SECONDS,
+  sourceOpenTimeoutMs: positiveFiniteOr(input.sourceOpenTimeoutMs, DEFAULT_SOURCE_OPEN_TIMEOUT_MS),
   retry: {
     maxAttempts: Math.max(
       1,
-      Math.floor(
-        positiveFiniteOr(
-          input.maxRequestAttempts,
-          DEFAULT_MAX_REQUEST_ATTEMPTS,
-        ),
-      ),
+      Math.floor(positiveFiniteOr(input.maxRequestAttempts, DEFAULT_MAX_REQUEST_ATTEMPTS)),
     ),
-    timeoutMs: positiveFiniteOr(
-      input.requestTimeoutMs,
-      DEFAULT_REQUEST_TIMEOUT_MS,
-    ),
-    baseDelayMs: nonNegativeFiniteOr(
-      input.retryBaseDelayMs,
-      DEFAULT_RETRY_BASE_DELAY_MS,
-    ),
+    timeoutMs: positiveFiniteOr(input.requestTimeoutMs, DEFAULT_REQUEST_TIMEOUT_MS),
+    baseDelayMs: nonNegativeFiniteOr(input.retryBaseDelayMs, DEFAULT_RETRY_BASE_DELAY_MS),
   },
 })

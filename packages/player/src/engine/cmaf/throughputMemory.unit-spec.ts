@@ -1,11 +1,7 @@
-import { beforeEach, describe, expect, it } from 'vitest'
-
-import type { TrackManifest } from '@/entities/Player/model/manifest.types'
-import {
-  pickStartBitrate,
-  readRememberedThroughput,
-  rememberThroughput,
-} from './throughputMemory'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { configureCmafEngine } from './environment'
+import type { TrackManifest } from './manifest'
+import { pickStartBitrate, readRememberedThroughput, rememberThroughput } from './throughputMemory'
 
 const manifest = {
   version: 1,
@@ -46,6 +42,19 @@ describe('pickStartBitrate', () => {
 describe('throughput memory', () => {
   beforeEach(() => {
     localStorage.clear()
+    configureCmafEngine({ storage: localStorage })
+  })
+
+  afterEach(() => {
+    configureCmafEngine({ storage: null })
+  })
+
+  it('keeps nothing when the host supplies no storage', () => {
+    configureCmafEngine({ storage: null })
+    rememberThroughput({ bps: 12_000_000 })
+
+    expect(readRememberedThroughput()).toBeNull()
+    expect(localStorage.getItem('player-throughput')).toBeNull()
   })
 
   it('returns null before anything has been measured', () => {

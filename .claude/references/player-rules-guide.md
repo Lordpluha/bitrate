@@ -106,6 +106,12 @@ have a different environment-variable convention and a different SSR boundary; a
 reads `process.env` directly breaks on two of the three and is untestable in isolation on the
 third.
 
+`src/engine/cmaf/` is the single-file CMAF/MSE path with adaptive bitrate (ADR-0020), moved
+from web-player for #236. The host passes `fetchRange` to each `StreamLoader`, and calls
+`configureCmafEngine({ storage, debugByDefault })` once for the remembered bandwidth and the
+`player-debug` switch; without it nothing persists and tracing stays off. The quality cap
+(`setMaxStreamBitrate`) is the one other module-level setting.
+
 ## SSR guard and `defineBitratePlayer()`
 
 `customElements` does not exist during server rendering — but that alone is not enough.

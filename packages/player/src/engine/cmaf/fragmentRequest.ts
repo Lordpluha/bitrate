@@ -1,5 +1,5 @@
-import type { ThroughputSample } from '@/entities/Player/lib/adaptiveBitrate'
-import type { RequestRetryPolicy } from '@/entities/Player/lib/streamLoaderOptions'
+import type { ThroughputSample } from './adaptiveBitrate'
+import type { RequestRetryPolicy } from './streamLoaderOptions'
 
 /** What one fragment download needs in order to run and to be measured. */
 export type FetchRangeInput = {
@@ -93,9 +93,7 @@ export async function requestFragment({
       const aborted = new Promise<never>((_resolve, reject) => {
         handleAbort = () => {
           const error = new Error(
-            timedOut
-              ? 'Audio fragment request timed out'
-              : 'Audio fragment request aborted',
+            timedOut ? 'Audio fragment request timed out' : 'Audio fragment request aborted',
           )
           error.name = timedOut ? 'TimeoutError' : 'AbortError'
           reject(error)
@@ -110,8 +108,7 @@ export async function requestFragment({
           aborted,
         ])
       } finally {
-        if (handleAbort)
-          controller.signal.removeEventListener('abort', handleAbort)
+        if (handleAbort) controller.signal.removeEventListener('abort', handleAbort)
       }
 
       onSample?.({
@@ -122,13 +119,8 @@ export async function requestFragment({
     } catch (caughtError) {
       if (controller.signal.aborted && !timedOut) return null
 
-      const error = timedOut
-        ? new Error('Audio fragment request timed out')
-        : caughtError
-      if (
-        attempt === retry.maxAttempts ||
-        !isRetryableRequestError(caughtError)
-      ) {
+      const error = timedOut ? new Error('Audio fragment request timed out') : caughtError
+      if (attempt === retry.maxAttempts || !isRetryableRequestError(caughtError)) {
         throw toError(error)
       }
 
