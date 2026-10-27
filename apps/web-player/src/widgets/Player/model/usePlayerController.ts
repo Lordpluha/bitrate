@@ -10,7 +10,9 @@ import {
 } from '@entities/Player'
 import { useTrackLike } from '@entities/Track'
 import { useI18n } from '@shared/i18n'
+import { ROUTES } from '@shared/routes'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
+import { useRouter } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
 import { useFloatingPlayerWindow } from './useFloatingPlayerWindow'
 import { usePlayerElementSync } from './usePlayerElementSync'
@@ -49,6 +51,8 @@ export const usePlayerController = ({
   })
   const isVisible = Boolean(currentTrack)
 
+  const router = useRouter()
+  const openQueue = useCallback(() => router.push(ROUTES.queue), [router])
   const { changeTrack } = audio
   /** Stable, since the playing element is handed them on every change. */
   const playNext = useCallback(() => changeTrack('next'), [changeTrack])
@@ -64,8 +68,10 @@ export const usePlayerController = ({
     duration: player.duration,
     isEnabled: isVisible,
     onNext: playNext,
+    onOpenQueue: openQueue,
     onPrevious: playPrevious,
     onSeek: audio.onSeek,
+    onToggleLike: trackLike.toggleLike,
     onToggleShuffle: toggleShuffle,
     onTogglePlay: audio.togglePlayPause,
     volume: player.volume,

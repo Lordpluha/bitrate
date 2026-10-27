@@ -51,6 +51,9 @@ export const usePlayerElementSync = ({
       pause: () => t('trackMenu.pause'),
       play: () => t('trackMenu.play'),
       previous: t('player.previous'),
+      quality: t('player.quality'),
+      qualityAuto: t('player.qualityAuto'),
+      qualityOption: (kbps) => t('player.qualityOption', { kbps }),
       repeat: {
         all: t('player.repeatOne'),
         off: t('player.repeatPlaylist'),

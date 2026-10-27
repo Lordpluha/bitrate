@@ -18,6 +18,7 @@ declare module 'react' {
     interface IntrinsicElements {
       'bitrate-player': ElementProps<BitratePlayerElement> & {
         chrome?: PlayerChrome
+        'media-session'?: boolean
       }
       'bitrate-player-cover': ElementProps & { size?: BitratePlayerCoverSize }
       'bitrate-player-meta': ElementProps

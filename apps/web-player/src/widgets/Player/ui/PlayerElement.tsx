@@ -10,7 +10,7 @@ type PlayerElementProps = {
 
 /**
  * The one `<bitrate-player>` that plays — headless (`chrome="none"`); the visible surfaces
- * render around it. Mounted only once the tag is defined, because properties set on an element
+ * render around it. It owns the Media Session, so the lock screen and media keys follow it. Mounted only once the tag is defined, because properties set on an element
  * before it upgrades are not guaranteed to survive.
  */
 export const PlayerElement = ({ bindElement }: PlayerElementProps) => {
@@ -35,6 +35,7 @@ export const PlayerElement = ({ bindElement }: PlayerElementProps) => {
   return (
     <bitrate-player
       chrome="none"
+      media-session
       ref={bindElement}
       style={{ display: 'none' }}
     />

@@ -6,6 +6,7 @@ import { ROUTES } from '@shared/routes'
 import { MediaImage } from '@shared/ui/MediaImage'
 import { ChevronDown, ListMusic, Mic2 } from 'lucide-react'
 import Link from 'next/link'
+import { PlayerMirror } from '@/entities/Player'
 import { LikeButton } from '@/entities/Track'
 import { ConnectDevicesPopover } from '@/features/BitrateConnect'
 import { useI18n } from '@/shared/i18n'
@@ -100,10 +101,16 @@ export const NowPlayingView = ({
           />
 
           <div className="flex items-center justify-between">
-            <ConnectDevicesPopover
-              iconSize={20}
-              triggerClassName="flex size-10 items-center justify-center rounded-full text-primary transition-colors hover:bg-surface"
-            />
+            <div className="flex items-center gap-3">
+              <ConnectDevicesPopover
+                iconSize={20}
+                triggerClassName="flex size-10 items-center justify-center rounded-full text-primary transition-colors hover:bg-surface"
+              />
+              {/* Shown only for a CMAF track with more than one rendition. */}
+              <PlayerMirror>
+                <bitrate-player-quality />
+              </PlayerMirror>
+            </div>
             <div className="flex items-center gap-1">
               <Link
                 aria-label={t('player.openLyrics')}

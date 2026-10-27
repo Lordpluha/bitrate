@@ -5,6 +5,7 @@ import { usePlayerController } from '@/widgets/Player/model/usePlayerController'
 import { DesktopPlayerBar } from './DesktopPlayerBar'
 import { PlayerElement } from './PlayerElement'
 import { PlayerResponsiveViews } from './PlayerResponsiveViews'
+import { TrackAnnouncer } from './TrackAnnouncer'
 
 interface PlayerProps {
   isExpanded: boolean
@@ -19,6 +20,7 @@ export const Player: FC<PlayerProps> = ({ isExpanded, onExpandedChange }) => {
   return (
     <>
       <PlayerElement {...controller.elementProps} />
+      <TrackAnnouncer title={controller.desktopProps.title} />
       <PlayerResponsiveViews {...controller.responsiveProps} />
       <DesktopPlayerBar {...controller.desktopProps} />
     </>
