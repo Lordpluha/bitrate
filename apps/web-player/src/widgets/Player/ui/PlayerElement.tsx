@@ -27,5 +27,16 @@ export const PlayerElement = ({ bindElement }: PlayerElementProps) => {
   }, [])
 
   if (!defined) return null
-  return <bitrate-player chrome="none" ref={bindElement} />
+  /**
+   * Out of layout: an empty block still takes a flex gap in the app shell. `display: none` on
+   * the tag itself, since the element's own `:host { display: block }` would beat `hidden`;
+   * its media keep playing inside a hidden subtree.
+   */
+  return (
+    <bitrate-player
+      chrome="none"
+      ref={bindElement}
+      style={{ display: 'none' }}
+    />
+  )
 }
