@@ -49,16 +49,16 @@ reads the nearest player; your own markup and CSS place them.
 </bitrate-player>
 ```
 
-| Part                       | Attributes                                             |
-| -------------------------- | ------------------------------------------------------ |
-| `bitrate-player-cover`     | `size="sm\|md\|lg"`, `lg` fills its box                |
-| `bitrate-player-meta`      | — title and artist                                     |
-| `bitrate-player-transport` | `controls`: any of `shuffle prev play next repeat`     |
-| `bitrate-player-seek`      | `variant="full\|thin"`, `thin` hides the time readouts |
-| `bitrate-player-volume`    | — mute and volume                                      |
-| `bitrate-player-actions`   | `controls`: any of `like pip queue expand`             |
-| `bitrate-player-quality`   | — shows only with more than one rendition              |
-| `bitrate-player-error`     | — the playback error, as `role="alert"`                |
+| Part                       | Attributes                                                                 |
+| -------------------------- | -------------------------------------------------------------------------- |
+| `bitrate-player-cover`     | `size="sm\|md\|lg"`, `lg` fills its box                                    |
+| `bitrate-player-meta`      | — title and artist                                                         |
+| `bitrate-player-transport` | `controls`: any of `shuffle prev play next repeat`                         |
+| `bitrate-player-seek`      | `variant="full\|stacked\|thin"`: time either side, under the rail, or none |
+| `bitrate-player-volume`    | — mute and volume                                                          |
+| `bitrate-player-actions`   | `controls`: any of `like pip queue expand`                                 |
+| `bitrate-player-quality`   | — shows only with more than one rendition                                  |
+| `bitrate-player-error`     | — the playback error, as `role="alert"`                                    |
 
 Without `controls` a part allows all of its buttons; the callback rule above still applies.
 Tag names are exported as `BITRATE_PLAYER_PART_TAG`. A part outside a player renders nothing.
@@ -68,19 +68,24 @@ Tag names are exported as `BITRATE_PLAYER_PART_TAG`. A part outside a player ren
 The element uses your design tokens (`--color-foreground`, `--color-surface`,
 `--color-primary`, …) through the shadow boundary. These properties tune a layout or a part:
 
-| Property                                                           | Default                                |
-| ------------------------------------------------------------------ | -------------------------------------- |
-| `--bitrate-player-background`                                      | layout's own                           |
-| `--bitrate-player-radius`                                          | `0.75rem` (`mini`, `floating`)         |
-| `--bitrate-player-cover-size`                                      | `2.5rem` / `3.5rem` / `100%` by `size` |
-| `--bitrate-player-cover-radius`                                    | `0.25rem`                              |
-| `--bitrate-player-title-size`, `--bitrate-player-artist-size`      | `0.875rem`, `0.75rem`                  |
-| `--bitrate-player-play-size`, `--bitrate-player-play-icon-scale`   | `2rem`, `1`                            |
-| `--bitrate-player-icon-button-size`, `--bitrate-player-icon-scale` | `2rem`, `1`                            |
-| `--bitrate-player-transport-gap`                                   | `1rem`                                 |
-| `--bitrate-player-track-height`                                    | `0.25rem`                              |
-| `--bitrate-player-floating-min-height`                             | `12rem`                                |
-| `--bitrate-player-scrim`, `--bitrate-player-on-media`              | dark scrim, white text (`floating`)    |
+| Property                                                               | Default                                                         |
+| ---------------------------------------------------------------------- | --------------------------------------------------------------- |
+| `--bitrate-player-background`                                          | layout's own                                                    |
+| `--bitrate-player-radius`                                              | `0.75rem` (`mini`, `floating`)                                  |
+| `--bitrate-player-cover-size`                                          | `2.5rem` / `3.5rem` / `100%` by `size`                          |
+| `--bitrate-player-cover-radius`                                        | `0.25rem`                                                       |
+| `--bitrate-player-title-size`, `--bitrate-player-artist-size`          | `0.875rem`, `0.75rem`                                           |
+| `--bitrate-player-play-size`, `--bitrate-player-play-icon-scale`       | `2rem`, `1`                                                     |
+| `--bitrate-player-icon-button-size`, `--bitrate-player-icon-scale`     | `2rem`, `1`                                                     |
+| `--bitrate-player-transport-gap`                                       | `1rem`                                                          |
+| `--bitrate-player-track-height`                                        | `0.25rem`                                                       |
+| `--bitrate-player-track-color`, `--bitrate-player-accent`              | border colour, text colour (rail rest, fill and active toggles) |
+| `--bitrate-player-thumb-size`, `--bitrate-player-thumb-color`          | `0.75rem`, text colour                                          |
+| `--bitrate-player-thumb-opacity`                                       | `0` (shown on hover/focus)                                      |
+| `--bitrate-player-play-background`, `--bitrate-player-play-foreground` | text colour, background colour                                  |
+| `--bitrate-player-time-size`, `--bitrate-player-time-min-width`        | `0.75rem`, `2.5rem`                                             |
+| `--bitrate-player-floating-min-height`                                 | `12rem`                                                         |
+| `--bitrate-player-scrim`, `--bitrate-player-on-media`                  | dark scrim, white text (`floating`)                             |
 
 For anything else, inner nodes expose `::part()` names: `layout`, `cover`, `meta`, `title`,
 `artist`, `transport`, `seek`, `volume`, `actions`, `quality`, `error`.
@@ -101,7 +106,13 @@ player.streaming = {
   isConstrained: () => navigator.connection?.saveData === true, // optional
   crossOrigin: 'use-credentials',
 }
-player.source = { key: 'mix:t1:1', trackId: 't1', progressiveUrl: '/t1.mp3' }
+player.source = {
+  key: 'mix:t1:1',
+  trackId: 't1',
+  progressiveUrl: '/t1.mp3',
+  duration: 182, // optional: shown until the media loads
+  startTime: 64, // optional: a restored position, shown and resumed
+}
 player.next = { key: 'mix:t2:2', trackId: 't2', progressiveUrl: '/t2.mp3' }
 player.addEventListener('ended', ({ detail }) => {
   // move the queue on, then set source to what was next: the element switches instantly
@@ -112,6 +123,18 @@ player.addEventListener('ended', ({ detail }) => {
 (`detail`: status, key, time, duration, volume, bitrate, error) fires on every change. Call
 `configureCmafEngine({ storage, debugByDefault })` from `@bitrate/player/engine` once to keep
 the measured bandwidth between tracks.
+
+## Labels
+
+Every accessible name and visible label can be translated: set `labels` to any subset, the
+rest keep their English defaults. A mirror uses the labels of the element it mirrors.
+
+```ts
+player.labels = {
+  play: (title) => `Відтворити «${title}»`,
+  repeat: { off: 'Повторювати плейлист' },
+}
+```
 
 ## Mirrors
 
