@@ -2,6 +2,7 @@ import { PrismaService } from '@infra/prisma/prisma.service'
 import { CanActivate, ExecutionContext, Injectable, Logger } from '@nestjs/common'
 import { WsException } from '@nestjs/websockets'
 import { Socket } from 'socket.io'
+import { sessionCookieName } from '../tokens'
 import { TokenService } from '../tokens/token.service'
 
 /**
@@ -109,6 +110,6 @@ export class WsUserAuthGuard implements CanActivate {
       {} as Record<string, string>,
     )
 
-    return cookies[process.env.ACCESS_TOKEN_NAME!] || null
+    return cookies[sessionCookieName('user', 'access')] || null
   }
 }

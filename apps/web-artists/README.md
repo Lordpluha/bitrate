@@ -81,8 +81,9 @@ Server configuration:
 | Variable | Default | Purpose |
 |---|---|---|
 | `API_URL` | `VITE_API_URL`, then `http://localhost:3000` | Internal API URL for session and 2FA requests |
-| `ACCESS_TOKEN_NAME` | `access_token` | Must match the API's cookie name |
-| `REFRESH_TOKEN_NAME` | `refresh_token` | Must match the API's cookie name |
+
+The session cookie names (`artist_access_token`, `artist_refresh_token`) come from
+`SESSION_COOKIE_NAMES` in `@bitrate/contracts`, which mirrors the API; they are not configurable.
 
 When the API and portal use different subdomains, configure **`COOKIE_DOMAIN` on the API**
 to their shared parent domain. Both session cookies and the short-lived pending 2FA cookie

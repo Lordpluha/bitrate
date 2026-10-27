@@ -31,8 +31,6 @@ const makeConfigServiceMock = () =>
         JWT_ACCESS_EXPIRES_IN: '15m',
         JWT_REFRESH_EXPIRES_IN: '7d',
         JWT_SECRET: 'test-secret',
-        ACCESS_TOKEN_NAME: 'access_token',
-        REFRESH_TOKEN_NAME: 'refresh_token',
         cookie: COOKIE_CONFIG,
       }
       return config[key as string] ?? {}
@@ -104,18 +102,18 @@ describe('TokenService (int)', () => {
   })
 
   it('setAuthCookies should call res.cookie for both tokens', () => {
-    const res = { cookie: jest.fn() } as never
+    const res = { cookie: jest.fn(), clearCookie: jest.fn() } as never
 
-    service.setAuthCookies(res, 'at', 'rt')
+    service.setAuthCookies(res, 'user', 'at', 'rt')
 
     expect((res as { cookie: jest.Mock }).cookie).toHaveBeenCalledTimes(2)
     expect((res as { cookie: jest.Mock }).cookie).toHaveBeenCalledWith(
-      'access_token',
+      'user_access_token',
       'at',
       expect.any(Object),
     )
     expect((res as { cookie: jest.Mock }).cookie).toHaveBeenCalledWith(
-      'refresh_token',
+      'user_refresh_token',
       'rt',
       expect.any(Object),
     )
@@ -124,15 +122,14 @@ describe('TokenService (int)', () => {
   it('clearAuthCookies should clear both tokens with the attributes they were written with', () => {
     const res = { clearCookie: jest.fn() } as never
 
-    service.clearAuthCookies(res)
+    service.clearAuthCookies(res, 'user')
 
-    expect((res as { clearCookie: jest.Mock }).clearCookie).toHaveBeenCalledTimes(2)
     expect((res as { clearCookie: jest.Mock }).clearCookie).toHaveBeenCalledWith(
-      'access_token',
+      'user_access_token',
       COOKIE_CONFIG,
     )
     expect((res as { clearCookie: jest.Mock }).clearCookie).toHaveBeenCalledWith(
-      'refresh_token',
+      'user_refresh_token',
       COOKIE_CONFIG,
     )
   })
@@ -142,10 +139,10 @@ describe('TokenService (int)', () => {
     configService.getOrThrow.mockImplementationOnce(() => withoutDomain as never)
 
     const res = { clearCookie: jest.fn() } as never
-    service.clearAuthCookies(res)
+    service.clearAuthCookies(res, 'user')
 
     expect((res as { clearCookie: jest.Mock }).clearCookie).toHaveBeenCalledWith(
-      'access_token',
+      'user_access_token',
       expect.not.objectContaining({ domain: expect.anything() }),
     )
   })

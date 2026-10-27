@@ -1,3 +1,4 @@
+import { SESSION_COOKIE_NAMES } from '@bitrate/contracts'
 import { createServerFn } from '@tanstack/react-start'
 import {
   getCookie,
@@ -11,8 +12,8 @@ import { resolveArtistSession } from './artistSession'
 export const getArtistSession = createServerFn({ method: 'POST' }).handler(
   async () => {
     setResponseHeader('Cache-Control', 'private, no-store')
-    const accessCookieName = process.env.ACCESS_TOKEN_NAME || 'access_token'
-    const refreshCookieName = process.env.REFRESH_TOKEN_NAME || 'refresh_token'
+    const { access: accessCookieName, refresh: refreshCookieName } =
+      SESSION_COOKIE_NAMES.artist
 
     return resolveArtistSession(
       {

@@ -65,12 +65,10 @@ x-api-env: &api-env
   S3_FORCE_PATH_STYLE: "true"
   S3_REGION:
   S3_PUBLIC_URL:
-  # Token lifetimes and cookie names. Absent here, the API fell back to its schema defaults, so
+  # Token lifetimes. Absent here, the API fell back to its schema defaults, so
   # changing any of them in .env had no effect on production at all.
   JWT_ACCESS_EXPIRES_IN:
   JWT_REFRESH_EXPIRES_IN:
-  ACCESS_TOKEN_NAME:
-  REFRESH_TOKEN_NAME:
   # The parent domain the session cookies are scoped to, e.g. `.bitrate.me`. Without it the
   # cookies are host-only on the API subdomain, so the web apps' route guards never see a
   # session and every authenticated route redirects back to the login page.
