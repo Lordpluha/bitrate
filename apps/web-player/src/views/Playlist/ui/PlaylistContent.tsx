@@ -8,6 +8,7 @@ import { selectCompactLibrary, useSettingsStore } from '@/entities/Settings'
 import { TracksList } from '@/entities/Track'
 import { useAuth } from '@/shared/hooks'
 import { useI18n } from '@/shared/i18n'
+import { ROUTES } from '@/shared/routes'
 import type { TrackViewMode } from '@/views/Playlist/model/playlist.types'
 import { getPlaylistCover } from '@/views/Playlist/model/playlist.utils'
 import { usePlaylistActions } from '@/views/Playlist/model/usePlaylistActions'
@@ -55,7 +56,7 @@ export const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
         imageUrl={cover}
         title={playlist.title || t('common.playlist')}
         tracksCount={tracks.length}
-        type={t('common.playlist')}
+        type={playlist.isPublic ? 'Public playlist' : t('common.playlist')}
       />
       <PlaylistActionBar
         details={{
@@ -96,7 +97,9 @@ export const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
       {!isOwner && tracks.length === 0 && (
         <StateMessage
           className="min-h-80"
+          description="Let's find something for your playlist."
           icon={Music}
+          primary={{ href: ROUTES.search(), label: 'Search tracks' }}
           title={t('playlist.noTracks')}
         />
       )}

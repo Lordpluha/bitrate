@@ -2,8 +2,15 @@
 
 import { useUserPlaylists } from '@entities/Playlist'
 import { FollowUserButton, useUserById } from '@entities/User'
+import { getApiErrorStatus } from '@shared/api/errors'
 import { ROUTES } from '@shared/routes'
-import { MusicCardLg, SectionHeader, Skeleton, StateMessage } from '@shared/ui'
+import {
+  ErrorState,
+  MusicCardLg,
+  SectionHeader,
+  Skeleton,
+  StateMessage,
+} from '@shared/ui'
 import { getPlaylistCoverUrl, getUserAvatarUrl } from '@shared/utils/mediaUrl'
 import { ListMusic, UserRound } from 'lucide-react'
 import { usePlayCollection } from '@/features/PlayCollection'
@@ -13,6 +20,12 @@ import { ProfileHeader } from '@/views/Profile/ui/ProfileHeader'
 type PublicProfilePageProps = {
   userId: string
 }
+
+/** The design's grid skeleton while a profile's playlists load. */
+const PLAYLIST_SKELETON_KEYS = Array.from(
+  { length: 5 },
+  (_, card) => `playlist-card-${card}`,
+)
 
 export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
   const userQuery = useUserById(userId)
@@ -35,6 +48,19 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
           </div>
         </div>
         <Skeleton className="h-64 rounded-[14px]" />
+      </div>
+    )
+  }
+
+  /* a missing user is not found; any other failure can be retried */
+  if (userQuery.isError && getApiErrorStatus(userQuery.error) !== 404) {
+    return (
+      <div className="flex h-full flex-col px-4 md:px-8">
+        <ErrorState
+          description="Something went wrong on our side. Try again."
+          onRetry={() => void userQuery.refetch()}
+          title="Profile could not be loaded"
+        />
       </div>
     )
   }
@@ -69,13 +95,22 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
         <section className="flex flex-col gap-4">
           <SectionHeader title="Public playlists" />
           {playlistsQuery.isPending ? (
-            <p className="text-sm text-muted-foreground">
-              Loading playlists...
-            </p>
+            <div
+              aria-label="Loading playlists"
+              className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5 xl:gap-5.5"
+              role="status"
+            >
+              {PLAYLIST_SKELETON_KEYS.map((key) => (
+                <Skeleton className="aspect-[4/5] rounded-[14px]" key={key} />
+              ))}
+            </div>
           ) : playlistsQuery.isError ? (
-            <p className="text-sm text-muted-foreground">
-              Playlists could not be loaded. Try again later.
-            </p>
+            <ErrorState
+              className="min-h-60"
+              description="Something went wrong on our side."
+              onRetry={() => void playlistsQuery.refetch()}
+              title="Playlists could not be loaded. Try again later."
+            />
           ) : playlists.length === 0 ? (
             <StateMessage
               className="min-h-60"

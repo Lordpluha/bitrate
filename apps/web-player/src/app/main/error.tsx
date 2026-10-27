@@ -2,19 +2,11 @@
 
 import { ErrorState } from '@shared/ui/ErrorState'
 
-export default function MainError({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string }
-  reset: () => void
-}) {
+/** A page that failed to render: the design's error copy, never the exception's text. */
+export default function MainError({ reset }: { reset: () => void }) {
   return (
     <ErrorState
-      description={
-        error.message ||
-        'This page could not be loaded. Try again, or head back home.'
-      }
+      description="This page could not be loaded. Try again, or head back home."
       onRetry={reset}
     />
   )

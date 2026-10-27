@@ -88,8 +88,8 @@ export const ArtistCatalogue = ({
         </>
       )}
 
-      <ArtistAbout artist={artist} statsLabel={statsLabel} />
       <RelatedArtistsSection artistId={artist.id} />
+      <ArtistAbout artist={artist} statsLabel={statsLabel} />
     </>
   )
 }

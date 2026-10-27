@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@bitrate/ui-react'
-import { Skeleton } from '@shared/ui'
+import { ErrorState, Skeleton } from '@shared/ui'
 import { Plus } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -106,6 +106,12 @@ export const LibraryPage = () => {
               <Skeleton className="aspect-[4/5] rounded-[14px]" key={key} />
             ))}
           </div>
+        ) : library.isError ? (
+          <ErrorState
+            description="Something went wrong on our side. Try again."
+            onRetry={library.refetch}
+            title="Your library could not be loaded"
+          />
         ) : controls.activeSection === 'playlists' ? (
           <PlaylistLibrarySection
             playlists={library.playlists}

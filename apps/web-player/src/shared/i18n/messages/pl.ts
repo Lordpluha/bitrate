@@ -138,8 +138,8 @@ export const pl = {
   'main.popularPlaylists': 'Popularne playlisty',
   'main.recentlyPlayed': 'Ostatnio odtwarzane',
   'main.podcasts.empty':
-    'W katalogu nie ma jeszcze audycji. Przejdź do muzyki, aby przeglądać albumy, playlisty i wykonawców.',
-  'main.podcasts.title': 'Podcasty są w drodze',
+    'Programy pojawią się tutaj, gdy twórcy je opublikują.',
+  'main.podcasts.title': 'Nie opublikowano jeszcze żadnych podcastów.',
   'playlist.add': 'Dodaj',
   'playlist.adding': 'Dodawanie',
   'playlist.find': 'Znajdźmy coś do Twojej playlisty',

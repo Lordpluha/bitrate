@@ -1,4 +1,3 @@
-import { Typography } from '@bitrate/ui-react'
 import {
   LEGAL_DOCUMENTS,
   type LegalBlock,
@@ -91,9 +90,9 @@ export const LegalDocumentView = ({ document }: LegalDocumentViewProps) => (
       yet.
     </p>
 
-    <Typography as="h1" size="heading2">
+    <h1 className="text-2xl leading-[1.1] font-bold text-foreground md:text-[32px]">
       {document.title}
-    </Typography>
+    </h1>
 
     {document.sections.map((section) => (
       <section
@@ -101,9 +100,9 @@ export const LegalDocumentView = ({ document }: LegalDocumentViewProps) => (
         key={section.heading ?? 'lead-in'}
       >
         {section.heading ? (
-          <Typography as="h2" size="heading5">
+          <h2 className="text-[19px] leading-[1.25] font-semibold text-foreground">
             {section.heading}
-          </Typography>
+          </h2>
         ) : null}
         {section.blocks.map((block) => (
           <LegalBlockView

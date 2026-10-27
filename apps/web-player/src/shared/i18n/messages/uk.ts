@@ -139,9 +139,8 @@ export const uk = {
   'main.popularArtists': 'Популярні виконавці',
   'main.popularPlaylists': 'Популярні плейлисти',
   'main.recentlyPlayed': 'Нещодавно прослухані',
-  'main.podcasts.empty':
-    'У каталозі ще немає шоу. Перейдіть до музики, щоб переглядати альбоми, плейлисти та виконавців.',
-  'main.podcasts.title': 'Подкасти вже в дорозі',
+  'main.podcasts.empty': 'Шоу з’являться тут, щойно автори їх опублікують.',
+  'main.podcasts.title': 'Ще не опубліковано жодного подкасту.',
   'playlist.add': 'Додати',
   'playlist.adding': 'Додаємо',
   'playlist.find': 'Знайдімо щось для вашого плейлиста',

@@ -136,9 +136,8 @@ export const en = {
   'main.popularArtists': 'Popular artists',
   'main.popularPlaylists': 'Popular playlists',
   'main.recentlyPlayed': 'Recently played',
-  'main.podcasts.empty':
-    'There are no shows in the catalogue yet. Switch to Music to keep browsing albums, playlists and artists.',
-  'main.podcasts.title': 'Podcasts are on the way',
+  'main.podcasts.empty': 'Shows will appear here when creators publish them.',
+  'main.podcasts.title': 'No podcasts have been published yet.',
   'playlist.add': 'Add',
   'playlist.adding': 'Adding',
   'playlist.find': "Let's find something for your playlist",

@@ -2,8 +2,9 @@
 
 import { useAlbum } from '@entities/Album'
 import type { TrackEntity } from '@entities/Track'
+import { getApiErrorStatus } from '@shared/api/errors'
 import { ROUTES } from '@shared/routes'
-import { StateMessage } from '@shared/ui'
+import { ErrorState, StateMessage } from '@shared/ui'
 import {
   CollectionPanel,
   CollectionSkeleton,
@@ -17,7 +18,7 @@ const getAlbumDuration = (tracks: TrackEntity[]) =>
   tracks.reduce((duration, track) => duration + (track.duration ?? 0), 0)
 
 export const AlbumPage = ({ albumId }: { albumId: string }) => {
-  const { data, isError, isPending } = useAlbum(albumId)
+  const { data, error, isError, isPending, refetch } = useAlbum(albumId)
   const album = data
   const tracks = album?.tracks ?? []
   const coverUrl = getAlbumCoverUrl(album?.cover)
@@ -30,6 +31,19 @@ export const AlbumPage = ({ albumId }: { albumId: string }) => {
     )
   }
 
+  /* a missing album is not found; any other failure can be retried */
+  if (isError && getApiErrorStatus(error) !== 404) {
+    return (
+      <CollectionPanel>
+        <ErrorState
+          description="Something went wrong on our side. Try again."
+          onRetry={() => void refetch()}
+          title="Album could not be loaded"
+        />
+      </CollectionPanel>
+    )
+  }
+
   if (isError || !album) {
     return (
       <CollectionPanel>
@@ -37,7 +51,7 @@ export const AlbumPage = ({ albumId }: { albumId: string }) => {
           description="This album may have been removed, or the link is incorrect."
           icon={Disc3}
           primary={{ href: ROUTES.main, label: 'Back to home' }}
-          title="Album not found"
+          title="Album not found."
         />
       </CollectionPanel>
     )

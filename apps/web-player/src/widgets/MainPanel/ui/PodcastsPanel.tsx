@@ -1,7 +1,7 @@
 'use client'
 
 import { MediaImage } from '@shared/ui/MediaImage'
-import { BookmarkCheck, BookmarkPlus } from 'lucide-react'
+import { BookmarkCheck, BookmarkPlus, Podcast } from 'lucide-react'
 import Link from 'next/link'
 import { useMemo } from 'react'
 import {
@@ -10,8 +10,9 @@ import {
   useUnsaveEpisode,
 } from '@/entities/Podcast'
 import { useAuth } from '@/shared/hooks'
+import { useI18n } from '@/shared/i18n'
 import { ROUTES } from '@/shared/routes'
-import { MusicCardLg } from '@/shared/ui'
+import { MusicCardLg, StateMessage } from '@/shared/ui'
 import { ErrorState } from '@/shared/ui/ErrorState'
 import { getEpisodeCoverUrl, getPodcastCoverUrl } from '@/shared/utils/mediaUrl'
 
@@ -21,6 +22,7 @@ const PODCAST_SKELETON_IDS = Array.from(
 )
 
 export const PodcastsPanel = () => {
+  const { t } = useI18n()
   const { isAuthenticated } = useAuth()
   const podcastsQuery = usePodcasts(1, 20)
   const savedQuery = useSavedEpisodes(1, 8, isAuthenticated)
@@ -135,9 +137,11 @@ export const PodcastsPanel = () => {
             ))}
           </div>
         ) : (
-          <p className="py-12 text-center text-muted-foreground">
-            No podcasts have been published yet.
-          </p>
+          <StateMessage
+            description={t('main.podcasts.empty')}
+            icon={Podcast}
+            title={t('main.podcasts.title')}
+          />
         )}
       </section>
     </div>

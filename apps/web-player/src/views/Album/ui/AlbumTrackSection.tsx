@@ -74,6 +74,7 @@ export const AlbumTrackSection = ({
       {tracks.length === 0 ? (
         <StateMessage
           className="min-h-80"
+          description="Tracks will appear here once they are published."
           icon={Disc3}
           title="No tracks in this album"
         />

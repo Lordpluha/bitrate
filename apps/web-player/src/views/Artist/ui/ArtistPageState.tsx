@@ -53,7 +53,7 @@ export const ArtistPageState = (props: ArtistPageStateProps) => {
         />
       ) : (
         <StateMessage
-          description="Something went wrong on our side. Try again."
+          description="Try again in a moment."
           icon={TriangleAlert}
           primary={
             props.variant === 'error'
@@ -61,7 +61,7 @@ export const ArtistPageState = (props: ArtistPageStateProps) => {
               : undefined
           }
           secondary={{ href: ROUTES.main, label: 'Back to home' }}
-          title="Unable to load artist"
+          title="The catalogue could not be loaded right now."
           tone="error"
         />
       )}

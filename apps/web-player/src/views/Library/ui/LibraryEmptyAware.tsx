@@ -1,14 +1,14 @@
 import { StateMessage } from '@shared/ui'
-import { Library } from 'lucide-react'
+import { LibraryBig } from 'lucide-react'
 import { ROUTES } from '@/shared/routes'
 
-/** The design's empty library: nothing saved yet, with a way to go and find music. */
+/** The design's empty library: nothing saved yet, with a way to create the first playlist. */
 export const LibraryEmptyState = () => (
   <StateMessage
     className="min-h-80"
-    description="Save playlists, albums and tracks and they will appear here."
-    icon={Library}
-    primary={{ href: ROUTES.search(), label: 'Find something to play' }}
-    title="Nothing here yet"
+    description="Playlists you create and albums you save will show up here."
+    icon={LibraryBig}
+    primary={{ href: ROUTES.createPlaylist, label: 'Create playlist' }}
+    title="Nothing here yet."
   />
 )

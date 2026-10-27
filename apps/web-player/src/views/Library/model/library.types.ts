@@ -27,7 +27,9 @@ export type LibraryAlbum = {
 
 export type LibraryData = {
   albums: LibraryAlbum[]
+  isError: boolean
   isPending: boolean
   playlists: LibraryPlaylist[]
+  refetch: () => void
   tracks: TrackEntity[]
 }
