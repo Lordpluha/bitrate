@@ -73,7 +73,7 @@ test.describe('landing page', () => {
   }) => {
     await context.addCookies([
       {
-        name: 'access_token',
+        name: 'user_access_token',
         value: 'e2e',
         url: baseURL ?? 'http://localhost:3001',
       },

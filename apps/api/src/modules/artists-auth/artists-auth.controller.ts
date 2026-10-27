@@ -95,7 +95,7 @@ export class AuthController {
       setPendingTwoFactorCookie(res, result.pendingToken)
       return { requires2fa: true }
     }
-    this.tokenService.setAuthCookies(res, result.access_token, result.refresh_token)
+    this.tokenService.setAuthCookies(res, 'artist', result.access_token, result.refresh_token)
   }
 
   @AuthRegistrationSwagger()
@@ -125,8 +125,8 @@ export class AuthController {
   @ArtistAuth()
   @Post('logout')
   async logout(@Req() req: ArtistAuthRequest & Request, @Res({ passthrough: true }) res: Response) {
-    await this.artistAuthService.logout(req.artist.id, readAccessToken(req))
-    this.tokenService.clearAuthCookies(res)
+    await this.artistAuthService.logout(req.artist.id, readAccessToken(req, 'artist'))
+    this.tokenService.clearAuthCookies(res, 'artist')
   }
 
   @AuthRefreshSwagger()
@@ -134,8 +134,11 @@ export class AuthController {
   @Throttle(SESSION_ROUTE_THROTTLE)
   @Post('refresh')
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const tokens = await this.artistAuthService.refresh(readRefreshToken(req), sessionClient(req))
-    this.tokenService.setAuthCookies(res, tokens.access_token, tokens.refresh_token)
+    const tokens = await this.artistAuthService.refresh(
+      readRefreshToken(req, 'artist'),
+      sessionClient(req),
+    )
+    this.tokenService.setAuthCookies(res, 'artist', tokens.access_token, tokens.refresh_token)
   }
 
   @AuthMeSwagger()
@@ -233,6 +236,6 @@ export class AuthController {
       sessionClient(req),
     )
     clearPendingTwoFactorCookie(res)
-    this.tokenService.setAuthCookies(res, access_token, refresh_token)
+    this.tokenService.setAuthCookies(res, 'artist', access_token, refresh_token)
   }
 }

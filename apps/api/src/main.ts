@@ -8,6 +8,7 @@ import './instrument'
 
 import { API_DOC_DESCRIPTION, API_DOC_TITLE, API_DOC_VERSION } from '@common/swagger'
 import { STATIC_ASSETS_GLOBAL_PREFIX_OPTIONS } from '@infra/storage/static-assets.routing'
+import { SESSION_COOKIE_NAMES } from '@modules/tokens'
 import { HttpStatus, Logger, VersioningType } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
@@ -83,12 +84,6 @@ async function bootstrap() {
         },
       },
     })
-    .addCookieAuth(configService.getOrThrow('ACCESS_TOKEN_NAME'), {
-      type: 'apiKey',
-      in: 'cookie',
-      name: configService.getOrThrow('ACCESS_TOKEN_NAME'),
-      description: `HttpOnly cookies: ${configService.getOrThrow('ACCESS_TOKEN_NAME')} and ${configService.getOrThrow('REFRESH_TOKEN_NAME')}`,
-    })
     .setContact('Lordpluha', 'https://github.com/Lordpluha', 'vladyslav.tesliuk.official@gmail.com')
     // Global server errors
     .addGlobalResponse({
@@ -138,6 +133,17 @@ async function bootstrap() {
       description: 'Too many requests',
     })
 
+  // One scheme per session cookie, named after it, as each audience's guard references its own.
+  for (const [audience, names] of Object.entries(SESSION_COOKIE_NAMES)) {
+    for (const [kind, name] of Object.entries(names)) {
+      documentBuilder.addCookieAuth(name, {
+        type: 'apiKey',
+        in: 'cookie',
+        name,
+        description: `HttpOnly ${kind} token cookie of a ${audience} session`,
+      })
+    }
+  }
   const config = documentBuilder.build()
 
   const documentFactory = () => SwaggerModule.createDocument(app, config)

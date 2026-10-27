@@ -410,8 +410,6 @@ jobs:
           SMTP_HOST: ${{ vars.SMTP_HOST }}
           SMTP_PORT: ${{ vars.SMTP_PORT }}
           EMAIL_FROM: ${{ vars.EMAIL_FROM }}
-          ACCESS_TOKEN_NAME: ${{ vars.ACCESS_TOKEN_NAME }}
-          REFRESH_TOKEN_NAME: ${{ vars.REFRESH_TOKEN_NAME }}
           COOKIE_DOMAIN: ${{ vars.COOKIE_DOMAIN }}
           JWT_ACCESS_EXPIRES_IN: ${{ vars.JWT_ACCESS_EXPIRES_IN }}
           JWT_REFRESH_EXPIRES_IN: ${{ vars.JWT_REFRESH_EXPIRES_IN }}
@@ -466,7 +464,7 @@ jobs:
           optional="
             USER_WEB_HOST ARTIST_WEB_HOST ADMIN_WEB_HOST API_BASE_URL API_URL
             REDIS_PORT SMTP_HOST SMTP_PORT SMTP_USER SMTP_PASS EMAIL_FROM
-            ACCESS_TOKEN_NAME REFRESH_TOKEN_NAME COOKIE_DOMAIN S3_BUCKET
+            COOKIE_DOMAIN S3_BUCKET
             TRUST_PROXY_HOPS HEALTH_CHECK_TIMEOUT_MS DEV_MAIL_LOG_TOKENS
             AUDIO_PROCESSING_WORKER_ENABLED
             OAUTH_GOOGLE_CLIENT_ID OAUTH_GOOGLE_CLIENT_SECRET
@@ -683,8 +681,6 @@ jobs:
           SMTP_HOST: ${{ vars.SMTP_HOST }}
           SMTP_PORT: ${{ vars.SMTP_PORT }}
           EMAIL_FROM: ${{ vars.EMAIL_FROM }}
-          ACCESS_TOKEN_NAME: ${{ vars.ACCESS_TOKEN_NAME }}
-          REFRESH_TOKEN_NAME: ${{ vars.REFRESH_TOKEN_NAME }}
           COOKIE_DOMAIN: ${{ vars.COOKIE_DOMAIN }}
           JWT_ACCESS_EXPIRES_IN: ${{ vars.JWT_ACCESS_EXPIRES_IN }}
           JWT_REFRESH_EXPIRES_IN: ${{ vars.JWT_REFRESH_EXPIRES_IN }}
@@ -786,8 +782,6 @@ jobs:
             req JWT_SECRET
             req JWT_ACCESS_EXPIRES_IN
             req JWT_REFRESH_EXPIRES_IN
-            opt ACCESS_TOKEN_NAME
-            opt REFRESH_TOKEN_NAME
             opt COOKIE_DOMAIN
             opt OAUTH_GOOGLE_CLIENT_ID
             opt OAUTH_GOOGLE_CLIENT_SECRET

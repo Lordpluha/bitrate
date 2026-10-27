@@ -36,20 +36,20 @@ export class ArtistSessionsController {
   @Header('Cache-Control', 'private, no-store')
   @Get()
   list(@Req() request: ArtistAuthRequest & Request) {
-    return this.sessions.list(request.artist.id, readAccessToken(request))
+    return this.sessions.list(request.artist.id, readAccessToken(request, 'artist'))
   }
 
   @RevokeOtherArtistSessionsSwagger()
   @HttpCode(HttpStatus.OK)
   @Post('revoke-others')
   revokeOthers(@Req() request: ArtistAuthRequest & Request) {
-    return this.sessions.revokeOthers(request.artist.id, readAccessToken(request))
+    return this.sessions.revokeOthers(request.artist.id, readAccessToken(request, 'artist'))
   }
 
   @RevokeArtistSessionSwagger()
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   revoke(@Req() request: ArtistAuthRequest & Request, @Param('id', ParseUUIDPipe) id: string) {
-    return this.sessions.revoke(request.artist.id, id, readAccessToken(request))
+    return this.sessions.revoke(request.artist.id, id, readAccessToken(request, 'artist'))
   }
 }

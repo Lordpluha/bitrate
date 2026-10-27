@@ -121,13 +121,18 @@ Per-app файлы до контейнера тоже не доходят: ни 
 | `REDIS_PORT` | данные | `6379` | Порт Redis |
 | `JWT_ACCESS_EXPIRES_IN` | аутентификация | `5m` | Срок жизни access token (формат `ms`) |
 | `JWT_REFRESH_EXPIRES_IN` | аутентификация | `30d` | Срок жизни refresh token |
-| `ACCESS_TOKEN_NAME` | аутентификация | `access_token` | Имя HttpOnly-куки с access token |
-| `REFRESH_TOKEN_NAME` | аутентификация | `refresh_token` | Имя HttpOnly-куки с refresh token |
 | `S3_REGION` | файлы | `us-east-1` | Регион S3 |
 | `S3_FORCE_PATH_STYLE` | файлы | `true` | Path-style адресация бакета |
 | `SMTP_PORT` | почта | `587` | SMTP-порт |
 | `HEALTH_CHECK_TIMEOUT_MS` | наблюдаемость | `2000` | Таймаут health-проверок (100–10000) |
 | `DEV_MAIL_LOG_TOKENS` | разработка | `false` | Логировать токены писем. В production обязан быть `false` |
+
+Имена кук сессии через окружение не настраиваются. Все куки живут на общем `COOKIE_DOMAIN`,
+поэтому у каждого типа аккаунта своя пара: `user_*` у плеера, `artist_*` у портала артистов,
+`staff_*` у админки (`user_access_token`, `user_refresh_token` и т. д.). С одним общим именем
+вход в одно приложение перезаписывал сессию другого. Имена заданы в
+`apps/api/src/modules/tokens/session-cookies.ts`, веб-приложения читают их копию из
+`@bitrate/contracts` (`SESSION_COOKIE_NAMES`); unit-тест API следит, чтобы копии совпадали.
 
 ### Опциональные без дефолта
 
@@ -205,10 +210,8 @@ Per-app файлы до контейнера тоже не доходят: ни 
 | `NODE_ENV` | нет, `development` | Next выставляет сам |
 | `NEXT_PUBLIC_API_URL` | нет, `http://localhost:3000` | Origin API |
 
-Вне схемы: `REFRESH_TOKEN_NAME` читает `src/middleware.ts`, сравнивая имя куки с фолбэком
-`refresh_token`. Схема эту переменную не описывает, а `Dockerfile` не передаёт — то есть на
-сервере всегда работает фолбэк. Если в API переименовать куку через `REFRESH_TOKEN_NAME`,
-гейт портала перестанет видеть сессию, и ничто об этом не предупредит.
+Имена кук сессии портал берёт из `@bitrate/contracts` (`SESSION_COOKIE_NAMES.artist`), а не из
+окружения.
 
 ## `apps/desktop`
 
@@ -283,7 +286,7 @@ Metro, а не конфигурация приложения.
 | `PORT=` · `REDIS_PORT=` · `SMTP_PORT=` | `0` — молча, сервер слушает случайный порт |
 | `S3_FORCE_PATH_STYLE=` | `false`, при дефолте `true` — молча наоборот |
 | `S3_REGION=` | пустая строка вместо `us-east-1` |
-| `NODE_ENV=` · `ACCESS_TOKEN_NAME=` · `REFRESH_TOKEN_NAME=` · `HEALTH_CHECK_TIMEOUT_MS=` · `DEV_MAIL_LOG_TOKENS=` | ошибка валидации, старт прерван |
+| `NODE_ENV=` · `HEALTH_CHECK_TIMEOUT_MS=` · `DEV_MAIL_LOG_TOKENS=` | ошибка валидации, старт прерван |
 | `JWT_ACCESS_EXPIRES_IN=` · `JWT_REFRESH_EXPIRES_IN=` | исключение внутри `ms()` — падение без внятного сообщения Zod |
 | `METRICS_TOKEN=` · `USER_WEB_HOST=` · `ARTIST_WEB_HOST=` · `COOKIE_DOMAIN=` · `API_BASE_URL=` · `EMAIL_FROM=` · `SENTRY_DSN=` · `S3_PUBLIC_URL=` | ошибка валидации, хотя переменная объявлена `.optional()` |
 
@@ -336,8 +339,6 @@ REDIS_PORT=6379
 # auth
 JWT_ACCESS_EXPIRES_IN=5m
 JWT_REFRESH_EXPIRES_IN=30d
-ACCESS_TOKEN_NAME=access_token
-REFRESH_TOKEN_NAME=refresh_token
 # files
 S3_REGION=us-east-1
 S3_FORCE_PATH_STYLE=true
@@ -433,10 +434,6 @@ NEXT_PUBLIC_API_URL=http://localhost:3000
 `apps/web-artists/env.schema.ts` объявляет `validateEnv()`, но её никто не вызывает — схема
 этого приложения сейчас ничего не проверяет. Пустое значение здесь не уронит сборку, но дойдёт
 до API-клиента как пустой origin.
-
-`REFRESH_TOKEN_NAME` в шаблоне отсутствует намеренно: `src/middleware.ts` читает её в обход
-схемы, а `Dockerfile` не передаёт, так что задать её здесь можно, но на сервере она всё равно
-не примени́тся.
 
 ## Шаблон `.env` для `apps/desktop`
 

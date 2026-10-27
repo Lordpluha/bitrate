@@ -153,7 +153,7 @@ export class ArtistsOAuthController {
       return res.redirect(`${host}/login/2fa`)
     }
 
-    this.tokenService.setAuthCookies(res, result.access_token, result.refresh_token)
+    this.tokenService.setAuthCookies(res, 'artist', result.access_token, result.refresh_token)
     return res.redirect(host)
   }
 }

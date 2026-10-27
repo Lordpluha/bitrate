@@ -62,8 +62,8 @@ describe('UsersAuthController (int)', () => {
         }) => {
           const req = ctx.switchToHttp().getRequest()
           req.user = user
-          req[process.env.ACCESS_TOKEN_NAME ?? 'access_token'] = 'at'
-          req[process.env.REFRESH_TOKEN_NAME ?? 'refresh_token'] = 'rt'
+          req.user_access_token = 'at'
+          req.user_refresh_token = 'rt'
           return true
         },
       })

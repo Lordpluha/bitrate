@@ -1,5 +1,5 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
-import type { JWTPayload } from '@modules/tokens'
+import { type JWTPayload, type SessionAudience, sessionCookieName } from '@modules/tokens'
 import { TokenService } from '@modules/tokens/token.service'
 import {
   applyDecorators,
@@ -25,10 +25,12 @@ export type TokenRequirement = 'access' | 'refresh'
 /** The token requirement value. */
 const TOKEN_REQUIREMENT = 'tokenRequirement'
 
-/** The access and refresh cookies of a request, by the configured cookie names. */
-export function extractAuthCookies(request: Request, tokenService: TokenService) {
-  const accessToken = request.cookies?.[tokenService.getTokenName('access')] as string | undefined
-  const refreshToken = request.cookies?.[tokenService.getTokenName('refresh')] as string | undefined
+/** The access and refresh cookies an audience's session is stored under on a request. */
+export function extractAuthCookies(request: Request, audience: SessionAudience) {
+  const accessToken = request.cookies?.[sessionCookieName(audience, 'access')] as string | undefined
+  const refreshToken = request.cookies?.[sessionCookieName(audience, 'refresh')] as
+    | string
+    | undefined
   return { accessToken, refreshToken }
 }
 
@@ -36,14 +38,14 @@ export function extractAuthCookies(request: Request, tokenService: TokenService)
  * Metadata wrapper to control a session guard: which token the route requires, the Swagger
  * cookie and 401 documentation, and the guard itself.
  */
-export function sessionAuth(guard: Type<CanActivate>, tokenRequirement: TokenRequirement) {
+export function sessionAuth(
+  guard: Type<CanActivate>,
+  tokenRequirement: TokenRequirement,
+  audience: AuthAudience,
+) {
   return applyDecorators(
     SetMetadata(TOKEN_REQUIREMENT, tokenRequirement),
-    ApiCookieAuth(
-      tokenRequirement === 'access'
-        ? process.env.ACCESS_TOKEN_NAME
-        : process.env.REFRESH_TOKEN_NAME,
-    ),
+    ApiCookieAuth(sessionCookieName(audience, tokenRequirement)),
     ApiResponse({
       status: HttpStatus.UNAUTHORIZED,
       description: 'Unauthorized',
@@ -112,7 +114,7 @@ export abstract class SessionAuthGuard<Account> implements CanActivate {
     const request = context.switchToHttp().getRequest<Request>()
     const { accessToken: access_token, refreshToken: refresh_token } = extractAuthCookies(
       request,
-      this.tokenService,
+      this.audience,
     )
 
     switch (tokenReq) {
@@ -151,8 +153,8 @@ export abstract class SessionAuthGuard<Account> implements CanActivate {
       if (!session) throw new UnauthorizedException(UNAUTHORIZED_ERRORS.SESSION_NOT_FOUND)
 
       this.attach(request, account)
-      if (access_token) request[this.tokenService.getTokenName('access')] = access_token
-      if (refresh_token) request[this.tokenService.getTokenName('refresh')] = refresh_token
+      if (access_token) request[sessionCookieName(this.audience, 'access')] = access_token
+      if (refresh_token) request[sessionCookieName(this.audience, 'refresh')] = refresh_token
     } catch (error) {
       if (error instanceof HttpException) throw error
       this.logger.error(`Unexpected error in ${this.constructor.name}`, error)
