@@ -116,6 +116,36 @@ describe('<bitrate-player> streaming mode', () => {
     await expect.poll(() => audios(element)[0]?.currentTime).toBeCloseTo(0.5, 1)
   })
 
+  it('keeps a mirror working once moved into another window, as into picture-in-picture', async () => {
+    const primary = await mountStreaming()
+    primary.source = await source('k1')
+    primary.trackTitle = 'Night Drive'
+
+    /** A same-origin iframe is a separate window with its own custom-element registry. */
+    const frame = document.createElement('iframe')
+    document.body.append(frame)
+    const otherDocument = frame.contentDocument
+    if (!otherDocument) throw new Error('iframe has no document')
+
+    const mirror = document.createElement('bitrate-player')
+    mirror.chrome = 'floating'
+    mirror.mirror = primary
+    otherDocument.body.append(mirror)
+
+    const play = await vi.waitFor(() => {
+      const button = mirror.shadowRoot?.querySelector('.play-button')
+      if (!(button instanceof HTMLElement) || button.hasAttribute('disabled')) {
+        throw new Error('floating mirror not ready')
+      }
+      return button
+    })
+    expect(mirror.ownerDocument).toBe(otherDocument)
+    expect(play.getAttribute('aria-label')).toBe('Play "Night Drive"')
+    play.click()
+
+    await expect.poll(() => primary.state.status).toBe('playing')
+  })
+
   it('lets a mirror render and drive the root it mirrors', async () => {
     const primary = await mountStreaming()
     primary.source = await source('k1')
