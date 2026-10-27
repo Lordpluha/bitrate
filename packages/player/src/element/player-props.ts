@@ -1,6 +1,6 @@
 import type {
   BitratePlayerElement,
-  BitratePlayerLabels,
+  BitratePlayerLabelOverrides,
   BitratePlayerRendition,
   BitratePlayerRepeatMode,
   BitratePlayerSource,
@@ -34,5 +34,5 @@ export type BitratePlayerProps = {
   volume?: number
   muted?: boolean
   mirror?: BitratePlayerElement | null
-  labels?: Partial<BitratePlayerLabels> | null
+  labels?: BitratePlayerLabelOverrides | null
 }

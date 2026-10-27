@@ -34,6 +34,11 @@
     <span class="time time--total" class:time--kept={keepTotal}>
       {formatTime(player.duration)}
     </span>
+  {:else if variant === 'stacked'}
+    <span class="readouts">
+      <span class="time">{formatTime(player.currentTime)}</span>
+      <span class="time">{formatTime(player.duration)}</span>
+    </span>
   {/if}
 </div>
 
@@ -54,11 +59,26 @@
     min-width: 0;
   }
 
+  /** The rail on its own line, the elapsed and total time under its two ends. */
+  .progress--stacked {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .readouts {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .readouts .time {
+    min-width: 0;
+  }
+
   .time {
-    min-width: 2.5rem;
+    min-width: var(--bitrate-player-time-min-width, 2.5rem);
     text-align: center;
     font-variant-numeric: tabular-nums;
-    font-size: 0.75rem;
+    font-size: var(--bitrate-player-time-size, 0.75rem);
     color: var(--color-text-subdued, var(--color-muted-foreground, inherit));
   }
 

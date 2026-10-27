@@ -52,8 +52,11 @@ export type BitratePlayerActionControl = (typeof BITRATE_PLAYER_ACTION_CONTROLS)
 /** `<bitrate-player-cover size="…">` — `sm` 2.5rem, `md` 3.5rem (default), `lg` fills its box. */
 export type BitratePlayerCoverSize = 'sm' | 'md' | 'lg'
 
-/** `<bitrate-player-seek variant="…">` — `full` with time readouts (default), `thin` without. */
-export type BitratePlayerSeekVariant = 'full' | 'thin'
+/**
+ * `<bitrate-player-seek variant="…">` — `full` with the time either side (default), `stacked`
+ * with the time under the rail, `thin` without it.
+ */
+export type BitratePlayerSeekVariant = 'full' | 'stacked' | 'thin'
 
 /** One playable quality a host offers — the element's quality selector is built from these. */
 export type BitratePlayerRendition = {
@@ -240,6 +243,11 @@ export type BitratePlayerLabels = {
   quality: string
 }
 
+/** What a host sets on `labels`: any subset, including part of `repeat`. */
+export type BitratePlayerLabelOverrides = Partial<Omit<BitratePlayerLabels, 'repeat'>> & {
+  repeat?: Partial<Record<BitratePlayerRepeatMode, string>>
+}
+
 /** The custom element's dispatched event names — bubbling, composed, `detail` where noted. */
 export const BITRATE_PLAYER_EVENT = {
   PLAY: 'play',
@@ -299,7 +307,7 @@ export interface BitratePlayerElement extends HTMLElement {
   /** Renders and controls another `<bitrate-player>` instead of playing anything itself. */
   mirror: BitratePlayerElement | null
   /** Translations for the element's labels; a mirror uses the labels of the root it mirrors. */
-  labels: Partial<BitratePlayerLabels> | null
+  labels: BitratePlayerLabelOverrides | null
   /** The current playback state; `statechange` fires whenever it changes. */
   readonly state: BitratePlayerStateDetail
   play(): Promise<void>

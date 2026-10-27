@@ -148,6 +148,23 @@ describe('<bitrate-player> composed from parts', () => {
       .toEqual(['Відтворити «Night Drive»', 'Next track', 'Повторювати плейлист'])
   })
 
+  it('puts the time under the rail for a stacked seek', async () => {
+    const element = await mountComposed(
+      '<bitrate-player-seek variant="stacked"></bitrate-player-seek>',
+    )
+
+    const root = await vi.waitFor(() => {
+      const seek = partRoot(element, 'bitrate-player-seek')
+      if (!seek.querySelector('.readouts')) throw new Error('stacked seek not rendered')
+      return seek
+    })
+    const rail = root.querySelector('input')?.getBoundingClientRect()
+    const readouts = root.querySelector('.readouts')?.getBoundingClientRect()
+
+    expect(readouts?.top).toBeGreaterThanOrEqual(rail?.bottom ?? Number.POSITIVE_INFINITY)
+    expect(root.querySelectorAll('.readouts .time')).toHaveLength(2)
+  })
+
   it('renders nothing for a part outside any player', async () => {
     const { defineBitratePlayer } = await import('./index')
     await defineBitratePlayer()

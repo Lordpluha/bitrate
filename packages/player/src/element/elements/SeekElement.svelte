@@ -19,7 +19,10 @@
 </script>
 
 {#if player.current}
-  <SeekBar player={player.current} variant={variant === 'thin' ? 'thin' : 'full'} />
+  <SeekBar
+    player={player.current}
+    variant={variant === 'thin' || variant === 'stacked' ? variant : 'full'}
+  />
 {/if}
 
 <style>

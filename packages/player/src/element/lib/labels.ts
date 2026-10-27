@@ -1,4 +1,4 @@
-import type { BitratePlayerLabels } from '../../contract'
+import type { BitratePlayerLabelOverrides, BitratePlayerLabels } from '../../contract'
 import { playPauseLabel } from './play-pause-label'
 import { REPEAT_LABELS } from './repeat-labels'
 
@@ -26,7 +26,7 @@ export const DEFAULT_LABELS: BitratePlayerLabels = {
 
 /** The host's labels over the defaults; a partial `repeat` keeps the missing modes. */
 export function resolveLabels(
-  overrides: Partial<BitratePlayerLabels> | null | undefined,
+  overrides: BitratePlayerLabelOverrides | null | undefined,
 ): BitratePlayerLabels {
   if (!overrides) return DEFAULT_LABELS
   return {
