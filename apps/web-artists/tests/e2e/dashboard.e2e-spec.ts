@@ -9,13 +9,13 @@ async function authenticate(
 ) {
   await context.addCookies([
     {
-      name: 'access_token',
+      name: 'artist_access_token',
       value: access,
       url: 'http://localhost:3102',
       httpOnly: true,
     },
     {
-      name: 'refresh_token',
+      name: 'artist_refresh_token',
       value: refresh,
       url: 'http://localhost:3102',
       httpOnly: true,
@@ -2720,12 +2720,14 @@ test('server rendering isolates artist identities and disables private response 
   const [first, second] = await Promise.all([
     request.get('/dashboard', {
       headers: {
-        Cookie: 'access_token=test-valid; refresh_token=test-refresh',
+        Cookie:
+          'artist_access_token=test-valid; artist_refresh_token=test-refresh',
       },
     }),
     request.get('/dashboard', {
       headers: {
-        Cookie: 'access_token=test-other; refresh_token=test-refresh',
+        Cookie:
+          'artist_access_token=test-other; artist_refresh_token=test-refresh',
       },
     }),
   ])
@@ -2788,7 +2790,7 @@ test('two-factor login verifies the code before returning to the protected page'
     cookies.find((cookie) => cookie.name === 'pending_2fa_token'),
   ).toBeUndefined()
   expect(
-    cookies.find((cookie) => cookie.name === 'access_token'),
+    cookies.find((cookie) => cookie.name === 'artist_access_token'),
   ).toMatchObject({
     value: 'test-valid',
     httpOnly: true,
@@ -2822,10 +2824,10 @@ test('expired access token refreshes on the server and relays httpOnly cookies',
   ).toBeVisible()
   const cookies = await context.cookies()
   expect(
-    cookies.find((cookie) => cookie.name === 'access_token'),
+    cookies.find((cookie) => cookie.name === 'artist_access_token'),
   ).toMatchObject({ value: 'test-valid', httpOnly: true })
   expect(
-    cookies.find((cookie) => cookie.name === 'refresh_token'),
+    cookies.find((cookie) => cookie.name === 'artist_refresh_token'),
   ).toMatchObject({ value: 'test-refresh-rotated', httpOnly: true })
 })
 

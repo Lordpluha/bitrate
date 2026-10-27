@@ -16,7 +16,7 @@ const createWsContext = (client: Socket): ExecutionContext =>
 
 const signedInClient = () =>
   ({
-    handshake: { headers: { cookie: 'access_token=access-token' } },
+    handshake: { headers: { cookie: 'user_access_token=access-token' } },
     disconnect: jest.fn(),
   }) as unknown as WsAuthClient & { disconnect: jest.Mock }
 
@@ -32,7 +32,6 @@ describe('WsUserAuthGuard', () => {
   }
 
   beforeEach(() => {
-    process.env.ACCESS_TOKEN_NAME = 'access_token'
     tokenService = mockDeep<TokenService>()
     prisma = mockDeep<PrismaService>()
     mockReset(tokenService)
@@ -93,7 +92,7 @@ describe('WsUserAuthGuard', () => {
     const client = {
       handshake: {
         headers: {
-          cookie: 'access_token=bad-token',
+          cookie: 'user_access_token=bad-token',
         },
       },
     } as Socket

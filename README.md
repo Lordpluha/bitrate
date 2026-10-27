@@ -346,6 +346,12 @@ web conventions above deliberately do not apply there.
   ([Task](https://taskfile.dev)) is the only interface to it. [nginx](https://nginx.org)
   terminates TLS for all six hostnames.
 
+## Sponsorship
+
+<a href="https://www.buymeacoffee.com/lordpluha">
+  <img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=%E2%98%95&slug=lordpluha&button_colour=BD5FFF&font_colour=ffffff&font_family=Arial&outline_colour=000000&coffee_colour=FFDD00" alt="Buy me a coffee" />
+</a>
+
 ## License
 
 [MIT](https://opensource.org/license/mit) © 2025 Lordpluha — see [LICENSE](LICENSE).

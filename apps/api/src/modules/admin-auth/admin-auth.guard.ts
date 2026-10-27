@@ -15,7 +15,7 @@ import {
 import { Reflector } from '@nestjs/core'
 import { ApiCookieAuth, ApiResponse } from '@nestjs/swagger'
 import type { Request } from 'express'
-import type { JWTPayload } from '../tokens'
+import { type JWTPayload, sessionCookieName } from '../tokens'
 import { hasPermission, type Permission, REQUIRED_PERMISSION } from './access'
 import { InsufficientPermissionException, UNAUTHORIZED_ERRORS } from './errors'
 import type { AdminAuthRequest } from './types'
@@ -37,7 +37,7 @@ const TOKEN_REQUIREMENT = 'tokenRequirement'
 export function AdminAuth() {
   return applyDecorators(
     SetMetadata(TOKEN_REQUIREMENT, 'access' satisfies TokenRequirement),
-    ApiCookieAuth(process.env.ACCESS_TOKEN_NAME),
+    ApiCookieAuth(sessionCookieName('staff', 'access')),
     ApiResponse({
       status: HttpStatus.UNAUTHORIZED,
       description: 'Unauthorized',
@@ -71,7 +71,7 @@ export function AdminAuth() {
 export function AdminRefreshAuth() {
   return applyDecorators(
     SetMetadata(TOKEN_REQUIREMENT, 'refresh' satisfies TokenRequirement),
-    ApiCookieAuth(process.env.REFRESH_TOKEN_NAME),
+    ApiCookieAuth(sessionCookieName('staff', 'refresh')),
     UseGuards(AdminAuthGuard),
   )
 }
@@ -143,8 +143,8 @@ export class AdminAuthGuard implements CanActivate {
       }
 
       request.staff = staff
-      if (access_token) request[this.tokenService.getTokenName('access')] = access_token
-      if (refresh_token) request[this.tokenService.getTokenName('refresh')] = refresh_token
+      if (access_token) request[sessionCookieName('staff', 'access')] = access_token
+      if (refresh_token) request[sessionCookieName('staff', 'refresh')] = refresh_token
     } catch (error) {
       if (error instanceof HttpException) throw error
       this.logger.error('Unexpected error in AdminAuthGuard', error)
@@ -156,10 +156,10 @@ export class AdminAuthGuard implements CanActivate {
 
   /** Runs the extract token from cookie operation. */
   private extractTokenFromCookie(request: Request) {
-    const access_token = request.cookies?.[this.tokenService.getTokenName('access')] as
+    const access_token = request.cookies?.[sessionCookieName('staff', 'access')] as
       | string
       | undefined
-    const refresh_token = request.cookies?.[this.tokenService.getTokenName('refresh')] as
+    const refresh_token = request.cookies?.[sessionCookieName('staff', 'refresh')] as
       | string
       | undefined
     return { access_token, refresh_token }

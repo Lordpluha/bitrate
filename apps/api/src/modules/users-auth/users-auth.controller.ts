@@ -92,7 +92,7 @@ export class UsersAuthController {
       setPendingTwoFactorCookie(res, result.pendingToken)
       return { requires2fa: true }
     }
-    this.tokenService.setAuthCookies(res, result.access_token, result.refresh_token)
+    this.tokenService.setAuthCookies(res, 'user', result.access_token, result.refresh_token)
   }
 
   @AuthRegistrationSwagger()
@@ -109,8 +109,8 @@ export class UsersAuthController {
   @Post('logout')
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const user = req.user as UserEntity
-    await this.authService.logout(user.id, readAccessToken(req))
-    this.tokenService.clearAuthCookies(res)
+    await this.authService.logout(user.id, readAccessToken(req, 'user'))
+    this.tokenService.clearAuthCookies(res, 'user')
   }
 
   @AuthRefreshSwagger()
@@ -118,8 +118,8 @@ export class UsersAuthController {
   @Throttle(SESSION_ROUTE_THROTTLE)
   @Post('refresh')
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const tokens = await this.authService.refresh(readRefreshToken(req))
-    this.tokenService.setAuthCookies(res, tokens.access_token, tokens.refresh_token)
+    const tokens = await this.authService.refresh(readRefreshToken(req, 'user'))
+    this.tokenService.setAuthCookies(res, 'user', tokens.access_token, tokens.refresh_token)
   }
 
   @AuthMeSwagger()
@@ -183,7 +183,7 @@ export class UsersAuthController {
   @UserAuth()
   @Get('sessions')
   getSessions(@Req() req: UserAuthRequest) {
-    return this.authService.getSessions(req.user.id, readAccessToken(req))
+    return this.authService.getSessions(req.user.id, readAccessToken(req, 'user'))
   }
 
   /** Revokes an individual session owned by the current user. */
@@ -199,7 +199,7 @@ export class UsersAuthController {
   @UserAuth()
   @Delete('sessions')
   async revokeOtherSessions(@Req() req: UserAuthRequest) {
-    await this.authService.revokeOtherSessions(req.user.id, readAccessToken(req))
+    await this.authService.revokeOtherSessions(req.user.id, readAccessToken(req, 'user'))
   }
 
   @TwoFactorSetupSwagger()
@@ -243,6 +243,6 @@ export class UsersAuthController {
     const user = await this.twoFactorService.verifyLoginCode(pendingToken, dto.code)
     const { access_token, refresh_token } = await this.authService.completeTwoFactorLogin(user.id)
     clearPendingTwoFactorCookie(res)
-    this.tokenService.setAuthCookies(res, access_token, refresh_token)
+    this.tokenService.setAuthCookies(res, 'user', access_token, refresh_token)
   }
 }

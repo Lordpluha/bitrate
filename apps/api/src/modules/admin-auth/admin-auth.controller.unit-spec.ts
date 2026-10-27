@@ -27,8 +27,6 @@ describe('AdminAuthController', () => {
   let tokenService: jest.Mocked<TokenService>
 
   beforeEach(() => {
-    process.env.ACCESS_TOKEN_NAME = 'access_token'
-    process.env.REFRESH_TOKEN_NAME = 'refresh_token'
     authService = makeAuthServiceMock()
     tokenService = makeTokenServiceMock()
     controller = new AdminAuthController(authService, tokenService)
@@ -41,20 +39,20 @@ describe('AdminAuthController', () => {
     await controller.login({ email: 'ops@bitrate.app', password: 'password' }, res)
 
     expect(authService.loginStaff).toHaveBeenCalledWith('ops@bitrate.app', 'password')
-    expect(tokenService.setAuthCookies).toHaveBeenCalledWith(res, 'at', 'rt')
+    expect(tokenService.setAuthCookies).toHaveBeenCalledWith(res, 'staff', 'at', 'rt')
   })
 
   it('logout calls logout with staff id and clears cookies', async () => {
     const req = {
       staff: { id: 'staff-1' },
-      access_token: 'at',
+      staff_access_token: 'at',
     } as unknown as AdminAuthRequest & Request
     const res = makeResponse()
 
     await controller.logout(req, res)
 
     expect(authService.logout).toHaveBeenCalledWith('staff-1', 'at')
-    expect(tokenService.clearAuthCookies).toHaveBeenCalledWith(res)
+    expect(tokenService.clearAuthCookies).toHaveBeenCalledWith(res, 'staff')
   })
 
   it('getMe returns the authenticated staff member', async () => {

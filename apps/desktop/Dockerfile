@@ -9,6 +9,7 @@ WORKDIR /app
 # Stage 2: Dependencies (Node.js)
 FROM base AS node-dependencies
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY patches ./patches
 COPY scripts ./scripts
 COPY apps/desktop/package.json ./apps/desktop/
 # pnpm's frozen-lockfile check validates every workspace importer in pnpm-lock.yaml has a
@@ -96,6 +97,7 @@ RUN cargo install tauri-cli
 
 WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY patches ./patches
 COPY scripts ./scripts
 COPY apps/desktop/package.json ./apps/desktop/
 RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile

@@ -40,8 +40,6 @@ export const envSchema = z
         message: 'Must be a valid time string (e.g. "15m", "7d")',
       }),
 
-    ACCESS_TOKEN_NAME: z.string().min(1).default('access_token'),
-    REFRESH_TOKEN_NAME: z.string().min(1).default('refresh_token'),
     /**
      * Parent domain the auth cookies are scoped to, e.g. `.bitrate.me`.
      * Unset means host-only cookies, which is correct on localhost but leaves the
