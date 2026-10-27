@@ -38,7 +38,7 @@
   input[type='range'] {
     appearance: none;
     -webkit-appearance: none;
-    height: 0.25rem;
+    height: var(--bitrate-player-track-height, 0.25rem);
     border-radius: 9999px;
     background: linear-gradient(
       to right,

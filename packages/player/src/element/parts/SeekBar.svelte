@@ -1,39 +1,40 @@
 <script lang="ts">
+  import type { BitratePlayerSeekVariant } from '../../contract'
+  import { formatTime } from '../lib/format-time'
+  import type { PlayerController } from '../player-controller'
   import RangeInput from './RangeInput.svelte'
 
-  type SeekBarTime = {
-    elapsedLabel: string
-    totalLabel: string
-  }
-
   let {
-    time,
-    currentTime,
-    duration,
-    progress,
-    onSeek,
+    player,
+    variant = 'full',
+    keepTotal = false,
   }: {
-    time: SeekBarTime
-    currentTime: number
-    duration: number
-    progress: number
-    onSeek: (event: Event) => void
+    player: PlayerController
+    variant?: BitratePlayerSeekVariant
+    /** Keeps the total-duration readout in a narrow container, where the bar drops it. */
+    keepTotal?: boolean
   } = $props()
 </script>
 
-<div class="progress">
-  <span class="time time--elapsed">{time.elapsedLabel}</span>
+<div class="progress progress--{variant}" part="seek">
+  {#if variant === 'full'}
+    <span class="time time--elapsed">{formatTime(player.currentTime)}</span>
+  {/if}
   <RangeInput
     label="Seek playback"
-    max={duration}
+    max={player.duration}
     min="0"
-    onInput={onSeek}
-    {progress}
+    onInput={player.seek}
+    progress={player.seekProgress}
     step="1"
-    value={currentTime}
+    value={player.currentTime}
     variant="seek"
   />
-  <span class="time time--total">{time.totalLabel}</span>
+  {#if variant === 'full'}
+    <span class="time time--total" class:time--kept={keepTotal}>
+      {formatTime(player.duration)}
+    </span>
+  {/if}
 </div>
 
 <style>
@@ -42,6 +43,15 @@
     align-items: center;
     gap: 0.5rem;
     width: 100%;
+  }
+
+  /** A hairline that still seeks: no readouts, a thinner track, no resting thumb. */
+  .progress--thin {
+    --bitrate-player-track-height: 0.125rem;
+  }
+
+  .progress--thin > :global(input) {
+    min-width: 0;
   }
 
   .time {
@@ -53,7 +63,7 @@
   }
 
   @container bitrate-player (max-width: 36rem) {
-    .time--total {
+    .time--total:not(.time--kept) {
       display: none;
     }
   }

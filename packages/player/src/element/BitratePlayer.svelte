@@ -2,6 +2,7 @@
   customElement={{
     shadow: 'open',
     props: {
+      chrome: { type: 'String', attribute: 'chrome', reflect: true },
       renditions: { type: 'Array' },
       resolveSource: {},
       trackTitle: { type: 'String', attribute: 'track-title', reflect: true },
@@ -19,23 +20,24 @@
       onPictureInPicture: {},
       onQueueOpen: {},
     },
+    extend: withPlayerProvider,
   }}
 />
 
+<script lang="ts" module>
+  import { withPlayerProvider } from './player-context'
+</script>
+
 <script lang="ts">
-  import { formatTime } from './lib/format-time'
-  import { playPauseLabel } from './lib/play-pause-label'
-  import { REPEAT_LABELS } from './lib/repeat-labels'
+  import ChromeLayout from './layouts/ChromeLayout.svelte'
+  import { resolveChrome } from './lib/controls'
+  import { isPlayerProviderHost } from './player-context'
+  import type { PlayerController } from './player-controller'
   import type { BitratePlayerProps } from './player-props'
   import { createPlayerEngineState } from './player-state.svelte'
-  import PlayerActions from './parts/PlayerActions.svelte'
-  import QualitySelect from './parts/QualitySelect.svelte'
-  import SeekBar from './parts/SeekBar.svelte'
-  import TrackMeta from './parts/TrackMeta.svelte'
-  import TransportControls from './parts/TransportControls.svelte'
-  import VolumeControl from './parts/VolumeControl.svelte'
 
   let {
+    chrome = 'bar',
     renditions = [],
     resolveSource = null,
     trackTitle = '',
@@ -55,6 +57,9 @@
   }: BitratePlayerProps = $props()
 
   let audioEl: HTMLAudioElement | undefined = $state(undefined)
+  let slotEl: HTMLElement | undefined = $state(undefined)
+  /** True once the host composes its own parts; the built-in layout steps aside. */
+  let composed = $state(false)
 
   function dispatch<T>(type: string, detail?: T): void {
     $host().dispatchEvent(new CustomEvent(type, { detail, bubbles: true, composed: true }))
@@ -74,77 +79,130 @@
     dispatch,
     exposeTransport,
   })
+
+  const callbacks: PlayerController['callbacks'] = {
+    get onNext() {
+      return onNext
+    },
+    get onPrevious() {
+      return onPrevious
+    },
+    get onLikeToggle() {
+      return onLikeToggle
+    },
+    get onShuffleToggle() {
+      return onShuffleToggle
+    },
+    get onRepeatToggle() {
+      return onRepeatToggle
+    },
+    get onExpand() {
+      return onExpand
+    },
+    get onPictureInPicture() {
+      return onPictureInPicture
+    },
+    get onQueueOpen() {
+      return onQueueOpen
+    },
+  }
+
+  const controller: PlayerController = {
+    get trackTitle() {
+      return trackTitle
+    },
+    get artist() {
+      return artist
+    },
+    get coverUrl() {
+      return coverUrl
+    },
+    get isLiked() {
+      return isLiked
+    },
+    get isShuffled() {
+      return isShuffled
+    },
+    get repeatMode() {
+      return repeatMode
+    },
+    get renditions() {
+      return renditions
+    },
+    callbacks,
+    get playing() {
+      return player.computed.playing
+    },
+    get preparing() {
+      return player.computed.preparing
+    },
+    get canPlay() {
+      return !player.computed.preparing && player.computed.effectiveBitrate !== null
+    },
+    get currentTime() {
+      return player.playbackState.currentTime
+    },
+    get duration() {
+      return player.computed.safeDuration
+    },
+    get seekProgress() {
+      return player.computed.seekProgress
+    },
+    get volume() {
+      return player.playbackState.volume
+    },
+    get volumeProgress() {
+      return player.computed.volumeProgress
+    },
+    get muted() {
+      return player.playbackState.muted
+    },
+    get effectiveBitrate() {
+      return player.computed.effectiveBitrate
+    },
+    get showQuality() {
+      return player.computed.showQuality
+    },
+    get error() {
+      return player.playbackState.error
+    },
+    playPause: () => void player.onPlayPause(),
+    seek: player.onSeek,
+    setVolume: player.onVolume,
+    toggleMute: player.onMuteToggle,
+    changeQuality: player.onQualityChange,
+  }
+
+  /** Not named `host`: `$host` would then read as a store subscription to it. */
+  const rootElement = $host()
+  if (isPlayerProviderHost(rootElement)) rootElement.providePlayer(controller)
+
+  function syncComposed(): void {
+    composed = slotEl instanceof HTMLSlotElement && slotEl.assignedElements().length > 0
+  }
+
+  /** Svelte's element typings carry no `onslotchange`, so the listener is attached here. */
+  $effect(() => {
+    const slot = slotEl
+    if (!slot) return
+    syncComposed()
+    slot.addEventListener('slotchange', syncComposed)
+    return () => slot.removeEventListener('slotchange', syncComposed)
+  })
 </script>
 
-<div class="root">
-  <audio bind:this={audioEl} preload="none"></audio>
+<audio bind:this={audioEl} preload="none"></audio>
 
-  <TrackMeta
-    {coverUrl}
-    {trackTitle}
-    {artist}
-    like={{ active: isLiked, onToggle: onLikeToggle }}
-    {onPictureInPicture}
-  />
+<!--
+  A native slot for the host's part elements — `<svelte:element>`, since `<slot>` is Svelte's
+  own slot syntax. Whitespace-only text the host leaves inside the tag does not count as
+  composing: only assigned elements switch the built-in layout off.
+-->
+<svelte:element this={"slot"} bind:this={slotEl} />
 
-  <div class="transport">
-    <TransportControls
-      shuffle={{ active: isShuffled, onToggle: onShuffleToggle }}
-      {onPrevious}
-      playback={{
-        playing: player.computed.playing,
-        disabled: player.computed.preparing || player.computed.effectiveBitrate === null,
-        label: player.computed.preparing
-          ? 'Preparing…'
-          : playPauseLabel(trackTitle, player.computed.playing),
-        onToggle: player.onPlayPause,
-      }}
-      {onNext}
-      repeat={{
-        active: repeatMode !== 'off',
-        repeatOne: repeatMode === 'one',
-        label: REPEAT_LABELS[repeatMode],
-        onToggle: onRepeatToggle,
-      }}
-    />
-
-    <SeekBar
-      time={{
-        elapsedLabel: formatTime(player.playbackState.currentTime),
-        totalLabel: formatTime(player.computed.safeDuration),
-      }}
-      currentTime={player.playbackState.currentTime}
-      duration={player.computed.safeDuration}
-      progress={player.computed.seekProgress}
-      onSeek={player.onSeek}
-    />
-  </div>
-
-  <div class="actions">
-    {#if player.computed.showQuality}
-      <QualitySelect
-        {renditions}
-        value={player.computed.effectiveBitrate}
-        disabled={player.computed.preparing}
-        onChange={player.onQualityChange}
-      />
-    {/if}
-
-    <VolumeControl
-      muted={player.playbackState.muted}
-      volume={player.playbackState.volume}
-      progress={player.computed.volumeProgress}
-      onVolume={player.onVolume}
-      onMuteToggle={player.onMuteToggle}
-    />
-
-    <PlayerActions {onQueueOpen} {onExpand} />
-  </div>
-
-  {#if player.playbackState.error}
-    <p class="error" role="alert">{player.playbackState.error.message}</p>
-  {/if}
-</div>
+{#if !composed}
+  <ChromeLayout chrome={resolveChrome(chrome)} player={controller} />
+{/if}
 
 <style>
   :host {
@@ -152,68 +210,6 @@
     container-type: inline-size;
     display: block;
     font-family: inherit;
-  }
-
-  .root {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem 1rem;
-    color: var(--color-text, var(--color-foreground, inherit));
-    background-color: var(--color-background, transparent);
-    border-top: 1px solid var(--color-border, currentColor);
-    font-family: inherit;
-    position: relative;
-  }
-
-  .transport {
-    display: flex;
-    flex: 2 1 40%;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    min-width: 0;
-    max-width: 45rem;
-  }
-
-  .actions {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 0.5rem;
-    flex: 1 1 35%;
-    min-width: 0;
-  }
-
-  .error {
-    position: absolute;
-    left: 1rem;
-    bottom: 100%;
-    margin: 0 0 0.25rem;
-    color: var(--color-destructive, crimson);
-    font-size: 0.75rem;
-  }
-
-  @container bitrate-player (max-width: 36rem) {
-    /** Quality and volume stay reachable at every width; only the total-duration readout shrinks. */
-    .root {
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      padding: 0.5rem 0.75rem;
-    }
-
-    .transport {
-      order: 3;
-      flex: 1 1 100%;
-      max-width: none;
-    }
-
-    .actions {
-      order: 2;
-      flex: 1 1 100%;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-    }
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -1,11 +1,13 @@
 import type {
   BitratePlayerRendition,
+  PlayerChrome,
   BitratePlayerRepeatMode,
   BitratePlayerSourceResolver,
 } from '../contract'
 
 /** Props accepted by `<bitrate-player>` — mirrors the `customElement.props` map in `BitratePlayer.svelte`. */
 export type BitratePlayerProps = {
+  chrome?: PlayerChrome
   renditions?: BitratePlayerRendition[]
   resolveSource?: BitratePlayerSourceResolver | null
   trackTitle?: string

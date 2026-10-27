@@ -57,8 +57,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 2rem;
-    height: 2rem;
+    width: var(--bitrate-player-icon-button-size, 2rem);
+    height: var(--bitrate-player-icon-button-size, 2rem);
     border-radius: 9999px;
     color: var(--color-text-subdued, var(--color-muted-foreground, inherit));
     transition:
@@ -83,8 +83,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 2rem;
-    height: 2rem;
+    width: var(--bitrate-player-play-size, 2rem);
+    height: var(--bitrate-player-play-size, 2rem);
     border-radius: 9999px;
     background-color: var(--color-text, var(--color-primary, currentColor));
     color: var(--color-background, var(--color-primary-foreground, inherit));
@@ -93,5 +93,14 @@
 
   .play-button:hover:not(:disabled) {
     transform: scale(1.05);
+  }
+
+  /** The icons carry fixed pixel sizes; larger layouts scale them rather than resize them. */
+  .icon-button :global(svg) {
+    scale: var(--bitrate-player-icon-scale, 1);
+  }
+
+  .play-button :global(svg) {
+    scale: var(--bitrate-player-play-icon-scale, 1);
   }
 </style>

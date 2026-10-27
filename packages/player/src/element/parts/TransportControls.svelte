@@ -1,92 +1,79 @@
 <script lang="ts">
+  import type { BitratePlayerTransportControl } from '../../contract'
   import PauseIcon from '../icons/PauseIcon.svelte'
   import PlayIcon from '../icons/PlayIcon.svelte'
   import RepeatIcon from '../icons/RepeatIcon.svelte'
   import ShuffleIcon from '../icons/ShuffleIcon.svelte'
   import SkipBackIcon from '../icons/SkipBackIcon.svelte'
   import SkipForwardIcon from '../icons/SkipForwardIcon.svelte'
+  import { playPauseLabel } from '../lib/play-pause-label'
+  import { REPEAT_LABELS } from '../lib/repeat-labels'
+  import type { PlayerController } from '../player-controller'
   import IconButton from './IconButton.svelte'
 
-  type TransportToggle = {
-    active: boolean
-    onToggle: (() => void) | null
-  }
-
-  type PlaybackToggle = {
-    playing: boolean
-    disabled: boolean
-    label: string
-    onToggle: () => void
-  }
-
-  type RepeatToggle = {
-    active: boolean
-    repeatOne: boolean
-    label: string
-    onToggle: (() => void) | null
-  }
-
+  /** A control renders only when it is in `controls` and, except Play, the root has its callback. */
   let {
-    shuffle,
-    onPrevious = null,
-    playback,
-    onNext = null,
-    repeat,
+    player,
+    controls,
   }: {
-    shuffle: TransportToggle
-    onPrevious?: (() => void) | null
-    playback: PlaybackToggle
-    onNext?: (() => void) | null
-    repeat: RepeatToggle
+    player: PlayerController
+    controls: readonly BitratePlayerTransportControl[]
   } = $props()
+
+  const shuffle = $derived(controls.includes('shuffle') ? player.callbacks.onShuffleToggle : null)
+  const previous = $derived(controls.includes('prev') ? player.callbacks.onPrevious : null)
+  const next = $derived(controls.includes('next') ? player.callbacks.onNext : null)
+  const repeat = $derived(controls.includes('repeat') ? player.callbacks.onRepeatToggle : null)
 </script>
 
-<div class="transport-buttons">
-  {#if shuffle.onToggle}
+<div class="transport-buttons" part="transport">
+  {#if shuffle}
     <IconButton
-      active={shuffle.active}
-      label={shuffle.active ? 'Disable shuffle' : 'Enable shuffle'}
-      onClick={shuffle.onToggle}
-      pressed={shuffle.active}
+      active={player.isShuffled}
+      label={player.isShuffled ? 'Disable shuffle' : 'Enable shuffle'}
+      onClick={shuffle}
+      pressed={player.isShuffled}
     >
       <ShuffleIcon />
     </IconButton>
   {/if}
 
-  {#if onPrevious}
-    <IconButton label="Previous track" onClick={onPrevious}>
+  {#if previous}
+    <IconButton label="Previous track" onClick={previous}>
       <SkipBackIcon />
     </IconButton>
   {/if}
 
-  <IconButton
-    disabled={playback.disabled}
-    label={playback.label}
-    onClick={playback.onToggle}
-    pressed={playback.playing}
-    variant="play"
-  >
-    {#if playback.playing}
-      <PauseIcon />
-    {:else}
-      <PlayIcon />
-    {/if}
-  </IconButton>
+  {#if controls.includes('play')}
+    <IconButton
+      disabled={!player.canPlay}
+      label={player.preparing ? 'Preparing…' : playPauseLabel(player.trackTitle, player.playing)}
+      onClick={player.playPause}
+      pressed={player.playing}
+      variant="play"
+    >
+      {#if player.playing}
+        <PauseIcon />
+      {:else}
+        <PlayIcon />
+      {/if}
+    </IconButton>
+  {/if}
 
-  {#if onNext}
-    <IconButton label="Next track" onClick={onNext}>
+  {#if next}
+    <IconButton label="Next track" onClick={next}>
       <SkipForwardIcon />
     </IconButton>
   {/if}
 
-  {#if repeat.onToggle}
+  {#if repeat}
     <IconButton
-      active={repeat.active}
-      label={repeat.label}
-      onClick={repeat.onToggle}
-      pressed={repeat.active}
+      active={player.repeatMode !== 'off'}
+      label={REPEAT_LABELS[player.repeatMode]}
+      onClick={repeat}
+      pressed={player.repeatMode !== 'off'}
     >
-      <RepeatIcon repeatOne={repeat.repeatOne} />
+      <RepeatIcon repeatOne={player.repeatMode === 'one'} />
     </IconButton>
   {/if}
 </div>
@@ -95,6 +82,7 @@
   .transport-buttons {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    justify-content: center;
+    gap: var(--bitrate-player-transport-gap, 1rem);
   }
 </style>

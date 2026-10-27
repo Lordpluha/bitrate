@@ -4,8 +4,56 @@
  * and no custom-element registry. See `.claude/rules/player-rules.md`.
  */
 
-/** Which chrome the player renders around its transport controls. */
-export type PlayerChrome = 'bar' | 'mini' | 'none'
+/**
+ * The layout `<bitrate-player>` renders when the host puts no part elements inside it —
+ * `bar` (the default: the horizontal desktop bar), `mini` (a compact mobile row), `expanded`
+ * (the full-screen now-playing view), `floating` (the small picture-in-picture window), or
+ * `none` (no built-in layout; only the parts the host composes). An unknown value falls back
+ * to `bar`.
+ */
+export const BITRATE_PLAYER_CHROMES = ['bar', 'mini', 'expanded', 'floating', 'none'] as const
+
+export type PlayerChrome = (typeof BITRATE_PLAYER_CHROMES)[number]
+
+/**
+ * Part elements a host composes inside `<bitrate-player>` to build its own layout. Each reads
+ * the state of the nearest `<bitrate-player>` ancestor and renders nothing outside one.
+ */
+export const BITRATE_PLAYER_PART_TAG = {
+  COVER: 'bitrate-player-cover',
+  META: 'bitrate-player-meta',
+  TRANSPORT: 'bitrate-player-transport',
+  SEEK: 'bitrate-player-seek',
+  VOLUME: 'bitrate-player-volume',
+  ACTIONS: 'bitrate-player-actions',
+  QUALITY: 'bitrate-player-quality',
+  ERROR: 'bitrate-player-error',
+} as const
+
+export type BitratePlayerPartTagName =
+  (typeof BITRATE_PLAYER_PART_TAG)[keyof typeof BITRATE_PLAYER_PART_TAG]
+
+/** Controls `<bitrate-player-transport controls="…">` can show, in the order they render. */
+export const BITRATE_PLAYER_TRANSPORT_CONTROLS = [
+  'shuffle',
+  'prev',
+  'play',
+  'next',
+  'repeat',
+] as const
+
+export type BitratePlayerTransportControl = (typeof BITRATE_PLAYER_TRANSPORT_CONTROLS)[number]
+
+/** Controls `<bitrate-player-actions controls="…">` can show, in the order they render. */
+export const BITRATE_PLAYER_ACTION_CONTROLS = ['like', 'pip', 'queue', 'expand'] as const
+
+export type BitratePlayerActionControl = (typeof BITRATE_PLAYER_ACTION_CONTROLS)[number]
+
+/** `<bitrate-player-cover size="…">` — `sm` 2.5rem, `md` 3.5rem (default), `lg` fills its box. */
+export type BitratePlayerCoverSize = 'sm' | 'md' | 'lg'
+
+/** `<bitrate-player-seek variant="…">` — `full` with time readouts (default), `thin` without. */
+export type BitratePlayerSeekVariant = 'full' | 'thin'
 
 /** One playable quality a host offers — the element's quality selector is built from these. */
 export type BitratePlayerRendition = {
@@ -77,6 +125,8 @@ export type BitratePlayerEventName =
  * (`isLiked`, `isShuffled`, `repeatMode`) only affects a control that is already showing.
  */
 export interface BitratePlayerElement extends HTMLElement {
+  /** Reflected as the `chrome` attribute; see `PlayerChrome`. */
+  chrome: PlayerChrome
   renditions: BitratePlayerRendition[]
   resolveSource: BitratePlayerSourceResolver | null
   trackTitle: string
@@ -97,8 +147,35 @@ export interface BitratePlayerElement extends HTMLElement {
   pause(): void
 }
 
+/**
+ * A part whose `controls` attribute narrows which buttons it shows — a space-separated list of
+ * control names. Absent, every control is allowed; a control still renders only when the
+ * root has its matching `on*` callback (`play` needs none). Unknown names are ignored.
+ */
+export interface BitratePlayerControlsPartElement extends HTMLElement {
+  controls: string | null
+}
+
+/** `<bitrate-player-cover>` — the track's cover art, or a placeholder. */
+export interface BitratePlayerCoverElement extends HTMLElement {
+  size: BitratePlayerCoverSize
+}
+
+/** `<bitrate-player-seek>` — the seek slider. */
+export interface BitratePlayerSeekElement extends HTMLElement {
+  variant: BitratePlayerSeekVariant
+}
+
 declare global {
   interface HTMLElementTagNameMap {
     'bitrate-player': BitratePlayerElement
+    'bitrate-player-cover': BitratePlayerCoverElement
+    'bitrate-player-meta': HTMLElement
+    'bitrate-player-transport': BitratePlayerControlsPartElement
+    'bitrate-player-seek': BitratePlayerSeekElement
+    'bitrate-player-volume': HTMLElement
+    'bitrate-player-actions': BitratePlayerControlsPartElement
+    'bitrate-player-quality': HTMLElement
+    'bitrate-player-error': HTMLElement
   }
 }

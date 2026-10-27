@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite'
 import { expect, fn, waitFor } from 'storybook/test'
-import type { BitratePlayerElement } from '../contract'
+import { BITRATE_PLAYER_CHROMES, type BitratePlayerElement } from '../contract'
 import { BITRATE_PLAYER_TAG_NAME } from './index'
 import BitratePlayerHost from './stories/BitratePlayerHost.svelte'
 import {
@@ -16,6 +16,8 @@ const meta = {
   component: BitratePlayerHost,
   tags: ['autodocs'],
   argTypes: {
+    chrome: { control: 'inline-radio', options: BITRATE_PLAYER_CHROMES },
+    frame: { control: 'text' },
     repeatMode: { control: 'inline-radio', options: ['off', 'all', 'one'] },
     renditions: { control: 'object' },
     resolveSource: { control: false },
@@ -114,4 +116,24 @@ export const LongMetadata: Story = {
       'An Unreasonably Long Track Title That Nobody Tried At Sixty Characters (Extended Club Mix)',
     artist: 'The Orchestra Of Very Long Artist Names featuring Several Guest Vocalists',
   },
+}
+
+/** `chrome="mini"`: the compact mobile row — cover, title, Play and Next, a hairline of progress. */
+export const Mini: Story = {
+  args: { ...FullChrome.args, chrome: 'mini', frame: 'max-width: 24rem' },
+}
+
+/** `chrome="expanded"`: the full-screen now-playing view. */
+export const Expanded: Story = {
+  args: { ...FullChrome.args, chrome: 'expanded' },
+}
+
+/** `chrome="floating"`: the picture-in-picture window, art as the backdrop. */
+export const Floating: Story = {
+  args: { ...FullChrome.args, chrome: 'floating', frame: 'width: 20rem; height: 12rem' },
+}
+
+/** `chrome="none"` with no parts inside: only the hidden `<audio>`, nothing to see. */
+export const Headless: Story = {
+  args: { ...FullChrome.args, chrome: 'none' },
 }

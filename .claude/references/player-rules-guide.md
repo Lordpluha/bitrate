@@ -189,6 +189,25 @@ CVA. `scripts/check-design-tokens.mjs` walks `packages/player/src` (including `.
 files) and flags a literal hex colour there — not the stock-Tailwind-scale check the other
 three roots get, since this package has no Tailwind utilities to check in the first place.
 
+Variants (ADR-0062) change size and density through `--bitrate-player-*` properties that each
+fall back to the old literal, so an unset property keeps the `bar` exactly as it was: set them
+on a layout's root class, never by editing a part's defaults. Inner nodes carry `part` names
+for `::part()`. Fixed-size SVG icons scale with `scale: var(--bitrate-player-*-icon-scale)`
+rather than CSS `width`, which would override the icon's own size attributes. A layout drawn
+over cover art (`floating`) redefines the `--color-*` tokens locally, because the page theme no
+longer describes what is behind the controls.
+
+## Variants and part elements
+
+`src/element/layouts/` holds the built-in `chrome` layouts; they render the internal parts in
+`src/element/parts/` directly, inside the root's shadow tree. `src/element/elements/` holds the
+public part elements: each wraps one internal part, gets the root's controller through
+`connectPlayer($host())` (a Context Protocol `context-request`), and renders nothing without
+one. The root is extended with `withPlayerProvider` so its listener exists from upgrade, and
+`src/element/registry.ts` lists every tag, root first. A new control goes into the internal
+part, its name into the contract's control union, and its gating into both rules: the layout
+or `controls` list *and* the root callback.
+
 ## Testing — the element is tested in the browser, not jsdom; SSR safety in real Node
 
 Three Vitest projects: `unit` (jsdom) holds the engine and contract specs; `node` (plain Node,
