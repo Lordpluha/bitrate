@@ -149,6 +149,21 @@ describe('TrackAudioPlayer', () => {
     expect(player.coverUrl).toBe('https://api.bitrate.test/static/tracks/covers/abc123.png')
   })
 
+  /**
+   * The package grew a streaming mode, mirrors and `chrome` layouts for web-player (#235, #236).
+   * The preview keeps the default bar on the single-element `resolveSource` path: binding any
+   * of these would switch it to behaviour it was never reviewed for.
+   */
+  it('stays on the default bar and the resolveSource path — no chrome, streaming or mirror bound', async () => {
+    const { player } = await render()
+
+    expect(player.getAttribute('chrome')).toBeNull()
+    for (const property of ['chrome', 'streaming', 'source', 'next', 'mirror']) {
+      expect(Object.hasOwn(player, property), property).toBe(false)
+    }
+    expect(player.resolveSource).toEqual(expect.any(Function))
+  })
+
   it("mounts no Angular-owned <audio> element — playback is the custom element's own concern", async () => {
     const { host } = await render()
 
