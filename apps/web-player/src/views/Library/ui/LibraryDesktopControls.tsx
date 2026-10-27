@@ -1,4 +1,4 @@
-import { SearchIcon } from 'lucide-react'
+import { SearchField } from '@shared/ui'
 import { useI18n } from '@/shared/i18n'
 import type { LibraryControls } from '@/views/Library/model/library.types'
 
@@ -15,20 +15,13 @@ export const LibraryDesktopControls = ({
 
   return (
     <div className="hidden items-center justify-between gap-3 xl:flex">
-      <label className="relative w-80">
-        <span className="sr-only">{t('library.filter')}</span>
-        <SearchIcon
-          aria-hidden="true"
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-          size={16}
-        />
-        <input
-          className="h-9 w-full rounded-md border border-border bg-background pr-3 pl-9 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
-          onChange={(event) => onChange({ query: event.target.value })}
-          placeholder={t('library.filter')}
-          value={controls.query}
-        />
-      </label>
+      <SearchField
+        className="w-80"
+        label={t('library.filter')}
+        onChange={(query) => onChange({ query })}
+        placeholder={t('library.filter')}
+        value={controls.query}
+      />
       <label>
         <span className="sr-only">{t('library.sort')}</span>
         <select
@@ -40,8 +33,8 @@ export const LibraryDesktopControls = ({
           }
           value={controls.sortMode}
         >
-          <option value="recent">{t('library.recents')}</option>
-          <option value="title">{t('common.title')}</option>
+          <option value="recent">{t('library.sortRecentlyAdded')}</option>
+          <option value="title">{t('library.sortTitle')}</option>
         </select>
       </label>
     </div>

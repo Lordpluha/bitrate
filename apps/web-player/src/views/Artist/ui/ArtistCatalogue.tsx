@@ -4,6 +4,7 @@ import type { ArtistEntity } from '@entities/Artist'
 import type { TrackEntity } from '@entities/Track'
 import { StateMessage } from '@shared/ui'
 import { MicVocal, TriangleAlert } from 'lucide-react'
+import { useI18n } from '@/shared/i18n'
 import type { ArtistContent } from '../model/artist.types'
 import { ArtistAbout } from './ArtistAbout'
 import { ArtistActionBar } from './ArtistActionBar'
@@ -37,6 +38,8 @@ export const ArtistCatalogue = ({
   onTogglePlay,
   statsLabel,
 }: ArtistCatalogueProps) => {
+  const { t } = useI18n()
+
   return (
     <>
       <ArtistActionBar
@@ -51,22 +54,22 @@ export const ArtistCatalogue = ({
       {content.tracks.length === 0 && content.albums.length === 0 ? (
         content.isPending ? (
           <p className="py-10 text-muted-foreground" role="status">
-            Loading catalogue…
+            {t('artist.loadingCatalogue')}
           </p>
         ) : content.isError ? (
           <StateMessage
             className="min-h-80"
-            description="The catalogue could not be loaded right now."
+            description={t('artist.catalogueFailed')}
             icon={TriangleAlert}
-            title="Music is unavailable"
+            title={t('artist.musicUnavailable')}
             tone="error"
           />
         ) : (
           <StateMessage
             className="min-h-80"
-            description="Follow them to hear about their first release."
+            description={t('artist.noMusicDescription')}
             icon={MicVocal}
-            title="This artist has no published music yet."
+            title={t('artist.noMusic')}
           />
         )
       ) : (
@@ -88,8 +91,8 @@ export const ArtistCatalogue = ({
         </>
       )}
 
-      <ArtistAbout artist={artist} statsLabel={statsLabel} />
       <RelatedArtistsSection artistId={artist.id} />
+      <ArtistAbout artist={artist} statsLabel={statsLabel} />
     </>
   )
 }

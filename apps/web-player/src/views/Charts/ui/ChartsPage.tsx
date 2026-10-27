@@ -2,10 +2,11 @@
 
 import { ArtistName } from '@entities/Artist'
 import { useArtistCharts, useCharts } from '@entities/Discovery'
+import { type TranslationKey, useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import {
+  ErrorState,
   PageTitle,
-  RetryState,
   type SegmentedTab,
   SegmentedTabs,
   StateMessage,
@@ -21,11 +22,13 @@ import { usePlayCollection } from '@/features/PlayCollection'
 
 type ChartTab = 'artists' | 'rising' | 'songs'
 
-const TABS: ReadonlyArray<SegmentedTab<ChartTab>> = [
-  { id: 'songs', label: 'Top songs' },
-  { id: 'artists', label: 'Top artists' },
-  { id: 'rising', label: 'Rising' },
-]
+const TAB_LABELS: Record<ChartTab, TranslationKey> = {
+  artists: 'charts.topArtists',
+  rising: 'charts.rising',
+  songs: 'charts.topSongs',
+}
+
+const TAB_ORDER: readonly ChartTab[] = ['songs', 'artists', 'rising']
 
 /** How many places each chart lists. */
 const CHART_LENGTH = 50
@@ -40,32 +43,55 @@ const Rank = ({ place }: { place: number }) => (
   </span>
 )
 
-const ChartError = ({ onRetry }: { onRetry: () => void }) => (
-  <RetryState onRetry={onRetry} title="Charts are unavailable" />
-)
+const ChartError = ({ onRetry }: { onRetry: () => void }) => {
+  const { t } = useI18n()
 
-const ChartLoading = () => (
-  <div aria-label="Loading chart" className="flex flex-col gap-1" role="status">
-    {SKELETON_KEYS.map((key) => (
-      <TrackRowSkeleton key={key} />
-    ))}
-  </div>
-)
+  return (
+    <ErrorState
+      description={t('common.tryAgainSoon')}
+      onRetry={onRetry}
+      title={t('charts.unavailable')}
+    />
+  )
+}
+
+const ChartLoading = () => {
+  const { t } = useI18n()
+
+  return (
+    <div
+      aria-label={t('charts.loading')}
+      className="flex flex-col gap-1"
+      role="status"
+    >
+      {SKELETON_KEYS.map((key) => (
+        <TrackRowSkeleton key={key} />
+      ))}
+    </div>
+  )
+}
+
+const ChartEmpty = () => {
+  const { t } = useI18n()
+
+  return (
+    <StateMessage
+      description={t('charts.emptyDescription')}
+      icon={TrendingUp}
+      title={t('charts.emptyTitle')}
+    />
+  )
+}
 
 const SongsChart = ({ scope }: { scope: 'global' | 'viral' }) => {
+  const { t } = useI18n()
   const chart = useCharts({ limit: CHART_LENGTH, scope })
   const playCollection = usePlayCollection()
 
   if (chart.isPending) return <ChartLoading />
   if (chart.isError) return <ChartError onRetry={() => void chart.refetch()} />
   if (chart.data.data.length === 0) {
-    return (
-      <StateMessage
-        description="Charts fill in as people listen."
-        icon={TrendingUp}
-        title="Nothing is charting yet"
-      />
-    )
+    return <ChartEmpty />
   }
 
   return (
@@ -73,7 +99,7 @@ const SongsChart = ({ scope }: { scope: 'global' | 'viral' }) => {
       {chart.data.data.map((track, index) => (
         <li key={track.id}>
           <button
-            aria-label={`Play ${track.title}`}
+            aria-label={t('common.playName', { name: track.title })}
             className={rowClassName}
             onClick={() =>
               void playCollection({
@@ -115,18 +141,13 @@ const SongsChart = ({ scope }: { scope: 'global' | 'viral' }) => {
 }
 
 const ArtistsChart = () => {
+  const { tp } = useI18n()
   const chart = useArtistCharts({ limit: CHART_LENGTH })
 
   if (chart.isPending) return <ChartLoading />
   if (chart.isError) return <ChartError onRetry={() => void chart.refetch()} />
   if (chart.data.data.length === 0) {
-    return (
-      <StateMessage
-        description="Charts fill in as people listen."
-        icon={TrendingUp}
-        title="Nothing is charting yet"
-      />
-    )
+    return <ChartEmpty />
   }
 
   return (
@@ -148,8 +169,7 @@ const ArtistsChart = () => {
               {artist.username}
             </span>
             <span className="text-[13px] tabular-nums text-muted-foreground">
-              {artist.listeners.toLocaleString('en-US')}{' '}
-              {artist.listeners === 1 ? 'listener' : 'listeners'}
+              {tp({ count: artist.listeners, key: 'charts.listeners' })}
             </span>
           </Link>
         </li>
@@ -160,17 +180,22 @@ const ArtistsChart = () => {
 
 /** Trending & charts: the most played songs, the most listened artists and what is rising. */
 export const ChartsPage = () => {
+  const { t } = useI18n()
   const [tab, setTab] = useState<ChartTab>('songs')
+  const tabs: SegmentedTab<ChartTab>[] = TAB_ORDER.map((id) => ({
+    id,
+    label: t(TAB_LABELS[id]),
+  }))
 
   return (
     <div className="h-full overflow-y-auto custom-scrollbar">
       <div className="flex flex-col gap-5 px-4 pt-2 pb-3 md:gap-7 md:px-8 md:py-6">
-        <PageTitle title="Trending & charts" />
+        <PageTitle title={t('charts.title')} />
         <SegmentedTabs
-          ariaLabel="Charts"
+          ariaLabel={t('nav.charts')}
           className="-mx-4 overflow-x-auto px-4 md:mx-0 md:px-0"
           onChange={setTab}
-          tabs={TABS}
+          tabs={tabs}
           value={tab}
         />
         {tab === 'artists' ? (

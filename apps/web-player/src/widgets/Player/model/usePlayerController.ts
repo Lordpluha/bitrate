@@ -9,6 +9,7 @@ import {
   useStreamingPlayer,
 } from '@entities/Player'
 import { useTrackLike } from '@entities/Track'
+import { useI18n } from '@shared/i18n'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import { useEffect } from 'react'
 import { useFloatingPlayerWindow } from './useFloatingPlayerWindow'
@@ -27,6 +28,7 @@ export const usePlayerController = ({
   isExpanded,
   onExpandedChange,
 }: UsePlayerControllerInput) => {
+  const { t } = useI18n()
   const player = usePlayerStore(selectMusicPlayer)
   const currentPlaylistName = usePlayerStore(selectCurrentPlaylistName)
   const repeatMode = usePlayerStore(selectRepeatMode)
@@ -70,7 +72,7 @@ export const usePlayerController = ({
   if (!currentTrack) return null
 
   const common = {
-    artist: artist?.username || 'Unknown Artist',
+    artist: artist?.username || t('common.unknownArtist'),
     coverUrl: getTrackCoverUrl(currentTrack.cover),
     currentTime: player.currentTime,
     duration: player.duration,
@@ -80,7 +82,7 @@ export const usePlayerController = ({
     onNext: () => audio.changeTrack('next'),
     onPlayPause: audio.togglePlayPause,
     onPrevious: () => audio.changeTrack('prev'),
-    title: currentTrack.title || 'Unknown',
+    title: currentTrack.title || t('common.unknown'),
   }
 
   return {
@@ -111,7 +113,7 @@ export const usePlayerController = ({
       onSeek: audio.onSeek,
       onShuffleToggle: toggleShuffle,
       onVolumeChange: setVolume,
-      playlistTitle: currentPlaylistName || 'Playlist',
+      playlistTitle: currentPlaylistName || t('common.playlist'),
       repeatMode,
       volume: player.volume,
     },

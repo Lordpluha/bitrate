@@ -1,6 +1,5 @@
-import { cn } from '@bitrate/ui-react'
 import { MediaImage } from '@shared/ui/MediaImage'
-import { Heart } from 'lucide-react'
+import { LikeButton } from '@/entities/Track'
 
 interface TrackInfoProps {
   title: string
@@ -34,21 +33,13 @@ export const TrackInfo = ({
       </div>
       <div className="truncate text-xs text-muted-foreground">{artist}</div>
     </div>
-    <button
-      aria-label={isLiked ? `Unlike ${title}` : `Like ${title}`}
-      aria-pressed={isLiked}
-      className="shrink-0 p-1 transition-transform hover:scale-110"
-      onClick={onLikeToggle}
-      type="button"
-    >
-      <Heart
-        className={cn(
-          isLiked
-            ? 'fill-accent text-accent'
-            : 'text-muted-foreground hover:text-foreground',
-        )}
+    {onLikeToggle ? (
+      <LikeButton
+        isLiked={isLiked}
+        onToggle={onLikeToggle}
         size={18}
+        trackTitle={title}
       />
-    </button>
+    ) : null}
   </div>
 )

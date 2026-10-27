@@ -22,7 +22,7 @@ export const AddToQueueButton = ({
     <button
       aria-label={`Add ${track.title} to queue`}
       className={cn(
-        'rounded-full p-1 text-text-subdued transition-colors hover:bg-white/10 hover:text-text',
+        'rounded-full p-1 text-muted-foreground transition-colors hover:bg-surface hover:text-foreground',
         className,
       )}
       onClick={(event) => {

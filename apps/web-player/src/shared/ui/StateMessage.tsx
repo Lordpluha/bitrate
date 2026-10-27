@@ -13,6 +13,8 @@ export type StateMessageProps = {
   icon: LucideIcon
   primary?: StateMessageAction
   secondary?: StateMessageAction
+  /** `compact` fits a popover or a panel: a smaller circle and title, no page height. */
+  size?: 'compact' | 'page'
   title: string
   /** `error` tints the icon circle red; `neutral` keeps it on the secondary surface. */
   tone?: 'error' | 'neutral'
@@ -48,33 +50,55 @@ export const StateMessage = ({
   icon: Icon,
   primary,
   secondary,
+  size = 'page',
   title,
   tone = 'neutral',
 }: StateMessageProps) => (
   <div
     aria-live={tone === 'error' ? 'assertive' : 'polite'}
     className={cn(
-      'flex min-h-96 flex-1 flex-col items-center justify-center px-4',
+      'flex flex-1 flex-col items-center justify-center px-4',
+      size === 'page' ? 'min-h-96' : 'min-h-0',
       className,
     )}
     role={tone === 'error' ? 'alert' : 'status'}
   >
-    <div className="flex w-full max-w-120 flex-col items-center gap-4 py-6 text-center">
+    <div
+      className={cn(
+        'flex w-full max-w-120 flex-col items-center text-center',
+        size === 'page' ? 'gap-4 py-6' : 'gap-2 py-5',
+      )}
+    >
       <span
         className={cn(
-          'flex size-18 items-center justify-center rounded-full',
+          'flex items-center justify-center rounded-full',
+          size === 'page' ? 'size-18' : 'size-10',
           tone === 'error'
             ? 'bg-error-surface text-error'
             : 'bg-secondary text-foreground',
         )}
       >
-        <Icon aria-hidden="true" size={30} />
+        <Icon aria-hidden="true" size={size === 'page' ? 30 : 18} />
       </span>
-      <h2 className="text-[28px] leading-[1.25] font-semibold text-foreground">
+      <h2
+        className={cn(
+          'leading-[1.25] font-semibold text-foreground',
+          size === 'page'
+            ? 'text-[28px]'
+            : 'font-[family-name:var(--font-landing-body)] text-sm',
+        )}
+      >
         {title}
       </h2>
       {description ? (
-        <p className="text-sm text-muted-foreground">{description}</p>
+        <p
+          className={cn(
+            'text-muted-foreground',
+            size === 'page' ? 'text-sm' : 'text-xs',
+          )}
+        >
+          {description}
+        </p>
       ) : null}
       {primary || secondary ? (
         <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2">

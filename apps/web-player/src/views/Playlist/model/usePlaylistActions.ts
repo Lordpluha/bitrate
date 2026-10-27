@@ -9,6 +9,7 @@ import {
 } from '@/entities/Playlist'
 import type { TrackEntity } from '@/entities/Track'
 import { showApiSuccessToast } from '@/shared/api/feedback'
+import { useI18n } from '@/shared/i18n'
 import { ROUTES } from '@/shared/routes'
 import type { PlaylistActions } from '@/views/Playlist/model/playlist.types'
 
@@ -23,6 +24,7 @@ export const usePlaylistActions = ({
   playlistTitle,
   tracks,
 }: UsePlaylistActionsOptions): PlaylistActions => {
+  const { t } = useI18n()
   const router = useRouter()
   const deleteMutation = useDeletePlaylist()
   const removeTrackMutation = useRemoveTrackFromPlaylist()
@@ -35,11 +37,11 @@ export const usePlaylistActions = ({
 
   /** Failures are toasted by the query client's mutation cache. */
   const deletePlaylist = () => {
-    if (!window.confirm('Delete this playlist?')) return
+    if (!window.confirm(t('playlist.deleteConfirm'))) return
 
     deleteMutation.mutate(playlistId, {
       onSuccess: () => {
-        showApiSuccessToast('Playlist deleted')
+        showApiSuccessToast(t('playlist.deleted'))
         router.push(ROUTES.main)
       },
     })
@@ -48,7 +50,7 @@ export const usePlaylistActions = ({
   const removeTrack = (trackId: string) =>
     removeTrackMutation.mutate(
       { params: { path: { id: playlistId, trackId } } },
-      { onSuccess: () => showApiSuccessToast('Track removed from playlist') },
+      { onSuccess: () => showApiSuccessToast(t('playlist.trackRemoved')) },
     )
 
   const addTrack = (track: TrackEntity) => {
@@ -62,7 +64,8 @@ export const usePlaylistActions = ({
       },
       {
         onSettled: () => setAddingTrackId(null),
-        onSuccess: () => showApiSuccessToast(`Added to ${playlistTitle}`),
+        onSuccess: () =>
+          showApiSuccessToast(t('playlist.addedTo', { title: playlistTitle })),
       },
     )
   }

@@ -71,5 +71,189 @@
       "src/app/(auth)/auth/reset-password/page.tsx",
       "src/app/(auth)/verify-email/page.tsx"
     ]
+  },
+  {
+    "test": "src/widgets/MainPanel/ui/MainPanel.screenshot-spec.ts",
+    "dependsOn": [
+      "src/widgets/MainPanel/ui/MainPanel.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/main/layout.tsx",
+      "src/app/main/page.tsx"
+    ]
+  },
+  {
+    "test": "src/widgets/MainHeader/ui/MainHeader.screenshot-spec.ts",
+    "dependsOn": [
+      "src/widgets/MainHeader/ui/MainHeader.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/main/layout.tsx",
+      "src/app/main/charts/page.tsx"
+    ]
+  },
+  {
+    "test": "src/features/Search/ui/SearchPage.screenshot-spec.ts",
+    "dependsOn": [
+      "src/features/Search/ui/SearchPage.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/main/layout.tsx",
+      "src/app/main/search/page.tsx"
+    ]
+  },
+  {
+    "test": "src/views/Charts/ui/ChartsPage.screenshot-spec.ts",
+    "dependsOn": [
+      "src/views/Charts/ui/ChartsPage.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/main/layout.tsx",
+      "src/app/main/charts/page.tsx"
+    ]
+  },
+  {
+    "test": "src/views/Library/ui/LibraryPage.screenshot-spec.ts",
+    "dependsOn": [
+      "src/views/Library/ui/LibraryPage.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/main/layout.tsx",
+      "src/app/main/library/page.tsx"
+    ]
+  },
+  {
+    "test": "src/views/Playlist/ui/PlaylistPage.screenshot-spec.ts",
+    "dependsOn": [
+      "src/views/Playlist/ui/PlaylistPage.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/main/layout.tsx",
+      "src/app/main/(playlists)/playlist/[id]/page.tsx",
+      "src/app/main/(playlists)/liked-songs/page.tsx"
+    ]
+  },
+  {
+    "test": "src/views/Album/ui/AlbumPage.screenshot-spec.ts",
+    "dependsOn": [
+      "src/views/Album/ui/AlbumPage.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/main/layout.tsx",
+      "src/app/main/album/[id]/page.tsx"
+    ]
+  },
+  {
+    "test": "src/views/Artist/ui/ArtistPage.screenshot-spec.ts",
+    "dependsOn": [
+      "src/views/Artist/ui/ArtistPage.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/main/layout.tsx",
+      "src/app/main/artist/[id]/page.tsx"
+    ]
+  },
+  {
+    "test": "src/views/Profile/ui/ProfilePage.screenshot-spec.ts",
+    "dependsOn": [
+      "src/views/Profile/ui/ProfilePage.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/main/layout.tsx",
+      "src/app/main/profile/page.tsx",
+      "src/app/main/user/[id]/page.tsx"
+    ]
+  },
+  {
+    "test": "src/views/Settings/ui/SettingsPage.screenshot-spec.ts",
+    "dependsOn": [
+      "src/views/Settings/ui/SettingsPage.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/main/layout.tsx",
+      "src/app/main/preferences/page.tsx"
+    ]
+  },
+  {
+    "test": "src/views/Recents/ui/RecentsPage.screenshot-spec.ts",
+    "dependsOn": [
+      "src/views/Recents/ui/RecentsPage.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/main/layout.tsx",
+      "src/app/main/recents/page.tsx"
+    ]
+  },
+  {
+    "test": "src/views/Queue/ui/QueuePage.screenshot-spec.ts",
+    "dependsOn": [
+      "src/views/Queue/ui/QueuePage.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/main/layout.tsx",
+      "src/app/main/queue/page.tsx"
+    ]
+  },
+  {
+    "test": "src/views/Lyrics/ui/LyricsPage.screenshot-spec.ts",
+    "dependsOn": [
+      "src/views/Lyrics/ui/LyricsPage.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/main/layout.tsx",
+      "src/app/main/lyrics/page.tsx"
+    ]
+  },
+  {
+    "test": "src/views/Notifications/ui/NotificationsPage.screenshot-spec.ts",
+    "dependsOn": [
+      "src/views/Notifications/ui/NotificationsPage.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/main/layout.tsx",
+      "src/app/main/notifications/page.tsx"
+    ]
+  },
+  {
+    "test": "src/views/Activity/ui/ActivityPage.screenshot-spec.ts",
+    "dependsOn": [
+      "src/views/Activity/ui/ActivityPage.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/main/layout.tsx",
+      "src/app/main/activity/page.tsx"
+    ]
+  },
+  {
+    "test": "src/views/Stats/ui/StatsPage.screenshot-spec.ts",
+    "dependsOn": [
+      "src/views/Stats/ui/StatsPage.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/main/layout.tsx",
+      "src/app/main/stats/page.tsx"
+    ]
+  },
+  {
+    "test": "src/views/Friends/ui/FriendsPage.screenshot-spec.ts",
+    "dependsOn": [
+      "src/views/Friends/ui/FriendsPage.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/main/layout.tsx",
+      "src/app/main/friends/page.tsx",
+      "src/app/main/friends/find/page.tsx",
+      "src/app/main/friends/requests/page.tsx"
+    ]
+  },
+  {
+    "test": "src/views/Podcast/ui/PodcastPage.screenshot-spec.ts",
+    "dependsOn": [
+      "src/views/Podcast/ui/PodcastPage.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/main/layout.tsx",
+      "src/app/main/podcast/[id]/page.tsx"
+    ]
   }
 ]

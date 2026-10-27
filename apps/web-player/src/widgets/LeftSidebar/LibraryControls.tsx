@@ -9,6 +9,7 @@ import {
   SearchIcon,
 } from '@bitrate/ui-react'
 import { ROUTES } from '@shared/routes'
+import { menuItemClassName, menuPanelClassName } from '@shared/ui'
 import { Check } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -21,7 +22,7 @@ import {
 
 const SORT_LABELS = {
   creator: 'library.sortCreator',
-  recent: 'library.recents',
+  recent: 'library.sortRecentlyAdded',
   title: 'library.sortTitle',
 } as const satisfies Record<LibrarySort, TranslationKey>
 
@@ -56,15 +57,12 @@ export const LibraryControls = ({
         </PopoverTrigger>
         <PopoverContent
           align="end"
-          className={cn(
-            Z_INDEX_CLASS.popover,
-            'w-48 rounded-md border border-border bg-popover p-1 text-sm text-text shadow-2xl',
-          )}
+          className={cn(Z_INDEX_CLASS.popover, 'w-48', menuPanelClassName)}
           positionerClassName={Z_INDEX_CLASS.popover}
           sideOffset={6}
         >
           <div
-            className="px-3 py-2 text-xs font-bold text-text-subdued"
+            className="px-3 py-2 text-xs font-bold text-muted-foreground"
             id="library-sort-label"
           >
             {t('library.sortBy')}
@@ -74,8 +72,9 @@ export const LibraryControls = ({
               <button
                 aria-checked={option === sort}
                 className={cn(
-                  'flex w-full items-center justify-between rounded-sm px-3 py-2 text-left transition-colors hover:bg-surface-hover',
-                  option === sort ? 'text-primary' : 'text-text',
+                  menuItemClassName,
+                  'justify-between',
+                  option === sort && 'text-accent [&_svg]:text-accent',
                 )}
                 key={option}
                 onClick={() => {

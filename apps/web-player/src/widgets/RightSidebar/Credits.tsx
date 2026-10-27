@@ -3,6 +3,7 @@
 import { Typography } from '@bitrate/ui-react'
 import { FollowArtistButton, useArtist } from '@entities/Artist'
 import { selectCurrentTrack, usePlayerStore } from '@entities/Player'
+import { useI18n } from '@shared/i18n'
 import { ROUTES } from '@shared/routes'
 import Link from 'next/link'
 
@@ -11,6 +12,7 @@ import Link from 'next/link'
  * The API exposes a single artist per track, so only the main artist row is shown.
  */
 export const Credits = () => {
+  const { t } = useI18n()
   const currentTrack = usePlayerStore(selectCurrentTrack)
   const { data: artist } = useArtist(currentTrack?.artistId)
 
@@ -19,20 +21,24 @@ export const Credits = () => {
   return (
     <div className="overflow-hidden rounded-lg bg-surface p-0">
       <div className="px-4 pb-1 pt-3">
-        <Typography as="h6" className="text-text" size="heading6">
-          Credits
+        <Typography as="h6" className="text-foreground" size="heading6">
+          {t('sidebar.credits')}
         </Typography>
       </div>
       <div className="flex items-center justify-between gap-3 px-4 pb-4">
         <div className="min-w-0">
           <Link
-            className="block truncate text-sm text-text hover:underline"
+            className="block truncate text-sm text-foreground hover:underline"
             href={ROUTES.artist(artist.id)}
           >
             {artist.username}
           </Link>
-          <Typography as="p" className="text-xs text-text-subdued" size="body">
-            Main Artist
+          <Typography
+            as="p"
+            className="text-xs text-muted-foreground"
+            size="body"
+          >
+            {t('sidebar.mainArtist')}
           </Typography>
         </div>
         <FollowArtistButton

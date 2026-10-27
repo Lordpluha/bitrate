@@ -4,6 +4,7 @@ import { cn } from '@bitrate/ui-react'
 import { MediaImage } from '@shared/ui/MediaImage'
 import { getArtistBackgroundUrl } from '@shared/utils/mediaUrl'
 import { useState } from 'react'
+import { useI18n } from '@/shared/i18n'
 
 export type ArtistAboutProps = {
   artist: {
@@ -20,13 +21,16 @@ export type ArtistAboutProps = {
  * laid over it, matching how the real product presents this block.
  */
 export const ArtistAbout = ({ artist, statsLabel }: ArtistAboutProps) => {
+  const { t } = useI18n()
   const [isExpanded, setIsExpanded] = useState(false)
 
   if (!artist.bio) return null
 
   return (
     <section className="flex flex-col gap-3">
-      <h2 className="text-[19px] leading-[1.25] font-semibold">About</h2>
+      <h2 className="text-[19px] leading-[1.25] font-semibold">
+        {t('artist.about')}
+      </h2>
 
       <div className="relative max-w-180 overflow-hidden rounded-[14px] border border-border bg-card">
         <MediaImage
@@ -59,7 +63,7 @@ export const ArtistAbout = ({ artist, statsLabel }: ArtistAboutProps) => {
             onClick={() => setIsExpanded((previous) => !previous)}
             type="button"
           >
-            {isExpanded ? 'Show less' : 'Show more'}
+            {isExpanded ? t('common.showLess') : t('common.showMore')}
           </button>
         </div>
       </div>

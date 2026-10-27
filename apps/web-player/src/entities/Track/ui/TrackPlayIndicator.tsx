@@ -23,12 +23,12 @@ export const TrackPlayIndicator = ({
   >
     {!isCurrent && (
       <>
-        <span className="text-text-subdued group-hover:hidden">
+        <span className="text-muted-foreground group-hover:hidden">
           {index + 1}
         </span>
         <Play
           aria-hidden="true"
-          className="text-text hidden group-hover:block"
+          className="text-foreground hidden group-hover:block"
           fill="currentColor"
           size={14}
         />
@@ -43,7 +43,7 @@ export const TrackPlayIndicator = ({
         />
         <Pause
           aria-hidden="true"
-          className="text-text hidden group-hover:block"
+          className="text-foreground hidden group-hover:block"
           fill="currentColor"
           size={14}
         />

@@ -19,7 +19,7 @@ export const PlaylistTrackSearchResult = ({
   const { t } = useI18n()
 
   return (
-    <li className="grid grid-cols-[40px_minmax(0,1fr)_auto] items-center gap-2 rounded px-2 py-2 transition-colors hover:bg-white/10 sm:grid-cols-[44px_minmax(0,1fr)_auto] sm:gap-3 sm:px-3 min-[861px]:grid-cols-[44px_minmax(0,1.8fr)_minmax(160px,1fr)_auto]">
+    <li className="grid grid-cols-[40px_minmax(0,1fr)_auto] items-center gap-2 rounded px-2 py-2 transition-colors hover:bg-surface sm:grid-cols-[44px_minmax(0,1fr)_auto] sm:gap-3 sm:px-3 min-[861px]:grid-cols-[44px_minmax(0,1.8fr)_minmax(160px,1fr)_auto]">
       <MediaImage
         alt=""
         className="h-10 w-10 rounded object-cover"
@@ -30,15 +30,17 @@ export const PlaylistTrackSearchResult = ({
         width={40}
       />
       <div className="min-w-0">
-        <p className="truncate font-medium text-text">{track.title}</p>
-        <p className="truncate text-sm text-text-subdued">{track.artistId}</p>
+        <p className="truncate font-medium text-foreground">{track.title}</p>
+        <p className="truncate text-sm text-muted-foreground">
+          {track.artistId}
+        </p>
       </div>
-      <p className="truncate text-sm text-text-subdued max-[860px]:hidden">
+      <p className="truncate text-sm text-muted-foreground max-[860px]:hidden">
         {track.title}
       </p>
       <button
         aria-label={`${t('playlist.add')} ${track.title}`}
-        className="rounded-full border border-white/50 px-3 py-1.5 text-sm font-bold text-text transition-colors hover:border-white disabled:cursor-not-allowed disabled:opacity-50 sm:px-4"
+        className="rounded-full border border-border px-3 py-1.5 text-sm font-bold text-foreground transition-colors hover:border-white disabled:cursor-not-allowed disabled:opacity-50 sm:px-4"
         disabled={addingTrackId === track.id}
         onClick={() => onAddTrack(track)}
         type="button"

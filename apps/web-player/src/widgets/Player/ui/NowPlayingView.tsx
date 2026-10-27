@@ -4,9 +4,11 @@ import { cn } from '@bitrate/ui-react'
 import { useOverlayFocus } from '@shared/hooks'
 import { ROUTES } from '@shared/routes'
 import { MediaImage } from '@shared/ui/MediaImage'
-import { ChevronDown, Heart, ListMusic, Mic2 } from 'lucide-react'
+import { ChevronDown, ListMusic, Mic2 } from 'lucide-react'
 import Link from 'next/link'
+import { LikeButton } from '@/entities/Track'
 import { ConnectDevicesPopover } from '@/features/BitrateConnect'
+import { useI18n } from '@/shared/i18n'
 import { NowPlayingDetails } from './NowPlayingDetails'
 import type { NowPlayingViewProps } from './nowPlaying.types'
 import { PlayerControls } from './PlayerControls'
@@ -36,15 +38,16 @@ export const NowPlayingView = ({
   onRepeatToggle,
   onSeek,
   onShuffleToggle,
-  playlistTitle = 'Playlist',
+  playlistTitle,
   repeatMode,
   title,
 }: NowPlayingViewProps) => {
+  const { t } = useI18n()
   const dialogRef = useOverlayFocus<HTMLDivElement>({ isOpen, onClose })
 
   return (
     <div
-      aria-label={`Now playing ${title}`}
+      aria-label={t('player.nowPlayingTitle', { title })}
       aria-modal="true"
       className={cn(
         'fixed inset-0 z-[80] overflow-y-auto overscroll-contain bg-background text-foreground transition-opacity duration-400 ease-out',
@@ -57,7 +60,7 @@ export const NowPlayingView = ({
     >
       <header className="sticky top-0 z-20 flex h-13 items-center gap-1 bg-background px-2 pt-[env(safe-area-inset-top)] xl:px-6">
         <button
-          aria-label="Minimize now playing"
+          aria-label={t('player.minimize')}
           className="flex size-9 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-surface"
           onClick={onClose}
           type="button"
@@ -65,14 +68,14 @@ export const NowPlayingView = ({
           <ChevronDown aria-hidden="true" size={22} />
         </button>
         <p className="min-w-0 flex-1 truncate font-[family-name:var(--font-landing-display)] text-lg font-semibold">
-          {playlistTitle}
+          {playlistTitle ?? t('common.playlist')}
         </p>
       </header>
 
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 pt-2 pb-[max(1.5rem,env(safe-area-inset-bottom))] xl:grid xl:grid-cols-[420px_minmax(0,1fr)] xl:px-8 xl:pt-6">
         <section className="flex flex-col gap-5">
           <MediaImage
-            alt={`Cover for ${title}`}
+            alt={t('player.coverFor', { title })}
             className="aspect-square w-full rounded-xl object-cover shadow-2xl"
             fallback="track"
             height={420}
@@ -89,19 +92,14 @@ export const NowPlayingView = ({
               </h2>
               <p className="truncate text-sm text-muted-foreground">{artist}</p>
             </div>
-            <button
-              aria-label={isLiked ? `Unlike ${title}` : `Like ${title}`}
-              aria-pressed={isLiked}
-              className="shrink-0 rounded-full p-1 text-primary transition-transform hover:scale-110"
-              onClick={onLikeToggle}
-              type="button"
-            >
-              <Heart
-                aria-hidden="true"
-                fill={isLiked ? 'currentColor' : 'none'}
+            {onLikeToggle ? (
+              <LikeButton
+                isLiked={isLiked}
+                onToggle={onLikeToggle}
                 size={24}
+                trackTitle={title}
               />
-            </button>
+            ) : null}
           </div>
 
           <PlayerControls
@@ -126,7 +124,7 @@ export const NowPlayingView = ({
             />
             <div className="flex items-center gap-1">
               <Link
-                aria-label="Open lyrics"
+                aria-label={t('player.openLyrics')}
                 className={iconLinkClassName}
                 href={ROUTES.lyrics}
                 onClick={onClose}
@@ -134,7 +132,7 @@ export const NowPlayingView = ({
                 <Mic2 aria-hidden="true" size={20} />
               </Link>
               <Link
-                aria-label="Open queue"
+                aria-label={t('player.openQueue')}
                 className={iconLinkClassName}
                 href={ROUTES.queue}
                 onClick={onClose}

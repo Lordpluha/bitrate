@@ -3,22 +3,22 @@
 import { LikeAlbumButton } from '@entities/Album'
 import { selectMusicPlayer, usePlayerStore } from '@entities/Player'
 import { type TrackEntity, TracksList } from '@entities/Track'
+import { useI18n } from '@shared/i18n'
 import { StateMessage } from '@shared/ui'
 import { Disc3, Pause, Play } from 'lucide-react'
 
 type AlbumTrackSectionProps = {
   albumId: string
   albumTitle: string
-  likedTrackIds: Set<string>
   tracks: TrackEntity[]
 }
 
 export const AlbumTrackSection = ({
   albumId,
   albumTitle,
-  likedTrackIds,
   tracks,
 }: AlbumTrackSectionProps) => {
+  const { t } = useI18n()
   const musicPlayer = usePlayerStore(selectMusicPlayer)
   const playPlaylist = usePlayerStore((state) => state.playPlaylist)
   const playbackId = `album:${albumId}`
@@ -45,12 +45,17 @@ export const AlbumTrackSection = ({
   return (
     <>
       <section
-        aria-label={`${albumTitle} actions`}
+        aria-label={t('album.actions', { title: albumTitle })}
         className="flex items-center gap-4.5"
       >
         {tracks.length > 0 ? (
           <button
-            aria-label={`${isAlbumPlaying ? 'Pause' : 'Play'} ${albumTitle}`}
+            aria-label={t(
+              isAlbumPlaying ? 'common.pauseName' : 'common.playName',
+              {
+                name: albumTitle,
+              },
+            )}
             className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform hover:scale-105 max-md:order-last max-md:ml-auto md:size-14"
             onClick={handlePlayAlbum}
             type="button"
@@ -76,14 +81,14 @@ export const AlbumTrackSection = ({
       {tracks.length === 0 ? (
         <StateMessage
           className="min-h-80"
+          description={t('album.noTracksDescription')}
           icon={Disc3}
-          title="No tracks in this album"
+          title={t('album.noTracks')}
         />
       ) : (
         <TracksList
           activeTrackId={musicPlayer.currentTrack?.id}
           isPlaybackContextActive={isAlbumContext}
-          likedTrackIds={likedTrackIds}
           onPlayTrack={playFrom}
           showDateAdded={false}
           tracks={tracks}

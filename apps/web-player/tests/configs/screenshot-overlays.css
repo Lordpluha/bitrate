@@ -3,9 +3,13 @@
  * draws two development overlays a production build never has: the Next.js dev indicator
  * (bottom left) and the TanStack Query devtools button (bottom right). Hiding them keeps one
  * baseline valid for `next dev` and `next start` alike.
+ *
+ * Toasts are hidden too: they are transient, and the fixture API has no audio, so the resumed
+ * player's "Unable to play" toast would land in shots at a random moment.
  */
 nextjs-portal,
 .tsqd-open-btn-container,
-.tsqd-parent-container {
+.tsqd-parent-container,
+[data-sonner-toaster] {
   display: none;
 }

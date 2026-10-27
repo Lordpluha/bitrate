@@ -1,29 +1,22 @@
 import { StateMessage } from '@shared/ui'
-import { Library } from 'lucide-react'
-import type { ReactNode } from 'react'
+import { LibraryBig } from 'lucide-react'
+import { useI18n } from '@/shared/i18n'
 import { ROUTES } from '@/shared/routes'
 
-/** The design's empty library: nothing saved yet, with a way to go and find music. */
-export const LibraryEmptyState = () => (
-  <StateMessage
-    className="min-h-80"
-    description="Save playlists, albums and tracks and they will appear here."
-    icon={Library}
-    primary={{ href: ROUTES.search(), label: 'Find something to play' }}
-    title="Nothing here yet"
-  />
-)
+/** The design's empty library: nothing saved yet, with a way to create the first playlist. */
+export const LibraryEmptyState = () => {
+  const { t } = useI18n()
 
-type LibraryListEmptyAwareProps = {
-  children: ReactNode
-  isEmpty: boolean
-}
-
-export const LibraryListEmptyAware = ({
-  children,
-  isEmpty,
-}: LibraryListEmptyAwareProps) => {
-  if (isEmpty) return <LibraryEmptyState />
-
-  return <div className="flex flex-col">{children}</div>
+  return (
+    <StateMessage
+      className="min-h-80"
+      description={t('library.emptyDescription')}
+      icon={LibraryBig}
+      primary={{
+        href: ROUTES.createPlaylist,
+        label: t('library.createPlaylist'),
+      }}
+      title={t('library.empty')}
+    />
+  )
 }

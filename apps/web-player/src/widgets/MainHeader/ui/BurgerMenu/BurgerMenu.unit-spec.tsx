@@ -39,4 +39,29 @@ describe('BurgerMenu', () => {
     await waitFor(() => expect(trigger).toHaveFocus())
     expect(panel).toHaveAttribute('inert')
   })
+
+  it('reaches every page the island does not hold, on any screen size', async () => {
+    const user = userEvent.setup()
+    render(<BurgerMenu />)
+
+    await user.click(screen.getByRole('button', { name: 'Open menu' }))
+    const panel = screen.getByLabelText('Main navigation', {
+      selector: '[role="dialog"]',
+    })
+
+    expect(
+      within(panel)
+        .getAllByRole('link')
+        .map((link) => link.getAttribute('href')),
+    ).toEqual([
+      '/main/charts',
+      '/main/activity',
+      '/main/liked-songs',
+      '/main/recents',
+      '/main/profile',
+      '/main/friends',
+      '/main/stats',
+      '/main/preferences',
+    ])
+  })
 })
