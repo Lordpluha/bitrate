@@ -1,17 +1,17 @@
 'use client'
 
 import type {
-  BitratePlayerElement,
   BitratePlayerEndedDetail,
   BitratePlayerErrorDetail,
   BitratePlayerSource,
   BitratePlayerStateDetail,
 } from '@bitrate/player/contract'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { getPlaybackKey } from '@/entities/Player/model/audioPlayer/audioPlayer.utils'
 import { createStreamingTransport } from '@/entities/Player/model/audioPlayer/streamingTransport'
 import { useManifestResolver } from '@/entities/Player/model/audioPlayer/useManifestResolver'
 import type { PlayableTrack } from '@/entities/Player/model/playableTrack.types'
+import { usePlayerElementStore } from '@/entities/Player/model/playerElementStore'
 import {
   type PlaybackTransition,
   resolvePlaybackTransition,
@@ -30,18 +30,23 @@ import {
 import { showApiErrorToast } from '@/shared/api/feedback'
 
 type ToSourceInput = {
-  track: PlayableTrack
+  track: PlayableTrack & { duration?: number | null }
   playlistId: string | null
   playbackSequence: number
+  /** Where a restored session left this play, shown and resumed before the media loads. */
+  startTime?: number
 }
 
 const toSource = ({
   track,
   playlistId,
   playbackSequence,
+  startTime,
 }: ToSourceInput): BitratePlayerSource => ({
+  duration: track.duration ?? undefined,
   key: getPlaybackKey(track.id, playlistId, playbackSequence),
   progressiveUrl: track.audioUrl,
+  startTime,
   trackId: track.id,
 })
 
@@ -69,7 +74,8 @@ export const useStreamingPlayer = () => {
   const changeTrack = usePlayerStore((state) => state.changeTrack)
   const advanceOnTrackEnd = usePlayerStore((state) => state.advanceOnTrackEnd)
   const resolveManifest = useManifestResolver()
-  const [element, setElement] = useState<BitratePlayerElement | null>(null)
+  const element = usePlayerElementStore((state) => state.element)
+  const setElement = usePlayerElementStore((state) => state.setElement)
 
   const nextTransition = useMemo<PlaybackTransition | null>(
     () =>
@@ -103,6 +109,8 @@ export const useStreamingPlayer = () => {
         ? toSource({
             playbackSequence,
             playlistId: currentPlaylistId,
+            /** Read once per play: afterwards the element is the source of the time. */
+            startTime: usePlayerStore.getState().currentTime,
             track: currentTrack,
           })
         : null,

@@ -24,22 +24,13 @@ const iconLinkClassName =
 export const NowPlayingView = ({
   artist,
   coverUrl,
-  currentTime,
-  duration,
   isLiked = false,
   isOpen,
-  isPlaying,
-  isShuffled,
   onClose,
   onLikeToggle,
   onNext,
-  onPlayPause,
   onPrevious,
-  onRepeatToggle,
-  onSeek,
-  onShuffleToggle,
   playlistTitle,
-  repeatMode,
   title,
 }: NowPlayingViewProps) => {
   const { t } = useI18n()
@@ -103,17 +94,8 @@ export const NowPlayingView = ({
           </div>
 
           <PlayerControls
-            currentTime={currentTime}
-            duration={duration}
-            isPlaying={isPlaying}
-            isShuffled={isShuffled}
             onNext={onNext}
-            onPlayPause={onPlayPause}
             onPrevious={onPrevious}
-            onRepeatToggle={onRepeatToggle}
-            onSeek={onSeek}
-            onShuffleToggle={onShuffleToggle}
-            repeatMode={repeatMode}
             size="large"
           />
 

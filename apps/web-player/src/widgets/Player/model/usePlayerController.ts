@@ -13,6 +13,7 @@ import { useI18n } from '@shared/i18n'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import { useEffect } from 'react'
 import { useFloatingPlayerWindow } from './useFloatingPlayerWindow'
+import { usePlayerElementSync } from './usePlayerElementSync'
 import { usePlayerHotkeys } from './usePlayerHotkeys'
 import { usePlayerSessionPersistence } from './usePlayerSessionPersistence'
 import { usePlaylistShuffle } from './usePlaylistShuffle'
@@ -65,6 +66,16 @@ export const usePlayerController = ({
     volume: player.volume,
   })
 
+  usePlayerElementSync({
+    artist: artist?.username || t('common.unknownArtist'),
+    coverUrl: (currentTrack && getTrackCoverUrl(currentTrack.cover)) || '',
+    isShuffled: player.isShuffled,
+    onRepeatToggle: cycleRepeatMode,
+    onShuffleToggle: toggleShuffle,
+    repeatMode,
+    title: currentTrack?.title || t('common.unknown'),
+  })
+
   useEffect(() => {
     if (!currentTrack) onExpandedChange(false)
   }, [currentTrack, onExpandedChange])
@@ -91,15 +102,10 @@ export const usePlayerController = ({
     },
     desktopProps: {
       ...common,
-      isShuffled: player.isShuffled,
       isVisible,
       onExpand: () => onExpandedChange(true),
       onPictureInPicture: floatingPlayer.open,
-      onRepeatToggle: cycleRepeatMode,
-      onSeek: audio.onSeek,
-      onShuffleToggle: toggleShuffle,
       onVolumeChange: setVolume,
-      repeatMode,
       volume: player.volume,
     },
     responsiveProps: {
@@ -107,14 +113,10 @@ export const usePlayerController = ({
       floatingWindow: floatingPlayer.targetWindow,
       isExpanded,
       onCloseExpanded: () => onExpandedChange(false),
-      isShuffled: player.isShuffled,
       onCloseFloating: floatingPlayer.close,
-      onRepeatToggle: cycleRepeatMode,
       onSeek: audio.onSeek,
-      onShuffleToggle: toggleShuffle,
       onVolumeChange: setVolume,
       playlistTitle: currentPlaylistName || t('common.playlist'),
-      repeatMode,
       volume: player.volume,
     },
   }
